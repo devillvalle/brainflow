@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : newXMLDocument.xml
+    Created on : July 17, 2006, 2:41 PM
+    Author     : buchs
+    Description:
+        Purpose of the document follows.
+-->
+
+<Design>
+    <Unit name = "Subject" value = "103">
+        <VariableSet>
+            <Variable 
+                type="factor"
+                name="presentationMode"
+                levelset="A, V">
+            </Variable>
+            <Variable
+                type="factor"
+                name="memoryMode"
+                levelset="A, V, Novel">
+            </Variable>
+            <Variable
+                type="factor"
+                name="lag"
+                levelset="Novel, 1, 2, 3, 4, 5">
+            </Variable>                  
+        </VariableSet>
+        <Data basepath=".">
+            <ImageSet>
+                <Apply>
+                    <Transformation
+                        file="epi2standard.mat"
+                        type="fslmat">
+                    </Transformation>                      
+                </Apply>     
+                <Image>
+                    <File
+                        name="A-A-1.nii"
+                        type="nifti">                        
+                    </File>
+                    <Value
+                        variable="memoryMode"
+                        level="1">
+                    </Value>
+                    <Value
+                        variable="presentationMode"
+                        level="A">
+                    </Value>
+                </Image>
+            </ImageSet>
+        </Data>
+    </Unit>
+</Design>
+                    
+                    
+                    
+                    
+                    
+                        
+                        
+                    
+                        
+                    
+                        
+                        
+                    
+                    
+                </Image>                
+            </ImageSet>        
+        </Data>
+    </Unit>
+
+</Design>

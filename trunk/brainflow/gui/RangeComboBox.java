@@ -1,0 +1,110 @@
+package com.brainflow.gui;
+
+import com.brainflow.utils.Range;
+import com.brainflow.utils.RangeModel;
+import com.jidesoft.combobox.AbstractComboBox;
+import com.jidesoft.combobox.PopupPanel;
+
+import javax.swing.*;
+import java.awt.event.ActionListener;
+
+/**
+ * Created by IntelliJ IDEA.
+ * User: Brad Buchsbaum
+ * Date: Aug 12, 2006
+ * Time: 5:00:32 PM
+ * To change this template use File | Settings | File Templates.
+ */
+public class RangeComboBox extends AbstractComboBox {
+
+    private RangeModel rangeModel;
+
+    private RangeEditorComponent editorComponent = new RangeEditorComponent(Range.class);
+    private RangePopupPanel popup;
+
+    public RangeComboBox() {
+        super(DROPDOWN);
+        setEditable(false);
+        setBorder(BorderFactory.createEmptyBorder());
+        initComponent();
+    }
+
+    public RangeComboBox(RangeModel _range) {
+        rangeModel = _range;
+    }
+
+
+    public RangeModel getRange() {
+        return rangeModel;
+    }
+
+    public void setRange(RangeModel range) {
+        this.rangeModel = range;
+        editorComponent.setItem(range);
+
+        if (popup != null)
+            popup.setRangeModel(rangeModel);
+
+    }
+
+    public EditorComponent createEditorComponent() {
+        return editorComponent;
+
+    }
+
+    public void addTextFieldActionListener(ActionListener listener) {
+        if (popup == null) {
+            popup = new RangePopupPanel(rangeModel);
+
+        }
+        popup.getMinField().addActionListener(listener);
+        popup.getMaxField().addActionListener(listener);
+
+    }
+
+    public void removeTextFieldActionListener(ActionListener listener) {
+        popup.getMinField().removeActionListener(listener);
+        popup.getMaxField().removeActionListener(listener);
+
+    }
+
+    public PopupPanel createPopupComponent() {
+        if (popup == null) {
+            popup = new RangePopupPanel(rangeModel);
+
+
+        }
+        return popup;
+
+    }
+
+    class RangeEditorComponent extends DefaultTextFieldEditorComponent {
+
+        public RangeEditorComponent(Class clazz) {
+            super(clazz);
+
+        }
+
+        public String getText() {
+            return rangeModel.toString();
+
+        }
+
+
+        public void setItem(Object value) {
+            if (value == null) return;
+
+            super.setItem(value);
+
+            if (value instanceof RangeModel) {
+                RangeModel r = (RangeModel) value;
+                setText(r.toString());
+            } else {
+                setText(value.toString());
+            }
+        }
+
+    }
+
+
+}

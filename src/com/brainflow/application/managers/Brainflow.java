@@ -45,6 +45,7 @@ import org.bushe.swing.event.EventSubscriber;
 import org.xml.sax.SAXException;
 
 import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -139,6 +140,10 @@ public class Brainflow {
 
 
             LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
+
+            //ColorUIResource clr = (ColorUIResource)UIManager.get("DockableFrame.activeTitleBackground");
+            //System.out.println("color is " + clr);
+            //UIManager.put("CollapsiblePane.background", clr.brighter());
 
         } catch (Exception e) {
             Logger.getAnonymousLogger().severe("Could not load Look and Feel, aborting");

@@ -19,14 +19,14 @@ import org.bushe.swing.event.AbstractEventServiceEvent;
  */
 public class ImageViewDataEvent extends ImageViewEvent {
     
-    private ImageView view;
+
     private ListDataEvent event;
     
     /** Creates a new instance of ImageViewDataEvent */
 
     public ImageViewDataEvent(ImageView _view, ListDataEvent _event) {
         super(_view);
-        view = _view;
+  
         event = _event;
 
     }

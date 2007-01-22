@@ -353,10 +353,10 @@ public class ImageCanvasSelection implements MouseListener, MouseMotionListener 
             CURSOR_STATE state = getAppropriateState(handle, CURSOR_STATE.OVER_SELECTED_VIEW);
             Point2D cross = view.getCrosshairLocation(view.whichPlot(p));
 
+            System.out.println("cross location: " + cross);
             if (state != CURSOR_STATE.OVER_SELECTED_VIEW) {
                 updateCursorState(state, view);
-            } else
-            if ((cross != null) && (Math.abs(cross.getX() - p.getX()) < 4) && (Math.abs(cross.getY() - p.getY()) < 4)) {
+            } else if ((cross != null) && (Math.abs(cross.getX() - p.getX()) < 4) && (Math.abs(cross.getY() - p.getY()) < 4)) {
                 updateCursorState(CURSOR_STATE.OVER_CROSSHAIR, view);
 
             } else {

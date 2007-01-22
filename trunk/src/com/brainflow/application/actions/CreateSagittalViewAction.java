@@ -20,11 +20,10 @@ public class CreateSagittalViewAction extends BasicAction {
 
     protected void execute(ActionEvent actionEvent) throws Exception {
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
-        System.out.println("view is not null in sag action!");
-
+       
         if (view != null) {
-            IImageDisplayModel displayModel = view.getImageDisplayModel();
-            ImageView sview = ImageViewFactory.createSagittalView(displayModel);
+            //IImageDisplayModel displayModel = view.getImageDisplayModel();
+            ImageView sview = ImageViewFactory.createSagittalView(view);
             ImageCanvas canvas = (ImageCanvas) getContextValue(ActionContext.SELECTED_CANVAS);
 
             if (canvas != null) {

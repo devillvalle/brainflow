@@ -22,8 +22,8 @@ public class CreateCoronalViewAction extends BasicAction {
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
 
         if (view != null) {
-            IImageDisplayModel displayModel = view.getImageDisplayModel();
-            ImageView sview = ImageViewFactory.createCoronalView(displayModel);
+
+            ImageView sview = ImageViewFactory.createCoronalView(view);
             ImageCanvas canvas = (ImageCanvas) getContextValue(ActionContext.SELECTED_CANVAS);
 
             if (canvas != null) {

@@ -13,7 +13,10 @@ import java.beans.PropertyChangeListener;
  * Time: 2:02:35 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface IAnnotation {
+public interface IAnnotation extends Cloneable {
+
+
+    public IAnnotation safeCopy();
 
     public void draw(Graphics2D g2d, Rectangle2D plotArea, IImagePlot plot);
 

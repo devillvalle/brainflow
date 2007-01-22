@@ -67,9 +67,9 @@ public class PlotResizeMode extends ImageCanvasMode implements MouseListener, Mo
         Rectangle bounds =selectedView.getBounds();
        
         Point relpos = SwingUtilities.convertPoint((Component)event.getSource(), event.getPoint(), selectedView);
-        if ( (relpos.x < -100) || (relpos.y < -100)) {
+        if ( (relpos.x < -200) || (relpos.y < -200)) {
             interested = false;
-        } else if ( (relpos.x > (bounds.getWidth() + 75)) || (relpos.y > (bounds.getHeight() + 75)) )  {
+        } else if ( (relpos.x > (bounds.getWidth() + 175)) || (relpos.y > (bounds.getHeight() + 175)) )  {
             interested = false;
         } else {
             interested  = true;

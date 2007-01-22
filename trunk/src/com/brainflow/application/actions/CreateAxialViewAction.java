@@ -22,8 +22,8 @@ public class CreateAxialViewAction extends BasicAction {
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
 
         if (view != null) {
-            IImageDisplayModel displayModel = view.getImageDisplayModel();
-            ImageView sview = ImageViewFactory.createAxialView(displayModel);
+            
+            ImageView sview = ImageViewFactory.createAxialView(view);
             ImageCanvas canvas = (ImageCanvas) getContextValue(ActionContext.SELECTED_CANVAS);
 
             if (canvas != null) {

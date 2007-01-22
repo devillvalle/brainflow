@@ -26,16 +26,20 @@ public class AxisLabelAnnotation extends AbstractAnnotation {
     private int xFontStart = axisLineXStart;
     private int yFontStart = axisLineYStart;
 
+
+    private Font font = new Font("helvetica", Font.ITALIC | Font.BOLD, 14);
+
+
     public void draw(Graphics2D g2d, Rectangle2D plotArea, IImagePlot plot) {
 
         AnatomicalAxis xaxis = plot.getXAxisRange().getAnatomicalAxis();
         AnatomicalAxis yaxis = plot.getYAxisRange().getAnatomicalAxis();
 
-        Font f = new Font("helvetica", Font.ITALIC | Font.BOLD, 14);
 
-        g2d.setFont(f);
+
+        g2d.setFont(font);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        FontMetrics fmetric = g2d.getFontMetrics(f);
+        FontMetrics fmetric = g2d.getFontMetrics(font);
 
 
         String xlabel = xaxis.getMinDirection().toString() + " to " + xaxis.getMaxDirection();
@@ -63,6 +67,15 @@ public class AxisLabelAnnotation extends AbstractAnnotation {
 
 
         g2d.setPaint(oldPaint);
+
+    }
+
+    public AxisLabelAnnotation safeCopy() {
+       AxisLabelAnnotation annot = new AxisLabelAnnotation();
+       annot.axisLineXStart = axisLineXStart;
+       annot.axisLineYStart = axisLineYStart;
+       annot.font = new Font(font.getName(), font.getStyle(), font.getSize());
+        return annot;
 
     }
 

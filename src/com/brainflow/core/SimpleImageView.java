@@ -43,7 +43,7 @@ public class SimpleImageView extends ImageView {
 
     private ImagePlotPaintScheduler scheduler;
 
-    private CrosshairAnnotation crosshairAnnotation;
+
 
     public SimpleImageView() {
     }
@@ -80,7 +80,7 @@ public class SimpleImageView extends ImageView {
 
         imagePlot = new BasicImagePlot(displayAnatomy, xrange, yrange, plotRenderer);
 
-        crosshairAnnotation = new CrosshairAnnotation(getImageDisplayModel().getDisplayParameters().getCrosshair());
+        CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(getImageDisplayModel().getDisplayParameters().getCrosshair());
 
 
         addAnnotation(new AxisLabelAnnotation());
@@ -126,7 +126,11 @@ public class SimpleImageView extends ImageView {
 
     public Point getCrosshairLocation(IImagePlot plot) {
         if (ipane.getImagePlot() == plot) {
-            return SwingUtilities.convertPoint(ipane, crosshairAnnotation.getLocation(), this);
+            CrosshairAnnotation annotation = (CrosshairAnnotation)getAnnotation(CrosshairAnnotation.class);
+
+            assert annotation != null;
+
+            return SwingUtilities.convertPoint(ipane, annotation.getLocation(), this);
         } else {
             return null;
             //throw new IllegalArgumentException("This View does not contain plot supplied as argument.");

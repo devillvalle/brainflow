@@ -2,11 +2,13 @@ package com.brainflow.core;
 
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.core.annotations.IAnnotation;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,9 +20,9 @@ import java.util.List;
 public class SimpleOrthogonalImageView extends ImageView {
 
 
-    private SimpleImageView axialView;
-    private SimpleImageView coronalView;
-    private SimpleImageView sagittalView;
+    private ImageView axialView;
+    private ImageView coronalView;
+    private ImageView sagittalView;
 
     private List<IImagePlot> plotList;
 
@@ -45,11 +47,9 @@ public class SimpleOrthogonalImageView extends ImageView {
             Point p = coronalView.getCrosshairLocation(plot);
             return SwingUtilities.convertPoint(coronalView, p, this);
         } else if (idx == 2) {
-
             Point p = sagittalView.getCrosshairLocation(plot);
             Point ret = SwingUtilities.convertPoint(sagittalView, p, this);
-            System.out.println("sag loc: " + p);
-            System.out.println("view loc: " + ret);
+
             return ret;
 
         } else {
@@ -71,8 +71,30 @@ public class SimpleOrthogonalImageView extends ImageView {
         } else {
             return null;
         }
+    }
 
 
+    public void addAnnotation(IAnnotation annotation) {
+        axialView.addAnnotation(annotation);
+    }
+
+    public void setAnnotation(IAnnotation annotation) {
+        axialView.setAnnotation(annotation);
+    }
+
+    public void removeAnnotation(IAnnotation annotation) {
+        axialView.removeAnnotation(annotation);
+    }
+    public IAnnotation getAnnotation(Class clazz) {
+        return axialView.getAnnotation(clazz);
+    }
+
+    public Iterator<IAnnotation> annotationIterator() {
+        return axialView.annotationIterator();
+    }
+
+    protected List<IAnnotation> getAnnotations() {
+        return axialView.getAnnotations();
     }
 
     private ImageView whichView(Point p) {
@@ -115,11 +137,11 @@ public class SimpleOrthogonalImageView extends ImageView {
     private void initView() {
         BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
 
-        axialView = new SimpleImageView(getImageDisplayModel(), AnatomicalVolume.getCanonicalAxial());
+        axialView = ImageViewFactory.createAxialView(getImageDisplayModel());
         axialView.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        coronalView = new SimpleImageView(getImageDisplayModel(), AnatomicalVolume.getCanonicalCoronal());
+        coronalView = ImageViewFactory.createCoronalView(axialView);
         coronalView.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        sagittalView = new SimpleImageView(getImageDisplayModel(), AnatomicalVolume.getCanonicalSagittal());
+        sagittalView = ImageViewFactory.createSagittalView(axialView);
         sagittalView.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         setLayout(layout);
         add(axialView);

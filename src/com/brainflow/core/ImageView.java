@@ -29,6 +29,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.logging.Logger;
 
 /**
@@ -60,6 +61,8 @@ public abstract class ImageView extends JComponent implements ListDataListener {
 
     private final List<IAnnotation> annotationList = new ArrayList<IAnnotation>();
 
+    private PropertyChangeListener annotationListener;
+
 
     public ImageView() {
 
@@ -89,23 +92,35 @@ public abstract class ImageView extends JComponent implements ListDataListener {
     }
 
     public void addAnnotation(IAnnotation annotation) {
+        annotation.addPropertyChangeListener(annotationListener);
         annotationList.add(annotation);
-        annotation.addPropertyChangeListener(new PropertyChangeListener() {
+        repaint();
+    }
 
-            public void propertyChange(PropertyChangeEvent evt) {
-                log.info("Annotation changed event, repainting");
-                log.info("Property is " + evt.getPropertyName());
-                log.info("New Value is " + evt.getNewValue());
-                IAnnotation annotation = (IAnnotation) evt.getSource();
-                scheduleRepaint(new DisplayChangeEvent(
-                        new DisplayParameter<IAnnotation>(annotation),
-                        DisplayAction.ANNOTATION_CHANGED));
-
+    public void setAnnotation(IAnnotation annotation) {
+        ListIterator<IAnnotation> iter = annotationList.listIterator();
+        int index = -1;
+        while (iter.hasNext()) {
+            IAnnotation a = iter.next();
+            if (a.getClass().equals(annotation.getClass())) {
+                a.removePropertyChangeListener(annotationListener);
+                index = iter.previousIndex();
             }
-        });
+        }
+
+        if (index == -1) {
+            addAnnotation(annotation);
+        } else {
+            annotation.addPropertyChangeListener(annotationListener);
+            annotationList.set(index, annotation);
+            repaint();
+        }
+
+
     }
 
     public void removeAnnotation(IAnnotation annotation) {
+        annotation.removePropertyChangeListener(annotationListener);
         annotationList.remove(annotation);
         repaint();
     }
@@ -146,6 +161,20 @@ public abstract class ImageView extends JComponent implements ListDataListener {
                 EventBus.publish(new ImageViewCrosshairEvent(ImageView.this));
             }
         });
+
+        annotationListener = new PropertyChangeListener() {
+
+            public void propertyChange(PropertyChangeEvent evt) {
+                log.info("Annotation changed event, repainting");
+                log.info("Property is " + evt.getPropertyName());
+                log.info("New Value is " + evt.getNewValue());
+                IAnnotation annotation = (IAnnotation) evt.getSource();
+                scheduleRepaint(new DisplayChangeEvent(
+                        new DisplayParameter<IAnnotation>(annotation),
+                        DisplayAction.ANNOTATION_CHANGED));
+
+            }
+        };
 
     }
 

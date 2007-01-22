@@ -4,11 +4,14 @@ import com.brainflow.application.presentation.CrosshairPresenter;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.annotations.CrosshairAnnotation;
 import com.brainflow.core.annotations.IAnnotation;
+import com.jgoodies.forms.builder.ButtonBarBuilder;
+import com.jgoodies.forms.factories.ButtonBarFactory;
 import org.bushe.swing.action.BasicAction;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.logging.Logger;
 
 /**
@@ -22,26 +25,94 @@ public class CrosshairDialogAction extends BasicAction {
 
     private static final Logger log = Logger.getLogger(CrosshairDialogAction.class.getName());
 
+    private JDialog dialog;
+
+
+
+
+
+    public CrosshairDialogAction() {
+        super();
+
+
+
+    }
+
     protected void execute(ActionEvent actionEvent) throws Exception {
 
-        ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
+        final ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
 
 
         if (view != null) {
-            IAnnotation icross = view.getAnnotation(CrosshairAnnotation.class);
+            final CrosshairAnnotation icross = (CrosshairAnnotation)view.getAnnotation(CrosshairAnnotation.class);
+            final CrosshairAnnotation safeCopy = (CrosshairAnnotation)icross.safeCopy();
+            
             if (icross != null) {
                 log.finest("retrieved crosshair annotation for editing");
+
                 CrosshairPresenter presenter = new CrosshairPresenter((CrosshairAnnotation) icross);
                 Container c = JOptionPane.getFrameForComponent(view);
-                JDialog dialog = new JDialog(JOptionPane.getFrameForComponent(view));
+
+
+                final JButton okButton = new JButton("OK");
+                okButton.addActionListener(new ActionListener() {
+
+                    public void actionPerformed(ActionEvent e) {
+
+                        dialog.setVisible(false);
+                        dialog.dispose();
+                    }
+                });
+
+                final JButton cancelButton = new JButton("Cancel");
+                cancelButton.addActionListener(new ActionListener() {
+
+                    public void actionPerformed(ActionEvent e) {
+                        //view.setAnnotation(safeCopy);
+                        icross.setLinePaint(safeCopy.getLinePaint());
+                        icross.setLineWidth(safeCopy.getLineWidth());
+                        icross.setGap(safeCopy.getGap());
+                        icross.setVisible(safeCopy.isVisible());
+                        
+
+                        dialog.setVisible(false);
+                        dialog.dispose();
+                    }
+                });
+
+
+
+
+                final JButton applyButton = new JButton("Apply");
+
+
+
+
+                dialog = new JDialog(JOptionPane.getFrameForComponent(view));
+                dialog.setLayout(new BorderLayout());
+
+
                 Point p = c.getLocation();
 
-                dialog.add(presenter.getComponent());
+
+                JPanel mainPanel = new JPanel();
+                mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 8, 15, 8));
+                mainPanel.setLayout(new BorderLayout());
+                JPanel buttonPanel = ButtonBarFactory.buildRightAlignedBar(okButton, cancelButton, applyButton);
+
+                mainPanel.add(presenter.getComponent(), BorderLayout.CENTER);
+                mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+                dialog.add(mainPanel, BorderLayout.CENTER);
                 dialog.pack();
+                dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
                 dialog.setLocation((int) (p.getX() + c.getWidth() / 2f), (int) (p.getY() + c.getHeight() / 2f));
                 dialog.setVisible(true);
             }
         }
+
+
+
 
     }
 }

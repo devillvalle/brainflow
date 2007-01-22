@@ -5,6 +5,7 @@ import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.utils.FilledSelectableBorder;
 import com.brainflow.utils.ITitledBorder;
 import com.brainflow.utils.StringGenerator;
+import com.brainflow.core.annotations.CrosshairAnnotation;
 
 /**
  * Created by IntelliJ IDEA.
@@ -62,6 +63,39 @@ public class ImageViewFactory {
 
         return view;
     }
+
+     public static ImageView createSagittalView(ImageView view) {
+         ImageView newView = createSagittalView(view.getImageDisplayModel());
+         CrosshairAnnotation annotation = (CrosshairAnnotation)view.getAnnotation(CrosshairAnnotation.class);
+         if (annotation != null) {
+             newView.setAnnotation(annotation);
+         }
+
+         return newView;
+
+     }
+
+    public static ImageView createCoronalView(ImageView view) {
+         ImageView newView = createCoronalView(view.getImageDisplayModel());
+         CrosshairAnnotation annotation = (CrosshairAnnotation)view.getAnnotation(CrosshairAnnotation.class);
+         if (annotation != null) {
+             newView.setAnnotation(annotation);
+         }
+
+         return newView;
+
+     }
+
+    public static ImageView createAxialView(ImageView view) {
+         ImageView newView = createAxialView(view.getImageDisplayModel());
+         CrosshairAnnotation annotation = (CrosshairAnnotation)view.getAnnotation(CrosshairAnnotation.class);
+         if (annotation != null) {
+             newView.setAnnotation(annotation);
+         }
+
+         return newView;
+
+     }
 
     public static ImageView createSagittalView(IImageDisplayModel displayModel) {
         SimpleImageView view = new SimpleImageView(displayModel, AnatomicalVolume.getCanonicalSagittal());

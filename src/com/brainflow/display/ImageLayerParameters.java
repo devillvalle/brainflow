@@ -53,7 +53,6 @@ public class ImageLayerParameters implements Serializable {
 
 
      public ImageLayerParameters(ImageLayer _layer) {
-        // should have reference to ImageLayer
         layer = _layer;
         IColorMap imap = new LinearColorMap(0, 255, ColorTable.GRAYSCALE);
         init(imap);
@@ -61,7 +60,6 @@ public class ImageLayerParameters implements Serializable {
     }
 
     public ImageLayerParameters(ImageLayer _layer, IndexColorModel _icm, Range _dataRange) {
-        // should have reference to ImageLayer
         layer = _layer;
         IColorMap imap = new LinearColorMap(_dataRange.getMin(), _dataRange.getMax(), _icm);
         init(imap);
@@ -86,7 +84,7 @@ public class ImageLayerParameters implements Serializable {
 
         colorMap = new DisplayParameter<IColorMap>(map);
         resampleInterpolation = new DisplayParameter<InterpolationProperty>(new InterpolationProperty(InterpolationHint.NEAREST_NEIGHBOR));
-        screenInterpolation = new DisplayParameter<InterpolationProperty>(new InterpolationProperty(InterpolationHint.CUBIC));
+        screenInterpolation = new DisplayParameter<InterpolationProperty>(new InterpolationProperty(InterpolationHint.NEAREST_NEIGHBOR));
         visible = new DisplayParameter<VisibleProperty>(new VisibleProperty(layer, true));
         alphaMask = new DisplayParameter<AlphaMaskProperty>(new AlphaMaskProperty());
         imageOpList = new DisplayParameter<ImageOpListProperty>(new ImageOpListProperty());

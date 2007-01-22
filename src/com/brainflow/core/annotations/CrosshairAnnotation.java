@@ -8,6 +8,7 @@ import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.Point2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
@@ -23,6 +24,7 @@ public class CrosshairAnnotation implements IAnnotation {
     public static final String LINE_PAINT_PROPERTY = "linePaint";
     public static final String LINE_LENGTH_PROPERTY = "lineLength";
     public static final String LINE_WIDTH_PROPERTY = "lineWidth";
+    public static final String GAP_PROPERTY = "gap";
 
     public static final String VISIBLE_PROPERTY = "visible";
 
@@ -30,14 +32,14 @@ public class CrosshairAnnotation implements IAnnotation {
     public static final Paint DEFAULT_LINE_PAINT = Color.GREEN;
     public static final Float DEFAULT_LINE_LENGTH = 1.0f;
     public static final Float DEFAULT_LINE_WIDTH = 1.0f;
-    public static final Float DEFAULT_GAP = 0.0f;
+    public static final Integer DEFAULT_GAP = 0;
 
     private Paint linePaint = DEFAULT_LINE_PAINT;
     private double lineLength = DEFAULT_LINE_LENGTH;
     private double lineWidth = DEFAULT_LINE_WIDTH;
 
-    private Float gap = DEFAULT_GAP;
-
+    private Integer gap = DEFAULT_GAP;
+   
     private Stroke stroke;
 
     private Point location;
@@ -46,7 +48,7 @@ public class CrosshairAnnotation implements IAnnotation {
 
     private DisplayParameter<Crosshair> crosshair;
 
-    PropertyChangeSupport support = new PropertyChangeSupport(this);
+    private PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     public CrosshairAnnotation(DisplayParameter<Crosshair> _crosshair) {
         crosshair = _crosshair;
@@ -66,6 +68,20 @@ public class CrosshairAnnotation implements IAnnotation {
         return location;
     }
 
+    public IAnnotation safeCopy() {
+        CrosshairAnnotation annot = new CrosshairAnnotation(crosshair);
+        annot.visible = visible;
+        annot.location = new Point(location);
+        annot.linePaint = linePaint;
+        annot.stroke = stroke;
+        annot.lineLength = lineLength;
+        annot.lineWidth = lineWidth;
+        annot.gap = gap;
+
+        return annot;
+
+    }
+
     public void draw(Graphics2D g2d, Rectangle2D plotArea, IImagePlot plot) {
         if (!isVisible()) return;
 
@@ -83,18 +99,29 @@ public class CrosshairAnnotation implements IAnnotation {
 
         location = new Point((int) Math.round(screenX), (int) Math.round(screenY));
 
-        double width = Math.max(lineLength * plotArea.getWidth(), lineLength * plotArea.getHeight());
-
-        Line2D lineX = new Line2D.Double(plotArea.getMinX(), screenY, plotArea.getMaxX(), screenY);
-        Line2D lineY = new Line2D.Double(screenX, plotArea.getMinY(), screenX, plotArea.getMaxY());
-
-        //Line2D lineX = new Line2D.Double(screenX - (width / 2.0), screenY, screenX + (width / 2.0), screenY);
-        //Line2D lineY = new Line2D.Double(screenX, screenY - (width / 2.0), screenX, screenY + (width / 2.0));
-
+        //double width = Math.max(lineLength * plotArea.getWidth(), lineLength * plotArea.getHeight());
         g2d.setPaint(linePaint);
         g2d.setStroke(stroke);
-        g2d.draw(lineX);
-        g2d.draw(lineY);
+
+        if (gap == 0) {
+            Line2D lineX = new Line2D.Double(plotArea.getMinX(), screenY, plotArea.getMaxX(), screenY);
+            Line2D lineY = new Line2D.Double(screenX, plotArea.getMinY(), screenX, plotArea.getMaxY());
+            g2d.draw(lineX);
+            g2d.draw(lineY);
+        } else {
+
+
+            Line2D lineXLeft = new Line2D.Double(plotArea.getMinX(), screenY, screenX-gap, screenY);
+            Line2D lineXRight = new Line2D.Double(screenX+gap, screenY, plotArea.getMaxX(), screenY);
+            Line2D lineYTop = new Line2D.Double(screenX, plotArea.getMinY(), screenX, screenY-gap);
+            Line2D lineYBottom = new Line2D.Double(screenX, screenY+gap, screenX, plotArea.getMaxY());
+
+            g2d.draw(lineXLeft);
+            g2d.draw(lineXRight);
+            g2d.draw(lineYTop);
+            g2d.draw(lineYBottom);
+
+        }
 
     }
 
@@ -121,12 +148,14 @@ public class CrosshairAnnotation implements IAnnotation {
         support.firePropertyChange(CrosshairAnnotation.LINE_LENGTH_PROPERTY, old, getLineLength());
     }
 
-    public Float getGap() {
+    public int getGap() {
         return gap;
     }
 
-    public void setGap(Float gap) {
+    public void setGap(int gap) {
+        double old = getGap();
         this.gap = gap;
+        support.firePropertyChange(CrosshairAnnotation.GAP_PROPERTY, old, getGap());
     }
 
     public Stroke getStroke() {

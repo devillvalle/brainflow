@@ -18,6 +18,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
 
+import de.javasoft.plaf.synthetica.SyntheticaLookAndFeel;
+import de.javasoft.plaf.synthetica.SyntheticaStandardLookAndFeel;
+
 public class ShowUIDefaults extends JFrame implements ActionListener {
     JFrame frame;
     JTabbedPane tabbedPane;
@@ -82,7 +85,7 @@ public class ShowUIDefaults extends JFrame implements ActionListener {
             Map componentMap = getComponentMap(components, key.toString());
 
             if (componentMap != null)
-                componentMap.put(key, value);
+                componentMap.put(key.toString(), value);
         }
 
         JTabbedPane pane = new JTabbedPane(SwingConstants.BOTTOM);
@@ -212,9 +215,11 @@ public class ShowUIDefaults extends JFrame implements ActionListener {
 
     public static void main(String[] args) {
         com.jidesoft.utils.Lm.verifyLicense("UIN", "Brainflow", "S5XiLlHH0VReaWDo84sDmzPxpMJvjP3");
+
         //javax.swing.LookAndFeel lipstikLnF = new com.lipstikLF.LipstikLookAndFeel();
         try {
-            //UIManager.setLookAndFeel(lipstikLnF);
+            SyntheticaLookAndFeel lf = new SyntheticaStandardLookAndFeel();
+            UIManager.setLookAndFeel(lf);
             LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.

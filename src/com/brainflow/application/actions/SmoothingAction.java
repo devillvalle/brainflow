@@ -23,7 +23,6 @@ public class SmoothingAction extends BasicAction {
     protected void execute(ActionEvent actionEvent) throws Exception {
 
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
-        System.out.println("Smoothing action called");
 
         if (view != null) {
             int idx = view.getSelectedIndex();

@@ -18,12 +18,12 @@ import java.util.Map;
  */
 
 
-public class BrainFlowContext2 {
+public class BrainFlowContext {
 
     private Map context = new HashMap();
 
 
-    public BrainFlowContext2(Map context) {
+    public BrainFlowContext(Map context) {
         this.context = context;
         init();
     }

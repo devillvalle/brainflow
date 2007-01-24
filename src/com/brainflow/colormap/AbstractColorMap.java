@@ -57,8 +57,6 @@ public abstract class AbstractColorMap implements IColorMap {
 
     public abstract Color getColor(double value);
 
-    public abstract void setMapSize(int size);
-
 
     public double getMaximumValue() {
         return maximumValue;
@@ -131,12 +129,8 @@ public abstract class AbstractColorMap implements IColorMap {
 
     public abstract ListIterator<ColorInterval> iterator();
 
-
     public abstract AbstractColorBar createColorBar();
 
-    public boolean isScaleable() {
-        return false;
-    }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         changeSupport.addPropertyChangeListener(listener);

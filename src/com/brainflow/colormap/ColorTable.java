@@ -52,14 +52,19 @@ public class ColorTable {
         return table;
     }
 
-    public static IndexColorModel concatenate(IntervalColorModel[] icm) {
-        IndexColorModel[] tmp = new IndexColorModel[icm.length];
-        for (int i = 0; i < tmp.length; i++) {
-            tmp[i] = icm[i].getWrappedModel();
+    public static byte[][] extractTable(LinearColorMap lcm) {
+        byte[][] table = new byte[4][lcm.getMapSize()];
+
+        for (int i = 0; i < lcm.getMapSize(); i++) {
+            table[0][i] = (byte) lcm.getInterval(i).getRed();
+            table[1][i] = (byte) lcm.getInterval(i).getGreen();
+            table[2][i] = (byte) lcm.getInterval(i).getBlue();
+            table[3][i] = (byte) lcm.getInterval(i).getAlpha();
         }
 
-        return ColorTable.concatenate(tmp);
+        return table;
     }
+
 
     public static ImageIcon createImageIcon(IndexColorModel icm, int swatchWidth, int swatchHeight) {
         LinearColorMap cmap = new LinearColorMap(0, 255, icm);

@@ -2,14 +2,13 @@ package com.brainflow.display;
 
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
-import com.brainflow.colormap.IntervalColorModel;
+import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.core.BrainflowException;
 import com.brainflow.image.Histogram;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.jfreechart.AxisPointer;
 import com.brainflow.jfreechart.HistogramDataset;
 import com.brainflow.utils.NumberUtils;
-import com.brainflow.utils.Range;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -54,7 +53,7 @@ public class ColoredHistogram extends JPanel implements MouseListener, MouseMoti
     NumberAxis hAxis;
     NumberAxis yAxis;
 
-    IntervalColorModel colorModel;
+    IColorMap colorModel;
 
     double xmedian;
 
@@ -127,7 +126,7 @@ public class ColoredHistogram extends JPanel implements MouseListener, MouseMoti
                 System.out.println("numbins: " + numBins);
                 System.out.println("coloridx: " + colorIdx);
 
-                Color rgb = colorModel.getIndexedColor(colorIdx);
+                Color rgb = colorModel.getInterval(colorIdx).getColor();
                 super.setSeriesPaint(series, rgb);
                 super.drawItem(g2, state, dataArea, info, plot, domainAxis, rangeAxis, data, series, item, crosshairState, pass);
 
@@ -161,10 +160,10 @@ public class ColoredHistogram extends JPanel implements MouseListener, MouseMoti
         chartPanel.setPreferredSize(d);
     }
 
-    public void setColorModel(IntervalColorModel icm) {
-        colorModel = icm;
+    //public void setColorModel(IColorMap  icm) {
+    //    colorModel = icm;
 
-    }
+    //}
 
 
     public void setHistogram(Histogram histogram) {
@@ -258,12 +257,13 @@ public class ColoredHistogram extends JPanel implements MouseListener, MouseMoti
     }
 
     public void setIndexColorModel(IndexColorModel icm) {
-        colorModel = new IntervalColorModel(colorModel.getDisplayRange(), icm, "color map");
+        colorModel = new LinearColorMap(colorModel.getMaximumValue(), colorModel.getMaximumValue(), icm);
         chartPanel.repaint();
     }
 
     public void setColorModel(IColorMap iColorMap) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        colorModel = iColorMap;
+        chartPanel.repaint();
     }
 
 
@@ -274,10 +274,10 @@ public class ColoredHistogram extends JPanel implements MouseListener, MouseMoti
 
     public static void main(String[] args) {
         try {
-            IImageData data = com.brainflow.image.io.AnalyzeIO.readAnalyzeImage("C:/code/icbm/icbm452_atlas_probability_gray.img");
+            IImageData data = com.brainflow.image.io.AnalyzeIO.readAnalyzeImage("C:/DTI/slopes/bAge.Norm");
             Histogram hist = new Histogram(data, 100);
             ColoredHistogram chist = new ColoredHistogram(hist);
-            chist.setColorModel(new com.brainflow.colormap.IntervalColorModel(new Range(0, 255), ColorTable.SPECTRUM, "color map"));
+            chist.setColorModel(new LinearColorMap(0, 255, ColorTable.SPECTRUM));
             JFrame frame = new JFrame();
             frame.getContentPane().add(chist);
             frame.pack();

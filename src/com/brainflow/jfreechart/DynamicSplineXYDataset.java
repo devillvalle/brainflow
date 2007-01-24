@@ -43,11 +43,9 @@ public class DynamicSplineXYDataset extends DynamicXYDataset {
 
         Pair p = (Pair) splinePairs.get(series);
         if (seriesType == DOMAIN) {
-            DoubleArrayList dlist = (DoubleArrayList) p.left();
-            return dlist;
+            return (DoubleArrayList) p.left();
         } else if (seriesType == RANGE) {
-            DoubleArrayList dlist = (DoubleArrayList) p.right();
-            return dlist;
+            return (DoubleArrayList) p.right();
         }
 
         return null;
@@ -57,7 +55,7 @@ public class DynamicSplineXYDataset extends DynamicXYDataset {
         double distance = Float.MAX_VALUE;
 
         int series = 0;
-        double minx = 0, miny = 0;
+
         for (int i = 0; i < splinePairs.size(); i++) {
             Pair p = (Pair) splinePairs.get(i);
             DoubleArrayList xlist = (DoubleArrayList) p.left();
@@ -67,8 +65,6 @@ public class DynamicSplineXYDataset extends DynamicXYDataset {
                 if (d < distance) {
                     series = i;
                     distance = d;
-                    minx = xlist.get(j);
-                    miny = ylist.get(j);
 
                 }
             }
@@ -180,6 +176,7 @@ public class DynamicSplineXYDataset extends DynamicXYDataset {
 
         BSpline bspline = new CatmullRomSpline(xlist, ylist);
         DoubleArrayList[] splines = bspline.evaluateSpline(numSamples);
+
         if (series == splinePairs.size())
             splinePairs.add(new Pair(splines[0], splines[1]));
         else

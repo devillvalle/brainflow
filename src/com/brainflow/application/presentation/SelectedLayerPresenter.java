@@ -35,6 +35,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
     private VisibilitySelection visibilitySelection;
 
     private JPanel form;
+    private JScrollPane formPane;
 
     private ComboBoxAdapter adapter;
 
@@ -45,7 +46,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
     private void buildGUI() {
         form = new JPanel();
-        layout = new FormLayout("6dlu, 70dlu:g, 1dlu, 12dlu", "8dlu, p, 3dlu, 1dlu, max(p;35dlu), 15dlu");
+        layout = new FormLayout("6dlu, 70dlu:g, 1dlu, 12dlu", "8dlu, p, 3dlu, 1dlu, max(p;55dlu), 5dlu");
         form.setLayout(layout);
 
         CellConstraints cc = new CellConstraints();
@@ -60,9 +61,11 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
             visibilitySelection = new VisibilitySelection(getSelectedView());
         }
 
-        //JScrollPane jsp = new JScrollPane();
-        //jsp.add(layerSelector);
-        form.add(layerSelector, cc.xywh(2, 4, 2, 2));
+
+        formPane = new JScrollPane(layerSelector);
+        //formPane.setPreferredSize(form.getPreferredSize());
+
+        form.add(formPane, cc.xywh(2, 4, 2, 2));
 
         layout.addGroupedColumn(2);
 

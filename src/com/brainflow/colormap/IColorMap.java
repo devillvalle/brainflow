@@ -23,7 +23,6 @@ public interface IColorMap {
 
     public Color getColor(double value);
 
-    public void setMapSize(int size);
 
     public double getMaximumValue();
 
@@ -37,7 +36,6 @@ public interface IColorMap {
 
     public AbstractColorBar createColorBar();
 
-    public boolean isScaleable();
 
     public void addPropertyChangeListener(PropertyChangeListener listener);
 

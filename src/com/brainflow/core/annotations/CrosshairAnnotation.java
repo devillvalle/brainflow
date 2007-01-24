@@ -8,7 +8,6 @@ import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.Point2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
@@ -39,7 +38,7 @@ public class CrosshairAnnotation implements IAnnotation {
     private double lineWidth = DEFAULT_LINE_WIDTH;
 
     private Integer gap = DEFAULT_GAP;
-   
+
     private Stroke stroke;
 
     private Point location;
@@ -64,9 +63,9 @@ public class CrosshairAnnotation implements IAnnotation {
 
     }
 
-    public Point getLocation() {
+    /*public Point getLocation() {
         return location;
-    }
+    }*/
 
     public IAnnotation safeCopy() {
         CrosshairAnnotation annot = new CrosshairAnnotation(crosshair);
@@ -111,10 +110,10 @@ public class CrosshairAnnotation implements IAnnotation {
         } else {
 
 
-            Line2D lineXLeft = new Line2D.Double(plotArea.getMinX(), screenY, screenX-gap, screenY);
-            Line2D lineXRight = new Line2D.Double(screenX+gap, screenY, plotArea.getMaxX(), screenY);
-            Line2D lineYTop = new Line2D.Double(screenX, plotArea.getMinY(), screenX, screenY-gap);
-            Line2D lineYBottom = new Line2D.Double(screenX, screenY+gap, screenX, plotArea.getMaxY());
+            Line2D lineXLeft = new Line2D.Double(plotArea.getMinX(), screenY, screenX - gap, screenY);
+            Line2D lineXRight = new Line2D.Double(screenX + gap, screenY, plotArea.getMaxX(), screenY);
+            Line2D lineYTop = new Line2D.Double(screenX, plotArea.getMinY(), screenX, screenY - gap);
+            Line2D lineYBottom = new Line2D.Double(screenX, screenY + gap, screenX, plotArea.getMaxY());
 
             g2d.draw(lineXLeft);
             g2d.draw(lineXRight);

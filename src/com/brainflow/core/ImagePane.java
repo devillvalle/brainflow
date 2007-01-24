@@ -106,6 +106,9 @@ public class ImagePane extends JComponent {
 
     }
 
+    public Rectangle2D getPlotArea() {
+        return plotArea;
+    }
 
     public IImagePlot getImagePlot() {
         return plot;

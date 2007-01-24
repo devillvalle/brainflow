@@ -35,8 +35,8 @@
     <taskdef name="pack" classname="org.sadun.util.ant.Pack"/>
 
     <target depends="init,compile" name="pack">
-        <pack classes="com.brainflow.application.BrainFrame2" targetJar="c:/javacode/brainflow.jar"
-              manifestMainClass="com.brainflow.application.BrainFrame2" excludePkg="java,javax,sun,com.sun, com.incors">
+        <pack classes="com.brainflow.application.BrainFrame" targetJar="c:/javacode/brainflow.jar"
+              manifestMainClass="com.brainflow.application.BrainFrame" excludePkg="java,javax,sun,com.sun, com.incors">
             <classpath>
                 <pathelement path="."/>
                 <pathelement path="c:/javacode/oldcrap"/>

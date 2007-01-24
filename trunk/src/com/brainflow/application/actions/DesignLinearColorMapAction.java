@@ -34,7 +34,7 @@ public class DesignLinearColorMapAction extends BasicAction {
 
             if (colorMap instanceof LinearColorMap) {
                 JDialog dialog = new JDialog(JOptionPane.getFrameForComponent(parent));
-                ColorBandChartPresenter presenter = new ColorBandChartPresenter((LinearColorMap) colorMap);
+                ColorBandChartPresenter presenter = new ColorBandChartPresenter(displayModel.getLayerParameters(idx).getColorMap());
                 dialog.add(presenter.getComponent());
                 dialog.pack();
 

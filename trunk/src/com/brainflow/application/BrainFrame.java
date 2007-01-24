@@ -1,10 +1,8 @@
-
-
-    /*
- * BrainFrame2.java
- *
- * Created on April 23, 2003, 2:14 PM
- */
+/*
+* BrainFrame.java
+*
+* Created on April 23, 2003, 2:14 PM
+*/
 
 package com.brainflow.application;
 
@@ -20,16 +18,18 @@ import java.util.logging.Logger;
  */
 
 
-public class BrainFrame2 extends DefaultDockableHolder {
-
-    private Logger log = Logger.getLogger(getClass().getName());
+public class BrainFrame extends DefaultDockableHolder {
 
 
-    public BrainFrame2() {
+    private static Logger log = Logger.getLogger(BrainFrame.class.getName());
+
+
+    public BrainFrame() {
 
     }
 
     private void initLookAndFeel() {
+
 
     }
 
@@ -38,7 +38,7 @@ public class BrainFrame2 extends DefaultDockableHolder {
         //com.incors.plaf.alloy.AlloyLookAndFeel.setProperty("alloy.licenseCode", "v#ej_technologies#uwbjzx#e6pck8");
         //com.incors.plaf.alloy.AlloyLookAndFeel.setProperty("alloy.isLookAndFeelFrameDecoration", "true");
         //com.incors.plaf.alloy.AlloyLookAndFeel alloylookandfeel = new com.incors.plaf.alloy.AlloyLookAndFeel();
-        com.jidesoft.utils.Lm.verifyLicense("UIN", "BrainFrame2", "7.YTcWgxxjx1xjSnUqG:U1ldgGetfRn1");
+        com.jidesoft.utils.Lm.verifyLicense("UIN", "BrainFrame", "7.YTcWgxxjx1xjSnUqG:U1ldgGetfRn1");
 
 
         try {
@@ -50,7 +50,7 @@ public class BrainFrame2 extends DefaultDockableHolder {
         }
 
 
-        BrainFrame2 bf = new BrainFrame2();
+        BrainFrame bf = new BrainFrame();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         bf.setSize((int) screenSize.getWidth(), (int) screenSize.getHeight() - 50);
         bf.setVisible(true);

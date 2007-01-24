@@ -19,15 +19,15 @@ import java.util.List;
  * Time: 12:47:22 PM
  * To change this template use File | Settings | File Templates.
  */
+
+
 public class LinearColorMap extends AbstractColorMap {
 
-    private IndexColorModel sourceModel;
-
-    private IndexColorModel derivedModel;
 
     private double bucketSize;
 
-    private ColorInterval[] clrs;
+
+    private ColorInterval[] colors;
 
 
     public LinearColorMap() {
@@ -37,16 +37,15 @@ public class LinearColorMap extends AbstractColorMap {
     public LinearColorMap(double min, double max, IndexColorModel icm) {
         assert max > min : "max must exceed min in LinearColorMap";
 
-        sourceModel = icm;
-        derivedModel = sourceModel;
+
         minimumValue = min;
         maximumValue = max;
         highClip = max;
         lowClip = min;
 
 
-        int mapSize = sourceModel.getMapSize();
-        fillIntervals(mapSize, sourceModel);
+        int mapSize = icm.getMapSize();
+        fillIntervals(mapSize, icm);
 
         setUpperAlphaThreshold(0);
         setLowerAlphaThreshold(0);
@@ -55,28 +54,34 @@ public class LinearColorMap extends AbstractColorMap {
     }
 
 
-    public void setIndexColorModel(IndexColorModel icm) {
-        IndexColorModel oldModel = derivedModel;
+    public LinearColorMap(double min, double max, LinearColorMap lcm) {
+        assert max > min : "max must exceed min in LinearColorMap";
 
-        sourceModel = icm;
-        derivedModel = icm;
-        updateColors();
 
-        changeSupport.firePropertyChange(LinearColorMap.COLORS_CHANGED_PROPERTY, null, sourceModel);
+        minimumValue = min;
+        maximumValue = max;
+        highClip = max;
+        lowClip = min;
+
+
+        int mapSize = lcm.getMapSize();
+        fillIntervals(mapSize, lcm);
+
+        setUpperAlphaThreshold(0);
+        setLowerAlphaThreshold(0);
+
 
     }
 
+
     public LinearColorMap copy() {
-        LinearColorMap cmap = new LinearColorMap(this.getMinimumValue(), this.getMaximumValue(), sourceModel);
+        LinearColorMap cmap = new LinearColorMap(this.getMinimumValue(), this.getMaximumValue(), this);
         cmap.setUpperAlphaThreshold(upperAlphaThreshold);
         cmap.setLowerAlphaThreshold(lowerAlphaThreshold);
         cmap.setAlphaMultiplier(getAlphaMultiplier());
         cmap.setHighClip(getHighClip());
         cmap.setLowClip(getLowClip());
 
-        if (cmap.getMapSize() != getMapSize()) {
-            cmap.setMapSize(getMapSize());
-        }
 
         return cmap;
 
@@ -84,37 +89,71 @@ public class LinearColorMap extends AbstractColorMap {
 
     private void fillIntervals(int mapSize, IndexColorModel sourceModel) {
 
-        clrs = new ColorInterval[mapSize];
+        colors = new ColorInterval[mapSize];
         bucketSize = (getHighClip() - getLowClip()) / (mapSize - 1);
-        clrs = new ColorInterval[mapSize];
-        clrs[0] = new ColorInterval(new OpenClosedInterval(minimumValue, lowClip),
+        colors = new ColorInterval[mapSize];
+        colors[0] = new ColorInterval(new OpenClosedInterval(minimumValue, lowClip),
                 new Color(sourceModel.getRed(0), sourceModel.getGreen(0),
                         sourceModel.getBlue(0), sourceModel.getAlpha(0)));
-        clrs[mapSize - 1] = new ColorInterval(new OpenInterval(highClip, maximumValue),
+        colors[mapSize - 1] = new ColorInterval(new OpenInterval(highClip, maximumValue),
                 new Color(sourceModel.getRed(mapSize - 1), sourceModel.getGreen(mapSize - 1),
                         sourceModel.getBlue(mapSize - 1), sourceModel.getAlpha(mapSize - 1)));
 
         double curmin = getLowClip();
-        for (int i = 1; i < clrs.length - 2; i++) {
-            clrs[i] = new ColorInterval(new OpenClosedInterval(curmin, curmin + bucketSize),
+        for (int i = 1; i < colors.length - 2; i++) {
+            colors[i] = new ColorInterval(new OpenClosedInterval(curmin, curmin + bucketSize),
                     new Color(sourceModel.getRed(i), sourceModel.getGreen(i),
                             sourceModel.getBlue(i), sourceModel.getAlpha(i)));
             curmin = curmin + bucketSize;
         }
 
-        int penultimate = clrs.length - 2;
-        clrs[penultimate] = new ColorInterval(new OpenClosedInterval(curmin, highClip),
+        int penultimate = colors.length - 2;
+        colors[penultimate] = new ColorInterval(new OpenClosedInterval(curmin, highClip),
                 new Color(sourceModel.getRed(penultimate), sourceModel.getGreen(penultimate),
                         sourceModel.getBlue(penultimate), sourceModel.getAlpha(penultimate)));
 
+    }
+
+    private void fillIntervals(int mapSize, LinearColorMap lcm) {
+
+        colors = new ColorInterval[mapSize];
+        bucketSize = (getHighClip() - getLowClip()) / (mapSize - 1);
+        colors = new ColorInterval[mapSize];
+
+        Color c0 = lcm.getInterval(0).getColor();
+
+        colors[0] = new ColorInterval(new OpenClosedInterval(minimumValue, lowClip),
+                new Color(c0.getRed(), c0.getGreen(),
+                        c0.getBlue(), c0.getAlpha()));
+
+        Color cn = lcm.getInterval(mapSize - 1).getColor();
+
+        colors[mapSize - 1] = new ColorInterval(new OpenInterval(highClip, maximumValue),
+                new Color(cn.getRed(), cn.getGreen(),
+                        cn.getBlue(), cn.getAlpha()));
+
+        double curmin = getLowClip();
+        for (int i = 1; i < colors.length - 2; i++) {
+            Color ci = lcm.getInterval(i).getColor();
+            colors[i] = new ColorInterval(new OpenClosedInterval(curmin, curmin + bucketSize),
+                    new Color(ci.getRed(), ci.getGreen(),
+                            ci.getBlue(), ci.getAlpha()));
+            curmin = curmin + bucketSize;
+        }
+
+        int penultimate = colors.length - 2;
+        Color cp = lcm.getInterval(penultimate).getColor();
+        colors[penultimate] = new ColorInterval(new OpenClosedInterval(curmin, highClip),
+                new Color(cp.getRed(), cp.getGreen(),
+                        cp.getBlue(), cp.getAlpha()));
 
     }
 
 
     protected void updateColors() {
         int mapSize = getMapSize();
-        IndexColorModel icm = derivedModel;
-        fillIntervals(mapSize, icm);
+
+        //fillIntervals(mapSize, icm);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener x) {
@@ -125,38 +164,35 @@ public class LinearColorMap extends AbstractColorMap {
         changeSupport.removePropertyChangeListener(x);
     }
 
-    public IndexColorModel getAsIndexColorModel() {
-        return derivedModel;
-    }
 
     public void setBottomColor(Color c) {
-        clrs[0] = new ColorInterval(new OpenClosedInterval(clrs[0].getMinimum(), clrs[0].getMaximum()), c);
+        colors[0] = new ColorInterval(new OpenClosedInterval(colors[0].getMinimum(), colors[0].getMaximum()), c);
     }
 
 
     public int getMapSize() {
-        return clrs.length;
+        return colors.length;
     }
 
     public ColorInterval getInterval(int index) {
-        assert index >= 0 && index < clrs.length : "index must be between 0 and " + getMapSize();
-        return clrs[index];
+        assert index >= 0 && index < colors.length : "index must be between 0 and " + getMapSize();
+        return colors[index];
     }
 
 
     public Color getColor(double value) {
         double mapRange = highClip - lowClip;
-        int bin = (int) (((value - lowClip) / mapRange) * clrs.length);
+        int bin = (int) (((value - lowClip) / mapRange) * colors.length);
         if (bin < 0) bin = 0;
-        if (bin >= clrs.length) bin = clrs.length - 1;
+        if (bin >= colors.length) bin = colors.length - 1;
 
         int alpha = 0;
-        int blue = clrs[bin].getBlue();
-        int green = clrs[bin].getGreen();
-        int red = clrs[bin].getRed();
+        int blue = colors[bin].getBlue();
+        int green = colors[bin].getGreen();
+        int red = colors[bin].getRed();
 
         if (value <= lowerAlphaThreshold || value >= upperAlphaThreshold) {
-            alpha = (int) (clrs[bin].getAlpha() * alphaMultiplier);
+            alpha = (int) (colors[bin].getAlpha() * alphaMultiplier);
 
         }
 
@@ -164,14 +200,6 @@ public class LinearColorMap extends AbstractColorMap {
 
     }
 
-
-    public void setMapSize(int _mapSize) {
-        int oldValue = getMapSize();
-        derivedModel = ColorTable.resampleMap(sourceModel, _mapSize);
-        updateColors();
-
-        changeSupport.firePropertyChange(MAP_SIZE_PROPERTY, oldValue, getMapSize());
-    }
 
     public void setUpperAlphaThreshold(double _upperAlphaThreshold) {
         double oldValue = getUpperAlphaThreshold();
@@ -273,7 +301,7 @@ public class LinearColorMap extends AbstractColorMap {
 
 
     public ListIterator<ColorInterval> iterator() {
-        List<ColorInterval> clist = Arrays.asList(clrs);
+        List<ColorInterval> clist = Arrays.asList(colors);
         clist = Collections.unmodifiableList(clist);
         return clist.listIterator();
     }
@@ -305,14 +333,14 @@ public class LinearColorMap extends AbstractColorMap {
 
             alpha = 0;
             if (val < lowerAlphaThreshold || val > upperAlphaThreshold) {
-                alpha = (byte) (clrs[bin].getAlpha() * alphaMultiplier);
+                alpha = (byte) (colors[bin].getAlpha() * alphaMultiplier);
             }
 
 
             rgba[offset++] = alpha;
-            rgba[offset++] = (byte) clrs[bin].getBlue();
-            rgba[offset++] = (byte) clrs[bin].getGreen();
-            rgba[offset++] = (byte) clrs[bin].getRed();
+            rgba[offset++] = (byte) colors[bin].getBlue();
+            rgba[offset++] = (byte) colors[bin].getGreen();
+            rgba[offset++] = (byte) colors[bin].getRed();
         }
         return rgba;
 
@@ -332,7 +360,7 @@ public class LinearColorMap extends AbstractColorMap {
 
         double mapRange = highClip - lowClip;
         int offset = 0;
-        double mapSize = clrs.length;
+        double mapSize = colors.length;
         //really ABGR
 
         ImageIterator iter = data.iterator();
@@ -342,12 +370,12 @@ public class LinearColorMap extends AbstractColorMap {
             int bin = (int) (((val - lowClip) / mapRange) * mapSize);
             if (bin < 0) bin = 0;
             if (bin >= mapSize) bin = (int) (mapSize - 1);
-            rgba[offset++] = (byte) (clrs[bin].getAlpha() * alphaMultiplier);
+            rgba[offset++] = (byte) (colors[bin].getAlpha() * alphaMultiplier);
             //rgba[offset] = (byte)255;
-            //rgba[offset++] = (byte)clrs[bin].getRed();
-            rgba[offset++] = (byte) clrs[bin].getBlue();
-            rgba[offset++] = (byte) clrs[bin].getGreen();
-            rgba[offset++] = (byte) clrs[bin].getRed();
+            //rgba[offset++] = (byte)colors[bin].getRed();
+            rgba[offset++] = (byte) colors[bin].getBlue();
+            rgba[offset++] = (byte) colors[bin].getGreen();
+            rgba[offset++] = (byte) colors[bin].getRed();
         }
         return rgba;
     }
@@ -366,21 +394,21 @@ public class LinearColorMap extends AbstractColorMap {
             double val = iter.next();
 
             if (val <= lowClip) {
-                rgba[0][i] = (byte) clrs[0].getRed();
-                rgba[1][i] = (byte) clrs[0].getGreen();
-                rgba[2][i] = (byte) clrs[0].getBlue();
-                rgba[3][i] = (byte) (clrs[0].getAlpha() * alphaMultiplier);
+                rgba[0][i] = (byte) colors[0].getRed();
+                rgba[1][i] = (byte) colors[0].getGreen();
+                rgba[2][i] = (byte) colors[0].getBlue();
+                rgba[3][i] = (byte) (colors[0].getAlpha() * alphaMultiplier);
             } else if (val >= highClip) {
-                rgba[0][i] = (byte) clrs[lastidx].getRed();
-                rgba[1][i] = (byte) clrs[lastidx].getGreen();
-                rgba[2][i] = (byte) clrs[lastidx].getBlue();
-                rgba[3][i] = (byte) (clrs[lastidx].getAlpha() * alphaMultiplier);
+                rgba[0][i] = (byte) colors[lastidx].getRed();
+                rgba[1][i] = (byte) colors[lastidx].getGreen();
+                rgba[2][i] = (byte) colors[lastidx].getBlue();
+                rgba[3][i] = (byte) (colors[lastidx].getAlpha() * alphaMultiplier);
             } else {
-                int bin = (int) Math.round((val - lowClip) / clrs.length);
-                rgba[0][i] = (byte) clrs[bin].getRed();
-                rgba[1][i] = (byte) clrs[bin].getGreen();
-                rgba[2][i] = (byte) clrs[bin].getBlue();
-                rgba[3][i] = (byte) (clrs[bin].getAlpha() * alphaMultiplier);
+                int bin = (int) Math.round((val - lowClip) / colors.length);
+                rgba[0][i] = (byte) colors[bin].getRed();
+                rgba[1][i] = (byte) colors[bin].getGreen();
+                rgba[2][i] = (byte) colors[bin].getBlue();
+                rgba[3][i] = (byte) (colors[bin].getAlpha() * alphaMultiplier);
 
             }
         }
@@ -397,7 +425,7 @@ public class LinearColorMap extends AbstractColorMap {
     }
 
     public String toString() {
-        Iterator iterator = Arrays.asList(clrs).iterator();
+        Iterator iterator = Arrays.asList(colors).iterator();
         StringBuffer sb = new StringBuffer();
 
         int count = 0;
@@ -415,7 +443,6 @@ public class LinearColorMap extends AbstractColorMap {
         LinearColorMap cmap = new LinearColorMap(0, 32555, ColorTable.GRAYSCALE);
         System.out.println(cmap.getInterval(0));
         System.out.println(cmap.getInterval(1));
-
 
     }
 

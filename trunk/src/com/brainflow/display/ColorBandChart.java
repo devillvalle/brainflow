@@ -10,6 +10,8 @@
 package com.brainflow.display;
 
 import com.brainflow.colormap.ColorTable;
+import com.brainflow.colormap.IColorMap;
+import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.jfreechart.DynamicSplineXYDataset;
 import com.brainflow.jfreechart.DynamicXYDataset;
 import com.brainflow.utils.ArrayUtils;
@@ -49,6 +51,11 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
         ALPHA
     }
 
+    public enum CHART_TYPE {
+        CONNECT_POINTS,
+        CONTROL_POINTS
+    }
+
 
     public static final int BAND_MAX = 255;
     public static final int BAND_SAMPLES = 256;
@@ -62,47 +69,27 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
     private XYPlot plot;
     private DynamicXYDataset controlPoints;
     private DynamicSplineXYDataset fittedLine;
+
+    private IColorMap colorMap;
     private ColorBand colorBand = ColorBandChart.ColorBand.RED;
 
     private boolean dragging = false;
     private int lockedOnItem = -1;
 
 
-    private int xmin = -15;
-    private int ymin = -15;
-    private int xmax = 270;
-    private int ymax = 270;
-
-    /**
-     * Creates a new instance of ColorBandChart
-     */
-    public ColorBandChart(ColorBand cband) {
-
-        colorBand = cband;
-        controlPoints = new DynamicXYDataset();
-
-        controlPoints.addXYSeries(new double[]{0, 127, 255}, new double[]{0, 55, 255});
-        fittedLine = new DynamicSplineXYDataset(controlPoints, BAND_SAMPLES);
-
-        initPlot();
-        chart = new JFreeChart("", JFreeChart.DEFAULT_TITLE_FONT, plot, false);
-        initPanel();
-    }
-
-
-    public ColorBandChart(ColorBand cband, byte[] bandValues) {
-        if (bandValues.length != 256) {
-            throw new
-                    IllegalArgumentException("supplied band array must have 256 values");
+    public ColorBandChart(ColorBand cband, IColorMap _colorMap) {
+        if (_colorMap.getMapSize() < 3) {
+            throw new IllegalArgumentException("ColorBandChart requires at least 3 values");
         }
 
-
+        colorMap = _colorMap;
         colorBand = cband;
+
+        double[][] values = getControlPoints(colorMap);
+
         controlPoints = new DynamicXYDataset();
 
-
-        controlPoints.addXYSeries(new double[]{0, 100, 175, 255},
-                ArrayUtils.unsignedBytesToDoubles(new byte[]{bandValues[0], bandValues[100], bandValues[175], bandValues[255]}));
+        controlPoints.addXYSeries(values[0], values[1]);
 
 
         fittedLine = new DynamicSplineXYDataset(controlPoints, BAND_SAMPLES);
@@ -111,6 +98,67 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
         chart = new JFreeChart("", JFreeChart.DEFAULT_TITLE_FONT, plot, false);
         initPanel();
 
+    }
+
+    private double[][] getControlPoints(IColorMap colorMap) {
+        int ncontrol = 4;
+        if (colorMap.getMapSize() < 4) {
+            ncontrol = 3;
+        }
+
+        double range = colorMap.getMaximumValue() - colorMap.getMinimumValue();
+        double increment = range / (ncontrol - 1);
+        double[][] controlPoints = new double[2][ncontrol];
+
+        double cur = colorMap.getMinimumValue();
+        for (int i = 0; i < ncontrol; i++) {
+            controlPoints[0][i] = cur;
+            if (colorBand == ColorBand.RED) {
+                controlPoints[1][i] = colorMap.getColor(cur).getRed();
+            } else if (colorBand == ColorBand.GREEN) {
+                controlPoints[1][i] = colorMap.getColor(cur).getGreen();
+            } else if (colorBand == ColorBand.BLUE) {
+                controlPoints[1][i] = colorMap.getColor(cur).getBlue();
+            } else if (colorBand == ColorBand.ALPHA) {
+                controlPoints[1][i] = colorMap.getColor(cur).getAlpha();
+            }
+            cur = cur + increment;
+        }
+
+        return controlPoints;
+
+    }
+
+    private byte[] getBandValues(ColorBand band, IColorMap colorMap) {
+        byte[] bandVals = new byte[colorMap.getMapSize()];
+
+        switch (band) {
+            case RED:
+                for (int i = 0; i < bandVals.length; i++) {
+                    bandVals[i] = (byte) colorMap.getInterval(i).getRed();
+                }
+                break;
+            case GREEN:
+                for (int i = 0; i < bandVals.length; i++) {
+                    bandVals[i] = (byte) colorMap.getInterval(i).getGreen();
+                }
+                break;
+            case BLUE:
+                for (int i = 0; i < bandVals.length; i++) {
+                    bandVals[i] = (byte) colorMap.getInterval(i).getBlue();
+                }
+                break;
+            case ALPHA:
+                for (int i = 0; i < bandVals.length; i++) {
+                    bandVals[i] = (byte) colorMap.getInterval(i).getAlpha();
+                }
+                break;
+            default:
+                assert false : "impossible";
+
+        }
+
+        return bandVals;
 
     }
 
@@ -174,18 +222,18 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
         plot.setDomainAxis(0, hAxis);
         plot.setRangeAxis(0, vAxis);
         plot.setRenderer(0, renderer);
-        plot.setDomainGridlinesVisible(false);
-        plot.setRangeGridlinesVisible(false);
+        plot.setDomainGridlinesVisible(true);
+        plot.setRangeGridlinesVisible(true);
         plot.setDataset(1, controlPoints);
         plot.setRenderer(1, controlRenderer);
 
 
         hAxis.setAutoRange(false);
         vAxis.setAutoRange(false);
-        hAxis.setLowerBound(-15);
-        hAxis.setUpperBound(BAND_SAMPLES + 15);
-        vAxis.setLowerBound(-30);
-        vAxis.setUpperBound(300);
+        hAxis.setLowerBound(colorMap.getMinimumValue() - .05 * (colorMap.getMaximumValue() - colorMap.getMinimumValue()));
+        hAxis.setUpperBound(colorMap.getMaximumValue() + .05 * (colorMap.getMaximumValue() - colorMap.getMinimumValue()));
+        vAxis.setLowerBound(-25);
+        vAxis.setUpperBound(280);
 
 
         switch (colorBand) {
@@ -281,12 +329,10 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
 
         ValueAxis hAxis = plot.getDomainAxis();
         ValueAxis vAxis = plot.getRangeAxis();
+
         double y = vAxis.java2DToValue(e.getY(), dataArea, plot.getRangeAxisEdge());
         double x = hAxis.java2DToValue(e.getX(), dataArea, plot.getDomainAxisEdge());
 
-
-        if (y > ymax || y < ymin) return;
-        if (x > xmax || x < xmin) return;
 
         if (lockedOnItem != -1) {
             double hdist = controlPoints.horizontalDistance(0, x, y, lockedOnItem);
@@ -328,9 +374,10 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
         byte[] rvals = new byte[256];
         ColorTable.SPECTRUM.getReds(rvals);
 
-        ColorBandChart chart1 = new ColorBandChart(ColorBand.RED, rvals);
-        ColorBandChart chart2 = new ColorBandChart(ColorBand.GREEN);
-        ColorBandChart chart3 = new ColorBandChart(ColorBand.BLUE);
+        LinearColorMap lmap = new LinearColorMap(0, 1000, ColorTable.SPECTRUM);
+        ColorBandChart chart1 = new ColorBandChart(ColorBand.RED, lmap);
+        ColorBandChart chart2 = new ColorBandChart(ColorBand.GREEN, lmap);
+        ColorBandChart chart3 = new ColorBandChart(ColorBand.BLUE, lmap);
 
         JPanel panel = new JPanel();
 

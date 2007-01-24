@@ -45,7 +45,6 @@ import org.bushe.swing.event.EventSubscriber;
 import org.xml.sax.SAXException;
 
 import javax.swing.*;
-import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -72,13 +71,12 @@ public class Brainflow {
 
     private Map context = new HashMap();
 
-    private final BrainFlowContext2 applicationContext = new BrainFlowContext2(context);
+    private final BrainFlowContext applicationContext = new BrainFlowContext(context);
 
-    final Logger log = Logger.getLogger(getClass().getCanonicalName());
+    private final static Logger log = Logger.getLogger(Brainflow.class.getCanonicalName());
 
-    private BrainFrame2 brainFrame = null;
+    private BrainFrame brainFrame = null;
 
-    // ACTIONS
 
     private MountFileSystemAction mountFileSystemAction;
 
@@ -132,6 +130,7 @@ public class Brainflow {
 
         try {
 
+            //SubstanceLookAndFeel lf = new org.jvnet.substance.skin.SubstanceCremeLookAndFeel();
             SyntheticaLookAndFeel lf = new SyntheticaStandardLookAndFeel();
             //SyntheticaLookAndFeel lf = new de.javasoft.plaf.synthetica.SyntheticaBlueIceLookAndFeel();
 
@@ -162,7 +161,7 @@ public class Brainflow {
 
 
     public void launch() {
-        brainFrame = new BrainFrame2();
+        brainFrame = new BrainFrame();
         ImageCanvasManager.getInstance().createCanvas();
 
 
@@ -578,25 +577,33 @@ public class Brainflow {
     }
 
     private void loadImage(final ILoadableImage limg) {
+
+        final ProgressDialog pdialog = new ProgressDialog(LoadableImageProgressEvent.class, "Loading Image ...", "Reading File from disk");
+        final JDialog dialog = pdialog.createDialog();
+        dialog.setResizable(true);
+        dialog.pack();
         final SwingWorker worker = new SwingWorker() {
             public Object doInBackground() {
                 try {
                     limg.load();
                 } catch (BrainflowException bfe) {
                     log.severe("Error load image " + limg.getHeaderFile().getName());
-                    // throw bfe;
+                    throw new RuntimeException(bfe);
                 }
                 return limg.getData();
             }
+
+
+            protected void done() {
+                dialog.setVisible(false);
+            }
         };
 
-        worker.execute();
 
-        ProgressDialog pdialog = new ProgressDialog(LoadableImageProgressEvent.class, "Loading Image ...", "Reading File from disk");
-        JDialog dialog = pdialog.createDialog();
-        dialog.setResizable(true);
-        dialog.pack();
+        worker.execute();
         dialog.setVisible(true);
+
+
     }
 
     public void loadAndDisplay(ILoadableImage limg) {

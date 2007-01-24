@@ -38,7 +38,8 @@ public class DesignColorMapAction extends BasicAction {
                 LinearColorMap lmap = (LinearColorMap) oldMap;
                 LinearColorMap copyMap = lmap.copy();
 
-                ColorBandChartPresenter presenter = new ColorBandChartPresenter(lmap);
+                ColorBandChartPresenter presenter = new ColorBandChartPresenter(view.getImageDisplayModel().getImageLayer(layer).
+                        getImageLayerParameters().getColorMap());
                 int ret = JideOptionPane.showOptionDialog(canvas, presenter.getComponent(), "Design Color Map", JideOptionPane.OK_CANCEL_OPTION, JideOptionPane.PLAIN_MESSAGE,
                         null, null, null);
 

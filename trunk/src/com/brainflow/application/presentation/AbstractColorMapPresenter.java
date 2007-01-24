@@ -23,8 +23,14 @@ public abstract class AbstractColorMapPresenter extends ImageViewPresenter {
 
     private long delay = 0;
 
-
     public AbstractColorMapPresenter() {
+
+    }
+
+
+    public AbstractColorMapPresenter(DisplayParameter<IColorMap> _colorMapParameter) {
+        colorMapParameter = _colorMapParameter;
+        setColorMap(colorMapParameter);
 
     }
 

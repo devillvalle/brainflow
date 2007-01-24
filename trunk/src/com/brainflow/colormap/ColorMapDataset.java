@@ -9,7 +9,6 @@
 
 package com.brainflow.colormap;
 
-import java.beans.PropertyChangeListener;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -18,12 +17,13 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.IntervalMarker;
 import org.jfree.chart.plot.Marker;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.general.DatasetChangeEvent;
 import org.jfree.data.xy.AbstractIntervalXYDataset;
 
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
-import org.jfree.data.general.DatasetChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * @author buchs
@@ -33,7 +33,7 @@ public class ColorMapDataset extends AbstractIntervalXYDataset {
 
     private IColorMap map;
     private int height = 10;
-    
+
     private ChangeHandler handler = new ChangeHandler();
 
     /**
@@ -43,16 +43,16 @@ public class ColorMapDataset extends AbstractIntervalXYDataset {
         map = _map;
         map.addPropertyChangeListener(handler);
     }
-    
+
     public void setColorMap(IColorMap _map) {
         map.removePropertyChangeListener(handler);
         map = _map;
         map.addPropertyChangeListener(handler);
-        notifyListeners(new DatasetChangeEvent(this, this));    
+        notifyListeners(new DatasetChangeEvent(this, this));
 
     }
-    
-    
+
+
     public IColorMap getColorMap() {
         return map;
     }
@@ -81,7 +81,7 @@ public class ColorMapDataset extends AbstractIntervalXYDataset {
     public ColorInterval getColorInterval(int i, int i0) {
         return map.getInterval(i0);
     }
-    
+
     public Color getColor(double val) {
         return map.getColor(val);
     }
@@ -108,7 +108,7 @@ public class ColorMapDataset extends AbstractIntervalXYDataset {
     public static void main(String[] args) {
 
         LinearColorMap cmap = new LinearColorMap(0, 300, ColorTable.SPECTRUM);
-        cmap.setMapSize(25);
+
         ColorMapDataset adapter = new ColorMapDataset(cmap);
         JFreeChart chart = ChartFactory.createXYBarChart("title", "x axis", false, "y axis", adapter, PlotOrientation.VERTICAL
                 , true, true, false);
@@ -169,7 +169,6 @@ public class ColorMapDataset extends AbstractIntervalXYDataset {
             notifyListeners(new DatasetChangeEvent(ColorMapDataset.this, ColorMapDataset.this));
         }
     }
-
 
 
 }

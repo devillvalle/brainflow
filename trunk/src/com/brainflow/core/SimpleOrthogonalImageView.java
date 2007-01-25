@@ -41,6 +41,7 @@ public class SimpleOrthogonalImageView extends ImageView {
         int idx = plots.indexOf(plot);
 
         if (idx == 0) {
+
             Point p = axialView.getCrosshairLocation(plot);
             return SwingUtilities.convertPoint(axialView, p, this);
         } else if (idx == 1) {
@@ -48,9 +49,8 @@ public class SimpleOrthogonalImageView extends ImageView {
             return SwingUtilities.convertPoint(coronalView, p, this);
         } else if (idx == 2) {
             Point p = sagittalView.getCrosshairLocation(plot);
-            Point ret = SwingUtilities.convertPoint(sagittalView, p, this);
+            return SwingUtilities.convertPoint(sagittalView, p, this);
 
-            return ret;
 
         } else {
             return null;
@@ -147,6 +147,10 @@ public class SimpleOrthogonalImageView extends ImageView {
         add(axialView);
         add(coronalView);
         add(sagittalView);
+    }
+
+     public String toString() {
+        return "SimpleOrthogonalImageView -- " + getImageDisplayModel().getName();
     }
 
 

@@ -191,12 +191,8 @@ public class ImageCanvasFacade {
             Viewport3D viewport = iview.getImageDisplayModel().getDisplayParameters().getViewport().getParameter();
 
             if (viewport.inBounds(pt)) {
-                System.out.println("point " + pt + "is in bounds");
                 iview.getImageDisplayModel().getDisplayParameters().getCrosshair().getParameter().setLocation(pt);
-            } else {
-                System.out.println("point " + pt + "is OUT OF BOUNDS");
             }
-
         }
 
         public void mouseReleased(MouseEvent e) {

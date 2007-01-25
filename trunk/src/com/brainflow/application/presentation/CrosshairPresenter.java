@@ -70,13 +70,18 @@ public class CrosshairPresenter extends AbstractPresenter {
         form.getColorChooser().setSelectedColor((Color)annotation.getLinePaint());
 
         // bind gap to JSpinner
-
         JSpinner gapSpinner = form.getGapSpinner();
         ValueModel gapModel = new PropertyAdapter(annotation, CrosshairAnnotation.GAP_PROPERTY, true);
         spinnerModel = new SpinnerNumberModel(annotation.getGap(), 0, 20, 1);
         SpinnerAdapterFactory.connect(spinnerModel, gapModel, 1);
         gapSpinner.setModel(spinnerModel);
 
+        // bind lineLength to JSpinner
+        JSpinner lengthSpinner = form.getLineLengthSpinner();
+        ValueModel lengthModel = new PropertyAdapter(annotation, CrosshairAnnotation.LINE_LENGTH_PROPERTY, true);
+        spinnerModel = new SpinnerNumberModel(annotation.getLineLength(), .1, 1, .1);
+        SpinnerAdapterFactory.connect(spinnerModel, lengthModel, 1);
+        lengthSpinner.setModel(spinnerModel);
         //form.getCancelButton().addActionListener();
 
 

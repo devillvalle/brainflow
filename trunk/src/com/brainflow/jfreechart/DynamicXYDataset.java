@@ -249,23 +249,26 @@ public class DynamicXYDataset extends AbstractDataset implements org.jfree.data.
         DoubleArrayList xlist = (DoubleArrayList) p.left();
         DoubleArrayList ylist = (DoubleArrayList) p.right();
         
-        double minDistance = 100;
+        double minDistance = Double.MAX_VALUE;
         int item = -1;
         for (int j = 0; j < xlist.size(); j++) {
             double _x = xlist.getQuick(j);
             double _y = ylist.getQuick(j);
-            double d = Math.abs(x - _x) * Math.abs(y - _y);
+            double d = Math.sqrt(Math.pow(Math.abs(x - _x),2) + Math.pow(Math.abs(y - _y),2));
             if (d < minDistance) {
                 minDistance = d;
                 item = j;
             }
         }
+
+        System.out.println("minDistance: " + minDistance);
         
         return item;
     }
     
     
     public int[] onDataPoint(double x, double y) {
+        
         double distance = 8;
         int series = -1;
         int item = -1;
@@ -277,7 +280,7 @@ public class DynamicXYDataset extends AbstractDataset implements org.jfree.data.
                 double _x = xlist.getQuick(j);
                 double _y = ylist.getQuick(j);
                 
-                double d = Math.abs(x - _x) * Math.abs(y - _y);
+               double d = Math.pow(Math.abs(x - _x),2) + Math.pow(Math.abs(y - _y),2); 
                 if (d < distance) {
                     series = i;
                     item = j;

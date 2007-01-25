@@ -4,6 +4,10 @@ import com.brainflow.image.data.IImageData;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.utils.NumberUtils;
 import com.brainflow.utils.Range;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.Annotations;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.XStream;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,13 +25,13 @@ import java.util.List;
  */
 
 
+
 public class LinearColorMap extends AbstractColorMap {
 
 
-    private double bucketSize;
+    private double binSize;
 
-
-    private ColorInterval[] colors;
+    private List<ColorInterval> intervals;
 
 
     public LinearColorMap() {
@@ -87,10 +91,45 @@ public class LinearColorMap extends AbstractColorMap {
 
     }
 
+    private void fillIntervals(int mapSize, LinearColorMap lcm) {
+
+        ColorInterval[] colors = new ColorInterval[mapSize];
+        binSize = (getHighClip() - getLowClip()) / (mapSize - 1);
+        colors = new ColorInterval[mapSize];
+
+        Color c0 = lcm.getInterval(0).getColor();
+        colors[0] = new ColorInterval(new OpenClosedInterval(minimumValue, lowClip),
+                new Color(c0.getRed(), c0.getGreen(),
+                        c0.getBlue(), c0.getAlpha()));
+
+        Color cn = lcm.getInterval(lcm.getMapSize() - 1).getColor();
+        colors[mapSize - 1] = new ColorInterval(new OpenInterval(highClip, maximumValue),
+                new Color(cn.getRed(), cn.getGreen(),
+                        cn.getBlue(), cn.getAlpha()));
+
+        double curmin = getLowClip();
+        for (int i = 1; i < colors.length - 2; i++) {
+            Color ci = lcm.getInterval(i).getColor();
+            colors[i] = new ColorInterval(new OpenClosedInterval(curmin, curmin + binSize),
+                    new Color(ci.getRed(), ci.getGreen(),
+                            ci.getBlue(), ci.getAlpha()));
+            curmin = curmin + binSize;
+        }
+
+        int penultimate = colors.length - 2;
+        Color cp = lcm.getInterval(penultimate).getColor();
+        colors[penultimate] = new ColorInterval(new OpenClosedInterval(curmin, highClip),
+                new Color(cp.getRed(), cp.getGreen(),
+                        cp.getBlue(), cp.getAlpha()));
+
+        intervals = new ArrayList<ColorInterval>(Arrays.asList(colors));
+
+    }
+
     private void fillIntervals(int mapSize, IndexColorModel sourceModel) {
 
-        colors = new ColorInterval[mapSize];
-        bucketSize = (getHighClip() - getLowClip()) / (mapSize - 1);
+        ColorInterval[] colors = new ColorInterval[mapSize];
+        binSize = (getHighClip() - getLowClip()) / (mapSize - 1);
         colors = new ColorInterval[mapSize];
         colors[0] = new ColorInterval(new OpenClosedInterval(minimumValue, lowClip),
                 new Color(sourceModel.getRed(0), sourceModel.getGreen(0),
@@ -101,10 +140,10 @@ public class LinearColorMap extends AbstractColorMap {
 
         double curmin = getLowClip();
         for (int i = 1; i < colors.length - 2; i++) {
-            colors[i] = new ColorInterval(new OpenClosedInterval(curmin, curmin + bucketSize),
+            colors[i] = new ColorInterval(new OpenClosedInterval(curmin, curmin + binSize),
                     new Color(sourceModel.getRed(i), sourceModel.getGreen(i),
                             sourceModel.getBlue(i), sourceModel.getAlpha(i)));
-            curmin = curmin + bucketSize;
+            curmin = curmin + binSize;
         }
 
         int penultimate = colors.length - 2;
@@ -112,40 +151,7 @@ public class LinearColorMap extends AbstractColorMap {
                 new Color(sourceModel.getRed(penultimate), sourceModel.getGreen(penultimate),
                         sourceModel.getBlue(penultimate), sourceModel.getAlpha(penultimate)));
 
-    }
-
-    private void fillIntervals(int mapSize, LinearColorMap lcm) {
-
-        colors = new ColorInterval[mapSize];
-        bucketSize = (getHighClip() - getLowClip()) / (mapSize - 1);
-        colors = new ColorInterval[mapSize];
-
-        Color c0 = lcm.getInterval(0).getColor();
-
-        colors[0] = new ColorInterval(new OpenClosedInterval(minimumValue, lowClip),
-                new Color(c0.getRed(), c0.getGreen(),
-                        c0.getBlue(), c0.getAlpha()));
-
-        Color cn = lcm.getInterval(mapSize - 1).getColor();
-
-        colors[mapSize - 1] = new ColorInterval(new OpenInterval(highClip, maximumValue),
-                new Color(cn.getRed(), cn.getGreen(),
-                        cn.getBlue(), cn.getAlpha()));
-
-        double curmin = getLowClip();
-        for (int i = 1; i < colors.length - 2; i++) {
-            Color ci = lcm.getInterval(i).getColor();
-            colors[i] = new ColorInterval(new OpenClosedInterval(curmin, curmin + bucketSize),
-                    new Color(ci.getRed(), ci.getGreen(),
-                            ci.getBlue(), ci.getAlpha()));
-            curmin = curmin + bucketSize;
-        }
-
-        int penultimate = colors.length - 2;
-        Color cp = lcm.getInterval(penultimate).getColor();
-        colors[penultimate] = new ColorInterval(new OpenClosedInterval(curmin, highClip),
-                new Color(cp.getRed(), cp.getGreen(),
-                        cp.getBlue(), cp.getAlpha()));
+        intervals = new ArrayList<ColorInterval>(Arrays.asList(colors));
 
     }
 
@@ -165,40 +171,39 @@ public class LinearColorMap extends AbstractColorMap {
     }
 
 
-    public void setBottomColor(Color c) {
-        colors[0] = new ColorInterval(new OpenClosedInterval(colors[0].getMinimum(), colors[0].getMaximum()), c);
-    }
-
 
     public int getMapSize() {
-        return colors.length;
+        return intervals.size();
     }
 
     public ColorInterval getInterval(int index) {
-        assert index >= 0 && index < colors.length : "index must be between 0 and " + getMapSize();
-        return colors[index];
+        assert index >= 0 && index < intervals.size() : "index must be between 0 and " + getMapSize();
+        return intervals.get(index);
     }
 
 
     public Color getColor(double value) {
         double mapRange = highClip - lowClip;
-        int bin = (int) (((value - lowClip) / mapRange) * colors.length);
+        int bin = (int) (((value - lowClip) / mapRange) * intervals.size());
         if (bin < 0) bin = 0;
-        if (bin >= colors.length) bin = colors.length - 1;
+        if (bin >= intervals.size()) bin = intervals.size() - 1;
 
+        ColorInterval clr = intervals.get(bin);
         int alpha = 0;
-        int blue = colors[bin].getBlue();
-        int green = colors[bin].getGreen();
-        int red = colors[bin].getRed();
+        int blue = clr.getBlue();
+        int green = clr.getGreen();
+        int red = clr.getRed();
 
         if (value <= lowerAlphaThreshold || value >= upperAlphaThreshold) {
-            alpha = (int) (colors[bin].getAlpha() * alphaMultiplier);
+            alpha = (int) (clr.getAlpha() * alphaMultiplier);
 
         }
 
         return new Color(red, green, blue, alpha);
 
     }
+
+
 
 
     public void setUpperAlphaThreshold(double _upperAlphaThreshold) {
@@ -301,9 +306,7 @@ public class LinearColorMap extends AbstractColorMap {
 
 
     public ListIterator<ColorInterval> iterator() {
-        List<ColorInterval> clist = Arrays.asList(colors);
-        clist = Collections.unmodifiableList(clist);
-        return clist.listIterator();
+        return intervals.listIterator();
     }
 
     public Range getRange() {
@@ -331,16 +334,17 @@ public class LinearColorMap extends AbstractColorMap {
             if (bin < 0) bin = 0;
             if (bin >= mapSize) bin = mapEnd;
 
+            Color clr = intervals.get(bin).getColor();
             alpha = 0;
             if (val < lowerAlphaThreshold || val > upperAlphaThreshold) {
-                alpha = (byte) (colors[bin].getAlpha() * alphaMultiplier);
+                alpha = (byte) (clr.getAlpha() * alphaMultiplier);
             }
 
 
             rgba[offset++] = alpha;
-            rgba[offset++] = (byte) colors[bin].getBlue();
-            rgba[offset++] = (byte) colors[bin].getGreen();
-            rgba[offset++] = (byte) colors[bin].getRed();
+            rgba[offset++] = (byte) clr.getBlue();
+            rgba[offset++] = (byte) clr.getGreen();
+            rgba[offset++] = (byte) clr.getRed();
         }
         return rgba;
 
@@ -360,7 +364,7 @@ public class LinearColorMap extends AbstractColorMap {
 
         double mapRange = highClip - lowClip;
         int offset = 0;
-        double mapSize = colors.length;
+        double mapSize = intervals.size();
         //really ABGR
 
         ImageIterator iter = data.iterator();
@@ -370,12 +374,14 @@ public class LinearColorMap extends AbstractColorMap {
             int bin = (int) (((val - lowClip) / mapRange) * mapSize);
             if (bin < 0) bin = 0;
             if (bin >= mapSize) bin = (int) (mapSize - 1);
-            rgba[offset++] = (byte) (colors[bin].getAlpha() * alphaMultiplier);
+
+            ColorInterval clr = intervals.get(bin);
+            rgba[offset++] = (byte) (clr.getAlpha() * alphaMultiplier);
             //rgba[offset] = (byte)255;
-            //rgba[offset++] = (byte)colors[bin].getRed();
-            rgba[offset++] = (byte) colors[bin].getBlue();
-            rgba[offset++] = (byte) colors[bin].getGreen();
-            rgba[offset++] = (byte) colors[bin].getRed();
+            //rgba[offset++] = (byte)clrs[bin].getRed();
+            rgba[offset++] = (byte) clr.getBlue();
+            rgba[offset++] = (byte) clr.getGreen();
+            rgba[offset++] = (byte) clr.getRed();
         }
         return rgba;
     }
@@ -388,27 +394,33 @@ public class LinearColorMap extends AbstractColorMap {
         int lastidx = getMapSize() - 1;
 
         ImageIterator iter = data.iterator();
+
+        Color c0 = intervals.get(0).getColor();
+        Color cn = intervals.get(lastidx).getColor();
+
+
         while (iter.hasNext()) {
 
             int i = iter.index();
             double val = iter.next();
 
             if (val <= lowClip) {
-                rgba[0][i] = (byte) colors[0].getRed();
-                rgba[1][i] = (byte) colors[0].getGreen();
-                rgba[2][i] = (byte) colors[0].getBlue();
-                rgba[3][i] = (byte) (colors[0].getAlpha() * alphaMultiplier);
+                rgba[0][i] = (byte) c0.getRed();
+                rgba[1][i] = (byte) c0.getGreen();
+                rgba[2][i] = (byte) c0.getBlue();
+                rgba[3][i] = (byte) (c0.getAlpha() * alphaMultiplier);
             } else if (val >= highClip) {
-                rgba[0][i] = (byte) colors[lastidx].getRed();
-                rgba[1][i] = (byte) colors[lastidx].getGreen();
-                rgba[2][i] = (byte) colors[lastidx].getBlue();
-                rgba[3][i] = (byte) (colors[lastidx].getAlpha() * alphaMultiplier);
+                rgba[0][i] = (byte) cn.getRed();
+                rgba[1][i] = (byte) cn.getGreen();
+                rgba[2][i] = (byte) cn.getBlue();
+                rgba[3][i] = (byte) (cn.getAlpha() * alphaMultiplier);
             } else {
-                int bin = (int) Math.round((val - lowClip) / colors.length);
-                rgba[0][i] = (byte) colors[bin].getRed();
-                rgba[1][i] = (byte) colors[bin].getGreen();
-                rgba[2][i] = (byte) colors[bin].getBlue();
-                rgba[3][i] = (byte) (colors[bin].getAlpha() * alphaMultiplier);
+                int bin = (int) Math.round((val - lowClip) / intervals.size());
+                Color ci = intervals.get(bin).getColor();
+                rgba[0][i] = (byte) ci.getRed();
+                rgba[1][i] = (byte) ci.getGreen();
+                rgba[2][i] = (byte) ci.getBlue();
+                rgba[3][i] = (byte) (ci.getAlpha() * alphaMultiplier);
 
             }
         }
@@ -425,12 +437,12 @@ public class LinearColorMap extends AbstractColorMap {
     }
 
     public String toString() {
-        Iterator iterator = Arrays.asList(colors).iterator();
+        Iterator<ColorInterval> iterator = iterator();
         StringBuffer sb = new StringBuffer();
 
         int count = 0;
         while (iterator.hasNext()) {
-            ColorInterval cli = (ColorInterval) iterator.next();
+            ColorInterval cli = iterator.next();
             sb.append("Interval " + count + ": " + cli);
             sb.append("\n");
             count++;
@@ -444,7 +456,15 @@ public class LinearColorMap extends AbstractColorMap {
         System.out.println(cmap.getInterval(0));
         System.out.println(cmap.getInterval(1));
 
-    }
+
+		XStream stream = new XStream(new DomDriver());
+		Annotations.configureAliases(stream, LinearColorMap.class);
+
+		System.out.println(stream.toXML(cmap));
+	}
+
+
+
 
 
 }

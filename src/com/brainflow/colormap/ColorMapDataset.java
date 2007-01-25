@@ -152,8 +152,7 @@ public class ColorMapDataset extends AbstractIntervalXYDataset {
         chart.getXYPlot().setDomainAxis(hAxis);
         chart.getXYPlot().setRangeAxis(vAxis);
 
-        System.out.print(chart.getXYPlot().getDomainAxis().getRange());
-
+      
         JFrame frame = new JFrame();
         frame.add(panel, BorderLayout.CENTER);
         frame.pack();
@@ -165,7 +164,7 @@ public class ColorMapDataset extends AbstractIntervalXYDataset {
     private class ChangeHandler implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent e) {
-            System.out.println("color map changed!");
+
             notifyListeners(new DatasetChangeEvent(ColorMapDataset.this, ColorMapDataset.this));
         }
     }

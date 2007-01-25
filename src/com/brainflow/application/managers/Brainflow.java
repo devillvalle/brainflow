@@ -444,12 +444,12 @@ public class Brainflow {
 
         ColorMapTablePresenter tablePresenter = new ColorMapTablePresenter();
 
-        tabbedPane.addTab("Adjustment", colorAdjustmentControl.getComponent());
-        tabbedPane.addTab("Color Table", tablePresenter.getComponent());
-        tabbedPane.addTab("Mask", maskControl.getComponent());
-        tabbedPane.addTab("Coordinates", coordinateControls.getComponent());
+        tabbedPane.addTab("Adjustment", new JScrollPane(colorAdjustmentControl.getComponent()));
+        tabbedPane.addTab("Color Table", new JScrollPane(tablePresenter.getComponent()));
+        //tabbedPane.addTab("Mask", maskControl.getComponent());
+        tabbedPane.addTab("Coordinates", new JScrollPane(coordinateControls.getComponent()));
 
-        //layerAdjustmentPanel.add(tabbedPane);
+
 
         dframe.getContentPane().add(tabbedPane);
         //dframe.getContext().setInitMode(DockContext.STATE_AUTOHIDE);

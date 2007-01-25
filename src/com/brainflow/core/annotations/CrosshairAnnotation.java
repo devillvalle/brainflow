@@ -30,7 +30,7 @@ public class CrosshairAnnotation implements IAnnotation {
 
     public static final Paint DEFAULT_LINE_PAINT = Color.GREEN;
     public static final Float DEFAULT_LINE_LENGTH = 1.0f;
-    public static final Float DEFAULT_LINE_WIDTH = 1.0f;
+    public static final Float DEFAULT_LINE_WIDTH = 1.8f;
     public static final Integer DEFAULT_GAP = 0;
 
     private Paint linePaint = DEFAULT_LINE_PAINT;
@@ -102,14 +102,16 @@ public class CrosshairAnnotation implements IAnnotation {
         g2d.setPaint(linePaint);
         g2d.setStroke(stroke);
 
+        double span = Math.max(plotArea.getWidth(), plotArea.getHeight());
+        double halfSpan = (span/2.0)*lineLength;
+
+
         if (gap == 0) {
-            Line2D lineX = new Line2D.Double(plotArea.getMinX(), screenY, plotArea.getMaxX(), screenY);
-            Line2D lineY = new Line2D.Double(screenX, plotArea.getMinY(), screenX, plotArea.getMaxY());
+            Line2D lineX = new Line2D.Double(screenX-halfSpan, screenY, screenX+halfSpan, screenY);
+            Line2D lineY = new Line2D.Double(screenX, screenY-halfSpan, screenX, screenY+halfSpan);
             g2d.draw(lineX);
             g2d.draw(lineY);
         } else {
-
-
             Line2D lineXLeft = new Line2D.Double(plotArea.getMinX(), screenY, screenX - gap, screenY);
             Line2D lineXRight = new Line2D.Double(screenX + gap, screenY, plotArea.getMaxX(), screenY);
             Line2D lineYTop = new Line2D.Double(screenX, plotArea.getMinY(), screenX, screenY - gap);

@@ -57,7 +57,7 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
     }
 
 
-    public static final int BAND_MAX = 255;
+
     public static final int BAND_SAMPLES = 256;
     public static final int DEFAULT_INTERCEPT = 127;
 
@@ -337,7 +337,9 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
         if (lockedOnItem != -1) {
             double hdist = controlPoints.horizontalDistance(0, x, y, lockedOnItem);
 
-            if (hdist > 50) {
+            double perc = hdist/hAxis.getRange().getLength();
+            System.out.println("perc dist: " + perc);
+            if (perc < .1) {
                 lockedOnItem = -1;
             } else {
                 setNewYValue(0, lockedOnItem, y);
@@ -358,6 +360,25 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
 
 
     public void mouseMoved(MouseEvent e) {
+        Rectangle2D dataArea = chartPanel.getChartRenderingInfo().getPlotInfo().getDataArea();
+
+        ValueAxis hAxis = plot.getDomainAxis();
+        ValueAxis vAxis = plot.getRangeAxis();
+
+        double y = vAxis.java2DToValue(e.getY(), dataArea, plot.getRangeAxisEdge());
+        double x = hAxis.java2DToValue(e.getX(), dataArea, plot.getDomainAxisEdge());
+
+
+
+        int item = controlPoints.nearestItem(0, x, y);
+        System.out.println("nearest item: " + item);
+
+        if (item != -1) {
+            double hdist = controlPoints.horizontalDistance(0, x, y, item);
+
+            double perc = hdist/hAxis.getRange().getLength();
+            System.out.println("perc dist: " + perc);
+        }
 
     }
 

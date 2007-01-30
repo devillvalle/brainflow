@@ -4,6 +4,7 @@ import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.ImageCanvas;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.ImageViewFactory;
+import com.brainflow.core.annotations.CrosshairAnnotation;
 import org.bushe.swing.action.BasicAction;
 
 import java.awt.event.ActionEvent;
@@ -17,6 +18,17 @@ import java.awt.event.ActionEvent;
  */
 public class CreateAxialViewAction extends BasicAction {
 
+
+     protected void contextChanged() {
+
+        ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
+
+        if (view != null) {
+            setEnabled(true);
+        } else {
+            setEnabled(false);
+        }
+    }
 
     protected void execute(ActionEvent actionEvent) throws Exception {
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);

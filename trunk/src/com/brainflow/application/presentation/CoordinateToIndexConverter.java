@@ -14,11 +14,11 @@ class CoordinateToIndexConverter extends AbstractConverter {
 
     }
 
+    
+
     public Object convertFromSubject(Object object) {
         Double val = (Double) object;
         return axis.nearestSample(val);
-
-
     }
 
 
@@ -32,7 +32,7 @@ class CoordinateToIndexConverter extends AbstractConverter {
 
     public void setValue(Object object) {
         Integer val = (Integer) object;
-        double newval = axis.valueOf(val);
+        double newval = axis.valueOf(val).getX();
         subject.setValue(newval);
 
     }

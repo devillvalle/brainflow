@@ -36,7 +36,9 @@ public class BasicImagePlot implements IImagePlot {
         renderer.paint(g2, area, this);
 
         for (IAnnotation ia : annotationList) {
-            ia.draw(g2, area, this);
+            if (ia.isVisible()) {
+                ia.draw(g2, area, this);
+            }
         }
     }
 

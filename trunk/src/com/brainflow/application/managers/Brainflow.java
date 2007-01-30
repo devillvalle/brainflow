@@ -202,6 +202,8 @@ public class Brainflow {
 
     }
 
+   
+
     private void intializeKeyActions() {
         ImageCanvas canvas = ImageCanvasManager.getInstance().getSelectedCanvas();
 
@@ -220,6 +222,10 @@ public class Brainflow {
 
         ActionList viewList = ActionManager.getInstance().getActionList("view-menu");
         brainFrame.getJMenuBar().add(ActionUIFactory.getInstance().createMenu(viewList));
+
+        ActionList navList = ActionManager.getInstance().getActionList("navigation-menu");
+        brainFrame.getJMenuBar().add(ActionUIFactory.getInstance().createMenu(navList));
+
 
         ActionList appearanceList = ActionManager.getInstance().getActionList("appearance-menu");
         brainFrame.getJMenuBar().add(ActionUIFactory.getInstance().createMenu(appearanceList));
@@ -291,7 +297,10 @@ public class Brainflow {
 
 
         CommandBar mainToolbar = ((JideActionUIFactory) ActionUIFactory.getInstance("jidefactory")).createCommandBar(globalList);
-        //JToolBar mainToolbar = ActionUIFactory.getInstance().createToolBar(globalList);
+
+
+
+
         JideSplitButton sliderDirection = new JideSplitButton("0  ");
         sliderDirection.add(new JRadioButtonMenuItem("Z Axis"));
         sliderDirection.add(new JRadioButtonMenuItem("X Axis"));
@@ -304,6 +313,18 @@ public class Brainflow {
         sliderPresenter.setValueLabel(adapter);
         mainToolbar.add(sliderPresenter.getComponent());
         mainToolbar.add(sliderDirection);
+
+
+        mainToolbar.addSeparator();
+        Action crossAction = ActionManager.getInstance().getAction("toggle-cross");
+        AbstractButton crossToggle = ((JideActionUIFactory)ActionUIFactory.getInstance("jidefactory")).
+                createJideButton(crossAction);
+        mainToolbar.add(crossToggle);
+
+        Action axisLabelAction = ActionManager.getInstance().getAction("toggle-axislabel");
+        AbstractButton axisLabelToggle = ((JideActionUIFactory)ActionUIFactory.getInstance("jidefactory")).
+                createJideButton(axisLabelAction);
+        mainToolbar.add(axisLabelToggle);
 
         brainFrame.getContentPane().add(mainToolbar, BorderLayout.NORTH);
         ActionManager.mapKeystrokeForAction(documentPane, ActionManager.getInstance().getAction("view-close"));

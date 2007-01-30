@@ -12,6 +12,10 @@ import java.beans.PropertyChangeSupport;
  */
 public abstract class AbstractAnnotation implements IAnnotation {
 
+    public static final String VISIBLE_PROPERTY = "visible";
+
+    private boolean visible = true;
+
     protected PropertyChangeSupport support = new PropertyChangeSupport(this);
 
 
@@ -22,4 +26,15 @@ public abstract class AbstractAnnotation implements IAnnotation {
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         support.removePropertyChangeListener(listener);
     }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        boolean old = this.visible;
+        this.visible = visible;
+        support.firePropertyChange(AbstractAnnotation.VISIBLE_PROPERTY, old, isVisible());
+    }
+
 }

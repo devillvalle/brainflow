@@ -19,9 +19,7 @@ import com.brainflow.utils.*;
  */
 
 public class HistogramDataset extends AbstractDataset implements IntervalXYDataset {
-        /* (non-Javadoc)
-         * @see org.jfree.data.xy.XYDataset#getDomainOrder()
-         */
+
     
     Histogram histogram;
     

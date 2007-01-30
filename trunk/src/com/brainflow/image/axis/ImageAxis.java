@@ -148,9 +148,9 @@ public class ImageAxis {
     }
 
 
-    public double valueOf(int sample) {
+    public AnatomicalPoint1D valueOf(int sample) {
         double relpos = sample * spacing + spacing / 2f;
-        return relpos + range.getMinimum();
+        return new AnatomicalPoint1D(axis, relpos + range.getMinimum());
     }
 
     public int[] getSampleArray() {

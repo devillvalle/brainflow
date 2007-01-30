@@ -16,6 +16,8 @@ import java.beans.PropertyChangeListener;
 public interface IAnnotation extends Cloneable {
 
 
+    public boolean isVisible();
+    
     public IAnnotation safeCopy();
 
     public void draw(Graphics2D g2d, Rectangle2D plotArea, IImagePlot plot);

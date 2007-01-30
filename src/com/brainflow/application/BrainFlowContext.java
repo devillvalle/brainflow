@@ -41,8 +41,7 @@ public class BrainFlowContext {
                 ActionManager.getInstance().putContextValueForAll(ActionContext.SELECTED_IMAGE_VIEW,
                         event.getSelectedImageView());
 
-                //Component comp = event.getSelectedImageView().getParent();
-                //System.out.println("parent of view is: " + comp.getClass());
+                
 
             }
         });

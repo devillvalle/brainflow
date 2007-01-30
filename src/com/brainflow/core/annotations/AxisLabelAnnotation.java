@@ -31,7 +31,8 @@ public class AxisLabelAnnotation extends AbstractAnnotation {
 
 
     public void draw(Graphics2D g2d, Rectangle2D plotArea, IImagePlot plot) {
-
+        if (!isVisible()) { return; }
+        
         AnatomicalAxis xaxis = plot.getXAxisRange().getAnatomicalAxis();
         AnatomicalAxis yaxis = plot.getYAxisRange().getAnatomicalAxis();
 

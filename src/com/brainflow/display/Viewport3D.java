@@ -53,9 +53,9 @@ public class Viewport3D extends Model {
         init();
     }
 
-    public void setBounds(ImageSpace3D bounds) {
+    public void setBounds(ImageSpace3D _bounds) {
         ImageSpace3D oldValue = this.bounds;
-        this.bounds = bounds;
+        bounds = _bounds;
         init();
 
         firePropertyChange(Viewport3D.BOUNDS_PROPERTY, oldValue, bounds);

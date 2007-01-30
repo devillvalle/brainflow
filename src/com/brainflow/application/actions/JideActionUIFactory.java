@@ -38,11 +38,13 @@ public class JideActionUIFactory extends ActionUIFactory {
         return toolBar;
     }
 
+    
+
     public AbstractButton createJideButton(Action action) {
         AbstractButton button = null;
         Object buttonType = action.getValue(ActionManager.BUTTON_TYPE);
         if (action.getValue(ActionManager.GROUP) != null) {
-            button = new JideToggleButton(action);
+            button = new JideButton(action);
         } else if (ActionManager.BUTTON_TYPE_VALUE_TOGGLE.equals(buttonType)) {
             button = new JideToggleButton(action);
         } else if (ActionManager.BUTTON_TYPE_VALUE_RADIO.equals(buttonType)) {

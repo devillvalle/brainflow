@@ -46,7 +46,7 @@ public class ImagePlotRenderer {
         double sy = area.getHeight() / cropRect.getHeight();
 
 
-        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 
         Shape oldClip = g2.getClip();
         g2.setClip(area);

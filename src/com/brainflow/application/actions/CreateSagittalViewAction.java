@@ -18,6 +18,17 @@ import java.awt.event.ActionEvent;
 public class CreateSagittalViewAction extends BasicAction {
 
 
+    protected void contextChanged() {
+
+        ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
+
+        if (view != null) {
+            setEnabled(true);
+        } else {
+            setEnabled(false);
+        }
+    }
+
     protected void execute(ActionEvent actionEvent) throws Exception {
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
        

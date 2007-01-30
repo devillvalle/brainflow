@@ -71,7 +71,7 @@ public class Crosshair extends Model {
         if (getYValue() < viewport.getYAxisMin()) {
             setYValue(viewport.getYAxisMin());
         }
-        if (getZValue() < viewport.getXAxisMin()) {
+        if (getZValue() < viewport.getZAxisMin()) {
             setZValue(viewport.getZAxisMin());
         }
         if (getXValue() > viewport.getXAxisMax()) {
@@ -113,7 +113,6 @@ public class Crosshair extends Model {
 
     public void setLocation(AnatomicalPoint3D ap) {
 
-
         double x = ap.getValue(location.getAnatomy().XAXIS).getX();
         double y = ap.getValue(location.getAnatomy().YAXIS).getX();
         double z = ap.getValue(location.getAnatomy().ZAXIS).getX();
@@ -141,6 +140,19 @@ public class Crosshair extends Model {
         double oldValue = location.getZ();
         location.setZ(z);
         this.firePropertyChange(Z_VALUE_PROPERTY, oldValue, z);
+    }
+
+    public void setValue(AnatomicalPoint1D val) {
+        if (val.getAnatomy() == location.getAnatomy().YAXIS) {
+            setXValue(val.getX());
+        } else if (val.getAnatomy() == location.getAnatomy().YAXIS) {
+           setYValue(val.getX());
+        } else if (val.getAnatomy() == location.getAnatomy().ZAXIS) {
+           setZValue(val.getX());
+        } else {
+            throw new IllegalArgumentException("illegal axis for current cross hair: " + val.getAnatomy());
+        }
+
     }
 
 

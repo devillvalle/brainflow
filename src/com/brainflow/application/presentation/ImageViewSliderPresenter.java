@@ -29,10 +29,12 @@ public class ImageViewSliderPresenter extends ImageViewPresenter {
     private BeanAdapter viewportAdapter;
 
     private BoundedRangeAdapter sliderAdapter;
+    
     private Axis sliderAxis = Axis.Z_AXIS;
     private Axis displayAxis = null;
 
     private ValueModel valueLabel;
+
     private CoordinateToIndexConverter imodel;
     private PropertyConnector labelConnector;
 

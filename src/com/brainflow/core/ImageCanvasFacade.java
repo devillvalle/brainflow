@@ -190,7 +190,7 @@ public class ImageCanvasFacade {
             AnatomicalPoint3D pt = iview.getAnatomicalLocation(e.getComponent(), e.getPoint());
             Viewport3D viewport = iview.getImageDisplayModel().getDisplayParameters().getViewport().getParameter();
 
-            if (viewport.inBounds(pt)) {
+            if (pt != null && viewport.inBounds(pt)) {
                 iview.getImageDisplayModel().getDisplayParameters().getCrosshair().getParameter().setLocation(pt);
             }
         }

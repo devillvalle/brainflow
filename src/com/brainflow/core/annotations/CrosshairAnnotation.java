@@ -18,14 +18,12 @@ import java.beans.PropertyChangeSupport;
  * Time: 2:05:34 PM
  * To change this template use File | Settings | File Templates.
  */
-public class CrosshairAnnotation implements IAnnotation {
+public class CrosshairAnnotation extends AbstractAnnotation {
 
     public static final String LINE_PAINT_PROPERTY = "linePaint";
     public static final String LINE_LENGTH_PROPERTY = "lineLength";
     public static final String LINE_WIDTH_PROPERTY = "lineWidth";
     public static final String GAP_PROPERTY = "gap";
-
-    public static final String VISIBLE_PROPERTY = "visible";
 
 
     public static final Paint DEFAULT_LINE_PAINT = Color.GREEN;
@@ -43,11 +41,11 @@ public class CrosshairAnnotation implements IAnnotation {
 
     private Point location;
 
-    private boolean visible = true;
+
 
     private DisplayParameter<Crosshair> crosshair;
 
-    private PropertyChangeSupport support = new PropertyChangeSupport(this);
+    
 
     public CrosshairAnnotation(DisplayParameter<Crosshair> _crosshair) {
         crosshair = _crosshair;
@@ -69,7 +67,7 @@ public class CrosshairAnnotation implements IAnnotation {
 
     public IAnnotation safeCopy() {
         CrosshairAnnotation annot = new CrosshairAnnotation(crosshair);
-        annot.visible = visible;
+        annot.setVisible(super.isVisible());
         annot.location = new Point(location);
         annot.linePaint = linePaint;
         annot.stroke = stroke;
@@ -181,15 +179,6 @@ public class CrosshairAnnotation implements IAnnotation {
     }
 
 
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public void setVisible(boolean visible) {
-        boolean old = this.visible;
-        this.visible = visible;
-        support.firePropertyChange(CrosshairAnnotation.VISIBLE_PROPERTY, old, isVisible());
-    }
 
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {

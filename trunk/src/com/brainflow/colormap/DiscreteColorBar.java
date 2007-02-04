@@ -19,7 +19,7 @@ public class DiscreteColorBar extends AbstractColorBar {
     public static final int DEFAULT_HEIGHT = 300;
 
 
-    public DiscreteColorBar(DiscreteColorMap _colorMap, int orientation) {
+    public DiscreteColorBar(IColorMap _colorMap, int orientation) {
         super(_colorMap, orientation);
         initListener(_colorMap);
         initBackground();
@@ -57,15 +57,16 @@ public class DiscreteColorBar extends AbstractColorBar {
     protected BufferedImage renderOffscreen() {
         BufferedImage bimage = null;
 
-        DiscreteColorMap raggedMap = (DiscreteColorMap) colorMap;
+       
 
         if (getOrientation() == SwingConstants.HORIZONTAL) {
 
             bimage = new BufferedImage(DEFAULT_WIDTH, 10, BufferedImage.TYPE_4BYTE_ABGR);
             Graphics2D g2d = bimage.createGraphics();
-            int ncolors = raggedMap.getMapSize();
-            double distance = raggedMap.getRange().getInterval();
-            double start = raggedMap.getMinimumValue();
+            int ncolors = colorMap.getMapSize();
+            double distance = colorMap.getMaximumValue() - colorMap.getMinimumValue();
+            System.out.println("distance = " + distance);
+            double start = colorMap.getMinimumValue();
 
             for (int i = 0; i < ncolors; i++) {
                 ColorInterval ci = colorMap.getInterval(i);
@@ -110,7 +111,7 @@ public class DiscreteColorBar extends AbstractColorBar {
     }
 
     public static void main(String[] args) {
-        DiscreteColorMap cmap = new DiscreteColorMap();
+        DiscreteColorMap cmap = new DiscreteColorMap(new LinearColorMap(0, 255, ColorTable.SPECTRUM));
 
 
         JPanel jp = cmap.createColorBar();

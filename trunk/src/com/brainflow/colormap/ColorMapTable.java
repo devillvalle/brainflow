@@ -44,6 +44,9 @@ public class ColorMapTable extends AbstractPresenter {
 
         tableModel = new ColorMapTableModel(colorMap);
         colorTable = new CellStyleTable(tableModel);
+        colorTable.setColumnSelectionAllowed(true);
+        colorTable.setRowHeight(18);
+        colorTable.setColumnAutoResizable(true);
         colorTable.setDefaultEditor(Color.class, (TableCellEditor) CellEditorManager.getEditor(Color.class));
         colorTable.setDefaultEditor(Range.class, new RangeCellEditor());
         colorTable.setDefaultRenderer(Range.class, new RangeCellRenderer());
@@ -77,6 +80,7 @@ public class ColorMapTable extends AbstractPresenter {
                 new ColorCellRenderer(true));
     }
 
+  
 
     public static void main(String[] args) {
         com.jidesoft.utils.Lm.verifyLicense("UIN", "Brainflow", "S5XiLlHH0VReaWDo84sDmzPxpMJvjP3");

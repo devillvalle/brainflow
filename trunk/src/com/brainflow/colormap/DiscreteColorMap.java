@@ -2,122 +2,80 @@ package com.brainflow.colormap;
 
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.iterators.ImageIterator;
-import com.brainflow.utils.Range;
+import com.brainflow.utils.NumberUtils;
+
 
 import javax.swing.*;
-import java.awt.*;
-import java.util.ListIterator;
+import java.util.*;
 import java.util.logging.Logger;
+import java.awt.Color;
 
 /**
  * Created by IntelliJ IDEA.
- * User: Brad
- * Date: Jan 4, 2007
- * Time: 9:59:02 PM
+ * User: Brad Buchsbaum
+ * Date: Feb 1, 2007
+ * Time: 12:20:10 PM
  * To change this template use File | Settings | File Templates.
  */
 public class DiscreteColorMap extends AbstractColorMap {
 
-    private static final Logger log = Logger.getLogger(DiscreteColorMap.class.getCanonicalName());
+    private static final Logger log = Logger.getLogger(DiscreteColorMap.class.getName());
 
-    private IntervalLookupTable<ColorInterval> table;
+    private double[] boundaryArray;
+    private double[] oldArray;
 
-    private Color gapColor = new Color(0, 0, 0, 0);
+    private List<ColorInterval> intervals;
+
 
     public DiscreteColorMap() {
-        table = new IntervalLookupTable<ColorInterval>();
+        boundaryArray = new double[0];
+        intervals = new ArrayList<ColorInterval>();
+
     }
 
     public DiscreteColorMap(IColorMap cmap) {
-        table = new IntervalLookupTable<ColorInterval>();
-
+        boundaryArray = new double[cmap.getMapSize() + 1];
         ListIterator<ColorInterval> iter = cmap.iterator();
+        intervals = new ArrayList<ColorInterval>(cmap.getMapSize());
+
+        boundaryArray[0] = cmap.getInterval(0).getMinimum();
         while (iter.hasNext()) {
-            ColorInterval ival = iter.next();
-            assert ival.getMaximum() <= cmap.getMaximumValue() : "interval max = " + ival.getMaximum() + " cmap max = " + cmap.getMaximumValue();
-
-            int index = iter.nextIndex();
-            if (index == cmap.getMapSize()) {
-                table.addIntervalToEnd(new ColorInterval(new OpenInterval(ival.getMinimum(), ival.getMaximum()), ival.getColor()));
-            } else {
-                table.addIntervalToEnd(new ColorInterval(new OpenClosedInterval(ival.getMinimum(), ival.getMaximum()), ival.getColor()));
-            }
-
+            ColorInterval ci = iter.next();
+            int i = iter.previousIndex();
+            boundaryArray[i + 1] = ci.getMaximum();
+            IndexedInterval ival = new IndexedInterval(i + 1, boundaryArray);
+            intervals.add(new ColorInterval(ival, ci.getColor()));
         }
 
 
-        assert Double.compare(table.getMaximumValue(), cmap.getMaximumValue()) == 0;
-        assert Double.compare(table.getMinimumValue(), cmap.getMinimumValue()) == 0;
-
-
-        assert!hasGaps();
     }
 
 
-    public boolean hasGaps() {
-        ListIterator<ColorInterval> iter = table.iterator();
-        double value = table.getFirstInterval().getMaximum();
-        while (iter.hasNext()) {
-            Interval ival = iter.next();
-            if (value == ival.getMinimum()) {
-                value = ival.getMaximum();
-                continue;
-            } else {
-                log.warning("color map has gap at index: " + iter.previousIndex());
-                log.warning("interval: " + ival);
-                log.warning("boundary: " + value);
+    public double getMaximumValue() {
+        return boundaryArray[boundaryArray.length - 1];
+    }
 
-            }
+    public double getMinimumValue() {
+        return boundaryArray[0];
+    }
 
-        }
-
-        return false;
-
+    public int getMapSize() {
+        return intervals.size();
     }
 
     public ColorInterval getInterval(int index) {
-        assert index >= 0 && index < table.getNumIntervals() : "illegal index " + index;
-        return table.getInterval(index);
+        return intervals.get(index);
     }
 
     public Color getColor(double value) {
-        ColorInterval cval = table.lookup(value);
-
-        if (cval != null) return cval.getColor();
-
-        if (value <= table.getFirstInterval().getMinimum()) {
-            return table.getFirstInterval().getColor();
-        }
-        if (value >= table.getLastInterval().getMaximum()) {
-            return table.getLastInterval().getColor();
-        }
-
-        return gapColor;
-
-    }
-
-    private void setInterval0(int index, double min, double max, Color clr) {
-        if (index == (table.getNumIntervals() - 1)) {
-            ColorInterval newInterval = new ColorInterval(new OpenInterval(min, max), clr);
-            table.setInterval(index, newInterval);
-        } else {
-            ColorInterval newInterval = new ColorInterval(new OpenClosedInterval(min, max), clr);
-            table.setInterval(index, newInterval);
-        }
-
+        int idx = indexOf(value);
+        return intervals.get(idx).getColor();
     }
 
     public void setColor(int index, Color clr) {
-        if (index < 0 || index >= table.getNumIntervals()) {
-            throw new IllegalArgumentException("illegal index " + index);
-        }
-
-        ColorInterval current = table.getInterval(index);
-        assert current != null;
-
-        setInterval0(index, current.getMinimum(), current.getMaximum(), clr);
-
+        intervals.get(index).setColor(clr);
         changeSupport.firePropertyChange(COLORS_CHANGED_PROPERTY, null, this);
+
     }
 
     public void equalizeIntervals(int startIndex, int endIndex) {
@@ -132,272 +90,141 @@ public class DiscreteColorMap extends AbstractColorMap {
 
         int range = endIndex - startIndex + 1;
 
-        ColorInterval begin = table.getInterval(startIndex);
-        ColorInterval end = table.getInterval(endIndex);
+        ColorInterval begin = getInterval(startIndex);
+        ColorInterval end = getInterval(endIndex);
 
         double bucketSize = (end.getMaximum() - begin.getMinimum()) / range;
         double start = begin.getMinimum();
 
-        IntervalLookupTable ntable = new IntervalLookupTable();
-
-        ColorInterval clr = null;
-        ColorInterval oldcolor = null;
-        for (int i = 0; i < table.getNumIntervals() - 1; i++) {
-            oldcolor = getInterval(i);
-            if (i < startIndex || i > endIndex) {
-                clr = new ColorInterval(new OpenClosedInterval(oldcolor.getMinimum(), oldcolor.getMaximum()), oldcolor.getColor());
-            } else {
-                clr = new ColorInterval(new OpenClosedInterval(start, start + bucketSize), oldcolor.getColor());
-                start = start + bucketSize;
-            }
-
-            ntable.addInterval(clr);
+        if (endIndex == (getMapSize()-1)) {
+            endIndex--;
         }
 
-        oldcolor = table.getLastInterval();
-        clr = new ColorInterval(new OpenInterval(start, start + bucketSize), oldcolor.getColor());
-        ntable.addInterval(clr);
-
-
-        assert(table.getMinimumValue() == ntable.getMinimumValue());
-        assert table.getMinimumValue() == ntable.getMinimumValue();
-
-        table = ntable;
-
-
-        assert hasGaps() == false;
+        for (int i = startIndex; i <= endIndex; i++) {
+            boundaryArray[i + 1] = start + bucketSize;
+            start = start + bucketSize;
+        }
 
         changeSupport.firePropertyChange(COLORS_CHANGED_PROPERTY, null, this);
 
     }
 
-    public void addInterval(double min, double max, Color clr) {
-        if (this.getMapSize() == 0) {
-            table.addInterval(new ColorInterval(new OpenInterval(min, max), clr));
-        } else {
-            ColorInterval ival = table.getLastInterval();
-            ColorInterval nlast = new ColorInterval(new OpenInterval(min, max), clr);
-            if (nlast.rightAdjacent(nlast)) {
-                ival = new ColorInterval(new OpenClosedInterval(ival.getMinimum(), ival.getMaximum()), ival.getColor());
-                table.removeLastInterval();
-                table.addInterval(ival);
-                table.addInterval(nlast);
+
+    public int indexOf(double value) {
+        if (value <= boundaryArray[0]) {
+            return 0;
+        }
+        if (value >= boundaryArray[boundaryArray.length - 1]) {
+            return getMapSize() - 1;
+        }
+
+        int bottom = 0;
+        int top = boundaryArray.length - 1;
+
+        int mid;
+
+        while (top != bottom) {
+            mid = (int) ((top + bottom) / 2.0);
+
+            if (value >= boundaryArray[mid] && value < boundaryArray[mid + 1]) {
+                return mid;
+            } else if (value > boundaryArray[mid]) {
+                bottom = mid;
             } else {
-                throw new IllegalArgumentException("non-adjacent interval: " + nlast + " with respect to " + ival);
+                top = mid;
             }
         }
-         //todo fire clip change
-         changeSupport.firePropertyChange(COLORS_CHANGED_PROPERTY, null, this);
 
+        return -1;
     }
+
+    private boolean isMonotonic() {
+        double prev = boundaryArray[0];
+        for (int i = 1; i < boundaryArray.length; i++) {
+            if (boundaryArray[i] < prev) {
+                log.info("i: " + i);
+                log.info("prev: " + prev);
+                log.info("cur: " + boundaryArray[i]);
+                return false;
+            }
+            prev = boundaryArray[i];
+        }
+
+        return true;
+    }
+
     public void setInterval(int index, double min, double max, Color clr) {
-        if (index < 0 || index >= table.getNumIntervals()) {
-            throw new IllegalArgumentException("color map index out of bounds");
-        } else if (Double.compare(getMaximumValue(), max) == -1) {
-            throw new IllegalArgumentException("interval is out of range: " + "(" + min + ", " + max + ")" +
-                    "for map with range: " + table.getLastInterval());
-        } else if (min < getMinimumValue()) {
-            throw new IllegalArgumentException("interval is out of range");
+        ColorInterval ival = getInterval(index);
+        min = Math.max(min, getMinimumValue());
+        max = Math.min(max, getMaximumValue());
+        if (index == 0) {
+            setBoundary(index + 1, max);
+        } else if (index == getMapSize() - 1) {
+            setBoundary(index, min);
+        } else {
+            if (!NumberUtils.equals(ival.getMinimum(), min, .0001)) {
+                setBoundary(index + 1, min);
+            }
+            if (!NumberUtils.equals(ival.getMaximum(), max, .0001)) {
+                setBoundary(index + 2, max);
+            }
         }
 
-
-        setInterval0(index, min, max, clr);
-
+        ival.setColor(clr);
         changeSupport.firePropertyChange(COLORS_CHANGED_PROPERTY, null, this);
     }
 
+    public void setBoundary(int boundary, double value) {
+        assert boundary > 0 && boundary < (boundaryArray.length - 1);
+        assert value >= boundaryArray[0] && value <= boundaryArray[boundaryArray.length - 1];
 
-    public void setMapSize(int size) {
-        if (size < 1 || size > IColorMap.MAXIMUM_INTERVALS) {
-            throw new IllegalArgumentException("DiscreteColorMap.setMapSize(): Size of map cannot be smaller than 1" +
-                    " or greater than " + IColorMap.MAXIMUM_INTERVALS);
+
+        double oldValue = boundaryArray[boundary];
+        double maxValue = boundaryArray[boundaryArray.length - 1];
+        double minValue = boundaryArray[0];
+
+        if (oldArray == null) {
+            oldArray = new double[boundaryArray.length];
         }
 
-        int oldSize = getMapSize();
+        System.arraycopy(boundaryArray, 0, oldArray, 0, boundaryArray.length);
 
-        ColorInterval oldFirst = table.getFirstInterval();
-        ColorInterval oldLast = table.getLastInterval();
+        if (value > oldValue) {
+            double totalSpan = maxValue - oldValue;
+            double difference = value - oldValue;
 
-        if (size == (getMapSize() + 1)) {
-            incrementMapSize();
-            changeSupport.firePropertyChange(COLORS_CHANGED_PROPERTY, null, this);
-        } else if (size == (getMapSize() - 1)) {
-            decrementMapSize();
-            changeSupport.firePropertyChange(COLORS_CHANGED_PROPERTY, null, this);
-        } else if (size < getMapSize()) {
-            chopDown(size);
-            changeSupport.firePropertyChange(COLORS_CHANGED_PROPERTY, null, this);
-        } else if (size > getMapSize()) {
-            growUp(size);
-            changeSupport.firePropertyChange(COLORS_CHANGED_PROPERTY, null, this);
+            int begin = boundary + 1;
+            int end = boundaryArray.length - 1;
+
+            boundaryArray[boundary] = value;
+            for (int i = begin; i < end; i++) {
+                double oldInterval = oldArray[i] - oldArray[i - 1];
+                double perc = oldInterval / totalSpan;
+                double localfudge = perc * difference;
+
+                boundaryArray[i] = Math.min(boundaryArray[i - 1] + oldInterval - localfudge, maxValue);
+
+            }
+        } else if (value < oldValue) {
+            double difference = oldValue - value;
+            double totalSpan = oldValue - minValue;
+
+
+            boundaryArray[boundary] = value;
+
+            for (int i = boundary - 1; i > 0; i--) {
+                double oldInterval = oldArray[i + 1] - oldArray[i];
+                double perc = oldInterval / totalSpan;
+                double localfudge = perc * difference;
+                boundaryArray[i] = Math.max(boundaryArray[i + 1] - oldInterval + localfudge, minValue);
+
+            }
+
         }
 
-        assert getMapSize() == size;
-
-        changeSupport.firePropertyChange(DiscreteColorMap.MAP_SIZE_PROPERTY, oldSize, getMapSize());
-
-        if (oldFirst.getMaximum() != table.getFirstInterval().getMaximum()) {
-            changeSupport.firePropertyChange(DiscreteColorMap.LOW_CLIP_PROPERTY, oldFirst.getMaximum(), getLowClip());
-        }
-
-        if (oldLast.getMinimum() != table.getLastInterval().getMinimum()) {
-            changeSupport.firePropertyChange(DiscreteColorMap.HIGH_CLIP_PROPERTY, oldLast.getMinimum(), getHighClip());
-        }
+        assert isMonotonic() : "not monotonic";
 
 
-    }
-
-    private void incrementMapSize() {
-        if (table.getNumIntervals() == 0) {
-            table.addIntervalToEnd(new ColorInterval(new OpenClosedInterval(getMinimumValue(), getMaximumValue()), Color.WHITE));
-            return;
-        }
-
-
-        ColorInterval lastInterval = table.getLastInterval();
-
-        double boundary = lastInterval.getMinimum() + (lastInterval.getMaximum() - lastInterval.getMinimum()) / 2.0;
-
-        ColorInterval penultimate = new ColorInterval(new OpenClosedInterval(lastInterval.getMinimum(), boundary), lastInterval.getColor());
-        ColorInterval newLast = new ColorInterval(new OpenInterval(boundary, lastInterval.getMaximum()), lastInterval.getColor().brighter());
-
-        table.removeLastInterval();
-        table.addIntervalToEnd(penultimate);
-        table.addIntervalToEnd(newLast);
-
-
-    }
-
-    private void decrementMapSize() {
-        if (getMapSize() == 1) {
-            throw new IllegalArgumentException("cannot reduce map size to 0");
-        }
-
-
-        ColorInterval lastInterval = table.getLastInterval();
-        ColorInterval lastButOne = table.getInterval(table.getNumIntervals() - 2);
-
-
-        table.removeLastInterval();
-
-        setInterval0(table.getNumIntervals() - 1, lastButOne.getMinimum(),
-                lastInterval.getMaximum(), lastButOne.getColor());
-
-
-    }
-
-    private void chopDown(int newSize) {
-        if (!(newSize < table.getNumIntervals())) {
-            throw new IllegalArgumentException("argument must be smaller than current map size");
-        }
-
-        ColorInterval lastInterval = table.getLastInterval().clone();
-
-        while (table.getNumIntervals() > newSize) {
-            table.removeLastInterval();
-        }
-
-        ColorInterval ival = table.getLastInterval();
-        ColorInterval newLast = new ColorInterval(new OpenInterval(ival.getMinimum(),
-                lastInterval.getMaximum()), ival.getColor());
-
-        table.removeLastInterval();
-        table.addIntervalToEnd(newLast);
-
-        //equalizeIntervals(0, table.getNumIntervals());
-
-    }
-
-    private void growUp(int newSize) {
-        if (!(newSize > table.getNumIntervals())) {
-            throw new IllegalArgumentException("argument must be greater than current map size");
-        }
-
-        int curSize = getMapSize();
-
-        while (curSize < newSize) {
-            incrementMapSize();
-            curSize++;
-        }
-
-
-    }
-
-
-
-
-    public void setHighClip(double _highClip) {
-        ColorInterval ival = table.getLastInterval();
-        if (_highClip > ival.getMaximum()) {
-            _highClip = ival.getMaximum();
-            //TODO log
-            //throw new IllegalArgumentException("highClip cannot exceed global maximum");
-        }
-
-        if (_highClip == ival.getMinimum()) return;
-
-
-        setInterval0(getMapSize() - 1, _highClip, ival.getMaximum(), ival.getColor());
-        //highClip = _highClip;
-
-        changeSupport.firePropertyChange(HIGH_CLIP_PROPERTY, ival.getMinimum(), getHighClip());
-
-    }
-
-    public void setLowClip(double _lowClip) {
-        ColorInterval ival = table.getFirstInterval();
-        if (_lowClip < ival.getMinimum()) {
-            _lowClip = ival.getMinimum();
-            //TODO log
-            //throw new IllegalArgumentException("highClip cannot exceed global maximum");
-        }
-        if (Double.compare(_lowClip, ival.getMaximum()) == 0) return;
-
-
-        setInterval0(0, ival.getMinimum(), _lowClip, ival.getColor());
-        //lowClip = _lowClip;
-
-        changeSupport.firePropertyChange(LOW_CLIP_PROPERTY, ival.getMaximum(), getLowClip());
-
-
-    }
-
-
-    public double getHighClip() {
-        return table.getLastInterval().getMinimum();
-    }
-
-
-    public double getLowClip() {
-        return table.getFirstInterval().getMaximum();
-    }
-
-    public ListIterator<ColorInterval> iterator() {
-        return table.iterator();
-
-    }
-
-    public AbstractColorBar createColorBar() {
-        return new DiscreteColorBar(this, SwingConstants.HORIZONTAL);
-
-    }
-
-    public Range getRange() {
-        return new Range(getMinimumValue(), getMaximumValue());
-    }
-
-
-    public int getMapSize() {
-        return table.getNumIntervals();
-    }
-
-
-    public double getMaximumValue() {
-        return table.getLastInterval().getMaximum();
-    }
-
-    public double getMinimumValue() {
-        return table.getFirstInterval().getMinimum();
     }
 
     public void setUpperAlphaThreshold(double _upperAlphaThreshold) {
@@ -412,16 +239,65 @@ public class DiscreteColorMap extends AbstractColorMap {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    public void setHighClip(double _highClip) {
+        ColorInterval ival = intervals.get(intervals.size() - 1);
+
+        if (_highClip > ival.getMaximum()) {
+            _highClip = ival.getMaximum();
+        }
+
+        if (_highClip == ival.getMinimum()) return;
+
+
+        setBoundary(boundaryArray.length - 2, _highClip);
+        changeSupport.firePropertyChange(HIGH_CLIP_PROPERTY, ival.getMinimum(), getHighClip());
+
+    }
+
+    public void setLowClip(double _lowClip) {
+        ColorInterval ival = intervals.get(0);
+        if (_lowClip < ival.getMinimum()) {
+            _lowClip = ival.getMinimum();
+
+        }
+
+        if (Double.compare(_lowClip, ival.getMaximum()) == 0) return;
+
+
+        setBoundary(1, _lowClip);
+
+        changeSupport.firePropertyChange(LOW_CLIP_PROPERTY, ival.getMaximum(), getLowClip());
+
+
+    }
+
+    public double getHighClip() {
+        return boundaryArray[boundaryArray.length - 2];
+    }
+
+
+    public double getLowClip() {
+        return boundaryArray[1];
+    }
+
+    public ListIterator<ColorInterval> iterator() {
+        return intervals.listIterator();
+    }
+
+    public AbstractColorBar createColorBar() {
+        return new DiscreteColorBar(this, SwingUtilities.HORIZONTAL);
+    }
+
     public byte[] getInterleavedRGBAComponents(IImageData data) {
 
         int len = data.getNumElements();
         byte[] rgba = new byte[len * 4];
 
-        double minValue = table.getMinimumValue();
-        double maxValue = table.getMaximumValue();
+        double minValue = getMinimumValue();
+        double maxValue = getMaximumValue();
 
-        ColorInterval lastInterval = table.getLastInterval();
-        ColorInterval firstInterval = table.getFirstInterval();
+        ColorInterval firstInterval = getInterval(0);
+        ColorInterval lastInterval = getInterval(getMapSize() - 1);
 
         ImageIterator iter = data.iterator();
         while (iter.hasNext()) {
@@ -439,7 +315,7 @@ public class DiscreteColorMap extends AbstractColorMap {
                 rgba[offset + 2] = (byte) lastInterval.getGreen();
                 rgba[offset + 3] = (byte) lastInterval.getRed();
             } else {
-                ColorInterval clr = table.lookup(val);
+                Color clr = getColor(val);
                 rgba[offset] = (byte) clr.getAlpha();
                 rgba[offset + 1] = (byte) clr.getBlue();
                 rgba[offset + 2] = (byte) clr.getGreen();
@@ -456,4 +332,14 @@ public class DiscreteColorMap extends AbstractColorMap {
     }
 
 
+    public static void main(String[] args) {
+        LinearColorMap cmap = new LinearColorMap(0, 255, ColorTable.SPECTRUM);
+        DiscreteColorMap tmp = new DiscreteColorMap(cmap);
+
+        tmp.setBoundary(128, 166);
+        tmp.setBoundary(128, 88);
+        tmp.setBoundary(128, 6);
+        tmp.setBoundary(128, 1);
+
+    }
 }

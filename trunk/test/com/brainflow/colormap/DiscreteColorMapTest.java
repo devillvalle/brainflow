@@ -80,15 +80,12 @@ public class DiscreteColorMapTest {
         System.out.println("dmap 99 interval size = " + dmap.getInterval(99).getSize());
         System.out.println("old first interval " + oldfirst);
         System.out.println("new first interval " + dmap.getInterval(0));
-        assert!dmap.hasGaps() : "gaps introduced by equalize";
+
     }
 
     @Test
     public void testSetMapSize() {
-        dmap.setMapSize(dmap.getMapSize() + 1);
-        dmap.setMapSize(dmap.getMapSize() + 1);
-        dmap.setMapSize(dmap.getMapSize() + 1);
-
+       
     }
 
 

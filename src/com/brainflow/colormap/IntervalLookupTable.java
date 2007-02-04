@@ -12,7 +12,7 @@ import java.util.List;
  * Time: 7:43:05 PM
  * To change this template use File | Settings | File Templates.
  */
-public class IntervalLookupTable<T extends Interval> {
+public class IntervalLookupTable<T extends MutableInterval> {
 
 
     private List<T> intervalList = new LinkedList<T>();
@@ -130,9 +130,11 @@ public class IntervalLookupTable<T extends Interval> {
         if ((oldval.getMinimum() == interval.getMinimum()) &&
                 (oldval.getMaximum() == interval.getMaximum())) {
             intervalList.set(index, interval);
-        } else if (oldval.overlapsWith(interval) || interval.leftAdjacent(oldval) || interval.rightAdjacent(oldval)) {
+        } else if (oldval.overlapsWith(interval)) {
             placeInterval(index, interval);
-        } else {
+        }
+
+        else {
             throw new IllegalArgumentException("Supplied interval must overlap with prior interval at same index " +
                     "old interval: " + oldval + " new interval: " + interval);
         }
@@ -188,9 +190,9 @@ public class IntervalLookupTable<T extends Interval> {
 
         T oldInterval = getInterval(index);
 
-        if (!(interval.overlapsWith(oldInterval) || interval.leftAdjacent(oldInterval) || interval.rightAdjacent(oldInterval))) {
+        /*if (!(interval.overlapsWith(oldInterval) || interval.leftAdjacent(oldInterval) || interval.rightAdjacent(oldInterval))) {
             throw new IllegalArgumentException("Supplied interval must overlap with prior interval at same index");
-        }
+        } */
 
         double difference = interval.getMinimum() - oldInterval.getMinimum();
         double makeup = difference / (double) index;
@@ -343,13 +345,6 @@ public class IntervalLookupTable<T extends Interval> {
 
     public static void main(String[] args) {
         IntervalLookupTable itl = new IntervalLookupTable();
-        itl.addInterval(new ColorInterval(new OpenClosedInterval(25, 35), Color.BLACK));
-        itl.addInterval(new ColorInterval(new OpenClosedInterval(35, 45), Color.BLACK));
-        itl.addInterval(new ColorInterval(new OpenClosedInterval(45, 75), Color.BLACK));
-        itl.addInterval(new ColorInterval(new OpenClosedInterval(75, 85), Color.BLACK));
-        itl.addInterval(new ColorInterval(new OpenInterval(85, 95), Color.BLACK));
-
-        itl.placeInterval(2, new ColorInterval(new OpenClosedInterval(39, 77), Color.BLACK));
 
 
     }

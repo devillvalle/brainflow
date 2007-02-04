@@ -156,11 +156,6 @@ public class LinearColorMap extends AbstractColorMap {
     }
 
 
-    protected void updateColors() {
-        int mapSize = getMapSize();
-
-        //fillIntervals(mapSize, icm);
-    }
 
     public void addPropertyChangeListener(PropertyChangeListener x) {
         changeSupport.addPropertyChangeListener(x);
@@ -245,7 +240,7 @@ public class LinearColorMap extends AbstractColorMap {
                     oldClip, lowClip);
         }
 
-        updateColors();
+
 
 
     }
@@ -290,7 +285,7 @@ public class LinearColorMap extends AbstractColorMap {
                     oldClip, highClip);
         }
 
-        updateColors();
+       
 
 
     }

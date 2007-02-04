@@ -50,6 +50,7 @@ public class ColorMapTablePresenter extends AbstractColorMapPresenter {
         colorTable = new ColorMapTable(new LinearColorMap(0, 255, ColorTable.SPECTRUM));
         scrollPane = new JScrollPane(colorTable.getComponent());
 
+
         topPanel = Box.createHorizontalBox();
         topPanel.setBorder(BorderFactory.createEmptyBorder(5, 2, 5, 2));
 

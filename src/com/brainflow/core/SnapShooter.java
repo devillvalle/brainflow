@@ -152,9 +152,9 @@ public class SnapShooter {
 
 
             LinearColorMap lmap = new LinearColorMap(0, 221, ColorTable.GRAYSCALE);
-            DiscreteColorMap ragged = new DiscreteColorMap();
+            DiscreteColorMap ragged = new DiscreteColorMap(lmap);
 
-            ragged.addInterval(0, 1.65, new Color(0, 0, 0, 0));
+            /*ragged.addInterval(0, 1.65, new Color(0, 0, 0, 0));
             ragged.addInterval(1.65, 1.95, new Color(255, 26, 26, 100));
             ragged.addInterval(1.95, 2.55, new Color(255, 77, 77, 150));
             ragged.addInterval(2.55, 3.2, new Color(255, 128, 128, 200));
@@ -165,7 +165,7 @@ public class SnapShooter {
             ragged.addInterval(-1.95, -1.65, new Color(26, 26, 255, 100));
             ragged.addInterval(-2.55, -1.95, new Color(77, 77, 255, 150));
             ragged.addInterval(-3.2, -2.55, new Color(128, 128, 255, 200));
-            ragged.addInterval(-12, -3.2, new Color(179, 179, 255, 255));
+            ragged.addInterval(-12, -3.2, new Color(179, 179, 255, 255)); */
 
 
             ImageLayer3D layer1 = new ImageLayer3D((IImageData3D) il1.getData());
@@ -205,7 +205,7 @@ public class SnapShooter {
 
             DiscreteColorMap ragged2 = new DiscreteColorMap();
 
-            ragged2.addInterval(0, .5, new Color(0, 0, 0, 0));
+            /*ragged2.addInterval(0, .5, new Color(0, 0, 0, 0));
             ragged2.addInterval(.5, 1, new Color(255, 26, 26, 50));
             ragged2.addInterval(1, 1.5, new Color(255, 50, 50, 75));
             ragged2.addInterval(1.5, 2, new Color(255, 77, 77, 100));
@@ -224,7 +224,7 @@ public class SnapShooter {
             ragged2.addInterval(-3, -2.5, new Color(128, 128, 255, 150));
             ragged2.addInterval(-3.5, -3, new Color(150, 150, 255, 175));
             ragged2.addInterval(-4, -3.5, new Color(179, 179, 255, 225));
-            ragged2.addInterval(-5, -4, new Color(200, 200, 255, 255));
+            ragged2.addInterval(-5, -4, new Color(200, 200, 255, 255));  */
 
             /*ragged2.addInterval(0, .5, new Color(0, 0, 0, 0));
             ragged2.addInterval(.5, 1, getHSB(.4f, 1f, 1f, 50));

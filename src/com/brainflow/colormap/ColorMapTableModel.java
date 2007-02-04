@@ -38,8 +38,8 @@ public class ColorMapTableModel extends AbstractTableModel {
 
 
     public void setTableSize(int newSize) {
-        colorMap.setMapSize(newSize);
-        fireTableStructureChanged();
+        //colorMap.setMapSize(newSize);
+        //fireTableStructureChanged();
         //fireTableDataChanged();
     }
 

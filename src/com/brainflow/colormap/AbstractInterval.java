@@ -32,23 +32,6 @@ public abstract class AbstractInterval implements Interval {
         return max - min;
     }
 
-    public boolean leftAdjacent(Interval other) {
-        if (other.getMaximum() == min) return true;
-        return false;
-    }
-
-    public boolean rightAdjacent(Interval other) {
-        if (other.getMinimum() == max) return true;
-        return false;
-    }
-
-    public boolean contiguousWith(Interval other) {
-        if (Double.compare(other.getMaximum(), min) == 0) return true;
-        if (Double.compare(other.getMinimum(), max) == 0) return true;
-
-
-        return false;
-    }
 
 
     public int compareTo(Object o) {

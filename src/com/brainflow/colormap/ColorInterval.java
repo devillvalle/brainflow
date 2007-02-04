@@ -20,6 +20,9 @@ public final class ColorInterval implements Interval {
         clr = c;
     }
 
+    public void setColor(Color c) {
+        clr = c;
+    }
     public Color getColor() {
         return clr;
     }
@@ -69,17 +72,7 @@ public final class ColorInterval implements Interval {
         return interval.getSize();
     }
 
-    public void setRange(double min, double max) {
-        interval.setRange(min, max);
-    }
-
-    public boolean leftAdjacent(Interval other) {
-        return interval.leftAdjacent(other);
-    }
-
-    public boolean rightAdjacent(Interval other) {
-        return interval.rightAdjacent(other);
-    }
+  
 
     public boolean equals(Object other) {
 

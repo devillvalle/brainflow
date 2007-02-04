@@ -10,12 +10,13 @@ package com.brainflow.colormap;
 public interface Interval extends Comparable {
 
 
-    public boolean overlapsWith(Interval other);
-
+   
     public boolean containsInterval(Interval other);
 
     public boolean containsValue(double v);
 
+    public boolean overlapsWith(Interval other);
+    
     public int compareTo(Object o);
 
     public double getMinimum();
@@ -24,11 +25,6 @@ public interface Interval extends Comparable {
 
     public double getSize();
 
-    public void setRange(double min, double max);
-
-    public boolean leftAdjacent(Interval other);
-
-    public boolean rightAdjacent(Interval other);
 
 
 }

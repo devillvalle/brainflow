@@ -50,7 +50,7 @@ public class RangePopupPanel extends PopupPanel {
     }
 
     private void init() {
-        layout = new FormLayout("3dlu, l:p, 3dlu, l:max(25dlu;p), 3dlu, l:p, 3dlu, l:max(25dlu;p), 3dlu", "2dlu, p, 2dlu");
+        layout = new FormLayout("6dlu, l:p, 3dlu, l:max(30dlu;p), 3dlu, l:p, 3dlu, l:max(30dlu;p), 6dlu", "8dlu, p, 8dlu");
 
         setLayout(layout);
 

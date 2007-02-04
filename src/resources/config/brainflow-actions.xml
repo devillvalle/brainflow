@@ -19,6 +19,12 @@
                 accel="control X"
                 actionClass="com.brainflow.application.actions.ExitApplicationAction"
                 desc="Exits the application"/>
+        <action id="main-save-colorbar"
+                name="Save color bar"
+                mnemonic="C"
+                accel="control alt s"
+                actionClass="com.brainflow.application.actions.SaveColorBarAction"
+                desc="Captures color bar for currently selected layer"/>
     </action-list>
     <action-list id="view-menu" name="View">
         <action id="view-sagittal"

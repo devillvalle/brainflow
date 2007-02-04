@@ -57,6 +57,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import apprising.api.swing.plaf.a03.A03LookAndFeel;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -131,9 +133,9 @@ public class Brainflow {
         try {
 
             //SubstanceLookAndFeel lf = new org.jvnet.substance.skin.SubstanceCremeLookAndFeel();
-            SyntheticaLookAndFeel lf = new SyntheticaStandardLookAndFeel();
-            //SyntheticaLookAndFeel lf = new de.javasoft.plaf.synthetica.SyntheticaBlueIceLookAndFeel();
-
+            //SyntheticaLookAndFeel lf = new SyntheticaStandardLookAndFeel();
+            SyntheticaLookAndFeel lf = new de.javasoft.plaf.synthetica.SyntheticaBlueIceLookAndFeel();
+            //A03LookAndFeel lf = new apprising.api.swing.plaf.a03.A03LookAndFeel();
             UIManager.setLookAndFeel(lf);
             //LookAndFeelFactory.installDefaultLookAndFeelAndExtension();
 
@@ -241,6 +243,8 @@ public class Brainflow {
         fileMenu.add(directoryMenu.getMenu());
         fileMenu.add(savePNGAction);
 
+        Action action = ActionManager.getInstance().getAction("main-save-colorbar");
+        fileMenu.add(action);
 
         BasicAction exit = (BasicAction) ActionManager.getInstance().getAction("main-exit");
         fileMenu.add(exit);
@@ -466,7 +470,7 @@ public class Brainflow {
         ColorMapTablePresenter tablePresenter = new ColorMapTablePresenter();
 
         tabbedPane.addTab("Adjustment", new JScrollPane(colorAdjustmentControl.getComponent()));
-        tabbedPane.addTab("Color Table", new JScrollPane(tablePresenter.getComponent()));
+        tabbedPane.addTab("Color Table", tablePresenter.getComponent());
         //tabbedPane.addTab("Mask", maskControl.getComponent());
         tabbedPane.addTab("Coordinates", new JScrollPane(coordinateControls.getComponent()));
 

@@ -48,9 +48,10 @@ public class FilledSelectableBorder extends AbstractBorder implements ISelectabl
         fillBorder.setBorderColor(deselectedColor);
         titleGenerator = new ConstantStringGenerator("");
 
-        selectedColor = UIManager.getColor("DockableFrame.activeTitleBackground");
-        deselectedColor = UIManager.getColor("DockableFrame.activeTitleBackground");
-        preselectedColor = UIManager.getColor("DockableFrame.activeTitleBackground").darker();
+        //selectedColor = UIManager.getColor("DockableFrame.activeTitleBackground");
+        selectedColor = new Color(255,134, 32);
+        deselectedColor = Color.GRAY;
+        preselectedColor = selectedColor.darker();
         //UIManager.getColor("InternalFrame.activeBorderColor");
     }
 

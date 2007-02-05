@@ -35,7 +35,8 @@ public class DiscreteColorMap2Test extends JPanel {
 
             public void actionPerformed(ActionEvent e) {
                 double num = ((Number)value.getValue()).doubleValue();
-                tmp.setBoundary(12, num);
+                ColorInterval ival = tmp.getInterval(12);
+                tmp.setInterval(12, ival.getMinimum(), num, ival.getColor());
             }
         });
 

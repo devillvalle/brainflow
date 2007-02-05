@@ -21,46 +21,86 @@ public class DiscreteColorMap extends AbstractColorMap {
 
     private static final Logger log = Logger.getLogger(DiscreteColorMap.class.getName());
 
-    private double[] boundaryArray;
-    private double[] oldArray;
+
+    private SegmentArray segments;
+
 
     private List<ColorInterval> intervals;
 
+    // need to abstract notion of boundary and interval.
 
-    public DiscreteColorMap() {
-        boundaryArray = new double[0];
-        intervals = new ArrayList<ColorInterval>();
+    /*public DiscreteColorMap(List<Color> clrs, Double... boundaries) {
+     if (clrs.size() != (boundaries.length-1)) {
+         throw new IllegalArgumentException("must provide one less color than number of color boundaries");
+     }
 
+     boundaryArray = new double[boundaries.length];
+     for (int i=0; i<boundaries.length; i++) {
+         boundaryArray[i] = boundaries[i];
+     }
+
+     for (int i=1; i<boundaries.length; i++) {
+         ColorInterval ival = new ColorInterval(new IndexedInterval(i, boundaryArray ), clrs.get(i-1));
+         intervals.add(ival);
+
+     }
+
+ }   */
+
+
+    private DiscreteColorMap(SegmentArray _segments, List<ColorInterval> _intervals) {
+        segments = _segments;
+        int numIntervals = segments.getNumIntervals();
+
+        int isize = _intervals.size() - 1;
+        intervals = new ArrayList<ColorInterval>(segments.getNumIntervals());
+        for (int i = 0; i < numIntervals; i++) {
+            double perc = (double) i / (double) (numIntervals - 1);
+            int index = (int) (perc * isize);
+            ColorInterval ival = new ColorInterval(segments.getInterval(i), _intervals.get(index).getColor());
+            intervals.add(ival);
+        }
+
+        equalizeIntervals(0, getMapSize() - 1);
     }
 
     public DiscreteColorMap(IColorMap cmap) {
-        boundaryArray = new double[cmap.getMapSize() + 1];
+        segments = new SegmentArray(cmap.getMapSize());
+        segments.setLowerBound(0, cmap.getMinimumValue());
+
         ListIterator<ColorInterval> iter = cmap.iterator();
+
         intervals = new ArrayList<ColorInterval>(cmap.getMapSize());
 
-        boundaryArray[0] = cmap.getInterval(0).getMinimum();
+
         while (iter.hasNext()) {
             ColorInterval ci = iter.next();
             int i = iter.previousIndex();
-            boundaryArray[i + 1] = ci.getMaximum();
-            IndexedInterval ival = new IndexedInterval(i + 1, boundaryArray);
-            intervals.add(new ColorInterval(ival, ci.getColor()));
+            segments.setUpperBound(i, ci.getMaximum());
+            intervals.add(new ColorInterval(segments.getInterval(i), ci.getColor()));
         }
-
-
     }
 
 
     public double getMaximumValue() {
-        return boundaryArray[boundaryArray.length - 1];
+        return segments.getUpperBound(segments.getNumIntervals() - 1);
     }
 
     public double getMinimumValue() {
-        return boundaryArray[0];
+        return segments.getLowerBound(0);
     }
 
     public int getMapSize() {
         return intervals.size();
+    }
+
+    public List<Color> getColors() {
+        List<Color> clr = new ArrayList<Color>(intervals.size() + 1);
+        for (int i = 0; i < clr.size(); i++) {
+            clr.add(intervals.get(i).getColor());
+        }
+
+        return clr;
     }
 
     public ColorInterval getInterval(int index) {
@@ -68,7 +108,7 @@ public class DiscreteColorMap extends AbstractColorMap {
     }
 
     public Color getColor(double value) {
-        int idx = indexOf(value);
+        int idx = segments.indexOf(value);
         return intervals.get(idx).getColor();
     }
 
@@ -79,94 +119,67 @@ public class DiscreteColorMap extends AbstractColorMap {
     }
 
     public void equalizeIntervals(int startIndex, int endIndex) {
-
-        if (startIndex < 0 || endIndex >= getMapSize()) {
-            throw new IllegalArgumentException("index range is outside map range: (" + startIndex +
-                    ", " + endIndex + "),  map size = " + getMapSize());
-        } else if ((endIndex - startIndex) < 1) {
-            throw new IllegalArgumentException("index range must be greater than 1!");
-        }
-
-
-        int range = endIndex - startIndex + 1;
-
-        ColorInterval begin = getInterval(startIndex);
-        ColorInterval end = getInterval(endIndex);
-
-        double bucketSize = (end.getMaximum() - begin.getMinimum()) / range;
-        double start = begin.getMinimum();
-
-        if (endIndex == (getMapSize()-1)) {
-            endIndex--;
-        }
-
-        for (int i = startIndex; i <= endIndex; i++) {
-            boundaryArray[i + 1] = start + bucketSize;
-            start = start + bucketSize;
-        }
-
+        segments.equalizeIntervals(startIndex, endIndex);
         changeSupport.firePropertyChange(COLORS_CHANGED_PROPERTY, null, this);
 
     }
 
-
-    public int indexOf(double value) {
-        if (value <= boundaryArray[0]) {
-            return 0;
-        }
-        if (value >= boundaryArray[boundaryArray.length - 1]) {
-            return getMapSize() - 1;
+    public DiscreteColorMap shrink(int shrinkBy) {
+        if (shrinkBy < 1 || shrinkBy > (getMapSize() - 1)) {
+            throw new IllegalArgumentException("Cannot shrink more intervals than map contains");
         }
 
-        int bottom = 0;
-        int top = boundaryArray.length - 1;
+        int nsize = segments.getNumIntervals() + 1 - shrinkBy;
 
-        int mid;
+        double[] nbounds = new double[nsize];
+        double[] oldbounds = segments.getBoundaries();
 
-        while (top != bottom) {
-            mid = (int) ((top + bottom) / 2.0);
+        System.arraycopy(oldbounds, 0, nbounds, 0, nsize - 1);
+        nbounds[nsize - 1] = oldbounds[oldbounds.length - 1];
 
-            if (value >= boundaryArray[mid] && value < boundaryArray[mid + 1]) {
-                return mid;
-            } else if (value > boundaryArray[mid]) {
-                bottom = mid;
-            } else {
-                top = mid;
-            }
-        }
+        SegmentArray nsegments = new SegmentArray(nbounds);
 
-        return -1;
+        return new DiscreteColorMap(nsegments, intervals);
+
+
     }
 
-    private boolean isMonotonic() {
-        double prev = boundaryArray[0];
-        for (int i = 1; i < boundaryArray.length; i++) {
-            if (boundaryArray[i] < prev) {
-                log.info("i: " + i);
-                log.info("prev: " + prev);
-                log.info("cur: " + boundaryArray[i]);
-                return false;
-            }
-            prev = boundaryArray[i];
+    public DiscreteColorMap grow(int growBy) {
+        if (growBy < 1 || (growBy + getMapSize()) > IColorMap.MAXIMUM_INTERVALS) {
+            throw new IllegalArgumentException("Cannot grow mapo by " + growBy + " intervals.");
         }
 
-        return true;
+        int nsize = segments.getNumIntervals() + 1 + growBy;
+
+        double[] nbounds = new double[nsize];
+        double[] oldbounds = segments.getBoundaries();
+        System.arraycopy(oldbounds, 0, nbounds, 0, oldbounds.length);
+
+        for (int i=getMapSize(); i<nsize; i++) {
+            nbounds[i] = oldbounds[oldbounds.length - 1];
+        }
+
+        SegmentArray nsegments = new SegmentArray(nbounds);
+
+        return new DiscreteColorMap(nsegments, intervals);
     }
+
 
     public void setInterval(int index, double min, double max, Color clr) {
         ColorInterval ival = getInterval(index);
         min = Math.max(min, getMinimumValue());
         max = Math.min(max, getMaximumValue());
         if (index == 0) {
-            setBoundary(index + 1, max);
+            setUpperBound(index, max);
+            //setBoundary(index + 1, max);
         } else if (index == getMapSize() - 1) {
-            setBoundary(index, min);
+            setUpperBound(index - 1, min);
         } else {
             if (!NumberUtils.equals(ival.getMinimum(), min, .0001)) {
-                setBoundary(index + 1, min);
+                setUpperBound(index - 1, min);
             }
             if (!NumberUtils.equals(ival.getMaximum(), max, .0001)) {
-                setBoundary(index + 2, max);
+                setUpperBound(index, max);
             }
         }
 
@@ -174,9 +187,57 @@ public class DiscreteColorMap extends AbstractColorMap {
         changeSupport.firePropertyChange(COLORS_CHANGED_PROPERTY, null, this);
     }
 
-    public void setBoundary(int boundary, double value) {
-        assert boundary > 0 && boundary < (boundaryArray.length - 1);
-        assert value >= boundaryArray[0] && value <= boundaryArray[boundaryArray.length - 1];
+    public void setUpperBound(int index, double value) {
+        double oldValue = segments.getUpperBound(index);
+        double maxValue = segments.getMaximum();
+        double minValue = segments.getMinimum();
+
+
+        if (value > oldValue) {
+            double totalSpan = maxValue - oldValue;
+            double difference = value - oldValue;
+
+            int begin = index + 1;
+            int end = segments.getNumIntervals() - 1;
+
+            segments.setUpperBound(index, value);
+
+            double prev = oldValue;
+            for (int i = begin; i < end; i++) {
+                double oldInterval = segments.getUpperBound(i) - prev;
+                double perc = oldInterval / totalSpan;
+                double localfudge = perc * difference;
+                prev = segments.getUpperBound(i);
+
+                segments.setUpperBound(i,
+                        Math.min(segments.getLowerBound(i) + oldInterval - localfudge, maxValue));
+            }
+        } else if (value < oldValue) {
+            double difference = oldValue - value;
+            double totalSpan = oldValue - minValue;
+
+            double prev = oldValue;
+            segments.setUpperBound(index, value);
+
+            for (int i = index - 1; i >= 0; i--) {
+                double oldInterval = prev - segments.getLowerBound(i + 1);
+                double perc = oldInterval / totalSpan;
+                double localfudge = perc * difference;
+                prev = segments.getUpperBound(i);
+
+                segments.setUpperBound(i,
+                        Math.max(segments.getUpperBound(i + 1) - oldInterval + localfudge, minValue));
+
+            }
+
+        }
+
+
+    }
+
+    /*private void setBoundary(int boundary, double value) {
+        //assert boundary > 0 && boundary < (boundaryArray.length - 1);
+        //assert value >= boundaryArray[0] && value <= boundaryArray[boundaryArray.length - 1];
 
 
         double oldValue = boundaryArray[boundary];
@@ -225,7 +286,7 @@ public class DiscreteColorMap extends AbstractColorMap {
         assert isMonotonic() : "not monotonic";
 
 
-    }
+    }   */
 
     public void setUpperAlphaThreshold(double _upperAlphaThreshold) {
         //To change body of implemented methods use File | Settings | File Templates.
@@ -249,7 +310,7 @@ public class DiscreteColorMap extends AbstractColorMap {
         if (_highClip == ival.getMinimum()) return;
 
 
-        setBoundary(boundaryArray.length - 2, _highClip);
+        setUpperBound(intervals.size() - 2, _highClip);
         changeSupport.firePropertyChange(HIGH_CLIP_PROPERTY, ival.getMinimum(), getHighClip());
 
     }
@@ -264,7 +325,7 @@ public class DiscreteColorMap extends AbstractColorMap {
         if (Double.compare(_lowClip, ival.getMaximum()) == 0) return;
 
 
-        setBoundary(1, _lowClip);
+        setUpperBound(0, _lowClip);
 
         changeSupport.firePropertyChange(LOW_CLIP_PROPERTY, ival.getMaximum(), getLowClip());
 
@@ -272,12 +333,12 @@ public class DiscreteColorMap extends AbstractColorMap {
     }
 
     public double getHighClip() {
-        return boundaryArray[boundaryArray.length - 2];
+        return segments.getLowerBound(intervals.size() - 1);
     }
 
 
     public double getLowClip() {
-        return boundaryArray[1];
+        return segments.getUpperBound(0);
     }
 
     public ListIterator<ColorInterval> iterator() {
@@ -335,11 +396,8 @@ public class DiscreteColorMap extends AbstractColorMap {
     public static void main(String[] args) {
         LinearColorMap cmap = new LinearColorMap(0, 255, ColorTable.SPECTRUM);
         DiscreteColorMap tmp = new DiscreteColorMap(cmap);
+        tmp.setUpperBound(34, 125);
 
-        tmp.setBoundary(128, 166);
-        tmp.setBoundary(128, 88);
-        tmp.setBoundary(128, 6);
-        tmp.setBoundary(128, 1);
 
     }
 }

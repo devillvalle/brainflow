@@ -71,8 +71,10 @@ public class FilledBorder extends AbstractBorder {
     }
 
     public void setBorderColor(Color color) {
-        this.endColor = color;
-        this.startColor = new Color((int) (.4 * color.getRed()), (int) (.4 * color.getGreen()), (int) (.4 * color.getBlue()));
+        this.endColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), 255);
+        this.startColor = new Color((int) Math.min(1.5 * color.getRed(), 255)
+                , (int) Math.min(1.5 * color.getGreen(), 255), (int) (Math.min(1.5 * color.getBlue(), 255)),
+                (int) Math.min(1/2 * color.getAlpha(), 255));
     }
 
 

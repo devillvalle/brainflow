@@ -54,7 +54,10 @@ public class IndexedInterval implements Interval {
 
     public double getMinimum() {
         return boundaryArray[index-1];
+    }
 
+    public int getIndex() {
+        return index;
     }
 
     public double getMaximum() {

@@ -135,7 +135,7 @@ public class SimpleOrthogonalImageView extends ImageView {
     }
 
     private void initView() {
-        BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
+        BoxLayout layout = new BoxLayout(this, BoxLayout.X_AXIS);
 
         axialView = ImageViewFactory.createAxialView(getImageDisplayModel());
         axialView.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));

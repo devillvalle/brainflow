@@ -134,7 +134,7 @@ public class Brainflow {
 
             //SubstanceLookAndFeel lf = new org.jvnet.substance.skin.SubstanceCremeLookAndFeel();
             //SyntheticaLookAndFeel lf = new SyntheticaStandardLookAndFeel();
-            SyntheticaLookAndFeel lf = new de.javasoft.plaf.synthetica.SyntheticaBlueIceLookAndFeel();
+            SyntheticaLookAndFeel lf = new de.javasoft.plaf.synthetica.SyntheticaOrangeMetallicLookAndFeel();
             //A03LookAndFeel lf = new apprising.api.swing.plaf.a03.A03LookAndFeel();
             UIManager.setLookAndFeel(lf);
             //LookAndFeelFactory.installDefaultLookAndFeelAndExtension();

@@ -234,7 +234,7 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
             propertiesButton.setButtonStyle(NullJideButton.HYPERLINK_STYLE);
             propertiesButton.setHorizontalAlignment(SwingConstants.LEADING);
 
-            URL url = getClass().getClassLoader().getResource("resources/icons/int_obj.gif");
+            URL url = getClass().getClassLoader().getResource("resources/icons/information.png");
             ImageIcon icon = null;
             try {
                 //icon = com.jidesoft.icons.IconsFactory.findImageIcon(getClass(), "resources/icons/info_tsk.gif");

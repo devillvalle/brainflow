@@ -12,6 +12,9 @@ package com.brainflow.application.presentation;
 import com.brainflow.gui.AbstractPresenter;
 import com.jidesoft.pane.CollapsiblePane;
 import com.jidesoft.pane.CollapsiblePanes;
+import com.jidesoft.plaf.longhorn.LonghornCollapsiblePaneUI;
+import com.jidesoft.plaf.office2003.Office2003CollapsiblePaneUI;
+import com.jidesoft.plaf.vsnet.VsnetCollapsiblePaneUI;
 
 import javax.swing.*;
 
@@ -44,9 +47,11 @@ public class ColorAdjustmentControl {
 
     private void addCollapsiblePane(AbstractPresenter presenter, String title) {
         CollapsiblePane cp = new CollapsiblePane();
-
+        cp.setStyle(CollapsiblePane.TREE_STYLE);
+        cp.setUI(new VsnetCollapsiblePaneUI());
         cp.setContentPane(presenter.getComponent());
         cp.setTitle(title);
+
         cp.setEmphasized(true);
         cp.setOpaque(false);
 

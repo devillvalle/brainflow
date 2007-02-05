@@ -60,8 +60,10 @@ public class ColorMapTablePresenter extends AbstractColorMapPresenter {
         segmentSpinner.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 Number n = (Number) segmentSpinner.getValue();
-                colorTable.getModel().setTableSize(n.intValue());
+                IColorMap cmap = colorTable.getModel().setTableSize(n.intValue());
+
                 colorTable.getComponent().getSelectionModel().clearSelection();
+                 ColorMapTablePresenter.this.getColorMapParameter().setParameter(cmap);
 
             }
         });
@@ -196,7 +198,7 @@ public class ColorMapTablePresenter extends AbstractColorMapPresenter {
 
 
         public boolean shouldBeEnabled() {
-            System.out.println("somebody is calling shouldBeEnabled");
+            
             return false;
         }
     }

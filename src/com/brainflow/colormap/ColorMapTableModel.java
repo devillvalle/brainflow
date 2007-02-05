@@ -37,11 +37,24 @@ public class ColorMapTableModel extends AbstractTableModel {
     }
 
 
-    public void setTableSize(int newSize) {
-        //colorMap.setMapSize(newSize);
+    public IColorMap setTableSize(int newSize) {
+        int oldSize = colorMap.getMapSize();
+        if (newSize < oldSize) {
+            colorMap = colorMap.shrink(oldSize-newSize);
+            fireTableStructureChanged();
+        } else {
+            colorMap = colorMap.grow(newSize-oldSize);
+            fireTableStructureChanged();
+
+            //colorMap.setMapSize(newSize);
         //fireTableStructureChanged();
         //fireTableDataChanged();
+        }
+
+        return colorMap;
     }
+
+
 
     public int getColumnCount() {
         return columnNames.length;

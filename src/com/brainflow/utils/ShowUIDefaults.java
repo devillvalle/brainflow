@@ -20,6 +20,7 @@ import java.util.*;
 
 import de.javasoft.plaf.synthetica.SyntheticaLookAndFeel;
 import de.javasoft.plaf.synthetica.SyntheticaStandardLookAndFeel;
+import de.javasoft.plaf.synthetica.SyntheticaOrangeMetallicLookAndFeel;
 
 public class ShowUIDefaults extends JFrame implements ActionListener {
     JFrame frame;
@@ -218,7 +219,7 @@ public class ShowUIDefaults extends JFrame implements ActionListener {
 
         //javax.swing.LookAndFeel lipstikLnF = new com.lipstikLF.LipstikLookAndFeel();
         try {
-            SyntheticaLookAndFeel lf = new SyntheticaStandardLookAndFeel();
+            SyntheticaLookAndFeel lf = new SyntheticaOrangeMetallicLookAndFeel();
             UIManager.setLookAndFeel(lf);
             LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
         } catch (Exception e) {

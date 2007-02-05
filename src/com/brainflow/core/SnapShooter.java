@@ -203,7 +203,7 @@ public class SnapShooter {
 
             shooter.shootContinuouslyAndSave("c:/DTI/slopes/", "TAge.Norm_Axial", -45, 45, 2);
 
-            DiscreteColorMap ragged2 = new DiscreteColorMap();
+            DiscreteColorMap ragged2 = new DiscreteColorMap(null);
 
             /*ragged2.addInterval(0, .5, new Color(0, 0, 0, 0));
             ragged2.addInterval(.5, 1, new Color(255, 26, 26, 50));

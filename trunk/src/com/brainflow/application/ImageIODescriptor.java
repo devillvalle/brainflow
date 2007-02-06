@@ -202,6 +202,10 @@ public class ImageIODescriptor {
         return formatName;
     }
 
+    public String toString() {
+        return getFormatName();
+    }
+
     public static ImageIODescriptor loadFromXML(Element formatElement) throws BrainflowException {
         return new ImageIODescriptor(formatElement);
     }

@@ -6,14 +6,16 @@ import com.brainflow.utils.Dimension3D;
 import com.brainflow.utils.Point3D;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.VFS;
+import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.util.RandomAccessMode;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.imageio.ImageIO;
+import java.io.*;
 import java.net.URL;
 import java.nio.ByteOrder;
 import java.util.Arrays;
+import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,13 +26,83 @@ import java.util.Arrays;
  */
 public class NiftiInfoReader implements ImageInfoReader {
 
+    private static final Logger log = Logger.getLogger(NiftiInfoReader.class.getName());
+
+    public static String getHeaderName(String name) {
+        if (name.endsWith(".img")) {
+            name = name.substring(0, name.length() - 3);
+            return name + "hdr";
+        }
+        if (name.endsWith(".nii")) {
+            return name;
+        }
+        if (name.endsWith(".nii.gz")) {
+            return name;
+        }
+
+        return name + ".nii";
+    }
+
+    public static String getImageName(String name) {
+        if (name.endsWith(".hdr")) {
+            name = name.substring(0, name.length() - 3);
+            return name + "img";
+        }
+        if (name.endsWith(".nii")) {
+            return name;
+        }
+
+        if (name.endsWith(".nii.gz")) {
+            return name;
+        }
+
+        return name + ".nii";
+    }
+
+
+    private InputStream getInputStream(FileObject obj) throws IOException {
+        try {
+
+            log.info("getting input stream for file object : " + obj.getName());
+            if (obj.getName().getBaseName().endsWith(".gz")) {
+                String uri = obj.getName().getURI();
+
+                log.info("resolving zipped file : " + "gz:" + uri);
+                FileObject gzfile = VFS.getManager().resolveFile("gz:" + uri);
+                FileObject[] children = gzfile.getChildren();
+                if (children == null || children.length == 0) {
+                    throw new IOException("Error reading gzipped file object, URI : " + uri);
+                }
+
+                return children[0].getContent().getInputStream();
+            } else {
+                return obj.getContent().getRandomAccessContent(RandomAccessMode.READ).getInputStream();
+            }
+
+        } catch (FileSystemException e) {
+            throw new IOException(e);
+        }
+
+    }
+
+    private InputStream getInputStream(File f) throws IOException {
+        if (f.getName().endsWith(".gz")) {
+            return new BufferedInputStream(new GZIPInputStream(new FileInputStream(f), 2048));
+        } else {
+            return new BufferedInputStream(new FileInputStream(f), 2048);
+        }
+
+    }
+
     public ImageInfo readInfo(File f) throws BrainflowException {
         ImageInfo ret = null;
 
         try {
-            ret = readHeader(f.getName(), new FileInputStream(f));
+
+            String headerName = NiftiInfoReader.getHeaderName(f.getName());
+            ret = readHeader(headerName, getInputStream(f));
             // todo check to see if valid nifti file extension
-            ret.setImageFile(VFS.getManager().resolveFile(f.getParentFile(), f.getName()));
+            ret.setImageFile(resolveFileObject(NiftiInfoReader.getImageName(f.getAbsolutePath())));
         } catch (Exception e) {
             //log.warning("Exception caught in AnalyzeInfoReader.readInfo ");
             throw new BrainflowException(e);
@@ -41,14 +113,39 @@ public class NiftiInfoReader implements ImageInfoReader {
 
     }
 
+    private FileObject resolveFileObject(String f) throws FileNotFoundException {
+        try {
+            if (f.endsWith(".gz")) {
+                FileObject gzfile = VFS.getManager().resolveFile("gz:" + f);
+                FileObject[] children = gzfile.getChildren();
+                if (children == null || children.length == 0) {
+                    throw new FileNotFoundException("Error finding gzipped file : " + f);
+                }
+
+                log.info("resolved gzipped file : " + children[0]);
+                log.info("file content type : " + children[0].getFileSystem());
+                return children[0];
+            } else {
+                return VFS.getManager().resolveFile(f);
+            }
+        } catch (FileSystemException e) {
+            throw new FileNotFoundException(e.getMessage());
+        }
+
+    }
+
+    private FileObject resolveFileObject(File f) throws FileNotFoundException {
+        return resolveFileObject(f.getAbsolutePath());
+    }
+
     public ImageInfo readInfo(FileObject fobj) throws BrainflowException {
         ImageInfo ret = null;
 
         try {
-            InputStream istream = fobj.getContent().getInputStream();
 
-            ret = readHeader(fobj.getName().getBaseName(), istream);
-            ret.setImageFile(VFS.getManager().resolveFile(fobj.getParent(), AnalyzeInfoReader.getImageName(fobj.getName().getBaseName())));
+            String headerName = NiftiInfoReader.getHeaderName(fobj.getName().getBaseName());
+            ret = readHeader(headerName, getInputStream(fobj));
+            ret.setImageFile(resolveFileObject(fobj.getName().getURI()));
 
         } catch (Exception e) {
             throw new BrainflowException(e);
@@ -221,15 +318,11 @@ public class NiftiInfoReader implements ImageInfoReader {
     public static void main(String[] args) {
         try {
 
+            String niftigz1 = "c:/javacode/googlecode/brainflow/test/data/corr_with_zperf_index.nii.gz";
             NiftiInfoReader reader = new NiftiInfoReader();
+            System.out.println(reader.readInfo(VFS.getManager().resolveFile(niftigz1)).toString());
 
-            System.out.println("exists? " + VFS.getManager().resolveFile("F:/data/anyback/sbhighres_mean.nii").exists());
 
-            FileObject fobj = VFS.getManager().resolveFile("F:/data/anyback/sbhighres_mean.nii");
-            System.out.println("size = " + fobj.getContent().getSize());
-
-            NiftiImageInfo info = reader.readHeader("sbhighres_mean.nii", fobj.getContent().getInputStream());
-            //System.out.println(info);
         } catch (Exception e) {
             e.printStackTrace();
         }

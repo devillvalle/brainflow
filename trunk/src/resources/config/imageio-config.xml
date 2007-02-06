@@ -8,6 +8,10 @@
         <Header extension=".nii" reader="com.brainflow.image.io.NiftiInfoReader"/>
         <Data extension=".nii" reader="com.brainflow.image.io.BasicImageReader"/>
     </ImageFormat>
+    <ImageFormat name="Nifti1-gz">
+        <Header extension=".nii.gz" reader="com.brainflow.image.io.NiftiInfoReader"/>
+        <Data extension=".nii.gz" reader="com.brainflow.image.io.BasicImageReader"/>
+    </ImageFormat>
 
 
 </root>

@@ -91,10 +91,13 @@ public class SoftLoadableImage implements ILoadableImage {
 
             } catch (BrainflowException e) {
                 e.printStackTrace();
+                throw new RuntimeException(e);
             } catch (InstantiationException e2) {
                 e2.printStackTrace();
+                throw new RuntimeException(e2);
             } catch (IllegalAccessException e3) {
                 e3.printStackTrace();
+                throw new RuntimeException(e3);
             }
         }
 
@@ -106,7 +109,11 @@ public class SoftLoadableImage implements ILoadableImage {
 
             ImageInfoReader reader = (ImageInfoReader) descriptor.getHeaderReader().newInstance();
             imageInfo = reader.readInfo(getHeaderFile());
-            imageInfo.setImageFile(getDataFile());
+
+            if (imageInfo.getImageFile() == null) {
+                imageInfo.setImageFile(getDataFile());
+            }
+
             ImageReader ireader = (ImageReader) descriptor.getDataReader().newInstance();
 
             IImageData data = ireader.readImage(imageInfo, plistener);
@@ -129,7 +136,11 @@ public class SoftLoadableImage implements ILoadableImage {
         try {
             ImageInfoReader reader = (ImageInfoReader) descriptor.getHeaderReader().newInstance();
             imageInfo = reader.readInfo(getHeaderFile());
-            imageInfo.setImageFile(getDataFile());
+
+            if (imageInfo.getImageFile() == null) {
+                imageInfo.setImageFile(getDataFile());
+            }
+
             ImageReader ireader = (ImageReader) descriptor.getDataReader().newInstance();
             IImageData data = ireader.readImage(imageInfo, new LoadableImageProgressListener(0, 100));
             data.setIdentifier(getUniqueID());
@@ -152,7 +163,7 @@ public class SoftLoadableImage implements ILoadableImage {
 
     public String toString() {
         return header.getName().getBaseName();
-     
+
     }
 
 

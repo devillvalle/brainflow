@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,6 +27,7 @@ import java.util.List;
  */
 public class ImageIOManager {
 
+    private static Logger log = Logger.getLogger(ImageIOManager.class.getName());
 
     private static java.util.List<ImageIODescriptor> descriptorList = new java.util.ArrayList<ImageIODescriptor>();
 
@@ -82,10 +84,11 @@ public class ImageIOManager {
             Document doc = parser.build(istream);
             Element root = doc.getRootElement();
             java.util.List l1 = root.getChildren("ImageFormat");
-            System.out.println("Image Format elements: " + l1.size());
+            log.info("Number of image formats: " + l1.size());
             for (Iterator iter = l1.iterator(); iter.hasNext();) {
                 try {
                     ImageIODescriptor desc = ImageIODescriptor.loadFromXML((Element) iter.next());
+                    log.info("Loading image format: " + desc);
                     descriptorList.add(desc);
                 } catch (BrainflowException e) {
                     throw e;

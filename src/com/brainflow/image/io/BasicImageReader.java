@@ -16,6 +16,8 @@ import org.apache.commons.vfs.util.RandomAccessMode;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.BufferedInputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
@@ -107,7 +109,7 @@ public class BasicImageReader implements ImageReader {
 
     public BasicImageData getOutput(ProgressListener listener) throws FileNotFoundException, IOException {
 
-        RandomAccessContent rac = null;
+        InputStream istream = null;
 
         try {
 
@@ -119,8 +121,14 @@ public class BasicImageReader implements ImageReader {
             listener.setMaximum(numBytes);
             listener.setString("Opening Image Stream ...");
 
-            rac = inputFile.getContent().getRandomAccessContent(RandomAccessMode.READ);
-            rac.seek(getByteOffset());
+            log.info("Input file system type: " + inputFile.getFileSystem());
+            istream = new BufferedInputStream(inputFile.getContent().getInputStream());
+            log.info("Getting input Stream ...");
+            log.info("Input Stream is " + istream.getClass().getCanonicalName());
+            istream.read(new byte[getByteOffset()]);
+
+            //rac = inputFile.getContent().getRandomAccessContent(RandomAccessMode.READ);
+            //rac.seek(getByteOffset());
 
 
             listener.setString("Allocating memory ...");
@@ -133,14 +141,16 @@ public class BasicImageReader implements ImageReader {
             byte[] tmpdata = new byte[chunkSize];
             log.info("max = " + numBytes);
             for (int i = 0; i < NUM_CHUNKS; i++) {
-                rac.readFully(tmpdata);
+                istream.read(tmpdata);
+                //rac.readFully(tmpdata);
                 wholeBuffer.put(tmpdata);
                 listener.setValue(i * chunkSize);
 
             }
 
             byte[] lastData = new byte[lastChunk];
-            rac.readFully(lastData);
+            istream.read(lastData);
+            //rac.readFully(lastData);
 
             wholeBuffer.put(lastData);
             listener.setValue(numBytes);
@@ -199,8 +209,11 @@ public class BasicImageReader implements ImageReader {
         } catch (IOException e2) {
             throw e2;
         } finally {
-            if (rac != null)
-                rac.close();
+            //if (rac != null)
+                //rac.close();
+            if (istream != null) {
+                istream.close();
+            }
         }
 
 

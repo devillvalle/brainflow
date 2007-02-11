@@ -52,7 +52,7 @@ public class PanelBuilderTest {
 
         mainPanel.add(cbar, BorderLayout.WEST);
         JComponent panel = new PanelBuilderTest().buildPanel();
-        mainPanel.add(panel, BorderLayout.CENTER);
+        mainPanel.add(new JScrollPane(panel), BorderLayout.CENTER);
         frame.getContentPane().add(mainPanel);
         frame.pack();
         frame.setVisible(true);
@@ -73,7 +73,7 @@ public class PanelBuilderTest {
 
         CellConstraints cc = new CellConstraints();
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 12; i++) {
             addRow(i, builder);
         }
 

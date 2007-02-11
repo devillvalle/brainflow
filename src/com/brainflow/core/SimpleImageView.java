@@ -2,6 +2,7 @@ package com.brainflow.core;
 
 
 import com.brainflow.core.annotations.AxisLabelAnnotation;
+import com.brainflow.core.annotations.ColorBarAnnotation;
 import com.brainflow.core.annotations.CrosshairAnnotation;
 import com.brainflow.display.Crosshair;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
@@ -86,8 +87,8 @@ public class SimpleImageView extends ImageView {
 
 
         addAnnotation(new AxisLabelAnnotation());
-
         addAnnotation(crosshairAnnotation);
+        addAnnotation(new ColorBarAnnotation(getImageDisplayModel()));
 
         imagePlot.setAnnotations(getAnnotations());
 

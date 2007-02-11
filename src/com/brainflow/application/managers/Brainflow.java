@@ -35,7 +35,6 @@ import com.jidesoft.status.LabelStatusBarItem;
 import com.jidesoft.status.StatusBar;
 import com.jidesoft.swing.*;
 import de.javasoft.plaf.synthetica.SyntheticaLookAndFeel;
-import de.javasoft.plaf.synthetica.SyntheticaStandardLookAndFeel;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.VFS;
@@ -56,8 +55,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Logger;
-
-import apprising.api.swing.plaf.a03.A03LookAndFeel;
 
 
 /**
@@ -132,7 +129,9 @@ public class Brainflow {
 
         try {
 
-            //SubstanceLookAndFeel lf = new org.jvnet.substance.skin.SubstanceCremeLookAndFeel();
+            //org.jvnet.substance.SubstanceLookAndFeel lf = new SubstanceLookAndFeel();
+            //SubstanceLookAndFeel.setSkin(new BusinessBlueSteelSkin());
+
             //SyntheticaLookAndFeel lf = new SyntheticaStandardLookAndFeel();
             SyntheticaLookAndFeel lf = new de.javasoft.plaf.synthetica.SyntheticaOrangeMetallicLookAndFeel();
             //A03LookAndFeel lf = new apprising.api.swing.plaf.a03.A03LookAndFeel();
@@ -204,7 +203,6 @@ public class Brainflow {
 
     }
 
-   
 
     private void intializeKeyActions() {
         ImageCanvas canvas = ImageCanvasManager.getInstance().getSelectedCanvas();
@@ -303,8 +301,6 @@ public class Brainflow {
         CommandBar mainToolbar = ((JideActionUIFactory) ActionUIFactory.getInstance("jidefactory")).createCommandBar(globalList);
 
 
-
-
         JideSplitButton sliderDirection = new JideSplitButton("0  ");
         sliderDirection.add(new JRadioButtonMenuItem("Z Axis"));
         sliderDirection.add(new JRadioButtonMenuItem("X Axis"));
@@ -321,12 +317,12 @@ public class Brainflow {
 
         mainToolbar.addSeparator();
         Action crossAction = ActionManager.getInstance().getAction("toggle-cross");
-        AbstractButton crossToggle = ((JideActionUIFactory)ActionUIFactory.getInstance("jidefactory")).
+        AbstractButton crossToggle = ((JideActionUIFactory) ActionUIFactory.getInstance("jidefactory")).
                 createJideButton(crossAction);
         mainToolbar.add(crossToggle);
 
         Action axisLabelAction = ActionManager.getInstance().getAction("toggle-axislabel");
-        AbstractButton axisLabelToggle = ((JideActionUIFactory)ActionUIFactory.getInstance("jidefactory")).
+        AbstractButton axisLabelToggle = ((JideActionUIFactory) ActionUIFactory.getInstance("jidefactory")).
                 createJideButton(axisLabelAction);
         mainToolbar.add(axisLabelToggle);
 
@@ -377,7 +373,7 @@ public class Brainflow {
         brainFrame.setVisible(true);
 
 
-        CanvasBar2 cbar = new CanvasBar2();
+        CanvasBar cbar = new CanvasBar();
 
         /// TODO add automatic updating of canvas to Canvas Bar via EventBus
         cbar.setImageCanvas(canvas);
@@ -473,7 +469,6 @@ public class Brainflow {
         tabbedPane.addTab("Color Table", tablePresenter.getComponent());
         //tabbedPane.addTab("Mask", maskControl.getComponent());
         tabbedPane.addTab("Coordinates", new JScrollPane(coordinateControls.getComponent()));
-
 
 
         dframe.getContentPane().add(tabbedPane);

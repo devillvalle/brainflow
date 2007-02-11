@@ -57,7 +57,6 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
     }
 
 
-
     public static final int BAND_SAMPLES = 256;
     public static final int DEFAULT_INTERCEPT = 127;
 
@@ -162,6 +161,9 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
 
     }
 
+    /**
+     * Method initPanel initialiazes the ChartPanel which contains the plot.
+     */
     private void initPanel() {
         chartPanel = new ChartPanel(chart);
         chartPanel.setBackground(Color.BLACK);
@@ -178,13 +180,32 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
     }
 
 
+    /**
+     * Method addChangeListener
+     *
+     * @param listener
+     */
+
     public void addChangeListener(ChangeListener listener) {
         listeners.add(ChangeListener.class, listener);
     }
 
+
+    /**
+     * Method removeChangeListener
+     *
+     * @param listener
+     */
+
     public void removeChangeListener(ChangeListener listener) {
         listeners.remove(ChangeListener.class, listener);
     }
+
+    /**
+     * Method fireChangeEvent
+     *
+     * @param e
+     */
 
     protected void fireChangeEvent(ChangeEvent e) {
         ChangeListener[] cl = listeners.getListeners(ChangeListener.class);
@@ -337,7 +358,7 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
         if (lockedOnItem != -1) {
             double hdist = controlPoints.horizontalDistance(0, x, y, lockedOnItem);
 
-            double perc = hdist/hAxis.getRange().getLength();
+            double perc = hdist / hAxis.getRange().getLength();
             System.out.println("perc dist: " + perc);
             if (perc < .1) {
                 lockedOnItem = -1;
@@ -369,14 +390,13 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
         double x = hAxis.java2DToValue(e.getX(), dataArea, plot.getDomainAxisEdge());
 
 
-
         int item = controlPoints.nearestItem(0, x, y);
         System.out.println("nearest item: " + item);
 
         if (item != -1) {
             double hdist = controlPoints.horizontalDistance(0, x, y, item);
 
-            double perc = hdist/hAxis.getRange().getLength();
+            double perc = hdist / hAxis.getRange().getLength();
             System.out.println("perc dist: " + perc);
         }
 

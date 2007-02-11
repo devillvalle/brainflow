@@ -31,11 +31,12 @@ public class AxisLabelAnnotation extends AbstractAnnotation {
 
 
     public void draw(Graphics2D g2d, Rectangle2D plotArea, IImagePlot plot) {
-        if (!isVisible()) { return; }
-        
+        if (!isVisible()) {
+            return;
+        }
+
         AnatomicalAxis xaxis = plot.getXAxisRange().getAnatomicalAxis();
         AnatomicalAxis yaxis = plot.getYAxisRange().getAnatomicalAxis();
-
 
 
         g2d.setFont(font);
@@ -56,7 +57,7 @@ public class AxisLabelAnnotation extends AbstractAnnotation {
         g2d.drawString(xlabel, xFontStart + fontHeight, fontHeight);
 
 
-        int lineLength = (int) (Math.min(plotArea.getWidth(), plotArea.getHeight()) / 1.5);
+        int lineLength = 0;//(int) (Math.min(plotArea.getWidth(), plotArea.getHeight()) / 1.5);
         lineLength = Math.min(stringLen, 200);
         lineLength = Math.max(lineLength, 75);
 
@@ -72,10 +73,10 @@ public class AxisLabelAnnotation extends AbstractAnnotation {
     }
 
     public AxisLabelAnnotation safeCopy() {
-       AxisLabelAnnotation annot = new AxisLabelAnnotation();
-       annot.axisLineXStart = axisLineXStart;
-       annot.axisLineYStart = axisLineYStart;
-       annot.font = new Font(font.getName(), font.getStyle(), font.getSize());
+        AxisLabelAnnotation annot = new AxisLabelAnnotation();
+        annot.axisLineXStart = axisLineXStart;
+        annot.axisLineYStart = axisLineYStart;
+        annot.font = new Font(font.getName(), font.getStyle(), font.getSize());
         return annot;
 
     }

@@ -57,7 +57,6 @@ public class DiscreteColorBar extends AbstractColorBar {
     protected BufferedImage renderOffscreen() {
         BufferedImage bimage = null;
 
-       
 
         if (getOrientation() == SwingConstants.HORIZONTAL) {
 
@@ -84,18 +83,28 @@ public class DiscreteColorBar extends AbstractColorBar {
                 g2d.fill(rect);
             }
         } else {
-            /*bimage = new BufferedImage(10, ncolors, BufferedImage.TYPE_4BYTE_ABGR);
-            int row = 0;
-            Graphics2D g2d = (Graphics2D) bimage.createGraphics();
-            for (int i = (ncolors - 1); i >= 0; i--, row++) {
+            bimage = new BufferedImage(10, DEFAULT_HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
+            int ncolors = colorMap.getMapSize();
+            double distance = colorMap.getMaximumValue() - colorMap.getMinimumValue();
+            double start = colorMap.getMinimumValue();
 
-                Color clr = colorMap.getColor(samples[i]);
-                float trans = (float) clr.getAlpha();
+            Graphics2D g2d = bimage.createGraphics();
+            for (int i = 0; i < ncolors; i++) {
+                ColorInterval ci = colorMap.getInterval(i);
+                double size = ((ci.getMaximum() - ci.getMinimum()) / distance);
+                double ypos = (ci.getMinimum() - start) / distance;
+
+
+                Rectangle2D rect = new Rectangle2D.Double(0, ypos * DEFAULT_HEIGHT, 10, size * DEFAULT_HEIGHT);
+                float trans = (float) ci.getAlpha();
+
                 AlphaComposite comp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, trans / 255f);
+
                 g2d.setComposite(comp);
-                g2d.setPaint(clr);
-                g2d.drawRect(0, row, 10, 1);
-            }*/
+                g2d.setPaint(ci.getColor());
+                g2d.fill(rect);
+
+            }
         }
 
         cachedImage = bimage;
@@ -114,7 +123,8 @@ public class DiscreteColorBar extends AbstractColorBar {
         DiscreteColorMap cmap = new DiscreteColorMap(new LinearColorMap(0, 255, ColorTable.SPECTRUM));
 
 
-        JPanel jp = cmap.createColorBar();
+        AbstractColorBar jp = cmap.createColorBar();
+        //jp.setOrientation(SwingConstants.VERTICAL);
 
         JFrame jf = new JFrame();
         jf.add(jp);

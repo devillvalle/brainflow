@@ -24,6 +24,8 @@ public class BasicImagePlot implements IImagePlot {
     private ImagePlotRenderer renderer;
     private AnatomicalVolume displayAnatomy;
 
+    private Insets plotInsets = new Insets(30, 30, 30, 30);
+
     public BasicImagePlot(AnatomicalVolume displayAnatomy, AxisRange xAxis, AxisRange yAxis, ImagePlotRenderer renderer) {
         this.xAxis = xAxis;
         this.yAxis = yAxis;
@@ -42,6 +44,15 @@ public class BasicImagePlot implements IImagePlot {
         }
     }
 
+
+    public Insets getPlotInsets() {
+        return plotInsets;
+    }
+
+
+    public void setPlotInsets(Insets insets) {
+        plotInsets = insets;
+    }
 
     public AnatomicalVolume getDisplayAnatomy() {
         return displayAnatomy;

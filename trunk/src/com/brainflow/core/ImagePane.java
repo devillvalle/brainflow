@@ -35,8 +35,7 @@ public class ImagePane extends JComponent {
 
     private Rectangle2D plotArea;
 
-    private int xmargin = 35;
-    private int ymargin = 35;
+
 
 
     public ImagePane(IImagePlot _plot) {
@@ -67,10 +66,12 @@ public class ImagePane extends JComponent {
         Dimension size = getSize();
         Insets insets = getInsets();
 
+        Insets plotInsets = plot.getPlotInsets();
+
         Rectangle2D available = new Rectangle2D.Double(
-                insets.left + xmargin, insets.top + ymargin,
-                size.getWidth() - insets.left - insets.right - (xmargin * 2),
-                size.getHeight() - insets.top - insets.bottom - (ymargin * 2)
+                insets.left + plotInsets.left, insets.top + plotInsets.top,
+                size.getWidth() - insets.left - insets.right - plotInsets.left - plotInsets.right,
+                size.getHeight() - insets.top - insets.bottom - plotInsets.top - plotInsets.bottom
         );
 
 
@@ -88,7 +89,7 @@ public class ImagePane extends JComponent {
         }
 
         plotArea = new Rectangle.Double(
-                insets.left + xmargin, insets.top + ymargin, drawWidth, drawHeight
+                insets.left + plotInsets.left, insets.top + plotInsets.top, drawWidth, drawHeight
         );
 
         scaleX = plotArea.getWidth() / plot.getXAxisRange().getInterval();
@@ -117,8 +118,9 @@ public class ImagePane extends JComponent {
 
     public Dimension getPreferredSize() {
         Insets insets = this.getInsets();
-        double w = plot.getXAxisRange().getInterval() + xmargin * 2 + insets.left + insets.right;
-        double h = plot.getYAxisRange().getInterval() + ymargin * 2 + insets.left + insets.right;
+        Insets plotInsets = plot.getPlotInsets();
+        double w = plot.getXAxisRange().getInterval() + plotInsets.left + plotInsets.right + insets.left + insets.right;
+        double h = plot.getYAxisRange().getInterval() + plotInsets.top + plotInsets.bottom + insets.left + insets.right;
         return new Dimension((int) w, (int) h);
     }
 
@@ -129,18 +131,22 @@ public class ImagePane extends JComponent {
 
     }
 
+
+
     public Point translateValueToScreen(Point2D value) {
         Insets insets = getInsets();
-        int x = (int) (value.getX() * this.scaleX + insets.left + xmargin);
-        int y = (int) (value.getY() * this.scaleY + insets.top + ymargin);
+        Insets plotInsets = plot.getPlotInsets();
+        int x = (int) (value.getX() * this.scaleX + insets.left + plotInsets.left);
+        int y = (int) (value.getY() * this.scaleY + insets.top + plotInsets.top);
         return new Point(x, y);
     }
 
 
     public AnatomicalPoint2D translateScreenToValue(Point screenPoint) {
         Insets insets = getInsets();
-        double x = (screenPoint.getX() - insets.left - xmargin) / this.scaleX;
-        double y = (screenPoint.getY() - insets.top - ymargin) / this.scaleY;
+        Insets plotInsets = plot.getPlotInsets();
+        double x = (screenPoint.getX() - insets.left - plotInsets.left) / this.scaleX;
+        double y = (screenPoint.getY() - insets.top - plotInsets.top) / this.scaleY;
         return new AnatomicalPoint2D(AnatomicalPlane.matchAnatomy(
                 plot.getXAxisRange().getAnatomicalAxis(),
                 plot.getYAxisRange().getAnatomicalAxis()),

@@ -326,6 +326,11 @@ public class Brainflow {
                 createJideButton(axisLabelAction);
         mainToolbar.add(axisLabelToggle);
 
+        Action colorbarAction = ActionManager.getInstance().getAction("toggle-colorbar");
+        AbstractButton colorbarToggle = ((JideActionUIFactory) ActionUIFactory.getInstance("jidefactory")).
+                createJideButton(colorbarAction);
+        mainToolbar.add(colorbarToggle);
+
         brainFrame.getContentPane().add(mainToolbar, BorderLayout.NORTH);
         ActionManager.mapKeystrokeForAction(documentPane, ActionManager.getInstance().getAction("view-close"));
         ActionManager.mapKeystrokeForAction(documentPane, ActionManager.getInstance().getAction("view-axial"));

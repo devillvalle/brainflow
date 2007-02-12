@@ -18,6 +18,10 @@ import java.util.List;
  */
 public interface IImagePlot {
 
+    public Insets getPlotInsets();
+
+    public void setPlotInsets(Insets insets);
+
     public AnatomicalVolume getDisplayAnatomy();
 
     public void updateAxis(AxisRange range);

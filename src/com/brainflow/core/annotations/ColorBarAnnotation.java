@@ -29,7 +29,7 @@ public class ColorBarAnnotation extends AbstractAnnotation {
     private int position = SwingUtilities.RIGHT;
 
 
-    private int maximumWidth = 100;
+    private int maximumWidth = 30;
 
     private int maximumHeight = 800;
 
@@ -58,6 +58,8 @@ public class ColorBarAnnotation extends AbstractAnnotation {
     }
 
     public void draw(Graphics2D g2d, Rectangle2D plotArea, IImagePlot plot) {
+        if (!isVisible())  return;
+        
         int selectedLayer = model.getSelectedIndex();
 
         if (colorBar == null) {

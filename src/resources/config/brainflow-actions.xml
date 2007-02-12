@@ -47,7 +47,7 @@
                 name="axial"
                 mnemonic="A"
                 accel="control A"
-                smicon="/resources/icons/axial_16.png"
+                smicon="/resources/icons/axial2_16.png"
                 actionClass="com.brainflow.application.actions.CreateAxialViewAction"
                 desc="Creates a new axial image view">
         </action>
@@ -74,6 +74,14 @@
                 accel="control H"
                 smicon="/resources/icons/addtsk_tsk.gif"
                 actionClass="com.brainflow.application.actions.CrosshairDialogAction"
+                desc="Change crosshair appearance">
+        </action>
+        <action id="appearance-margins"
+                name="margins"
+                mnemonic="m"
+                accel="control M"
+                smicon="/resources/icons/layout_header.png"
+                actionClass="com.brainflow.application.actions.AdjustMarginsAction"
                 desc="Change crosshair appearance">
         </action>
     </action-list>
@@ -111,6 +119,14 @@
             smicon="/resources/icons/att_class_obj.gif"
             actionClass="com.brainflow.application.actions.ToggleAxisLabelAction"
             desc="Toggle axis label visibility on/off">
+    </action>
+    <action id="toggle-colorbar"
+            name="toggle colorbar"
+            mnemonic="c"
+            accel="control K"
+            smicon="/resources/icons/colorbar.png"
+            actionClass="com.brainflow.application.actions.ToggleColorbarAction"
+            desc="Toggle color bar visibility on/off">
     </action>
 
     <action id="modify-colors"

@@ -1,28 +1,12 @@
 package com.brainflow.application.presentation.forms;
 
-import com.brainflow.application.ILoadableImage;
-import com.brainflow.application.MemoryImage;
-import com.brainflow.colormap.ColorTable;
-import com.brainflow.colormap.LinearColorMap;
-import com.brainflow.core.ImageDisplayModel;
-import com.brainflow.core.ImageLayer;
-import com.brainflow.core.SnapShooter;
-import com.brainflow.display.ImageLayerParameters;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.anatomy.AnatomicalVolume;
-import com.brainflow.image.io.AnalyzeIO;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
-import com.jidesoft.plaf.LookAndFeelFactory;
 import com.jidesoft.swing.JideButton;
 import com.jidesoft.swing.StyledLabel;
 
-import javax.media.jai.JAI;
-import javax.media.jai.RenderedImageAdapter;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.RenderedImage;
-import java.awt.image.renderable.ParameterBlock;
 
 /**
  * @author Brad Buchsbaum

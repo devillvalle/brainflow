@@ -7,13 +7,12 @@ import com.brainflow.image.data.BasicImageData;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.ImageSpace3D;
-import com.brainflow.image.io.AnalyzeIO;
+import com.brainflow.image.io.analyze.AnalyzeIO;
 import com.brainflow.application.ILoadableImage;
 import com.brainflow.application.MemoryImage;
 import com.brainflow.core.BrainflowException;
 
 import java.util.List;
-import java.util.Stack;
 
 /**
  * Created by IntelliJ IDEA.

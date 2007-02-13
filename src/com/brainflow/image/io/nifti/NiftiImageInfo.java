@@ -1,4 +1,6 @@
-package com.brainflow.image.io;
+package com.brainflow.image.io.nifti;
+
+import com.brainflow.image.io.ImageInfo;
 
 /**
  * Created by IntelliJ IDEA.

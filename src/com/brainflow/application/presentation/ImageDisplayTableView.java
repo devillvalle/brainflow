@@ -5,14 +5,13 @@ import com.brainflow.application.services.ImageViewSelectionEvent;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.core.*;
-import com.brainflow.display.ImageLayerParameters;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.data.IImageData3D;
 import com.brainflow.image.io.BasicImageReader;
 import com.brainflow.image.io.ImageInfo;
-import com.brainflow.image.io.NiftiInfoReader;
+import com.brainflow.image.io.nifti.NiftiInfoReader;
 import com.jidesoft.grid.*;
 import com.jidesoft.plaf.LookAndFeelFactory;
 

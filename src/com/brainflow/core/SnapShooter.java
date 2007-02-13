@@ -5,13 +5,12 @@ import com.brainflow.application.MemoryImage;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.colormap.DiscreteColorMap;
-import com.brainflow.display.ImageLayerParameters;
 import com.brainflow.display.InterpolationProperty;
 import com.brainflow.display.InterpolationHint;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.image.axis.AxisRange;
-import com.brainflow.image.io.AnalyzeIO;
+import com.brainflow.image.io.analyze.AnalyzeIO;
 import com.brainflow.image.data.IImageData3D;
 
 import javax.media.jai.JAI;

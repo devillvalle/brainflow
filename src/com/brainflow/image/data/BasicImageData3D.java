@@ -1,7 +1,7 @@
 package com.brainflow.image.data;
 
 import com.brainflow.image.interpolation.InterpolationFunction3D;
-import com.brainflow.image.io.AnalyzeIO;
+import com.brainflow.image.io.analyze.AnalyzeIO;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.image.space.Axis;

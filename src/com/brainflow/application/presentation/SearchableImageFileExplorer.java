@@ -5,8 +5,11 @@ import com.jidesoft.list.ListModelWrapper;
 import com.jidesoft.swing.SearchableUtils;
 import com.jidesoft.tree.FilterableTreeModel;
 import com.jidesoft.tree.QuickTreeFilterField;
+import com.xduke.xswing.DataTipManager;
 
 import javax.swing.*;
+import javax.swing.event.TreeExpansionListener;
+import javax.swing.event.TreeExpansionEvent;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -88,7 +91,8 @@ public class SearchableImageFileExplorer extends AbstractPresenter {
 
         JTree tree = field.getTree();
         tree.setModel(field.getDisplayTreeModel());
-
+        DataTipManager.get().register(tree);
+       
 
         treePanel.add(new JScrollPane(tree));
 

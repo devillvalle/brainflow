@@ -1,9 +1,8 @@
-package com.brainflow.image.io;
+package com.brainflow.image.io.nifti;
+
+import com.brainflow.image.io.nifti.Nifti1Dataset;
 
 import java.io.*;
-import java.text.*;
-import java.util.zip.*;
-
 
 
 public class TestNifti1Api {

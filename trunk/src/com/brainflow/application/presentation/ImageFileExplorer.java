@@ -6,6 +6,8 @@ import com.brainflow.application.SoftLoadableImage;
 import com.brainflow.application.managers.ImageIOManager;
 import com.brainflow.gui.AbstractPresenter;
 import com.brainflow.gui.FileExplorer;
+import com.jidesoft.tree.AbstractTreeModel;
+import com.jidesoft.tree.DefaultTreeModelWrapper;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSelector;
 import org.apache.commons.vfs.FileSystemException;
@@ -14,16 +16,21 @@ import org.apache.commons.vfs.FileType;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.event.TreeExpansionListener;
+import javax.swing.event.TreeExpansionEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.DefaultTreeModel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,8 +41,10 @@ import java.util.List;
  */
 public class ImageFileExplorer extends AbstractPresenter implements TreeSelectionListener, LoadableImageProvider, MouseListener, MouseMotionListener {
 
-    private FileExplorer explorer;
 
+    private static final Logger log = Logger.getLogger(ImageFileExplorer.class.getName());
+
+    private FileExplorer explorer;
 
     private FileSelector selector;
 
@@ -47,10 +56,35 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
 
         explorer = new FileExplorer(_rootObject, selector) {
             protected DefaultMutableTreeNode createTreeNode(FileObject fobj) {
+                log.info("creating tree node " + fobj);
                 return new ImageFileObjectNode(fobj, selector);
             }
 
         };
+
+        explorer.addTreeExpansionListener(new TreeExpansionListener() {
+
+            public void treeExpanded(TreeExpansionEvent event) {
+                ImageFileObjectNode node = (ImageFileObjectNode) event.getPath().getLastPathComponent();
+                if (!node.areChildrenDefined()) {
+                    ImageNodeWorker worker = new ImageNodeWorker(node);
+                    try {
+                        log.info("spawning worker thread to find child file nodes");
+                        worker.execute();
+                    } catch(Exception e) {
+                        //todo log
+                        throw new RuntimeException(e);
+                    }
+
+
+                }
+
+            }
+
+            public void treeCollapsed(TreeExpansionEvent event) {
+                System.out.println("tree collapsed");
+            }
+        });
 
 
         explorer.addTreeSelectionListener(this);
@@ -174,7 +208,59 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
     }
 
 
-    public static class ImageFileObjectNode extends DefaultMutableTreeNode {
+    class ImageNodeWorker extends SwingWorker<List<ImageFileObjectNode>, ImageFileObjectNode> {
+
+        ImageFileObjectNode parent;
+
+
+        public ImageNodeWorker(ImageFileObjectNode parent) {
+            this.parent = parent;
+        }
+
+        protected List<ImageFileObjectNode> doInBackground() throws Exception {
+            log.info("fetching nodes in background");
+            ImageFileExplorer.this.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            List<ImageFileObjectNode> nodes =  parent.fetchChildNodes(this);
+            ImageFileExplorer.this.getComponent().setCursor(Cursor.getDefaultCursor());
+
+            return nodes;
+        }
+
+        public void addNode(ImageFileObjectNode node) {
+            publish(node);
+        }
+
+
+        protected void done() {
+            AbstractTreeModel model = (AbstractTreeModel) (explorer.getJTree().getModel());
+            model.nodeChanged(parent);
+        }
+
+        protected void process(List<ImageFileObjectNode> chunks) {
+            for (ImageFileObjectNode node : chunks) {
+                parent.add(node);
+            }
+
+
+            TreeModel model = explorer.getJTree().getModel();
+            DefaultTreeModel dtm = null;
+            if (model instanceof DefaultTreeModelWrapper) {
+                DefaultTreeModelWrapper wrapper = (DefaultTreeModelWrapper)model;
+                dtm = (DefaultTreeModel)wrapper.getActualModel();
+            } else if (model instanceof DefaultTreeModel) {
+                dtm = (DefaultTreeModel)model;
+            }
+
+            if (dtm != null) {
+                log.info("firing node structure changed");
+                dtm.nodeStructureChanged(parent);
+            }
+
+        }
+    }
+
+
+    /*public static class ImageFileObjectNode extends DefaultMutableTreeNode {
 
         private boolean areChildrenDefined = false;
         private boolean leaf;
@@ -211,25 +297,18 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
         }
 
         public int getChildCount() {
-            /*int length = 0;
-            try {
-                length = fileObject.getChildren().length;
-            } catch(FileSystemException e) {
-                throw new RuntimeException(e);
-            }
-
-            return length; */
 
             if (!areChildrenDefined()) {
                 defineChildNodes();
             }
+
 
             return super.getChildCount();
 
         }
 
 
-        private void defineChildNodes() {
+        public void defineChildNodes() {
             areChildrenDefined = true;
             System.out.println("leaf: " + isLeaf() + " defining child nodes for: " + fileObject.getName().getPath());
             try {
@@ -256,6 +335,103 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
                 throw new RuntimeException(e);
             }
         }
+
+        public String toString() {
+            if (this == getRoot()) {
+                try {
+                    URI uri = new URI(fileObject.getName().getURI());
+
+                    return uri.getHost() + ":" + uri.getPath();
+                } catch (URISyntaxException e) {
+                    return fileObject.getName().getURI();
+                }
+            } else
+                return fileObject.getName().getBaseName();
+        }
+    }*/
+
+    public static class ImageFileObjectNode extends DefaultMutableTreeNode {
+
+        private boolean areChildrenDefined = false;
+        private boolean leaf;
+
+        private FileObject fileObject;
+        private FileSelector selector;
+
+
+        private List<ImageFileObjectNode> childNodes = new ArrayList<ImageFileObjectNode>();
+        
+        public ImageFileObjectNode(FileObject _fobj, FileSelector _selector) {
+            selector = _selector;
+            fileObject = _fobj;
+
+            try {
+                if (fileObject.getType() == FileType.FOLDER) {
+                    leaf = false;
+                } else {
+                    leaf = true;
+                }
+            } catch (FileSystemException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+
+
+        public FileObject getFileObject() {
+            return fileObject;
+        }
+
+        public boolean isLeaf() {
+            return leaf;
+        }
+
+        public boolean areChildrenDefined() {
+            return areChildrenDefined;
+        }
+
+        public List<ImageFileObjectNode> getChildNodes() {
+            return childNodes;
+        }
+
+        public List<ImageFileObjectNode> fetchChildNodes(ImageNodeWorker worker) {
+
+
+
+            try {
+
+                FileObject[] children = fileObject.findFiles(selector);
+                SoftLoadableImage[] limgs = ImageIOManager.getInstance().findLoadableImages(children);
+
+                // first add folders
+                for (int i = 0; i < children.length; i++) {
+                    if (children[i].getType() == FileType.FOLDER) {
+
+                        log.info("adding folder node " + children[i].getName().getPath());
+                        ImageFileObjectNode node = new ImageFileObjectNode(children[i], selector);
+                        childNodes.add(node);
+                        worker.addNode(node);
+                    }
+                }
+
+                // then add confirmed loadable images
+                for (int i = 0; i < limgs.length; i++) {
+                    ImageFileObjectNode node = new ImageFileObjectNode(limgs[i].getHeaderFile(), selector);
+                    node.setUserObject(limgs[i]);
+                    childNodes.add(node);
+                    worker.addNode(node);
+                }
+            } catch (FileSystemException e) {
+                throw new RuntimeException(e);
+            }
+
+
+            areChildrenDefined = true;
+
+            return childNodes;
+
+        }
+
 
         public String toString() {
             if (this == getRoot()) {

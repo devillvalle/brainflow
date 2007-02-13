@@ -4,7 +4,7 @@
  * Created on April 29, 2003, 9:21 AM
  */
 
-package com.brainflow.image.io;
+package com.brainflow.image.io.analyze;
 
 import javax.swing.filechooser.FileFilter;
 import java.io.File;

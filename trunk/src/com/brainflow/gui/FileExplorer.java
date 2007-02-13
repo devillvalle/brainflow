@@ -5,6 +5,7 @@ import org.apache.commons.vfs.*;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.*;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -27,6 +28,7 @@ public class FileExplorer extends AbstractPresenter {
     private List<FileObject> rootList = new ArrayList<FileObject>();
 
     protected JTree fileTree;
+
     protected DefaultTreeModel treeModel;
 
     //private ImageIcon folderIcon = new ImageIcon(ResourceLoader.getResource("resources/icons/folder.png"));
@@ -51,6 +53,10 @@ public class FileExplorer extends AbstractPresenter {
 
     public void addTreeSelectionListener(TreeSelectionListener tsl) {
         fileTree.addTreeSelectionListener(tsl);
+    }
+
+    public void addTreeExpansionListener(TreeExpansionListener tel) {
+        fileTree.addTreeExpansionListener(tel);
     }
 
 
@@ -99,7 +105,7 @@ public class FileExplorer extends AbstractPresenter {
 
     public static void main(String args[]) {
         try {
-            FileExplorer fe = new FileExplorer(VFS.getManager().resolveFile("c:/modal_exp"), null);
+            FileExplorer fe = new FileExplorer(VFS.getManager().resolveFile(System.getProperty("user.dir")), null);
             JFrame jf = new JFrame("Tree Demo");
             jf.add(fe.getComponent(), "Center");
             jf.pack();

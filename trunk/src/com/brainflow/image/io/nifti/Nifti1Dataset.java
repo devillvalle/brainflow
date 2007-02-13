@@ -1,4 +1,7 @@
-package com.brainflow.image.io;
+package com.brainflow.image.io.nifti;
+
+import com.brainflow.image.io.EndianCorrectInputStream;
+import com.brainflow.image.io.EndianCorrectOutputStream;
 
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.MemoryCacheImageInputStream;

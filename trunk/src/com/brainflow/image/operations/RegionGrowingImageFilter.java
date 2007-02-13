@@ -5,7 +5,7 @@ import com.brainflow.image.data.BasicImageData;
 import com.brainflow.image.data.BasicImageData3D;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.data.IImageData3D;
-import com.brainflow.image.io.AnalyzeIO;
+import com.brainflow.image.io.analyze.AnalyzeIO;
 import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.utils.DataType;
 import com.brainflow.utils.Index3D;

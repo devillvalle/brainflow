@@ -1,23 +1,12 @@
 package com.brainflow.application;
 
-import com.brainflow.colormap.ColorTable;
-import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.core.IImageDisplayModel;
-import com.brainflow.core.ImageDisplayModel;
-import com.brainflow.core.ImageLayer3D;
 import com.brainflow.core.SnapShooter;
-import com.brainflow.display.ImageLayerParameters;
 import com.brainflow.image.anatomy.AnatomicalVolume;
-import com.brainflow.image.data.IImageData;
-import com.brainflow.image.data.IImageData3D;
-import com.brainflow.image.io.BasicImageReader;
-import com.brainflow.image.io.ImageInfo;
-import com.brainflow.image.io.NiftiInfoReader;
 import com.jidesoft.swing.CheckBoxList;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 
 /**
  * Created by IntelliJ IDEA.

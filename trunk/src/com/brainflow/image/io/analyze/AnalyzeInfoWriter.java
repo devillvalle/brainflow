@@ -4,11 +4,12 @@
  * Created on March 21, 2003, 1:28 PM
  */
 
-package com.brainflow.image.io;
+package com.brainflow.image.io.analyze;
 
 import com.brainflow.core.BrainflowException;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
+import com.brainflow.image.io.ImageInfo;
 
 import javax.imageio.stream.FileImageOutputStream;
 import java.io.File;

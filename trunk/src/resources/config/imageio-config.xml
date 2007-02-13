@@ -1,15 +1,15 @@
 <root>
     <!--[ ... ]-->
     <ImageFormat name="Analyze7.5">
-        <Header extension=".hdr" reader="com.brainflow.image.io.AnalyzeInfoReader"/>
+        <Header extension=".hdr" reader="com.brainflow.image.io.analyze.AnalyzeInfoReader"/>
         <Data extension=".img" reader="com.brainflow.image.io.BasicImageReader"/>
     </ImageFormat>
     <ImageFormat name="Nifti1">
-        <Header extension=".nii" reader="com.brainflow.image.io.NiftiInfoReader"/>
+        <Header extension=".nii" reader="com.brainflow.image.io.nifti.NiftiInfoReader"/>
         <Data extension=".nii" reader="com.brainflow.image.io.BasicImageReader"/>
     </ImageFormat>
     <ImageFormat name="Nifti1-gz">
-        <Header extension=".nii.gz" reader="com.brainflow.image.io.NiftiInfoReader"/>
+        <Header extension=".nii.gz" reader="com.brainflow.image.io.nifti.NiftiInfoReader"/>
         <Data extension=".nii.gz" reader="com.brainflow.image.io.BasicImageReader"/>
     </ImageFormat>
 

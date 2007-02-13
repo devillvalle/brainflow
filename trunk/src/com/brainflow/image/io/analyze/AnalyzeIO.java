@@ -1,9 +1,12 @@
-package com.brainflow.image.io;
+package com.brainflow.image.io.analyze;
 
 
 import com.brainflow.core.BrainflowException;
 import com.brainflow.image.data.BasicImageData;
 import com.brainflow.image.data.IImageData;
+import com.brainflow.image.io.nifti.NiftiInfoReader;
+import com.brainflow.image.io.ImageInfo;
+import com.brainflow.image.io.BasicImageReader;
 import com.brainflow.utils.DataType;
 import com.brainflow.utils.Dimension3D;
 import com.brainflow.utils.ProgressListener;

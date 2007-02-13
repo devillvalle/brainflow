@@ -6,8 +6,7 @@ import com.brainflow.core.BrainflowException;
 import com.brainflow.image.data.BasicImageData3D;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.data.IImageData3D;
-import com.brainflow.image.data.BasicImageData;
-import com.brainflow.image.io.AnalyzeIO;
+import com.brainflow.image.io.analyze.AnalyzeIO;
 import com.brainflow.image.space.Axis;
 
 import java.util.ArrayList;

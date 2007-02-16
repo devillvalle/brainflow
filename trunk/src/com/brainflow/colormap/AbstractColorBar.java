@@ -64,6 +64,37 @@ public abstract class AbstractColorBar extends JPanel {
     }
 
 
+    public void paintInto(Graphics g, int x, int y, int width, int height, boolean paintBackground) {
+        Graphics2D g2 = (Graphics2D) g;
+
+
+        AffineTransform at = null;
+
+
+        if (cachedImage == null) {
+            renderOffscreen();
+        }
+        if (getOrientation() == SwingConstants.VERTICAL) {
+            at = AffineTransform.getTranslateInstance(x, y);
+            at.scale((double) width / 10f, (double) height / colorMap.getMapSize());
+
+        }
+
+        if (getOrientation() == SwingConstants.HORIZONTAL) {
+            at = AffineTransform.getTranslateInstance(x, y);
+            at.scale((double) width / (double) colorMap.getMapSize(), (double) height / (double) 10);
+
+        }
+
+        if (paintBackground) {
+            drawBackground(g2);
+        }
+
+        g2.drawRenderedImage(cachedImage, at);
+
+
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);

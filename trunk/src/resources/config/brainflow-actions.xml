@@ -76,6 +76,14 @@
                 actionClass="com.brainflow.application.actions.CrosshairDialogAction"
                 desc="Change crosshair appearance">
         </action>
+        <action id="appearance-colorbar"
+                name="colorbar"
+                mnemonic="c"
+                accel="control Q"
+                smicon="/resources/icons/layout_header.png"
+                actionClass="com.brainflow.application.actions.ColorBarAnnotationDialogAction"
+                desc="Change color bar annotation properties">
+        </action>
         <action id="appearance-margins"
                 name="margins"
                 mnemonic="m"
@@ -102,7 +110,7 @@
                 actionClass="com.brainflow.application.actions.PreviousSliceAction"
                 desc="Go to the previous slice in the z-plane">
         </action>
-     </action-list>
+    </action-list>
 
     <action id="toggle-cross"
             name="toggle crosshair"

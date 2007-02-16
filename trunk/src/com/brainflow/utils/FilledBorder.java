@@ -74,7 +74,7 @@ public class FilledBorder extends AbstractBorder {
         this.endColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), 255);
         this.startColor = new Color((int) Math.min(1.5 * color.getRed(), 255)
                 , (int) Math.min(1.5 * color.getGreen(), 255), (int) (Math.min(1.5 * color.getBlue(), 255)),
-                (int) Math.min(1/2 * color.getAlpha(), 255));
+                (int) Math.min(1 / 2 * color.getAlpha(), 255));
     }
 
 
@@ -107,25 +107,25 @@ public class FilledBorder extends AbstractBorder {
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
 
         // top highlight
-        g2.setPaint(lightOutline);
+        //g2.setPaint(lightOutline);
 
         //outer light
-        g2.drawLine(x, y, x + width, y);
-        g2.drawLine(x, y, x, y + height);
+        //g2.drawLine(x, y, x + width, y);
+        //g2.drawLine(x, y, x, y + height);
 
         //inner light
-        g2.drawLine(x + width - insets.right, y + insets.top, x + width - insets.right, y + height - insets.bottom);
-        g2.drawLine(x + insets.left, y + height - insets.bottom, x + width - insets.right, y + height - insets.bottom);
+        //g2.drawLine(x + width - insets.right, y + insets.top, x + width - insets.right, y + height - insets.bottom);
+        //g2.drawLine(x + insets.left, y + height - insets.bottom, x + width - insets.right, y + height - insets.bottom);
 
-        g2.setPaint(darkOutline);
+        //g2.setPaint(darkOutline);
 
         //outer dark
-        g2.drawLine(x, y + height, x + width, y + height);
-        g2.drawLine(x + width, y, x + width, y + height);
+        //g2.drawLine(x, y + height, x + width, y + height);
+        //g2.drawLine(x + width, y, x + width, y + height);
 
         //inner dark
-        g2.drawLine(x + insets.left, y + insets.top, x + width - insets.right, y + insets.top);
-        g2.drawLine(x + insets.left, y + insets.top, x + insets.left, y + height - insets.bottom);
+        //g2.drawLine(x + insets.left, y + insets.top, x + width - insets.right, y + insets.top);
+        //g2.drawLine(x + insets.left, y + insets.top, x + insets.left, y + height - insets.bottom);
 
 
         g2.setColor(Color.WHITE);

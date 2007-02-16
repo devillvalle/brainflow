@@ -1,14 +1,16 @@
 package com.brainflow.core;
 
-import com.brainflow.image.anatomy.AnatomicalPoint3D;
-import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.core.annotations.IAnnotation;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.jgoodies.binding.list.ArrayListModel;
+import com.jgoodies.binding.list.SelectionInList;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.RenderedImage;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,12 +26,17 @@ public class SimpleOrthogonalImageView extends ImageView {
     private ImageView coronalView;
     private ImageView sagittalView;
 
-    private List<IImagePlot> plotList;
+
+    private ArrayListModel plotList = new ArrayListModel();
+    private SelectionInList plotSelection;
 
 
     public SimpleOrthogonalImageView(IImageDisplayModel imodel) {
         super(imodel);
         initView();
+
+        plotSelection = new SelectionInList((ListModel) plotList);
+        plotSelection.setSelectionIndex(0);
     }
 
     public void scheduleRepaint(DisplayChangeEvent e) {
@@ -85,6 +92,7 @@ public class SimpleOrthogonalImageView extends ImageView {
     public void removeAnnotation(IAnnotation annotation) {
         axialView.removeAnnotation(annotation);
     }
+
     public IAnnotation getAnnotation(Class clazz) {
         return axialView.getAnnotation(clazz);
     }
@@ -124,14 +132,28 @@ public class SimpleOrthogonalImageView extends ImageView {
         return null;
     }
 
+
+    public SelectionInList getPlotSelection() {
+        return plotSelection;
+    }
+
+    public IImagePlot getSelectedPlot() {
+        return (IImagePlot) plotSelection.getSelection();
+    }
+
+    public RenderedImage captureImage() {
+        throw new UnsupportedOperationException("SimpleOrthogonalImageView does not support method \"captureImage\" yet.");
+    }
+
     public List<IImagePlot> getPlots() {
-        if (plotList == null) {
-            plotList = new ArrayList<IImagePlot>();
-            plotList.addAll(axialView.getPlots());
-            plotList.addAll(coronalView.getPlots());
-            plotList.addAll(sagittalView.getPlots());
+        List<IImagePlot> ret = new ArrayList<IImagePlot>();
+        for (int i = 0; i < plotList.size(); i++) {
+            ret.add((IImagePlot) plotList.get(i));
         }
-        return plotList;
+
+        return ret;
+
+
     }
 
     private void initView() {
@@ -139,6 +161,8 @@ public class SimpleOrthogonalImageView extends ImageView {
 
         axialView = ImageViewFactory.createAxialView(getImageDisplayModel());
         axialView.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        plotList.add(axialView.getPlots().get(0));
+
         coronalView = ImageViewFactory.createCoronalView(axialView);
         coronalView.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         sagittalView = ImageViewFactory.createSagittalView(axialView);
@@ -149,7 +173,7 @@ public class SimpleOrthogonalImageView extends ImageView {
         add(sagittalView);
     }
 
-     public String toString() {
+    public String toString() {
         return "SimpleOrthogonalImageView -- " + getImageDisplayModel().getName();
     }
 

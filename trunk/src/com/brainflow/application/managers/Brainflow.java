@@ -3,7 +3,6 @@ package com.brainflow.application.managers;
 import com.brainflow.application.*;
 import com.brainflow.application.actions.*;
 import com.brainflow.application.presentation.*;
-import com.brainflow.application.presentation.ImageFileExplorer;
 import com.brainflow.application.services.ImageViewCrosshairEvent;
 import com.brainflow.application.services.ImageViewCursorEvent;
 import com.brainflow.application.services.LoadableImageProgressEvent;
@@ -56,8 +55,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import apprising.api.swing.plaf.a03.A03LookAndFeel;
-
 
 /**
  * Created by IntelliJ IDEA.
@@ -77,7 +74,6 @@ public class Brainflow {
     private final static Logger log = Logger.getLogger(Brainflow.class.getCanonicalName());
 
     private BrainFrame brainFrame = null;
-
 
     private MountFileSystemAction mountFileSystemAction;
 

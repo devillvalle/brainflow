@@ -56,11 +56,11 @@ public class ColorBarAnnotation extends AbstractAnnotation {
                 Object obj = evt.getNewValue();
                 if (obj instanceof Integer && isVisible()) {
                     // hack to force repaints on selected layer change
-                    System.out.println("layer changed to" + obj);
+
+                    ImageLayer oldLayer = selectedLayer;
                     int selectedIndex = (Integer) evt.getNewValue();
                     selectedLayer = ColorBarAnnotation.this.model.getImageLayer(selectedIndex);
-                    //ColorBarAnnotation.this.setVisible(!isVisible());
-                    //ColorBarAnnotation.this.setVisible(!isVisible());
+                    support.firePropertyChange("LAYER_CHANGED", oldLayer, selectedLayer);
                 }
             }
         });
@@ -111,6 +111,7 @@ public class ColorBarAnnotation extends AbstractAnnotation {
             selectedLayer = layer;
             colorBar = selectedLayer.getImageLayerParameters().getColorMap().getParameter().createColorBar();
             colorBar.setOrientation(orientation);
+            colorBar.setDrawOutline(true);
         } else if (colorBar.getColorMap() != selectedLayer.getImageLayerParameters().getColorMap().getParameter()) {
             colorBar = selectedLayer.getImageLayerParameters().getColorMap().getParameter().createColorBar();
             colorBar.setOrientation(orientation);

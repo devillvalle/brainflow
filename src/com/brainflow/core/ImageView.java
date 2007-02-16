@@ -12,7 +12,6 @@ import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.ImageSpace3D;
-import com.jgoodies.binding.beans.ExtendedPropertyChangeSupport;
 import com.jgoodies.binding.list.SelectionInList;
 import com.jgoodies.binding.value.ValueHolder;
 import org.bushe.swing.event.EventBus;
@@ -26,6 +25,7 @@ import java.awt.*;
 import java.awt.image.RenderedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -45,9 +45,7 @@ public abstract class ImageView extends JComponent implements ListDataListener {
 
     private static final Logger log = Logger.getLogger(ImageView.class.getName());
 
-    protected boolean selected = false;
-
-    protected ExtendedPropertyChangeSupport changeSupport = new ExtendedPropertyChangeSupport(this);
+    protected PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     private String id = "";
 
@@ -64,13 +62,9 @@ public abstract class ImageView extends JComponent implements ListDataListener {
     private PropertyChangeListener annotationListener;
 
 
-    public ImageView() {
-
-    }
-
-
     public ImageView(IImageDisplayModel imodel) {
         super();
+
         displayModel = imodel;
         init();
     }
@@ -165,9 +159,6 @@ public abstract class ImageView extends JComponent implements ListDataListener {
         annotationListener = new PropertyChangeListener() {
 
             public void propertyChange(PropertyChangeEvent evt) {
-                log.info("Annotation changed event, repainting");
-                log.info("Property is " + evt.getPropertyName());
-                log.info("New Value is " + evt.getNewValue());
                 IAnnotation annotation = (IAnnotation) evt.getSource();
                 scheduleRepaint(new DisplayChangeEvent(
                         new DisplayParameter<IAnnotation>(annotation),
@@ -231,10 +222,11 @@ public abstract class ImageView extends JComponent implements ListDataListener {
 
     public abstract List<IImagePlot> getPlots();
 
+    public abstract SelectionInList getPlotSelection();
 
-    public RenderedImage captureImage() {
-        return null;
-    }
+    public abstract IImagePlot getSelectedPlot();
+
+    public abstract RenderedImage captureImage();
 
 
     public AnatomicalPoint3D getCentroid() {

@@ -1,9 +1,11 @@
 package com.brainflow.core;
 
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.jgoodies.binding.list.SelectionInList;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.RenderedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -50,6 +52,18 @@ public class IconImageView extends ImageView implements Icon {
         repaint();
     }
 
+
+    public SelectionInList getPlotSelection() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public IImagePlot getSelectedPlot() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public RenderedImage captureImage() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
     public AnatomicalPoint3D getAnatomicalLocation(Component source, Point screenPoint) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.

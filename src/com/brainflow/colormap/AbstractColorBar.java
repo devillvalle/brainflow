@@ -30,6 +30,10 @@ public abstract class AbstractColorBar extends JPanel {
     protected IColorMap colorMap;
 
 
+    private boolean drawOutline;
+
+    private Paint outlineColor = Color.WHITE;
+
     protected AbstractColorBar(IColorMap _colorMap, int orientation) {
         this.orientation = orientation;
         colorMap = _colorMap;
@@ -41,6 +45,15 @@ public abstract class AbstractColorBar extends JPanel {
 
     public void setOrientation(int orientation) {
         this.orientation = orientation;
+    }
+
+
+    public boolean isDrawOutline() {
+        return drawOutline;
+    }
+
+    public void setDrawOutline(boolean drawOutline) {
+        this.drawOutline = drawOutline;
     }
 
     public BufferedImage getImage() {
@@ -90,7 +103,15 @@ public abstract class AbstractColorBar extends JPanel {
             drawBackground(g2);
         }
 
+
         g2.drawRenderedImage(cachedImage, at);
+
+        if (isDrawOutline()) {
+            Paint op = g2.getPaint();
+            g2.setPaint(outlineColor);
+            g2.drawRect(x, y, width, height);
+            g2.setPaint(op);
+        }
 
 
     }

@@ -4,12 +4,14 @@ package com.brainflow.core;
 import com.brainflow.core.annotations.AxisLabelAnnotation;
 import com.brainflow.core.annotations.ColorBarAnnotation;
 import com.brainflow.core.annotations.CrosshairAnnotation;
+import com.brainflow.core.annotations.SelectedAnnotation;
 import com.brainflow.display.Crosshair;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.image.axis.AxisRange;
+import com.jgoodies.binding.list.SelectionInList;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
@@ -48,10 +50,6 @@ public class SimpleImageView extends ImageView {
     private ImagePlotPaintScheduler scheduler;
 
 
-    public SimpleImageView() {
-    }
-
-
     public SimpleImageView(IImageDisplayModel dset) {
         super(dset);
         initView();
@@ -87,8 +85,10 @@ public class SimpleImageView extends ImageView {
 
 
         addAnnotation(new AxisLabelAnnotation());
+
         addAnnotation(crosshairAnnotation);
         addAnnotation(new ColorBarAnnotation(getImageDisplayModel()));
+        addAnnotation(new SelectedAnnotation(imagePlot));
 
         imagePlot.setAnnotations(getAnnotations());
 
@@ -103,6 +103,15 @@ public class SimpleImageView extends ImageView {
 
     public RenderedImage captureImage() {
         return ipane.captureImage();
+    }
+
+
+    public SelectionInList getPlotSelection() {
+        return new SelectionInList(new Object[]{imagePlot});
+    }
+
+    public IImagePlot getSelectedPlot() {
+        return imagePlot;
     }
 
     public AnatomicalPoint3D getAnatomicalLocation(Component source, Point p) {

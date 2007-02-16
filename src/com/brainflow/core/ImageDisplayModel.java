@@ -13,14 +13,15 @@ import com.jgoodies.binding.list.ArrayListModel;
 import com.jgoodies.binding.list.SelectionInList;
 
 import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.EventListenerList;
+import javax.swing.event.ListDataListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
 
 /**
  * Created by IntelliJ IDEA.
@@ -58,16 +59,8 @@ public class ImageDisplayModel implements IImageDisplayModel {
         displayParameters = new ImageDisplayParameters(this);
         displayParameters.addChangeListener(dirtyListener);
         getDisplayParameters().getViewport().getParameter().setBounds((ImageSpace3D) EMPTY_SPACE);
-        layerSelection.getSelectionIndexHolder().addValueChangeListener(new PropertyChangeListener() {
 
-            public void propertyChange(PropertyChangeEvent evt) {
-                System.out.println("index changed from: " + evt.getOldValue() + " to: " + evt.getNewValue());
-                System.out.println("source " + evt.getSource());
 
-                Integer idx = (Integer)evt.getNewValue();
-                assert idx >= 0 : " selection index is set below zero";
-            }
-        });
     }
 
     public ListModel getListModel() {

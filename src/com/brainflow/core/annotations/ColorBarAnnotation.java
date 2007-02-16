@@ -3,12 +3,13 @@ package com.brainflow.core.annotations;
 import com.brainflow.colormap.AbstractColorBar;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.IImagePlot;
+import com.brainflow.core.ImageLayer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * BrainFlow Project
@@ -20,37 +21,81 @@ public class ColorBarAnnotation extends AbstractAnnotation {
 
     public static final String ORIENTATION_PROPERTY = "orientation";
 
-    private int selectedLayer = -1;
+    public static final String POSITION_PROPERTY = "position";
+
+    public static final String BAR_SIZE_PROPERTY = "barSize";
+
+    public static final String BAR_LENGTH_PROPERTY = "barLength";
+
+    public static final String MARGIN_PROPERTY = "margin";
+
+
+    private ImageLayer selectedLayer;
 
     private IImageDisplayModel model;
 
     private int orientation = SwingUtilities.VERTICAL;
 
-    private int position = SwingUtilities.RIGHT;
 
+    private int barSize = 30;
 
-    private int maximumWidth = 30;
+    private double barLength = 1f;
 
-    private int maximumHeight = 800;
-
-    private float maximumPercentWidth = .2f;
-
-    private float maximumPercentHeight = .8f;
-
-    private int xmargin = 20;
-
-    private int ymargin = 20;
+    private int margin = 20;
 
 
     private AbstractColorBar colorBar = null;
-
-    private BufferedImage colorBarImage = null;
 
 
     public ColorBarAnnotation(IImageDisplayModel _model) {
         model = _model;
 
+        model.getSelection().getSelectionIndexHolder().addValueChangeListener(new PropertyChangeListener() {
 
+            public void propertyChange(PropertyChangeEvent evt) {
+                Object obj = evt.getNewValue();
+                if (obj instanceof Integer && isVisible()) {
+                    // hack to force repaints on selected layer change
+                    System.out.println("layer changed to" + obj);
+                    int selectedIndex = (Integer) evt.getNewValue();
+                    selectedLayer = ColorBarAnnotation.this.model.getImageLayer(selectedIndex);
+                    ColorBarAnnotation.this.setVisible(!isVisible());
+                    ColorBarAnnotation.this.setVisible(!isVisible());
+                }
+            }
+        });
+    }
+
+
+    public int getBarSize() {
+        return barSize;
+    }
+
+    public void setBarSize(int barSize) {
+        int old = this.barSize;
+        this.barSize = barSize;
+        support.firePropertyChange(ColorBarAnnotation.BAR_SIZE_PROPERTY, old, getBarSize());
+    }
+
+    public double getBarLength() {
+        return barLength;
+    }
+
+    public void setBarLength(double barLength) {
+        double old = getBarLength();
+        this.barLength = barLength;
+        System.out.println("new bar length " + barLength);
+        support.firePropertyChange(ColorBarAnnotation.BAR_LENGTH_PROPERTY, old, getBarLength());
+    }
+
+    public int getMargin() {
+        return margin;
+    }
+
+    public void setMargin(int margin) {
+        int old = getMargin();
+        this.margin = margin;
+        support.firePropertyChange(ColorBarAnnotation.MARGIN_PROPERTY, old, getMargin());
     }
 
     public IAnnotation safeCopy() {
@@ -58,34 +103,68 @@ public class ColorBarAnnotation extends AbstractAnnotation {
     }
 
     public void draw(Graphics2D g2d, Rectangle2D plotArea, IImagePlot plot) {
-        if (!isVisible())  return;
-        
-        int selectedLayer = model.getSelectedIndex();
+        if (!isVisible()) return;
 
-        if (colorBar == null) {
-            colorBar = model.getImageLayer(selectedLayer).getImageLayerParameters().getColorMap().getParameter().createColorBar();
-            colorBar.setOrientation(SwingUtilities.VERTICAL);
-            colorBarImage = colorBar.getImage();
+        ImageLayer layer = model.getImageLayer(model.getSelectedIndex());
+
+        if (colorBar == null || layer != selectedLayer) {
+            selectedLayer = layer;
+            colorBar = selectedLayer.getImageLayerParameters().getColorMap().getParameter().createColorBar();
+            colorBar.setOrientation(orientation);
+        } else if (colorBar.getColorMap() != selectedLayer.getImageLayerParameters().getColorMap().getParameter()) {
+            colorBar = selectedLayer.getImageLayerParameters().getColorMap().getParameter().createColorBar();
+            colorBar.setOrientation(orientation);
         }
 
+        if (orientation == SwingUtilities.VERTICAL) {
+            drawVertical(g2d);
+        } else {
+            drawHorizontal(g2d);
+        }
 
+        selectedLayer = layer;
+
+    }
+
+    private void drawVertical(Graphics2D g2d) {
         Rectangle2D cbounds = g2d.getClipBounds();
 
-        int roomx = (int) cbounds.getWidth() - xmargin;
-        int roomy = (int) cbounds.getHeight() - ymargin;
+        int roomx = (int) cbounds.getWidth() - margin;
+        int roomy = (int) cbounds.getHeight() - (margin * 2);
 
-        int width = Math.min(roomx, maximumWidth);
-        width = (int) Math.min(width, maximumPercentWidth * cbounds.getWidth());
+        int width = Math.min(roomx, barSize);
+        int height = (int) (barLength * roomy);
 
-        int height = Math.min(roomy, maximumHeight);
-        height = (int) Math.min(height, maximumPercentHeight * cbounds.getHeight());
 
-        int xmin = (int) cbounds.getWidth() - width - xmargin;
-        int ymin = ymargin;
+        int xmin = (int) cbounds.getWidth() - width - margin;
+        int ymin = margin;
 
-        AffineTransform xform = AffineTransform.getTranslateInstance(xmin, ymin);
+        /*AffineTransform xform = AffineTransform.getTranslateInstance(xmin, ymin);
         xform.scale((float) width / (float) colorBarImage.getWidth(), (float) height / (float) colorBarImage.getHeight());
-        g2d.drawRenderedImage(colorBarImage, xform);
+        g2d.drawRenderedImage(colorBarImage, xform);  */
+
+        colorBar.paintInto(g2d, xmin, ymin, width, height, false);
+
+    }
+
+    private void drawHorizontal(Graphics2D g2d) {
+        Rectangle2D cbounds = g2d.getClipBounds();
+
+        int roomx = (int) cbounds.getWidth() - margin * 2;
+        int roomy = (int) cbounds.getHeight() - (margin);
+
+        int width = (int) (barLength * roomx);
+        int height = Math.min(roomy, barSize);
+
+
+        int xmin = margin;
+        int ymin = (int) cbounds.getHeight() - height - margin;
+
+        /*AffineTransform xform = AffineTransform.getTranslateInstance(xmin, ymin);
+        xform.scale((float) width / (float) colorBarImage.getWidth(), (float) height / (float) colorBarImage.getHeight());
+        g2d.drawRenderedImage(colorBarImage, xform);  */
+
+        colorBar.paintInto(g2d, xmin, ymin, width, height, false);
 
     }
 

@@ -5,6 +5,8 @@ import com.brainflow.image.anatomy.AnatomicalPoint2D;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -36,7 +38,16 @@ public class ImagePane extends JComponent {
     private Rectangle2D plotArea;
 
 
+    private static final BasicStroke[] outlines = new BasicStroke[100];
 
+    static {
+        float phase = 0;
+        for (int i = 0; i < outlines.length; i++) {
+            outlines[i] = new BasicStroke(6, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0f, new float[]{1, 1}, phase);
+            phase = phase + 2;
+        }
+
+    }
 
     public ImagePane(IImagePlot _plot) {
         assert _plot != null;
@@ -44,6 +55,46 @@ public class ImagePane extends JComponent {
         plot = _plot;
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+
+        Timer timer = new Timer(500, new ActionListener() {
+
+            int strokeNum = 0;
+            Stroke prevStroke = null;
+            public void actionPerformed(ActionEvent e) {
+                if (!ImagePane.this.isVisible()) return;
+                Graphics2D g2 = (Graphics2D) getGraphics();
+                Insets insets = getInsets();
+                Dimension size = getSize();
+                Rectangle2D selRect = new Rectangle(insets.left, insets.top,
+                        (int) (size.getWidth() - insets.left - insets.right),
+                        (int) (size.getHeight() - insets.top - insets.bottom));
+
+                if (prevStroke != null) {
+                    g2.setStroke(prevStroke);
+                    //g2.setPaint(Color.BLACK);
+                    g2.setXORMode(Color.GREEN);
+                    g2.draw(selRect);
+                }
+
+                g2.setXORMode(Color.GREEN);
+
+                //g2.setPaint(Color.WHITE);
+                g2.setStroke(outlines[strokeNum]);
+                g2.draw(selRect);
+                prevStroke = outlines[strokeNum];
+                g2.dispose();
+                strokeNum++;
+                if (strokeNum == outlines.length) {
+                    strokeNum = 0;
+                }
+
+
+            }
+        });
+
+        timer.setRepeats(true);
+        timer.start();
     }
 
 
@@ -65,6 +116,7 @@ public class ImagePane extends JComponent {
 
         Dimension size = getSize();
         Insets insets = getInsets();
+
 
         Insets plotInsets = plot.getPlotInsets();
 
@@ -101,8 +153,9 @@ public class ImagePane extends JComponent {
                 (int) (size.getWidth() - insets.left - insets.right),
                 (int) (size.getHeight() - insets.top - insets.bottom));
 
-        g2.setColor(oldColor);
 
+        g2.setColor(oldColor);
+        
         plot.paint(g2, plotArea);
 
     }
@@ -130,7 +183,6 @@ public class ImagePane extends JComponent {
         return !((point.x < 0) | (point.y < 0) | (point.x > getWidth()) | (point.y > getHeight()));
 
     }
-
 
 
     public Point translateValueToScreen(Point2D value) {

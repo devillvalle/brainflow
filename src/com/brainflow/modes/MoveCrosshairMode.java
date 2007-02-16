@@ -18,7 +18,7 @@ import java.awt.event.MouseEvent;
 public class MoveCrosshairMode extends ImageCanvasMode {
 
 
-    private Point dragBegin;
+
     private boolean dragging = false;
 
 

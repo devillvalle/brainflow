@@ -31,20 +31,19 @@ public class PlotSelectorMode extends ImageCanvasMode {
         ImageView view = canvas.whichView(point);
 
         if (view == null) {
-            System.out.println("view is null, clearing selection");
+
             canvas.getCanvasSelection().clearSelection();
             canvas.setSelectedView(null);
         } else if (view == canvas.getSelectedView()) {
-            System.out.println("view already *is* selected view");
+
             return;
         } else if (view != null) {
-            System.out.println("view is not the currently selected view");
 
             canvas.getCanvasSelection().clearPreSelection();
             canvas.getCanvasSelection().setSelectedView(event, view);
 
         } else {
-            System.out.println(" else ?");
+           
 
         }
 

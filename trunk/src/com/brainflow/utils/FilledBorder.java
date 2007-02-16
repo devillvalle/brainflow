@@ -23,7 +23,7 @@ public class FilledBorder extends AbstractBorder {
 
 
     private int titleHeight = 30;
-    private Insets insets = new Insets(titleHeight, 7, 7, 7);
+    private Insets insets = new Insets(titleHeight, 2, 2, 2);
     private GradientPaint fillPaint;
 
     private float alpha = .7f;

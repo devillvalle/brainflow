@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 
 public class PlotResizeMode extends ImageCanvasMode implements MouseListener, MouseMotionListener {
 
-    Logger log = Logger.getLogger("com.brainflow.display");
+    private static final Logger log = Logger.getLogger(PlotResizeMode.class.getName());
 
     private Point dragBegin = null;
 

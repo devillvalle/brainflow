@@ -59,8 +59,8 @@ public class ColorBarAnnotation extends AbstractAnnotation {
                     System.out.println("layer changed to" + obj);
                     int selectedIndex = (Integer) evt.getNewValue();
                     selectedLayer = ColorBarAnnotation.this.model.getImageLayer(selectedIndex);
-                    ColorBarAnnotation.this.setVisible(!isVisible());
-                    ColorBarAnnotation.this.setVisible(!isVisible());
+                    //ColorBarAnnotation.this.setVisible(!isVisible());
+                    //ColorBarAnnotation.this.setVisible(!isVisible());
                 }
             }
         });

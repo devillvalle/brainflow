@@ -67,7 +67,9 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
                 if (event instanceof MouseEvent) {
 
                     MouseEvent me = (MouseEvent) event;
+                    boolean b = SwingUtilities.isDescendingFrom(rootPane, (Component)me.getSource()));
                     Point absp = SwingUtilities.convertPoint((Component)me.getSource(), me.getX(), me.getY(), rootPane);
+
 
                     if (absp.getX() < 0 || absp.getX() > rootPane.getWidth() ||
                             absp.getY() < 0 || absp.getY() > rootPane.getHeight()) {

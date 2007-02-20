@@ -104,7 +104,7 @@ public class CanvasBar2 extends ImageViewPresenter {
             ImageLayer layer = getSelectedView().getImageDisplayModel().getImageLayer(i);
             JideToggleSplitButton button = new JideToggleSplitButton("" + (i + 1) + ": " + layer);
             button.addItemListener(listener);
-            BasicAction visAction = new LayerVisibilityAction(layer);
+            BasicAction visAction = new LayerVisibilityAction(layer.getImageLayerParameters());
 
             visAction.setContext(map);
 

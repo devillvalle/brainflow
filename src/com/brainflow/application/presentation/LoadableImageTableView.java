@@ -14,6 +14,7 @@ import com.brainflow.gui.AbstractPresenter;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.image.data.IImageData3D;
+import com.brainflow.display.ImageLayerParameters;
 import com.jidesoft.grid.*;
 import com.jidesoft.swing.NullButton;
 import com.jidesoft.swing.NullJideButton;
@@ -177,9 +178,9 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
 
 
             IImageData3D data = (IImageData3D) limg.getData();
-            ImageLayer layer = new ImageLayer3D(data);
-            layer.getImageLayerParameters().setColorMap(new LinearColorMap(data.getMinValue(), data.getMaxValue(),
+            ImageLayerParameters parms = new ImageLayerParameters(new LinearColorMap(data.getMinValue(), data.getMaxValue(),
                     ColorTable.GRAYSCALE));
+            ImageLayer layer = new ImageLayer3D(data, parms);
 
             dmodel.addLayer(layer);
 

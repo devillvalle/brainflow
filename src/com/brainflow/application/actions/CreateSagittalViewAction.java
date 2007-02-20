@@ -34,7 +34,7 @@ public class CreateSagittalViewAction extends BasicAction {
        
         if (view != null) {
             //IImageDisplayModel displayModel = view.getImageDisplayModel();
-            ImageView sview = ImageViewFactory.createSagittalView(view);
+            ImageView sview = ImageViewFactory.createYokedSagittalView(view);
             ImageCanvas canvas = (ImageCanvas) getContextValue(ActionContext.SELECTED_CANVAS);
 
             if (canvas != null) {

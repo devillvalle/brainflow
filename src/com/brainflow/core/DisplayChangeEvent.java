@@ -1,6 +1,6 @@
 package com.brainflow.core;
 
-import com.brainflow.display.DisplayParameter;
+import com.brainflow.display.Property;
 
 import javax.swing.event.ChangeEvent;
 
@@ -15,10 +15,10 @@ public class DisplayChangeEvent extends ChangeEvent {
 
 
     private DisplayAction displayAction;
-    private DisplayParameter parameter;
+    private Property parameter;
 
 
-    public DisplayChangeEvent(DisplayParameter _parameter, DisplayAction _displayAction) {
+    public DisplayChangeEvent(Property _parameter, DisplayAction _displayAction) {
         super(_parameter);
         displayAction = _displayAction;
         parameter = _parameter;
@@ -30,7 +30,7 @@ public class DisplayChangeEvent extends ChangeEvent {
         return displayAction;
     }
 
-    public DisplayParameter getDisplayParameter() {
+    public Property getDisplayParameter() {
         return parameter;
     }
 

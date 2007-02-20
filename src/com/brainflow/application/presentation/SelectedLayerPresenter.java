@@ -3,8 +3,9 @@ package com.brainflow.application.presentation;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
-import com.brainflow.display.DisplayParameter;
+import com.brainflow.display.Property;
 import com.brainflow.display.VisibleProperty;
+import com.brainflow.display.ImageLayerParameters;
 import com.jgoodies.binding.adapter.ComboBoxAdapter;
 import com.jgoodies.binding.adapter.SingleListSelectionAdapter;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -158,8 +159,9 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
         public void propertyChange(PropertyChangeEvent evt) {
 
             VisibleProperty property = (VisibleProperty) evt.getSource();
-            ImageLayer layer = property.getLayer();
-            int i = view.getImageDisplayModel().indexOf(layer);
+            ImageLayerParameters params = property.getLayerParameters();
+            ImageLayer layer = getSelectedView().getImageDisplayModel().getLayer(params);
+            int i = getSelectedView().getImageDisplayModel().indexOf(layer);
             if (property.isVisible()) {
                 layerSelector.getCheckBoxListSelectionModel().addSelectionInterval(i, i);
             } else {
@@ -172,10 +174,10 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
         public void listen() {
             for (int i = 0; i < view.getImageDisplayModel().getNumLayers(); i++) {
-                DisplayParameter<VisibleProperty> param = view.getImageDisplayModel().getImageLayer(i).getImageLayerParameters().getVisiblility();
+                Property<VisibleProperty> param = view.getImageDisplayModel().getImageLayer(i).getImageLayerParameters().getVisiblility();
                 param.addPropertyChangeListener(this);
 
-                VisibleProperty property = param.getParameter();
+                VisibleProperty property = param.getProperty();
                 if (property.isVisible()) {
                     layerSelector.getCheckBoxListSelectionModel().addSelectionInterval(i, i);
                 } else {
@@ -196,7 +198,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
         public boolean isSelectedIndex(int index) {
             IImageDisplayModel model = view.getImageDisplayModel();
             ImageLayer layer = model.getImageLayer(index);
-            return layer.getImageLayerParameters().getVisiblility().getParameter().isVisible();
+            return layer.getImageLayerParameters().getVisiblility().getProperty().isVisible();
 
         }
 

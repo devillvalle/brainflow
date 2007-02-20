@@ -28,7 +28,7 @@ public class DesignLinearColorMapAction extends BasicAction {
         if (view != null) {
             IImageDisplayModel displayModel = view.getImageDisplayModel();
             int idx = view.getSelectedIndex();
-            IColorMap colorMap = displayModel.getLayerParameters(idx).getColorMap().getParameter();
+            IColorMap colorMap = displayModel.getLayerParameters(idx).getColorMap().getProperty();
 
             Container parent = view.getParent();
 

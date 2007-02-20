@@ -1,6 +1,5 @@
 package com.brainflow.core;
 
-import com.brainflow.display.ImageDisplayParameters;
 import com.brainflow.display.ImageLayerParameters;
 import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.AnatomicalVolume;
@@ -22,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.beans.PropertyChangeSupport;
+import java.beans.PropertyChangeListener;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,6 +33,10 @@ import java.util.logging.Logger;
  */
 public class ImageDisplayModel implements IImageDisplayModel {
 
+
+
+    public static final String IMAGE_SPACE_PROPERTY = "imageSpace";
+
     private EventListenerList listeners = new EventListenerList();
 
     private ArrayListModel imageListModel = new ArrayListModel();
@@ -40,15 +45,15 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     private SelectionInList layerSelection = new SelectionInList((ListModel) imageListModel);
 
-    private ImageDisplayParameters displayParameters;
 
-    private Map<ImageLayer, List<ImageLayer>> alphaMaskMap = new HashMap<ImageLayer, List<ImageLayer>>();
+    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
+
 
     private static IImageSpace EMPTY_SPACE = new ImageSpace3D(new ImageAxis(0, 100, AnatomicalVolume.getCanonicalAxial().XAXIS, 100),
             new ImageAxis(0, 100, AnatomicalVolume.getCanonicalAxial().YAXIS, 100),
             new ImageAxis(0, 100, AnatomicalVolume.getCanonicalAxial().ZAXIS, 100));
 
-    private IImageSpace compositeSpace = EMPTY_SPACE;
+    private IImageSpace imageSpace = EMPTY_SPACE;
 
     private final static Logger log = Logger.getLogger(ImageDisplayModel.class.getName());
 
@@ -56,16 +61,8 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     public ImageDisplayModel(String _name) {
         name = _name;
-        displayParameters = new ImageDisplayParameters(this);
-        displayParameters.addChangeListener(dirtyListener);
-        getDisplayParameters().getViewport().getParameter().setBounds((ImageSpace3D) EMPTY_SPACE);
-
-
     }
 
-    public ListModel getListModel() {
-        return imageListModel;
-    }
 
     public ImageLayerParameters getLayerParameters(int layer) {
         assert layer >= 0 && layer < imageListModel.size();
@@ -73,45 +70,20 @@ public class ImageDisplayModel implements IImageDisplayModel {
         return ilayer.getImageLayerParameters();
     }
 
-    public ImageDisplayParameters getDisplayParameters() {
-        return displayParameters;
+    public ImageLayer getLayer(ImageLayerParameters params) {
+        for (int i=0; i<imageListModel.size(); i++) {
+            ImageLayer layer = (ImageLayer)imageListModel.get(i);
+            if (params == layer.getImageLayerParameters()) return layer;
+        }
+
+        return null;
     }
 
     public SelectionInList getSelection() {
         return layerSelection;
     }
 
-    public void removeMaskForLayer(ImageLayer iLayer, ImageLayer imaskLayer) {
-        if (!containsLayer(iLayer)) {
-            throw new IllegalArgumentException("ImageLayer not contained in model");
-        }
 
-        List<ImageLayer> mlist = alphaMaskMap.get(iLayer);
-        mlist.remove(imaskLayer);
-
-
-    }
-
-    public void addMaskForLayer(ImageLayer iLayer, ImageLayer imaskLayer) {
-        if (!containsLayer(iLayer) || !containsLayer(imaskLayer)) {
-            throw new IllegalArgumentException("ImageLayer not contained in model");
-        }
-
-        List<ImageLayer> mlist = alphaMaskMap.get(iLayer);
-        if (mlist == null) {
-            mlist = new ArrayList<ImageLayer>();
-            mlist.add(imaskLayer);
-            alphaMaskMap.put(iLayer, mlist);
-
-        } else if (!mlist.contains(imaskLayer)) {
-            mlist.add(imaskLayer);
-        }
-
-        //fireChangeEvent(new DisplayChangeEvent())
-
-        return;
-
-    }
 
 
     public int getSelectedIndex() {
@@ -130,6 +102,15 @@ public class ImageDisplayModel implements IImageDisplayModel {
         imageListModel.removeListDataListener(listener);
     }
 
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.removePropertyChangeListener(listener);
+    }
+
+
     public void addChangeListener(ChangeListener listener) {
         listeners.add(ChangeListener.class, listener);
     }
@@ -146,22 +127,26 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
 
     public void addLayer(ImageLayer layer) {
+        listenToLayer(layer);
         imageListModel.add(layer);
         if (imageListModel.size() == 1) {
             layerSelection.setSelectionIndex(0);
         }
-        computeCompositeSpace();
-        listenToLayer(layer);
+        computeImageSpace();
 
+
+
+       
         //this.fireChangeEvent(new DisplayChangeEvent()
     }
 
     private void listenToLayer(ImageLayer layer) {
+
         layer.getImageLayerParameters().addChangeListener(dirtyListener);
     }
 
 
-    private void computeCompositeSpace() {
+    private void computeImageSpace() {
         IImageSpace uspace = null;
 
         if (!imageListModel.isEmpty()) {
@@ -172,25 +157,27 @@ public class ImageDisplayModel implements IImageDisplayModel {
                     uspace = space;
                 } else {
                     uspace = uspace.union(space);
+
                 }
             }
         } else {
             uspace = EMPTY_SPACE;
         }
 
-        compositeSpace = (ImageSpace3D) uspace;
-        getDisplayParameters().getViewport().getParameter().setBounds((ImageSpace3D) uspace);
+        if (!uspace.equals(imageSpace)) {
+         
+            IImageSpace old = imageSpace;
+            imageSpace = uspace;
+            changeSupport.firePropertyChange(ImageDisplayModel.IMAGE_SPACE_PROPERTY, old, imageSpace);
+        }
+        //fireChangeEvent(
+        //getDisplayParameters().getViewport().getProperty().setBounds((ImageSpace3D) uspace);
 
     }
 
 
     public int indexOf(ImageLayer layer) {
-        for (int i = 0; i < imageListModel.size(); i++) {
-            ImageLayer l = (ImageLayer) imageListModel.get(i);
-            if (l == layer) return i;
-        }
-
-        return -1;
+        return imageListModel.indexOf(layer);
 
 
     }
@@ -212,14 +199,15 @@ public class ImageDisplayModel implements IImageDisplayModel {
         assert imageListModel.size() > layer && layer >= 0;
         ImageLayer rlayer = (ImageLayer) imageListModel.get(layer);
         imageListModel.remove(layer);
-        computeCompositeSpace();
-        rlayer.getImageLayerParameters().removeChangeListener(dirtyListener);
+        computeImageSpace();
+        //rlayer.getImageLayerParameters().removeChangeListener(dirtyListener);
 
     }
 
     public void removeLayer(ImageLayer layer) {
         assert imageListModel.contains(layer);
-        imageListModel.remove(layer);
+        int idx = imageListModel.indexOf(layer);
+        removeLayer(idx);
     }
 
     public boolean containsLayer(ImageLayer layer) {
@@ -246,26 +234,26 @@ public class ImageDisplayModel implements IImageDisplayModel {
         return size();
     }
 
-    public ImageSpace3D getCompositeImageSpace() {
-        return (ImageSpace3D) compositeSpace;
+    public IImageSpace getImageSpace() {
+        return imageSpace;
 
     }
 
     public double getSpacing(Axis axis) {
-        return getCompositeImageSpace().getSpacing(axis);
+        return getImageSpace().getSpacing(axis);
 
     }
 
     public double getSpacing(AnatomicalAxis axis) {
-        return getCompositeImageSpace().getSpacing(axis);
+        return getImageSpace().getSpacing(axis);
     }
 
     public ImageAxis getImageAxis(Axis axis) {
-        return getCompositeImageSpace().getImageAxis(axis);
+        return getImageSpace().getImageAxis(axis);
     }
 
     public ImageAxis getImageAxis(AnatomicalAxis axis) {
-        ImageAxis iaxis = getCompositeImageSpace().getImageAxis(axis, true);
+        ImageAxis iaxis = getImageSpace().getImageAxis(axis, true);
         ImageAxis retAxis = iaxis.matchAxis(axis);
         return retAxis;
     }
@@ -274,11 +262,11 @@ public class ImageDisplayModel implements IImageDisplayModel {
     /* (non-Javadoc)
      * @see com.brainflow.core.IImageDisplayModel#setLayer(int, com.brainflow.application.SoftLoadableImage, com.brainflow.display.props.DisplayProperties)
      */
-    public void setLayer(int index, ImageLayer layer) {
-        assert index >= 0 && index < size();
-        imageListModel.set(index, layer);
-        computeCompositeSpace();
-    }
+    //public void setLayer(int index, ImageLayer layer) {
+    //    assert index >= 0 && index < size();
+    //    imageListModel.set(index, layer);
+    //    computeImageSpace();
+   // }
 
 
     protected void fireChangeEvent(DisplayChangeEvent e) {
@@ -293,6 +281,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
         public void stateChanged(ChangeEvent e) {
             DisplayChangeEvent de = (DisplayChangeEvent) e;
+            System.out.println("firing dirty event : " + de.getDisplayAction());
             fireChangeEvent(de);
         }
     }

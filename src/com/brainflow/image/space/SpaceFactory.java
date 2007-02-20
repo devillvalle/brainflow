@@ -17,7 +17,6 @@ public class SpaceFactory {
 
 
     public static IImageSpace createImageSpace(ImageAxis ... axes) {
-        assert axes.length <= 3;
 
         if (axes.length > 3) {
             throw new IllegalArgumentException("Cannot create an IImageSpace with more than three axes");

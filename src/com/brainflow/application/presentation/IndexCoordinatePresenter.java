@@ -2,6 +2,7 @@ package com.brainflow.application.presentation;
 
 import com.brainflow.application.presentation.forms.TripleSliderForm;
 import com.brainflow.display.Crosshair;
+import com.brainflow.display.ICrosshair;
 import com.brainflow.gui.AbstractPresenter;
 import com.brainflow.image.space.Axis;
 import com.jgoodies.binding.adapter.Bindings;
@@ -21,7 +22,7 @@ import javax.swing.*;
 public class IndexCoordinatePresenter extends AbstractPresenter {
 
     private TripleSliderForm form;
-    private Crosshair crosshair;
+    private ICrosshair crosshair;
 
     private BeanAdapter crosshairAdapter;
     private BeanAdapter viewportAdapter;
@@ -30,7 +31,7 @@ public class IndexCoordinatePresenter extends AbstractPresenter {
     private BoundedRangeAdapter JSliderAdapter;
     private BoundedRangeAdapter KSliderAdapter;
 
-    public IndexCoordinatePresenter(Crosshair _crosshair) {
+    public IndexCoordinatePresenter(ICrosshair _crosshair) {
         form = new TripleSliderForm();
         crosshair = _crosshair;
 
@@ -39,7 +40,7 @@ public class IndexCoordinatePresenter extends AbstractPresenter {
 
     }
 
-    public void setCrosshair(Crosshair _crosshair) {
+    public void setCrosshair(ICrosshair _crosshair) {
         crosshair = _crosshair;
         if (crosshairAdapter != null) {
             crosshairAdapter.setBean(crosshair);

@@ -1,7 +1,7 @@
 package com.brainflow.core;
 
-import com.brainflow.display.Crosshair;
 import com.brainflow.display.Viewport3D;
+import com.brainflow.display.ICrosshair;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 
 import javax.swing.*;
@@ -47,7 +47,7 @@ public class ImagePlotPaintScheduler {
         System.out.println("DISPLAY ACTION: " + event.getDisplayAction());
         if (event.getDisplayAction() == DisplayAction.SLICE_CHANGED) {
 
-            Crosshair cross = (Crosshair) event.getDisplayParameter().getParameter();
+            ICrosshair cross = (ICrosshair) event.getDisplayParameter().getProperty();
             executor.submit(new ProcureTask(cross.getValue(plot.getDisplayAnatomy().ZAXIS)));
 
         } else if (event.getDisplayAction() == DisplayAction.DATA_CHANGED) {
@@ -69,7 +69,7 @@ public class ImagePlotPaintScheduler {
         } else if (event.getDisplayAction() == DisplayAction.RECOMPOSE) {
             executor.submit(new ComposeTask());
         } else if (event.getDisplayAction() == DisplayAction.VIEWPORT_CHANGED) {
-            Viewport3D viewport = (Viewport3D) event.getDisplayParameter().getParameter();
+            Viewport3D viewport = (Viewport3D) event.getDisplayParameter().getProperty();
             plot.updateAxis(viewport.getRange(viewport.getXAxis()));
             plot.updateAxis(viewport.getRange(viewport.getYAxis()));
             plot.updateAxis(viewport.getRange(viewport.getZAxis()));

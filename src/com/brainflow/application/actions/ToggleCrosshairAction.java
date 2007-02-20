@@ -31,8 +31,10 @@ public class ToggleCrosshairAction extends BasicAction {
         if (view != null) {
             setEnabled(true);
             CrosshairAnnotation annot = (CrosshairAnnotation)view.getAnnotation(CrosshairAnnotation.class);
-            boolean selected = annot.isVisible();
-            setSelected(selected);
+            if (annot != null) {
+                boolean selected = annot.isVisible();
+                setSelected(selected);
+            }
         } else {
             setEnabled(false);
         }

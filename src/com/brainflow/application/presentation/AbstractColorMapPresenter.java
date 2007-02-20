@@ -3,7 +3,7 @@ package com.brainflow.application.presentation;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
-import com.brainflow.display.DisplayParameter;
+import com.brainflow.display.Property;
 import com.jgoodies.binding.beans.DelayedPropertyChangeHandler;
 
 import java.beans.PropertyChangeEvent;
@@ -18,7 +18,7 @@ import java.beans.PropertyChangeListener;
  */
 public abstract class AbstractColorMapPresenter extends ImageViewPresenter {
 
-    private DisplayParameter<IColorMap> colorMapParameter;
+    private Property<IColorMap> colorMapParameter;
     private PropertyChangeListener substitutionHandler = new ParameterHandler();
 
     private long delay = 0;
@@ -28,13 +28,13 @@ public abstract class AbstractColorMapPresenter extends ImageViewPresenter {
     }
 
 
-    public AbstractColorMapPresenter(DisplayParameter<IColorMap> _colorMapParameter) {
+    public AbstractColorMapPresenter(Property<IColorMap> _colorMapParameter) {
         colorMapParameter = _colorMapParameter;
         setColorMap(colorMapParameter);
 
     }
 
-    public abstract void setColorMap(DisplayParameter<IColorMap> colorMapParameter);
+    public abstract void setColorMap(Property<IColorMap> colorMapParameter);
 
 
     public void viewSelected(ImageView view) {
@@ -54,7 +54,7 @@ public abstract class AbstractColorMapPresenter extends ImageViewPresenter {
 
     }
 
-    protected DisplayParameter<IColorMap> getColorMapParameter() {
+    protected Property<IColorMap> getColorMapParameter() {
         return colorMapParameter;
     }
 
@@ -67,7 +67,7 @@ public abstract class AbstractColorMapPresenter extends ImageViewPresenter {
         this.delay = delay;
     }
 
-    private void updateColorMapParameter(DisplayParameter<IColorMap> _colorMapParameter) {
+    private void updateColorMapParameter(Property<IColorMap> _colorMapParameter) {
 
 
         if (colorMapParameter != null) {

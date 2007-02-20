@@ -35,9 +35,10 @@ public class CreateAxialViewAction extends BasicAction {
 
         if (view != null) {
             
-            ImageView sview = ImageViewFactory.createAxialView(view);
+            ImageView sview = ImageViewFactory.createYokedAxialView(view);
+            System.out.println("selected view: " + sview);
             ImageCanvas canvas = (ImageCanvas) getContextValue(ActionContext.SELECTED_CANVAS);
-
+            System.out.println("selected canvas: " + canvas);
             if (canvas != null) {
                 canvas.addImageView(sview);
             }

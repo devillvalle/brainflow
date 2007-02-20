@@ -32,7 +32,7 @@ public class DesignColorMapAction extends BasicAction {
 
             int layer = view.getImageDisplayModel().getSelectedIndex();
             IColorMap oldMap = view.getImageDisplayModel().getImageLayer(layer).
-                    getImageLayerParameters().getColorMap().getParameter();
+                    getImageLayerParameters().getColorMap().getProperty();
 
             if (oldMap instanceof LinearColorMap) {
                 LinearColorMap lmap = (LinearColorMap) oldMap;
@@ -45,7 +45,7 @@ public class DesignColorMapAction extends BasicAction {
 
                 if (ret != JideOptionPane.OK_OPTION) {
                     view.getImageDisplayModel().getImageLayer(layer).
-                            getImageLayerParameters().getColorMap().setParameter(copyMap);
+                            getImageLayerParameters().getColorMap().setProperty(copyMap);
 
                 }
 

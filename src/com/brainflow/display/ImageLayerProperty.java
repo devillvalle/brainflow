@@ -9,12 +9,12 @@ import com.brainflow.core.ImageLayer;
  * Time: 11:30:39 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ImageLayerDisplayParameter<T> extends DisplayParameter {
+public class ImageLayerProperty<T> extends Property {
 
 
     private ImageLayer layer;
 
-    public ImageLayerDisplayParameter(ImageLayer _layer, T param) {
+    public ImageLayerProperty(ImageLayer _layer, T param) {
         super(param);
         layer = _layer;
     }

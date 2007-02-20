@@ -34,6 +34,7 @@ import java.beans.PropertyChangeEvent;
 public class AdjustMarginsAction extends BasicAction {
 
     private static final Logger log = Logger.getLogger(AdjustMarginsAction.class.getName());
+
     private JDialog dialog;
 
 

@@ -48,15 +48,15 @@ public class ImagePlotRenderer {
 
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 
-        Shape oldClip = g2.getClip();
-        g2.setClip(area);
+        //Shape oldClip = g2.getClip();
+        //g2.setClip(area);
 
         AffineTransform trans = AffineTransform.getTranslateInstance(area.getX(), area.getY());
         trans.scale(sx, sy);
 
         g2.drawRenderedImage(rimg, trans);
 
-        g2.setClip(oldClip);
+        //g2.setClip(oldClip);
 
     }
 

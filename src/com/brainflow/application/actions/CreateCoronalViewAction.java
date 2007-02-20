@@ -33,7 +33,7 @@ public class CreateCoronalViewAction extends BasicAction {
 
         if (view != null) {
 
-            ImageView sview = ImageViewFactory.createCoronalView(view);
+            ImageView sview = ImageViewFactory.createYokedCoronalView(view);
             ImageCanvas canvas = (ImageCanvas) getContextValue(ActionContext.SELECTED_CANVAS);
 
             if (canvas != null) {

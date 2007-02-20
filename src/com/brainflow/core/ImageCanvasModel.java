@@ -6,7 +6,9 @@ import com.jgoodies.binding.list.SelectionInList;
 
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.logging.Logger;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,20 +17,22 @@ import java.util.logging.Logger;
  * Time: 10:35:14 AM
  * To change this template use File | Settings | File Templates.
  */
+
+
 public class ImageCanvasModel {
 
-    private static Logger log = Logger.getLogger(ImageCanvasModel.class.getCanonicalName());
+    private static final Logger log = Logger.getLogger(ImageCanvasModel.class.getCanonicalName());
 
     public static String SELECTED_VIEW_PROPERTY = "selectedView";
 
-    private ExtendedPropertyChangeSupport support = new ExtendedPropertyChangeSupport(this);
+    private PropertyChangeSupport support = new ExtendedPropertyChangeSupport(this);
 
-    //private List<ImageView> imageViews = new ArrayList<ImageView>();
     private ArrayListModel imageViewListModel = new ArrayListModel();
 
     private SelectionInList imageViewSelection = new SelectionInList((ListModel) imageViewListModel);
 
     private ImageView selectedView = null;
+
 
 
     public ImageCanvasModel() {
@@ -60,25 +64,23 @@ public class ImageCanvasModel {
         return (ImageView) imageViewSelection.getSelection();
     }
 
-    public ImageView[] getImageViews() {
+    public List<ImageView> getImageViews() {
         ImageView[] views = new ImageView[imageViewListModel.size()];
         imageViewListModel.toArray(views);
-        return views;
+        return Arrays.asList(views);
+
     }
 
+
+
     public void addImageView(ImageView view) {
-
-        log.info("Adding ImageView to imageViewListModel");
         imageViewListModel.add(view);
-
-        //log.info("setting selected view");
-        //setSelectedView(view);
-        //log.info("finished setting selected view");
-        //assert getSelectedView() != null;
+        //linkedViews.put(view, new ArrayList<ImageView>());
     }
 
     public void removeImageView(ImageView view) {
         imageViewListModel.remove(view);
+        //linkedViews.remove(view);
     }
 
 

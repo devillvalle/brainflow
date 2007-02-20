@@ -56,7 +56,7 @@ public class MaskSelectionPresenter extends ImageViewPresenter {
             if (selIndex > 0) {
                 ImageLayer selectedLayer = view.getImageDisplayModel().getImageLayer(selIndex);
                 Collection<ImageLayer> maskSet = selectedLayer.getImageLayerParameters().getAlphaMask().
-                        getParameter().getAlphaMaskSet();
+                        getProperty().getAlphaMaskSet();
                 int count = 0;
                 for (int i = 0; i < view.getImageDisplayModel().getNumLayers(); i++) {
                     ImageLayer layer = view.getImageDisplayModel().getImageLayer(i);
@@ -82,10 +82,10 @@ public class MaskSelectionPresenter extends ImageViewPresenter {
 
                     ImageLayer layer = (ImageLayer) clist.getModel().getElementAt(i);
                     if (clist.getCheckBoxListSelectionModel().isSelectedIndex(i)) {
-                        selectedLayer.getImageLayerParameters().getAlphaMask().getParameter().addAlphaMask(layer);
+                        selectedLayer.getImageLayerParameters().getAlphaMask().getProperty().addAlphaMask(layer);
                     } else {
 
-                        selectedLayer.getImageLayerParameters().getAlphaMask().getParameter().removeAlphaMask(layer);
+                        selectedLayer.getImageLayerParameters().getAlphaMask().getProperty().removeAlphaMask(layer);
                     }
 
 

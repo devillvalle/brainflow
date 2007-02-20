@@ -26,6 +26,7 @@ public class AxisLabelAnnotation extends AbstractAnnotation {
     private int xFontStart = axisLineXStart;
     private int yFontStart = axisLineYStart;
 
+    public static final String ID = "axis label";
 
     private Font font = new Font("helvetica", Font.ITALIC | Font.BOLD, 14);
 
@@ -70,6 +71,11 @@ public class AxisLabelAnnotation extends AbstractAnnotation {
 
         g2d.setPaint(oldPaint);
 
+    }
+
+
+    public final String getIdentifier() {
+        return AxisLabelAnnotation.ID;
     }
 
     public AxisLabelAnnotation safeCopy() {

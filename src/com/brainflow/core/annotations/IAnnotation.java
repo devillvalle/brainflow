@@ -26,5 +26,6 @@ public interface IAnnotation extends Cloneable {
 
     public void removePropertyChangeListener(PropertyChangeListener listener);
 
+    public String getIdentifier();
 
 }

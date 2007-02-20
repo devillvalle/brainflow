@@ -1,7 +1,7 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.colormap.*;
-import com.brainflow.display.DisplayParameter;
+import com.brainflow.display.Property;
 import com.brainflow.utils.ResourceLoader;
 import com.jgoodies.binding.beans.DelayedPropertyChangeHandler;
 import com.jidesoft.dialog.ButtonPanel;
@@ -63,7 +63,7 @@ public class ColorMapTablePresenter extends AbstractColorMapPresenter {
                 IColorMap cmap = colorTable.getModel().setTableSize(n.intValue());
 
                 colorTable.getComponent().getSelectionModel().clearSelection();
-                 ColorMapTablePresenter.this.getColorMapParameter().setParameter(cmap);
+                 ColorMapTablePresenter.this.getColorMapParameter().setProperty(cmap);
 
             }
         });
@@ -95,7 +95,7 @@ public class ColorMapTablePresenter extends AbstractColorMapPresenter {
 
             public void actionPerformed(ActionEvent e) {
                 // color map already be set and therefore property change event never fired.
-                ColorMapTablePresenter.this.getColorMapParameter().setParameter(colorTable.getEditedColorMap());
+                ColorMapTablePresenter.this.getColorMapParameter().setProperty(colorTable.getEditedColorMap());
             }
         });
 
@@ -112,12 +112,12 @@ public class ColorMapTablePresenter extends AbstractColorMapPresenter {
     }
 
     private void initSegmentSpinner() {
-        DisplayParameter<IColorMap> param = getColorMapParameter();
+        Property<IColorMap> param = getColorMapParameter();
 
 
         if (param != null) {
             segmentSpinner.setEnabled(true);
-            IColorMap cmap = param.getParameter();
+            IColorMap cmap = param.getProperty();
             segmentSpinner.setModel(new SpinnerNumberModel(cmap.getMapSize(), 1, 256, 1));
 
 
@@ -129,14 +129,14 @@ public class ColorMapTablePresenter extends AbstractColorMapPresenter {
     }
 
 
-    public void setColorMap(DisplayParameter<IColorMap> param) {
+    public void setColorMap(Property<IColorMap> param) {
 
         initSegmentSpinner();
-        colorTable.setColorMap(param.getParameter());
+        colorTable.setColorMap(param.getProperty());
 
         param.addPropertyChangeListener(new DelayedPropertyChangeHandler(5000) {
             public void delayedPropertyChange(PropertyChangeEvent evt) {
-                colorTable.setColorMap(ColorMapTablePresenter.this.getColorMapParameter().getParameter());
+                colorTable.setColorMap(ColorMapTablePresenter.this.getColorMapParameter().getProperty());
 
             }
         });

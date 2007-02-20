@@ -5,7 +5,7 @@ import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.display.ColorBandChart;
-import com.brainflow.display.DisplayParameter;
+import com.brainflow.display.Property;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -33,9 +33,9 @@ public class ColorBandChartPresenter extends AbstractColorMapPresenter {
 
     private ChangeHandler changeHandler = new ChangeHandler();
 
-    public ColorBandChartPresenter(DisplayParameter<IColorMap> parameter) {
+    public ColorBandChartPresenter(Property<IColorMap> parameter) {
         super(parameter);
-        colorMap = (LinearColorMap) parameter.getParameter();
+        colorMap = (LinearColorMap) parameter.getProperty();
         buildGUI();
     }
 
@@ -74,9 +74,9 @@ public class ColorBandChartPresenter extends AbstractColorMapPresenter {
         panel.add(chartAlpha.getComponent());
     }
 
-    public void setColorMap(DisplayParameter<IColorMap> colorMapParameter) {
+    public void setColorMap(Property<IColorMap> colorMapParameter) {
 
-        IColorMap icmap = colorMapParameter.getParameter();
+        IColorMap icmap = colorMapParameter.getProperty();
         if (icmap != null & icmap != colorMap && icmap instanceof LinearColorMap) {
 
             LinearColorMap colorMap = (LinearColorMap) icmap;
@@ -98,7 +98,7 @@ public class ColorBandChartPresenter extends AbstractColorMapPresenter {
 
             IndexColorModel icm = new IndexColorModel(8, 256, reds, greens, blues, alpha);
             colorMap = new LinearColorMap(colorMap.getMinimumValue(), colorMap.getMaximumValue(), icm);
-            ColorBandChartPresenter.this.getColorMapParameter().setParameter(colorMap);
+            ColorBandChartPresenter.this.getColorMapParameter().setProperty(colorMap);
 
         }
     }
@@ -107,7 +107,7 @@ public class ColorBandChartPresenter extends AbstractColorMapPresenter {
         JFrame jf = new JFrame();
 
 
-        jf.add(new ColorBandChartPresenter(new DisplayParameter<IColorMap>(new LinearColorMap(0, 300, ColorTable.SPECTRUM))).getComponent());
+        jf.add(new ColorBandChartPresenter(new Property<IColorMap>(new LinearColorMap(0, 300, ColorTable.SPECTRUM))).getComponent());
         jf.pack();
         jf.setVisible(true);
 

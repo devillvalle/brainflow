@@ -31,12 +31,7 @@ public class ImageLayer3D extends ImageLayer {
         }
     };
 
-    public ImageLayer3D(IImageData3D _data) {
-        super(_data);
-        slicer = new ImageSlicer((IImageData3D) getImageData());
-
-    }
-
+    
     public ImageLayer3D(IImageData3D _data, ImageLayerParameters _params) {
         super(_data, _params);
         slicer = new ImageSlicer((IImageData3D) getImageData());

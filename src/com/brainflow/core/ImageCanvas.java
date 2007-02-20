@@ -9,9 +9,11 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.AWTEventListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 import org.bushe.swing.event.EventBus;
@@ -28,8 +30,8 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
 
 
     private ImageCanvasModel canvasModel = new ImageCanvasModel();
-    private ImageCanvasSelection canvasSelection;
 
+    private ImageCanvasSelection canvasSelection;
 
     private JRootPane rootPane = new JRootPane();
 
@@ -45,13 +47,68 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
         setLayout(new BorderLayout());
 
         rootPane.getGlassPane().setVisible(true);
-        rootPane.getGlassPane().addMouseListener(this);
-        rootPane.getGlassPane().addMouseMotionListener(this);
+        //rootPane.getGlassPane().addMouseListener(this);
+        //rootPane.getGlassPane().addMouseMotionListener(this);
         add(rootPane, "Center");
 
 
         canvasSelection = new ImageCanvasSelection(this);
+        initListener();
 
+
+    }
+
+    private void initListener() {
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        toolkit.addAWTEventListener(new AWTEventListener() {
+
+            public void eventDispatched(AWTEvent event) {
+
+                if (event instanceof MouseEvent) {
+
+                    MouseEvent me = (MouseEvent) event;
+                    Point absp = SwingUtilities.convertPoint((Component)me.getSource(), me.getX(), me.getY(), rootPane);
+
+                    if (absp.getX() < 0 || absp.getX() > rootPane.getWidth() ||
+                            absp.getY() < 0 || absp.getY() > rootPane.getHeight()) {
+                  
+                        return;
+                    }
+
+                    switch (me.getID()) {
+                        case MouseEvent.MOUSE_MOVED:
+                            ImageCanvas.this.mouseMoved(me);
+                            break;
+                        case MouseEvent.MOUSE_DRAGGED:
+                            ImageCanvas.this.mouseDragged(me);
+                            break;
+                        case MouseEvent.MOUSE_PRESSED:
+                            ImageCanvas.this.mousePressed(me);
+                            break;
+                        case MouseEvent.MOUSE_RELEASED:
+                            //System.out.println("dispatching " + me.getSource().getClass().getName());
+                            ImageCanvas.this.mouseReleased(me);
+                            break;
+                        case MouseEvent.MOUSE_CLICKED:
+                            ImageCanvas.this.mouseClicked(me);
+                            break;
+                        case MouseEvent.MOUSE_ENTERED:
+                            ImageCanvas.this.mouseEntered(me);
+                            break;
+                        case MouseEvent.MOUSE_EXITED:
+                            ImageCanvas.this.mouseExited(me);
+                            break;
+                        default:
+                            System.out.println("unrecgonized mouse event : " + me.paramString());
+
+
+                    }
+
+
+                }
+
+            }
+        }, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_WHEEL_EVENT_MASK);
 
     }
 
@@ -95,7 +152,8 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
 
     }
 
-    public ImageView whichView(Point p) {
+    public ImageView whichView(Component source, Point p) {
+        p = SwingUtilities.convertPoint(source, p, rootPane.getLayeredPane());
         Component c = rootPane.getLayeredPane().findComponentAt(p);
 
         if (c instanceof ImageView) {
@@ -164,9 +222,14 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
             return false;
     }
 
-    //this special mouselistener stuff is for the birds... need to change.
+
 
     public void addSpecialMouseListener(MouseListener listener) {
+        if (Arrays.asList(listenerList.getListenerList()).contains(listener)) {
+            log.warning("attempting to add listener twice to image canvas.");
+            return;
+        }
+
         listenerList.add(MouseListener.class, listener);
         //mouseListeners.add(listener);
         //rootPane.getGlassPane().addMouseListener(listener);
@@ -174,12 +237,17 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
     }
 
     public void removeSpecialMouseListener(MouseListener listener) {
+
         listenerList.remove(MouseListener.class, listener);
         //mouseListeners.remove(listener);
         //rootPane.getGlassPane().removeMouseListener(listener);
     }
 
     public void addSpecialMouseMotionListener(MouseMotionListener listener) {
+         if (Arrays.asList(listenerList.getListenerList()).contains(listener)) {
+            log.warning("attempting to add listener twice to image canvas.");
+            return;
+        }
         listenerList.add(MouseMotionListener.class, listener);
         //mouseMotionListeners.add(listener);
         //rootPane.getGlassPane().addMouseMotionListener(listener);
@@ -201,7 +269,7 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
         return rootPane.getLayeredPane();
     }
 
-    public ImageView[] getViews() {
+    public java.util.List<ImageView> getViews() {
         return canvasModel.getImageViews();
     }
 
@@ -256,16 +324,15 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
     public void addImageView(ImageView view) {
 
         view.setSize(view.getPreferredSize());
-        /*HandledBorder border = new HandledBorder();
-        border.setSelected(true);
 
-        Border margin = new EmptyBorder(4,4,4,4);
-        EmptyBorder margin2 = new EmptyBorder(3,3,3,3);
-        view.setBackground(Color.GREEN);
-        view.setBorder(new CompoundBorder(margin2, new CompoundBorder(border, margin)));   */
+        ImageView squatter = whichView(rootPane.getLayeredPane(), new Point(100, 100));
+        if (squatter == null) {
+            view.setLocation(100, 100);
+        } else {
+            Point p = squatter.getLocation();
+            view.setLocation(new Point(p.x + 50, p.y + 50));
+        }
 
-
-        view.setLocation(100, 100);
         view.addPropertyChangeListener(closeHandler);
         canvasModel.addImageView(view);
         rootPane.getLayeredPane().add(view, JLayeredPane.DEFAULT_LAYER);
@@ -298,7 +365,7 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
         }
 
 
-        redispatchMouseEvent(e);
+        //redispatchMouseEvent(e);
     }
 
     public void mousePressed(MouseEvent e) {
@@ -307,17 +374,20 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
         for (MouseListener ml : mouseListeners) {
             ml.mousePressed(e);
         }
-        redispatchMouseEvent(e);
+        //redispatchMouseEvent(e);
 
     }
 
     public void mouseReleased(MouseEvent e) {
         canvasSelection.mouseReleased(e);
         MouseListener[] mouseListeners = listenerList.getListeners(MouseListener.class);
+        int i=0;
         for (MouseListener ml : mouseListeners) {
+            //System.out.println("sending mouse released to : " + i + " :" + ml.getClass().getName());
             ml.mouseReleased(e);
+            i++;
         }
-        redispatchMouseEvent(e);
+        //redispatchMouseEvent(e);
 
     }
 
@@ -328,7 +398,7 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
         for (MouseListener ml : mouseListeners) {
             ml.mouseEntered(e);
         }
-        redispatchMouseEvent(e);
+        //redispatchMouseEvent(e);
     }
 
     public void mouseExited(MouseEvent e) {
@@ -337,7 +407,7 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
         for (MouseListener ml : mouseListeners) {
             ml.mouseExited(e);
         }
-        redispatchMouseEvent(e);
+        //redispatchMouseEvent(e);
 
 
     }
@@ -348,7 +418,7 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
         for (MouseMotionListener ml : mouseMotionListeners) {
             ml.mouseDragged(e);
         }
-        redispatchMouseEvent(e);
+        //redispatchMouseEvent(e);
 
     }
 
@@ -359,11 +429,11 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
         for (MouseMotionListener ml : mouseMotionListeners) {
             ml.mouseMoved(e);
         }
-        redispatchMouseEvent(e);
+        //redispatchMouseEvent(e);
 
     }
 
-    private void redispatchMouseEvent(MouseEvent e) {
+    /*private void redispatchMouseEvent(MouseEvent e) {
 
         //System.out.println("redispatching event ...");
         Point glassPanePoint = e.getPoint();
@@ -393,8 +463,6 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
                             containerPoint.y);
 
             Component ancestor = SwingUtilities.getAncestorOfClass(ImageView.class, component);
-
-         
 
 
             if (ancestor != null) {
@@ -430,7 +498,7 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
             }
 
         }
-    }
+    }           */
 
 
 }

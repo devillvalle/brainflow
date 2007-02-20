@@ -11,7 +11,8 @@ import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.core.*;
-import com.brainflow.display.Crosshair;
+import com.brainflow.display.ICrosshair;
+import com.brainflow.display.ImageLayerParameters;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.image.data.BasicImageData3D;
@@ -44,8 +45,7 @@ import org.xml.sax.SAXException;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.awt.image.IndexColorModel;
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -100,7 +100,6 @@ public class Brainflow {
     DocumentPane documentPane = new DocumentPane();
     JideSplitPane westSplitPane = new JideSplitPane(SwingUtilities.VERTICAL);
     ImageFileExplorer loadingDock = null;
-    ImageCanvasFacade canvasFacade;
 
     // STATUS BAR
 
@@ -163,6 +162,8 @@ public class Brainflow {
         brainFrame = new BrainFrame();
         ImageCanvasManager.getInstance().createCanvas();
 
+
+       
 
         log.info("launching Brainflow version 0.1");
 
@@ -353,8 +354,7 @@ public class Brainflow {
 
         applicationContext.putValue(ActionContext.SELECTED_CANVAS, canvas);
 
-        canvasFacade = new ImageCanvasFacade();
-
+        
         documentPane.setTabPlacement(DocumentPane.BOTTOM);
         documentPane.openDocument(new DocumentComponent(new JScrollPane(canvas), "Canvas-1"));
         documentPane.setActiveDocument("Canvas-1");
@@ -490,10 +490,10 @@ public class Brainflow {
             ImageIOManager.getInstance().initialize();
         } catch (BrainflowException e) {
             log.severe("Could not initialize IO facilities, aborting");
-            System.exit(-1);
+            throw new RuntimeException(e);
         } catch (IOException e) {
             log.severe("Could not initialize IO facilities, aborting");
-            System.exit(-1);
+            throw new RuntimeException(e);
         }
 
     }
@@ -544,10 +544,11 @@ public class Brainflow {
                     addLayerWithFadeIn((BasicImageData3D) data, view);
                 } else {
                     IImageDisplayModel dset = view.getImageDisplayModel();
-                    ImageLayer layer = new ImageLayer3D((IImageData3D) data);
-                    layer.getImageLayerParameters().setColorMap(
-                            new LinearColorMap(data.getMinValue(), data.getMaxValue(), ResourceManager.getInstance().getDefaultColorMap()));
+                    ImageLayerParameters params = new ImageLayerParameters();
+                    params.setColorMap(new LinearColorMap(data.getMinValue(), data.getMaxValue(), ResourceManager.getInstance().getDefaultColorMap()));
 
+                    ImageLayer layer = new ImageLayer3D((IImageData3D) data, params);
+             
                     dset.addLayer(layer);
                 }
             }
@@ -556,20 +557,21 @@ public class Brainflow {
     }
 
 
-    private void addLayerWithFadeIn(BasicImageData3D data, ImageView view) {
+    private void addLayerWithFadeIn(IImageData3D data, ImageView view) {
         IImageDisplayModel dset = view.getImageDisplayModel();
 
-        //final LinearColorMap cmap = (LinearColorMap) params.getColorMap().getParameter();
+        //final LinearColorMap cmap = (LinearColorMap) params.getColorMap().getProperty();
         //cmap.setAlphaMultiplier(0.0);
 
         //FadeAction fade = new FadeAction(cmap);
         //final Timer timer = new javax.swing.Timer(25, fade);
         //timer.setCoalesce(true);
         //fade.setTimer(timer);
+        ImageLayerParameters parms = new ImageLayerParameters(new LinearColorMap(data.getMinValue(), data.getMaxValue(),
+                ResourceManager.getInstance().getDefaultColorMap()));
+        ImageLayer3D layer = new ImageLayer3D(data, parms);
 
-        ImageLayer3D layer = new ImageLayer3D(data);
-        layer.getImageLayerParameters().setColorMap(
-                new LinearColorMap(data.getMinValue(), data.getMaxValue(), ResourceManager.getInstance().getDefaultColorMap()));
+        
         dset.addLayer(layer);
         //timer.start();
 
@@ -605,6 +607,7 @@ public class Brainflow {
         final JDialog dialog = pdialog.createDialog();
         dialog.setResizable(true);
         dialog.pack();
+        
         final SwingWorker worker = new SwingWorker() {
             public Object doInBackground() {
                 try {
@@ -761,7 +764,7 @@ class ValueStatusItem extends LabelStatusBarItem implements EventSubscriber {
 
         double value = idata.getRealValue(x, y, z, new NearestNeighborInterpolator());
 
-        IColorMap cmap = layer.getImageLayerParameters().getColorMap().getParameter();
+        IColorMap cmap = layer.getImageLayerParameters().getColorMap().getProperty();
 
         Color c = null;
         try {
@@ -822,7 +825,7 @@ class CrosshairCoordinates extends LabelStatusBarItem implements EventSubscriber
 
     public void onEvent(Object evt) {
         ImageViewCrosshairEvent event = (ImageViewCrosshairEvent) evt;
-        Crosshair cross = event.getCrosshair();
+        ICrosshair cross = event.getCrosshair();
         if (cross != null) {
             String x = format.format(new Object[]{"x", cross.getXValue()});
             String y = format.format(new Object[]{"y", cross.getYValue()});

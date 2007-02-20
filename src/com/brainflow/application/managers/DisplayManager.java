@@ -8,6 +8,8 @@ import com.brainflow.core.ImageDisplayModel;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageLayer3D;
 import com.brainflow.image.data.BasicImageData3D;
+import com.brainflow.image.data.IImageData3D;
+import com.brainflow.display.ImageLayerParameters;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 
@@ -38,6 +40,7 @@ public class DisplayManager implements EventSubscriber {
     public IImageDisplayModel createDisplayModel(ILoadableImage limg) {
 
         boolean registered = LoadableImageManager.getInstance().isRegistered(limg);
+
         if (!registered) {
             LoadableImageManager.getInstance().registerLoadableImage(limg);
         }
@@ -46,10 +49,12 @@ public class DisplayManager implements EventSubscriber {
 
         models.add(displayModel);
 
-        BasicImageData3D data = (BasicImageData3D) limg.getData();
-        ImageLayer layer = new ImageLayer3D(data);
-        layer.getImageLayerParameters().setColorMap(new LinearColorMap(limg.getData().getMinValue(), limg.getData().getMaxValue(),
+        IImageData3D data = (IImageData3D) limg.getData();
+        ImageLayerParameters params = new ImageLayerParameters();
+        params.setColorMap(new LinearColorMap(limg.getData().getMinValue(), limg.getData().getMaxValue(),
                 ResourceManager.getInstance().getDefaultColorMap()));
+
+        ImageLayer layer = new ImageLayer3D(data, params);
 
         displayModel.addLayer(layer);
 

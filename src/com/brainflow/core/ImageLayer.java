@@ -20,18 +20,15 @@ import com.brainflow.image.data.IImageData;
 
 public class ImageLayer {
 
-    private ImageLayerParameters parameters;
-    private IImageData data;
+    private final ImageLayerParameters parameters;
+    private final IImageData data;
 
 
-    public ImageLayer(IImageData _data) {
-        data = _data;
-        parameters = new ImageLayerParameters(this);
-    }
-
+   
     public ImageLayer(IImageData _data, ImageLayerParameters _params) {
         data = _data;
         parameters = _params;
+
     }
 
     public IImageData getImageData() {

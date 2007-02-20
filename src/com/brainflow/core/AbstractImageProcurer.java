@@ -12,6 +12,7 @@ package com.brainflow.core;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.image.space.ImageSpace3D;
+import com.brainflow.image.space.IImageSpace;
 import com.brainflow.utils.NumberUtils;
 
 import java.util.List;
@@ -24,13 +25,13 @@ public abstract class AbstractImageProcurer {
     private IImageDisplayModel displayModel;
     private AnatomicalVolume displayAnatomy;
     private AnatomicalPoint1D displaySlice;
-    private ImageSpace3D imageSpace;
+    private IImageSpace imageSpace;
 
 
     public AbstractImageProcurer(IImageDisplayModel _displayModel, AnatomicalVolume _displayAnatomy) {
         displayModel = _displayModel;
         displayAnatomy = _displayAnatomy;
-        imageSpace = displayModel.getCompositeImageSpace();
+        imageSpace = displayModel.getImageSpace();
 
     }
 
@@ -54,7 +55,7 @@ public abstract class AbstractImageProcurer {
         return displaySlice;
     }
 
-    protected ImageSpace3D getImageSpace() {
+    protected IImageSpace getImageSpace() {
         return imageSpace;
     }
 

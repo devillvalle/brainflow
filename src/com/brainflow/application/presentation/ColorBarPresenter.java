@@ -19,7 +19,7 @@ import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.core.ImageView;
-import com.brainflow.display.DisplayParameter;
+import com.brainflow.display.Property;
 import com.jidesoft.swing.JideSplitButton;
 import org.bushe.swing.action.BasicAction;
 
@@ -76,8 +76,8 @@ public class ColorBarPresenter extends AbstractColorMapPresenter {
     }
 
 
-    public void setColorMap(DisplayParameter<IColorMap> param) {
-        form.setColorMap(param.getParameter());
+    public void setColorMap(Property<IColorMap> param) {
+        form.setColorMap(param.getProperty());
     }
 
 

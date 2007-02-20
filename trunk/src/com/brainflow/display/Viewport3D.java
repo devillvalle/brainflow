@@ -4,8 +4,12 @@ import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.space.Axis;
-import com.brainflow.image.space.ImageSpace3D;
+import com.brainflow.image.space.IImageSpace;
+import com.brainflow.core.IImageDisplayModel;
 import com.jgoodies.binding.beans.Model;
+
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 /**
  * Created by IntelliJ IDEA.
@@ -33,7 +37,8 @@ public class Viewport3D extends Model {
     public static final String BOUNDS_PROPERTY = "bounds";
 
 
-    private ImageSpace3D bounds;
+    private IImageDisplayModel displayModel;
+    private IImageSpace bounds;
 
     private double XAxisMin;
     private double YAxisMin;
@@ -48,20 +53,24 @@ public class Viewport3D extends Model {
     private double ZAxisWidth;
 
 
-    public Viewport3D(ImageSpace3D _bounds) {
-        bounds = _bounds;
+    public Viewport3D(IImageDisplayModel _displayModel) {
+        displayModel = _displayModel;
+        bounds = displayModel.getImageSpace();
+        displayModel.addPropertyChangeListener(new PropertyChangeListener() {
+
+            public void propertyChange(PropertyChangeEvent evt) {
+                bounds =  displayModel.getImageSpace();
+                init();
+            }
+        });
+
+
         init();
     }
 
-    public void setBounds(ImageSpace3D _bounds) {
-        ImageSpace3D oldValue = this.bounds;
-        bounds = _bounds;
-        init();
+   
 
-        firePropertyChange(Viewport3D.BOUNDS_PROPERTY, oldValue, bounds);
-    }
-
-    public ImageSpace3D getBounds() {
+    public IImageSpace getBounds() {
         return bounds;
     }
 
@@ -79,6 +88,8 @@ public class Viewport3D extends Model {
     }
 
     private void init() {
+
+
 
         setXAxisMin(bounds.getImageAxis(Axis.X_AXIS).getRange().getMinimum());
         setYAxisMin(bounds.getImageAxis(Axis.Y_AXIS).getRange().getMinimum());

@@ -13,18 +13,18 @@ import com.brainflow.core.ImageLayer;
 public class VisibleProperty extends Model {
 
     private boolean visible = true;
-    private ImageLayer layer;
+    private ImageLayerParameters layer;
 
     public static final String VISIBLE_PROPERTY = "visible";
 
 
-    public VisibleProperty(ImageLayer _layer, boolean visible) {
+    public VisibleProperty(ImageLayerParameters _layer, boolean visible) {
         layer = _layer;
         this.visible = visible;
     }
 
 
-    public ImageLayer getLayer() {
+    public ImageLayerParameters getLayerParameters() {
         return layer;
     }
 

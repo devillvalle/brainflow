@@ -14,7 +14,7 @@ import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.colormap.AbstractColorMap;
-import com.brainflow.display.DisplayParameter;
+import com.brainflow.display.Property;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
 import com.jgoodies.binding.beans.BeanAdapter;
@@ -46,8 +46,8 @@ public class OpacityPresenter extends AbstractColorMapPresenter {
 
     }
 
-    public void setColorMap(DisplayParameter<IColorMap> param) {
-        IColorMap _colorMap = param.getParameter();
+    public void setColorMap(Property<IColorMap> param) {
+        IColorMap _colorMap = param.getProperty();
         if (_colorMap instanceof LinearColorMap) {
             colorMap = (LinearColorMap) _colorMap;
             if (adapter != null) {

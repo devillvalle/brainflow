@@ -30,7 +30,7 @@ public class PanImageMode extends ImageCanvasMode {
 
     public void mousePressed(MouseEvent event) {
         if ((event.getModifiers() & LEFT_CONTROL_MASK) == LEFT_CONTROL_MASK) {
-            ImageView iview = canvas.whichView(event.getPoint());
+            ImageView iview = canvas.whichView((Component)event.getSource(), event.getPoint());
             if (iview == null) return;
             if (canvas.isSelectedView(iview)) {
                 lastPoint = event.getPoint();
@@ -65,7 +65,7 @@ public class PanImageMode extends ImageCanvasMode {
 
         double shiftx = mousePoint.getX() - lastPoint.getX();
         double shifty = mousePoint.getY() - lastPoint.getY();
-        Viewport3D viewport = selectedView.getImageDisplayModel().getDisplayParameters().getViewport().getParameter();
+        //Viewport3D viewport = selectedView.getImageDisplayModel().getDisplayParameters().getViewport().getProperty();
         
     }
 

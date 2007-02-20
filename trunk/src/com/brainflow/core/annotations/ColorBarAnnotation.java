@@ -19,6 +19,8 @@ import java.beans.PropertyChangeListener;
  */
 public class ColorBarAnnotation extends AbstractAnnotation {
 
+    public static final String ID = "color bar";
+
     public static final String ORIENTATION_PROPERTY = "orientation";
 
     public static final String POSITION_PROPERTY = "position";
@@ -60,12 +62,17 @@ public class ColorBarAnnotation extends AbstractAnnotation {
                     ImageLayer oldLayer = selectedLayer;
                     int selectedIndex = (Integer) evt.getNewValue();
                     selectedLayer = ColorBarAnnotation.this.model.getImageLayer(selectedIndex);
+                    System.out.println("layer changed! repaint me");
                     support.firePropertyChange("LAYER_CHANGED", oldLayer, selectedLayer);
                 }
             }
         });
     }
 
+
+    public final String getIdentifier() {
+        return ColorBarAnnotation.ID;
+    }
 
     public int getBarSize() {
         return barSize;
@@ -109,16 +116,16 @@ public class ColorBarAnnotation extends AbstractAnnotation {
 
         if (colorBar == null || layer != selectedLayer) {
             selectedLayer = layer;
-            colorBar = selectedLayer.getImageLayerParameters().getColorMap().getParameter().createColorBar();
+            colorBar = selectedLayer.getImageLayerParameters().getColorMap().getProperty().createColorBar();
             colorBar.setOrientation(orientation);
             colorBar.setDrawOutline(true);
-        } else if (colorBar.getColorMap() != selectedLayer.getImageLayerParameters().getColorMap().getParameter()) {
-            colorBar = selectedLayer.getImageLayerParameters().getColorMap().getParameter().createColorBar();
+        } else if (colorBar.getColorMap() != selectedLayer.getImageLayerParameters().getColorMap().getProperty()) {
+            colorBar = selectedLayer.getImageLayerParameters().getColorMap().getProperty().createColorBar();
             colorBar.setOrientation(orientation);
         }
 
         if (orientation == SwingUtilities.VERTICAL) {
-            drawVertical(g2d);
+            drawVertical(g2d, plot.getComponent().getBounds());
         } else {
             drawHorizontal(g2d);
         }
@@ -127,17 +134,16 @@ public class ColorBarAnnotation extends AbstractAnnotation {
 
     }
 
-    private void drawVertical(Graphics2D g2d) {
-        Rectangle2D cbounds = g2d.getClipBounds();
+    private void drawVertical(Graphics2D g2d, Rectangle bounds) {
 
-        int roomx = (int) cbounds.getWidth() - margin;
-        int roomy = (int) cbounds.getHeight() - (margin * 2);
+        int roomx = (int) bounds.getWidth() - margin;
+        int roomy = (int) bounds.getHeight() - (margin * 2);
 
         int width = Math.min(roomx, barSize);
         int height = (int) (barLength * roomy);
 
 
-        int xmin = (int) cbounds.getWidth() - width - margin;
+        int xmin = (int) bounds.getWidth() - width - margin;
         int ymin = margin;
 
         /*AffineTransform xform = AffineTransform.getTranslateInstance(xmin, ymin);

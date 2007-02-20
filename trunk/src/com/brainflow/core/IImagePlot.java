@@ -4,6 +4,7 @@ import com.brainflow.core.annotations.IAnnotation;
 import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.image.axis.AxisRange;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
@@ -30,9 +31,17 @@ public interface IImagePlot {
 
     public void setYAxisRange(AxisRange drange);
 
+    public double getScaleX();
+
+    public double getScaleY();
+
+    public Rectangle getPlotArea();
+
     public AxisRange getXAxisRange();
 
     public AxisRange getYAxisRange();
+
+    public JComponent getComponent();
 
     public void setRenderer(ImagePlotRenderer renderer);
 

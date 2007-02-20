@@ -5,7 +5,7 @@ import org.bushe.swing.action.BasicAction;
 import java.awt.event.ActionEvent;
 
 import com.brainflow.core.ImageView;
-import com.brainflow.display.Crosshair;
+import com.brainflow.display.ICrosshair;
 import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.axis.ImageAxis;
@@ -25,7 +25,7 @@ public class PreviousSliceAction extends BasicAction {
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
 
         if (view != null) {
-           Crosshair cross = view.getCrosshair();
+           ICrosshair cross = view.getCrosshair();
            AnatomicalVolume displayAnatomy = view.getDisplayAnatomy();
            Axis axis = cross.getViewport().getBounds().findAxis(displayAnatomy.ZAXIS);
            ImageAxis iaxis = view.getImageDisplayModel().getImageAxis(axis);

@@ -28,7 +28,7 @@ public class PlotSelectorMode extends ImageCanvasMode {
     public void mousePressed(MouseEvent event) {
 
         Point point = event.getPoint();
-        ImageView view = canvas.whichView(point);
+        ImageView view = canvas.whichView((Component)event.getSource(), point);
 
         if (view == null) {
 

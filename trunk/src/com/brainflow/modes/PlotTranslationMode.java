@@ -38,7 +38,7 @@ public class PlotTranslationMode extends ImageCanvasMode {
 
     public void mousePressed(MouseEvent event) {
         if (SwingUtilities.isLeftMouseButton(event)) {
-            ImageView iview = canvas.whichView(event.getPoint());
+            ImageView iview = canvas.whichView((Component)event.getSource(), event.getPoint());
             if (iview == null) return;
             if (canvas.isSelectedView(iview)) {
                 currentPane = iview;

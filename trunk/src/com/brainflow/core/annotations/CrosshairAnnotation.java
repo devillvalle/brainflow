@@ -2,14 +2,14 @@ package com.brainflow.core.annotations;
 
 import com.brainflow.core.IImagePlot;
 import com.brainflow.display.Crosshair;
-import com.brainflow.display.DisplayParameter;
+import com.brainflow.display.Property;
+import com.brainflow.display.ICrosshair;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,6 +19,8 @@ import java.beans.PropertyChangeSupport;
  * To change this template use File | Settings | File Templates.
  */
 public class CrosshairAnnotation extends AbstractAnnotation {
+
+    public static final String ID = "crosshair";
 
     public static final String LINE_PAINT_PROPERTY = "linePaint";
     public static final String LINE_LENGTH_PROPERTY = "lineLength";
@@ -43,11 +45,11 @@ public class CrosshairAnnotation extends AbstractAnnotation {
 
 
 
-    private DisplayParameter<Crosshair> crosshair;
+    private ICrosshair crosshair;
 
     
 
-    public CrosshairAnnotation(DisplayParameter<Crosshair> _crosshair) {
+    public CrosshairAnnotation(ICrosshair _crosshair) {
         crosshair = _crosshair;
         linePaint = DEFAULT_LINE_PAINT;
         lineLength = DEFAULT_LINE_LENGTH.doubleValue();
@@ -59,6 +61,10 @@ public class CrosshairAnnotation extends AbstractAnnotation {
     private void resetStroke() {
         stroke = new BasicStroke((float) lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND);
 
+    }
+
+    public String getIdentifier() {
+        return ID;
     }
 
     /*public Point getLocation() {
@@ -82,7 +88,7 @@ public class CrosshairAnnotation extends AbstractAnnotation {
     public void draw(Graphics2D g2d, Rectangle2D plotArea, IImagePlot plot) {
         if (!isVisible()) return;
 
-        Crosshair cross = crosshair.getParameter();
+        ICrosshair cross = crosshair;
 
         AnatomicalPoint1D xpt = cross.getValue(plot.getXAxisRange().getAnatomicalAxis());
         AnatomicalPoint1D ypt = cross.getValue(plot.getYAxisRange().getAnatomicalAxis());

@@ -11,13 +11,17 @@ import java.awt.geom.Rectangle2D;
  * Date: Feb 16, 2007
  * Time: 3:02:59 PM
  */
-public class SelectedAnnotation extends AbstractAnnotation {
+public class SelectedPlotAnnotation extends AbstractAnnotation {
+
+    public static final String ID = "plot delimiter";
 
     private IImagePlot selectedPlot;
+
     private Stroke stroke = new BasicStroke(1, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND, 10f, new float[]{2f, 2f}, 0f);
+
     private Composite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .3f);
 
-    public SelectedAnnotation(IImagePlot selectedPlot) {
+    public SelectedPlotAnnotation(IImagePlot selectedPlot) {
         this.selectedPlot = selectedPlot;
     }
 
@@ -41,6 +45,10 @@ public class SelectedAnnotation extends AbstractAnnotation {
 
     }
 
+
+    public final String getIdentifier() {
+        return ID;
+    }
 
     public IImagePlot getSelectedPlot() {
         return selectedPlot;

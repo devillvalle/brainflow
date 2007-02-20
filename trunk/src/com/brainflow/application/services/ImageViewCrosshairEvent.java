@@ -1,7 +1,7 @@
 package com.brainflow.application.services;
 
 import com.brainflow.core.ImageView;
-import com.brainflow.display.Crosshair;
+import com.brainflow.display.ICrosshair;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,12 +14,11 @@ public class ImageViewCrosshairEvent extends ImageViewEvent {
     /**
      * Creates a new instance of ImageViewEvent
      */
-    public ImageViewCrosshairEvent(ImageView view) {
-        
+    public ImageViewCrosshairEvent(ImageView view) {        
         super(view);
     }
 
-    public Crosshair getCrosshair() {
+    public ICrosshair getCrosshair() {
         return getImageView().getCrosshair();
     }
 

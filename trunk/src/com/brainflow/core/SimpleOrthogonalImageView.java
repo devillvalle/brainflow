@@ -1,7 +1,10 @@
 package com.brainflow.core;
 
-import com.brainflow.core.annotations.IAnnotation;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.image.anatomy.AnatomicalPoint1D;
+import com.brainflow.image.anatomy.AnatomicalPoint2D;
+import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.display.ICrosshair;
 import com.jgoodies.binding.list.ArrayListModel;
 import com.jgoodies.binding.list.SelectionInList;
 
@@ -9,7 +12,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.RenderedImage;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -22,9 +24,9 @@ import java.util.List;
 public class SimpleOrthogonalImageView extends ImageView {
 
 
-    private ImageView axialView;
-    private ImageView coronalView;
-    private ImageView sagittalView;
+    private ImagePane axialPane;
+    private ImagePane coronalPane;
+    private ImagePane sagittalPane;
 
 
     private ArrayListModel plotList = new ArrayListModel();
@@ -40,7 +42,30 @@ public class SimpleOrthogonalImageView extends ImageView {
     }
 
     public void scheduleRepaint(DisplayChangeEvent e) {
-        // repainting handled by simple image views
+        repaint();
+    }
+
+
+    private Point getCrosshairLocation(ImagePane ipane) {
+        IImagePlot plot = ipane.getImagePlot();
+        Rectangle plotArea = plot.getPlotArea();
+        
+        ICrosshair cross = getCrosshair();
+        AnatomicalPoint1D xpt = cross.getValue(plot.getDisplayAnatomy().XAXIS);
+        AnatomicalPoint1D ypt = cross.getValue(plot.getDisplayAnatomy().YAXIS);
+
+        double percentX = (xpt.getX() - plot.getXAxisRange().getBeginning().getX()) / plot.getXAxisRange().getInterval();
+        double percentY = (ypt.getX() - plot.getYAxisRange().getBeginning().getX()) / plot.getYAxisRange().getInterval();
+
+      
+
+        double screenX = (percentX * plotArea.getWidth()) + plotArea.getX();
+        double screenY = (percentY * plotArea.getHeight()) + plotArea.getY();
+
+        Point location = new Point((int) Math.round(screenX), (int) Math.round(screenY));
+
+        return SwingUtilities.convertPoint(ipane, location, this);
+
     }
 
     public Point getCrosshairLocation(IImagePlot plot) {
@@ -48,88 +73,82 @@ public class SimpleOrthogonalImageView extends ImageView {
         int idx = plots.indexOf(plot);
 
         if (idx == 0) {
-
-            Point p = axialView.getCrosshairLocation(plot);
-            return SwingUtilities.convertPoint(axialView, p, this);
+            Point p = getCrosshairLocation(axialPane);
+            return SwingUtilities.convertPoint(axialPane, p, this);
         } else if (idx == 1) {
-            Point p = coronalView.getCrosshairLocation(plot);
-            return SwingUtilities.convertPoint(coronalView, p, this);
+            Point p = getCrosshairLocation(coronalPane);
+            return SwingUtilities.convertPoint(coronalPane, p, this);
         } else if (idx == 2) {
-            Point p = sagittalView.getCrosshairLocation(plot);
-            return SwingUtilities.convertPoint(sagittalView, p, this);
-
-
+            Point p = getCrosshairLocation(sagittalPane);
+            return SwingUtilities.convertPoint(sagittalPane, p, this);
         } else {
-            return null;
+            throw new RuntimeException("Should never get here.");
         }
 
     }
 
+    private ImagePane whichPane(IImagePlot plot) {
+        if (axialPane.getImagePlot() == plot) {
+            return axialPane;
+        }
 
-    public AnatomicalPoint3D getAnatomicalLocation(Component source, Point screenPoint) {
+        if (coronalPane.getImagePlot() == plot) {
+            return coronalPane;
+        }
 
+        if (sagittalPane.getImagePlot() == plot) {
+            return sagittalPane;
+        }
+
+        throw new RuntimeException("Should never get here.");
+
+    }
+
+    public AnatomicalPoint3D getAnatomicalLocation(Component source, Point p) {
+
+        Point pointInView = SwingUtilities.convertPoint(source, p, this);
         // fix me this is ugly
+        IImagePlot plot = whichPlot(pointInView);
 
-        Point pointInView = SwingUtilities.convertPoint(source, screenPoint, this);
-        ImageView subView = whichView(pointInView);
-        if (subView != null) {
-            AnatomicalPoint3D ap = subView.getAnatomicalLocation(source, screenPoint);
-            return ap;
-        } else {
+
+        if (plot == null) {
+            //todo deal with more elegantly
             return null;
         }
+
+        ImagePane ipane = whichPane(plot);
+
+        Point panePoint = SwingUtilities.convertPoint(source, p, ipane);
+
+        AnatomicalPoint2D apoint = ipane.translateScreenToValue(panePoint);
+
+        AnatomicalVolume displayAnatomy = plot.getDisplayAnatomy();
+        AnatomicalPoint3D ap3d = new AnatomicalPoint3D(
+                AnatomicalVolume.matchAnatomy(
+                        plot.getXAxisRange().getAnatomicalAxis(),
+                        plot.getYAxisRange().getAnatomicalAxis(),
+                        plot.getDisplayAnatomy().ZAXIS),
+                apoint.getX(), apoint.getY(),
+                getCrosshair().getValue(displayAnatomy.ZAXIS).getX());
+
+
+        return ap3d;
     }
 
-
-    public void addAnnotation(IAnnotation annotation) {
-        axialView.addAnnotation(annotation);
-    }
-
-    public void setAnnotation(IAnnotation annotation) {
-        axialView.setAnnotation(annotation);
-    }
-
-    public void removeAnnotation(IAnnotation annotation) {
-        axialView.removeAnnotation(annotation);
-    }
-
-    public IAnnotation getAnnotation(Class clazz) {
-        return axialView.getAnnotation(clazz);
-    }
-
-    public Iterator<IAnnotation> annotationIterator() {
-        return axialView.annotationIterator();
-    }
-
-    protected List<IAnnotation> getAnnotations() {
-        return axialView.getAnnotations();
-    }
-
-    private ImageView whichView(Point p) {
-        if (axialView.whichPlot(SwingUtilities.convertPoint(this, p, axialView)) != null) {
-            return axialView;
-        }
-        if (coronalView.whichPlot(SwingUtilities.convertPoint(this, p, coronalView)) != null) {
-            return coronalView;
-        }
-        if (sagittalView.whichPlot(SwingUtilities.convertPoint(this, p, sagittalView)) != null) {
-            return sagittalView;
-        }
-
-        return null;
-
-
-    }
 
     public IImagePlot whichPlot(Point p) {
-        if (axialView.whichPlot(SwingUtilities.convertPoint(this, p, axialView)) != null)
-            return axialView.getPlots().get(0);
-        if (coronalView.whichPlot(SwingUtilities.convertPoint(this, p, coronalView)) != null)
-            return coronalView.getPlots().get(0);
-        if (sagittalView.whichPlot(SwingUtilities.convertPoint(this, p, sagittalView)) != null)
-            return sagittalView.getPlots().get(0);
+        if (axialPane.pointInPlot(this, p)) {
+            return axialPane.getImagePlot();
+        }
+        if (coronalPane.pointInPlot(this, p)) {
+            return coronalPane.getImagePlot();
+        }
+        if (sagittalPane.pointInPlot(this, p)) {
+            return sagittalPane.getImagePlot();
+        }
 
         return null;
+
     }
 
 
@@ -159,18 +178,24 @@ public class SimpleOrthogonalImageView extends ImageView {
     private void initView() {
         BoxLayout layout = new BoxLayout(this, BoxLayout.X_AXIS);
 
-        axialView = ImageViewFactory.createAxialView(getImageDisplayModel());
-        axialView.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        plotList.add(axialView.getPlots().get(0));
+        axialPane = new ImagePane(ImageViewFactory.createAxialPlot(getImageDisplayModel()));
+        axialPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
-        coronalView = ImageViewFactory.createCoronalView(axialView);
-        coronalView.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        sagittalView = ImageViewFactory.createSagittalView(axialView);
-        sagittalView.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        coronalPane = new ImagePane(ImageViewFactory.createCoronalPlot(getImageDisplayModel()));
+        coronalPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+        sagittalPane = new ImagePane(ImageViewFactory.createSagittalPlot(getImageDisplayModel()));
+        sagittalPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+        plotList.add(axialPane.getImagePlot());
+        plotList.add(coronalPane.getImagePlot());
+        plotList.add(sagittalPane.getImagePlot());
+
+        
         setLayout(layout);
-        add(axialView);
-        add(coronalView);
-        add(sagittalView);
+        add(axialPane);
+        add(coronalPane);
+        add(sagittalPane);
     }
 
     public String toString() {

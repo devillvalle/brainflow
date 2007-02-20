@@ -27,7 +27,6 @@ public class ImageCanvasFacade {
 
     private ImageCanvas selectedCanvas;
 
-    private AnatomicalPointOnGrid cursorPosition;
 
     private EventListenerList listeners = new EventListenerList();
 
@@ -35,6 +34,7 @@ public class ImageCanvasFacade {
     private ExtendedPropertyChangeSupport changeSupport = new ExtendedPropertyChangeSupport(this);
 
     MouseListener localMouseListener = new ImageViewMouseListener();
+
     MouseMotionListener localMouseMotionListener = new ImageViewMouseMotionListener();
 
 
@@ -161,7 +161,7 @@ public class ImageCanvasFacade {
 
         public void mouseMoved(MouseEvent e) {
             Point p = e.getPoint();
-            ImageView iview = selectedCanvas.whichView(p);
+            ImageView iview = selectedCanvas.whichView((Component)e.getSource(), p);
 
             if (iview != selectedCanvas.getSelectedView()) {
                 return;
@@ -181,17 +181,17 @@ public class ImageCanvasFacade {
         public void mousePressed(MouseEvent e) {
             Point p = e.getPoint();
 
-            ImageView iview = selectedCanvas.whichView(p);
+            ImageView iview = selectedCanvas.whichView((Component)e.getSource(), p);
             if (iview == null || iview != selectedCanvas.getSelectedView()) {
                 return;
             }
 
 
             AnatomicalPoint3D pt = iview.getAnatomicalLocation(e.getComponent(), e.getPoint());
-            Viewport3D viewport = iview.getImageDisplayModel().getDisplayParameters().getViewport().getParameter();
+            Viewport3D viewport = iview.getViewport();
 
             if (pt != null && viewport.inBounds(pt)) {
-                iview.getImageDisplayModel().getDisplayParameters().getCrosshair().getParameter().setLocation(pt);
+                iview.getCrosshair().setLocation(pt);
             }
         }
 

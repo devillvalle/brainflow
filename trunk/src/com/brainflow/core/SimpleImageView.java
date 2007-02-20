@@ -4,8 +4,8 @@ package com.brainflow.core;
 import com.brainflow.core.annotations.AxisLabelAnnotation;
 import com.brainflow.core.annotations.ColorBarAnnotation;
 import com.brainflow.core.annotations.CrosshairAnnotation;
-import com.brainflow.core.annotations.SelectedAnnotation;
-import com.brainflow.display.Crosshair;
+import com.brainflow.core.annotations.SelectedPlotAnnotation;
+import com.brainflow.display.ICrosshair;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
@@ -50,6 +50,14 @@ public class SimpleImageView extends ImageView {
     private ImagePlotPaintScheduler scheduler;
 
 
+    public SimpleImageView(ImageView source, AnatomicalVolume _displayAnatomy) {
+        super(source.getImageDisplayModel());
+        setDisplayAnatomy(_displayAnatomy);
+        initView();
+
+    }
+
+
     public SimpleImageView(IImageDisplayModel dset) {
         super(dset);
         initView();
@@ -69,7 +77,7 @@ public class SimpleImageView extends ImageView {
     private void initView() {
 
         getImageDisplayModel().addChangeListener(dirtListener);
-
+        AnatomicalVolume displayAnatomy = getDisplayAnatomy();
         AxisRange xrange = getImageDisplayModel().getImageAxis(displayAnatomy.XAXIS).getRange();
         AxisRange yrange = getImageDisplayModel().getImageAxis(displayAnatomy.YAXIS).getRange();
 
@@ -81,14 +89,13 @@ public class SimpleImageView extends ImageView {
 
         imagePlot = new BasicImagePlot(displayAnatomy, xrange, yrange, plotRenderer);
 
-        CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(getImageDisplayModel().getDisplayParameters().getCrosshair());
+        CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(getCrosshair());
 
 
         addAnnotation(new AxisLabelAnnotation());
-
         addAnnotation(crosshairAnnotation);
         addAnnotation(new ColorBarAnnotation(getImageDisplayModel()));
-        addAnnotation(new SelectedAnnotation(imagePlot));
+        addAnnotation(new SelectedPlotAnnotation(imagePlot));
 
         imagePlot.setAnnotations(getAnnotations());
 
@@ -123,6 +130,7 @@ public class SimpleImageView extends ImageView {
         AnatomicalPoint2D apoint = ipane.translateScreenToValue(panePoint);
         IImagePlot plot = ipane.getImagePlot();
 
+        AnatomicalVolume displayAnatomy = getDisplayAnatomy();
         AnatomicalPoint3D ap3d = new AnatomicalPoint3D(
                 AnatomicalVolume.matchAnatomy(
                         plot.getXAxisRange().getAnatomicalAxis(),
@@ -139,20 +147,20 @@ public class SimpleImageView extends ImageView {
     public Point getCrosshairLocation(IImagePlot plot) {
         if (ipane.getImagePlot() == plot) {
 
-            Crosshair cross = getImageDisplayModel().getDisplayParameters().getCrosshair().getParameter();
+            ICrosshair cross = getCrosshair();
+            
             AnatomicalPoint1D xpt = cross.getValue(imagePlot.getDisplayAnatomy().XAXIS);
             AnatomicalPoint1D ypt = cross.getValue(imagePlot.getDisplayAnatomy().YAXIS);
 
             double percentX = (xpt.getX() - plot.getXAxisRange().getBeginning().getX()) / plot.getXAxisRange().getInterval();
             double percentY = (ypt.getX() - plot.getYAxisRange().getBeginning().getX()) / plot.getYAxisRange().getInterval();
 
-            Rectangle2D plotArea = ipane.getPlotArea();
-
+            Rectangle2D plotArea = ipane.getImagePlot().getPlotArea();
+            
             double screenX = (percentX * plotArea.getWidth()) + plotArea.getX();
             double screenY = (percentY * plotArea.getHeight()) + plotArea.getY();
 
             Point location = new Point((int) Math.round(screenX), (int) Math.round(screenY));
-
             return SwingUtilities.convertPoint(ipane, location, this);
 
         } else {

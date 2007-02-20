@@ -1,14 +1,10 @@
 package com.brainflow.display;
 
-import com.brainflow.colormap.LinearColorMap;
 import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.value.BufferedValueModel;
 import com.jgoodies.binding.value.ValueModel;
 
-import javax.swing.event.EventListenerList;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,11 +13,11 @@ import java.util.List;
  * Time: 10:28:33 AM
  * To change this template use File | Settings | File Templates.
  */
-public class DisplayParameter<T> {
+public class Property<T> {
 
     //private ExtendedPropertyChangeSupport support = new ExtendedPropertyChangeSupport(this);
     private PresentationModel model;
-    private T parameter;
+    private T property;
 
     public static final String PROPERTYNAME_AFTER_BEAN = PresentationModel.PROPERTYNAME_AFTER_BEAN;
     public static final String PROPERTYNAME_BEAN = PresentationModel.PROPERTYNAME_BEAN;
@@ -29,22 +25,22 @@ public class DisplayParameter<T> {
     public static final String PROPERTYNAME_BUFFERING = PresentationModel.PROPERTYNAME_BUFFERING;
     public static final String PROPERTYNAME_CHANGED = PresentationModel.PROPERTYNAME_CHANGED;
     public static final String PROPERTYNAME_TRIGGERCHANNEL = PresentationModel.PROPERTYNAME_TRIGGERCHANNEL;
-    public static final String PROPERTYNAME_PARAMETER_CHANGED = "parameter";
+    public static final String PROPERTYNAME_PARAMETER_CHANGED = "property";
 
    
-    public DisplayParameter(T param) {
-        parameter = param;
+    public Property(T param) {
+        property = param;
         model = new PresentationModel(param);
     }
 
-    public void setParameter(T param) {
-        parameter = param;
-        model.setBean(parameter);
+    public void setProperty(T prop) {
+        property = prop;
+        model.setBean(property);
 
     }
 
-    public T getParameter() {
-        return parameter;
+    public T getProperty() {
+        return property;
     }
 
     

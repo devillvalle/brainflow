@@ -158,44 +158,7 @@ public class ImageDisplayTableView extends ImageViewPresenter {
 
     public static void main(String[] args) {
         try {
-            com.jidesoft.utils.Lm.verifyLicense("UIN", "BrainFlow", "S5XiLlHH0VReaWDo84sDmzPxpMJvjP3");
-
-
-            LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
-            ImageDisplayModel model = new ImageDisplayModel("model");
-            NiftiInfoReader niftiReader = new NiftiInfoReader();
-            ImageInfo info = niftiReader.readInfo(new File("/home/surge/anyback/anova_novel2/mean_epi_mni.nii"));
-            BasicImageReader breader = new BasicImageReader(info);
-            IImageData data = breader.getOutput();
-            System.out.println(data.getImageLabel());
-
-            ImageLayer layer3D = new ImageLayer3D((IImageData3D) data);
-            layer3D.getImageLayerParameters().setColorMap(new LinearColorMap(0, 5000, ColorTable.GRAYSCALE));
-
-            model.addLayer(layer3D);
-
-
-            model.getSelection().setSelectionIndex(0);
-            info = niftiReader.readInfo(new File("/home/surge/anyback/anova_novel2/FLag.nii"));
-            breader = new BasicImageReader(info);
-            data = breader.getOutput();
-
-            layer3D = new ImageLayer3D((IImageData3D) data);
-            layer3D.getImageLayerParameters().setColorMap(new LinearColorMap(0, 34, ColorTable.SPECTRUM));
-
-
-            model.addLayer(layer3D);
-
-
-            ImageDisplayTableView tableView = new ImageDisplayTableView();
-            SimpleImageView view = new SimpleImageView(model);
-            EventBus.publish(new ImageViewSelectionEvent(view));
-
-
-            JFrame jf = new JFrame();
-            jf.add(tableView.getComponent());
-            jf.pack();
-            jf.setVisible(true);
+           
 
 
         } catch (Exception e) {
@@ -261,7 +224,7 @@ public class ImageDisplayTableView extends ImageViewPresenter {
             if (columnIndex == 2) {
                 ImageView view = ImageDisplayTableView.this.getSelectedView();
                 ImageLayer layer = view.getImageDisplayModel().getImageLayer(rowIndex);
-                layer.getImageLayerParameters().getVisiblility().getParameter().setVisible((Boolean) aValue);
+                layer.getImageLayerParameters().getVisiblility().getProperty().setVisible((Boolean) aValue);
 
             }
         }
@@ -277,7 +240,7 @@ public class ImageDisplayTableView extends ImageViewPresenter {
                     return "visible";
                 case 2:
                     return view.getImageDisplayModel().getImageLayer(rowIndex).
-                            getImageLayerParameters().getVisiblility().getParameter().isVisible();
+                            getImageLayerParameters().getVisiblility().getProperty().isVisible();
 
             }
 

@@ -5,7 +5,6 @@ import com.brainflow.core.ImageView;
 import com.jidesoft.pane.CollapsiblePane;
 import com.jidesoft.pane.CollapsiblePanes;
 import org.bushe.swing.event.EventBus;
-import org.bushe.swing.event.EventServiceEvent;
 import org.bushe.swing.event.EventSubscriber;
 
 import javax.swing.*;
@@ -33,18 +32,12 @@ public class CoordinateControls {
                 ImageViewEvent event = (ImageViewEvent) e;
                 activeView = event.getImageView();
                 if (activeView != null) {
-                    worldCoordinatePresenter.setCrosshair(activeView.getImageDisplayModel().
-                            getDisplayParameters().getCrosshair().getParameter());
-                    indexCoordinatePresenter.setCrosshair(activeView.getImageDisplayModel().
-                            getDisplayParameters().getCrosshair().getParameter());
-                    imageOriginPresenter.setViewport(activeView.getImageDisplayModel().
-                            getDisplayParameters().getViewport().getParameter());
-                    imageExtentPresenter.setViewport(activeView.getImageDisplayModel().
-                            getDisplayParameters().getViewport().getParameter());
+                    worldCoordinatePresenter.setCrosshair(activeView.getCrosshair());
+                    indexCoordinatePresenter.setCrosshair(activeView.getCrosshair());
+                    imageOriginPresenter.setViewport(activeView.getViewport());
+                    imageExtentPresenter.setViewport(activeView.getViewport());
 
-                } else {
-
-                }
+                } 
             }
         });
 
@@ -62,10 +55,10 @@ public class CoordinateControls {
 
 
         if (activeView != null) {
-            worldCoordinatePresenter = new WorldCoordinatePresenter(activeView.getImageDisplayModel().getDisplayParameters().getCrosshair().getParameter());
-            indexCoordinatePresenter = new IndexCoordinatePresenter(activeView.getImageDisplayModel().getDisplayParameters().getCrosshair().getParameter());
-            imageOriginPresenter = new ImageOriginPresenter(activeView.getImageDisplayModel().getDisplayParameters().getViewport().getParameter());
-            imageExtentPresenter = new ImageExtentPresenter(activeView.getImageDisplayModel().getDisplayParameters().getViewport().getParameter());
+            worldCoordinatePresenter = new WorldCoordinatePresenter(activeView.getCrosshair());
+            indexCoordinatePresenter = new IndexCoordinatePresenter(activeView.getCrosshair());
+            imageOriginPresenter = new ImageOriginPresenter(activeView.getViewport());
+            imageExtentPresenter = new ImageExtentPresenter(activeView.getViewport());
 
         } else {
             worldCoordinatePresenter = new WorldCoordinatePresenter(null);

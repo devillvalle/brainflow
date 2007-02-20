@@ -89,7 +89,7 @@ public class DefaultImageCompositor implements IImageCompositor {
             ImageSpace2D ispace = (ImageSpace2D) data.getImageSpace();
 
             ImageLayerParameters dprops = layer.getImageLayerParameters();
-            InterpolationProperty interp = dprops.getResampleInterpolation().getParameter();
+            InterpolationProperty interp = dprops.getResampleInterpolation().getProperty();
 
             double sx = ispace.getImageAxis(Axis.X_AXIS).getRange().getInterval() / ispace.getDimension(Axis.X_AXIS);
             double sy = ispace.getImageAxis(Axis.Y_AXIS).getRange().getInterval() / ispace.getDimension(Axis.Y_AXIS);
@@ -136,7 +136,7 @@ public class DefaultImageCompositor implements IImageCompositor {
             } else {
                 //resampled.add(bop.filter(layer.getBufferedImage(), null));
 
-                pb.add(Interpolation.getInstance(Interpolation.INTERP_NEAREST));
+                pb.add(Interpolation.getInstance(Interpolation.INTERP_BILINEAR));
             }
 
             resampled.add(JAI.create("scale", pb, hints));
@@ -210,7 +210,7 @@ public class DefaultImageCompositor implements IImageCompositor {
 
         for (int i = 0; i < images.size(); i++) {
             ImageLayer layer = images.get(i);
-            if (layer.getImageLayerParameters().getVisiblility().getParameter().isVisible()) {
+            if (layer.getImageLayerParameters().getVisiblility().getProperty().isVisible()) {
                 RenderedImage rim = cachedResampled.get(i);
                 double transx = (rim.getMinX() - frameBounds.getMinX()) + (-frameBounds.getMinX());
                 double transy = (rim.getMinY() - frameBounds.getMinY()) + (-frameBounds.getMinY());
@@ -277,28 +277,34 @@ public class DefaultImageCompositor implements IImageCompositor {
 
         ParameterBlock pb = new ParameterBlock();
 
-        RenderedImage rimg = compose();
-        pb.addSource(rimg);
 
-        float xmin = (float) (region.getX() - bounds.getX());
-        float ymin = (float) (region.getY() - bounds.getY());
-        float width = (int) Math.min(bounds.getWidth() - xmin, region.getWidth());
-        float height = (int) Math.min(bounds.getHeight() - ymin, region.getHeight());
+        try {
+            RenderedImage rimg = compose();
+            pb.addSource(rimg);
 
-
-        pb.add(xmin);
-        pb.add(ymin);
-
-        pb.add(width);
-        pb.add(height);
-
-        RenderedImage croppedImage = JAI.create("crop", pb, null);
+            float xmin = (float) Math.floor(region.getX() - bounds.getX());
+            float ymin = (float) Math.floor(region.getY() - bounds.getY());
+            float width = (int) Math.min(bounds.getWidth() - xmin, region.getWidth());
+            float height = (int) Math.min(bounds.getHeight() - ymin, region.getHeight());
 
 
-        pb = new ParameterBlock();
-        pb.addSource(croppedImage);
-        pb.add((float) (-croppedImage.getMinX()));
-        pb.add((float) (-croppedImage.getMinY()));
+            pb.add(xmin);
+            pb.add(ymin);
+
+            pb.add(width);
+            pb.add(height);
+
+            RenderedImage croppedImage = JAI.create("crop", pb, null);
+            pb = new ParameterBlock();
+            pb.addSource(croppedImage);
+            pb.add((float) (-croppedImage.getMinX()));
+            pb.add((float) (-croppedImage.getMinY()));
+        } catch (IllegalArgumentException e) {
+
+            e.printStackTrace();
+        }
+
+
         return JAI.create("translate", pb, null);
 
 

@@ -5,6 +5,7 @@ import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.image.space.ImageSpace3D;
+import com.brainflow.image.space.IImageSpace;
 import com.jgoodies.binding.beans.Model;
 
 import java.beans.PropertyChangeEvent;
@@ -17,7 +18,7 @@ import java.beans.PropertyChangeListener;
  * Time: 5:21:43 PM
  * To change this template use File | Settings | File Templates.
  */
-public class Crosshair extends Model {
+public class Crosshair extends Model implements ICrosshair {
 
     public static final String LOCATION_PROPERTY = "location";
     public static final String X_VALUE_PROPERTY = "XValue";
@@ -55,8 +56,10 @@ public class Crosshair extends Model {
     }
 
     private void viewportChanged() {
-        ImageSpace3D space = viewport.getBounds();
-        AnatomicalPoint3D loc = space.getCentroid();
+        IImageSpace space = viewport.getBounds();
+
+        // danger danger
+        AnatomicalPoint3D loc = ((ImageSpace3D)space).getCentroid();
         setXValue(loc.getX());
         setYValue(loc.getY());
         setZValue(loc.getZ());
@@ -121,6 +124,13 @@ public class Crosshair extends Model {
         setYValue(y);
         setZValue(z);
 
+    }
+
+    public AnatomicalPoint3D getLocation() {
+        return new AnatomicalPoint3D(location.getAnatomy(),
+                location.getX(),
+                location.getY(),
+                location.getZ());
     }
 
 

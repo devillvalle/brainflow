@@ -2,6 +2,7 @@ package com.brainflow.application.actions;
 
 import org.bushe.swing.action.BasicAction;
 import org.bushe.swing.action.ActionManager;
+import org.bushe.swing.action.ActionUIFactory;
 
 import javax.swing.*;
 
@@ -23,6 +24,7 @@ public class ToggleAxisLabelAction extends BasicAction {
      public ToggleAxisLabelAction() {
         putValue(Action.NAME, "Toggle Axis Label");
         putValue(ActionManager.BUTTON_TYPE, ActionManager.BUTTON_TYPE_VALUE_TOGGLE);
+         
     }
 
 
@@ -32,8 +34,10 @@ public class ToggleAxisLabelAction extends BasicAction {
         if (view != null) {
             setEnabled(true);
             AxisLabelAnnotation annot = (AxisLabelAnnotation)view.getAnnotation(AxisLabelAnnotation.class);
-            boolean selected = annot.isVisible();
-            setSelected(selected);
+            if (annot != null) {
+                boolean selected = annot.isVisible();
+                setSelected(selected);
+            }
         } else {
             setEnabled(false);
         }

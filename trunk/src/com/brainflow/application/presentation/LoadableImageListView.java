@@ -14,6 +14,7 @@ import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.image.data.IImageData3D;
 import com.brainflow.image.space.Axis;
+import com.brainflow.display.ImageLayerParameters;
 import com.jidesoft.swing.StyleRange;
 import com.jidesoft.swing.StyledLabel;
 import org.bushe.swing.action.ActionManager;
@@ -159,9 +160,10 @@ public class LoadableImageListView extends JList {
                 ImageDisplayModel dmodel = new ImageDisplayModel("" + limg.getUniqueID());
                 IImageData3D data = (IImageData3D) limg.getData();
 
-                ImageLayer layer = new ImageLayer3D(data);
-                layer.getImageLayerParameters().setColorMap(new LinearColorMap(data.getMinValue(), data.getMaxValue(), ColorTable.GRAYSCALE));
 
+                ImageLayerParameters parms = new ImageLayerParameters(new LinearColorMap(data.getMinValue(), data.getMaxValue(), ColorTable.GRAYSCALE));
+                ImageLayer layer = new ImageLayer3D(data, parms);
+                
                 dmodel.addLayer(layer);
 
                 AnatomicalPoint1D point = dmodel.getImageAxis(AnatomicalVolume.getCanonicalAxial().ZAXIS).getRange().getCenter();

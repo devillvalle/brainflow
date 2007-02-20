@@ -32,8 +32,10 @@ public class ToggleColorbarAction extends BasicAction {
         if (view != null) {
             setEnabled(true);
             ColorBarAnnotation annot = (ColorBarAnnotation)view.getAnnotation(ColorBarAnnotation.class);
-            boolean selected = annot.isVisible();
-            setSelected(selected);
+            if (annot != null) {
+                boolean selected = annot.isVisible();
+                setSelected(selected);
+            }
         } else {
             setEnabled(false);
         }

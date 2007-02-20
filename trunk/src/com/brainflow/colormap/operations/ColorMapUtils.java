@@ -171,6 +171,7 @@ public class ColorMapUtils {
     GraphicsConfiguration config = screen.getDefaultConfiguration();
     return config.createCompatibleImage(width, height);
   }
+   
 
   public static byte[][] extractTable(IndexColorModel icm) {
     byte[][] table = new byte[4][icm.getMapSize()];

@@ -2,6 +2,7 @@ package com.brainflow.core;
 
 import com.brainflow.image.anatomy.AnatomicalPlane;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
+import com.brainflow.colormap.operations.ColorMapUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,11 +30,9 @@ public class ImagePane extends JComponent {
 
     private int minimumDrawHeight = 25;
 
-    private double scaleX = 1f;
 
-    private double scaleY = 1f;
 
-    private Rectangle2D plotArea;
+
 
 
     public ImagePane(IImagePlot _plot) {
@@ -42,77 +41,23 @@ public class ImagePane extends JComponent {
         plot = _plot;
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        add(plot.getComponent(), BorderLayout.CENTER);
 
 
     }
 
 
     public RenderedImage captureImage() {
+        System.out.println("capturing image");
         BufferedImage img = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-        paintComponent(img.createGraphics());
+        //BufferedImage img = ColorMapUtils.createCompatibleImage(getWidth(), getHeight());
+        plot.getComponent().paint(img.createGraphics());
 
         return img;
     }
 
 
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
 
-        if (this.plot == null) {
-            return;
-        }
-
-        Graphics2D g2 = (Graphics2D) g;
-
-        Dimension size = getSize();
-        Insets insets = getInsets();
-
-
-        Insets plotInsets = plot.getPlotInsets();
-
-        Rectangle2D available = new Rectangle2D.Double(
-                insets.left + plotInsets.left, insets.top + plotInsets.top,
-                size.getWidth() - insets.left - insets.right - plotInsets.left - plotInsets.right,
-                size.getHeight() - insets.top - insets.bottom - plotInsets.top - plotInsets.bottom
-        );
-
-
-        double drawWidth = available.getWidth();
-        double drawHeight = available.getHeight();
-
-        if (drawWidth < this.minimumDrawWidth) {
-            drawWidth = this.minimumDrawWidth;
-
-        }
-
-        if (drawHeight < this.minimumDrawHeight) {
-            drawHeight = this.minimumDrawHeight;
-
-        }
-
-        plotArea = new Rectangle.Double(
-                insets.left + plotInsets.left, insets.top + plotInsets.top, drawWidth, drawHeight
-        );
-
-        scaleX = plotArea.getWidth() / plot.getXAxisRange().getInterval();
-        scaleY = plotArea.getHeight() / plot.getYAxisRange().getInterval();
-
-        Color oldColor = g2.getColor();
-        g2.setColor(Color.BLACK);
-        g2.fillRect(insets.left, insets.top,
-                (int) (size.getWidth() - insets.left - insets.right),
-                (int) (size.getHeight() - insets.top - insets.bottom));
-
-
-        g2.setColor(oldColor);
-
-        plot.paint(g2, plotArea);
-
-    }
-
-    public Rectangle2D getPlotArea() {
-        return plotArea;
-    }
 
     public IImagePlot getImagePlot() {
         return plot;
@@ -130,7 +75,7 @@ public class ImagePane extends JComponent {
 
     public boolean pointInPlot(Component source, Point sourcePoint) {
         Point point = SwingUtilities.convertPoint(source, sourcePoint, this);
-        return !((point.x < 0) | (point.y < 0) | (point.x > getWidth()) | (point.y > getHeight()));
+        return !((point.x < 0) || (point.y < 0) || (point.x > getWidth()) || (point.y > getHeight()));
 
     }
 
@@ -138,8 +83,8 @@ public class ImagePane extends JComponent {
     public Point translateValueToScreen(Point2D value) {
         Insets insets = getInsets();
         Insets plotInsets = plot.getPlotInsets();
-        int x = (int) (value.getX() * this.scaleX + insets.left + plotInsets.left);
-        int y = (int) (value.getY() * this.scaleY + insets.top + plotInsets.top);
+        int x = (int) (value.getX() * plot.getScaleX() + insets.left + plotInsets.left);
+        int y = (int) (value.getY() * plot.getScaleY() + insets.top + plotInsets.top);
         return new Point(x, y);
     }
 
@@ -147,8 +92,8 @@ public class ImagePane extends JComponent {
     public AnatomicalPoint2D translateScreenToValue(Point screenPoint) {
         Insets insets = getInsets();
         Insets plotInsets = plot.getPlotInsets();
-        double x = (screenPoint.getX() - insets.left - plotInsets.left) / this.scaleX;
-        double y = (screenPoint.getY() - insets.top - plotInsets.top) / this.scaleY;
+        double x = (screenPoint.getX() - insets.left - plotInsets.left) / plot.getScaleX();
+        double y = (screenPoint.getY() - insets.top - plotInsets.top) / plot.getScaleY();
         return new AnatomicalPoint2D(AnatomicalPlane.matchAnatomy(
                 plot.getXAxisRange().getAnatomicalAxis(),
                 plot.getYAxisRange().getAnatomicalAxis()),

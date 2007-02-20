@@ -5,7 +5,7 @@ import com.brainflow.colormap.AbstractColorMap;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMap;
-import com.brainflow.display.DisplayParameter;
+import com.brainflow.display.Property;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
 import com.jgoodies.binding.beans.BeanAdapter;
@@ -46,8 +46,8 @@ public class ColorRangePresenter extends AbstractColorMapPresenter {
 
     }
 
-    public void setColorMap(DisplayParameter<IColorMap> param) {
-        IColorMap colorMap = param.getParameter();
+    public void setColorMap(Property<IColorMap> param) {
+        IColorMap colorMap = param.getProperty();
         //if (!(colorMap instanceof LinearColorMap)) {
         //    form.getMinSlider().setEnabled(false);
         //    form.getMaxSlider().setEnabled(false);

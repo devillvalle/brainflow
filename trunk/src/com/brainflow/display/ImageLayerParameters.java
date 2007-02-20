@@ -16,8 +16,8 @@ import java.awt.image.IndexColorModel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 
 /**
@@ -37,57 +37,55 @@ public class ImageLayerParameters implements Serializable {
     public static final String RESAMPLE_INTERPOLATION_PARAMETER = "resampleInterpolation";
 
 
-    private ImageLayer layer;
 
-    private DisplayParameter<IColorMap> colorMap;
-    private DisplayParameter<InterpolationProperty> resampleInterpolation;
-    private DisplayParameter<InterpolationProperty> screenInterpolation;
-    private DisplayParameter<VisibleProperty> visible;
-    private DisplayParameter<AlphaMaskProperty> alphaMask;
-    private DisplayParameter<ImageOpListProperty> imageOpList;
 
-    private EventListenerList listeners = new EventListenerList();
+    private Property<IColorMap> colorMap;
+    private Property<InterpolationProperty> resampleInterpolation;
+    private Property<InterpolationProperty> screenInterpolation;
+    private Property<VisibleProperty> visible;
+    private Property<AlphaMaskProperty> alphaMask;
+    private Property<ImageOpListProperty> imageOpList;
+
+    private final List<ChangeListener> listeners = new ArrayList<ChangeListener>();
 
     private SelectionInList resampleSelection;
 
 
 
-     public ImageLayerParameters(ImageLayer _layer) {
-        layer = _layer;
+     public ImageLayerParameters() {
+         System.out.println("new ImageLayerParameters, constructor 1 " + toString());
+
+        new Throwable().printStackTrace();
         IColorMap imap = new LinearColorMap(0, 255, ColorTable.GRAYSCALE);
         init(imap);
 
     }
 
-    public ImageLayerParameters(ImageLayer _layer, IndexColorModel _icm, Range _dataRange) {
-        layer = _layer;
+    public ImageLayerParameters(IndexColorModel _icm, Range _dataRange) {
+        System.out.println("new ImageLayerParameters, constructor 2 " + toString());
+        new Throwable().printStackTrace();
+        
         IColorMap imap = new LinearColorMap(_dataRange.getMin(), _dataRange.getMax(), _icm);
         init(imap);
 
     }
 
-
-
-
-    public ImageLayerParameters(ImageLayer _layer, IColorMap map) {
-        layer = _layer;
+    public ImageLayerParameters(IColorMap map) {
+        
+        System.out.println("new ImageLayerParameters, constructor 3 " + toString());
+        new Throwable().printStackTrace();
         init(map);
-
     }
 
-
-    public ImageLayer getLayer() {
-        return layer;
-    }
 
     private void init(IColorMap map) {
 
-        colorMap = new DisplayParameter<IColorMap>(map);
-        resampleInterpolation = new DisplayParameter<InterpolationProperty>(new InterpolationProperty(InterpolationHint.NEAREST_NEIGHBOR));
-        screenInterpolation = new DisplayParameter<InterpolationProperty>(new InterpolationProperty(InterpolationHint.NEAREST_NEIGHBOR));
-        visible = new DisplayParameter<VisibleProperty>(new VisibleProperty(layer, true));
-        alphaMask = new DisplayParameter<AlphaMaskProperty>(new AlphaMaskProperty());
-        imageOpList = new DisplayParameter<ImageOpListProperty>(new ImageOpListProperty());
+        colorMap = new Property<IColorMap>(map);
+        resampleInterpolation = new Property<InterpolationProperty>(new InterpolationProperty(InterpolationHint.CUBIC));
+        screenInterpolation = new Property<InterpolationProperty>(new InterpolationProperty(InterpolationHint.CUBIC));
+        visible = new Property<VisibleProperty>(new VisibleProperty(this, true));
+        alphaMask = new Property<AlphaMaskProperty>(new AlphaMaskProperty());
+        imageOpList = new Property<ImageOpListProperty>(new ImageOpListProperty());
 
         resampleSelection = new SelectionInList(InterpolationHint.values(), resampleInterpolation.getModel(InterpolationProperty.INTERPOLATION_PROPERTY));
 
@@ -138,7 +136,7 @@ public class ImageLayerParameters implements Serializable {
     }
 
     public void addImageOp(String filterName, ImageOp op) {
-        imageOpList.getParameter().addImageOp(filterName, op);
+        imageOpList.getProperty().addImageOp(filterName, op);
 
     }
 
@@ -148,56 +146,56 @@ public class ImageLayerParameters implements Serializable {
     }
 
     public void addChangeListener(ChangeListener listener) {
-        listeners.add(ChangeListener.class, listener);
+        listeners.add(listener);
+
     }
 
     public void removeChangeListener(ChangeListener listener) {
-        listeners.remove(ChangeListener.class, listener);
+        listeners.remove(listener);
     }
 
 
     private void fireChangeEvent(DisplayChangeEvent event) {
-        ChangeListener[] list = listeners.getListeners(ChangeListener.class);
-        for (ChangeListener listener : list) {
+        for (ChangeListener listener : listeners) {
             listener.stateChanged(event);
         }
     }
 
-    public DisplayParameter<VisibleProperty> getVisiblility() {
+    public Property<VisibleProperty> getVisiblility() {
         return visible;
     }
 
-    public DisplayParameter<IColorMap> getColorMap() {
+    public Property<IColorMap> getColorMap() {
         return colorMap;
     }
 
-    public DisplayParameter<InterpolationProperty> getScreenInterpolation() {
+    public Property<InterpolationProperty> getScreenInterpolation() {
         return screenInterpolation;
     }
 
-    public DisplayParameter<InterpolationProperty> getResampleInterpolation() {
+    public Property<InterpolationProperty> getResampleInterpolation() {
         return resampleInterpolation;
     }
 
-    public DisplayParameter<ImageOpListProperty> getImageOpList() {
+    public Property<ImageOpListProperty> getImageOpList() {
         return imageOpList;
     }
 
-    public DisplayParameter<AlphaMaskProperty> getAlphaMask() {
+    public Property<AlphaMaskProperty> getAlphaMask() {
         return alphaMask;
     }
 
 
     public void setColorMap(IColorMap imap) {
-        colorMap.setParameter(imap);
+        colorMap.setProperty(imap);
     }
 
     public void setScreenInterpolation(InterpolationProperty interp) {
-        screenInterpolation.setParameter(interp);
+        screenInterpolation.setProperty(interp);
     }
 
     public void setResampleInterpolation(InterpolationProperty interp) {
-        resampleInterpolation.setParameter(interp);
+        resampleInterpolation.setProperty(interp);
     }
 
 

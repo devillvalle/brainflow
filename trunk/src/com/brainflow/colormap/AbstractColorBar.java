@@ -79,8 +79,7 @@ public abstract class AbstractColorBar extends JPanel {
 
     public void paintInto(Graphics g, int x, int y, int width, int height, boolean paintBackground) {
         Graphics2D g2 = (Graphics2D) g;
-
-
+        
         AffineTransform at = null;
 
 

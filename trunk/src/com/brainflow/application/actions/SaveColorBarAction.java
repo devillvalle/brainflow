@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 import com.brainflow.core.ImageView;
-import com.brainflow.core.ImageCanvas;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.AbstractColorBar;
 
@@ -30,7 +29,7 @@ public class SaveColorBarAction extends BasicAction {
 
         if (view != null) {
             int idx = view.getImageDisplayModel().getSelectedIndex();
-            IColorMap cmap = view.getImageDisplayModel().getLayerParameters(idx).getColorMap().getParameter();
+            IColorMap cmap = view.getImageDisplayModel().getLayerParameters(idx).getColorMap().getProperty();
             AbstractColorBar cbar = cmap.createColorBar();
 
             cbar.setOrientation(SwingUtilities.HORIZONTAL);

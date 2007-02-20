@@ -30,7 +30,7 @@ public class ImageCanvasSelection implements MouseListener, MouseMotionListener 
 
     private ImageView preSelectedView;
 
-    private ImageCanvasMode selectorMode;
+
     private PlotResizeMode resizeMode;
     private PlotTranslationMode translateMode;
     private MoveCrosshairMode crosshairMode;
@@ -338,13 +338,15 @@ public class ImageCanvasSelection implements MouseListener, MouseMotionListener 
     }
 
     private void computeState(MouseEvent event) {
-        ImageView view = canvas.whichView(event.getPoint());
+        ImageView view = canvas.whichView((Component) event.getSource(), event.getPoint());
 
         // view is null
         if (view == null) {
             updateCursorState(CURSOR_STATE.OVER_CANVAS, null);
+
         } else if (view != canvas.getSelectedView()) {
             updateCursorState(CURSOR_STATE.OVER_UNSELECTED_VIEW, view);
+
         } else if (view == canvas.getSelectedView()) {
 
             // means we're inside a selected view
@@ -361,10 +363,9 @@ public class ImageCanvasSelection implements MouseListener, MouseMotionListener 
 
             if (state != CURSOR_STATE.OVER_SELECTED_VIEW) {
                 updateCursorState(state, view);
-            } else
-            if ((cross != null) && (Math.abs(cross.getX() - p.getX()) < 4) && (Math.abs(cross.getY() - p.getY()) < 4)) {
+            } else if ((cross != null) && (Math.abs(cross.getX() - p.getX()) < 4) &&
+                      (Math.abs(cross.getY() - p.getY()) < 4)) {
                 updateCursorState(CURSOR_STATE.OVER_CROSSHAIR, view);
-
             } else {
                 updateCursorState(CURSOR_STATE.OVER_SELECTED_VIEW, view);
             }
@@ -381,7 +382,7 @@ public class ImageCanvasSelection implements MouseListener, MouseMotionListener 
 
 
     public void mousePressed(MouseEvent mouseevent) {
-        ImageView view = canvas.whichView(mouseevent.getPoint());
+        ImageView view = canvas.whichView((Component) mouseevent.getSource(), mouseevent.getPoint());
         if (view == null) {
             clearSelection();
             setSelectedView(null);

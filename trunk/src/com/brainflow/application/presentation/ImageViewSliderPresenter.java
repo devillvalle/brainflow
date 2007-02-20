@@ -2,6 +2,7 @@ package com.brainflow.application.presentation;
 
 import com.brainflow.core.ImageView;
 import com.brainflow.display.Crosshair;
+import com.brainflow.display.ICrosshair;
 import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.image.space.Axis;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
@@ -23,7 +24,7 @@ import java.text.NumberFormat;
 public class ImageViewSliderPresenter extends ImageViewPresenter {
 
     private JSlider slider;
-    private Crosshair crosshair;
+    private ICrosshair crosshair;
 
     private BeanAdapter crosshairAdapter;
     private BeanAdapter viewportAdapter;
@@ -38,7 +39,7 @@ public class ImageViewSliderPresenter extends ImageViewPresenter {
     private CoordinateToIndexConverter imodel;
     private PropertyConnector labelConnector;
 
-    public ImageViewSliderPresenter(Crosshair _crosshair) {
+    public ImageViewSliderPresenter(ICrosshair _crosshair) {
         slider = new JSlider();
 
         crosshair = _crosshair;

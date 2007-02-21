@@ -1,16 +1,12 @@
 package com.brainflow.image.io.afni;
 
-import com.brainflow.core.BrainflowException;
-import com.brainflow.image.io.ImageInfoReader;
+import com.brainflow.application.BrainflowException;
 import com.brainflow.image.io.ImageInfo;
-
-import java.net.URL;
-import java.io.*;
-import java.util.List;
-import java.util.StringTokenizer;
-import java.util.ArrayList;
-
+import com.brainflow.image.io.ImageInfoReader;
 import org.apache.commons.vfs.FileObject;
+
+import java.io.*;
+import java.net.URL;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,7 +16,6 @@ import org.apache.commons.vfs.FileObject;
  * To change this template use File | Settings | File Templates.
  */
 public class AFNIInfoReader implements ImageInfoReader {
-
 
 
     public ImageInfo readInfo(URL url) throws BrainflowException {
@@ -36,12 +31,10 @@ public class AFNIInfoReader implements ImageInfoReader {
     }
 
 
-
-
     private void skipNewLines(BufferedReader reader) throws IOException {
         String str = null;
         boolean marked = false;
-        while ( (str = reader.readLine()).equals("")) {
+        while ((str = reader.readLine()).equals("")) {
             reader.mark(500);
             System.out.println("skipping line: " + str);
             marked = true;
@@ -73,7 +66,7 @@ public class AFNIInfoReader implements ImageInfoReader {
 
         AFNIAttribute.AFNI_ATTRIBUTE_TYPE type = AFNIAttribute.parseType(typeStr.replaceFirst("-", "_"));
 
-        return AFNIAttribute.createAttribute(type, AFNIAttribute.parseName(nameStr), 
+        return AFNIAttribute.createAttribute(type, AFNIAttribute.parseName(nameStr),
                 AFNIAttribute.parseCount(countStr), sb.toString());
 
     }
@@ -87,9 +80,6 @@ public class AFNIInfoReader implements ImageInfoReader {
     }
 
 
-    
-
-
     public static void main(String[] args) {
         File f = null;
         try {
@@ -100,7 +90,7 @@ public class AFNIInfoReader implements ImageInfoReader {
             areader.skipNewLines(reader);
             do {
                 ret = areader.parseElement(reader);
-              
+
                 if (ret != null) {
                     System.out.println(ret);
                 }

@@ -2,7 +2,7 @@ package com.brainflow.application.presentation;
 
 import com.brainflow.application.actions.ActionContext;
 import com.brainflow.application.actions.LayerVisibilityAction;
-import com.brainflow.application.services.ImageViewDataEvent;
+import com.brainflow.application.services.ImageDisplayModelEvent;
 import com.brainflow.core.ImageCanvas;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
@@ -33,18 +33,23 @@ import java.util.List;
 public class CanvasBar extends ImageViewPresenter {
 
     private CommandBar commandBar;
+
     private SplitButtonGroup buttonGroup = new SplitButtonGroup();
+
     private List<AbstractButton> layerButtonList = new ArrayList<AbstractButton>();
-    ButtonSelectionListener listener = new ButtonSelectionListener();
+
+    private ButtonSelectionListener listener = new ButtonSelectionListener();
 
     private ImageCanvas canvas;
 
     public CanvasBar() {
-        EventBus.subscribeStrongly(ImageViewDataEvent.class, new EventSubscriber() {
+        EventBus.subscribeStrongly(ImageDisplayModelEvent.class, new EventSubscriber() {
 
             public void onEvent(Object evt) {
-                ImageViewDataEvent event = (ImageViewDataEvent) evt;
-                if (getSelectedView() == event.getImageView()) {
+                ImageDisplayModelEvent event = (ImageDisplayModelEvent) evt;
+                ImageView view = getSelectedView();
+                if (view == null) return;
+                if (view.getModel() == event.getModel()) {
                     update();
                 }
             }
@@ -100,8 +105,8 @@ public class CanvasBar extends ImageViewPresenter {
         HashMap map = new HashMap();
         map.put(ActionContext.SELECTED_IMAGE_VIEW, getSelectedView());
 
-        for (int i = 0; i < getSelectedView().getImageDisplayModel().getNumLayers(); i++) {
-            ImageLayer layer = getSelectedView().getImageDisplayModel().getImageLayer(i);
+        for (int i = 0; i < getSelectedView().getModel().getNumLayers(); i++) {
+            ImageLayer layer = getSelectedView().getModel().getImageLayer(i);
             JideToggleSplitButton button = new JideToggleSplitButton("" + (i + 1) + ": " + layer);
             button.addItemListener(listener);
             BasicAction visAction = new LayerVisibilityAction(layer.getImageLayerParameters());

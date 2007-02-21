@@ -30,8 +30,8 @@ public class SelectColorMapAction extends BasicAction {
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
         if (view != null) {
 
-            int layer = view.getImageDisplayModel().getSelectedIndex();
-            IColorMap map = view.getImageDisplayModel().getImageLayer(layer).
+            int layer = view.getModel().getSelectedIndex();
+            IColorMap map = view.getModel().getImageLayer(layer).
                     getImageLayerParameters().getColorMap().getProperty();
 
             LinearColorMap lmap = new LinearColorMap(map.getMinimumValue(), map.getMaximumValue(), icm);
@@ -44,7 +44,7 @@ public class SelectColorMapAction extends BasicAction {
                 lmap.setLowerAlphaThreshold(lmap2.getLowerAlphaThreshold());
             }
 
-            view.getImageDisplayModel().getImageLayer(layer).
+            view.getModel().getImageLayer(layer).
                     getImageLayerParameters().getColorMap().setProperty(lmap);
         }
 

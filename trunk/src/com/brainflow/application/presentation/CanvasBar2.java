@@ -2,7 +2,7 @@ package com.brainflow.application.presentation;
 
 import com.brainflow.application.actions.ActionContext;
 import com.brainflow.application.actions.LayerVisibilityAction;
-import com.brainflow.application.services.ImageViewDataEvent;
+import com.brainflow.application.services.ImageDisplayModelEvent;
 import com.brainflow.core.ImageCanvas;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
@@ -40,11 +40,11 @@ public class CanvasBar2 extends ImageViewPresenter {
     private ImageCanvas canvas;
 
     public CanvasBar2() {
-        EventBus.subscribeStrongly(ImageViewDataEvent.class, new EventSubscriber() {
+        EventBus.subscribeStrongly(ImageDisplayModelEvent.class, new EventSubscriber() {
 
             public void onEvent(Object evt) {
-                ImageViewDataEvent event = (ImageViewDataEvent) evt;
-                if (getSelectedView() == event.getImageView()) {
+                ImageDisplayModelEvent event = (ImageDisplayModelEvent) evt;
+                if (getSelectedView().getModel() == event.getModel()) {
                     update();
                 }
             }
@@ -100,8 +100,8 @@ public class CanvasBar2 extends ImageViewPresenter {
         HashMap map = new HashMap();
         map.put(ActionContext.SELECTED_IMAGE_VIEW, getSelectedView());
 
-        for (int i = 0; i < getSelectedView().getImageDisplayModel().getNumLayers(); i++) {
-            ImageLayer layer = getSelectedView().getImageDisplayModel().getImageLayer(i);
+        for (int i = 0; i < getSelectedView().getModel().getNumLayers(); i++) {
+            ImageLayer layer = getSelectedView().getModel().getImageLayer(i);
             JideToggleSplitButton button = new JideToggleSplitButton("" + (i + 1) + ": " + layer);
             button.addItemListener(listener);
             BasicAction visAction = new LayerVisibilityAction(layer.getImageLayerParameters());

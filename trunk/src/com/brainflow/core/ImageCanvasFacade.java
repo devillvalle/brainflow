@@ -1,11 +1,10 @@
 package com.brainflow.core;
 
-import com.brainflow.application.managers.ImageCanvasManager;
 import com.brainflow.application.services.ImageViewCursorEvent;
 import com.brainflow.application.services.ImageViewSelectionEvent;
+import com.brainflow.application.toplevel.ImageCanvasManager;
 import com.brainflow.display.Viewport3D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
-import com.brainflow.image.anatomy.AnatomicalPointOnGrid;
 import com.jgoodies.binding.beans.ExtendedPropertyChangeSupport;
 import org.bushe.swing.event.EventBus;
 
@@ -161,7 +160,7 @@ public class ImageCanvasFacade {
 
         public void mouseMoved(MouseEvent e) {
             Point p = e.getPoint();
-            ImageView iview = selectedCanvas.whichView((Component)e.getSource(), p);
+            ImageView iview = selectedCanvas.whichView((Component) e.getSource(), p);
 
             if (iview != selectedCanvas.getSelectedView()) {
                 return;
@@ -181,7 +180,7 @@ public class ImageCanvasFacade {
         public void mousePressed(MouseEvent e) {
             Point p = e.getPoint();
 
-            ImageView iview = selectedCanvas.whichView((Component)e.getSource(), p);
+            ImageView iview = selectedCanvas.whichView((Component) e.getSource(), p);
             if (iview == null || iview != selectedCanvas.getSelectedView()) {
                 return;
             }

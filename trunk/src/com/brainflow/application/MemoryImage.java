@@ -1,6 +1,5 @@
 package com.brainflow.application;
 
-import com.brainflow.core.BrainflowException;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.utils.ProgressListener;

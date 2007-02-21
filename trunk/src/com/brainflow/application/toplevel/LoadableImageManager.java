@@ -4,7 +4,7 @@
  * Created on May 29, 2003, 9:09 AM
  */
 
-package com.brainflow.application.managers;
+package com.brainflow.application.toplevel;
 
 import com.brainflow.application.ILoadableImage;
 import com.brainflow.application.services.LoadableImageStatusEvent;
@@ -35,7 +35,7 @@ public class LoadableImageManager {
     }
 
     public static LoadableImageManager getInstance() {
-        return (LoadableImageManager) SingletonRegistry.REGISTRY.getInstance("com.brainflow.application.managers.LoadableImageManager");
+        return (LoadableImageManager) SingletonRegistry.REGISTRY.getInstance("com.brainflow.application.toplevel.LoadableImageManager");
     }
 
 

@@ -14,12 +14,23 @@ public class ImageViewCrosshairEvent extends ImageViewEvent {
     /**
      * Creates a new instance of ImageViewEvent
      */
-    public ImageViewCrosshairEvent(ImageView view) {        
+    public ImageViewCrosshairEvent(ImageView view) {
         super(view);
     }
 
     public ICrosshair getCrosshair() {
         return getImageView().getCrosshair();
+    }
+
+    public String toString() {
+        StringBuilder builder = new StringBuilder("Crosshair at : ");
+        ICrosshair cross = getCrosshair();
+
+        builder.append("x: " + (int) cross.getLocation().getX());
+        builder.append(" y: " + (int) cross.getLocation().getY());
+        builder.append(" z: " + (int) cross.getLocation().getZ());
+
+        return builder.toString();
     }
 
 

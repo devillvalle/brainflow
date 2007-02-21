@@ -5,17 +5,19 @@
  */
 
 package com.brainflow.image.io;
-import com.brainflow.core.*;
 
-import java.io.*;
+import com.brainflow.application.BrainflowException;
+
+import java.io.File;
 
 /**
- *
- * @author  Bradley
+ * @author Bradley
  */
 public interface ImageInfoWriter {
-    
-    /** Creates a new instance of ImageInfoWriter */
+
+    /**
+     * Creates a new instance of ImageInfoWriter
+     */
     public void writeInfo(File file, ImageInfo info) throws BrainflowException;
-    
+
 }

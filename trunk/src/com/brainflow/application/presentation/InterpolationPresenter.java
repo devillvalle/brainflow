@@ -72,7 +72,7 @@ public class InterpolationPresenter extends ImageViewPresenter {
         int idx = view.getSelectedIndex();
 
         if (idx > 0) {
-            SelectionInList sel = view.getImageDisplayModel().
+            SelectionInList sel = view.getModel().
                     getImageLayer(idx).getImageLayerParameters().getResampleSelection();
 
             Bindings.bind(choices, sel);

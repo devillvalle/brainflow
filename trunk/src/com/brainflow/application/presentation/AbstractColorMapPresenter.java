@@ -41,7 +41,7 @@ public abstract class AbstractColorMapPresenter extends ImageViewPresenter {
         int idx = view.getSelectedIndex();
 
         if (idx >= 0) {
-            updateColorMapParameter(view.getImageDisplayModel().
+            updateColorMapParameter(view.getModel().
                     getImageLayer(idx).getImageLayerParameters().
                     getColorMap());
         }

@@ -35,8 +35,8 @@ public abstract class ImageViewPresenter extends AbstractPresenter {
 
                 selectedView = event.getSelectedImageView();
                 // in fact this should not happen.
-                //if ( (selectedView != null) && (selectedView.getImageDisplayModel().getSelectedIndex() < 0) ) {
-                //    selectedView.getImageDisplayModel().getSelection().setSelectionIndex(0);
+                //if ( (selectedView != null) && (selectedView.getModel().getSelectedIndex() < 0) ) {
+                //    selectedView.getModel().getSelection().setSelectionIndex(0);
                 //
                 // }
 
@@ -54,10 +54,10 @@ public abstract class ImageViewPresenter extends AbstractPresenter {
             public void onEvent(Object evt) {
                 EventServiceEvent ese = (EventServiceEvent) evt;
                 if (ese.getSource() == selectedView) {
-                    int idx = selectedView.getImageDisplayModel().getSelectedIndex();
+                    int idx = selectedView.getModel().getSelectedIndex();
 
                     if (idx >= 0) {
-                        ImageLayer newLayer = selectedView.getImageDisplayModel().getImageLayer(idx);
+                        ImageLayer newLayer = selectedView.getModel().getImageLayer(idx);
                         assert newLayer != null;
 
                         layerSelected(newLayer);
@@ -87,8 +87,8 @@ public abstract class ImageViewPresenter extends AbstractPresenter {
 
     public ImageLayer getSelectedLayer() {
         if (selectedView == null) return null;
-        int idx = selectedView.getImageDisplayModel().getSelectedIndex();
-        return selectedView.getImageDisplayModel().getImageLayer(idx);
+        int idx = selectedView.getModel().getSelectedIndex();
+        return selectedView.getModel().getImageLayer(idx);
 
     }
 }

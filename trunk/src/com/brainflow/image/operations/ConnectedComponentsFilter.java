@@ -1,8 +1,8 @@
 package com.brainflow.image.operations;
 
+import com.brainflow.application.BrainflowException;
 import com.brainflow.application.ILoadableImage;
 import com.brainflow.application.MemoryImage;
-import com.brainflow.core.BrainflowException;
 import com.brainflow.image.data.BasicImageData3D;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.data.IImageData3D;
@@ -285,11 +285,11 @@ public class ConnectedComponentsFilter extends AbstractImageFilter {
 
             long etime = System.currentTimeMillis();
             System.out.println("avg time " + (etime - btime) / 200.00);
-            
+
             /*ConnectedComponentsFilter filter = new ConnectedComponentsFilter();
-            filter.addInput(data);
-            IImageData idata = filter.getOutput();
-            AnalyzeIO.writeAnalyzeImage("c:/DTI/slopes/bAge.Norm_index.hdr", (BasicImageData) idata); */
+         filter.addInput(data);
+         IImageData idata = filter.getOutput();
+         AnalyzeIO.writeAnalyzeImage("c:/DTI/slopes/bAge.Norm_index.hdr", (BasicImageData) idata); */
 
         } catch (BrainflowException e) {
             e.printStackTrace();

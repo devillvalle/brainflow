@@ -1,9 +1,9 @@
-package com.brainflow.application.managers;
+package com.brainflow.application.toplevel;
 
 
+import com.brainflow.application.BrainflowException;
 import com.brainflow.application.ImageIODescriptor;
 import com.brainflow.application.SoftLoadableImage;
-import com.brainflow.core.BrainflowException;
 import org.apache.commons.vfs.FileObject;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -37,7 +37,7 @@ public class ImageIOManager {
 
 
     public static ImageIOManager getInstance() {
-        return (ImageIOManager) SingletonRegistry.REGISTRY.getInstance("com.brainflow.application.managers.ImageIOManager");
+        return (ImageIOManager) SingletonRegistry.REGISTRY.getInstance("com.brainflow.application.toplevel.ImageIOManager");
     }
 
     public ImageIODescriptor[] descriptorArray() {

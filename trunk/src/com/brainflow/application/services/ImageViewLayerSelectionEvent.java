@@ -31,4 +31,8 @@ public class ImageViewLayerSelectionEvent extends ImageViewEvent {
         return selectionIndex;
     }
 
+    public String toString() {
+        return getImageView().getName() + " Selected Layer : " + selectionIndex;
+    }
+
 }

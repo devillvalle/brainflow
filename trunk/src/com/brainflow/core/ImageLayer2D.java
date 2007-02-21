@@ -1,10 +1,10 @@
 package com.brainflow.core;
 
 import com.brainflow.colormap.IColorMap;
-import com.brainflow.display.Property;
 import com.brainflow.display.ImageLayerParameters;
 import com.brainflow.display.ImageOp;
 import com.brainflow.display.ImageOpListProperty;
+import com.brainflow.display.Property;
 import com.brainflow.image.data.IImageData2D;
 import com.brainflow.image.rendering.RenderUtils;
 import com.brainflow.image.space.Axis;
@@ -20,14 +20,24 @@ import java.util.Collection;
  * Time: 6:10:00 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ImageLayer2D extends ImageLayer {
+public class ImageLayer2D {
 
 
     private BufferedImage rimg;
-
+    private IImageData2D data;
+    private ImageLayerParameters params;
 
     public ImageLayer2D(IImageData2D _data, ImageLayerParameters _params) {
-        super(_data, _params);
+        data = _data;
+        params = _params;
+    }
+
+    public IImageData2D getImageData() {
+        return data;
+    }
+
+    public ImageLayerParameters getImageLayerParameters() {
+        return params;
     }
 
 
@@ -44,17 +54,17 @@ public class ImageLayer2D extends ImageLayer {
     }
 
     public BufferedImage createBufferedImage() {
-        IColorMap imap = getImageLayerParameters().getColorMap().getProperty();
+        IColorMap imap = params.getColorMap().getProperty();
 
-        IImageSpace ispace = getImageData().getImageSpace();
+        IImageSpace ispace = data.getImageSpace();
 
-        byte[] rgba = imap.getInterleavedRGBAComponents(getImageData());
+        byte[] rgba = imap.getInterleavedRGBAComponents(data);
 
         rimg = RenderUtils.createRGBAImage(rgba, ispace.getDimension(Axis.X_AXIS),
                 ispace.getDimension(Axis.Y_AXIS));
 
 
-        Property<ImageOpListProperty> prop = getImageLayerParameters().getImageOpList();
+        Property<ImageOpListProperty> prop = params.getImageOpList();
 
         Collection<ImageOp> oplist = prop.getProperty().getImageOpList();
         for (ImageOp op : oplist) {

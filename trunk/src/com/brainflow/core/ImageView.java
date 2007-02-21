@@ -1,12 +1,11 @@
 package com.brainflow.core;
 
 import com.brainflow.application.services.ImageViewCrosshairEvent;
-import com.brainflow.application.services.ImageViewDataEvent;
 import com.brainflow.application.services.ImageViewLayerSelectionEvent;
 import com.brainflow.core.annotations.IAnnotation;
-import com.brainflow.display.Property;
-import com.brainflow.display.ICrosshair;
 import com.brainflow.display.Crosshair;
+import com.brainflow.display.ICrosshair;
+import com.brainflow.display.Property;
 import com.brainflow.display.Viewport3D;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
@@ -76,8 +75,8 @@ public abstract class ImageView extends JComponent implements ListDataListener {
 
 
     protected void init() {
-        viewport = new Viewport3D(getImageDisplayModel());
-        
+        viewport = new Viewport3D(getModel());
+
         crosshair = new Crosshair(viewport);
 
         crosshair.addPropertyChangeListener(new PropertyChangeListener() {
@@ -111,7 +110,6 @@ public abstract class ImageView extends JComponent implements ListDataListener {
 
             }
         });
-
 
 
         annotationListener = new PropertyChangeListener() {
@@ -210,12 +208,12 @@ public abstract class ImageView extends JComponent implements ListDataListener {
     }
 
     public void setSelectedIndex(int selectedIndex) {
-        assert selectedIndex < getImageDisplayModel().getNumLayers() & selectedIndex >= 0;
+        assert selectedIndex < getModel().getNumLayers() & selectedIndex >= 0;
         displayModel.getSelection().setSelectionIndex(selectedIndex);
     }
 
 
-    public IImageDisplayModel getImageDisplayModel() {
+    public IImageDisplayModel getModel() {
         return displayModel;
     }
 
@@ -233,7 +231,6 @@ public abstract class ImageView extends JComponent implements ListDataListener {
     public ICrosshair getCrosshair() {
         return crosshair;
     }
-
 
 
     public Viewport3D getViewport() {
@@ -271,47 +268,38 @@ public abstract class ImageView extends JComponent implements ListDataListener {
 
     }
 
-    protected void listChanged(ListDataEvent e) {
-        EventBus.publish(new ImageViewDataEvent(this, e));
-        scheduleRepaint(new DisplayChangeEvent(new Property(new ValueHolder(getImageDisplayModel())), DisplayAction.DATA_CHANGED));
-
-
-    }
 
     public void intervalAdded(ListDataEvent e) {
-        EventBus.publish(new ImageViewDataEvent(this, e));
-        scheduleRepaint(new DisplayChangeEvent(new Property(new ValueHolder(getImageDisplayModel())), DisplayAction.DATA_CHANGED));
+
+        scheduleRepaint(new DisplayChangeEvent(new Property(new ValueHolder(getModel())), DisplayAction.DATA_CHANGED));
 
     }
 
     public void intervalRemoved(ListDataEvent e) {
-        if (getImageDisplayModel().getNumLayers() == 0) {
+
+        if (getModel().getNumLayers() == 0) {
             changeSupport.firePropertyChange(ImageView.CLOSED_PROPERTY, false, true);
         } else {
-            scheduleRepaint(new DisplayChangeEvent(new Property(new ValueHolder(getImageDisplayModel())), DisplayAction.DATA_CHANGED));
+            scheduleRepaint(new DisplayChangeEvent(new Property(new ValueHolder(getModel())), DisplayAction.DATA_CHANGED));
         }
 
 
     }
 
     public void contentsChanged(ListDataEvent e) {
-        scheduleRepaint(new DisplayChangeEvent(new Property(new ValueHolder(getImageDisplayModel())), DisplayAction.DATA_CHANGED));
-        EventBus.publish(new ImageViewDataEvent(this, e));
+        scheduleRepaint(new DisplayChangeEvent(new Property(new ValueHolder(getModel())), DisplayAction.DATA_CHANGED));
+
     }
 
     protected class DirtListener implements ChangeListener {
         public void stateChanged(ChangeEvent e) {
 
             DisplayChangeEvent de = (DisplayChangeEvent) e;
-            
+
             scheduleRepaint(de);
 
         }
     }
-
-
-
-
 
 
 }

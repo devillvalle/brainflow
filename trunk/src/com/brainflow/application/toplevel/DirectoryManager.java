@@ -1,4 +1,4 @@
-package com.brainflow.application.managers;
+package com.brainflow.application.toplevel;
 
 import com.brainflow.application.FileSystemEvent;
 import com.brainflow.application.FileSystemEventListener;

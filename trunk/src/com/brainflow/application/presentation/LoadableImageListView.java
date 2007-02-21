@@ -2,19 +2,18 @@ package com.brainflow.application.presentation;
 
 import com.brainflow.application.ILoadableImage;
 import com.brainflow.application.actions.ActionContext;
-import com.brainflow.application.managers.LoadableImageManager;
 import com.brainflow.application.presentation.forms.LoadableImageCell2;
+import com.brainflow.application.toplevel.LoadableImageManager;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.core.ImageDisplayModel;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageLayer3D;
 import com.brainflow.core.SnapShooter;
+import com.brainflow.display.ImageLayerParameters;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
-import com.brainflow.image.data.IImageData3D;
 import com.brainflow.image.space.Axis;
-import com.brainflow.display.ImageLayerParameters;
 import com.jidesoft.swing.StyleRange;
 import com.jidesoft.swing.StyledLabel;
 import org.bushe.swing.action.ActionManager;
@@ -158,12 +157,10 @@ public class LoadableImageListView extends JList {
 
             if (icon == null) {
                 ImageDisplayModel dmodel = new ImageDisplayModel("" + limg.getUniqueID());
-                IImageData3D data = (IImageData3D) limg.getData();
 
+                ImageLayerParameters parms = new ImageLayerParameters(new LinearColorMap(limg.getData().getMinValue(), limg.getData().getMaxValue(), ColorTable.GRAYSCALE));
+                ImageLayer layer = new ImageLayer3D(limg, parms);
 
-                ImageLayerParameters parms = new ImageLayerParameters(new LinearColorMap(data.getMinValue(), data.getMaxValue(), ColorTable.GRAYSCALE));
-                ImageLayer layer = new ImageLayer3D(data, parms);
-                
                 dmodel.addLayer(layer);
 
                 AnatomicalPoint1D point = dmodel.getImageAxis(AnatomicalVolume.getCanonicalAxial().ZAXIS).getRange().getCenter();

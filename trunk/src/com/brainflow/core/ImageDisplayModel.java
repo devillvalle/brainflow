@@ -12,17 +12,12 @@ import com.jgoodies.binding.list.ArrayListModel;
 import com.jgoodies.binding.list.SelectionInList;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.EventListenerList;
-import javax.swing.event.ListDataListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-import java.beans.PropertyChangeSupport;
+import javax.swing.event.*;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,7 +27,6 @@ import java.beans.PropertyChangeListener;
  * To change this template use File | Settings | File Templates.
  */
 public class ImageDisplayModel implements IImageDisplayModel {
-
 
 
     public static final String IMAGE_SPACE_PROPERTY = "imageSpace";
@@ -45,6 +39,9 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     private SelectionInList layerSelection = new SelectionInList((ListModel) imageListModel);
 
+    private List<ListDataListener> listenerList = new ArrayList<ListDataListener>();
+
+    private ForwardingListDataListener forwarder = new ForwardingListDataListener();
 
     private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
@@ -61,6 +58,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     public ImageDisplayModel(String _name) {
         name = _name;
+        imageListModel.addListDataListener(forwarder);
     }
 
 
@@ -71,8 +69,8 @@ public class ImageDisplayModel implements IImageDisplayModel {
     }
 
     public ImageLayer getLayer(ImageLayerParameters params) {
-        for (int i=0; i<imageListModel.size(); i++) {
-            ImageLayer layer = (ImageLayer)imageListModel.get(i);
+        for (int i = 0; i < imageListModel.size(); i++) {
+            ImageLayer layer = (ImageLayer) imageListModel.get(i);
             if (params == layer.getImageLayerParameters()) return layer;
         }
 
@@ -84,8 +82,6 @@ public class ImageDisplayModel implements IImageDisplayModel {
     }
 
 
-
-
     public int getSelectedIndex() {
         return layerSelection.getSelectionIndex();
     }
@@ -95,11 +91,11 @@ public class ImageDisplayModel implements IImageDisplayModel {
     }
 
     public void addListDataListener(ListDataListener listener) {
-        imageListModel.addListDataListener(listener);
+        listenerList.add(listener);
     }
 
     public void removeListDataListener(ListDataListener listener) {
-        imageListModel.removeListDataListener(listener);
+        listenerList.remove(listener);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -134,9 +130,6 @@ public class ImageDisplayModel implements IImageDisplayModel {
         }
         computeImageSpace();
 
-
-
-       
         //this.fireChangeEvent(new DisplayChangeEvent()
     }
 
@@ -165,7 +158,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         }
 
         if (!uspace.equals(imageSpace)) {
-         
+
             IImageSpace old = imageSpace;
             imageSpace = uspace;
             changeSupport.firePropertyChange(ImageDisplayModel.IMAGE_SPACE_PROPERTY, old, imageSpace);
@@ -258,15 +251,14 @@ public class ImageDisplayModel implements IImageDisplayModel {
         return retAxis;
     }
 
-
     /* (non-Javadoc)
-     * @see com.brainflow.core.IImageDisplayModel#setLayer(int, com.brainflow.application.SoftLoadableImage, com.brainflow.display.props.DisplayProperties)
-     */
+    * @see com.brainflow.core.IImageDisplayModel#setLayer(int, com.brainflow.application.SoftLoadableImage, com.brainflow.display.props.DisplayProperties)
+    */
     //public void setLayer(int index, ImageLayer layer) {
     //    assert index >= 0 && index < size();
     //    imageListModel.set(index, layer);
     //    computeImageSpace();
-   // }
+    // }
 
 
     protected void fireChangeEvent(DisplayChangeEvent e) {
@@ -283,6 +275,49 @@ public class ImageDisplayModel implements IImageDisplayModel {
             DisplayChangeEvent de = (DisplayChangeEvent) e;
             System.out.println("firing dirty event : " + de.getDisplayAction());
             fireChangeEvent(de);
+        }
+    }
+
+
+    class ForwardingListDataListener implements ListDataListener {
+
+        public void intervalAdded(ListDataEvent e) {
+            fireIntervalAdded(e);
+        }
+
+        public void intervalRemoved(ListDataEvent e) {
+            fireIntervalRemoved(e);
+        }
+
+        public void contentsChanged(ListDataEvent e) {
+            fireContentsChanged(e);
+        }
+
+        private void fireIntervalAdded(ListDataEvent e) {
+            ListDataEvent ne = new ListDataEvent(ImageDisplayModel.this, e.getType(), e.getIndex0(), e.getIndex1());
+            for (ListDataListener l : listenerList) {
+                l.intervalAdded(ne);
+
+            }
+
+        }
+
+        private void fireContentsChanged(ListDataEvent e) {
+            ListDataEvent ne = new ListDataEvent(ImageDisplayModel.this, e.getType(), e.getIndex0(), e.getIndex1());
+            for (ListDataListener l : listenerList) {
+                l.intervalAdded(ne);
+
+            }
+
+        }
+
+        private void fireIntervalRemoved(ListDataEvent e) {
+            ListDataEvent ne = new ListDataEvent(ImageDisplayModel.this, e.getType(), e.getIndex0(), e.getIndex1());
+            for (ListDataListener l : listenerList) {
+                l.intervalAdded(ne);
+
+            }
+
         }
     }
 

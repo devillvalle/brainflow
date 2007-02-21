@@ -1,17 +1,14 @@
 package com.brainflow.application;
 
-import java.util.logging.Logger;
-import org.jdom.Element;
+import com.brainflow.utils.FileObjectFilter;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.VFS;
+import org.jdom.Element;
 
-import com.brainflow.core.BrainflowException;
-import com.brainflow.utils.FileObjectFilter;
-
-import java.io.FileFilter;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,8 +28,6 @@ public class ImageIODescriptor {
     private FOF fof = new FOF();
 
     Logger log = Logger.getLogger(ImageIODescriptor.class.getName());
-
-
 
 
     private ImageIODescriptor(Element formatElement) throws BrainflowException {
@@ -58,12 +53,11 @@ public class ImageIODescriptor {
     }
 
 
-
     public SoftLoadableImage[] findLoadableImages(FileObject[] fobjs) {
 
         List<SoftLoadableImage> limglist = new ArrayList<SoftLoadableImage>();
 
-        for (int i=0; i<fobjs.length; i++) {
+        for (int i = 0; i < fobjs.length; i++) {
             if (isHeaderMatch(fobjs[i])) {
                 try {
 
@@ -89,11 +83,10 @@ public class ImageIODescriptor {
     }
 
 
-
     public FileObject findDataMatch(FileObject header, FileObject[] candidates) {
         assert isHeaderMatch(header);
 
-        for (int i=0; i<candidates.length; i++) {
+        for (int i = 0; i < candidates.length; i++) {
             String dataName = getDataName(header);
             String candyName = candidates[i].getName().getBaseName();
 
@@ -106,6 +99,7 @@ public class ImageIODescriptor {
         return null;
 
     }
+
     public SoftLoadableImage createLoadableImage(FileObject header, FileObject data) {
         assert isHeaderMatch(header) && isDataMatch(data);
         SoftLoadableImage limg = new SoftLoadableImage(this, header, data);
@@ -147,7 +141,6 @@ public class ImageIODescriptor {
     }
 
 
-
     public boolean isHeaderMatch(FileObject fobj) {
         if (fobj.getName().getPath().endsWith(headerExtension)) {
             return true;
@@ -162,15 +155,12 @@ public class ImageIODescriptor {
 
         if (fname.endsWith(headerExtension)) {
             ret = fname.substring(0, fname.length() - headerExtension.length());
-        }
-
-        else if (fname.endsWith(dataExtension)) {
+        } else if (fname.endsWith(dataExtension)) {
             ret = fname.substring(0, fname.length() - dataExtension.length());
         }
 
         return ret;
     }
-
 
 
     public boolean isDataMatch(FileObject fobj) {
@@ -220,7 +210,6 @@ public class ImageIODescriptor {
             return isHeaderMatch(fobj);
         }
     }
-
 
 
 }

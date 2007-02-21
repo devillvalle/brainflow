@@ -1,7 +1,6 @@
 package com.brainflow.application;
 
 import com.brainflow.application.services.LoadableImageProgressEvent;
-import com.brainflow.core.BrainflowException;
 import com.brainflow.image.data.BasicImageData;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.ImageInfo;

@@ -1,14 +1,13 @@
 package com.brainflow.core;
 
-
-import com.brainflow.application.managers.ImageCanvasManager;
+import com.brainflow.application.toplevel.ImageCanvasManager;
+import com.brainflow.core.annotations.CrosshairAnnotation;
 import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.utils.FilledSelectableBorder;
 import com.brainflow.utils.ITitledBorder;
 import com.brainflow.utils.StringGenerator;
-import com.brainflow.core.annotations.CrosshairAnnotation;
 
 /**
  * Created by IntelliJ IDEA.
@@ -60,7 +59,7 @@ public class ImageViewFactory {
         view.setId(id);
         FilledSelectableBorder border = new FilledSelectableBorder(view);
         view.setBorder(border);
-        view.setName("[" + view.getId() + "] " + view.getImageDisplayModel().getName());
+        view.setName("[" + view.getId() + "] " + view.getModel().getName());
 
         ITitledBorder tborder = border;
         tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
@@ -70,40 +69,39 @@ public class ImageViewFactory {
     }
 
     public static ImageView createYokedCoronalView(ImageView source) {
-            SimpleImageView view = new SimpleImageView(source, AnatomicalVolume.getCanonicalCoronal());
+        SimpleImageView view = new SimpleImageView(source, AnatomicalVolume.getCanonicalCoronal());
 
-            String id = ImageCanvasManager.getInstance().register(view);
-            ImageCanvasManager.getInstance().yokeViews(source, view);
-            view.setId(id);
-            FilledSelectableBorder border = new FilledSelectableBorder(view);
-            view.setBorder(border);
-            view.setName("[" + view.getId() + "] " + view.getImageDisplayModel().getName());
+        String id = ImageCanvasManager.getInstance().register(view);
+        ImageCanvasManager.getInstance().yokeViews(source, view);
+        view.setId(id);
+        FilledSelectableBorder border = new FilledSelectableBorder(view);
+        view.setBorder(border);
+        view.setName("[" + view.getId() + "] " + view.getModel().getName());
 
-            ITitledBorder tborder = border;
-            tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
+        ITitledBorder tborder = border;
+        tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
 
 
-            return view;
-        }
+        return view;
+    }
 
 
     public static ImageView createYokedSagittalView(ImageView source) {
-            SimpleImageView view = new SimpleImageView(source, AnatomicalVolume.getCanonicalSagittal());
+        SimpleImageView view = new SimpleImageView(source, AnatomicalVolume.getCanonicalSagittal());
 
-            String id = ImageCanvasManager.getInstance().register(view);
-            ImageCanvasManager.getInstance().yokeViews(source, view);
-            view.setId(id);
-            FilledSelectableBorder border = new FilledSelectableBorder(view);
-            view.setBorder(border);
-            view.setName("[" + view.getId() + "] " + view.getImageDisplayModel().getName());
+        String id = ImageCanvasManager.getInstance().register(view);
+        ImageCanvasManager.getInstance().yokeViews(source, view);
+        view.setId(id);
+        FilledSelectableBorder border = new FilledSelectableBorder(view);
+        view.setBorder(border);
+        view.setName("[" + view.getId() + "] " + view.getModel().getName());
 
-            ITitledBorder tborder = border;
-            tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
+        ITitledBorder tborder = border;
+        tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
 
 
-            return view;
-        }
-
+        return view;
+    }
 
 
     public static ImageView createAxialView(IImageDisplayModel displayModel) {
@@ -112,7 +110,7 @@ public class ImageViewFactory {
         view.setId(id);
         FilledSelectableBorder border = new FilledSelectableBorder(view);
         view.setBorder(border);
-        view.setName("[" + view.getId() + "] " + view.getImageDisplayModel().getName());
+        view.setName("[" + view.getId() + "] " + view.getModel().getName());
 
         ITitledBorder tborder = border;
         tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
@@ -127,7 +125,7 @@ public class ImageViewFactory {
         view.setId(id);
         FilledSelectableBorder border = new FilledSelectableBorder(view);
         view.setBorder(border);
-        view.setName("[" + view.getId() + "] " + view.getImageDisplayModel().getName());
+        view.setName("[" + view.getId() + "] " + view.getModel().getName());
 
         ITitledBorder tborder = border;
         tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
@@ -142,7 +140,7 @@ public class ImageViewFactory {
         view.setId(id);
         FilledSelectableBorder border = new FilledSelectableBorder(view);
         view.setBorder(border);
-        view.setName("[" + view.getId() + "] " + view.getImageDisplayModel().getName());
+        view.setName("[" + view.getId() + "] " + view.getModel().getName());
 
 
         ITitledBorder tborder = border;
@@ -152,7 +150,7 @@ public class ImageViewFactory {
     }
 
     public static ImageView createSagittalView(ImageView view) {
-        ImageView newView = createSagittalView(view.getImageDisplayModel());
+        ImageView newView = createSagittalView(view.getModel());
         CrosshairAnnotation annotation = (CrosshairAnnotation) view.getAnnotation(CrosshairAnnotation.class);
         if (annotation != null) {
             newView.setAnnotation(annotation);
@@ -163,7 +161,7 @@ public class ImageViewFactory {
     }
 
     public static ImageView createCoronalView(ImageView view) {
-        ImageView newView = createCoronalView(view.getImageDisplayModel());
+        ImageView newView = createCoronalView(view.getModel());
         CrosshairAnnotation annotation = (CrosshairAnnotation) view.getAnnotation(CrosshairAnnotation.class);
         if (annotation != null) {
             newView.setAnnotation(annotation);
@@ -174,7 +172,7 @@ public class ImageViewFactory {
     }
 
     public static ImageView createAxialView(ImageView view) {
-        ImageView newView = createAxialView(view.getImageDisplayModel());
+        ImageView newView = createAxialView(view.getModel());
         CrosshairAnnotation annotation = (CrosshairAnnotation) view.getAnnotation(CrosshairAnnotation.class);
         if (annotation != null) {
             newView.setAnnotation(annotation);
@@ -191,7 +189,7 @@ public class ImageViewFactory {
         view.setId(id);
         FilledSelectableBorder border = new FilledSelectableBorder(view);
         view.setBorder(border);
-        view.setName("[" + view.getId() + "] " + view.getImageDisplayModel().getName());
+        view.setName("[" + view.getId() + "] " + view.getModel().getName());
 
 
         ITitledBorder tborder = border;
@@ -213,7 +211,7 @@ public class ImageViewFactory {
 
         public String getString() {
             if (view != null) {
-                return "[" + view.getId() + "] " + view.getImageDisplayModel().getName();
+                return "[" + view.getId() + "] " + view.getModel().getName();
             }
 
             return null;

@@ -1,13 +1,10 @@
 package com.brainflow.application.services;
 
-import org.bushe.swing.event.AbstractEventServiceEvent;
-
-import java.awt.event.MouseEvent;
-import java.awt.*;
-
 import com.brainflow.core.ImageView;
-import com.brainflow.image.anatomy.AnatomicalPointOnGrid;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
+
+import java.awt.*;
+import java.awt.event.MouseEvent;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,6 +15,7 @@ import com.brainflow.image.anatomy.AnatomicalPoint3D;
  */
 public class ImageViewCursorEvent extends ImageViewMouseEvent {
 
+    private AnatomicalPoint3D ap;
 
     public ImageViewCursorEvent(ImageView view, MouseEvent _event) {
         super(view, _event);
@@ -29,11 +27,21 @@ public class ImageViewCursorEvent extends ImageViewMouseEvent {
             return null;
         }
 
-
-        MouseEvent event = getEvent();
-        AnatomicalPoint3D ap = getImageView().getAnatomicalLocation((Component)event.getSource(), event.getPoint());
+        if (ap == null) {
+            MouseEvent event = getEvent();
+            ap = getImageView().getAnatomicalLocation((Component) event.getSource(), event.getPoint());
+        }
 
         return ap;
 
+    }
+
+    public String toString() {
+        StringBuilder builder = new StringBuilder("Cursor at : ");
+        builder.append("x: " + (int) getLocation().getX());
+        builder.append(" y: " + (int) getLocation().getY());
+        builder.append(" z: " + (int) getLocation().getZ());
+
+        return builder.toString();
     }
 }

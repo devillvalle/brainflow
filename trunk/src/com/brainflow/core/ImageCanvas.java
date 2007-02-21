@@ -6,17 +6,15 @@ import com.brainflow.modes.ImageCanvasMode;
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import java.awt.*;
+import java.awt.event.AWTEventListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.event.AWTEventListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Logger;
-
-import org.bushe.swing.event.EventBus;
 
 
 /**
@@ -67,13 +65,15 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
                 if (event instanceof MouseEvent) {
 
                     MouseEvent me = (MouseEvent) event;
-                    boolean b = SwingUtilities.isDescendingFrom(rootPane, (Component)me.getSource()));
-                    Point absp = SwingUtilities.convertPoint((Component)me.getSource(), me.getX(), me.getY(), rootPane);
+                    if (!SwingUtilities.isDescendingFrom(rootPane, (Component) me.getSource())) {
+                        return;
+                    }
+                    Point absp = SwingUtilities.convertPoint((Component) me.getSource(), me.getX(), me.getY(), rootPane);
 
 
                     if (absp.getX() < 0 || absp.getX() > rootPane.getWidth() ||
                             absp.getY() < 0 || absp.getY() > rootPane.getHeight()) {
-                  
+
                         return;
                     }
 
@@ -225,7 +225,6 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
     }
 
 
-
     public void addSpecialMouseListener(MouseListener listener) {
         if (Arrays.asList(listenerList.getListenerList()).contains(listener)) {
             log.warning("attempting to add listener twice to image canvas.");
@@ -246,7 +245,7 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
     }
 
     public void addSpecialMouseMotionListener(MouseMotionListener listener) {
-         if (Arrays.asList(listenerList.getListenerList()).contains(listener)) {
+        if (Arrays.asList(listenerList.getListenerList()).contains(listener)) {
             log.warning("attempting to add listener twice to image canvas.");
             return;
         }
@@ -366,7 +365,6 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
             ml.mouseClicked(e);
         }
 
-
         //redispatchMouseEvent(e);
     }
 
@@ -383,7 +381,7 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
     public void mouseReleased(MouseEvent e) {
         canvasSelection.mouseReleased(e);
         MouseListener[] mouseListeners = listenerList.getListeners(MouseListener.class);
-        int i=0;
+        int i = 0;
         for (MouseListener ml : mouseListeners) {
             //System.out.println("sending mouse released to : " + i + " :" + ml.getClass().getName());
             ml.mouseReleased(e);

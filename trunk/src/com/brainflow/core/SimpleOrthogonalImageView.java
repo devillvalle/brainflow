@@ -1,10 +1,10 @@
 package com.brainflow.core;
 
-import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.display.ICrosshair;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
-import com.brainflow.display.ICrosshair;
 import com.jgoodies.binding.list.ArrayListModel;
 import com.jgoodies.binding.list.SelectionInList;
 
@@ -49,7 +49,7 @@ public class SimpleOrthogonalImageView extends ImageView {
     private Point getCrosshairLocation(ImagePane ipane) {
         IImagePlot plot = ipane.getImagePlot();
         Rectangle plotArea = plot.getPlotArea();
-        
+
         ICrosshair cross = getCrosshair();
         AnatomicalPoint1D xpt = cross.getValue(plot.getDisplayAnatomy().XAXIS);
         AnatomicalPoint1D ypt = cross.getValue(plot.getDisplayAnatomy().YAXIS);
@@ -57,7 +57,6 @@ public class SimpleOrthogonalImageView extends ImageView {
         double percentX = (xpt.getX() - plot.getXAxisRange().getBeginning().getX()) / plot.getXAxisRange().getInterval();
         double percentY = (ypt.getX() - plot.getYAxisRange().getBeginning().getX()) / plot.getYAxisRange().getInterval();
 
-      
 
         double screenX = (percentX * plotArea.getWidth()) + plotArea.getX();
         double screenY = (percentY * plotArea.getHeight()) + plotArea.getY();
@@ -178,20 +177,20 @@ public class SimpleOrthogonalImageView extends ImageView {
     private void initView() {
         BoxLayout layout = new BoxLayout(this, BoxLayout.X_AXIS);
 
-        axialPane = new ImagePane(ImageViewFactory.createAxialPlot(getImageDisplayModel()));
+        axialPane = new ImagePane(ImageViewFactory.createAxialPlot(getModel()));
         axialPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
-        coronalPane = new ImagePane(ImageViewFactory.createCoronalPlot(getImageDisplayModel()));
+        coronalPane = new ImagePane(ImageViewFactory.createCoronalPlot(getModel()));
         coronalPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
-        sagittalPane = new ImagePane(ImageViewFactory.createSagittalPlot(getImageDisplayModel()));
+        sagittalPane = new ImagePane(ImageViewFactory.createSagittalPlot(getModel()));
         sagittalPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
         plotList.add(axialPane.getImagePlot());
         plotList.add(coronalPane.getImagePlot());
         plotList.add(sagittalPane.getImagePlot());
 
-        
+
         setLayout(layout);
         add(axialPane);
         add(coronalPane);
@@ -199,7 +198,7 @@ public class SimpleOrthogonalImageView extends ImageView {
     }
 
     public String toString() {
-        return "SimpleOrthogonalImageView -- " + getImageDisplayModel().getName();
+        return "SimpleOrthogonalImageView -- " + getModel().getName();
     }
 
 

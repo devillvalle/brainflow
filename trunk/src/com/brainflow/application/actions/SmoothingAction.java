@@ -26,7 +26,7 @@ public class SmoothingAction extends BasicAction {
 
         if (view != null) {
             int idx = view.getSelectedIndex();
-            ImageLayer layer = view.getImageDisplayModel().getImageLayer(idx);
+            ImageLayer layer = view.getModel().getImageLayer(idx);
 
 
             String result = JideOptionPane.showInputDialog(view, "Smoothing Radius (FWHM): ", 0);

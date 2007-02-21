@@ -194,7 +194,7 @@ public class ImageCanvasManager implements EventSubscriber {
 
 
     public void yokeViews(ImageView view1, ImageView view2) {
-        if (registeredViews.containsKey(view1) && registeredViews.containsKey(view2)) {
+        //if (registeredViews.containsKey(view1) && registeredViews.containsKey(view2)) {
             Set<ImageView> set1 = linkedViews.get(view1);
             Set<ImageView> set2 = linkedViews.get(view2);
 
@@ -204,7 +204,7 @@ public class ImageCanvasManager implements EventSubscriber {
             set1.add(view2);
             set2.add(view1);
 
-        }
+        //}
 
     }
 

@@ -110,8 +110,9 @@ public class ColorBarAnnotation extends AbstractAnnotation {
     }
 
     public void draw(Graphics2D g2d, Rectangle2D plotArea, IImagePlot plot) {
-        if (!isVisible()) return;
+        if (!isVisible() || model.getNumLayers() == 0) return;
 
+        
         ImageLayer layer = model.getImageLayer(model.getSelectedIndex());
 
         if (colorBar == null || layer != selectedLayer) {

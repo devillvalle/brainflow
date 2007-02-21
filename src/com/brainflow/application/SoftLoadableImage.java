@@ -51,18 +51,17 @@ public class SoftLoadableImage implements ILoadableImage {
         dataRef.enqueue();
     }
 
-    public BasicImageData getData() {
+    public IImageData getData() {
         if (dataRef.get() == null) {
             try {
                 load();
             } catch (BrainflowException e) {
                 log.severe("failed to load " + getDataFile().getName().getPath());
-                // need to deal with exception reasonably
-                //
+                throw new RuntimeException(e);
             }
         }
 
-        return (BasicImageData) dataRef.get();
+        return (IImageData) dataRef.get();
     }
 
     public String getStem() {
@@ -89,13 +88,13 @@ public class SoftLoadableImage implements ILoadableImage {
 
 
             } catch (BrainflowException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
                 throw new RuntimeException(e);
             } catch (InstantiationException e2) {
-                e2.printStackTrace();
+                //e2.printStackTrace();
                 throw new RuntimeException(e2);
             } catch (IllegalAccessException e3) {
-                e3.printStackTrace();
+                //e3.printStackTrace();
                 throw new RuntimeException(e3);
             }
         }
@@ -103,7 +102,7 @@ public class SoftLoadableImage implements ILoadableImage {
         return imageInfo;
     }
 
-    public BasicImageData load(ProgressListener plistener) throws BrainflowException {
+    public IImageData load(ProgressListener plistener) throws BrainflowException {
         try {
 
             ImageInfoReader reader = (ImageInfoReader) descriptor.getHeaderReader().newInstance();
@@ -131,7 +130,7 @@ public class SoftLoadableImage implements ILoadableImage {
 
     }
 
-    public BasicImageData load() throws BrainflowException {
+    public IImageData load() throws BrainflowException {
         try {
             ImageInfoReader reader = (ImageInfoReader) descriptor.getHeaderReader().newInstance();
             imageInfo = reader.readInfo(getHeaderFile());
@@ -141,7 +140,7 @@ public class SoftLoadableImage implements ILoadableImage {
             }
 
             ImageReader ireader = (ImageReader) descriptor.getDataReader().newInstance();
-            IImageData data = ireader.readImage(imageInfo, new LoadableImageProgressListener(0, 100));
+            IImageData data = ireader.readImage(imageInfo);
             data.setIdentifier(getUniqueID());
             data.setImageLabel(getStem());
             dataRef = new SoftReference(data);
@@ -153,7 +152,7 @@ public class SoftLoadableImage implements ILoadableImage {
             throw new BrainflowException(e);
         }
 
-        return (BasicImageData) dataRef.get();
+        return (IImageData) dataRef.get();
     }
 
     public int getUniqueID() {
@@ -188,49 +187,7 @@ public class SoftLoadableImage implements ILoadableImage {
         return result;
     }
 
-    class LoadableImageProgressListener implements ProgressListener {
-        int min;
-        int max;
 
-        int value;
-
-        String message = "";
-
-        public LoadableImageProgressListener(int _min, int _max) {
-            min = _min;
-            max = _max;
-        }
-
-        public void setValue(int val) {
-            value = val;
-            EventBus.publish(new LoadableImageProgressEvent(SoftLoadableImage.this, (int) ((float) (value - min) / (float) (max - min) * 100f), message));
-
-        }
-
-        public void setMinimum(int val) {
-            min = val;
-        }
-
-        public void setMaximum(int val) {
-            max = val;
-        }
-
-        public void setString(String _message) {
-            message = _message;
-            EventBus.publish(new LoadableImageProgressEvent(SoftLoadableImage.this, (int) ((float) (value - min) / (float) (max - min) * 100f), message));
-
-        }
-
-        public void setIndeterminate(boolean b) {
-        }
-
-        public void finished() {
-            value = max;
-            EventBus.publish(new LoadableImageProgressEvent(SoftLoadableImage.this, (int) ((float) (value - min) / (float) (max - min) * 100f), message));
-
-        }
-
-    }
 
 
 }

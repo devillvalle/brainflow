@@ -34,6 +34,8 @@ public class ImageLayerParameters implements Serializable {
     public static final String RESAMPLE_INTERPOLATION_PARAMETER = "resampleInterpolation";
 
 
+
+
     private Property<IColorMap> colorMap;
     private Property<InterpolationProperty> resampleInterpolation;
     private Property<InterpolationProperty> screenInterpolation;

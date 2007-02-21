@@ -23,8 +23,8 @@ public class CoordinateControls {
 
     private WorldCoordinatePresenter worldCoordinatePresenter;
     private IndexCoordinatePresenter indexCoordinatePresenter;
-    private ImageOriginPresenter imageOriginPresenter;
-    private ImageExtentPresenter imageExtentPresenter;
+    private ImageViewportPresenter imageViewportPresenter;
+    //private ImageExtentPresenter imageExtentPresenter;
 
     public CoordinateControls() {
         EventBus.subscribeStrongly(ImageViewEvent.class, new EventSubscriber() {
@@ -34,8 +34,8 @@ public class CoordinateControls {
                 if (activeView != null) {
                     worldCoordinatePresenter.setCrosshair(activeView.getCrosshair());
                     indexCoordinatePresenter.setCrosshair(activeView.getCrosshair());
-                    imageOriginPresenter.setViewport(activeView.getViewport());
-                    imageExtentPresenter.setViewport(activeView.getViewport());
+                    //imageViewportPresenter.setViewport(activeView.getViewport());
+                    //imageExtentPresenter.setViewport(activeView.getViewport());
 
                 } 
             }
@@ -57,14 +57,14 @@ public class CoordinateControls {
         if (activeView != null) {
             worldCoordinatePresenter = new WorldCoordinatePresenter(activeView.getCrosshair());
             indexCoordinatePresenter = new IndexCoordinatePresenter(activeView.getCrosshair());
-            imageOriginPresenter = new ImageOriginPresenter(activeView.getViewport());
-            imageExtentPresenter = new ImageExtentPresenter(activeView.getViewport());
+            imageViewportPresenter = new ImageViewportPresenter();
+            //imageExtentPresenter = new ImageExtentPresenter(activeView.getViewport());
 
         } else {
             worldCoordinatePresenter = new WorldCoordinatePresenter(null);
             indexCoordinatePresenter = new IndexCoordinatePresenter(null);
-            imageOriginPresenter = new ImageOriginPresenter(null);
-            imageExtentPresenter = new ImageExtentPresenter(null);
+            imageViewportPresenter = new ImageViewportPresenter();
+            //imageExtentPresenter = new ImageExtentPresenter(null);
         }
 
         CollapsiblePane p1 = new CollapsiblePane();
@@ -82,18 +82,18 @@ public class CoordinateControls {
         cpanes.add(p2);
 
         CollapsiblePane p3 = new CollapsiblePane();
-        p3.setContentPane(imageOriginPresenter.getComponent());
-        p3.setTitle("Image Origin");
+        p3.setContentPane(imageViewportPresenter.getComponent());
+        p3.setTitle("Plot Viewport");
         p3.setEmphasized(true);
         p3.setOpaque(false);
         cpanes.add(p3);
 
-        CollapsiblePane p4 = new CollapsiblePane();
-        p4.setContentPane(imageExtentPresenter.getComponent());
-        p4.setTitle("Image Extent");
-        p4.setEmphasized(true);
-        p4.setOpaque(false);
-        cpanes.add(p4);
+        //CollapsiblePane p4 = new CollapsiblePane();
+        //p4.setContentPane(imageExtentPresenter.getComponent());
+        //p4.setTitle("Image Extent");
+        //p4.setEmphasized(true);
+        //p4.setOpaque(false);
+        //cpanes.add(p4);
 
         cpanes.addExpansion();
 

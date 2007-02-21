@@ -1,7 +1,7 @@
 package com.brainflow.application.actions;
 
-import com.brainflow.application.managers.Brainflow;
-import com.brainflow.application.managers.DirectoryManager;
+import com.brainflow.application.toplevel.Brainflow;
+import com.brainflow.application.toplevel.DirectoryManager;
 import com.jidesoft.swing.FolderChooser;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.VFS;

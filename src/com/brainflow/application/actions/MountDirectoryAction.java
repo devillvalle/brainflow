@@ -1,6 +1,6 @@
 package com.brainflow.application.actions;
 
-import com.brainflow.application.managers.DirectoryManager;
+import com.brainflow.application.toplevel.DirectoryManager;
 import org.apache.commons.vfs.VFS;
 import org.bushe.swing.action.BasicAction;
 

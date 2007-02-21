@@ -1,19 +1,22 @@
-package com.brainflow.application.managers;
+package com.brainflow.application.toplevel;
 
+import com.brainflow.application.BrainflowProject;
 import com.brainflow.application.ILoadableImage;
+import com.brainflow.application.services.ImageDisplayModelEvent;
 import com.brainflow.application.services.LoadableImageStatusEvent;
 import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.ImageDisplayModel;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageLayer3D;
-import com.brainflow.image.data.BasicImageData3D;
-import com.brainflow.image.data.IImageData3D;
 import com.brainflow.display.ImageLayerParameters;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -23,21 +26,27 @@ import java.util.List;
  * Time: 1:39:29 PM
  * To change this template use File | Settings | File Templates.
  */
-public class DisplayManager implements EventSubscriber {
+public class ProjectManager implements EventSubscriber, ListDataListener {
 
-    private List<IImageDisplayModel> models = new ArrayList<IImageDisplayModel>();
+    private List<BrainflowProject> projects = new ArrayList<BrainflowProject>();
+    private BrainflowProject activeProject = new BrainflowProject();
 
-
-    protected DisplayManager() {
+    protected ProjectManager() {
         // Exists only to thwart instantiation.
         EventBus.subscribe(LoadableImageStatusEvent.class, this);
+        activeProject.addListDataListener(this);
     }
 
-    public static DisplayManager getInstance() {
-        return (DisplayManager) SingletonRegistry.REGISTRY.getInstance("com.brainflow.application.managers.DisplayManager");
+    public static ProjectManager getInstance() {
+        return (ProjectManager) SingletonRegistry.REGISTRY.getInstance("com.brainflow.application.toplevel.ProjectManager");
     }
 
-    public IImageDisplayModel createDisplayModel(ILoadableImage limg) {
+    public BrainflowProject getActiveProject() {
+        return activeProject;
+    }
+
+
+    public IImageDisplayModel addToActiveProject(ILoadableImage limg) {
 
         boolean registered = LoadableImageManager.getInstance().isRegistered(limg);
 
@@ -45,17 +54,16 @@ public class DisplayManager implements EventSubscriber {
             LoadableImageManager.getInstance().registerLoadableImage(limg);
         }
 
-        IImageDisplayModel displayModel = new ImageDisplayModel("Dataset #" + (models.size() + 1));
 
-        models.add(displayModel);
+        IImageDisplayModel displayModel = new ImageDisplayModel(activeProject + " : " + "model #" + (activeProject.size() + 1));
+        activeProject.addModel(displayModel);
 
-        IImageData3D data = (IImageData3D) limg.getData();
+
         ImageLayerParameters params = new ImageLayerParameters();
         params.setColorMap(new LinearColorMap(limg.getData().getMinValue(), limg.getData().getMaxValue(),
                 ResourceManager.getInstance().getDefaultColorMap()));
 
-        ImageLayer layer = new ImageLayer3D(data, params);
-
+        ImageLayer layer = new ImageLayer3D(limg, params);
         displayModel.addLayer(layer);
 
 
@@ -73,14 +81,16 @@ public class DisplayManager implements EventSubscriber {
                 break;
             case IMAGE_REMOVED:
                 //todo if only one image is in model, then this is effectively removing the view.
-                removeLoadableImage(event.getLoadableImage());
+                clearLoadableImage(event.getLoadableImage());
             case IMAGE_UNLOADED:
                 break;
         }
     }
 
-    protected void removeLoadableImage(ILoadableImage limg) {
-        for (IImageDisplayModel dmodel : models) {
+    protected void clearLoadableImage(ILoadableImage limg) {
+        Iterator<IImageDisplayModel> iter = activeProject.iterator();
+        while (iter.hasNext()) {
+            IImageDisplayModel dmodel = iter.next();
             List<Integer> idx = dmodel.indexOf(limg.getData());
 
             if (idx.size() > 0) {
@@ -96,5 +106,18 @@ public class DisplayManager implements EventSubscriber {
                 }
             }
         }
+    }
+
+    public void intervalAdded(ListDataEvent e) {
+        EventBus.publish(new ImageDisplayModelEvent((IImageDisplayModel) e.getSource(), e));
+    }
+
+    public void intervalRemoved(ListDataEvent e) {
+        EventBus.publish(new ImageDisplayModelEvent((IImageDisplayModel) e.getSource(), e));
+
+    }
+
+    public void contentsChanged(ListDataEvent e) {
+        EventBus.publish(new ImageDisplayModelEvent((IImageDisplayModel) e.getSource(), e));
     }
 }

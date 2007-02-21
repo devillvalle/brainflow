@@ -3,7 +3,7 @@ package com.brainflow.application.presentation;
 import com.brainflow.application.CompositeFileSelector;
 import com.brainflow.application.LoadableImageProvider;
 import com.brainflow.application.SoftLoadableImage;
-import com.brainflow.application.managers.ImageIOManager;
+import com.brainflow.application.toplevel.ImageIOManager;
 import com.brainflow.gui.AbstractPresenter;
 import com.brainflow.gui.FileExplorer;
 import com.jidesoft.tree.AbstractTreeModel;
@@ -14,18 +14,18 @@ import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileType;
 
 import javax.swing.*;
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeExpansionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.event.TreeExpansionListener;
-import javax.swing.event.TreeExpansionEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
-import javax.swing.tree.DefaultTreeModel;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -71,7 +71,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
                     try {
                         log.info("spawning worker thread to find child file nodes");
                         worker.execute();
-                    } catch(Exception e) {
+                    } catch (Exception e) {
                         //todo log
                         throw new RuntimeException(e);
                     }
@@ -220,7 +220,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
         protected List<ImageFileObjectNode> doInBackground() throws Exception {
             log.info("fetching nodes in background");
             ImageFileExplorer.this.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            List<ImageFileObjectNode> nodes =  parent.fetchChildNodes(this);
+            List<ImageFileObjectNode> nodes = parent.fetchChildNodes(this);
             ImageFileExplorer.this.getComponent().setCursor(Cursor.getDefaultCursor());
 
             return nodes;
@@ -245,10 +245,10 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
             TreeModel model = explorer.getJTree().getModel();
             DefaultTreeModel dtm = null;
             if (model instanceof DefaultTreeModelWrapper) {
-                DefaultTreeModelWrapper wrapper = (DefaultTreeModelWrapper)model;
-                dtm = (DefaultTreeModel)wrapper.getActualModel();
+                DefaultTreeModelWrapper wrapper = (DefaultTreeModelWrapper) model;
+                dtm = (DefaultTreeModel) wrapper.getActualModel();
             } else if (model instanceof DefaultTreeModel) {
-                dtm = (DefaultTreeModel)model;
+                dtm = (DefaultTreeModel) model;
             }
 
             if (dtm != null) {
@@ -258,7 +258,6 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
 
         }
     }
-
 
     /*public static class ImageFileObjectNode extends DefaultMutableTreeNode {
 
@@ -360,7 +359,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
 
 
         private List<ImageFileObjectNode> childNodes = new ArrayList<ImageFileObjectNode>();
-        
+
         public ImageFileObjectNode(FileObject _fobj, FileSelector _selector) {
             selector = _selector;
             fileObject = _fobj;
@@ -395,7 +394,6 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
         }
 
         public List<ImageFileObjectNode> fetchChildNodes(ImageNodeWorker worker) {
-
 
 
             try {

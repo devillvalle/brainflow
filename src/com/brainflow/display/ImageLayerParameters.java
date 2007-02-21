@@ -1,23 +1,20 @@
 package com.brainflow.display;
 
+import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMap;
-import com.brainflow.colormap.ColorTable;
 import com.brainflow.core.DisplayAction;
 import com.brainflow.core.DisplayChangeEvent;
-import com.brainflow.core.ImageLayer;
 import com.brainflow.utils.Range;
 import com.jgoodies.binding.list.SelectionInList;
 
-
 import javax.swing.event.ChangeListener;
-import javax.swing.event.EventListenerList;
 import java.awt.image.IndexColorModel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.Serializable;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -37,8 +34,6 @@ public class ImageLayerParameters implements Serializable {
     public static final String RESAMPLE_INTERPOLATION_PARAMETER = "resampleInterpolation";
 
 
-
-
     private Property<IColorMap> colorMap;
     private Property<InterpolationProperty> resampleInterpolation;
     private Property<InterpolationProperty> screenInterpolation;
@@ -51,29 +46,19 @@ public class ImageLayerParameters implements Serializable {
     private SelectionInList resampleSelection;
 
 
-
-     public ImageLayerParameters() {
-         System.out.println("new ImageLayerParameters, constructor 1 " + toString());
-
-        new Throwable().printStackTrace();
+    public ImageLayerParameters() {
         IColorMap imap = new LinearColorMap(0, 255, ColorTable.GRAYSCALE);
         init(imap);
 
     }
 
     public ImageLayerParameters(IndexColorModel _icm, Range _dataRange) {
-        System.out.println("new ImageLayerParameters, constructor 2 " + toString());
-        new Throwable().printStackTrace();
-        
         IColorMap imap = new LinearColorMap(_dataRange.getMin(), _dataRange.getMax(), _icm);
         init(imap);
 
     }
 
     public ImageLayerParameters(IColorMap map) {
-        
-        System.out.println("new ImageLayerParameters, constructor 3 " + toString());
-        new Throwable().printStackTrace();
         init(map);
     }
 

@@ -52,14 +52,14 @@ public class MaskSelectionPresenter extends ImageViewPresenter {
 
 
         if (view != null) {
-            int selIndex = view.getImageDisplayModel().getSelectedIndex();
+            int selIndex = view.getModel().getSelectedIndex();
             if (selIndex > 0) {
-                ImageLayer selectedLayer = view.getImageDisplayModel().getImageLayer(selIndex);
+                ImageLayer selectedLayer = view.getModel().getImageLayer(selIndex);
                 Collection<ImageLayer> maskSet = selectedLayer.getImageLayerParameters().getAlphaMask().
                         getProperty().getAlphaMaskSet();
                 int count = 0;
-                for (int i = 0; i < view.getImageDisplayModel().getNumLayers(); i++) {
-                    ImageLayer layer = view.getImageDisplayModel().getImageLayer(i);
+                for (int i = 0; i < view.getModel().getNumLayers(); i++) {
+                    ImageLayer layer = view.getModel().getImageLayer(i);
                     if (layer == selectedLayer) continue;
 
                     listModel.addElement(layer);
@@ -76,8 +76,8 @@ public class MaskSelectionPresenter extends ImageViewPresenter {
                 public void valueChanged(ListSelectionEvent e) {
                     int i = e.getFirstIndex();
                     ImageView view = getSelectedView();
-                    int selIndex = view.getImageDisplayModel().getSelectedIndex();
-                    ImageLayer selectedLayer = view.getImageDisplayModel().getImageLayer(selIndex);
+                    int selIndex = view.getModel().getSelectedIndex();
+                    ImageLayer selectedLayer = view.getModel().getImageLayer(selIndex);
 
 
                     ImageLayer layer = (ImageLayer) clist.getModel().getElementAt(i);

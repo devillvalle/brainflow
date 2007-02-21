@@ -1,17 +1,15 @@
 package com.brainflow.application.actions;
 
+import com.brainflow.colormap.AbstractColorBar;
+import com.brainflow.colormap.IColorMap;
+import com.brainflow.core.ImageView;
 import org.bushe.swing.action.BasicAction;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-
-import com.brainflow.core.ImageView;
-import com.brainflow.colormap.IColorMap;
-import com.brainflow.colormap.AbstractColorBar;
-
-import javax.swing.*;
-import javax.imageio.ImageIO;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,8 +26,8 @@ public class SaveColorBarAction extends BasicAction {
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
 
         if (view != null) {
-            int idx = view.getImageDisplayModel().getSelectedIndex();
-            IColorMap cmap = view.getImageDisplayModel().getLayerParameters(idx).getColorMap().getProperty();
+            int idx = view.getModel().getSelectedIndex();
+            IColorMap cmap = view.getModel().getLayerParameters(idx).getColorMap().getProperty();
             AbstractColorBar cbar = cmap.createColorBar();
 
             cbar.setOrientation(SwingUtilities.HORIZONTAL);

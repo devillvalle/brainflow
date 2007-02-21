@@ -1,7 +1,5 @@
 package com.brainflow.application.presentation;
 
-import com.brainflow.application.managers.ResourceManager;
-
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.core.IImageDisplayModel;
 import com.jgoodies.forms.layout.CellConstraints;

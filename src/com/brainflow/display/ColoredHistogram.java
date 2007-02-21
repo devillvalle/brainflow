@@ -1,12 +1,12 @@
 package com.brainflow.display;
 
+import com.brainflow.application.BrainflowException;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMap;
-import com.brainflow.core.BrainflowException;
 import com.brainflow.image.Histogram;
-import com.brainflow.image.io.analyze.AnalyzeIO;
 import com.brainflow.image.data.IImageData;
+import com.brainflow.image.io.analyze.AnalyzeIO;
 import com.brainflow.jfreechart.AxisPointer;
 import com.brainflow.jfreechart.HistogramDataset;
 import com.brainflow.utils.NumberUtils;

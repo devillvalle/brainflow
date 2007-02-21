@@ -6,7 +6,7 @@
 
 package com.brainflow.application.actions;
 
-import com.brainflow.application.managers.ImageCanvasManager;
+import com.brainflow.application.toplevel.ImageCanvasManager;
 import com.brainflow.core.ImageCanvas;
 import com.brainflow.core.ImageView;
 

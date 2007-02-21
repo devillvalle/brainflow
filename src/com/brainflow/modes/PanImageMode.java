@@ -1,13 +1,12 @@
 package com.brainflow.modes;
 
 import com.brainflow.core.ImageView;
-import com.brainflow.display.Viewport3D;
 
 import javax.swing.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,7 +29,7 @@ public class PanImageMode extends ImageCanvasMode {
 
     public void mousePressed(MouseEvent event) {
         if ((event.getModifiers() & LEFT_CONTROL_MASK) == LEFT_CONTROL_MASK) {
-            ImageView iview = canvas.whichView((Component)event.getSource(), event.getPoint());
+            ImageView iview = canvas.whichView((Component) event.getSource(), event.getPoint());
             if (iview == null) return;
             if (canvas.isSelectedView(iview)) {
                 lastPoint = event.getPoint();
@@ -65,8 +64,8 @@ public class PanImageMode extends ImageCanvasMode {
 
         double shiftx = mousePoint.getX() - lastPoint.getX();
         double shifty = mousePoint.getY() - lastPoint.getY();
-        //Viewport3D viewport = selectedView.getImageDisplayModel().getDisplayParameters().getViewport().getProperty();
-        
+        //Viewport3D viewport = selectedView.getModel().getDisplayParameters().getViewport().getProperty();
+
     }
 
     public Cursor getCursor() {

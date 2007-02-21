@@ -3,9 +3,9 @@ package com.brainflow.application.presentation;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
+import com.brainflow.display.ImageLayerParameters;
 import com.brainflow.display.Property;
 import com.brainflow.display.VisibleProperty;
-import com.brainflow.display.ImageLayerParameters;
 import com.jgoodies.binding.adapter.ComboBoxAdapter;
 import com.jgoodies.binding.adapter.SingleListSelectionAdapter;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -88,19 +88,19 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
         }
 
-        //assert view.getImageDisplayModel().getSelectedIndex() >= 0;
+        //assert view.getModel().getSelectedIndex() >= 0;
         //layerSelector.clearSelection();
 
-        if (layerSelector.getModel() == view.getImageDisplayModel().getSelection()) {
+        if (layerSelector.getModel() == view.getModel().getSelection()) {
             //SingleListSelectionAdapter adapter = (SingleListSelectionAdapter)layerSelector.getSelectionModel();
-            //adapter.setSelectionInterval(view.getImageDisplayModel().getSelectedIndex(), view.getImageDisplayModel().getSelectedIndex());
+            //adapter.setSelectionInterval(view.getModel().getSelectedIndex(), view.getModel().getSelectedIndex());
 
         } else {
             layerSelector.setSelectionModel(new DefaultListSelectionModel());
-            layerSelector.setModel(view.getImageDisplayModel().getSelection());
+            layerSelector.setModel(view.getModel().getSelection());
             layerSelector.setSelectionModel(
                     new SingleListSelectionAdapter(
-                            view.getImageDisplayModel().getSelection().getSelectionIndexHolder()));
+                            view.getModel().getSelection().getSelectionIndexHolder()));
         }
 
 
@@ -125,7 +125,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
             view = _view;
 
 
-            IImageDisplayModel model = view.getImageDisplayModel();
+            IImageDisplayModel model = view.getModel();
             model.addListDataListener(new ListDataListener() {
 
                 public void intervalAdded(ListDataEvent e) {
@@ -160,8 +160,8 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
             VisibleProperty property = (VisibleProperty) evt.getSource();
             ImageLayerParameters params = property.getLayerParameters();
-            ImageLayer layer = getSelectedView().getImageDisplayModel().getLayer(params);
-            int i = getSelectedView().getImageDisplayModel().indexOf(layer);
+            ImageLayer layer = getSelectedView().getModel().getLayer(params);
+            int i = getSelectedView().getModel().indexOf(layer);
             if (property.isVisible()) {
                 layerSelector.getCheckBoxListSelectionModel().addSelectionInterval(i, i);
             } else {
@@ -173,8 +173,8 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
 
         public void listen() {
-            for (int i = 0; i < view.getImageDisplayModel().getNumLayers(); i++) {
-                Property<VisibleProperty> param = view.getImageDisplayModel().getImageLayer(i).getImageLayerParameters().getVisiblility();
+            for (int i = 0; i < view.getModel().getNumLayers(); i++) {
+                Property<VisibleProperty> param = view.getModel().getImageLayer(i).getImageLayerParameters().getVisiblility();
                 param.addPropertyChangeListener(this);
 
                 VisibleProperty property = param.getProperty();
@@ -188,15 +188,15 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
         }
 
         public void unlisten() {
-            for (int i = 0; i < view.getImageDisplayModel().getNumLayers(); i++) {
-                view.getImageDisplayModel().getImageLayer(i).getImageLayerParameters().getVisiblility().removePropertyChangeListener(this);
+            for (int i = 0; i < view.getModel().getNumLayers(); i++) {
+                view.getModel().getImageLayer(i).getImageLayerParameters().getVisiblility().removePropertyChangeListener(this);
 
             }
 
         }
 
         public boolean isSelectedIndex(int index) {
-            IImageDisplayModel model = view.getImageDisplayModel();
+            IImageDisplayModel model = view.getModel();
             ImageLayer layer = model.getImageLayer(index);
             return layer.getImageLayerParameters().getVisiblility().getProperty().isVisible();
 

@@ -33,7 +33,7 @@ public class CreateOrthogonalViewAction extends BasicAction {
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
 
         if (view != null) {
-            IImageDisplayModel displayModel = view.getImageDisplayModel();
+            IImageDisplayModel displayModel = view.getModel();
             ImageView sview = ImageViewFactory.createOrthogonalView(displayModel);
             ImageCanvas canvas = (ImageCanvas) getContextValue(ActionContext.SELECTED_CANVAS);
 

@@ -1,6 +1,6 @@
 package com.brainflow.image.io;
 
-import com.brainflow.core.BrainflowException;
+import com.brainflow.application.BrainflowException;
 import com.brainflow.image.data.BasicImageData;
 import com.brainflow.image.data.BasicImageData2D;
 import com.brainflow.image.data.BasicImageData3D;
@@ -11,13 +11,11 @@ import com.brainflow.utils.NumberUtils;
 import com.brainflow.utils.ProgressListener;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileUtil;
-import org.apache.commons.vfs.RandomAccessContent;
-import org.apache.commons.vfs.util.RandomAccessMode;
 
+import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.BufferedInputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
@@ -210,7 +208,7 @@ public class BasicImageReader implements ImageReader {
             throw e2;
         } finally {
             //if (rac != null)
-                //rac.close();
+            //rac.close();
             if (istream != null) {
                 istream.close();
             }

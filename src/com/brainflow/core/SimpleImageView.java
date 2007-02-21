@@ -51,7 +51,7 @@ public class SimpleImageView extends ImageView {
 
 
     public SimpleImageView(ImageView source, AnatomicalVolume _displayAnatomy) {
-        super(source.getImageDisplayModel());
+        super(source.getModel());
         setDisplayAnatomy(_displayAnatomy);
         initView();
 
@@ -76,12 +76,12 @@ public class SimpleImageView extends ImageView {
 
     private void initView() {
 
-        getImageDisplayModel().addChangeListener(dirtListener);
+        getModel().addChangeListener(dirtListener);
         AnatomicalVolume displayAnatomy = getDisplayAnatomy();
-        AxisRange xrange = getImageDisplayModel().getImageAxis(displayAnatomy.XAXIS).getRange();
-        AxisRange yrange = getImageDisplayModel().getImageAxis(displayAnatomy.YAXIS).getRange();
+        AxisRange xrange = getModel().getImageAxis(displayAnatomy.XAXIS).getRange();
+        AxisRange yrange = getModel().getImageAxis(displayAnatomy.YAXIS).getRange();
 
-        procurer = new DefaultImageProcurer(getImageDisplayModel(), displayAnatomy);
+        procurer = new DefaultImageProcurer(getModel(), displayAnatomy);
         procurer.setSlice(getCrosshair().getValue(displayAnatomy.ZAXIS));
 
         compositor = new DefaultImageCompositor();
@@ -94,7 +94,7 @@ public class SimpleImageView extends ImageView {
 
         addAnnotation(new AxisLabelAnnotation());
         addAnnotation(crosshairAnnotation);
-        addAnnotation(new ColorBarAnnotation(getImageDisplayModel()));
+        addAnnotation(new ColorBarAnnotation(getModel()));
         addAnnotation(new SelectedPlotAnnotation(imagePlot));
 
         imagePlot.setAnnotations(getAnnotations());
@@ -148,7 +148,7 @@ public class SimpleImageView extends ImageView {
         if (ipane.getImagePlot() == plot) {
 
             ICrosshair cross = getCrosshair();
-            
+
             AnatomicalPoint1D xpt = cross.getValue(imagePlot.getDisplayAnatomy().XAXIS);
             AnatomicalPoint1D ypt = cross.getValue(imagePlot.getDisplayAnatomy().YAXIS);
 
@@ -156,7 +156,7 @@ public class SimpleImageView extends ImageView {
             double percentY = (ypt.getX() - plot.getYAxisRange().getBeginning().getX()) / plot.getYAxisRange().getInterval();
 
             Rectangle2D plotArea = ipane.getImagePlot().getPlotArea();
-            
+
             double screenX = (percentX * plotArea.getWidth()) + plotArea.getX();
             double screenY = (percentY * plotArea.getHeight()) + plotArea.getY();
 
@@ -206,7 +206,7 @@ public class SimpleImageView extends ImageView {
 
 
     public String toString() {
-        return "SimpleImageView -- " + getImageDisplayModel().getName();
+        return "SimpleImageView -- " + getModel().getName();
     }
 
 

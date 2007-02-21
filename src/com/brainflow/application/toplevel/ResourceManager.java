@@ -1,7 +1,7 @@
-package com.brainflow.application.managers;
+package com.brainflow.application.toplevel;
 
+import com.brainflow.application.BrainflowException;
 import com.brainflow.colormap.ColorTable;
-import com.brainflow.core.BrainflowException;
 
 import java.awt.image.IndexColorModel;
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class ResourceManager {
 
 
     public static ResourceManager getInstance() {
-        return (ResourceManager) SingletonRegistry.REGISTRY.getInstance("com.brainflow.application.managers.ResourceManager");
+        return (ResourceManager) SingletonRegistry.REGISTRY.getInstance("com.brainflow.application.toplevel.ResourceManager");
     }
 
     public IndexColorModel getDefaultColorMap() {

@@ -1,6 +1,6 @@
 package com.brainflow.image.data;
 
-import com.brainflow.core.BrainflowException;
+import com.brainflow.application.BrainflowException;
 import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.axis.AxisRange;

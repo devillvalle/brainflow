@@ -1,7 +1,7 @@
 package com.brainflow.application.actions;
 
 import com.brainflow.application.ILoadableImage;
-import com.brainflow.application.managers.LoadableImageManager;
+import com.brainflow.application.toplevel.LoadableImageManager;
 import org.bushe.swing.action.BasicAction;
 
 import java.awt.event.ActionEvent;

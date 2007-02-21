@@ -1,18 +1,16 @@
 package com.brainflow.application.mapping;
 
-import com.brainflow.application.SoftLoadableImage;
-import com.brainflow.application.ImageIODescriptor;
 import com.brainflow.application.ILoadableImage;
-import com.brainflow.application.managers.ImageIOManager;
+import com.brainflow.application.ImageIODescriptor;
+import com.brainflow.application.SoftLoadableImage;
+import com.brainflow.application.toplevel.ImageIOManager;
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.extended.ColorConverter;
 import com.thoughtworks.xstream.io.xml.DomDriver;
-import org.apache.commons.vfs.VFS;
 import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.VFS;
 import org.apache.commons.vfs.provider.local.LocalFile;
 
 import java.io.FileOutputStream;
-import java.awt.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -47,7 +45,7 @@ public class TestXStream {
             xstream.registerConverter(new ILoadableImageConverter());
             xstream.registerConverter(new FileObjectConverter());
 
-            xstream.toXML(limg,new FileOutputStream("/home/surge/fobj.xml"));
+            xstream.toXML(limg, new FileOutputStream("/home/surge/fobj.xml"));
 
         } catch (Exception e) {
             e.printStackTrace();

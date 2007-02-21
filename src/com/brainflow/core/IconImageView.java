@@ -79,7 +79,7 @@ public class IconImageView extends ImageView implements Icon {
         System.out.println("y = " + y);
 
         Graphics2D g2 = (Graphics2D) g;
-        //imageRenderer.drawLayers(g2, getImageDisplayModel(), iplot, new Rectangle2D.Double(x, y, ICON_WIDTH, ICON_HEIGHT));
+        //imageRenderer.drawLayers(g2, getModel(), iplot, new Rectangle2D.Double(x, y, ICON_WIDTH, ICON_HEIGHT));
 
     }
 

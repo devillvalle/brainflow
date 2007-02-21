@@ -1,16 +1,14 @@
 package com.brainflow.image.io.nifti;
 
-import com.brainflow.core.BrainflowException;
+import com.brainflow.application.BrainflowException;
+import com.brainflow.image.io.ImageInfo;
+import com.brainflow.image.io.ImageInfoReader;
 import com.brainflow.utils.DataType;
 import com.brainflow.utils.Dimension3D;
 import com.brainflow.utils.Point3D;
-import com.brainflow.image.io.ImageInfoReader;
-import com.brainflow.image.io.ImageInfo;
-import com.brainflow.image.io.nifti.NiftiImageInfo;
-import com.brainflow.image.io.nifti.Nifti1Dataset;
 import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.VFS;
 import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.VFS;
 import org.apache.commons.vfs.util.RandomAccessMode;
 
 import java.io.*;

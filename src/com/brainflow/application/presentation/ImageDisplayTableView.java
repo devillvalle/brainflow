@@ -1,21 +1,13 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.application.presentation.forms.ImageLayerEditor;
-import com.brainflow.application.services.ImageViewSelectionEvent;
-import com.brainflow.colormap.ColorTable;
-import com.brainflow.colormap.LinearColorMap;
-import com.brainflow.core.*;
+import com.brainflow.core.ImageDisplayModel;
+import com.brainflow.core.ImageLayer;
+import com.brainflow.core.ImageView;
+import com.brainflow.core.SnapShooter;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
-import com.brainflow.image.data.IImageData;
-import com.brainflow.image.data.IImageData3D;
-import com.brainflow.image.io.BasicImageReader;
-import com.brainflow.image.io.ImageInfo;
-import com.brainflow.image.io.nifti.NiftiInfoReader;
 import com.jidesoft.grid.*;
-import com.jidesoft.plaf.LookAndFeelFactory;
-
-import org.bushe.swing.event.EventBus;
 
 import javax.media.jai.JAI;
 import javax.media.jai.RenderedImageAdapter;
@@ -28,7 +20,6 @@ import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.image.RenderedImage;
 import java.awt.image.renderable.ParameterBlock;
-import java.io.File;
 
 /**
  * Created by IntelliJ IDEA.
@@ -158,7 +149,6 @@ public class ImageDisplayTableView extends ImageViewPresenter {
 
     public static void main(String[] args) {
         try {
-           
 
 
         } catch (Exception e) {
@@ -194,7 +184,7 @@ public class ImageDisplayTableView extends ImageViewPresenter {
             ImageView view = ImageDisplayTableView.this.getSelectedView();
             if (view == null) return 0;
 
-            return view.getImageDisplayModel().getNumLayers();
+            return view.getModel().getNumLayers();
         }
 
         public int getColumnCount() {
@@ -223,7 +213,7 @@ public class ImageDisplayTableView extends ImageViewPresenter {
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
             if (columnIndex == 2) {
                 ImageView view = ImageDisplayTableView.this.getSelectedView();
-                ImageLayer layer = view.getImageDisplayModel().getImageLayer(rowIndex);
+                ImageLayer layer = view.getModel().getImageLayer(rowIndex);
                 layer.getImageLayerParameters().getVisiblility().getProperty().setVisible((Boolean) aValue);
 
             }
@@ -235,11 +225,11 @@ public class ImageDisplayTableView extends ImageViewPresenter {
 
             switch (columnIndex) {
                 case 0:
-                    return view.getImageDisplayModel().getImageLayer(rowIndex);
+                    return view.getModel().getImageLayer(rowIndex);
                 case 1:
                     return "visible";
                 case 2:
-                    return view.getImageDisplayModel().getImageLayer(rowIndex).
+                    return view.getModel().getImageLayer(rowIndex).
                             getImageLayerParameters().getVisiblility().getProperty().isVisible();
 
             }
@@ -270,7 +260,7 @@ public class ImageDisplayTableView extends ImageViewPresenter {
 
         public Object getChildValueAt(int i) {
             ImageView view = ImageDisplayTableView.this.getSelectedView();
-            return view.getImageDisplayModel().getImageLayer(i);
+            return view.getModel().getImageLayer(i);
         }
 
         public boolean isCellStyleOn() {

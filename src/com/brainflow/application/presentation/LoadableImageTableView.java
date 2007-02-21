@@ -10,11 +10,10 @@ import com.brainflow.core.ImageDisplayModel;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageLayer3D;
 import com.brainflow.core.SnapShooter;
+import com.brainflow.display.ImageLayerParameters;
 import com.brainflow.gui.AbstractPresenter;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
-import com.brainflow.image.data.IImageData3D;
-import com.brainflow.display.ImageLayerParameters;
 import com.jidesoft.grid.*;
 import com.jidesoft.swing.NullButton;
 import com.jidesoft.swing.NullJideButton;
@@ -177,10 +176,9 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
             ImageDisplayModel dmodel = new ImageDisplayModel("" + limg.getUniqueID());
 
 
-            IImageData3D data = (IImageData3D) limg.getData();
-            ImageLayerParameters parms = new ImageLayerParameters(new LinearColorMap(data.getMinValue(), data.getMaxValue(),
+            ImageLayerParameters parms = new ImageLayerParameters(new LinearColorMap(limg.getData().getMinValue(), limg.getData().getMaxValue(),
                     ColorTable.GRAYSCALE));
-            ImageLayer layer = new ImageLayer3D(data, parms);
+            ImageLayer layer = new ImageLayer3D(limg, parms);
 
             dmodel.addLayer(layer);
 

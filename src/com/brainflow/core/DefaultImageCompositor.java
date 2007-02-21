@@ -85,7 +85,7 @@ public class DefaultImageCompositor implements IImageCompositor {
         ParameterBlock pb = null;
         for (int i = 0; i < images.size(); i++) {
             ImageLayer2D layer = images.get(i);
-            IImageData2D data = (IImageData2D) layer.getImageData();
+            IImageData2D data = layer.getImageData();
             ImageSpace2D ispace = (ImageSpace2D) data.getImageSpace();
 
             ImageLayerParameters dprops = layer.getImageLayerParameters();
@@ -209,7 +209,7 @@ public class DefaultImageCompositor implements IImageCompositor {
         Graphics2D g2 = sourceImage.createGraphics();
 
         for (int i = 0; i < images.size(); i++) {
-            ImageLayer layer = images.get(i);
+            ImageLayer2D layer = images.get(i);
             if (layer.getImageLayerParameters().getVisiblility().getProperty().isVisible()) {
                 RenderedImage rim = cachedResampled.get(i);
                 double transx = (rim.getMinX() - frameBounds.getMinX()) + (-frameBounds.getMinX());

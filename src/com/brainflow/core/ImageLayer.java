@@ -9,6 +9,7 @@
 
 package com.brainflow.core;
 
+import com.brainflow.application.ILoadableImage;
 import com.brainflow.display.ImageLayerParameters;
 import com.brainflow.image.data.IImageData;
 
@@ -21,28 +22,28 @@ import com.brainflow.image.data.IImageData;
 public class ImageLayer {
 
     private final ImageLayerParameters parameters;
-    private final IImageData data;
+    private ILoadableImage limg;
 
 
-   
-    public ImageLayer(IImageData _data, ImageLayerParameters _params) {
-        data = _data;
+    public ImageLayer(ILoadableImage _limg, ImageLayerParameters _params) {
+        limg = _limg;
         parameters = _params;
-
     }
 
     public IImageData getImageData() {
-        return data;
+        return limg.getData();
+    }
+
+    public ILoadableImage getLoadableImage() {
+        return limg;
     }
 
     public ImageLayerParameters getImageLayerParameters() {
         return parameters;
     }
-    
-
 
     public String toString() {
-        return data.getImageLabel();
+        return limg.getStem();
     }
 
 

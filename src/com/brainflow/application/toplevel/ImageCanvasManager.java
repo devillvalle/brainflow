@@ -4,31 +4,28 @@
  * Created on April 30, 2003, 10:45 AM
  */
 
-package com.brainflow.application.managers;
+package com.brainflow.application.toplevel;
 
-import com.brainflow.core.ImageCanvas;
-import com.brainflow.core.ImageView;
-import com.brainflow.core.IImageDisplayModel;
-import com.brainflow.core.ImageCanvasModel;
-import com.brainflow.application.services.ImageViewSelectionEvent;
-import com.brainflow.application.services.ImageViewCursorEvent;
-import com.brainflow.application.services.LoadableImageStatusEvent;
 import com.brainflow.application.services.ImageViewCrosshairEvent;
-import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.application.services.ImageViewCursorEvent;
+import com.brainflow.application.services.ImageViewSelectionEvent;
+import com.brainflow.core.IImageDisplayModel;
+import com.brainflow.core.ImageCanvas;
+import com.brainflow.core.ImageCanvasModel;
+import com.brainflow.core.ImageView;
 import com.brainflow.display.Viewport3D;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import org.bushe.swing.event.EventBus;
+import org.bushe.swing.event.EventSubscriber;
 
-import java.awt.event.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Logger;
-import java.lang.ref.WeakReference;
-
-import org.bushe.swing.event.EventBus;
-import org.bushe.swing.event.EventSubscriber;
 
 /**
  * @author Bradley
@@ -68,7 +65,7 @@ public class ImageCanvasManager implements EventSubscriber {
 
 
     public static ImageCanvasManager getInstance() {
-        return (ImageCanvasManager) SingletonRegistry.REGISTRY.getInstance("com.brainflow.application.managers.ImageCanvasManager");
+        return (ImageCanvasManager) SingletonRegistry.REGISTRY.getInstance("com.brainflow.application.toplevel.ImageCanvasManager");
     }
 
     private void listenToCanvas(ImageCanvas canvas) {
@@ -93,7 +90,7 @@ public class ImageCanvasManager implements EventSubscriber {
 
         }
 
-        registeredViews.put(view, view.getImageDisplayModel());
+        registeredViews.put(view, view.getModel());
 
         linkedViews.put(view, new LinkedHashSet<ImageView>());
 
@@ -106,8 +103,6 @@ public class ImageCanvasManager implements EventSubscriber {
     }
 
 
-
-
     public void addImageCanvas(ImageCanvas _canvas) {
         canvasList.add(_canvas);
         if (selectedCanvas == null)
@@ -118,7 +113,7 @@ public class ImageCanvasManager implements EventSubscriber {
         List<ImageView> views = _canvas.getImageCanvasModel().getImageViews();
 
         for (ImageView v : views) {
-            registeredViews.put(v, v.getImageDisplayModel());
+            registeredViews.put(v, v.getModel());
         }
 
     }
@@ -181,16 +176,16 @@ public class ImageCanvasManager implements EventSubscriber {
         if (!registeredViews.containsKey(view)) {
             register(view);
             ImageCanvas canvas = getSelectedCanvas();
-            if (canvas != null ) {
+            if (canvas != null) {
                 canvas.add(view);
             }
 
         }
     }
+
     public ImageView getSelectedImageView() {
         if (selectedCanvas != null)
             return selectedCanvas.getSelectedView();
-
 
         //todo is this correct to return null?
         return null;
@@ -208,7 +203,7 @@ public class ImageCanvasManager implements EventSubscriber {
 
             set1.add(view2);
             set2.add(view1);
-           
+
         }
 
     }
@@ -228,7 +223,6 @@ public class ImageCanvasManager implements EventSubscriber {
 
     class ContextMenuHandler extends MouseAdapter {
 
-       
 
         public void mouseReleased(MouseEvent e) {
             if (e.isPopupTrigger()) {
@@ -245,7 +239,7 @@ public class ImageCanvasManager implements EventSubscriber {
 
         public void mouseMoved(MouseEvent e) {
             Point p = e.getPoint();
-            ImageView iview = selectedCanvas.whichView((Component)e.getSource(), p);
+            ImageView iview = selectedCanvas.whichView((Component) e.getSource(), p);
 
             if (iview != selectedCanvas.getSelectedView()) {
                 return;
@@ -261,7 +255,7 @@ public class ImageCanvasManager implements EventSubscriber {
         public void mousePressed(MouseEvent e) {
             Point p = e.getPoint();
 
-            ImageView iview = selectedCanvas.whichView((Component)e.getSource(), p);
+            ImageView iview = selectedCanvas.whichView((Component) e.getSource(), p);
             if (iview == null || iview != selectedCanvas.getSelectedView()) {
                 return;
             }
@@ -280,7 +274,7 @@ public class ImageCanvasManager implements EventSubscriber {
 
 
     public void onEvent(Object evt) {
-        ImageViewCrosshairEvent event = (ImageViewCrosshairEvent)evt;
+        ImageViewCrosshairEvent event = (ImageViewCrosshairEvent) evt;
         ImageView source = event.getImageView();
 
         Set<ImageView> yoked = linkedViews.get(source);
@@ -291,11 +285,8 @@ public class ImageCanvasManager implements EventSubscriber {
             }
         }
 
-        
+
     }
-
-
-
 
 
 }

@@ -1,6 +1,5 @@
 package com.brainflow.application.actions;
 
-import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.ImageCanvas;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.ImageViewFactory;
@@ -31,9 +30,9 @@ public class CreateSagittalViewAction extends BasicAction {
 
     protected void execute(ActionEvent actionEvent) throws Exception {
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
-       
+
         if (view != null) {
-            //IImageDisplayModel displayModel = view.getImageDisplayModel();
+            //IImageDisplayModel displayModel = view.getModel();
             ImageView sview = ImageViewFactory.createYokedSagittalView(view);
             ImageCanvas canvas = (ImageCanvas) getContextValue(ActionContext.SELECTED_CANVAS);
 

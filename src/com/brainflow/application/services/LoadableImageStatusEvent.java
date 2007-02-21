@@ -17,7 +17,6 @@ public class LoadableImageStatusEvent extends AbstractEventServiceEvent {
         IMAGE_REGISTERED, IMAGE_REMOVED, IMAGE_LOADED, IMAGE_UNLOADED
     }
 
-    ;
 
     private EventID id;
 
@@ -35,7 +34,14 @@ public class LoadableImageStatusEvent extends AbstractEventServiceEvent {
 
     public ILoadableImage getLoadableImage() {
         return sourceImage;
+    }
 
+    public String toString() {
+        StringBuilder builder = new StringBuilder("+++ ");
+        builder.append(sourceImage.getDataFile().getName().getPath());
+        builder.append(" : ");
+        builder.append(id);
+        return builder.toString();
     }
 
 

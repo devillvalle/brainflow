@@ -1,6 +1,6 @@
 package com.brainflow.application;
 
-import com.brainflow.application.managers.Brainflow;
+import com.brainflow.application.toplevel.Brainflow;
 import com.brainflow.core.ImageView;
 
 import javax.swing.*;

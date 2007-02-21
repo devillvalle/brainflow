@@ -1,16 +1,16 @@
 package com.brainflow.image.operations;
 
-import com.brainflow.image.data.IImageData;
-import com.brainflow.image.data.BasicImageData3D;
-import com.brainflow.image.data.IImageData3D;
-import com.brainflow.image.data.BasicImageData;
-import com.brainflow.image.space.IImageSpace;
-import com.brainflow.image.space.Axis;
-import com.brainflow.image.space.ImageSpace3D;
-import com.brainflow.image.io.analyze.AnalyzeIO;
+import com.brainflow.application.BrainflowException;
 import com.brainflow.application.ILoadableImage;
 import com.brainflow.application.MemoryImage;
-import com.brainflow.core.BrainflowException;
+import com.brainflow.image.data.BasicImageData;
+import com.brainflow.image.data.BasicImageData3D;
+import com.brainflow.image.data.IImageData;
+import com.brainflow.image.data.IImageData3D;
+import com.brainflow.image.io.analyze.AnalyzeIO;
+import com.brainflow.image.space.Axis;
+import com.brainflow.image.space.IImageSpace;
+import com.brainflow.image.space.ImageSpace3D;
 
 import java.util.List;
 
@@ -80,7 +80,7 @@ public class ConnectedComponentsFilter2 extends AbstractImageFilter {
                 labels[idx] = curlab;
                 searchKernel.pushKernel(idx, labels, stack);
                 nswaps++;
-                
+
             } else if (labels[idx] < curlab) {
                 labels[i] = labels[idx];
                 curlab = labels[idx];
@@ -99,7 +99,6 @@ public class ConnectedComponentsFilter2 extends AbstractImageFilter {
     private IImageData3D connect(IImageData3D data, int xdim, int ydim, int zdim) {
         ImageSpace3D space = (ImageSpace3D) data.getImageSpace();
         searchKernel = new LargeSearchKernel3D(space, 1, 1, 1);
-
 
 
         int[] labels = firstPass(xdim, ydim, zdim, data);

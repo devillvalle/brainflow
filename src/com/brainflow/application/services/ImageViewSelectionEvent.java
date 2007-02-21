@@ -1,8 +1,6 @@
 package com.brainflow.application.services;
 
-import org.bushe.swing.event.AbstractEventServiceEvent;
 import com.brainflow.core.ImageView;
-
 
 
 /**
@@ -17,7 +15,7 @@ public class ImageViewSelectionEvent extends ImageViewEvent {
     private ImageView view;
 
     /**
-     * Creates a new instance of ImageViewDataEvent
+     * Creates a new instance of ImageDisplayModelEvent
      */
     public ImageViewSelectionEvent(ImageView _view) {
         super(_view);
@@ -27,6 +25,10 @@ public class ImageViewSelectionEvent extends ImageViewEvent {
 
     public ImageView getSelectedImageView() {
         return view;
+    }
+
+    public String toString() {
+        return "Selected View Changed : " + view.getName();
     }
 
 }

@@ -2,6 +2,7 @@ package com.brainflow.application.services;
 
 import com.brainflow.core.ImageView;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.image.anatomy.AnatomicalPoint;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -38,6 +39,9 @@ public class ImageViewCursorEvent extends ImageViewMouseEvent {
 
     public String toString() {
         StringBuilder builder = new StringBuilder("Cursor at : ");
+        AnatomicalPoint tmp = getLocation();
+        if (tmp == null) return  "cursor : --";
+
         builder.append("x: " + (int) getLocation().getX());
         builder.append(" y: " + (int) getLocation().getY());
         builder.append(" z: " + (int) getLocation().getZ());

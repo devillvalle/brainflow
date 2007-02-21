@@ -19,6 +19,8 @@ import java.util.List;
  */
 public interface IImagePlot {
 
+    public void setName(String name);
+
     public Insets getPlotInsets();
 
     public void setPlotInsets(Insets insets);

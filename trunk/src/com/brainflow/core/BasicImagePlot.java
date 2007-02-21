@@ -31,6 +31,8 @@ public class BasicImagePlot extends JComponent implements IImagePlot {
     private double scaleX = 1f;
     private double scaleY = 1f;
 
+    private String name;
+
     public BasicImagePlot(AnatomicalVolume displayAnatomy, AxisRange xAxis, AxisRange yAxis, ImagePlotRenderer renderer) {
         this.xAxis = xAxis;
         this.yAxis = yAxis;
@@ -173,5 +175,16 @@ public class BasicImagePlot extends JComponent implements IImagePlot {
 
     public void setAnnotations(java.util.List<IAnnotation> _annotationList) {
         annotationList = _annotationList;
+    }
+
+    public void setName(String _name) {
+        name = _name;
+    }
+
+    public String toString() {
+        if (name != null) return name;
+        else {
+            return super.toString();
+        }
     }
 }

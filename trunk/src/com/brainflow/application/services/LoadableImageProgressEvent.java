@@ -14,10 +14,24 @@ package com.brainflow.application.services;
  * @author buchs
  */
 public class LoadableImageProgressEvent extends ProgressEvent {
+
+    public enum State {
+        INITIATED,
+        DONE,
+        LOADING,
+        CANCELLED;
+    }
+
+    private State state;
     
     /** Creates a new instance of LoadableImageProgressEvent */
-    public LoadableImageProgressEvent(Object source, int _progress, String _message) {
+    public LoadableImageProgressEvent(Object source, int _progress, String _message, State _state) {
         super(source, _progress, _message);
+        state = _state;
     }
-    
+
+
+    public State getState() {
+        return state;
+    }
 }

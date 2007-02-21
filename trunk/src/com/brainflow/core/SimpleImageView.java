@@ -1,10 +1,7 @@
 package com.brainflow.core;
 
 
-import com.brainflow.core.annotations.AxisLabelAnnotation;
-import com.brainflow.core.annotations.ColorBarAnnotation;
-import com.brainflow.core.annotations.CrosshairAnnotation;
-import com.brainflow.core.annotations.SelectedPlotAnnotation;
+import com.brainflow.core.annotations.*;
 import com.brainflow.display.ICrosshair;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
@@ -76,6 +73,12 @@ public class SimpleImageView extends ImageView {
 
     private void initView() {
 
+        CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(getCrosshair());
+        addAnnotation(new AxisLabelAnnotation());
+        addAnnotation(crosshairAnnotation);
+        addAnnotation(new ColorBarAnnotation(getModel()));
+        addAnnotation(new SelectedPlotAnnotation(imagePlot));
+
         getModel().addChangeListener(dirtListener);
         AnatomicalVolume displayAnatomy = getDisplayAnatomy();
         AxisRange xrange = getModel().getImageAxis(displayAnatomy.XAXIS).getRange();
@@ -88,14 +91,9 @@ public class SimpleImageView extends ImageView {
         plotRenderer = new ImagePlotRenderer(compositor, procurer);
 
         imagePlot = new BasicImagePlot(displayAnatomy, xrange, yrange, plotRenderer);
+        imagePlot.setName(displayAnatomy.XY_PLANE.getOrientation().toString());
 
-        CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(getCrosshair());
 
-
-        addAnnotation(new AxisLabelAnnotation());
-        addAnnotation(crosshairAnnotation);
-        addAnnotation(new ColorBarAnnotation(getModel()));
-        addAnnotation(new SelectedPlotAnnotation(imagePlot));
 
         imagePlot.setAnnotations(getAnnotations());
 
@@ -104,6 +102,8 @@ public class SimpleImageView extends ImageView {
 
         setLayout(new BorderLayout());
         add(ipane, BorderLayout.CENTER);
+
+        getPlotSelection().setSelectionIndex(0);
 
     }
 
@@ -170,11 +170,6 @@ public class SimpleImageView extends ImageView {
 
     }
 
-    private Point convertToPlotPoint(Component source, int x, int y) {
-        Point p1 = SwingUtilities.convertPoint(source, x, y, ipane);
-        Component c = ipane.getComponentAt(p1);
-        return SwingUtilities.convertPoint(ipane, p1, c);
-    }
 
     public ImagePlotRenderer getPlotRenderer() {
         return plotRenderer;
@@ -184,6 +179,10 @@ public class SimpleImageView extends ImageView {
         List<IImagePlot> lst = new ArrayList<IImagePlot>();
         lst.add(imagePlot);
         return lst;
+    }
+
+    public void clearAnnotations() {
+        imagePlot.setAnnotations(new ArrayList<IAnnotation>());
     }
 
 

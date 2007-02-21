@@ -2,6 +2,7 @@ package com.brainflow.application;
 
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.ImageInfo;
+import com.brainflow.utils.ProgressListener;
 import org.apache.commons.vfs.FileObject;
 
 /**
@@ -26,6 +27,8 @@ public interface ILoadableImage {
     public IImageData getData();
 
     public void releaseData();
+
+    public IImageData load(ProgressListener plistener) throws BrainflowException;
 
     public IImageData load() throws BrainflowException;
 

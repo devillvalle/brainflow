@@ -187,6 +187,18 @@ public class DiscreteColorMap extends AbstractColorMap {
         changeSupport.firePropertyChange(COLORS_CHANGED_PROPERTY, null, this);
     }
 
+    public void setLowerBound(int index, double value) {
+        if (index < 1) {
+            throw new IllegalArgumentException("Cannot change the low boundary for the first bin (e.g. the absolute minimum)");
+        }
+        if (index > (segments.getNumIntervals()-1) ) {
+            throw new IllegalArgumentException("index " + index + " is greater than number of intervals " + segments.getNumIntervals());
+        }
+
+        setUpperBound(index-1, value);
+    }
+
+    
     public void setUpperBound(int index, double value) {
         double oldValue = segments.getUpperBound(index);
         double maxValue = segments.getMaximum();

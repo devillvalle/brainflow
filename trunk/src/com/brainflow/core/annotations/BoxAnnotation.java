@@ -4,6 +4,7 @@ import com.brainflow.core.IImagePlot;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.Point2D;
 
 /**
  * BrainFlow Project
@@ -23,14 +24,9 @@ public class BoxAnnotation extends AbstractAnnotation {
     public static final String FILLPAINT_PROPERTY = "fillPaint";
     public static final String LINEPAINT_PROPERTY = "linePaint";
 
+    private Rectangle2D rect = new Rectangle2D.Double();
 
-    private double xmin;
 
-    private double ymin;
-
-    private double width;
-
-    private double height;
 
     private Paint fillPaint = new Color(0, 255, 0, 87);
 
@@ -41,20 +37,65 @@ public class BoxAnnotation extends AbstractAnnotation {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
+
+    public boolean containsPoint(IImagePlot plot, Point plotPoint) {
+        Insets plotInsets = plot.getPlotInsets();
+        double x = (plotPoint.getX() - plotInsets.left) / plot.getScaleX();
+        double y = (plotPoint.getY() - plotInsets.top) / plot.getScaleY();
+        x = x + plot.getXAxisRange().getMinimum();
+        y = y + plot.getYAxisRange().getMinimum();
+
+        if (rect.contains(x,y)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public Point2D translateFromJava2D(IImagePlot plot, Point plotPoint) {
+        Insets plotInsets = plot.getPlotInsets();
+        double x = (plotPoint.getX() - plotInsets.left) / plot.getScaleX();
+        double y = (plotPoint.getY() - plotInsets.top) / plot.getScaleY();
+        x = x + plot.getXAxisRange().getMinimum();
+        y = y + plot.getYAxisRange().getMinimum();
+
+        return new Point2D.Double(x,y);
+
+    }
+
+    public double getNormalizedX(IImagePlot plot, double val) {
+        return (val - plot.getXAxisRange().getBeginning().getX()) / plot.getXAxisRange().getInterval();
+
+    }
+
+    public double getNormalizedY(IImagePlot plot, double val) {
+        return (val - plot.getYAxisRange().getBeginning().getX()) / plot.getYAxisRange().getInterval();
+    }
+
+    public double getNormalizedWidth(IImagePlot plot, double val) {
+        return val / plot.getXAxisRange().getInterval();
+    }
+
+    public double getNormalizedHeight(IImagePlot plot, double val) {
+        return val / plot.getYAxisRange().getInterval();
+    }
+
+
+
     public void draw(Graphics2D g2d, Rectangle2D plotArea, IImagePlot plot) {
         if (!isVisible()) return;
 
-        System.out.println("paint box annotation");
-        double percentX = (xmin - plot.getXAxisRange().getBeginning().getX()) / plot.getXAxisRange().getInterval();
-        double percentY = (ymin - plot.getYAxisRange().getBeginning().getX()) / plot.getYAxisRange().getInterval();
-        double percentWidth = width / plot.getXAxisRange().getInterval();
-        double percentHeight = height / plot.getYAxisRange().getInterval();
+
+        double nX = getNormalizedX(plot, getXmin());
+        double nY = getNormalizedY(plot, getYmin());
+        double nW = getNormalizedWidth(plot, getWidth());
+        double nH = getNormalizedHeight(plot, getHeight());
 
 
-        double screenX = (percentX * plotArea.getWidth()) + plotArea.getX();
-        double screenY = (percentY * plotArea.getHeight()) + plotArea.getY();
-        double screenWidth = percentWidth * plotArea.getWidth();
-        double screenHeight = percentHeight * plotArea.getHeight();
+        double screenX = (nX * plotArea.getWidth()) + plotArea.getX();
+        double screenY = (nY * plotArea.getHeight()) + plotArea.getY();
+        double screenWidth = nW * plotArea.getWidth();
+        double screenHeight = nH * plotArea.getHeight();
 
 
         Paint oldPaint = g2d.getPaint();
@@ -73,44 +114,45 @@ public class BoxAnnotation extends AbstractAnnotation {
 
 
     public double getXmin() {
-        return xmin;
+        return rect.getX();
     }
 
     public void setXmin(double xmin) {
         System.out.println("changing x min in box annotation to " + xmin);
-        double old = this.xmin;
-        this.xmin = xmin;
+        double old = getXmin();
+        rect.setRect(xmin, rect.getY(), rect.getWidth(), rect.getHeight());
         support.firePropertyChange(BoxAnnotation.XMIN_PROPERTY, old, getXmin());
     }
 
     public double getYmin() {
-        return ymin;
+        return rect.getY();
     }
 
     public void setYmin(double ymin) {
-        double old = this.ymin;
-        this.ymin = ymin;
-        support.firePropertyChange(BoxAnnotation.YMIN_PROPERTY, old, ymin);
+        double old = getYmin();
+
+        rect.setRect(rect.getX(), ymin, rect.getWidth(), rect.getHeight());
+        support.firePropertyChange(BoxAnnotation.YMIN_PROPERTY, old, getYmin());
     }
 
     public double getWidth() {
-        return width;
+        return rect.getWidth();
     }
 
     public void setWidth(double width) {
-        double old = this.width;
-        this.width = width;
-        support.firePropertyChange(BoxAnnotation.WIDTH_PROPERTY, old, width);
+        double old = getWidth();
+        rect.setRect(getXmin(), getYmin(), width, rect.getHeight());
+        support.firePropertyChange(BoxAnnotation.WIDTH_PROPERTY, old, getWidth());
     }
 
     public double getHeight() {
-        return height;
+        return rect.getHeight();
     }
 
     public void setHeight(double height) {
-        double old = this.height;
-        this.height = height;
-        support.firePropertyChange(BoxAnnotation.HEIGHT_PROPERTY, old, height);
+        double old = getHeight();
+         rect.setRect(getXmin(), getYmin(), rect.getWidth(), height);
+        support.firePropertyChange(BoxAnnotation.HEIGHT_PROPERTY, old, getHeight());
     }
 
 

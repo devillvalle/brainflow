@@ -57,6 +57,7 @@ public class SimpleImageView extends ImageView {
 
     }
 
+   
 
     public SimpleImageView(IImageDisplayModel dset) {
         super(dset);
@@ -77,9 +78,9 @@ public class SimpleImageView extends ImageView {
     private void initView() {
 
         CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(getCrosshair());
-        addAnnotation(new AxisLabelAnnotation());
+        //addAnnotation(new AxisLabelAnnotation());
         addAnnotation(crosshairAnnotation);
-        addAnnotation(new ColorBarAnnotation(getModel()));
+        //addAnnotation(new ColorBarAnnotation(getModel()));
         addAnnotation(new SelectedPlotAnnotation(imagePlot));
 
         getModel().addChangeListener(dirtListener);

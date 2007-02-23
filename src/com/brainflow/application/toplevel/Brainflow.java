@@ -410,8 +410,10 @@ public class Brainflow {
 
             DockableFrame dframe = new DockableFrame("File Manager", new ImageIcon(getClass().getClassLoader().getResource("resources/icons/fldr_obj.gif")));
             dframe.setPreferredSize(new Dimension(275, 200));
+
             //JScrollPane jsp = new JScrollPane(explorer.getComponent());
             //jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
             dframe.getContentPane().add(explorer.getComponent());
 
             dframe.getContext().setInitMode(DockContext.STATE_FRAMEDOCKED);

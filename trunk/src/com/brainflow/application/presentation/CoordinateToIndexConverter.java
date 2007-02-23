@@ -14,8 +14,6 @@ class CoordinateToIndexConverter extends AbstractConverter {
 
     }
 
-    
-
     public Object convertFromSubject(Object object) {
         Double val = (Double) object;
         return axis.nearestSample(val);

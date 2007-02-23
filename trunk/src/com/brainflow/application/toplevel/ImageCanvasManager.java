@@ -193,8 +193,16 @@ public class ImageCanvasManager implements EventSubscriber {
     }
 
 
-    public void yokeViews(ImageView view1, ImageView view2) {
-        //if (registeredViews.containsKey(view1) && registeredViews.containsKey(view2)) {
+    public void yoke(ImageView view1, ImageView view2) {
+        if (!registeredViews.containsKey(view1)) {
+            register(view1);
+        }
+
+        if (!registeredViews.containsKey(view2)) {
+            register(view2);
+        }
+
+        if (registeredViews.containsKey(view1)) {
             Set<ImageView> set1 = linkedViews.get(view1);
             Set<ImageView> set2 = linkedViews.get(view2);
 
@@ -204,9 +212,29 @@ public class ImageCanvasManager implements EventSubscriber {
             set1.add(view2);
             set2.add(view1);
 
-        //}
+        }
 
     }
+
+    public void unyoke(ImageView view1, ImageView view2) {
+        Set<ImageView> set1 = linkedViews.get(view1);
+        Set<ImageView> set2 = linkedViews.get(view2);
+
+        if (set1 != null && !set1.isEmpty() && set1.contains(view2)) {
+            set1.remove(view2);
+        } else {
+            log.warning("attempting to unyoke but view " + view1 + "is not yoked to " + view2);
+        }
+
+        if (set2 != null && !set2.isEmpty() && set2.contains(view1)) {
+            set2.remove(view1);
+        } else {
+            log.warning("attempting to unyoke but view " + view1 + "is not yoked to " + view2);
+        }
+
+
+    }
+
 
     class CanvasPropertyChangeListener implements PropertyChangeListener {
 
@@ -281,6 +309,7 @@ public class ImageCanvasManager implements EventSubscriber {
 
         for (ImageView iview : yoked) {
             if (iview != source) {
+                System.out.println("setting location of yoked view : " + iview);
                 iview.getCrosshair().setLocation(event.getCrosshair().getLocation());
             }
         }

@@ -93,7 +93,7 @@ public abstract class ImageView extends JComponent implements ListDataListener {
 
         viewport.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                scheduleRepaint(new DisplayChangeEvent(new Property<Viewport3D>(viewport), DisplayAction.SLICE_CHANGED));
+                scheduleRepaint(new DisplayChangeEvent(new Property<Viewport3D>(viewport), DisplayAction.VIEWPORT_CHANGED));
             }
         });
 
@@ -132,6 +132,10 @@ public abstract class ImageView extends JComponent implements ListDataListener {
 
     public AnatomicalVolume getDisplayAnatomy() {
         return displayAnatomy;
+    }
+
+    public void clearAnnotations() {
+        annotationList.clear();
     }
 
     protected List<IAnnotation> getAnnotations() {

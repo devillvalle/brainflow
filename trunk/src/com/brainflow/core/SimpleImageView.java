@@ -1,7 +1,10 @@
 package com.brainflow.core;
 
 
-import com.brainflow.core.annotations.*;
+import com.brainflow.core.annotations.AxisLabelAnnotation;
+import com.brainflow.core.annotations.ColorBarAnnotation;
+import com.brainflow.core.annotations.CrosshairAnnotation;
+import com.brainflow.core.annotations.SelectedPlotAnnotation;
 import com.brainflow.display.ICrosshair;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
@@ -94,7 +97,6 @@ public class SimpleImageView extends ImageView {
         imagePlot.setName(displayAnatomy.XY_PLANE.getOrientation().toString());
 
 
-
         imagePlot.setAnnotations(getAnnotations());
 
         ipane = new ImagePane(imagePlot);
@@ -179,10 +181,6 @@ public class SimpleImageView extends ImageView {
         List<IImagePlot> lst = new ArrayList<IImagePlot>();
         lst.add(imagePlot);
         return lst;
-    }
-
-    public void clearAnnotations() {
-        imagePlot.setAnnotations(new ArrayList<IAnnotation>());
     }
 
 

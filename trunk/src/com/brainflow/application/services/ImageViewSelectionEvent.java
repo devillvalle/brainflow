@@ -28,7 +28,11 @@ public class ImageViewSelectionEvent extends ImageViewEvent {
     }
 
     public String toString() {
-        return "Selected View Changed : " + view.getName();
+        if (view != null) {
+            return "Selected View Changed : " + view.getName();
+        } else {
+            return "Selected View Changed : NULL";
+        }
     }
 
 }

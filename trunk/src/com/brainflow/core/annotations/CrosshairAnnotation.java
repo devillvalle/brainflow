@@ -1,8 +1,6 @@
 package com.brainflow.core.annotations;
 
 import com.brainflow.core.IImagePlot;
-import com.brainflow.display.Crosshair;
-import com.brainflow.display.Property;
 import com.brainflow.display.ICrosshair;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 
@@ -44,10 +42,8 @@ public class CrosshairAnnotation extends AbstractAnnotation {
     private Point location;
 
 
-
     private ICrosshair crosshair;
 
-    
 
     public CrosshairAnnotation(ICrosshair _crosshair) {
         crosshair = _crosshair;
@@ -90,6 +86,7 @@ public class CrosshairAnnotation extends AbstractAnnotation {
 
         ICrosshair cross = crosshair;
 
+        // potential bug because may not match plot axes????
         AnatomicalPoint1D xpt = cross.getValue(plot.getXAxisRange().getAnatomicalAxis());
         AnatomicalPoint1D ypt = cross.getValue(plot.getYAxisRange().getAnatomicalAxis());
 
@@ -107,12 +104,12 @@ public class CrosshairAnnotation extends AbstractAnnotation {
         g2d.setStroke(stroke);
 
         double span = Math.max(plotArea.getWidth(), plotArea.getHeight());
-        double halfSpan = (span/2.0)*lineLength;
+        double halfSpan = (span / 2.0) * lineLength;
 
 
         if (gap == 0) {
-            Line2D lineX = new Line2D.Double(screenX-halfSpan, screenY, screenX+halfSpan, screenY);
-            Line2D lineY = new Line2D.Double(screenX, screenY-halfSpan, screenX, screenY+halfSpan);
+            Line2D lineX = new Line2D.Double(screenX - halfSpan, screenY, screenX + halfSpan, screenY);
+            Line2D lineY = new Line2D.Double(screenX, screenY - halfSpan, screenX, screenY + halfSpan);
             g2d.draw(lineX);
             g2d.draw(lineY);
         } else {
@@ -183,8 +180,6 @@ public class CrosshairAnnotation extends AbstractAnnotation {
         resetStroke();
         support.firePropertyChange(CrosshairAnnotation.LINE_WIDTH_PROPERTY, old, getLineWidth());
     }
-
-
 
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {

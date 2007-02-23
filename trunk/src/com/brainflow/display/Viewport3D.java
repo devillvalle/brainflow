@@ -1,15 +1,15 @@
 package com.brainflow.display;
 
+import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
-import com.brainflow.core.IImageDisplayModel;
 import com.jgoodies.binding.beans.Model;
 
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * Created by IntelliJ IDEA.
@@ -59,16 +59,18 @@ public class Viewport3D extends Model {
         displayModel.addPropertyChangeListener(new PropertyChangeListener() {
 
             public void propertyChange(PropertyChangeEvent evt) {
-                bounds =  displayModel.getImageSpace();
-                init();
+                if (!bounds.equals(displayModel.getImageSpace())) {
+                    displayModel.getImageSpace();
+                    init();
+                }
             }
+
         });
 
 
         init();
     }
 
-   
 
     public IImageSpace getBounds() {
         return bounds;
@@ -88,9 +90,6 @@ public class Viewport3D extends Model {
     }
 
     private void init() {
-
-
-
         setXAxisMin(bounds.getImageAxis(Axis.X_AXIS).getRange().getMinimum());
         setYAxisMin(bounds.getImageAxis(Axis.Y_AXIS).getRange().getMinimum());
         setZAxisMin(bounds.getImageAxis(Axis.Z_AXIS).getRange().getMinimum());
@@ -112,12 +111,52 @@ public class Viewport3D extends Model {
         return bounds.getAnatomicalAxis(Axis.Z_AXIS);
     }
 
+    public String getMinPropertyName(AnatomicalAxis axis) {
+        if (axis.sameAxis(getXAxis())) {
+            return Viewport3D.X_AXIS_MIN_PROPERTY;
+        } else if (axis.sameAxis(getYAxis())) {
+            return Viewport3D.Y_AXIS_MIN_PROPERTY;
+        } else if (axis.sameAxis(getZAxis())) {
+            return Viewport3D.Z_AXIS_MIN_PROPERTY;
+        }
+
+        throw new IllegalArgumentException("Invalid axis " + axis + " for viewport");
+
+    }
+
+    public String getMaxPropertyName(AnatomicalAxis axis) {
+        if (axis.sameAxis(getXAxis())) {
+            return Viewport3D.X_AXIS_MAX_PROPERTY;
+        } else if (axis.sameAxis(getYAxis())) {
+            return Viewport3D.Y_AXIS_MAX_PROPERTY;
+        } else if (axis.sameAxis(getZAxis())) {
+            return Viewport3D.Z_AXIS_MAX_PROPERTY;
+        }
+
+        throw new IllegalArgumentException("Invalid axis " + axis + " for viewport");
+
+    }
+
+    public String getWidthPropertyName(AnatomicalAxis axis) {
+        if (axis.sameAxis(getXAxis())) {
+            return Viewport3D.X_AXIS_WIDTH_PROPERTY;
+        } else if (axis.sameAxis(getYAxis())) {
+            return Viewport3D.Y_AXIS_WIDTH_PROPERTY;
+        } else if (axis.sameAxis(getZAxis())) {
+            return Viewport3D.Z_AXIS_WIDTH_PROPERTY;
+        }
+
+        throw new IllegalArgumentException("Invalid axis " + axis + " for viewport");
+
+    }
+
+
     public AxisRange getRange(AnatomicalAxis axis) {
-        if (axis == getXAxis()) {
+        if (axis.sameAxis(getXAxis())) {
             return new AxisRange(axis, getXAxisMin(), getXAxisMax());
-        } else if (axis == getYAxis()) {
+        } else if (axis.sameAxis(getYAxis())) {
             return new AxisRange(axis, getYAxisMin(), getYAxisMax());
-        } else if (axis == getZAxis()) {
+        } else if (axis.sameAxis(getZAxis())) {
             return new AxisRange(axis, getZAxisMin(), getZAxisMax());
         }
 
@@ -128,6 +167,8 @@ public class Viewport3D extends Model {
         if (xAxisMin < bounds.getImageAxis(Axis.X_AXIS).getRange().getMinimum()) {
             throw new IllegalArgumentException("value " + xAxisMin + "outside of image bounds");
         }
+
+        System.out.println("NEW ORIGIN : " + xAxisMin);
 
         double oldValue = this.XAxisMin;
         this.XAxisMin = xAxisMin;
@@ -141,7 +182,7 @@ public class Viewport3D extends Model {
 
     public void setYAxisMin(double yAxisMin) {
         if (yAxisMin < bounds.getImageAxis(Axis.Y_AXIS).getRange().getMinimum()) {
-            throw new IllegalArgumentException("value " + yAxisMin + "outside of image bounds");
+            throw new IllegalArgumentException("value " + yAxisMin + " is outside of image bounds");
         }
 
         double oldValue = this.YAxisMin;

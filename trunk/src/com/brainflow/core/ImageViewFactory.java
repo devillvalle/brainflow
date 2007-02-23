@@ -55,7 +55,7 @@ public class ImageViewFactory {
         SimpleImageView view = new SimpleImageView(source, AnatomicalVolume.getCanonicalAxial());
 
         String id = ImageCanvasManager.getInstance().register(view);
-        ImageCanvasManager.getInstance().yokeViews(source, view);
+        ImageCanvasManager.getInstance().yoke(source, view);
         view.setId(id);
         FilledSelectableBorder border = new FilledSelectableBorder(view);
         view.setBorder(border);
@@ -72,7 +72,7 @@ public class ImageViewFactory {
         SimpleImageView view = new SimpleImageView(source, AnatomicalVolume.getCanonicalCoronal());
 
         String id = ImageCanvasManager.getInstance().register(view);
-        ImageCanvasManager.getInstance().yokeViews(source, view);
+        ImageCanvasManager.getInstance().yoke(source, view);
         view.setId(id);
         FilledSelectableBorder border = new FilledSelectableBorder(view);
         view.setBorder(border);
@@ -90,7 +90,7 @@ public class ImageViewFactory {
         SimpleImageView view = new SimpleImageView(source, AnatomicalVolume.getCanonicalSagittal());
 
         String id = ImageCanvasManager.getInstance().register(view);
-        ImageCanvasManager.getInstance().yokeViews(source, view);
+        ImageCanvasManager.getInstance().yoke(source, view);
         view.setId(id);
         FilledSelectableBorder border = new FilledSelectableBorder(view);
         view.setBorder(border);

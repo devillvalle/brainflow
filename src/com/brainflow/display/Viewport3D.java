@@ -168,8 +168,7 @@ public class Viewport3D extends Model {
             throw new IllegalArgumentException("value " + xAxisMin + "outside of image bounds");
         }
 
-        System.out.println("NEW ORIGIN : " + xAxisMin);
-
+     
         double oldValue = this.XAxisMin;
         this.XAxisMin = xAxisMin;
         this.XAxisMax = XAxisMin + XAxisWidth;

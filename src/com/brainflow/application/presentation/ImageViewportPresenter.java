@@ -23,6 +23,8 @@ import com.jidesoft.swing.JideBorderLayout;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
+import java.awt.geom.Point2D;
+import java.awt.event.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -47,18 +49,27 @@ public class ImageViewportPresenter extends ImageViewPresenter {
     private BeanAdapter viewportAdapter;
 
     private BoundedRangeAdapter xfovAdapter;
+
     private BoundedRangeAdapter yfovAdapter;
 
     private JSpinner xorigin;
+
     private JSpinner yorigin;
+
     private JSlider xfovSlider;
+
     private JSlider yfovSlider;
 
     private FormLayout layout;
 
     private SimpleImageView boxView;
+
     private BoxAnnotation boxAnnotation = new BoxAnnotation();
+
     private JPanel viewPanel;
+
+    private MouseMotionListener panner = new Panner();
+
 
     public ImageViewportPresenter() {
         buildGUI();
@@ -179,12 +190,10 @@ public class ImageViewportPresenter extends ImageViewPresenter {
         return view.getModel().getImageSpace().getImageAxis(plot.getYAxisRange().getAnatomicalAxis(), true).getRange().getMaximum();
     }
 
-    public void viewSelected(ImageView view) {
-
-
+    private void updateView(ImageView view) {
         viewPanel.remove(boxView);
 
-        boxView = new SimpleImageView(view.getModel());
+        boxView = new SimpleImageView(view.getModel(), view.getSelectedPlot().getDisplayAnatomy());
 
         boxView.clearAnnotations();
         boxView.getSelectedPlot().setPlotInsets(new Insets(2, 2, 2, 2));
@@ -195,17 +204,49 @@ public class ImageViewportPresenter extends ImageViewPresenter {
         boxView.addAnnotation(boxAnnotation);
 
         viewPanel.add(boxView);
+        boxView.getSelectedPlot().getComponent().addMouseMotionListener(panner);
+        boxView.getSelectedPlot().getComponent().addMouseListener((MouseListener)panner);
 
         /// what about unyoking old views?
         ImageCanvasManager.getInstance().yoke(view, boxView);
-        //xfovSlider.setValue(Math.max(convertYRangeToInteger(view), convertXRangeToInteger(view)));
+
+    }
+
+    public void viewSelected(ImageView view) {
 
         bindComponents();
+        updateView(view);
         setEnabled(true);
-
         form.revalidate();
 
     }
+
+    private void intializeAdapters() {
+        ImageView view = getSelectedView();
+        Viewport3D viewport = view.getViewport();
+        IImagePlot plot = view.getSelectedPlot();
+
+        viewportAdapter = new BeanAdapter(viewport, true);
+
+        ValueModel xextent = viewportAdapter.getValueModel(viewport.getWidthPropertyName(plot.getXAxisRange().getAnatomicalAxis()));
+        ValueModel yextent = viewportAdapter.getValueModel(viewport.getWidthPropertyName(plot.getYAxisRange().getAnatomicalAxis()));
+
+
+        xfovAdapter = new BoundedRangeAdapter(new PercentageConverter(xextent,
+                new ValueHolder(10),
+                new ValueHolder(viewport.getBounds().getImageAxis(Axis.X_AXIS).getRange().getInterval()), 100), 0, 0, 100);
+        xfovSlider.setModel(xfovAdapter);
+
+        yfovAdapter = new BoundedRangeAdapter(new PercentageConverter(yextent,
+                new ValueHolder(10),
+                new ValueHolder(viewport.getBounds().getImageAxis(Axis.Y_AXIS).getRange().getInterval()), 100), 0, 0, 100);
+        yfovSlider.setModel(yfovAdapter);
+
+        PropertyConnector.connect(xextent, "value", yextent, "value");
+
+    }
+
+
 
     private void bindComponents() {
         // assumes view not null;
@@ -214,35 +255,13 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
         Bindings.bind(plotSelector, view.getPlotSelection());
 
-        PropertyAdapter xminAdapter = new PropertyAdapter(boxAnnotation, BoxAnnotation.XMIN_PROPERTY);
-        PropertyAdapter yminAdapter = new PropertyAdapter(boxAnnotation, BoxAnnotation.YMIN_PROPERTY);
-        PropertyAdapter widthAdapter = new PropertyAdapter(boxAnnotation, BoxAnnotation.WIDTH_PROPERTY);
-        PropertyAdapter heightAdapter = new PropertyAdapter(boxAnnotation, BoxAnnotation.HEIGHT_PROPERTY);
-
 
         Viewport3D viewport = view.getViewport();
         IImagePlot plot = view.getSelectedPlot();
 
 
         if (viewportAdapter == null) {
-            viewportAdapter = new BeanAdapter(viewport, true);
-            ValueModel xextent = viewportAdapter.getValueModel(viewport.getWidthPropertyName(plot.getXAxisRange().getAnatomicalAxis()));
-            ValueModel yextent = viewportAdapter.getValueModel(viewport.getWidthPropertyName(plot.getYAxisRange().getAnatomicalAxis()));
-
-
-            xfovAdapter = new BoundedRangeAdapter(new PercentageConverter(xextent,
-                    new ValueHolder(10),
-                    new ValueHolder(viewport.getBounds().getImageAxis(Axis.X_AXIS).getRange().getInterval()), 100), 0, 0, 100);
-            xfovSlider.setModel(xfovAdapter);
-
-            yfovAdapter = new BoundedRangeAdapter(new PercentageConverter(yextent,
-                    new ValueHolder(10),
-                    new ValueHolder(viewport.getBounds().getImageAxis(Axis.Y_AXIS).getRange().getInterval()), 100), 0, 0, 100);
-            yfovSlider.setModel(yfovAdapter);
-
-            PropertyConnector.connect(xextent, "value", yextent, "value");
-
-
+            intializeAdapters();
         } else {
             viewportAdapter.setBean(viewport);
         }
@@ -253,6 +272,10 @@ public class ImageViewportPresenter extends ImageViewPresenter {
         ValueModel wval = viewportAdapter.getValueModel(viewport.getWidthPropertyName(plot.getXAxisRange().getAnatomicalAxis()));
         ValueModel hval = viewportAdapter.getValueModel(viewport.getWidthPropertyName(plot.getYAxisRange().getAnatomicalAxis()));
 
+        PropertyAdapter xminAdapter = new PropertyAdapter(boxAnnotation, BoxAnnotation.XMIN_PROPERTY);
+        PropertyAdapter yminAdapter = new PropertyAdapter(boxAnnotation, BoxAnnotation.YMIN_PROPERTY);
+        PropertyAdapter widthAdapter = new PropertyAdapter(boxAnnotation, BoxAnnotation.WIDTH_PROPERTY);
+        PropertyAdapter heightAdapter = new PropertyAdapter(boxAnnotation, BoxAnnotation.HEIGHT_PROPERTY);
 
         PropertyConnector xconnector = new PropertyConnector(xval, "value", xminAdapter, "value");
         PropertyConnector yconnector = new PropertyConnector(yval, "value", yminAdapter, "value");
@@ -266,7 +289,6 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
         xspinnerModel = new SpinnerNumberModel((Number) xval.getValue(), getXLowerBound(view), getXUpperBound(view), 1);
         yspinnerModel = new SpinnerNumberModel((Number) yval.getValue(), getYLowerBound(view), getYUpperBound(view), 1);
-
 
         xorigin.setModel(xspinnerModel);
         yorigin.setModel(yspinnerModel);
@@ -288,10 +310,53 @@ public class ImageViewportPresenter extends ImageViewPresenter {
     }
 
     public void allViewsDeselected() {
+        boxView.removeMouseMotionListener(panner);
+        boxView.removeMouseListener((MouseListener)panner);
         setEnabled(false);
     }
 
     public JComponent getComponent() {
         return form;
     }
+
+
+    class Panner extends MouseAdapter implements MouseMotionListener {
+
+        private Point2D lastPoint = null;
+
+
+        public void mousePressed(MouseEvent e) {          
+            lastPoint = boxAnnotation.translateFromJava2D(boxView.getSelectedPlot(), e.getPoint());
+        }
+
+        public void mouseReleased(MouseEvent e) {
+            lastPoint = null;
+        }
+
+        public void mouseMoved(MouseEvent e) {
+
+        }
+
+
+        public void mouseDragged(MouseEvent e) {
+            if (lastPoint == null) return;
+
+                IImagePlot plot = boxView.getSelectedPlot();
+
+                if (boxAnnotation.containsPoint(plot, e.getPoint())) {
+                    Point2D next = boxAnnotation.translateFromJava2D(plot, e.getPoint());
+                    Number xold = (Number)xorigin.getValue();
+                    Number yold = (Number)yorigin.getValue();
+
+                    //ImageView selView = getSelectedView();
+                    //Viewport3D viewport = selView.getViewport();
+
+                    xspinnerModel.setValue(xold.doubleValue() + (next.getX() - lastPoint.getX()) );
+                    yspinnerModel.setValue(yold.doubleValue() + (next.getY() - lastPoint.getY()) );
+                    lastPoint = next;
+                }
+            }
+        }
+
+
 }

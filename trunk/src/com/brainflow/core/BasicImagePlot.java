@@ -1,8 +1,11 @@
 package com.brainflow.core;
 
 import com.brainflow.core.annotations.IAnnotation;
+import com.brainflow.image.anatomy.AnatomicalPlane;
+import com.brainflow.image.anatomy.AnatomicalPoint2D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.image.axis.AxisRange;
+import com.brainflow.image.axis.ImageAxis;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,8 +44,6 @@ public class BasicImagePlot extends JComponent implements IImagePlot {
     }
 
 
-
-
     public void paint(Graphics2D g2, Rectangle2D area) {
         renderer.paint(g2, area, this);
 
@@ -57,11 +58,10 @@ public class BasicImagePlot extends JComponent implements IImagePlot {
 
     @Override
     protected void paintComponent(Graphics g) {
-        System.out.println("painting plot ... ");
-        Graphics2D g2 = (Graphics2D)g;
+
+        Graphics2D g2 = (Graphics2D) g;
         Dimension size = getSize();
         Insets insets = getInsets();
-
 
 
         Rectangle2D available = new Rectangle2D.Double(
@@ -71,8 +71,8 @@ public class BasicImagePlot extends JComponent implements IImagePlot {
         );
 
 
-        int drawWidth = (int)available.getWidth();
-        int drawHeight = (int)available.getHeight();
+        int drawWidth = (int) available.getWidth();
+        int drawHeight = (int) available.getHeight();
 
         /*if (drawWidth < this.minimumDrawWidth) {
             drawWidth = this.minimumDrawWidth;
@@ -101,7 +101,7 @@ public class BasicImagePlot extends JComponent implements IImagePlot {
 
         g2.setColor(oldColor);
 
-        renderer.paint(g2, plotArea, this );
+        renderer.paint(g2, plotArea, this);
         for (IAnnotation ia : annotationList) {
             if (ia.isVisible()) {
                 ia.draw(g2, plotArea, this);
@@ -159,6 +159,35 @@ public class BasicImagePlot extends JComponent implements IImagePlot {
     public void setYAxisRange(AxisRange yrange) {
         yAxis = yrange;
     }
+
+    public Point translateAnatToScreen(AnatomicalPoint2D pt) {
+        if (pt.getAnatomy().XAXIS != getXAxisRange().getAnatomicalAxis()) {
+            throw new ImageAxis.IncompatibleAxisException("supplied point does not match image plot axes: " +
+                    "X: " + pt.getAnatomy().XAXIS + " Y: " + pt.getAnatomy().YAXIS +
+                    " Plot X: " + getXAxisRange().getAnatomicalAxis() +
+                    " Plot Y: " + getYAxisRange().getAnatomicalAxis());
+        }
+
+        Insets insets = getInsets();
+        Insets plotInsets = getPlotInsets();
+        int x = (int) (pt.getX() * getScaleX() + plotInsets.left + insets.left);
+        int y = (int) (pt.getY() * getScaleY() + plotInsets.top + insets.top);
+        return new Point(x, y);
+    }
+
+
+    public AnatomicalPoint2D translateScreenToAnat(Point screenPoint) {
+        Insets insets = getInsets();
+        Insets plotInsets = getPlotInsets();
+        double x = (screenPoint.getX() - insets.left - plotInsets.left) / getScaleX();
+        double y = (screenPoint.getY() - insets.top - plotInsets.top) / getScaleY();
+        return new AnatomicalPoint2D(AnatomicalPlane.matchAnatomy(
+                getXAxisRange().getAnatomicalAxis(),
+                getYAxisRange().getAnatomicalAxis()),
+                x + getXAxisRange().getMinimum(),
+                y + getYAxisRange().getMinimum());
+    }
+
 
     public AxisRange getXAxisRange() {
         return xAxis;

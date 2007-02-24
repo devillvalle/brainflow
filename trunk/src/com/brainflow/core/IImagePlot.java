@@ -1,6 +1,7 @@
 package com.brainflow.core;
 
 import com.brainflow.core.annotations.IAnnotation;
+import com.brainflow.image.anatomy.AnatomicalPoint2D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.image.axis.AxisRange;
 
@@ -36,6 +37,10 @@ public interface IImagePlot {
     public double getScaleX();
 
     public double getScaleY();
+
+    public Point translateAnatToScreen(AnatomicalPoint2D pt);
+
+    public AnatomicalPoint2D translateScreenToAnat(Point pt);
 
     public Rectangle getPlotArea();
 

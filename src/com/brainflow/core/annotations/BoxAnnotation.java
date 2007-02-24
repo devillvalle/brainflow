@@ -1,10 +1,10 @@
 package com.brainflow.core.annotations;
 
 import com.brainflow.core.IImagePlot;
+import com.brainflow.image.anatomy.AnatomicalPoint2D;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.Point2D;
 
 /**
  * BrainFlow Project
@@ -27,7 +27,6 @@ public class BoxAnnotation extends AbstractAnnotation {
     private Rectangle2D rect = new Rectangle2D.Double();
 
 
-
     private Paint fillPaint = new Color(0, 255, 0, 87);
 
     private Paint linePaint = Color.GREEN.brighter();
@@ -39,27 +38,16 @@ public class BoxAnnotation extends AbstractAnnotation {
 
 
     public boolean containsPoint(IImagePlot plot, Point plotPoint) {
-        Insets plotInsets = plot.getPlotInsets();
-        double x = (plotPoint.getX() - plotInsets.left) / plot.getScaleX();
-        double y = (plotPoint.getY() - plotInsets.top) / plot.getScaleY();
-        x = x + plot.getXAxisRange().getMinimum();
-        y = y + plot.getYAxisRange().getMinimum();
-
-        if (rect.contains(x,y)) {
+        AnatomicalPoint2D pt = plot.translateScreenToAnat(plotPoint);
+        if (rect.contains(pt.getX(), pt.getY())) {
             return true;
         } else {
             return false;
         }
     }
 
-    public Point2D translateFromJava2D(IImagePlot plot, Point plotPoint) {
-        Insets plotInsets = plot.getPlotInsets();
-        double x = (plotPoint.getX() - plotInsets.left) / plot.getScaleX();
-        double y = (plotPoint.getY() - plotInsets.top) / plot.getScaleY();
-        x = x + plot.getXAxisRange().getMinimum();
-        y = y + plot.getYAxisRange().getMinimum();
-
-        return new Point2D.Double(x,y);
+    public AnatomicalPoint2D translateFromJava2D(IImagePlot plot, Point plotPoint) {
+        return plot.translateScreenToAnat(plotPoint);
 
     }
 
@@ -79,7 +67,6 @@ public class BoxAnnotation extends AbstractAnnotation {
     public double getNormalizedHeight(IImagePlot plot, double val) {
         return val / plot.getYAxisRange().getInterval();
     }
-
 
 
     public void draw(Graphics2D g2d, Rectangle2D plotArea, IImagePlot plot) {
@@ -118,7 +105,7 @@ public class BoxAnnotation extends AbstractAnnotation {
     }
 
     public void setXmin(double xmin) {
-        System.out.println("changing x min in box annotation to " + xmin);
+        System.out.println("SETTING BOX X MIN TO : " + xmin);
         double old = getXmin();
         rect.setRect(xmin, rect.getY(), rect.getWidth(), rect.getHeight());
         support.firePropertyChange(BoxAnnotation.XMIN_PROPERTY, old, getXmin());
@@ -129,9 +116,10 @@ public class BoxAnnotation extends AbstractAnnotation {
     }
 
     public void setYmin(double ymin) {
+        System.out.println("SETTING BOX Y MIN TO : " + ymin);
         double old = getYmin();
 
-        rect.setRect(rect.getX(), ymin, rect.getWidth(), rect.getHeight());
+        rect.setRect(getXmin(), ymin, getWidth(), getHeight());
         support.firePropertyChange(BoxAnnotation.YMIN_PROPERTY, old, getYmin());
     }
 
@@ -140,6 +128,7 @@ public class BoxAnnotation extends AbstractAnnotation {
     }
 
     public void setWidth(double width) {
+        System.out.println("SETTING BOX WIDTH TO : " + width);
         double old = getWidth();
         rect.setRect(getXmin(), getYmin(), width, rect.getHeight());
         support.firePropertyChange(BoxAnnotation.WIDTH_PROPERTY, old, getWidth());
@@ -150,8 +139,9 @@ public class BoxAnnotation extends AbstractAnnotation {
     }
 
     public void setHeight(double height) {
+        System.out.println("SETTING BOX HEIGHT TO : " + height);
         double old = getHeight();
-         rect.setRect(getXmin(), getYmin(), rect.getWidth(), height);
+        rect.setRect(getXmin(), getYmin(), rect.getWidth(), height);
         support.firePropertyChange(BoxAnnotation.HEIGHT_PROPERTY, old, getHeight());
     }
 

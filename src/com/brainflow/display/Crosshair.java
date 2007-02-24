@@ -4,7 +4,6 @@ import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
-import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.image.space.IImageSpace;
 import com.jgoodies.binding.beans.Model;
 
@@ -47,7 +46,7 @@ public class Crosshair extends Model implements ICrosshair {
 
         viewport.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent e) {
-                makeLegal();
+                //makeLegal();
 
 
             }
@@ -59,10 +58,10 @@ public class Crosshair extends Model implements ICrosshair {
         IImageSpace space = viewport.getBounds();
 
         // danger danger
-        AnatomicalPoint3D loc = ((ImageSpace3D)space).getCentroid();
-        setXValue(loc.getX());
-        setYValue(loc.getY());
-        setZValue(loc.getZ());
+        //AnatomicalPoint3D loc = ((ImageSpace3D)space).getCentroid();
+        //setXValue(loc.getX());
+        //setYValue(loc.getY());
+        //setZValue(loc.getZ());
 
     }
 
@@ -153,12 +152,12 @@ public class Crosshair extends Model implements ICrosshair {
     }
 
     public void setValue(AnatomicalPoint1D val) {
-        if (val.getAnatomy() == location.getAnatomy().YAXIS) {
+        if (val.getAnatomy() == location.getAnatomy().XAXIS) {
             setXValue(val.getX());
         } else if (val.getAnatomy() == location.getAnatomy().YAXIS) {
-           setYValue(val.getX());
+            setYValue(val.getX());
         } else if (val.getAnatomy() == location.getAnatomy().ZAXIS) {
-           setZValue(val.getX());
+            setZValue(val.getX());
         } else {
             throw new IllegalArgumentException("illegal axis for current cross hair: " + val.getAnatomy());
         }

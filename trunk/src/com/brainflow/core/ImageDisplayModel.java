@@ -268,6 +268,10 @@ public class ImageDisplayModel implements IImageDisplayModel {
         }
     }
 
+    public String toString() {
+        return getName();
+    }
+
 
     class DirtyListener implements ChangeListener {
 

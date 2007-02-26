@@ -75,7 +75,12 @@ public class NiftiInfoReader implements ImageInfoReader {
                     throw new IOException("Error reading gzipped file object, URI : " + uri);
                 }
 
+                if (!children[0].exists()) {
+                    throw new FileNotFoundException("Error, file " + children[0].getName() + " does not exist.");
+                }
                 return children[0].getContent().getInputStream();
+
+
             } else {
                 return obj.getContent().getRandomAccessContent(RandomAccessMode.READ).getInputStream();
             }

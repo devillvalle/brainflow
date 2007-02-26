@@ -134,13 +134,37 @@ public class SoftLoadableImage implements ILoadableImage {
         try {
             ImageInfoReader reader = (ImageInfoReader) descriptor.getHeaderReader().newInstance();
             imageInfo = reader.readInfo(getHeaderFile());
-
             if (imageInfo.getImageFile() == null) {
                 imageInfo.setImageFile(getDataFile());
             }
 
             ImageReader ireader = (ImageReader) descriptor.getDataReader().newInstance();
-            IImageData data = ireader.readImage(imageInfo);
+            IImageData data = ireader.readImage(imageInfo, new ProgressListener() {
+
+                public void setValue(int val) {
+                    //To change body of implemented methods use File | Settings | File Templates.
+                }
+
+                public void setMinimum(int val) {
+                    //To change body of implemented methods use File | Settings | File Templates.
+                }
+
+                public void setMaximum(int val) {
+                    //To change body of implemented methods use File | Settings | File Templates.
+                }
+
+                public void setString(String message) {
+                   log.info(message);
+                }
+
+                public void setIndeterminate(boolean b) {
+                    //To change body of implemented methods use File | Settings | File Templates.
+                }
+
+                public void finished() {
+                    //To change body of implemented methods use File | Settings | File Templates.
+                }
+            });
             data.setIdentifier(getUniqueID());
             data.setImageLabel(getStem());
             dataRef = new SoftReference(data);

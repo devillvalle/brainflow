@@ -37,6 +37,7 @@ public class ProjectManager implements EventSubscriber, BrainflowProjectListener
         // Exists only to thwart instantiation.
         EventBus.subscribe(LoadableImageStatusEvent.class, this);
         activeProject.addListDataListener(this);
+        activeProject.setName("Project-1");
     }
 
     public static ProjectManager getInstance() {

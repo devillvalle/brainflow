@@ -127,7 +127,7 @@ public class ImageViewSliderPresenter extends ImageViewPresenter {
 
     public void viewSelected(ImageView view) {
         slider.setEnabled(true);
-        crosshair = view.getCrosshair();
+        crosshair = view.getCrosshair().getProperty();
 
         if (crosshairAdapter == null) {
             initBinding();

@@ -62,7 +62,7 @@ public abstract class ImageView extends JComponent implements ListDataListener {
 
     private PropertyChangeListener annotationListener;
 
-    protected Crosshair crosshair;
+    private Property<ICrosshair> crosshair;
 
     protected Viewport3D viewport;
 
@@ -77,11 +77,12 @@ public abstract class ImageView extends JComponent implements ListDataListener {
     protected void init() {
         viewport = new Viewport3D(getModel());
 
-        crosshair = new Crosshair(viewport);
+        crosshair = new Property<ICrosshair>(new Crosshair(viewport));
 
         crosshair.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                scheduleRepaint(new DisplayChangeEvent(new Property<ICrosshair>(crosshair), DisplayAction.SLICE_CHANGED));
+                log.info("CROSSHAIR EVENT : SOURCE " + ImageView.this);
+                scheduleRepaint(new DisplayChangeEvent(crosshair, DisplayAction.SLICE_CHANGED));
             }
         });
 
@@ -232,7 +233,7 @@ public abstract class ImageView extends JComponent implements ListDataListener {
         this.id = id;
     }
 
-    public ICrosshair getCrosshair() {
+    public Property<ICrosshair> getCrosshair() {
         return crosshair;
     }
 

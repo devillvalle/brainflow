@@ -190,7 +190,7 @@ public class ImageCanvasFacade {
             Viewport3D viewport = iview.getViewport();
 
             if (pt != null && viewport.inBounds(pt)) {
-                iview.getCrosshair().setLocation(pt);
+                iview.getCrosshair().getProperty().setLocation(pt);
             }
         }
 

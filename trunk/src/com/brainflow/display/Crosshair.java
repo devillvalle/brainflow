@@ -19,10 +19,6 @@ import java.beans.PropertyChangeListener;
  */
 public class Crosshair extends Model implements ICrosshair {
 
-    public static final String LOCATION_PROPERTY = "location";
-    public static final String X_VALUE_PROPERTY = "XValue";
-    public static final String Y_VALUE_PROPERTY = "YValue";
-    public static final String Z_VALUE_PROPERTY = "ZValue";
 
     private Viewport3D viewport;
 
@@ -114,14 +110,13 @@ public class Crosshair extends Model implements ICrosshair {
     }
 
     public void setLocation(AnatomicalPoint3D ap) {
+        if (!ap.equals(location)) {
+            double x = ap.getValue(location.getAnatomy().XAXIS).getX();
+            double y = ap.getValue(location.getAnatomy().YAXIS).getX();
+            double z = ap.getValue(location.getAnatomy().ZAXIS).getX();
 
-        double x = ap.getValue(location.getAnatomy().XAXIS).getX();
-        double y = ap.getValue(location.getAnatomy().YAXIS).getX();
-        double z = ap.getValue(location.getAnatomy().ZAXIS).getX();
-
-        setXValue(x);
-        setYValue(y);
-        setZValue(z);
+            setLocation(x, y, z);
+        }
 
     }
 
@@ -132,23 +127,37 @@ public class Crosshair extends Model implements ICrosshair {
                 location.getZ());
     }
 
+    private void setLocation(double x, double y, double z) {
+
+        location.setX(x);
+        location.setY(y);
+        location.setZ(z);
+        //todo something better than null?
+        this.firePropertyChange(LOCATION_PROPERTY, null, location);
+    }
 
     public void setXValue(double x) {
-        double oldValue = location.getX();
-        location.setX(x);
-        this.firePropertyChange(X_VALUE_PROPERTY, oldValue, x);
+        if (Double.compare(getXValue(), x) != 0) {
+            double oldValue = location.getX();
+            location.setX(x);
+            this.firePropertyChange(X_VALUE_PROPERTY, oldValue, x);
+        }
     }
 
     public void setYValue(double y) {
-        double oldValue = location.getY();
-        location.setY(y);
-        this.firePropertyChange(Y_VALUE_PROPERTY, oldValue, y);
+        if (Double.compare(getYValue(), y) != 0) {
+            double oldValue = location.getY();
+            location.setY(y);
+            this.firePropertyChange(Y_VALUE_PROPERTY, oldValue, y);
+        }
     }
 
     public void setZValue(double z) {
-        double oldValue = location.getZ();
-        location.setZ(z);
-        this.firePropertyChange(Z_VALUE_PROPERTY, oldValue, z);
+        if (Double.compare(getZValue(), z) != 0) {
+            double oldValue = location.getZ();
+            location.setZ(z);
+            this.firePropertyChange(Z_VALUE_PROPERTY, oldValue, z);
+        }
     }
 
     public void setValue(AnatomicalPoint1D val) {

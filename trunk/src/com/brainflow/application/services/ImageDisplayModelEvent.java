@@ -10,6 +10,8 @@
 package com.brainflow.application.services;
 
 import com.brainflow.core.IImageDisplayModel;
+import com.brainflow.application.BrainflowProject;
+import com.brainflow.application.toplevel.BrainflowProjectEvent;
 import org.bushe.swing.event.AbstractEventServiceEvent;
 
 import javax.swing.event.ListDataEvent;
@@ -19,27 +21,46 @@ import javax.swing.event.ListDataEvent;
  */
 public class ImageDisplayModelEvent extends AbstractEventServiceEvent {
 
+    public enum TYPE {
+        MODEL_ADDED,
+        MODEL_REMOVED,
+        MODEL_CHANGED,
+        MODEL_INTERVAL_ADDED,
+        MODEL_INTERVAL_REMOVED
+    }
 
-    private ListDataEvent event;
-    private IImageDisplayModel model;
+    private BrainflowProjectEvent event;
+    private TYPE type;
+   
 
     /**
      * Creates a new instance of ImageDisplayModelEvent
      */
 
-    public ImageDisplayModelEvent(IImageDisplayModel _model, ListDataEvent _event) {
+    public ImageDisplayModelEvent(BrainflowProjectEvent _event, TYPE _type) {
         super(_event);
         event = _event;
-        model = _model;
+        type = _type;
+    }
 
+
+    public TYPE getType() {
+        return type;
     }
 
     public ListDataEvent getListDataEvent() {
-        return event;
+        //todo do we need to expose low level event especially since it might be null?
+        // could have getIndex
+        // etc ..
+        return event.getListDataEvent();
     }
 
     public IImageDisplayModel getModel() {
-        return model;
+        return event.getModel();
+    }
+
+    public BrainflowProject getProject() {
+        return event.getProject();
     }
 
 }

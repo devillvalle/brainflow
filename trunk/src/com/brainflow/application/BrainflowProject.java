@@ -1,12 +1,15 @@
 package com.brainflow.application;
 
 import com.brainflow.core.IImageDisplayModel;
+import com.brainflow.application.toplevel.BrainflowProjectListener;
+import com.brainflow.application.toplevel.BrainflowProjectEvent;
 
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * BrainFlow Project
@@ -16,23 +19,30 @@ import java.util.List;
  */
 public class BrainflowProject {
 
+    private static final Logger log = Logger.getLogger(BrainflowProject.class.getName());
 
     private List<IImageDisplayModel> modelList = new ArrayList<IImageDisplayModel>();
 
     private ModelListDataListener listener = new ModelListDataListener();
 
-    private List<ListDataListener> listenerList = new ArrayList<ListDataListener>();
+    private List<BrainflowProjectListener> listenerList = new ArrayList<BrainflowProjectListener>();
 
     public void addModel(IImageDisplayModel model) {
         if (!modelList.contains(model)) {
             modelList.add(model);
             model.addListDataListener(listener);
+            fireModelAdded(new BrainflowProjectEvent(this, model, null));
+        } else {
+            log.warning("BrainflowProject already contains model supplied as argument, not adding.");
         }
     }
 
     public void removeModel(IImageDisplayModel model) {
         if (modelList.contains(model)) {
             modelList.remove(model);
+            fireModelRemoved(new BrainflowProjectEvent(this, model, null));
+        } else {
+            log.warning("BrainflowProject does not contain model supplied as argument, cannot remove");
         }
     }
 
@@ -45,11 +55,11 @@ public class BrainflowProject {
         return modelList.size();
     }
 
-    public void addListDataListener(ListDataListener listener) {
+    public void addListDataListener(BrainflowProjectListener listener) {
         listenerList.add(listener);
     }
 
-    public void removeDataListener(ListDataListener listener) {
+    public void removeListDataListener(BrainflowProjectListener listener) {
         listenerList.remove(listener);
     }
 
@@ -71,25 +81,43 @@ public class BrainflowProject {
 
     }
 
+    private void fireModelAdded(BrainflowProjectEvent event) {
+        for (BrainflowProjectListener l : listenerList) {
+            l.modelAdded(event);
+
+        }
+
+    }
+
+    private void fireModelRemoved(BrainflowProjectEvent event) {
+         for (BrainflowProjectListener l : listenerList) {
+            l.modelAdded(event);
+
+        }
+
+
+    }
+
     private void fireIntervalAdded(ListDataEvent e) {
-        for (ListDataListener l : listenerList) {
-            l.intervalAdded(e);
+        for (BrainflowProjectListener l : listenerList) {
+           l.intervalAdded(new BrainflowProjectEvent(this, (IImageDisplayModel)e.getSource(), e));
 
         }
 
     }
 
     private void fireContentsChanged(ListDataEvent e) {
-        for (ListDataListener l : listenerList) {
-            l.contentsChanged(e);
+        for (BrainflowProjectListener l : listenerList) {
+            l.contentsChanged(new BrainflowProjectEvent(this, (IImageDisplayModel)e.getSource(), e));
+
 
         }
 
     }
 
     private void fireIntervalRemoved(ListDataEvent e) {
-        for (ListDataListener l : listenerList) {
-            l.intervalRemoved(e);
+        for (BrainflowProjectListener l : listenerList) {
+            l.intervalRemoved(new BrainflowProjectEvent(this, (IImageDisplayModel)e.getSource(), e));
 
         }
 
@@ -97,6 +125,7 @@ public class BrainflowProject {
 
 
     class ModelListDataListener implements ListDataListener {
+
 
         public void intervalAdded(ListDataEvent e) {
             fireIntervalAdded(e);

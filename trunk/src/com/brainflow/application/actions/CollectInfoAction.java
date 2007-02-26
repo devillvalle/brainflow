@@ -53,7 +53,7 @@ public class CollectInfoAction extends BasicAction {
         sb.append("Range " + iplot.getYAxisRange().getMinimum() + " to " + iplot.getYAxisRange().getMaximum() + "\n");
 
 
-        ICrosshair cross = view.getCrosshair();
+        ICrosshair cross = view.getCrosshair().getProperty();
         sb.append("Crosshair: " + "\n");
         sb.append("x loc " + cross.getValue(iplot.getXAxisRange().getAnatomicalAxis()) + "\n");
         sb.append("y loc " + cross.getValue(iplot.getYAxisRange().getAnatomicalAxis()) + "\n");

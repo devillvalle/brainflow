@@ -26,7 +26,9 @@ import java.util.List;
  * Time: 1:39:29 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ProjectManager implements EventSubscriber, ListDataListener {
+
+
+public class ProjectManager implements EventSubscriber, BrainflowProjectListener {
 
     private List<BrainflowProject> projects = new ArrayList<BrainflowProject>();
     private BrainflowProject activeProject = new BrainflowProject();
@@ -54,8 +56,8 @@ public class ProjectManager implements EventSubscriber, ListDataListener {
             LoadableImageManager.getInstance().registerLoadableImage(limg);
         }
 
-
-        IImageDisplayModel displayModel = new ImageDisplayModel(activeProject + " : " + "model #" + (activeProject.size() + 1));
+        //todo give sensible name
+        IImageDisplayModel displayModel = new ImageDisplayModel("model #" + (activeProject.size() + 1));
         activeProject.addModel(displayModel);
 
 
@@ -108,16 +110,25 @@ public class ProjectManager implements EventSubscriber, ListDataListener {
         }
     }
 
-    public void intervalAdded(ListDataEvent e) {
-        EventBus.publish(new ImageDisplayModelEvent((IImageDisplayModel) e.getSource(), e));
+
+    public void modelAdded(BrainflowProjectEvent event) {
+        EventBus.publish(new ImageDisplayModelEvent(event, ImageDisplayModelEvent.TYPE.MODEL_ADDED));
+        
     }
 
-    public void intervalRemoved(ListDataEvent e) {
-        EventBus.publish(new ImageDisplayModelEvent((IImageDisplayModel) e.getSource(), e));
-
+    public void modelRemoved(BrainflowProjectEvent event) {
+        EventBus.publish(new ImageDisplayModelEvent(event, ImageDisplayModelEvent.TYPE.MODEL_REMOVED));
     }
 
-    public void contentsChanged(ListDataEvent e) {
-        EventBus.publish(new ImageDisplayModelEvent((IImageDisplayModel) e.getSource(), e));
+    public void intervalAdded(BrainflowProjectEvent e) {
+        EventBus.publish(new ImageDisplayModelEvent(e, ImageDisplayModelEvent.TYPE.MODEL_INTERVAL_ADDED));
+    }
+
+    public void intervalRemoved(BrainflowProjectEvent e) {
+        EventBus.publish(new ImageDisplayModelEvent(e, ImageDisplayModelEvent.TYPE.MODEL_INTERVAL_REMOVED));
+    }
+
+    public void contentsChanged(BrainflowProjectEvent e) {
+        EventBus.publish(new ImageDisplayModelEvent(e, ImageDisplayModelEvent.TYPE.MODEL_CHANGED));
     }
 }

@@ -25,7 +25,7 @@ public class AnatomicalPoint3D implements AnatomicalPoint {
     private double y;
     private double z;
 
-    private PropertyChangeSupport changeSupport = new ExtendedPropertyChangeSupport(this);
+    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     public AnatomicalPoint3D(AnatomicalVolume _anatomy, double x, double y, double z) {
         this.x = x;
@@ -74,6 +74,8 @@ public class AnatomicalPoint3D implements AnatomicalPoint {
         return z;
     }
 
+    
+
     public void setX(double value) {
         double oldValue = getX();
         x = value;
@@ -98,25 +100,49 @@ public class AnatomicalPoint3D implements AnatomicalPoint {
     }
 
     public double getValue(int axisNum) {
-        assert axisNum == 0 | axisNum == 1;
-
+  
         if (axisNum == 0) {
             return getX();
         } else if (axisNum == 1) {
             return getY();
         } else if (axisNum == 2) {
             return getZ();
-        } else throw new AssertionError();
+        } else throw new IllegalArgumentException("illegal axis number " + axisNum);
 
     }
 
 
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AnatomicalPoint3D that = (AnatomicalPoint3D) o;
+
+        if (Double.compare(that.x, x) != 0) return false;
+        if (Double.compare(that.y, y) != 0) return false;
+        if (Double.compare(that.z, z) != 0) return false;
+        if (anatomy != null ? !anatomy.equals(that.anatomy) : that.anatomy != null) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result;
+        long temp;
+        result = (anatomy != null ? anatomy.hashCode() : 0);
+        temp = x != +0.0d ? Double.doubleToLongBits(x) : 0L;
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = y != +0.0d ? Double.doubleToLongBits(y) : 0L;
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = z != +0.0d ? Double.doubleToLongBits(z) : 0L;
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
     public String toString() {
-        return "AnatomicalPoint3D{" +
-                "anatomy=" + anatomy +
-                ", x=" + x +
-                ", y=" + y +
-                ", z=" + z +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        sb.append(anatomy.XAXIS).append("-").append(anatomy.YAXIS).append("-").append(anatomy.ZAXIS);
+        sb.append("X: ").append(getX()).append(" Y: ").append(getY()).append(" Z: ").append(getZ());
+        return sb.toString();
     }
 }

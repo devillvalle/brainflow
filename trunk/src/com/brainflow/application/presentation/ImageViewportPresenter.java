@@ -1,6 +1,7 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.application.toplevel.ImageCanvasManager;
+import com.brainflow.application.YokeHandler;
 import com.brainflow.core.IImagePlot;
 import com.brainflow.core.ImageDisplayModel;
 import com.brainflow.core.ImageView;
@@ -43,6 +44,7 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
     private JLabel choiceLabel;
 
+    private YokeHandler yokeHandler;
 
     private SpinnerNumberModel xspinnerModel;
 
@@ -243,6 +245,15 @@ public class ImageViewportPresenter extends ImageViewPresenter {
         viewPanel.add(boxView);
         boxView.getSelectedPlot().getComponent().addMouseMotionListener(panner);
         boxView.getSelectedPlot().getComponent().addMouseListener((MouseListener) panner);
+
+        if (yokeHandler == null) {
+            yokeHandler = new YokeHandler(boxView);
+            yokeHandler.addSource(view);
+        } else {
+            yokeHandler.clearSources();
+            yokeHandler.setTarget(boxView);
+            yokeHandler.addSource(view);
+        }
 
         /// what about unyoking old views?
         ImageCanvasManager.getInstance().yoke(view, boxView);

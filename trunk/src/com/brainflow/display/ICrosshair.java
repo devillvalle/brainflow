@@ -16,6 +16,10 @@ import java.util.Observable;
  */
 public interface ICrosshair {
     
+    public static final String LOCATION_PROPERTY = "location";
+    public static final String X_VALUE_PROPERTY = "XValue";
+    public static final String Y_VALUE_PROPERTY = "YValue";
+    public static final String Z_VALUE_PROPERTY = "ZValue";
 
     Viewport3D getViewport();
 

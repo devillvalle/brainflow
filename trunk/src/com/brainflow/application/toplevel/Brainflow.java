@@ -353,6 +353,7 @@ public class Brainflow {
 
 
         initLoadingDock();
+        initProjectView();
         initLoadableImageTableView();
         initControlPanel();
         initEventBusMonitor();
@@ -426,6 +427,17 @@ public class Brainflow {
             log.log(Level.SEVERE, e.getMessage(), e);
         }
 
+    }
+
+    private void initProjectView() {
+        ProjectView projectView = new ProjectView(ProjectManager.getInstance().getActiveProject());
+        DockableFrame dframe = new DockableFrame("Project");
+        dframe.getContentPane().add(new JScrollPane(projectView.getComponent()));
+        dframe.getContext().setInitMode(DockContext.STATE_FRAMEDOCKED);
+        dframe.getContext().setInitSide(DockContext.DOCK_SIDE_WEST);
+        dframe.getContext().setInitIndex(1);
+        dframe.setPreferredSize(new Dimension(275, 200));
+        brainFrame.getDockingManager().addFrame(dframe);
     }
 
     private void initLoadableImageTableView() {

@@ -9,6 +9,7 @@ import javax.swing.event.ListDataListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Collections;
 import java.util.logging.Logger;
 
 /**
@@ -26,6 +27,8 @@ public class BrainflowProject {
     private ModelListDataListener listener = new ModelListDataListener();
 
     private List<BrainflowProjectListener> listenerList = new ArrayList<BrainflowProjectListener>();
+
+    private String name = "untitled";
 
     public void addModel(IImageDisplayModel model) {
         if (!modelList.contains(model)) {
@@ -49,6 +52,20 @@ public class BrainflowProject {
 
     public Iterator<IImageDisplayModel> iterator() {
         return modelList.iterator();
+    }
+
+    public List<IImageDisplayModel> getModelList() {
+        
+        return Collections.unmodifiableList(modelList);
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int size() {
@@ -79,6 +96,11 @@ public class BrainflowProject {
 
         return list;
 
+    }
+
+
+    public String toString() {
+        return name;
     }
 
     private void fireModelAdded(BrainflowProjectEvent event) {

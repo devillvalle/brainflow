@@ -56,7 +56,6 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
 
         explorer = new FileExplorer(_rootObject, selector) {
             protected DefaultMutableTreeNode createTreeNode(FileObject fobj) {
-                log.info("creating tree node " + fobj);
                 return new ImageFileObjectNode(fobj, selector);
             }
 
@@ -69,10 +68,9 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
                 if (!node.areChildrenDefined()) {
                     ImageNodeWorker worker = new ImageNodeWorker(node);
                     try {
-                        log.info("spawning worker thread to find child file nodes");
                         worker.execute();
                     } catch (Exception e) {
-                        //todo log
+                        log.severe("Error encountered discovering file nodes in ImageNodeWorker thread");
                         throw new RuntimeException(e);
                     }
 
@@ -82,7 +80,6 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
             }
 
             public void treeCollapsed(TreeExpansionEvent event) {
-                System.out.println("tree collapsed");
             }
         });
 

@@ -77,7 +77,7 @@ public class SimpleImageView extends ImageView {
 
     private void initView() {
 
-        CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(getCrosshair());
+        CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(getCrosshair().getProperty());
         //addAnnotation(new AxisLabelAnnotation());
         addAnnotation(crosshairAnnotation);
         //addAnnotation(new ColorBarAnnotation(getModel()));
@@ -89,7 +89,7 @@ public class SimpleImageView extends ImageView {
         AxisRange yrange = getModel().getImageAxis(displayAnatomy.YAXIS).getRange();
 
         procurer = new DefaultImageProcurer(getModel(), displayAnatomy);
-        procurer.setSlice(getCrosshair().getValue(displayAnatomy.ZAXIS));
+        procurer.setSlice(getCrosshair().getProperty().getValue(displayAnatomy.ZAXIS));
 
         compositor = new DefaultImageCompositor();
         plotRenderer = new ImagePlotRenderer(compositor, procurer);
@@ -140,7 +140,7 @@ public class SimpleImageView extends ImageView {
                         plot.getYAxisRange().getAnatomicalAxis(),
                         plot.getDisplayAnatomy().ZAXIS),
                 apoint.getX(), apoint.getY(),
-                getCrosshair().getValue(displayAnatomy.ZAXIS).getX());
+                getCrosshair().getProperty().getValue(displayAnatomy.ZAXIS).getX());
 
 
         return ap3d;
@@ -150,7 +150,7 @@ public class SimpleImageView extends ImageView {
     public Point getCrosshairLocation(IImagePlot plot) {
         if (ipane.getImagePlot() == plot) {
 
-            ICrosshair cross = getCrosshair();
+            ICrosshair cross = getCrosshair().getProperty();
 
             AnatomicalPoint1D xpt = cross.getValue(imagePlot.getDisplayAnatomy().XAXIS);
             AnatomicalPoint1D ypt = cross.getValue(imagePlot.getDisplayAnatomy().YAXIS);
@@ -204,7 +204,7 @@ public class SimpleImageView extends ImageView {
 
 
     public String toString() {
-        return "SimpleImageView -- " + getModel().getName();
+        return "SimpleImageView -- " + this.getId() + getName();
     }
 
 

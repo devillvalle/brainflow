@@ -32,8 +32,8 @@ public class CoordinateControls {
                 ImageViewEvent event = (ImageViewEvent) e;
                 activeView = event.getImageView();
                 if (activeView != null) {
-                    worldCoordinatePresenter.setCrosshair(activeView.getCrosshair());
-                    indexCoordinatePresenter.setCrosshair(activeView.getCrosshair());
+                    worldCoordinatePresenter.setCrosshair(activeView.getCrosshair().getProperty());
+                    indexCoordinatePresenter.setCrosshair(activeView.getCrosshair().getProperty());
                     //imageViewportPresenter.setViewport(activeView.getViewport());
                     //imageExtentPresenter.setViewport(activeView.getViewport());
 
@@ -55,8 +55,8 @@ public class CoordinateControls {
 
 
         if (activeView != null) {
-            worldCoordinatePresenter = new WorldCoordinatePresenter(activeView.getCrosshair());
-            indexCoordinatePresenter = new IndexCoordinatePresenter(activeView.getCrosshair());
+            worldCoordinatePresenter = new WorldCoordinatePresenter(activeView.getCrosshair().getProperty());
+            indexCoordinatePresenter = new IndexCoordinatePresenter(activeView.getCrosshair().getProperty());
             imageViewportPresenter = new ImageViewportPresenter();
             //imageExtentPresenter = new ImageExtentPresenter(activeView.getViewport());
 

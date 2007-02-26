@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,6 +20,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 
 public class ImagePlotPaintScheduler {
+
+    private static final Logger log = Logger.getLogger(ImagePlotPaintScheduler.class.getName());
 
     private AbstractImageProcurer procurer;
     private IImageCompositor compositor;
@@ -44,9 +47,12 @@ public class ImagePlotPaintScheduler {
 
     public void displayChanged(DisplayChangeEvent event) {
 
-        System.out.println("DISPLAY ACTION: " + event.getDisplayAction());
-        if (event.getDisplayAction() == DisplayAction.SLICE_CHANGED) {
+        log.info("Display Action : " + event.getDisplayAction());
 
+        
+        //todo visitor pattern?
+        if (event.getDisplayAction() == DisplayAction.SLICE_CHANGED) {
+            
             ICrosshair cross = (ICrosshair) event.getDisplayParameter().getProperty();
             executor.submit(new ProcureTask(cross.getValue(plot.getDisplayAnatomy().ZAXIS)));
 

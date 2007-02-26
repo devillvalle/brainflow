@@ -252,7 +252,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
             }
 
             if (dtm != null) {
-                log.info("firing node structure changed");
+                log.finest("firing nodeStructureChanged event");
                 dtm.nodeStructureChanged(parent);
             }
 
@@ -405,7 +405,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
                 for (int i = 0; i < children.length; i++) {
                     if (children[i].getType() == FileType.FOLDER) {
 
-                        log.info("adding folder node " + children[i].getName().getPath());
+                        log.finest("adding folder node " + children[i].getName().getPath());
                         ImageFileObjectNode node = new ImageFileObjectNode(children[i], selector);
                         childNodes.add(node);
                         worker.addNode(node);

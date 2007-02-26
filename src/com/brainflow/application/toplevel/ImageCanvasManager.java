@@ -9,6 +9,7 @@ package com.brainflow.application.toplevel;
 import com.brainflow.application.services.ImageViewCrosshairEvent;
 import com.brainflow.application.services.ImageViewCursorEvent;
 import com.brainflow.application.services.ImageViewSelectionEvent;
+import com.brainflow.application.YokeHandler;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.ImageCanvas;
 import com.brainflow.core.ImageCanvasModel;
@@ -17,7 +18,11 @@ import com.brainflow.display.Viewport3D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
+import org.bushe.swing.action.BasicAction;
+import org.bushe.swing.action.ActionManager;
+import org.bushe.swing.action.ActionUIFactory;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
@@ -30,7 +35,7 @@ import java.util.logging.Logger;
 /**
  * @author Bradley
  */
-public class ImageCanvasManager implements EventSubscriber {
+public class ImageCanvasManager  {
 
     private static final Logger log = Logger.getLogger(ImageCanvasManager.class.getName());
 
@@ -50,7 +55,7 @@ public class ImageCanvasManager implements EventSubscriber {
 
     private MouseMotionListener localMouseMotionListener;
 
-    private Map<ImageView, Set<ImageView>> linkedViews = new HashMap<ImageView, Set<ImageView>>();
+    private Map<ImageView, YokeHandler> yokeHandlers = new HashMap<ImageView, YokeHandler>();
 
     private WeakHashMap<ImageView, IImageDisplayModel> registeredViews = new WeakHashMap<ImageView, IImageDisplayModel>();
 
@@ -60,7 +65,7 @@ public class ImageCanvasManager implements EventSubscriber {
 
     protected ImageCanvasManager() {
         // Exists only to thwart instantiation.
-        EventBus.subscribe(ImageViewCrosshairEvent.class, this);
+        //EventBus.subscribe(ImageViewCrosshairEvent.class, this);
     }
 
 
@@ -91,8 +96,6 @@ public class ImageCanvasManager implements EventSubscriber {
         }
 
         registeredViews.put(view, view.getModel());
-
-        linkedViews.put(view, new LinkedHashSet<ImageView>());
 
         if (registeredViews.size() >= ids.length) {
             return String.valueOf(registeredViews.size());
@@ -192,48 +195,44 @@ public class ImageCanvasManager implements EventSubscriber {
 
     }
 
-
-    public void yoke(ImageView view1, ImageView view2) {
-        if (!registeredViews.containsKey(view1)) {
-            register(view1);
+    public void unyoke(ImageView target1, ImageView target2) {
+        YokeHandler handler = yokeHandlers.get(target1);
+        if (handler != null) {
+            handler.removeSource(target2);
         }
 
-        if (!registeredViews.containsKey(view2)) {
-            register(view2);
-        }
-
-        if (registeredViews.containsKey(view1)) {
-            Set<ImageView> set1 = linkedViews.get(view1);
-            Set<ImageView> set2 = linkedViews.get(view2);
-
-            set1.addAll(set2);
-            set2.addAll(set1);
-
-            set1.add(view2);
-            set2.add(view1);
-
+        handler = yokeHandlers.get(target2);
+        if (handler != null) {
+            handler.removeSource(target1);
         }
 
     }
 
-    public void unyoke(ImageView view1, ImageView view2) {
-        Set<ImageView> set1 = linkedViews.get(view1);
-        Set<ImageView> set2 = linkedViews.get(view2);
-
-        if (set1 != null && !set1.isEmpty() && set1.contains(view2)) {
-            set1.remove(view2);
-        } else {
-            log.warning("attempting to unyoke but view " + view1 + "is not yoked to " + view2);
+    
+    public void yoke(ImageView target1, ImageView target2) {
+        
+        log.info("Yoking : " + target1 + " to " + target2);
+        YokeHandler handler = yokeHandlers.get(target1);
+        if (handler == null) {
+            handler = new YokeHandler(target1);
+            yokeHandlers.put(target1, handler);
         }
 
-        if (set2 != null && !set2.isEmpty() && set2.contains(view1)) {
-            set2.remove(view1);
-        } else {
-            log.warning("attempting to unyoke but view " + view1 + "is not yoked to " + view2);
+        handler.addSource(target2);
+
+        handler = yokeHandlers.get(target2);
+        if (handler == null) {
+            handler = new YokeHandler(target2);
+            yokeHandlers.put(target2, handler);
         }
+
+        handler.addSource(target1);
+
 
 
     }
+
+
 
 
     class CanvasPropertyChangeListener implements PropertyChangeListener {
@@ -253,10 +252,17 @@ public class ImageCanvasManager implements EventSubscriber {
 
 
         public void mouseReleased(MouseEvent e) {
+            Action yokeAction = ActionManager.getInstance().getAction("yoke-views");
+            Action unyokeAction = ActionManager.getInstance().getAction("unyoke-views");
             if (e.isPopupTrigger()) {
-                System.out.println("popup menu!");
-                System.out.println(e.paramString());
-                System.out.println(e.getSource().getClass());
+                JPopupMenu popup = new JPopupMenu();
+                System.out.println(yokeAction);
+                System.out.println(unyokeAction);
+                popup.add(ActionUIFactory.getInstance().createMenuItem(yokeAction));
+                popup.add(ActionUIFactory.getInstance().createMenuItem(unyokeAction));
+                popup.setInvoker(getSelectedCanvas());
+                popup.setLocation(e.getXOnScreen(), e.getYOnScreen());
+                popup.setVisible(true);
             }
         }
     }
@@ -293,7 +299,7 @@ public class ImageCanvasManager implements EventSubscriber {
             Viewport3D viewport = iview.getViewport();
 
             if (pt != null && viewport.inBounds(pt)) {
-                iview.getCrosshair().setLocation(pt);
+                iview.getCrosshair().getProperty().setLocation(pt);
             }
         }
 
@@ -301,21 +307,7 @@ public class ImageCanvasManager implements EventSubscriber {
     }
 
 
-    public void onEvent(Object evt) {
-        ImageViewCrosshairEvent event = (ImageViewCrosshairEvent) evt;
-        ImageView source = event.getImageView();
 
-        Set<ImageView> yoked = linkedViews.get(source);
-
-        for (ImageView iview : yoked) {
-            if (iview != source) {
-                System.out.println("setting location of yoked view : " + iview);
-                iview.getCrosshair().setLocation(event.getCrosshair().getLocation());
-            }
-        }
-
-
-    }
 
 
 }

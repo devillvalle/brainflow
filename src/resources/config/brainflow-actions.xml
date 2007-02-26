@@ -111,7 +111,20 @@
                 desc="Go to the previous slice in the z-plane">
         </action>
     </action-list>
-
+    <action id="yoke-views"
+            name="yoke views"
+            mnemonic="y"
+            accel="control Y"
+            actionClass="com.brainflow.application.actions.YokeAction"
+            desc="Yoke view to other views of same data set">
+    </action>
+    <action id="unyoke-views"
+            name="unyoke views"
+            mnemonic="u"
+            accel="control U"
+            actionClass="com.brainflow.application.actions.UnyokeAction"
+            desc="unyoke selected view from other views of data set">
+    </action>
     <action id="toggle-cross"
             name="toggle crosshair"
             mnemonic="t"

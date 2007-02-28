@@ -23,8 +23,7 @@ public class BrainFlowContext {
     private Map context = new HashMap();
 
 
-    public BrainFlowContext(Map context) {
-        this.context = context;
+    public BrainFlowContext() {
         init();
     }
 

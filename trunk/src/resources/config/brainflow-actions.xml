@@ -47,7 +47,7 @@
                 name="axial"
                 mnemonic="A"
                 accel="control A"
-                smicon="/resources/icons/axial2_16.png"
+                smicon="/resources/icons/axial_16.png"
                 actionClass="com.brainflow.application.actions.CreateAxialViewAction"
                 desc="Creates a new axial image view">
         </action>
@@ -80,7 +80,7 @@
                 name="colorbar"
                 mnemonic="c"
                 accel="control Q"
-                smicon="/resources/icons/layout_header.png"
+                smicon="/resources/icons/colorbar.png"
                 actionClass="com.brainflow.application.actions.ColorBarAnnotationDialogAction"
                 desc="Change color bar annotation properties">
         </action>

@@ -38,67 +38,69 @@ public class ColorBarAnnotationDialogAction extends BasicAction {
 
 
         if (view != null) {
-            final ColorBarAnnotation cbar = (ColorBarAnnotation) view.getAnnotation(ColorBarAnnotation.class);
-            //final ColorBarAnnotation safeCopy = (CrosshairAnnotation)icross.safeCopy();
+            ColorBarAnnotation cbar = (ColorBarAnnotation) view.getAnnotation(ColorBarAnnotation.class);
 
-            if (cbar != null) {
-                log.finest("retrieved color bar annotation for editing");
-
-                ColorBarAnnotationPresenter presenter = new ColorBarAnnotationPresenter(cbar);
-                Container c = JOptionPane.getFrameForComponent(view);
-
-
-                final JButton okButton = new JButton("OK");
-                okButton.addActionListener(new ActionListener() {
-
-                    public void actionPerformed(ActionEvent e) {
-
-                        dialog.setVisible(false);
-                        dialog.dispose();
-                    }
-                });
-
-                final JButton cancelButton = new JButton("Cancel");
-                cancelButton.addActionListener(new ActionListener() {
-
-                    public void actionPerformed(ActionEvent e) {
-                        //view.setAnnotation(safeCopy);
-                        //icross.setLinePaint(safeCopy.getLinePaint());
-                        //icross.setLineWidth(safeCopy.getLineWidth());
-                        //icross.setGap(safeCopy.getGap());
-                        //icross.setVisible(safeCopy.isVisible());
-
-
-                        dialog.setVisible(false);
-                        dialog.dispose();
-                    }
-                });
-
-
-                final JButton applyButton = new JButton("Apply");
-
-
-                dialog = new JDialog(JOptionPane.getFrameForComponent(view));
-                dialog.setLayout(new BorderLayout());
-
-
-                Point p = c.getLocation();
-
-
-                JPanel mainPanel = new JPanel();
-                mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 8, 15, 8));
-                mainPanel.setLayout(new BorderLayout());
-                JPanel buttonPanel = ButtonBarFactory.buildRightAlignedBar(okButton, cancelButton, applyButton);
-
-                mainPanel.add(presenter.getComponent(), BorderLayout.CENTER);
-                mainPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-                dialog.add(mainPanel, BorderLayout.CENTER);
-                dialog.pack();
-                dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-                dialog.setLocation((int) (p.getX() + c.getWidth() / 2f), (int) (p.getY() + c.getHeight() / 2f));
-                dialog.setVisible(true);
+            if (cbar == null) {
+                cbar = new ColorBarAnnotation(view.getModel());
+                view.setAnnotation(cbar);
             }
+
+
+            log.finest("retrieved color bar annotation for editing");
+
+            ColorBarAnnotationPresenter presenter = new ColorBarAnnotationPresenter(cbar);
+            Container c = JOptionPane.getFrameForComponent(view);
+
+            final JButton okButton = new JButton("OK");
+            okButton.addActionListener(new ActionListener() {
+
+                public void actionPerformed(ActionEvent e) {
+                    dialog.setVisible(false);
+                    dialog.dispose();
+                }
+            });
+
+            final JButton cancelButton = new JButton("Cancel");
+            cancelButton.addActionListener(new ActionListener() {
+
+                public void actionPerformed(ActionEvent e) {
+                    //view.setAnnotation(safeCopy);
+                    //icross.setLinePaint(safeCopy.getLinePaint());
+                    //icross.setLineWidth(safeCopy.getLineWidth());
+                    //icross.setGap(safeCopy.getGap());
+                    //icross.setVisible(safeCopy.isVisible());
+
+
+                    dialog.setVisible(false);
+                    dialog.dispose();
+                }
+            });
+
+
+            final JButton applyButton = new JButton("Apply");
+
+
+            dialog = new JDialog(JOptionPane.getFrameForComponent(view));
+            dialog.setLayout(new BorderLayout());
+
+
+            Point p = c.getLocation();
+
+
+            JPanel mainPanel = new JPanel();
+            mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 8, 15, 8));
+            mainPanel.setLayout(new BorderLayout());
+            JPanel buttonPanel = ButtonBarFactory.buildRightAlignedBar(okButton, cancelButton, applyButton);
+
+            mainPanel.add(presenter.getComponent(), BorderLayout.CENTER);
+            mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+            dialog.add(mainPanel, BorderLayout.CENTER);
+            dialog.pack();
+            dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+            dialog.setLocation((int) (p.getX() + c.getWidth() / 2f), (int) (p.getY() + c.getHeight() / 2f));
+            dialog.setVisible(true);
+
         }
 
 

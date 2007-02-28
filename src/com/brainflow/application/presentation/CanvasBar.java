@@ -11,6 +11,7 @@ import com.jgoodies.binding.adapter.Bindings;
 import com.jidesoft.action.CommandBar;
 import com.jidesoft.swing.JideToggleSplitButton;
 import com.jidesoft.swing.SplitButtonGroup;
+import com.jidesoft.swing.JideSplitButton;
 import org.bushe.swing.action.ActionUIFactory;
 import org.bushe.swing.action.BasicAction;
 import org.bushe.swing.event.EventBus;
@@ -41,6 +42,8 @@ public class CanvasBar extends ImageViewPresenter {
     private ButtonSelectionListener listener = new ButtonSelectionListener();
 
     private ImageCanvas canvas;
+
+    private JideSplitButton emptyButton = new JideSplitButton("Tabula Rasa");
 
     public CanvasBar() {
         EventBus.subscribeStrongly(ImageDisplayModelEvent.class, new EventSubscriber() {
@@ -84,11 +87,22 @@ public class CanvasBar extends ImageViewPresenter {
     private CommandBar createCanvasBar() {
         commandBar = new CommandBar();
 
+        //
+        commandBar.setPaintBackground(false);
+        commandBar.setOpaque(false);
+        //
+
         layerButtonList = buttonList();
 
+        if (layerButtonList.isEmpty()) {
+            emptyButton.setEnabled(false);
+            commandBar.add(emptyButton);
+        }
+        
         for (AbstractButton button : layerButtonList) {
             commandBar.add(button);
         }
+
 
         commandBar.addExpansion();
         return commandBar;

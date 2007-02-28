@@ -11,18 +11,22 @@ import javax.swing.event.ChangeEvent;
  * Time: 8:00:59 PM
  * To change this template use File | Settings | File Templates.
  */
+
+
 public class DisplayChangeEvent extends ChangeEvent {
 
 
     private DisplayAction displayAction;
+
     private Property parameter;
 
+    //private ImageLayer affectedLayer;
 
     public DisplayChangeEvent(Property _parameter, DisplayAction _displayAction) {
         super(_parameter);
         displayAction = _displayAction;
         parameter = _parameter;
-
+        //affectedLayer = layer;
 
     }
 
@@ -35,4 +39,7 @@ public class DisplayChangeEvent extends ChangeEvent {
     }
 
 
+   // public ImageLayer getAffectedLayer() {
+   //     return affectedLayer;
+    //}
 }

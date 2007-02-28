@@ -5,6 +5,7 @@ import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.core.DisplayAction;
 import com.brainflow.core.DisplayChangeEvent;
+import com.brainflow.core.ImageLayer;
 import com.brainflow.utils.Range;
 import com.jgoodies.binding.list.SelectionInList;
 
@@ -46,12 +47,12 @@ public class ImageLayerParameters implements Serializable {
     private final List<ChangeListener> listeners = new ArrayList<ChangeListener>();
 
     private SelectionInList resampleSelection;
-
+    
+    private ImageLayer layer;
 
     public ImageLayerParameters() {
         IColorMap imap = new LinearColorMap(0, 255, ColorTable.GRAYSCALE);
         init(imap);
-
     }
 
     public ImageLayerParameters(IndexColorModel _icm, Range _dataRange) {
@@ -64,6 +65,14 @@ public class ImageLayerParameters implements Serializable {
         init(map);
     }
 
+
+    public ImageLayer getLayer() {
+        return layer;
+    }
+
+    public void setLayer(ImageLayer layer) {
+        this.layer = layer;
+    }
 
     private void init(IColorMap map) {
 

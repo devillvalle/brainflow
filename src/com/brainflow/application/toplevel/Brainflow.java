@@ -61,9 +61,9 @@ import java.util.logging.Logger;
 public class Brainflow {
 
 
-    private Map context = new HashMap();
 
-    private final BrainFlowContext applicationContext = new BrainFlowContext(context);
+
+    private final BrainFlowContext applicationContext = new BrainFlowContext();
 
     private final static Logger log = Logger.getLogger(Brainflow.class.getCanonicalName());
 
@@ -73,10 +73,6 @@ public class Brainflow {
 
     private SavePNGAction savePNGAction;
 
-    // ACTIONS
-
-    // MENU
-    private JideMenu fileMenu = new JideMenu("File");
 
 
     private RecentDirectoryMenu directoryMenu = new RecentDirectoryMenu();
@@ -92,7 +88,9 @@ public class Brainflow {
     // MAIN WINDOW
 
     DocumentPane documentPane = new DocumentPane();
+
     JideSplitPane westSplitPane = new JideSplitPane(SwingUtilities.VERTICAL);
+
     ImageFileExplorer loadingDock = null;
 
     // STATUS BAR
@@ -102,7 +100,9 @@ public class Brainflow {
     // STATUS BAR
 
     CursorCoordinates cursorCoordinates = new CursorCoordinates();
+
     CrosshairCoordinates crosshairCoordinates = new CrosshairCoordinates();
+
     SelectedViewStatus viewStatus = new SelectedViewStatus();
 
     protected Brainflow() {
@@ -124,7 +124,7 @@ public class Brainflow {
             //SubstanceLookAndFeel.setSkin(new BusinessBlueSteelSkin());
 
             //SyntheticaLookAndFeel lf = new SyntheticaStandardLookAndFeel();
-            SyntheticaLookAndFeel lf = new de.javasoft.plaf.synthetica.SyntheticaOrangeMetallicLookAndFeel();
+            SyntheticaLookAndFeel lf = new de.javasoft.plaf.synthetica.SyntheticaBlueIceLookAndFeel();
             //A03LookAndFeel lf = new apprising.api.swing.plaf.a03.A03LookAndFeel();
             UIManager.setLookAndFeel(lf);
             //LookAndFeelFactory.installDefaultLookAndFeelAndExtension();
@@ -204,28 +204,14 @@ public class Brainflow {
     private void initializeMenu() {
         log.info("initializing Menu");
 
-        brainFrame.setJMenuBar(new CommandMenuBar());
-        brainFrame.getJMenuBar().add(fileMenu);
 
-        //brainFrame.getJMenuBar().add(editMenu);
-        //brainFrame.getJMenuBar().add(viewMenu);
-        //brainFrame.getJMenuBar().add(displayMenu);
+        CommandMenuBar menuBar = new CommandMenuBar();
+        //
+        menuBar.setOpaque(false);
+        menuBar.setPaintBackground(false);
+        //
 
-        ActionList viewList = ActionManager.getInstance().getActionList("view-menu");
-        brainFrame.getJMenuBar().add(ActionUIFactory.getInstance().createMenu(viewList));
-
-        ActionList navList = ActionManager.getInstance().getActionList("navigation-menu");
-        brainFrame.getJMenuBar().add(ActionUIFactory.getInstance().createMenu(navList));
-
-
-        ActionList appearanceList = ActionManager.getInstance().getActionList("appearance-menu");
-        brainFrame.getJMenuBar().add(ActionUIFactory.getInstance().createMenu(appearanceList));
-
-        ActionList debugList = ActionManager.getInstance().getActionList("debug-menu");
-        brainFrame.getJMenuBar().add(ActionUIFactory.getInstance().createMenu(debugList));
-
-        //viewMenu.add(CommandBarFactory.createLookAndFeelMenu(brainFrame));
-
+        JideMenu fileMenu = new JideMenu("File");
 
         fileMenu.add(mountFileSystemAction);
         directoryMenu.getMenu().setName("Mount Recent");
@@ -237,6 +223,26 @@ public class Brainflow {
 
         BasicAction exit = (BasicAction) ActionManager.getInstance().getAction("main-exit");
         fileMenu.add(exit);
+
+
+
+        brainFrame.setJMenuBar(menuBar);
+        brainFrame.getJMenuBar().add(fileMenu);
+
+
+        ActionList viewList = ActionManager.getInstance().getActionList("view-menu");
+        brainFrame.getJMenuBar().add(ActionUIFactory.getInstance().createMenu(viewList));
+
+        ActionList navList = ActionManager.getInstance().getActionList("navigation-menu");
+        brainFrame.getJMenuBar().add(ActionUIFactory.getInstance().createMenu(navList));
+
+        ActionList appearanceList = ActionManager.getInstance().getActionList("appearance-menu");
+        brainFrame.getJMenuBar().add(ActionUIFactory.getInstance().createMenu(appearanceList));
+
+        ActionList debugList = ActionManager.getInstance().getActionList("debug-menu");
+        brainFrame.getJMenuBar().add(ActionUIFactory.getInstance().createMenu(debugList));
+
+
 
 
     }
@@ -291,19 +297,24 @@ public class Brainflow {
 
         CommandBar mainToolbar = ((JideActionUIFactory) ActionUIFactory.getInstance("jidefactory")).createCommandBar(globalList);
 
+        /// hack from jidesoft for synthetica lookandfeel
+        mainToolbar.setPaintBackground(false);
+        mainToolbar.setOpaque(false);
+        //////////////////////////////////////////////////
 
-        JideSplitButton sliderDirection = new JideSplitButton("0  ");
-        sliderDirection.add(new JRadioButtonMenuItem("Z Axis"));
-        sliderDirection.add(new JRadioButtonMenuItem("X Axis"));
-        sliderDirection.add(new JRadioButtonMenuItem("Y Axis"));
+
+        //JideSplitButton sliderDirection = new JideSplitButton("0  ");
+        //sliderDirection.add(new JRadioButtonMenuItem("Z Axis"));
+        //sliderDirection.add(new JRadioButtonMenuItem("X Axis"));
+        //sliderDirection.add(new JRadioButtonMenuItem("Y Axis"));
 
         mainToolbar.addSeparator();
 
         ImageViewSliderPresenter sliderPresenter = new ImageViewSliderPresenter();
-        PropertyAdapter adapter = new PropertyAdapter(sliderDirection, "text");
-        sliderPresenter.setValueLabel(adapter);
+        //PropertyAdapter adapter = new PropertyAdapter(sliderDirection, "text");
+        //sliderPresenter.setValueLabel(adapter);
         mainToolbar.add(sliderPresenter.getComponent());
-        mainToolbar.add(sliderDirection);
+        //mainToolbar.add(sliderDirection);
 
 
         mainToolbar.addSeparator();

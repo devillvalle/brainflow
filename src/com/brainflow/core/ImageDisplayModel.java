@@ -69,6 +69,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
     }
 
     public ImageLayer getLayer(ImageLayerParameters params) {
+        
         for (int i = 0; i < imageListModel.size(); i++) {
             ImageLayer layer = (ImageLayer) imageListModel.get(i);
             if (params == layer.getImageLayerParameters()) return layer;
@@ -277,7 +278,6 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
         public void stateChanged(ChangeEvent e) {
             DisplayChangeEvent de = (DisplayChangeEvent) e;
-            System.out.println("firing dirty event : " + de.getDisplayAction());
             fireChangeEvent(de);
         }
     }

@@ -16,7 +16,6 @@ import com.brainflow.image.data.IImageData3D;
 import com.brainflow.image.interpolation.NearestNeighborInterpolator;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
-import com.jgoodies.binding.beans.PropertyAdapter;
 import com.jidesoft.action.CommandBar;
 import com.jidesoft.action.CommandMenuBar;
 import com.jidesoft.docking.DefaultDockingManager;
@@ -38,6 +37,7 @@ import org.bushe.swing.event.EventSubscriber;
 import org.xml.sax.SAXException;
 
 import javax.swing.*;
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -61,9 +61,7 @@ import java.util.logging.Logger;
 public class Brainflow {
 
 
-
-
-    private final BrainFlowContext applicationContext = new BrainFlowContext();
+    private final BrainflowContext applicationContext = new BrainflowContext();
 
     private final static Logger log = Logger.getLogger(Brainflow.class.getCanonicalName());
 
@@ -73,37 +71,21 @@ public class Brainflow {
 
     private SavePNGAction savePNGAction;
 
-
-
     private RecentDirectoryMenu directoryMenu = new RecentDirectoryMenu();
 
-    // MENU
+    private DocumentPane documentPane = new DocumentPane();
 
-    // TOOLBAR
-
-    //CoordinateBar coordinateBar = new CoordinateBar();
-
-    // TOOLBAR
-
-    // MAIN WINDOW
-
-    DocumentPane documentPane = new DocumentPane();
-
-    JideSplitPane westSplitPane = new JideSplitPane(SwingUtilities.VERTICAL);
-
-    ImageFileExplorer loadingDock = null;
+    private ImageFileExplorer loadingDock = null;
 
     // STATUS BAR
 
-    StatusBar statusBar = new StatusBar();
+    private StatusBar statusBar = new StatusBar();
 
-    // STATUS BAR
+    private CursorCoordinates cursorCoordinates = new CursorCoordinates();
 
-    CursorCoordinates cursorCoordinates = new CursorCoordinates();
+    private CrosshairCoordinates crosshairCoordinates = new CrosshairCoordinates();
 
-    CrosshairCoordinates crosshairCoordinates = new CrosshairCoordinates();
-
-    SelectedViewStatus viewStatus = new SelectedViewStatus();
+    private SelectedViewStatus viewStatus = new SelectedViewStatus();
 
     protected Brainflow() {
         // Exists only to thwart instantiation.
@@ -132,18 +114,13 @@ public class Brainflow {
 
             LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
 
-            //ColorUIResource clr = (ColorUIResource)UIManager.get("DockableFrame.activeTitleBackground");
-            //System.out.println("color is " + clr);
-            //UIManager.put("CollapsiblePane.background", clr.brighter());
-
+            Brainflow bflow = getInstance();
+            bflow.launch();
         } catch (Exception e) {
             Logger.getAnonymousLogger().severe("Could not load Look and Feel, aborting");
             e.printStackTrace();
             System.exit(-1);
         }
-
-        Brainflow bflow = getInstance();
-        bflow.launch();
     }
 
 
@@ -152,7 +129,7 @@ public class Brainflow {
     }
 
 
-    public void launch() {
+    public void launch() throws Exception {
         brainFrame = new BrainFrame();
         ImageCanvasManager.getInstance().createCanvas();
 
@@ -225,7 +202,6 @@ public class Brainflow {
         fileMenu.add(exit);
 
 
-
         brainFrame.setJMenuBar(menuBar);
         brainFrame.getJMenuBar().add(fileMenu);
 
@@ -241,8 +217,6 @@ public class Brainflow {
 
         ActionList debugList = ActionManager.getInstance().getActionList("debug-menu");
         brainFrame.getJMenuBar().add(ActionUIFactory.getInstance().createMenu(debugList));
-
-
 
 
     }
@@ -302,7 +276,6 @@ public class Brainflow {
         mainToolbar.setOpaque(false);
         //////////////////////////////////////////////////
 
-
         //JideSplitButton sliderDirection = new JideSplitButton("0  ");
         //sliderDirection.add(new JRadioButtonMenuItem("Z Axis"));
         //sliderDirection.add(new JRadioButtonMenuItem("X Axis"));
@@ -346,7 +319,7 @@ public class Brainflow {
     }
 
 
-    private void initializeWorkspace() {
+    private void initializeWorkspace() throws Exception {
         log.info("initializing workspace");
         brainFrame.getDockingManager().getWorkspace().setLayout(new BorderLayout());
         brainFrame.getDockingManager().getWorkspace().add(documentPane, "Center");
@@ -440,9 +413,12 @@ public class Brainflow {
 
     }
 
-    private void initProjectView() {
+    private void initProjectView() throws IOException {
         ProjectView projectView = new ProjectView(ProjectManager.getInstance().getActiveProject());
         DockableFrame dframe = new DockableFrame("Project");
+        dframe.setFrameIcon(new ImageIcon(
+                ImageIO.read(getClass().
+                        getClassLoader().getResource("resources/icons/folder_page.png"))));
         dframe.getContentPane().add(new JScrollPane(projectView.getComponent()));
         dframe.getContext().setInitMode(DockContext.STATE_FRAMEDOCKED);
         dframe.getContext().setInitSide(DockContext.DOCK_SIDE_WEST);
@@ -451,11 +427,14 @@ public class Brainflow {
         brainFrame.getDockingManager().addFrame(dframe);
     }
 
-    private void initLoadableImageTableView() {
+    private void initLoadableImageTableView() throws IOException {
 
         LoadableImageTableView loadView = new LoadableImageTableView();
-
         DockableFrame dframe = new DockableFrame("Loaded Images");
+        dframe.setFrameIcon(new ImageIcon(
+                ImageIO.read(getClass().
+                        getClassLoader().getResource("resources/icons/det_pane_hide.gif"))));
+
         dframe.getContentPane().add(new JScrollPane(loadView.getComponent()));
         dframe.getContext().setInitMode(DockContext.STATE_FRAMEDOCKED);
         dframe.getContext().setInitSide(DockContext.DOCK_SIDE_WEST);
@@ -664,12 +643,17 @@ public class Brainflow {
         if (limg != null) {
             register(limg);
 
-            IImageDisplayModel displayModel = ProjectManager.getInstance().addToActiveProject(limg);
+            ImageProgressDialog id = new ImageProgressDialog(limg);
+            JDialog dialog = id.getDialog();
+            dialog.setVisible(true);
+            id.execute();
+
+            //IImageDisplayModel displayModel = ProjectManager.getInstance().addToActiveProject(limg);
 
 
-            ImageView iview = ImageViewFactory.createAxialView(displayModel);
-            iview.setTransferHandler(new ImageViewTransferHandler());
-            ImageCanvasManager.getInstance().getSelectedCanvas().addImageView(iview);
+            //ImageView iview = ImageViewFactory.createAxialView(displayModel);
+            //iview.setTransferHandler(new ImageViewTransferHandler());
+            //ImageCanvasManager.getInstance().getSelectedCanvas().addImageView(iview);
         }
 
     }

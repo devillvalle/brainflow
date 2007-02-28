@@ -62,7 +62,7 @@
         <action id="view-close"
                 name="close"
                 accel="del"
-                smicon="/resources/icons/remove.png"
+                smicon="/resources/icons/delete.png"
                 actionClass="com.brainflow.application.actions.CloseViewAction"
                 desc="Closes the current view">
         </action>

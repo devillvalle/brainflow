@@ -147,6 +147,7 @@ public class Brainflow {
         initializeResources();
 
 
+
     }
 
 
@@ -215,8 +216,11 @@ public class Brainflow {
         ActionList appearanceList = ActionManager.getInstance().getActionList("appearance-menu");
         brainFrame.getJMenuBar().add(ActionUIFactory.getInstance().createMenu(appearanceList));
 
+
         ActionList debugList = ActionManager.getInstance().getActionList("debug-menu");
         brainFrame.getJMenuBar().add(ActionUIFactory.getInstance().createMenu(debugList));
+
+        brainFrame.getJMenuBar().add(DockWindowManager.getInstance().getDockMenu());
 
 
     }
@@ -312,7 +316,6 @@ public class Brainflow {
         ActionManager.mapKeystrokeForAction(documentPane, ActionManager.getInstance().getAction("view-coronal"));
         ActionManager.mapKeystrokeForAction(documentPane, ActionManager.getInstance().getAction("view-sagittal"));
         ActionManager.mapKeystrokeForAction(documentPane, ActionManager.getInstance().getAction("view-orthogonal"));
-
         ActionManager.mapKeystrokeForAction(documentPane, ActionManager.getInstance().getAction("set-smoothing"));
 
 
@@ -392,20 +395,20 @@ public class Brainflow {
 
             SearchableImageFileExplorer explorer = new SearchableImageFileExplorer(loadingDock);
 
+            DockableFrame dframe = DockWindowManager.getInstance().createDockableFrame("File Manager",
+                    "resources/icons/fldr_obj.gif",
+                    DockContext.STATE_FRAMEDOCKED,
+                    DockContext.DOCK_SIDE_WEST); 
 
-            DockableFrame dframe = new DockableFrame("File Manager", new ImageIcon(getClass().getClassLoader().getResource("resources/icons/fldr_obj.gif")));
+
             dframe.setPreferredSize(new Dimension(275, 200));
 
             //JScrollPane jsp = new JScrollPane(explorer.getComponent());
             //jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
             dframe.getContentPane().add(explorer.getComponent());
-
-            dframe.getContext().setInitMode(DockContext.STATE_FRAMEDOCKED);
-            dframe.getContext().setInitSide(DockContext.DOCK_SIDE_WEST);
-            dframe.getContext().setInitIndex(0);
-
             brainFrame.getDockingManager().addFrame(dframe);
+
         } catch (FileSystemException e) {
             // this would be more or less fatal, no?
             log.log(Level.SEVERE, e.getMessage(), e);
@@ -415,41 +418,42 @@ public class Brainflow {
 
     private void initProjectView() throws IOException {
         ProjectView projectView = new ProjectView(ProjectManager.getInstance().getActiveProject());
-        DockableFrame dframe = new DockableFrame("Project");
-        dframe.setFrameIcon(new ImageIcon(
-                ImageIO.read(getClass().
-                        getClassLoader().getResource("resources/icons/folder_page.png"))));
+        DockableFrame dframe = DockWindowManager.getInstance().createDockableFrame("Project",
+                "resources/icons/folder_page.png",
+                DockContext.STATE_FRAMEDOCKED,
+                DockContext.DOCK_SIDE_WEST, 1);
+                    
         dframe.getContentPane().add(new JScrollPane(projectView.getComponent()));
-        dframe.getContext().setInitMode(DockContext.STATE_FRAMEDOCKED);
-        dframe.getContext().setInitSide(DockContext.DOCK_SIDE_WEST);
-        dframe.getContext().setInitIndex(1);
         dframe.setPreferredSize(new Dimension(275, 200));
+
         brainFrame.getDockingManager().addFrame(dframe);
     }
 
     private void initLoadableImageTableView() throws IOException {
 
         LoadableImageTableView loadView = new LoadableImageTableView();
-        DockableFrame dframe = new DockableFrame("Loaded Images");
-        dframe.setFrameIcon(new ImageIcon(
-                ImageIO.read(getClass().
-                        getClassLoader().getResource("resources/icons/det_pane_hide.gif"))));
+        DockableFrame dframe = DockWindowManager.getInstance().createDockableFrame("Loaded Images",
+                "resources/icons/det_pane_hide.gif",
+                DockContext.STATE_FRAMEDOCKED,
+                DockContext.DOCK_SIDE_WEST,
+                1);
 
         dframe.getContentPane().add(new JScrollPane(loadView.getComponent()));
-        dframe.getContext().setInitMode(DockContext.STATE_FRAMEDOCKED);
-        dframe.getContext().setInitSide(DockContext.DOCK_SIDE_WEST);
-        dframe.getContext().setInitIndex(1);
         dframe.setPreferredSize(new Dimension(275, 200));
         brainFrame.getDockingManager().addFrame(dframe);
 
     }
 
     private void initEventBusMonitor() {
-        DockableFrame dframe = new DockableFrame("Event Monitor");
+        DockableFrame dframe = DockWindowManager.getInstance().createDockableFrame("Event Monitor",
+                "resources/icons/console_view.gif",
+                DockContext.STATE_AUTOHIDE,
+                DockContext.DOCK_SIDE_SOUTH,
+                1);
+
+
         dframe.getContentPane().add(new JScrollPane(new EventBusMonitor().getComponent()));
-        dframe.getContext().setInitMode(DockContext.STATE_FRAMEDOCKED);
-        dframe.getContext().setInitSide(DockContext.DOCK_SIDE_SOUTH);
-        dframe.getContext().setInitIndex(1);
+        
         dframe.setPreferredSize(new Dimension(800, 200));
         brainFrame.getDockingManager().addFrame(dframe);
 
@@ -524,19 +528,42 @@ public class Brainflow {
 
             if (ret == JOptionPane.YES_OPTION) {
                 limg.releaseData();
-                loadImage(limg);
+                loadAndDisplay(limg);
 
 
             }
 
 
         } else {
-            loadImage(limg);
-            manager.registerLoadableImage(limg);
+            //loadAndDisplay(limg);
+            //manager.registerLoadableImage(limg);
         }
 
         return;
 
+
+    }
+
+     public void loadAndDisplay(ILoadableImage limg) {
+
+        if (limg != null) {
+            //register(limg);
+
+            ImageProgressDialog id = new ImageProgressDialog(limg);
+            JDialog dialog = id.getDialog();
+            dialog.setVisible(true);
+
+            id.execute();
+
+
+
+            IImageDisplayModel displayModel = ProjectManager.getInstance().addToActiveProject(limg);
+
+
+            ImageView iview = ImageViewFactory.createAxialView(displayModel);
+            iview.setTransferHandler(new ImageViewTransferHandler());
+            ImageCanvasManager.getInstance().getSelectedCanvas().addImageView(iview);
+        }
 
     }
 
@@ -607,56 +634,8 @@ public class Brainflow {
         }
     }
 
-    private void loadImage(final ILoadableImage limg) {
-
-        final ProgressDialog pdialog = new ProgressDialog(LoadableImageProgressEvent.class, "Loading Image ...", "Reading File from disk");
-        final JDialog dialog = pdialog.createDialog();
-        dialog.setResizable(true);
-        dialog.pack();
-
-        final SwingWorker worker = new SwingWorker() {
-            public Object doInBackground() {
-                try {
-                    limg.load();
-                } catch (BrainflowException bfe) {
-                    log.severe("Error load image " + limg.getHeaderFile().getName());
-                    throw new RuntimeException(bfe);
-                }
-                return limg.getData();
-            }
 
 
-            protected void done() {
-                dialog.setVisible(false);
-            }
-        };
-
-
-        worker.execute();
-        dialog.setVisible(true);
-
-
-    }
-
-    public void loadAndDisplay(ILoadableImage limg) {
-
-        if (limg != null) {
-            register(limg);
-
-            ImageProgressDialog id = new ImageProgressDialog(limg);
-            JDialog dialog = id.getDialog();
-            dialog.setVisible(true);
-            id.execute();
-
-            //IImageDisplayModel displayModel = ProjectManager.getInstance().addToActiveProject(limg);
-
-
-            //ImageView iview = ImageViewFactory.createAxialView(displayModel);
-            //iview.setTransferHandler(new ImageViewTransferHandler());
-            //ImageCanvasManager.getInstance().getSelectedCanvas().addImageView(iview);
-        }
-
-    }
 
     public SoftLoadableImage[] getSelectedLoadableImages() {
         SoftLoadableImage[] limg = loadingDock.requestLoadableImages();

@@ -1,7 +1,6 @@
 package com.brainflow.application.actions;
 
-import com.brainflow.core.ImageLayer;
-import com.brainflow.display.ImageLayerParameters;
+import com.brainflow.display.ImageLayerProperties;
 import org.bushe.swing.action.ActionManager;
 import org.bushe.swing.action.BasicAction;
 
@@ -17,14 +16,14 @@ import java.awt.event.ActionEvent;
  */
 public class LayerVisibilityAction extends BasicAction {
 
-    private ImageLayerParameters layer;
+    private ImageLayerProperties layer;
 
-    public LayerVisibilityAction(ImageLayerParameters _layer) {
+    public LayerVisibilityAction(ImageLayerProperties _layer) {
         layer = _layer;
         putValue(Action.NAME, "Visible");
         putValue(ActionManager.BUTTON_TYPE, ActionManager.BUTTON_TYPE_VALUE_CHECKBOX);
 
-        setSelected(layer.getVisiblility().getProperty().isVisible());
+        setSelected(layer.getVisible().getProperty().isVisible());
     }
 
     protected void execute(ActionEvent actionEvent) throws Exception {

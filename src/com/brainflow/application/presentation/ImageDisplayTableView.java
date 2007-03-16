@@ -214,7 +214,7 @@ public class ImageDisplayTableView extends ImageViewPresenter {
             if (columnIndex == 2) {
                 ImageView view = ImageDisplayTableView.this.getSelectedView();
                 ImageLayer layer = view.getModel().getImageLayer(rowIndex);
-                layer.getImageLayerParameters().getVisiblility().getProperty().setVisible((Boolean) aValue);
+                layer.getImageLayerParameters().getVisible().getProperty().setVisible((Boolean) aValue);
 
             }
         }
@@ -230,7 +230,7 @@ public class ImageDisplayTableView extends ImageViewPresenter {
                     return "visible";
                 case 2:
                     return view.getModel().getImageLayer(rowIndex).
-                            getImageLayerParameters().getVisiblility().getProperty().isVisible();
+                            getImageLayerParameters().getVisible().getProperty().isVisible();
 
             }
 

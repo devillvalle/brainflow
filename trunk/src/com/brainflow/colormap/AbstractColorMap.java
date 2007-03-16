@@ -1,5 +1,11 @@
 package com.brainflow.colormap;
 
+import com.brainflow.image.data.RGBAImage;
+import com.brainflow.image.data.IImageData2D;
+import com.brainflow.image.data.UByteImageData2D;
+import com.brainflow.image.iterators.ImageIterator;
+import com.brainflow.image.space.ImageSpace2D;
+
 import java.awt.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -111,6 +117,7 @@ public abstract class AbstractColorMap implements IColorMap {
 
     public abstract void setAlphaMultiplier(Double amult);
 
+
     public Double getAlphaMultiplier() {
         return alphaMultiplier;
     }
@@ -130,6 +137,57 @@ public abstract class AbstractColorMap implements IColorMap {
     public abstract ListIterator<ColorInterval> iterator();
 
     public abstract AbstractColorBar createColorBar();
+
+
+    public RGBAImage getRGBAImage(IImageData2D data) {
+        int len = data.getNumElements();
+
+        byte[][] rgba = new byte[4][len];
+        int lastidx = getMapSize() - 1;
+
+        ImageIterator iter = data.iterator();
+
+        Color c0 = getInterval(0).getColor();
+        Color cn = getInterval(lastidx).getColor();
+
+      
+        while (iter.hasNext()) {
+
+            int i = iter.index();
+            double val = iter.next();
+
+            if (val <= getLowClip()) {
+                rgba[0][i] = (byte) c0.getRed();
+                rgba[1][i] = (byte) c0.getGreen();
+                rgba[2][i] = (byte) c0.getBlue();
+                rgba[3][i] = (byte) c0.getAlpha();
+            } else if (val >= getHighClip()) {
+                rgba[0][i] = (byte) cn.getRed();
+                rgba[1][i] = (byte) cn.getGreen();
+                rgba[2][i] = (byte) cn.getBlue();
+                rgba[3][i] = (byte) cn.getAlpha();
+            } else {
+
+                Color ci = getColor(val);
+                rgba[0][i] = (byte) ci.getRed();
+                rgba[1][i] = (byte) ci.getGreen();
+                rgba[2][i] = (byte) ci.getBlue();
+                rgba[3][i] = (byte) ci.getAlpha();
+
+            }
+
+        }
+
+        RGBAImage rgbaimage = new RGBAImage(
+                new UByteImageData2D((ImageSpace2D) data.getImageSpace(), rgba[0]),
+                new UByteImageData2D((ImageSpace2D) data.getImageSpace(), rgba[1]),
+                new UByteImageData2D((ImageSpace2D) data.getImageSpace(), rgba[2]),
+                new UByteImageData2D((ImageSpace2D) data.getImageSpace(), rgba[3]));
+
+        return rgbaimage;
+
+
+    }
 
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {

@@ -1,6 +1,8 @@
 package com.brainflow.colormap;
 
 import com.brainflow.image.data.IImageData;
+import com.brainflow.image.data.RGBAImage;
+import com.brainflow.image.data.IImageData2D;
 
 import java.awt.*;
 import java.beans.PropertyChangeListener;
@@ -23,19 +25,15 @@ public interface IColorMap {
 
     public Color getColor(double value);
 
-
     public double getMaximumValue();
 
     public double getMinimumValue();
 
     public ListIterator<ColorInterval> iterator();
 
-    public byte[][] getRGBAComponents(IImageData data);
-
-    public byte[] getInterleavedRGBAComponents(IImageData data);
+    public RGBAImage getRGBAImage(IImageData2D data);
 
     public AbstractColorBar createColorBar();
-
 
     public void addPropertyChangeListener(PropertyChangeListener listener);
 

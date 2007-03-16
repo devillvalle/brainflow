@@ -1,7 +1,11 @@
 package com.brainflow.colormap;
 
 import com.brainflow.image.data.IImageData;
+import com.brainflow.image.data.RGBAImage;
+import com.brainflow.image.data.IImageData2D;
+import com.brainflow.image.data.UByteImageData2D;
 import com.brainflow.image.iterators.ImageIterator;
+import com.brainflow.image.space.ImageSpace2D;
 import com.brainflow.utils.NumberUtils;
 import com.brainflow.utils.Range;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -30,6 +34,7 @@ public class LinearColorMap extends AbstractColorMap {
 
 
     private double binSize;
+    private double mapRange;
 
     private List<ColorInterval> intervals;
 
@@ -46,7 +51,7 @@ public class LinearColorMap extends AbstractColorMap {
         maximumValue = max;
         highClip = max;
         lowClip = min;
-
+        mapRange = highClip - lowClip;
 
         int mapSize = icm.getMapSize();
         fillIntervals(mapSize, icm);
@@ -66,7 +71,7 @@ public class LinearColorMap extends AbstractColorMap {
         maximumValue = max;
         highClip = max;
         lowClip = min;
-
+        mapRange = highClip - lowClip;
 
         int mapSize = lcm.getMapSize();
         fillIntervals(mapSize, lcm);
@@ -92,7 +97,7 @@ public class LinearColorMap extends AbstractColorMap {
     }
 
     private void fillIntervals(int mapSize, LinearColorMap lcm) {
-
+        //todo grotesque code duplicatation
         ColorInterval[] colors = new ColorInterval[mapSize];
         binSize = (getHighClip() - getLowClip()) / (mapSize - 1);
         colors = new ColorInterval[mapSize];
@@ -127,6 +132,7 @@ public class LinearColorMap extends AbstractColorMap {
     }
 
     private void fillIntervals(int mapSize, IndexColorModel sourceModel) {
+        //todo grotesque code duplicatation
 
         ColorInterval[] colors = new ColorInterval[mapSize];
         binSize = (getHighClip() - getLowClip()) / (mapSize - 1);
@@ -172,29 +178,16 @@ public class LinearColorMap extends AbstractColorMap {
     }
 
     public ColorInterval getInterval(int index) {
-        assert index >= 0 && index < intervals.size() : "index must be between 0 and " + getMapSize();
         return intervals.get(index);
     }
 
 
     public Color getColor(double value) {
-        double mapRange = highClip - lowClip;
-        int bin = (int) (((value - lowClip) / mapRange) * intervals.size());
+        int bin = (int) (((value - getLowClip()) / mapRange) * getMapSize());
         if (bin < 0) bin = 0;
-        if (bin >= intervals.size()) bin = intervals.size() - 1;
+        if (bin >= getMapSize()) bin = intervals.size() - 1;
 
-        ColorInterval clr = intervals.get(bin);
-        int alpha = 0;
-        int blue = clr.getBlue();
-        int green = clr.getGreen();
-        int red = clr.getRed();
-
-        if (value <= lowerAlphaThreshold || value >= upperAlphaThreshold) {
-            alpha = (int) (clr.getAlpha() * alphaMultiplier);
-
-        }
-
-        return new Color(red, green, blue, alpha);
+        return intervals.get(bin).getColor();
 
     }
 
@@ -233,14 +226,14 @@ public class LinearColorMap extends AbstractColorMap {
                 oldValue, highClip);
 
         if (range[0] != getLowClip()) {
-            System.out.println("forcing low clip change to " + range[0]);
+            
             double oldClip = getLowClip();
             lowClip = range[0];
             changeSupport.firePropertyChange(AbstractColorMap.LOW_CLIP_PROPERTY,
                     oldClip, lowClip);
         }
 
-
+        mapRange = getHighClip() - getLowClip();
 
 
     }
@@ -277,7 +270,7 @@ public class LinearColorMap extends AbstractColorMap {
 
 
         if (range[1] != getHighClip()) {
-            System.out.println("forcing high clip change to " + range[1]);
+            
             double oldClip = getHighClip();
             highClip = range[1];
 
@@ -285,7 +278,7 @@ public class LinearColorMap extends AbstractColorMap {
                     oldClip, highClip);
         }
 
-       
+        mapRange = getHighClip() - getLowClip();
 
 
     }
@@ -304,6 +297,7 @@ public class LinearColorMap extends AbstractColorMap {
         return intervals.listIterator();
     }
 
+    
     public Range getRange() {
         return new Range(getMinimumValue(), getMaximumValue());
     }
@@ -382,16 +376,14 @@ public class LinearColorMap extends AbstractColorMap {
     }
 
     public byte[][] getRGBAComponents(IImageData data) {
-        // use of DataBuffer not ideal. Should move to commons primitives.
-
-        int len = data.getNumElements();
-        byte[][] rgba = new byte[4][len];
-        int lastidx = getMapSize() - 1;
+       int len = data.getNumElements();
+       byte[][] rgba = new byte[4][len];
+       int lastidx = getMapSize() - 1;
 
         ImageIterator iter = data.iterator();
 
-        Color c0 = intervals.get(0).getColor();
-        Color cn = intervals.get(lastidx).getColor();
+        Color c0 = getInterval(0).getColor();
+        Color cn = getInterval(lastidx).getColor();
 
 
         while (iter.hasNext()) {
@@ -411,7 +403,7 @@ public class LinearColorMap extends AbstractColorMap {
                 rgba[3][i] = (byte) (cn.getAlpha() * alphaMultiplier);
             } else {
                 int bin = (int) Math.round((val - lowClip) / intervals.size());
-                Color ci = intervals.get(bin).getColor();
+                Color ci = getInterval(bin).getColor();
                 rgba[0][i] = (byte) ci.getRed();
                 rgba[1][i] = (byte) ci.getGreen();
                 rgba[2][i] = (byte) ci.getBlue();

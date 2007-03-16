@@ -109,7 +109,7 @@ public class CanvasBar2 extends ImageViewPresenter {
             visAction.setContext(map);
 
             AbstractButton visButton = ActionUIFactory.getInstance().createButton(visAction);
-            Bindings.bind((JCheckBox) visButton, layer.getImageLayerParameters().getVisiblility().getModel(VisibleProperty.VISIBLE_PROPERTY));
+            Bindings.bind((JCheckBox) visButton, layer.getImageLayerParameters().getVisible().getModel(VisibleProperty.VISIBLE_PROPERTY));
             visButton.setText("Visible");
 
             button.add(visButton);

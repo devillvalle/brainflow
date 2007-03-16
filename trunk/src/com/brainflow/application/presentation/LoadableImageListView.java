@@ -10,7 +10,7 @@ import com.brainflow.core.ImageDisplayModel;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageLayer3D;
 import com.brainflow.core.SnapShooter;
-import com.brainflow.display.ImageLayerParameters;
+import com.brainflow.display.ImageLayerProperties;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.image.space.Axis;
@@ -158,7 +158,7 @@ public class LoadableImageListView extends JList {
             if (icon == null) {
                 ImageDisplayModel dmodel = new ImageDisplayModel("" + limg.getUniqueID());
 
-                ImageLayerParameters parms = new ImageLayerParameters(new LinearColorMap(limg.getData().getMinValue(), limg.getData().getMaxValue(), ColorTable.GRAYSCALE));
+                ImageLayerProperties parms = new ImageLayerProperties(new LinearColorMap(limg.getData().getMinValue(), limg.getData().getMaxValue(), ColorTable.GRAYSCALE));
                 ImageLayer layer = new ImageLayer3D(limg, parms);
 
                 dmodel.addLayer(layer);

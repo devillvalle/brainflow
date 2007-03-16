@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Arrays;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.awt.*;
 
 import org.bushe.swing.event.EventBus;
 
@@ -35,21 +36,32 @@ public class ImageProgressDialog extends SwingWorker<IImageData, Integer> implem
 
     private JProgressBar progressBar;
 
+
     private JDialog dialog;
 
-    public ImageProgressDialog(ILoadableImage _loadable) {
+
+    private Component parent;
+
+
+    public ImageProgressDialog(Component _parent) {
+        parent = _parent;
+        buildGUI();
+    }
+
+    public ImageProgressDialog(ILoadableImage _loadable, Component _parent) {
         loadable = _loadable;
-        this.addPropertyChangeListener(new PropertyChangeListener() {
-
-            public void propertyChange(PropertyChangeEvent evt) {
-                System.out.println("LOADING IMAGE : " + evt.getNewValue());
-            }
-        });
-
+        parent = _parent;
         buildGUI();
     }
 
 
+    public ILoadableImage getLoadable() {
+        return loadable;
+    }
+
+    public void setLoadable(ILoadableImage loadable) {
+        this.loadable = loadable;
+    }
 
     private void buildGUI() {
         progressBar = new JProgressBar(0, 100);
@@ -61,26 +73,31 @@ public class ImageProgressDialog extends SwingWorker<IImageData, Integer> implem
         panel.add(Box.createVerticalStrut(3));
         panel.add(progressBar);
         panel.add(Box.createVerticalStrut(3));
-        panel.add(new JLabel("Scranning C:\\Program Files\\...\\win.ini ..."));
+        panel.add(new JLabel("Scanning C:\\Program Files\\...\\win.ini ..."));
         JideOptionPane optionPane = new JideOptionPane(panel, JOptionPane.INFORMATION_MESSAGE, 0, null, new Object[]{
                 new JButton("Cancel")});
 
-        optionPane.setTitle("Loading Image " + loadable.getStem());
+        optionPane.setTitle("Loading Image ");
 
         String details = ("Details are as Follows");
         optionPane.setDetails(details);
 
-        dialog = optionPane.createDialog(JOptionPane.getFrameForComponent(progressBar), "Please wait");
-        dialog.setResizable(true);
-        dialog.setModal(false);
+        dialog = optionPane.createDialog(parent, "Loading Image");
+        dialog.setModalityType(Dialog.ModalityType.MODELESS);
         dialog.pack();
+
+       
        
 
     }
 
     public JDialog getDialog() {
         return dialog;
+
     }
+
+
+
 
 
     protected void process(List<Integer> chunks) {
@@ -94,7 +111,7 @@ public class ImageProgressDialog extends SwingWorker<IImageData, Integer> implem
     }
 
     protected void done() {
-        progressBar.setValue(100);
+
         //dialog.setVisible(false);
     }
 
@@ -138,6 +155,6 @@ public class ImageProgressDialog extends SwingWorker<IImageData, Integer> implem
     }
 
     public void finished() {
-        //
+        progressBar.setValue(100);
     }
 }

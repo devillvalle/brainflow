@@ -16,10 +16,10 @@ import com.brainflow.image.data.BasicImageData2D;
 public class DisplayableImage {
 
     private BasicImageData2D image;
-    private ImageLayerParameters properties;
+    private ImageLayerProperties properties;
 
 
-    public DisplayableImage(BasicImageData2D _image, ImageLayerParameters _properties) {
+    public DisplayableImage(BasicImageData2D _image, ImageLayerProperties _properties) {
         image = _image;
         properties = _properties;
     }
@@ -28,7 +28,7 @@ public class DisplayableImage {
         return image;
     }
 
-    public ImageLayerParameters getDisplayProperties() {
+    public ImageLayerProperties getDisplayProperties() {
         return properties;
     }
 

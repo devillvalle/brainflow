@@ -1,7 +1,6 @@
 package com.brainflow.display;
 
 import com.jgoodies.binding.beans.Model;
-import com.brainflow.core.ImageLayer;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,18 +12,18 @@ import com.brainflow.core.ImageLayer;
 public class VisibleProperty extends Model {
 
     private boolean visible = true;
-    private ImageLayerParameters layer;
+    private ImageLayerProperties layer;
 
     public static final String VISIBLE_PROPERTY = "visible";
 
 
-    public VisibleProperty(ImageLayerParameters _layer, boolean visible) {
+    public VisibleProperty(ImageLayerProperties _layer, boolean visible) {
         layer = _layer;
         this.visible = visible;
     }
 
 
-    public ImageLayerParameters getLayerParameters() {
+    public ImageLayerProperties getLayerParameters() {
         return layer;
     }
 

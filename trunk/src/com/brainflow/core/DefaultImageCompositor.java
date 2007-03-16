@@ -9,7 +9,7 @@
 
 package com.brainflow.core;
 
-import com.brainflow.display.ImageLayerParameters;
+import com.brainflow.display.ImageLayerProperties;
 import com.brainflow.display.InterpolationHint;
 import com.brainflow.display.InterpolationProperty;
 import com.brainflow.image.data.IImageData2D;
@@ -88,7 +88,7 @@ public class DefaultImageCompositor implements IImageCompositor {
             IImageData2D data = layer.getImageData();
             ImageSpace2D ispace = (ImageSpace2D) data.getImageSpace();
 
-            ImageLayerParameters dprops = layer.getImageLayerParameters();
+            ImageLayerProperties dprops = layer.getImageLayerProperties();
             InterpolationProperty interp = dprops.getResampleInterpolation().getProperty();
 
             double sx = ispace.getImageAxis(Axis.X_AXIS).getRange().getInterval() / ispace.getDimension(Axis.X_AXIS);
@@ -210,7 +210,7 @@ public class DefaultImageCompositor implements IImageCompositor {
 
         for (int i = 0; i < images.size(); i++) {
             ImageLayer2D layer = images.get(i);
-            if (layer.getImageLayerParameters().getVisiblility().getProperty().isVisible()) {
+            if (layer.getImageLayerProperties().getVisible().getProperty().isVisible()) {
                 RenderedImage rim = cachedResampled.get(i);
                 double transx = (rim.getMinX() - frameBounds.getMinX()) + (-frameBounds.getMinX());
                 double transy = (rim.getMinY() - frameBounds.getMinY()) + (-frameBounds.getMinY());

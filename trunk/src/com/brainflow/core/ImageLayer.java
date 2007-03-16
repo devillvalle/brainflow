@@ -10,8 +10,12 @@
 package com.brainflow.core;
 
 import com.brainflow.application.ILoadableImage;
-import com.brainflow.display.ImageLayerParameters;
+import com.brainflow.display.ImageLayerProperties;
 import com.brainflow.image.data.IImageData;
+
+import java.beans.PropertyChangeSupport;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 
 /**
@@ -21,14 +25,78 @@ import com.brainflow.image.data.IImageData;
 
 public class ImageLayer {
 
-    private final ImageLayerParameters parameters;
+    private final ImageLayerProperties properties;
+
     private ILoadableImage limg;
 
+    private PropertyChangeSupport support = new PropertyChangeSupport(this);
 
-    public ImageLayer(ILoadableImage _limg, ImageLayerParameters _params) {
+
+    public ImageLayer(ILoadableImage _limg, ImageLayerProperties _params) {
         limg = _limg;
-        parameters = _params;
+        properties = _params;
+        init();
     }
+
+    public boolean isVisible() {
+        return properties.getVisible().getProperty().isVisible();
+    }
+
+
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        support.addPropertyChangeListener(propertyName, listener);
+    }
+
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        support.removePropertyChangeListener(propertyName, listener);
+    }
+
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        support.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        support.removePropertyChangeListener(listener);
+    }
+
+
+    private void init() {
+        properties.getColorMap().addPropertyChangeListener(new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                support.firePropertyChange(new PropertyChangeEvent(ImageLayer.this, evt.getPropertyName(),
+                        evt.getOldValue(), evt.getNewValue()));
+            }
+        });
+
+        properties.getImageOpList().addPropertyChangeListener(new PropertyChangeListener() {
+
+            public void propertyChange(PropertyChangeEvent evt) {
+                support.firePropertyChange(new PropertyChangeEvent(ImageLayer.this, evt.getPropertyName(),
+                        evt.getOldValue(), evt.getNewValue()));
+            }
+        });
+
+
+        properties.getResampleInterpolation().addPropertyChangeListener(new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                support.firePropertyChange(new PropertyChangeEvent(ImageLayer.this, evt.getPropertyName(),
+                        evt.getOldValue(), evt.getNewValue()));
+            }
+        });
+
+        properties.getVisible().addPropertyChangeListener(new PropertyChangeListener() {
+
+            public void propertyChange(PropertyChangeEvent evt) {
+                support.firePropertyChange(new PropertyChangeEvent(ImageLayer.this, evt.getPropertyName(),
+                        evt.getOldValue(), evt.getNewValue()));
+
+            }
+        });
+
+
+    }
+
 
     public IImageData getImageData() {
         return limg.getData();
@@ -38,8 +106,8 @@ public class ImageLayer {
         return limg;
     }
 
-    public ImageLayerParameters getImageLayerParameters() {
-        return parameters;
+    public ImageLayerProperties getImageLayerParameters() {
+        return properties;
     }
 
     public String toString() {

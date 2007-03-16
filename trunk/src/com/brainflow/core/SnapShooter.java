@@ -5,13 +5,10 @@ import com.brainflow.application.MemoryImage;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.colormap.DiscreteColorMap;
-import com.brainflow.display.InterpolationProperty;
-import com.brainflow.display.InterpolationHint;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.io.analyze.AnalyzeIO;
-import com.brainflow.image.data.IImageData3D;
 
 import javax.media.jai.JAI;
 import javax.swing.*;
@@ -184,9 +181,9 @@ public class SnapShooter {
        System.out.println(ragged);
 
        ImageLayer layer1 = new ImageLayer(il1.getData());
-       layer1.getImageLayerParameters().getColorMap().setProperty(lmap);
+       layer1.getImageLayerProperties().getColorMap().setProperty(lmap);
        ImageLayer layer2 = new ImageLayer(il2.getData());
-       layer2.getImageLayerParameters().getColorMap().setProperty(ragged);
+       layer2.getImageLayerProperties().getColorMap().setProperty(ragged);
 
        dset.addLayer(layer1);
        dset.addLayer(layer2);

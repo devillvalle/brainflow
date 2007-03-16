@@ -39,51 +39,59 @@ public class ImagePlotPaintScheduler {
         executor = new ScheduledThreadPoolExecutor(2, new RejectedExecutionHandler() {
 
             public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-                System.out.println("task was rejected! " + r);
+
             }
         });
     }
 
 
-    public void displayChanged(DisplayChangeEvent event) {
+    public void viewportChanged(Viewport3D viewport) {
+        plot.updateAxis(viewport.getRange(viewport.getXAxis()));
+        plot.updateAxis(viewport.getRange(viewport.getYAxis()));
+        plot.updateAxis(viewport.getRange(viewport.getZAxis()));
+        ipane.repaint();
 
-        log.info("Display Action : " + event.getDisplayAction());
+    }
 
-        
-        //todo visitor pattern?
-        if (event.getDisplayAction() == DisplayAction.SLICE_CHANGED) {
-            
-            ICrosshair cross = (ICrosshair) event.getDisplayParameter().getProperty();
-            executor.submit(new ProcureTask(cross.getValue(plot.getDisplayAnatomy().ZAXIS)));
+    public void annotationChanged() {
+         ipane.repaint();
 
-        } else if (event.getDisplayAction() == DisplayAction.DATA_CHANGED) {
+    }
+
+    public void crossHairChanged(ICrosshair cross) {
+        executor.submit(new ProcureTask(cross.getValue(plot.getDisplayAnatomy().ZAXIS)));
+
+    }
+
+    public void layerChanged(DisplayChangeType changeType) {
+
+        log.info("Display Action : " + changeType);
+
+
+        if (changeType == DisplayChangeType.STRUCTURE_CHANGE) {
             procurer.reset();
             compositor.setDirty();
             executor.submit(new ProcureTask(procurer.getSlice()));
 
-        } else if (event.getDisplayAction() == DisplayAction.FILTER_LAYER_CHANGED) {
+        } else if (changeType == DisplayChangeType.IMAGE_FILTER_CHANGE) {
             procurer.reset();
             compositor.setDirty();
             executor.submit(new ProcureTask(procurer.getSlice()));
-        } else if (event.getDisplayAction() == DisplayAction.COLOR_MAP_CHANGED) {
+        } else if (changeType == DisplayChangeType.COLOR_MAP_CHANGE) {
             procurer.reset();
             compositor.setDirty();
             executor.submit(new ProcureTask(procurer.getSlice()));
 
-        } else if (event.getDisplayAction() == DisplayAction.INTERPOLATION_CHANGED) {
+        } else if (changeType == DisplayChangeType.RESAMPLE_CHANGE) {
             executor.submit(new ComposeTask());
-        } else if (event.getDisplayAction() == DisplayAction.RECOMPOSE) {
+        } else if (changeType == DisplayChangeType.COMPOSITION_CHANGE) {
             executor.submit(new ComposeTask());
-        } else if (event.getDisplayAction() == DisplayAction.VIEWPORT_CHANGED) {
-            Viewport3D viewport = (Viewport3D) event.getDisplayParameter().getProperty();
-            plot.updateAxis(viewport.getRange(viewport.getXAxis()));
-            plot.updateAxis(viewport.getRange(viewport.getYAxis()));
-            plot.updateAxis(viewport.getRange(viewport.getZAxis()));
-            ipane.repaint();
-        } else if (event.getDisplayAction() == DisplayAction.ANNOTATION_CHANGED) {
-            ipane.repaint();
+        } else {
+            procurer.reset();
+            compositor.setDirty();
+            executor.submit(new ProcureTask(procurer.getSlice()));
+
         }
-
 
     }
 

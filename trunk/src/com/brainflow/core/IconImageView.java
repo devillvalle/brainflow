@@ -48,7 +48,7 @@ public class IconImageView extends ImageView implements Icon {
 
     }
 
-    public void scheduleRepaint(DisplayChangeEvent e) {
+    public void scheduleRepaint(LayerChangeEvent e) {
         repaint();
     }
 

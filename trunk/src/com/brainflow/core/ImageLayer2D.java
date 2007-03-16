@@ -1,7 +1,7 @@
 package com.brainflow.core;
 
 import com.brainflow.colormap.IColorMap;
-import com.brainflow.display.ImageLayerParameters;
+import com.brainflow.display.ImageLayerProperties;
 import com.brainflow.display.ImageOp;
 import com.brainflow.display.ImageOpListProperty;
 import com.brainflow.display.Property;
@@ -25,9 +25,9 @@ public class ImageLayer2D {
 
     private BufferedImage rimg;
     private IImageData2D data;
-    private ImageLayerParameters params;
+    private ImageLayerProperties params;
 
-    public ImageLayer2D(IImageData2D _data, ImageLayerParameters _params) {
+    public ImageLayer2D(IImageData2D _data, ImageLayerProperties _params) {
         data = _data;
         params = _params;
     }
@@ -36,7 +36,7 @@ public class ImageLayer2D {
         return data;
     }
 
-    public ImageLayerParameters getImageLayerParameters() {
+    public ImageLayerProperties getImageLayerProperties() {
         return params;
     }
 
@@ -54,7 +54,7 @@ public class ImageLayer2D {
     }
 
     public BufferedImage createBufferedImage() {
-        IColorMap imap = params.getColorMap().getProperty();
+        /*IColorMap imap = params.getColorMap().getProperty();
 
         IImageSpace ispace = data.getImageSpace();
 
@@ -71,7 +71,9 @@ public class ImageLayer2D {
             rimg = op.filter(rimg);
         }
 
-        return rimg;
+        return rimg;   */
+
+        return null;
     }
 
 

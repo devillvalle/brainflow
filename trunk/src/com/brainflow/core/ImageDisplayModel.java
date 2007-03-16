@@ -1,6 +1,6 @@
 package com.brainflow.core;
 
-import com.brainflow.display.ImageLayerParameters;
+import com.brainflow.display.ImageLayerProperties;
 import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.image.axis.ImageAxis;
@@ -15,6 +15,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -31,13 +32,13 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     public static final String IMAGE_SPACE_PROPERTY = "imageSpace";
 
-    private EventListenerList listeners = new EventListenerList();
 
     private ArrayListModel imageListModel = new ArrayListModel();
 
-    private ChangeListener dirtyListener = new DirtyListener();
 
     private SelectionInList layerSelection = new SelectionInList((ListModel) imageListModel);
+
+    private List<LayerChangeListener> layerListeners = new ArrayList<LayerChangeListener>();
 
     private List<ListDataListener> listenerList = new ArrayList<ListDataListener>();
 
@@ -62,14 +63,13 @@ public class ImageDisplayModel implements IImageDisplayModel {
     }
 
 
-    public ImageLayerParameters getLayerParameters(int layer) {
+    public ImageLayerProperties getLayerParameters(int layer) {
         assert layer >= 0 && layer < imageListModel.size();
         ImageLayer ilayer = (ImageLayer) imageListModel.get(layer);
         return ilayer.getImageLayerParameters();
     }
 
-    public ImageLayer getLayer(ImageLayerParameters params) {
-        
+    public ImageLayer getLayer(ImageLayerProperties params) {
         for (int i = 0; i < imageListModel.size(); i++) {
             ImageLayer layer = (ImageLayer) imageListModel.get(i);
             if (params == layer.getImageLayerParameters()) return layer;
@@ -107,14 +107,14 @@ public class ImageDisplayModel implements IImageDisplayModel {
         changeSupport.removePropertyChangeListener(listener);
     }
 
-
-    public void addChangeListener(ChangeListener listener) {
-        listeners.add(ChangeListener.class, listener);
+    public void addLayerChangeListener(LayerChangeListener listener) {
+        layerListeners.add(listener);
     }
 
-    public void removeChangeListener(ChangeListener listener) {
-        listeners.remove(ChangeListener.class, listener);
+    public void removeLayerChangeListener(LayerChangeListener listener) {
+        layerListeners.remove(listener);
     }
+
 
     public String getLayerName(int idx) {
         assert idx >= 0 && idx < imageListModel.size();
@@ -131,12 +131,25 @@ public class ImageDisplayModel implements IImageDisplayModel {
         }
         computeImageSpace();
 
-        //this.fireChangeEvent(new DisplayChangeEvent()
     }
 
     private void listenToLayer(ImageLayer layer) {
+        layer.addPropertyChangeListener(new PropertyChangeListener() {
 
-        layer.getImageLayerParameters().addChangeListener(dirtyListener);
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getPropertyName() == ImageLayerProperties.COLOR_MAP_PARAMETER) {
+                    fireLayerChangeEvent(new LayerChangeEvent(ImageDisplayModel.this, DisplayChangeType.COLOR_MAP_CHANGE, (ImageLayer)evt.getSource()));
+                } else if (evt.getPropertyName() == ImageLayerProperties.RESAMPLE_PROPERTY) {
+                    fireLayerChangeEvent(new LayerChangeEvent(ImageDisplayModel.this, DisplayChangeType.RESAMPLE_CHANGE, (ImageLayer)evt.getSource()));
+                } else if (evt.getPropertyName() == ImageLayerProperties.VISIBLE_PROPERTY) {
+                    fireLayerChangeEvent(new LayerChangeEvent(ImageDisplayModel.this, DisplayChangeType.COMPOSITION_CHANGE, (ImageLayer)evt.getSource()));
+                } else if (evt.getPropertyName() == ImageLayerProperties.IMAGEOP_PROPERTY) {
+                    fireLayerChangeEvent(new LayerChangeEvent(ImageDisplayModel.this, DisplayChangeType.IMAGE_FILTER_CHANGE, (ImageLayer)evt.getSource()));
+
+                }
+            }
+        });
+
     }
 
 
@@ -164,8 +177,6 @@ public class ImageDisplayModel implements IImageDisplayModel {
             imageSpace = uspace;
             changeSupport.firePropertyChange(ImageDisplayModel.IMAGE_SPACE_PROPERTY, old, imageSpace);
         }
-        //fireChangeEvent(
-        //getDisplayParameters().getViewport().getProperty().setBounds((ImageSpace3D) uspace);
 
     }
 
@@ -191,10 +202,8 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     public void removeLayer(int layer) {
         assert imageListModel.size() > layer && layer >= 0;
-        ImageLayer rlayer = (ImageLayer) imageListModel.get(layer);
         imageListModel.remove(layer);
         computeImageSpace();
-        //rlayer.getImageLayerParameters().removeChangeListener(dirtyListener);
 
     }
 
@@ -262,11 +271,10 @@ public class ImageDisplayModel implements IImageDisplayModel {
     // }
 
 
-    protected void fireChangeEvent(DisplayChangeEvent e) {
-        ChangeListener[] cl = listeners.getListeners(ChangeListener.class);
-        for (ChangeListener c : cl) {
-            c.stateChanged(e);
-        }
+    protected void fireLayerChangeEvent(LayerChangeEvent e) {
+       for (LayerChangeListener listener : layerListeners) {
+           listener.layerChanged(e);
+       }
     }
 
     public String toString() {
@@ -274,13 +282,6 @@ public class ImageDisplayModel implements IImageDisplayModel {
     }
 
 
-    class DirtyListener implements ChangeListener {
-
-        public void stateChanged(ChangeEvent e) {
-            DisplayChangeEvent de = (DisplayChangeEvent) e;
-            fireChangeEvent(de);
-        }
-    }
 
 
     class ForwardingListDataListener implements ListDataListener {

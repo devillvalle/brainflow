@@ -51,7 +51,7 @@ public class DefaultImageProcurer extends AbstractImageProcurer {
 
             ImageLayer3D layer = (ImageLayer3D) getModel().getImageLayer(i);
 
-            //if (!layer.getImageLayerParameters().getVisiblility().getProperty().isVisible()) {
+            //if (!layer.getImageLayerProperties().getVisiblility().getProperty().isVisible()) {
             //    continue;
             //}
 

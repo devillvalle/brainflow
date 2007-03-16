@@ -81,8 +81,7 @@ public abstract class ImageView extends JComponent implements ListDataListener {
 
         crosshair.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                log.info("CROSSHAIR EVENT : SOURCE " + ImageView.this);
-                scheduleRepaint(new DisplayChangeEvent(crosshair, DisplayAction.SLICE_CHANGED));
+                //scheduleRepaint(new LayerChangeEvent(crosshair, DisplayAction.SLICE_CHANGED));
             }
         });
 
@@ -94,7 +93,7 @@ public abstract class ImageView extends JComponent implements ListDataListener {
 
         viewport.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                scheduleRepaint(new DisplayChangeEvent(new Property<Viewport3D>(viewport), DisplayAction.VIEWPORT_CHANGED));
+                //scheduleRepaint(new LayerChangeEvent(new Property<Viewport3D>(viewport), DisplayAction.VIEWPORT_CHANGED));
             }
         });
 
@@ -117,9 +116,9 @@ public abstract class ImageView extends JComponent implements ListDataListener {
 
             public void propertyChange(PropertyChangeEvent evt) {
                 IAnnotation annotation = (IAnnotation) evt.getSource();
-                scheduleRepaint(new DisplayChangeEvent(
-                        new Property<IAnnotation>(annotation),
-                        DisplayAction.ANNOTATION_CHANGED));
+               // scheduleRepaint(new LayerChangeEvent(
+                //        new Property<IAnnotation>(annotation),
+                //        DisplayAction.ANNOTATION_CHANGED));
 
             }
         };
@@ -222,7 +221,7 @@ public abstract class ImageView extends JComponent implements ListDataListener {
         return displayModel;
     }
 
-    public abstract void scheduleRepaint(DisplayChangeEvent e);
+    public abstract void scheduleRepaint(LayerChangeEvent e);
 
 
     public String getId() {
@@ -276,7 +275,7 @@ public abstract class ImageView extends JComponent implements ListDataListener {
 
     public void intervalAdded(ListDataEvent e) {
 
-        scheduleRepaint(new DisplayChangeEvent(new Property(new ValueHolder(getModel())), DisplayAction.DATA_CHANGED));
+        //scheduleRepaint(new LayerChangeEvent(new Property(new ValueHolder(getModel())), DisplayAction.DATA_CHANGED));
 
     }
 
@@ -285,21 +284,21 @@ public abstract class ImageView extends JComponent implements ListDataListener {
         if (getModel().getNumLayers() == 0) {
             changeSupport.firePropertyChange(ImageView.CLOSED_PROPERTY, false, true);
         } else {
-            scheduleRepaint(new DisplayChangeEvent(new Property(new ValueHolder(getModel())), DisplayAction.DATA_CHANGED));
+            //scheduleRepaint(new LayerChangeEvent(new Property(new ValueHolder(getModel())), DisplayAction.DATA_CHANGED));
         }
 
 
     }
 
     public void contentsChanged(ListDataEvent e) {
-        scheduleRepaint(new DisplayChangeEvent(new Property(new ValueHolder(getModel())), DisplayAction.DATA_CHANGED));
+        //scheduleRepaint(new LayerChangeEvent(new Property(new ValueHolder(getModel())), DisplayAction.DATA_CHANGED));
 
     }
 
     protected class DirtListener implements ChangeListener {
         public void stateChanged(ChangeEvent e) {
 
-            DisplayChangeEvent de = (DisplayChangeEvent) e;
+            LayerChangeEvent de = (LayerChangeEvent) e;
 
             scheduleRepaint(de);
 

@@ -2,17 +2,14 @@ package com.brainflow.core;
 
 
 
-import com.brainflow.display.ImageLayerParameters;
-import com.brainflow.display.Property;
+import com.brainflow.display.ImageLayerProperties;
 import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.space.Axis;
-import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.image.space.IImageSpace;
 import com.jgoodies.binding.list.SelectionInList;
 
-import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListDataListener;
 import java.util.List;
@@ -42,13 +39,13 @@ public interface IImageDisplayModel {
 
     public void removePropertyChangeListener(PropertyChangeListener listener);
 
-    public void addChangeListener(ChangeListener listener);
+    public void addLayerChangeListener(LayerChangeListener listener);
 
-    public void removeChangeListener(ChangeListener listener);
+    public void removeLayerChangeListener(LayerChangeListener listener);
 
     public String getLayerName(int idx);
 
-    ImageLayer getLayer(ImageLayerParameters params);
+    ImageLayer getLayer(ImageLayerProperties params);
 
     public List<Integer> indexOf(IImageData data);
 
@@ -64,7 +61,7 @@ public interface IImageDisplayModel {
 
     //public ListModel getListModel();
 
-    public ImageLayerParameters getLayerParameters(int layer);
+    public ImageLayerProperties getLayerParameters(int layer);
 
     public ImageLayer getImageLayer(int layer);
 

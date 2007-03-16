@@ -1,7 +1,7 @@
 package com.brainflow.core;
 
 import com.brainflow.application.ILoadableImage;
-import com.brainflow.display.ImageLayerParameters;
+import com.brainflow.display.ImageLayerProperties;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.image.data.IImageData2D;
@@ -33,7 +33,7 @@ public class ImageLayer3D extends ImageLayer {
     };
 
 
-    public ImageLayer3D(ILoadableImage limg, ImageLayerParameters _params) {
+    public ImageLayer3D(ILoadableImage limg, ImageLayerProperties _params) {
         super(limg, _params);
         slicer = new ImageSlicer((IImageData3D) getImageData());
     }

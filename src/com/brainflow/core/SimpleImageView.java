@@ -1,8 +1,6 @@
 package com.brainflow.core;
 
 
-import com.brainflow.core.annotations.AxisLabelAnnotation;
-import com.brainflow.core.annotations.ColorBarAnnotation;
 import com.brainflow.core.annotations.CrosshairAnnotation;
 import com.brainflow.core.annotations.SelectedPlotAnnotation;
 import com.brainflow.display.ICrosshair;
@@ -64,8 +62,8 @@ public class SimpleImageView extends ImageView {
         initView();
     }
 
-    public void scheduleRepaint(DisplayChangeEvent e) {
-        scheduler.displayChanged(e);
+    public void scheduleRepaint(LayerChangeEvent e) {
+        //scheduler.displayChanged(e);
 
     }
 
@@ -83,7 +81,7 @@ public class SimpleImageView extends ImageView {
         //addAnnotation(new ColorBarAnnotation(getModel()));
         addAnnotation(new SelectedPlotAnnotation(imagePlot));
 
-        getModel().addChangeListener(dirtListener);
+        //getModel().addChangeListener(dirtListener);
         AnatomicalVolume displayAnatomy = getDisplayAnatomy();
         AxisRange xrange = getModel().getImageAxis(displayAnatomy.XAXIS).getRange();
         AxisRange yrange = getModel().getImageAxis(displayAnatomy.YAXIS).getRange();

@@ -41,7 +41,7 @@ public class SimpleOrthogonalImageView extends ImageView {
         plotSelection.setSelectionIndex(0);
     }
 
-    public void scheduleRepaint(DisplayChangeEvent e) {
+    public void scheduleRepaint(LayerChangeEvent e) {
         repaint();
     }
 

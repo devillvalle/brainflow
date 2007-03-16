@@ -3,7 +3,7 @@ package com.brainflow.application.presentation;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
-import com.brainflow.display.ImageLayerParameters;
+import com.brainflow.display.ImageLayerProperties;
 import com.brainflow.display.Property;
 import com.brainflow.display.VisibleProperty;
 import com.jgoodies.binding.adapter.ComboBoxAdapter;
@@ -159,7 +159,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
         public void propertyChange(PropertyChangeEvent evt) {
 
             VisibleProperty property = (VisibleProperty) evt.getSource();
-            ImageLayerParameters params = property.getLayerParameters();
+            ImageLayerProperties params = property.getLayerParameters();
             ImageLayer layer = getSelectedView().getModel().getLayer(params);
             int i = getSelectedView().getModel().indexOf(layer);
             if (property.isVisible()) {
@@ -174,7 +174,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
         public void listen() {
             for (int i = 0; i < view.getModel().getNumLayers(); i++) {
-                Property<VisibleProperty> param = view.getModel().getImageLayer(i).getImageLayerParameters().getVisiblility();
+                Property<VisibleProperty> param = view.getModel().getImageLayer(i).getImageLayerParameters().getVisible();
                 param.addPropertyChangeListener(this);
 
                 VisibleProperty property = param.getProperty();
@@ -189,7 +189,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
         public void unlisten() {
             for (int i = 0; i < view.getModel().getNumLayers(); i++) {
-                view.getModel().getImageLayer(i).getImageLayerParameters().getVisiblility().removePropertyChangeListener(this);
+                view.getModel().getImageLayer(i).getImageLayerParameters().getVisible().removePropertyChangeListener(this);
 
             }
 
@@ -198,7 +198,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
         public boolean isSelectedIndex(int index) {
             IImageDisplayModel model = view.getModel();
             ImageLayer layer = model.getImageLayer(index);
-            return layer.getImageLayerParameters().getVisiblility().getProperty().isVisible();
+            return layer.getImageLayerParameters().getVisible().getProperty().isVisible();
 
         }
 

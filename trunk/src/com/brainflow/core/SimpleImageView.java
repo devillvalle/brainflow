@@ -92,7 +92,7 @@ public class SimpleImageView extends ImageView {
         compositor = new DefaultImageCompositor();
         plotRenderer = new ImagePlotRenderer(compositor, procurer);
 
-        imagePlot = new BasicImagePlot(displayAnatomy, xrange, yrange, plotRenderer);
+        imagePlot = new ComponentImagePlot(displayAnatomy, xrange, yrange, plotRenderer);
         imagePlot.setName(displayAnatomy.XY_PLANE.getOrientation().toString());
 
 

@@ -25,21 +25,12 @@ public class CreateBufferedImagesStage extends ImageProcessingStage {
     private static Logger log = Logger.getLogger(CreateBufferedImagesStage.class.getName());
 
     public void process(StageFerry ferry) throws StageException {
-        List<RGBAImage> layers = ferry.getRGBAImageLayerStack();
-        List<BufferedImage> imageList = ferry.getBufferedImageStack();
-
-        if (imageList == null || imageList.size() != ferry.getModel().getNumLayers()) {
-            imageList = new ArrayList<BufferedImage>();
-            int n = layers.size();
-            for (int i=0; i<n; i++) {
-                if (ferry.getModel().getImageLayer(i).isVisible()) {
-                    imageList.add(createBufferedImage(layers.get(i)));
-                } else {
-                    imageList.add(null);
-                }
+        List<PipelineLayer> layers = ferry.getLayers();
+        for (int i = 0; i < layers.size(); i++) {
+            PipelineLayer layer = layers.get(i);
+            if (layer.isVisible() && layer.getRawImage() == null) {
+                layer.setRawImage(createBufferedImage(layer.getColoredImage()));
             }
-
-            ferry.setBufferedImageStack(imageList);
         }
 
         emit(ferry);
@@ -57,13 +48,13 @@ public class CreateBufferedImagesStage extends ImageProcessingStage {
         ball[1] = bg;
         ball[2] = bb;
         ball[3] = ba;
-        BufferedImage bimg =  RenderUtils.createBufferedImage(ball, rgba.getWidth(), rgba.getHeight());
+        BufferedImage bimg = RenderUtils.createBufferedImage(ball, rgba.getWidth(), rgba.getHeight());
 
         // code snippet is required because of bug in Java ImagingLib.
         // It cannot deal with component sample models... so we convert first.
         BufferedImage ret = RenderUtils.createCompatibleImage(bimg.getWidth(), bimg.getHeight());
         Graphics2D g2 = ret.createGraphics();
-        g2.drawRenderedImage(bimg, AffineTransform.getTranslateInstance(0,0));
+        g2.drawRenderedImage(bimg, AffineTransform.getTranslateInstance(0, 0));
         return ret;
     }
 }

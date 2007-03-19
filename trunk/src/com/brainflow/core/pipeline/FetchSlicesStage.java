@@ -29,42 +29,41 @@ public class FetchSlicesStage extends ImageProcessingStage {
 
 
     private static final int MAX_ENTRIES = 50;
+
     private static Logger log = Logger.getLogger(FetchSlicesStage.class.getName());
 
-    private static final Map<MultiKey, IImageData2D> cache = new LinkedHashMap<MultiKey, IImageData2D>(MAX_ENTRIES, .75F, true) {
-        protected boolean removeEldestEntry(Map.Entry eldest) {
-            return size() > MAX_ENTRIES;
-        }
-    };
-
-    boolean useCache = false;
 
     public FetchSlicesStage() {
 
+
     }
 
 
-    public void init(StageContext context) {
-        super.init(context);
-        Boolean b = (Boolean) context.getEnv(ImagePipeline.USE_SLICE_CACHE);
-        useCache = b.booleanValue();
-    }
-
-
+  
     public void process(StageFerry ferry) throws StageException {
 
-        List<ImageLayer2D> stack = ferry.getImageLayerStack();
+        List<PipelineLayer> stack = ferry.getLayers();
 
         if (stack == null || stack.size() != ferry.getModel().getNumLayers()) {
             doTheWork(ferry);
         }
-       
+
         emit(ferry);
     }
 
     private void doTheWork(StageFerry ferry) {
         List<ImageLayer2D> stack = fetchSlices(ferry);
-        ferry.setImageLayerStack(stack);
+        List<PipelineLayer> layers = ferry.getLayers();
+
+        if (layers == null) {
+            layers = new ArrayList<PipelineLayer>();
+            ferry.setLayers(layers);
+         
+        }
+
+        for (int i = 0; i < stack.size(); i++) {
+            layers.add(new PipelineLayer(stack.get(i)));
+        }
 
     }
 
@@ -78,31 +77,27 @@ public class FetchSlicesStage extends ImageProcessingStage {
         for (int i = 0; i < ferry.getModel().getNumLayers(); i++) {
 
             ImageLayer layer = ferry.getModel().getImageLayer(i);
+            IImageData data = layer.getImageData();
+            IImageData2D data2d = null;
 
-            if (layer.isVisible()) {
-                IImageData data = layer.getImageData();
-                IImageData2D data2d = null;
+            /*if (useCache) {
+                MultiKey key = new MultiKey(data, slice);
+                data2d = cache.get(key);
+            }*/
 
-                if (useCache) {
-                    MultiKey key = new MultiKey(data, slice);
-                    data2d = cache.get(key);
-                }
+            if (data2d == null) {
+                ImageSlicer slicer = new ImageSlicer((IImageData3D) data);
+                data2d = slicer.getSlice(ferry.getDisplayAnatomy(), slice);
 
-                if (data2d == null) {
-                    ImageSlicer slicer = new ImageSlicer((IImageData3D) data);
-                    data2d = slicer.getSlice(ferry.getDisplayAnatomy(), slice);
-
-                    if (useCache) {
-                        cache.put(new MultiKey(data, slice), data2d);
-                    }
-                }
-
-                ImageLayer2D layer2d = new ImageLayer2D(data2d, layer.getImageLayerParameters());
-                list.add(layer2d);
-
-            } else {
-                list.add(null);
+                //if (useCache) {
+                //    cache.put(new MultiKey(data, slice), data2d);
+                //}
             }
+
+            ImageLayer2D layer2d = new ImageLayer2D(data2d, layer.getImageLayerParameters());
+            list.add(layer2d);
+
+
         }
 
         return list;

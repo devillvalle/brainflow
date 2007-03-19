@@ -47,7 +47,7 @@ public class ImageViewFactory {
         IImageCompositor compositor = new DefaultImageCompositor();
         ImagePlotRenderer plotRenderer = new ImagePlotRenderer(compositor, procurer);
 
-        return new BasicImagePlot(displayAnatomy, xrange, yrange, plotRenderer);
+        return new ComponentImagePlot(displayAnatomy, xrange, yrange, plotRenderer);
 
     }
 

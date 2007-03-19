@@ -9,17 +9,12 @@ import java.awt.image.BufferedImage;
 import java.awt.image.AffineTransformOp;
 import java.awt.geom.AffineTransform;
 
-import com.brainflow.image.data.RGBAImage;
-import com.brainflow.image.data.IImageData2D;
 import com.brainflow.image.space.ImageSpace2D;
 import com.brainflow.image.space.Axis;
 import com.brainflow.core.ImageLayer2D;
-import com.brainflow.core.IImageDisplayModel;
-import com.brainflow.core.ImageLayer;
 import com.brainflow.display.ImageLayerProperties;
-import com.brainflow.display.InterpolationProperty;
+import com.brainflow.display.InterpolationMethod;
 import com.brainflow.display.InterpolationHint;
-
 
 
 /**
@@ -31,26 +26,17 @@ import com.brainflow.display.InterpolationHint;
  */
 public class ResampleImagesStage extends ImageProcessingStage {
 
-    private static final Logger log = Logger.getLogger(ColorizeImagesStage.class.getName());
+    private static final Logger log = Logger.getLogger(ResampleImagesStage.class.getName());
 
 
     public void process(StageFerry ferry) throws StageException {
-        List<BufferedImage> layers = ferry.getBufferedImageStack();
-        List<BufferedImage> imageList = ferry.getResampledImageStack();
+        List<PipelineLayer> layers = ferry.getLayers();
 
-        if (imageList == null || imageList.size() != ferry.getModel().getNumLayers()) {
-            imageList = new ArrayList<BufferedImage>();
-            int n = ferry.getModel().getNumLayers();
-            for (int i = 0; i < n; i++) {
-                if (ferry.getModel().getImageLayer(i).isVisible()) {
-                    imageList.add(resample(ferry.getImageLayerStack().get(i), layers.get(i)));
-                } else {
-                    imageList.add(null);
-                }
+        for (int i = 0; i < layers.size(); i++) {
+            PipelineLayer layer = layers.get(i);
+            if (layer.isVisible() && layer.getResampledImage() == null) {
+                layer.setResampledImage(resample(layer.getLayer(), layer.getRawImage()));
             }
-
-            ferry.setResampledImageStack(imageList);
-
         }
 
         emit(ferry);
@@ -60,7 +46,7 @@ public class ResampleImagesStage extends ImageProcessingStage {
     private BufferedImage resample(ImageLayer2D layer, BufferedImage source) {
 
         ImageLayerProperties dprops = layer.getImageLayerProperties();
-        InterpolationProperty interp = dprops.getResampleInterpolation().getProperty();
+        InterpolationMethod interp = dprops.getResampleInterpolation().getProperty();
         ImageSpace2D ispace = (ImageSpace2D) layer.getImageData().getImageSpace();
 
         double sx = ispace.getImageAxis(Axis.X_AXIS).getRange().getInterval() / ispace.getDimension(Axis.X_AXIS);
@@ -70,8 +56,8 @@ public class ResampleImagesStage extends ImageProcessingStage {
         double oy = ispace.getImageAxis(Axis.Y_AXIS).getRange().getMinimum();
 
         //AffineTransform at = AffineTransform.getTranslateInstance(ox,oy);
-        AffineTransform at = AffineTransform.getTranslateInstance(0,0);
-        at.scale(sx,sy);
+        AffineTransform at = AffineTransform.getTranslateInstance(0, 0);
+        at.scale(sx, sy);
         AffineTransformOp aop = null;
 
 

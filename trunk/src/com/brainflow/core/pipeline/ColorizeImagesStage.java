@@ -24,28 +24,20 @@ public class ColorizeImagesStage extends ImageProcessingStage {
     private static final Logger log = Logger.getLogger(ColorizeImagesStage.class.getName());
 
     public void process(StageFerry ferry) throws StageException {
-        List<ImageLayer2D> layers = ferry.getImageLayerStack();
+        List<PipelineLayer> layers = ferry.getLayers();
 
-        if (layers == null) throw new StageException(this, "Cannot colorize images, image layer stack is null");
+        if (layers == null) throw new StageException(this, "Cannot colorize images, layer stack is null");
 
-        List<RGBAImage> imageList = ferry.getRGBAImageLayerStack();
-
-        if (imageList == null || imageList.size() != ferry.getModel().getNumLayers()) {
-            imageList = new ArrayList<RGBAImage>();
-            int n = ferry.getModel().getNumLayers();
-            for (int i=0; i<n; i++) {
-                if (ferry.getModel().getImageLayer(i).isVisible()) {
-                    imageList.add(createRGBAImage(layers.get(i)));
-                } else {
-                    imageList.add(null);
-                }
+        for (int i = 0; i < layers.size(); i++) {
+            PipelineLayer layer = layers.get(i);
+            if (layer.isVisible() && layer.getColoredImage() == null) {
+                layer.setColoredImage(createRGBAImage(layer.getLayer()));
             }
-
-            ferry.setRGBAImageLayerStack(imageList);
         }
 
+
         emit(ferry);
-      
+
     }
 
 
@@ -53,9 +45,6 @@ public class ColorizeImagesStage extends ImageProcessingStage {
         IColorMap cmap = layer.getImageLayerProperties().getColorMap().getProperty();
         return cmap.getRGBAImage(layer.getImageData());
     }
-
-    
-
 
 
 }

@@ -6,7 +6,7 @@ import com.brainflow.application.services.ImageDisplayModelEvent;
 import com.brainflow.core.ImageCanvas;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
-import com.brainflow.display.VisibleProperty;
+import com.brainflow.display.Visibility;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jidesoft.action.CommandBar;
 import com.jidesoft.swing.JideToggleSplitButton;
@@ -109,7 +109,7 @@ public class CanvasBar2 extends ImageViewPresenter {
             visAction.setContext(map);
 
             AbstractButton visButton = ActionUIFactory.getInstance().createButton(visAction);
-            Bindings.bind((JCheckBox) visButton, layer.getImageLayerParameters().getVisible().getModel(VisibleProperty.VISIBLE_PROPERTY));
+            Bindings.bind((JCheckBox) visButton, layer.getImageLayerParameters().getVisible().getModel(Visibility.VISIBLE_PROPERTY));
             visButton.setText("Visible");
 
             button.add(visButton);

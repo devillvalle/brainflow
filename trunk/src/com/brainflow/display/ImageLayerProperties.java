@@ -22,22 +22,28 @@ import java.io.Serializable;
 
 public class ImageLayerProperties implements Serializable {
 
-    public static final String COLOR_MAP_PARAMETER = "colormap";
-
+    public static final String COLOR_MAP_PROPERTY = "colormap";
 
     public static final String RESAMPLE_PROPERTY = "resampleInterpolation";
+
     public static final String COLORMAP_PROPERTY = "colorMap";
+
     public static final String VISIBLE_PROPERTY  = "visible";
+
     public static final String IMAGEOP_PROPERTY  = "imageOpList";
+
+    public static final String OPACITY_PROPERTY = "opacity";
 
     
     private Property<IColorMap> colorMap;
 
-    private Property<InterpolationProperty> resampleInterpolation;
+    private Property<InterpolationMethod> resampleInterpolation;
 
-    private Property<VisibleProperty> visible;
+    private Property<Visibility> visible;
 
     private Property<ImageOpListProperty> imageOpList;
+
+    private Property<Opacity> opacity;
 
     private SelectionInList resampleSelection;
     
@@ -62,10 +68,11 @@ public class ImageLayerProperties implements Serializable {
     private void init(IColorMap map) {
 
         colorMap = new Property<IColorMap>(map);
-        resampleInterpolation = new Property<InterpolationProperty>(new InterpolationProperty(InterpolationHint.CUBIC));
-        visible = new Property<VisibleProperty>(new VisibleProperty(this, true));
+        resampleInterpolation = new Property<InterpolationMethod>(new InterpolationMethod(InterpolationHint.CUBIC));
+        visible = new Property<Visibility>(new Visibility(this, true));
         imageOpList = new Property<ImageOpListProperty>(new ImageOpListProperty());
-        resampleSelection = new SelectionInList(InterpolationHint.values(), resampleInterpolation.getModel(InterpolationProperty.INTERPOLATION_PROPERTY));
+        opacity = new Property<Opacity>(new Opacity(1f));
+        resampleSelection = new SelectionInList(InterpolationHint.values(), resampleInterpolation.getModel(InterpolationMethod.INTERPOLATION_PROPERTY));
 
 
 
@@ -73,11 +80,10 @@ public class ImageLayerProperties implements Serializable {
 
     public void addImageOp(String filterName, ImageOp op) {
         imageOpList.getProperty().addImageOp(filterName, op);
-
     }
 
 
-    public Property<VisibleProperty> getVisible() {
+    public Property<Visibility> getVisible() {
         return visible;
     }
 
@@ -86,12 +92,16 @@ public class ImageLayerProperties implements Serializable {
     }
 
 
+    public Property<Opacity> getOpacity() {
+        return opacity;
+    }
+
     public Property<IColorMap> getColorMap() {
         return colorMap;
     }
 
 
-    public Property<InterpolationProperty> getResampleInterpolation() {
+    public Property<InterpolationMethod> getResampleInterpolation() {
         return resampleInterpolation;
     }
 

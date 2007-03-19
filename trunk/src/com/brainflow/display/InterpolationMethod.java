@@ -1,7 +1,6 @@
 package com.brainflow.display;
 
 import com.jgoodies.binding.beans.Model;
-import com.jgoodies.binding.PresentationModel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -10,13 +9,13 @@ import com.jgoodies.binding.PresentationModel;
  * Time: 9:51:33 PM
  * To change this template use File | Settings | File Templates.
  */
-public class InterpolationProperty extends Model {
+public class InterpolationMethod extends Model {
 
 
     public static final String INTERPOLATION_PROPERTY = "interpolation";
 
 
-    public InterpolationProperty(InterpolationHint interpolation) {
+    public InterpolationMethod(InterpolationHint interpolation) {
         this.interpolation = interpolation;
     }
 
@@ -31,7 +30,7 @@ public class InterpolationProperty extends Model {
         InterpolationHint old = this.interpolation;
         this.interpolation = interpolation;
         
-        firePropertyChange(InterpolationProperty.INTERPOLATION_PROPERTY, old, interpolation);
+        firePropertyChange(INTERPOLATION_PROPERTY, old, interpolation);
 
     }
 }

@@ -1,14 +1,13 @@
 package com.brainflow.core.pipeline;
 
-import com.brainflow.core.IImageDisplayModel;
-import com.brainflow.core.ImageDisplayModel;
-import com.brainflow.core.ImageLayer;
-import com.brainflow.core.DisplayChangeType;
+import com.brainflow.core.*;
 import com.brainflow.image.io.analyze.AnalyzeIO;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalAxis;
+import com.brainflow.image.axis.AxisRange;
+import com.brainflow.image.space.Axis;
 import com.brainflow.application.BrainflowException;
 import com.brainflow.application.MemoryImage;
 import com.brainflow.display.ImageLayerProperties;
@@ -28,7 +27,7 @@ import org.apache.commons.pipeline.StageException;
  */
 public class TestPipeline {
 
-    ImagePipeline pipeline;
+    ImagePlotPipeline pipeline;
 
     public TestPipeline() throws BrainflowException, StageException, ValidationException {
         IImageDisplayModel model = new ImageDisplayModel("test");
@@ -44,17 +43,32 @@ public class TestPipeline {
         ImageLayer layer2 = new ImageLayer(new MemoryImage(data2),
                 new ImageLayerProperties(new LinearColorMap(data2.getMinValue(), data2.getMaxValue(), ColorTable.SPECTRUM)));
 
-
+        layer2.getImageLayerParameters().getOpacity().getProperty().setOpacity(.9f);
         model.addLayer(layer1);
         model.addLayer(layer2);
 
 
-        pipeline = new ImagePipeline(model, AnatomicalVolume.getCanonicalAxial());
+        IImagePlot plot = new ComponentImagePlot(AnatomicalVolume.getCanonicalAxial(),
+                new AxisRange(model.getImageAxis(Axis.X_AXIS).getAnatomicalAxis(), -50, 50),
+                new AxisRange(model.getImageAxis(Axis.X_AXIS).getAnatomicalAxis(), -50, 50),
+                null);
+        
+
+
+
+        pipeline = new ImagePlotPipeline(model, plot);
         pipeline.addStage(new FetchSlicesStage(), new SynchronousStageDriverFactory());
         pipeline.addStage(new ColorizeImagesStage(), new SynchronousStageDriverFactory());
         pipeline.addStage(new CreateBufferedImagesStage(), new SynchronousStageDriverFactory());
         pipeline.addStage(new ResampleImagesStage(), new SynchronousStageDriverFactory());
         pipeline.addStage(new WriteBufferedImagesStage(), new SynchronousStageDriverFactory());
+        pipeline.addStage(new ComposeImagesStage(), new SynchronousStageDriverFactory());
+
+        pipeline.addStage(new WriteCompositeImageStage(), new SynchronousStageDriverFactory());
+        pipeline.addStage(new CropImageStage(), new SynchronousStageDriverFactory());
+        pipeline.addStage(new WriteCroppedImageStage(), new SynchronousStageDriverFactory());
+        pipeline.addStage(new ResizeImageStage(), new SynchronousStageDriverFactory());
+        pipeline.addStage(new WriteResizedImageStage(), new SynchronousStageDriverFactory());
 
 
         StageFerry ferry = new StageFerry(model,

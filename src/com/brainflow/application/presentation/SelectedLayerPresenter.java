@@ -5,7 +5,7 @@ import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
 import com.brainflow.display.ImageLayerProperties;
 import com.brainflow.display.Property;
-import com.brainflow.display.VisibleProperty;
+import com.brainflow.display.Visibility;
 import com.jgoodies.binding.adapter.ComboBoxAdapter;
 import com.jgoodies.binding.adapter.SingleListSelectionAdapter;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -158,7 +158,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
         public void propertyChange(PropertyChangeEvent evt) {
 
-            VisibleProperty property = (VisibleProperty) evt.getSource();
+            Visibility property = (Visibility) evt.getSource();
             ImageLayerProperties params = property.getLayerParameters();
             ImageLayer layer = getSelectedView().getModel().getLayer(params);
             int i = getSelectedView().getModel().indexOf(layer);
@@ -174,10 +174,10 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
         public void listen() {
             for (int i = 0; i < view.getModel().getNumLayers(); i++) {
-                Property<VisibleProperty> param = view.getModel().getImageLayer(i).getImageLayerParameters().getVisible();
+                Property<Visibility> param = view.getModel().getImageLayer(i).getImageLayerParameters().getVisible();
                 param.addPropertyChangeListener(this);
 
-                VisibleProperty property = param.getProperty();
+                Visibility property = param.getProperty();
                 if (property.isVisible()) {
                     layerSelector.getCheckBoxListSelectionModel().addSelectionInterval(i, i);
                 } else {

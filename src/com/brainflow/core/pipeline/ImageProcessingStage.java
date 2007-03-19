@@ -2,6 +2,7 @@ package com.brainflow.core.pipeline;
 
 import org.apache.commons.pipeline.stage.BaseStage;
 import org.apache.commons.pipeline.StageException;
+import org.apache.commons.pipeline.StageContext;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,6 +13,17 @@ import org.apache.commons.pipeline.StageException;
  */
 public abstract class ImageProcessingStage extends BaseStage {
 
+    private ImagePlotPipeline pipeline;
+
+    @Override
+    public void init(StageContext context) {
+        super.init(context);
+        pipeline = (ImagePlotPipeline)context;
+    }
+
+    protected ImagePlotPipeline getPipeline() {
+        return pipeline;
+    }
 
     public void process(Object obj) throws StageException {
         process((StageFerry)obj);

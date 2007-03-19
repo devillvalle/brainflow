@@ -1,15 +1,11 @@
 package com.brainflow.core.pipeline;
 
 import com.brainflow.core.IImageDisplayModel;
-import com.brainflow.core.ImageLayer2D;
 import com.brainflow.core.DisplayChangeType;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
-import com.brainflow.image.data.IImageData2D;
-import com.brainflow.image.data.RGBAImage;
 
 import java.util.List;
-import java.util.ArrayList;
 import java.awt.image.BufferedImage;
 
 /**
@@ -31,27 +27,17 @@ public class StageFerry {
 
     private DisplayChangeType displayChangeType;
 
-    // stage 1
-    private List<ImageLayer2D> imageLayerStack;
+    private List<PipelineLayer> layers;
 
-    // stage 2
-    private List<RGBAImage> RGBAImageLayerStack;
-
-    // stage 3
-    private List<BufferedImage> BufferedImageStack;
-
-    //stage 4
-    private List<BufferedImage> resampledImageStack;
 
     //stage 5
-    private BufferedImage compositedImage;
+    private BufferedImage compositeImage;
 
     //stage 6
     private BufferedImage croppedImage;
 
-
     //stage 7
-    private BufferedImage screenImage;
+    private BufferedImage resizedImage;
 
 
     public StageFerry(IImageDisplayModel model, AnatomicalPoint1D slice,
@@ -82,6 +68,15 @@ public class StageFerry {
     }
 
 
+    public List<PipelineLayer> getLayers() {
+        return layers;
+    }
+
+
+    public void setLayers(List<PipelineLayer> layers) {
+        this.layers = layers;
+    }
+
     public int getAffectedLayer() {
         return affectedLayer;
     }
@@ -95,52 +90,28 @@ public class StageFerry {
     }
 
 
-    public List<RGBAImage> getRGBAImageLayerStack() {
-        return RGBAImageLayerStack;
+    public BufferedImage getCompositeImage() {
+        return compositeImage;
     }
 
-    public void setRGBAImageLayerStack(List<RGBAImage> RGBAImageLayerStack) {
-        this.RGBAImageLayerStack = RGBAImageLayerStack;
+    public void setCompositeImage(BufferedImage compositeImage) {
+        this.compositeImage = compositeImage;
     }
 
-    public List<ImageLayer2D> getImageLayerStack() {
-        return imageLayerStack;
+    public BufferedImage getResizedImage() {
+        return resizedImage;
     }
 
-    public void setImageLayerStack(List<ImageLayer2D> imageLayerStack) {
-        this.imageLayerStack = imageLayerStack;
-    }
-
-    public List<BufferedImage> getBufferedImageStack() {
-        return BufferedImageStack;
-    }
-
-    public void setBufferedImageStack(List<BufferedImage> bufferedImageStack) {
-        BufferedImageStack = bufferedImageStack;
+    public void setResizedImage(BufferedImage resizedImage) {
+        this.resizedImage = resizedImage;
     }
 
 
-    public List<BufferedImage> getResampledImageStack() {
-        return resampledImageStack;
+    public BufferedImage getCroppedImage() {
+        return croppedImage;
     }
 
-    public void setResampledImageStack(List<BufferedImage> resampledImageStack) {
-        this.resampledImageStack = resampledImageStack;
-    }
-
-    public BufferedImage getCompositedImage() {
-        return compositedImage;
-    }
-
-    public void setCompositedImage(BufferedImage compositedImage) {
-        this.compositedImage = compositedImage;
-    }
-
-    public BufferedImage getScreenImage() {
-        return screenImage;
-    }
-
-    public void setScreenImage(BufferedImage screenImage) {
-        this.screenImage = screenImage;
+    public void setCroppedImage(BufferedImage croppedImage) {
+        this.croppedImage = croppedImage;
     }
 }

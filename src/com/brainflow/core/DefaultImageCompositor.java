@@ -11,7 +11,7 @@ package com.brainflow.core;
 
 import com.brainflow.display.ImageLayerProperties;
 import com.brainflow.display.InterpolationHint;
-import com.brainflow.display.InterpolationProperty;
+import com.brainflow.display.InterpolationMethod;
 import com.brainflow.image.data.IImageData2D;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
@@ -89,7 +89,7 @@ public class DefaultImageCompositor implements IImageCompositor {
             ImageSpace2D ispace = (ImageSpace2D) data.getImageSpace();
 
             ImageLayerProperties dprops = layer.getImageLayerProperties();
-            InterpolationProperty interp = dprops.getResampleInterpolation().getProperty();
+            InterpolationMethod interp = dprops.getResampleInterpolation().getProperty();
 
             double sx = ispace.getImageAxis(Axis.X_AXIS).getRange().getInterval() / ispace.getDimension(Axis.X_AXIS);
             double sy = ispace.getImageAxis(Axis.Y_AXIS).getRange().getInterval() / ispace.getDimension(Axis.Y_AXIS);
@@ -107,7 +107,7 @@ public class DefaultImageCompositor implements IImageCompositor {
             //BufferedImageOp bop = new AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC);
 
             pb = new ParameterBlock();
-            pb.addSource(layer.getBufferedImage());
+            //pb.addSource(layer.getBufferedImage());
             pb.add((float) sx);
             pb.add((float) sy);
             pb.add((float) ox);

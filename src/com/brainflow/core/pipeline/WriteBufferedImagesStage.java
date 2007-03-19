@@ -19,20 +19,20 @@ import java.io.IOException;
  */
 public class WriteBufferedImagesStage extends ImageProcessingStage {
 
-    private static Logger log = Logger.getLogger(CreateBufferedImagesStage.class.getName());
+    private static Logger log = Logger.getLogger(WriteBufferedImagesStage.class.getName());
 
     String path = System.getProperty("user.dir");
 
     public void process(StageFerry ferry) throws StageException {
         log.entering(getClass().getName(), "process");
         log.info("path = " + path);
-        List<BufferedImage> imgs = ferry.getResampledImageStack();
+        List<PipelineLayer> layers = ferry.getLayers();
 
         try {
-            for (int i = 0; i < imgs.size(); i++) {
-                BufferedImage img = imgs.get(i);
+            for (int i = 0; i < layers.size(); i++) {
+                BufferedImage img = layers.get(i).getRawImage();
                 if (img != null) {
-                    ImageIO.write(imgs.get(i), "png", new File(path + "/" + "Raw-Layer-" + i + ".png"));
+                    ImageIO.write(img, "png", new File(path + "/" + "Raw-Layer-" + i + ".png"));
                 }
             }
         } catch (IOException e) {

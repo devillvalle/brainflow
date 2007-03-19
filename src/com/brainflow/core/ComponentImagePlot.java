@@ -19,35 +19,40 @@ import java.util.ArrayList;
  * Time: 3:10:17 AM
  * To change this template use File | Settings | File Templates.
  */
-public class BasicImagePlot extends JComponent implements IImagePlot {
+public class ComponentImagePlot extends JComponent implements IImagePlot {
 
     private AxisRange xAxis;
+
     private AxisRange yAxis;
 
     private java.util.List<IAnnotation> annotationList = new ArrayList<IAnnotation>();
-    private ImagePlotRenderer renderer;
+
+    //private ImagePlotRenderer renderer;
+
     private AnatomicalVolume displayAnatomy;
 
     private Insets plotInsets = new Insets(30, 30, 30, 30);
-    private Rectangle plotArea;
+
+    private Rectangle plotArea = new Rectangle(300,300);
 
     private double scaleX = 1f;
+
     private double scaleY = 1f;
 
     private String name;
 
-    public BasicImagePlot(AnatomicalVolume displayAnatomy, AxisRange xAxis, AxisRange yAxis, ImagePlotRenderer renderer) {
+
+
+    public ComponentImagePlot(AnatomicalVolume displayAnatomy, AxisRange xAxis, AxisRange yAxis) {
         this.xAxis = xAxis;
         this.yAxis = yAxis;
-        this.renderer = renderer;
+
         this.displayAnatomy = displayAnatomy;
     }
 
-
+    // not necessary?
     public void paint(Graphics2D g2, Rectangle2D area) {
         renderer.paint(g2, area, this);
-
-
     }
 
 
@@ -216,4 +221,7 @@ public class BasicImagePlot extends JComponent implements IImagePlot {
             return super.toString();
         }
     }
+
+
+
 }

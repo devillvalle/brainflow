@@ -137,7 +137,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         layer.addPropertyChangeListener(new PropertyChangeListener() {
 
             public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getPropertyName() == ImageLayerProperties.COLOR_MAP_PARAMETER) {
+                if (evt.getPropertyName() == ImageLayerProperties.COLOR_MAP_PROPERTY) {
                     fireLayerChangeEvent(new LayerChangeEvent(ImageDisplayModel.this, DisplayChangeType.COLOR_MAP_CHANGE, (ImageLayer)evt.getSource()));
                 } else if (evt.getPropertyName() == ImageLayerProperties.RESAMPLE_PROPERTY) {
                     fireLayerChangeEvent(new LayerChangeEvent(ImageDisplayModel.this, DisplayChangeType.RESAMPLE_CHANGE, (ImageLayer)evt.getSource()));

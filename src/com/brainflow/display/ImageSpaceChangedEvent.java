@@ -14,7 +14,7 @@ import javax.swing.event.ChangeEvent;
  */
 public class ImageSpaceChangedEvent extends ChangeEvent {
 
-    IImageDisplayModel displayModel;
+    private IImageDisplayModel displayModel;
 
     public ImageSpaceChangedEvent(IImageDisplayModel dmodel) {
         super(dmodel);

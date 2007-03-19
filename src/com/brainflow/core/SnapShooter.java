@@ -55,7 +55,7 @@ public class SnapShooter {
 
         ImagePlotRenderer renderer = new ImagePlotRenderer(compositor, procurer);
 
-        emulator = new BasicImagePlot(displayAnatomy, dset.getImageAxis(displayAnatomy.XAXIS).getRange(),
+        emulator = new ComponentImagePlot(displayAnatomy, dset.getImageAxis(displayAnatomy.XAXIS).getRange(),
                 dset.getImageAxis(displayAnatomy.YAXIS).getRange(), renderer);
 
 

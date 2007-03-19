@@ -32,9 +32,9 @@ public class ImageLayer {
     private PropertyChangeSupport support = new PropertyChangeSupport(this);
 
 
-    public ImageLayer(ILoadableImage _limg, ImageLayerProperties _params) {
+    public ImageLayer(ILoadableImage _limg, ImageLayerProperties _properties) {
         limg = _limg;
-        properties = _params;
+        properties = _properties;
         init();
     }
 

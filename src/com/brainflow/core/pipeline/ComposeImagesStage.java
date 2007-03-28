@@ -33,7 +33,10 @@ public class ComposeImagesStage extends ImageProcessingStage {
         BufferedImage composite = ferry.getCompositeImage();
 
         if (composite == null) {
-            if (layers.size() == 1) {
+            if (layers.size() == 0) {
+                ferry.setCompositeImage(null);
+            }
+            else if (layers.size() == 1) {
                 if (layers.get(0).isVisible()) {
                     ferry.setCompositeImage(layers.get(0).getResampledImage());
                 } else {

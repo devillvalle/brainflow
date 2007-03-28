@@ -28,8 +28,8 @@ public class CropImageStage extends ImageProcessingStage {
                 plot.getXAxisRange().getInterval(),
                 plot.getYAxisRange().getInterval());
 
-
-            BufferedImage cropped = crop(bounds, region, ferry.getCompositeImage());
+            BufferedImage composite = ferry.getCompositeImage();
+            BufferedImage cropped = crop(bounds, region, composite );
             ferry.setCroppedImage(cropped);
         }
         

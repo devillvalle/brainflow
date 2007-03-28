@@ -44,7 +44,8 @@ public class FetchSlicesStage extends ImageProcessingStage {
 
         List<PipelineLayer> stack = ferry.getLayers();
 
-        if (stack == null || stack.size() != ferry.getModel().getNumLayers()) {
+        if (stack == null || (stack.size() != ferry.getModel().getNumLayers()) ) {
+            log.info("fetching slices");
             doTheWork(ferry);
         }
 

@@ -25,6 +25,7 @@ public class NextSliceAction extends BasicAction {
 
         if (view != null) {
             ICrosshair cross = view.getCrosshair().getProperty();
+            
             AnatomicalVolume displayAnatomy = view.getDisplayAnatomy();
             Axis axis = cross.getViewport().getBounds().findAxis(displayAnatomy.ZAXIS);
             ImageAxis iaxis = view.getModel().getImageAxis(axis);

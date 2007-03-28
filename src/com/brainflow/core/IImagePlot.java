@@ -28,6 +28,8 @@ public interface IImagePlot {
 
     public AnatomicalVolume getDisplayAnatomy();
 
+    public IImageDisplayModel getModel();
+  
     public void updateAxis(AxisRange range);
 
     public void setXAxisRange(AxisRange drange);
@@ -49,10 +51,6 @@ public interface IImagePlot {
     public AxisRange getYAxisRange();
 
     public JComponent getComponent();
-
-    public void setRenderer(ImagePlotRenderer renderer);
-
-    public void paint(Graphics2D g2, Rectangle2D area);
 
     public void setAnnotations(List<IAnnotation> annotationList);
 

@@ -48,10 +48,9 @@ public class TestPipeline {
         model.addLayer(layer2);
 
 
-        IImagePlot plot = new ComponentImagePlot(AnatomicalVolume.getCanonicalAxial(),
+        IImagePlot plot = new ComponentImagePlot(model, AnatomicalVolume.getCanonicalAxial(),
                 new AxisRange(model.getImageAxis(Axis.X_AXIS).getAnatomicalAxis(), -50, 50),
-                new AxisRange(model.getImageAxis(Axis.X_AXIS).getAnatomicalAxis(), -50, 50),
-                null);
+                new AxisRange(model.getImageAxis(Axis.Y_AXIS).getAnatomicalAxis(), -50, 50));
         
 
 
@@ -78,6 +77,7 @@ public class TestPipeline {
 
         pipeline.getSourceFeeder().feed(ferry);
         pipeline.run();
+        
 
 
     }

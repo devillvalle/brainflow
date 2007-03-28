@@ -20,6 +20,8 @@ import java.awt.image.RenderedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 
 /**
@@ -33,19 +35,11 @@ public class SimpleImageView extends ImageView {
 
     private ImagePane ipane;
 
-    private IImageCompositor compositor;
-
-    private AbstractImageProcurer procurer;
-
-    private ImagePlotRenderer plotRenderer;
-
-    private ChangeListener dirtListener = new DirtListener();
-
     private final static Logger log = Logger.getLogger(SimpleImageView.class.getName());
 
     private IImagePlot imagePlot = null;
 
-    private ImagePlotPaintScheduler scheduler;
+    private IImageProducer producer = null;
 
 
     public SimpleImageView(ImageView source, AnatomicalVolume _displayAnatomy) {
@@ -62,10 +56,6 @@ public class SimpleImageView extends ImageView {
         initView();
     }
 
-    public void scheduleRepaint(LayerChangeEvent e) {
-        //scheduler.displayChanged(e);
-
-    }
 
     public SimpleImageView(IImageDisplayModel dset, AnatomicalVolume _displayAnatomy) {
         super(dset);
@@ -76,35 +66,42 @@ public class SimpleImageView extends ImageView {
     private void initView() {
 
         CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(getCrosshair().getProperty());
-        //addAnnotation(new AxisLabelAnnotation());
+
         addAnnotation(crosshairAnnotation);
-        //addAnnotation(new ColorBarAnnotation(getModel()));
         addAnnotation(new SelectedPlotAnnotation(imagePlot));
 
-        //getModel().addChangeListener(dirtListener);
+
         AnatomicalVolume displayAnatomy = getDisplayAnatomy();
         AxisRange xrange = getModel().getImageAxis(displayAnatomy.XAXIS).getRange();
         AxisRange yrange = getModel().getImageAxis(displayAnatomy.YAXIS).getRange();
 
-        procurer = new DefaultImageProcurer(getModel(), displayAnatomy);
-        procurer.setSlice(getCrosshair().getProperty().getValue(displayAnatomy.ZAXIS));
+        producer = new CompositeImageProducer(imagePlot,getModel(), getDisplayAnatomy());
 
-        compositor = new DefaultImageCompositor();
-        plotRenderer = new ImagePlotRenderer(compositor, procurer);
-
-        imagePlot = new ComponentImagePlot(displayAnatomy, xrange, yrange, plotRenderer);
+        imagePlot = new ComponentImagePlot(getModel(), producer, displayAnatomy, xrange, yrange);
         imagePlot.setName(displayAnatomy.XY_PLANE.getOrientation().toString());
-
 
         imagePlot.setAnnotations(getAnnotations());
 
         ipane = new ImagePane(imagePlot);
-        scheduler = new ImagePlotPaintScheduler(ipane, procurer, compositor);
 
         setLayout(new BorderLayout());
         add(ipane, BorderLayout.CENTER);
-
         getPlotSelection().setSelectionIndex(0);
+
+        getCrosshair().addPropertyChangeListener(new PropertyChangeListener() {
+
+            public void propertyChange(PropertyChangeEvent evt) {
+                ICrosshair cross = (ICrosshair)evt.getSource();
+                AnatomicalPoint1D slice = cross.getLocation().getValue(SimpleImageView.this.getSelectedPlot().getDisplayAnatomy().ZAXIS);
+                if (!producer.getSlice().equals(slice)) {
+                    producer.setSlice(slice);
+                    producer.updateImage(new ViewChangeEvent(SimpleImageView.this, DisplayChangeType.SLICE_CHANGE));
+                
+                }
+
+                imagePlot.getComponent().repaint();
+            }
+        });
 
     }
 
@@ -172,9 +169,7 @@ public class SimpleImageView extends ImageView {
     }
 
 
-    public ImagePlotRenderer getPlotRenderer() {
-        return plotRenderer;
-    }
+
 
     public List<IImagePlot> getPlots() {
         List<IImagePlot> lst = new ArrayList<IImagePlot>();
@@ -196,10 +191,18 @@ public class SimpleImageView extends ImageView {
         return ipane.getPreferredSize();
     }
 
-    protected void listChanged(ListDataEvent e) {
-        procurer.reset();
+
+    public void intervalAdded(ListDataEvent e) {
+        producer.updateImage(new ViewChangeEvent(this, DisplayChangeType.STRUCTURE_CHANGE));
     }
 
+    public void intervalRemoved(ListDataEvent e) {
+       producer.updateImage(new ViewChangeEvent(this, DisplayChangeType.STRUCTURE_CHANGE));
+    }
+
+    public void contentsChanged(ListDataEvent e) {
+        producer.updateImage(new ViewChangeEvent(this, DisplayChangeType.STRUCTURE_CHANGE));
+    }
 
     public String toString() {
         return "SimpleImageView -- " + this.getId() + getName();

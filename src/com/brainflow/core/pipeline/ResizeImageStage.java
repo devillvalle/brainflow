@@ -6,6 +6,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.AffineTransformOp;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,6 +18,7 @@ import java.awt.geom.AffineTransform;
  */
 public class ResizeImageStage extends ImageProcessingStage {
 
+    private static Logger log = Logger.getLogger(ResizeImageStage.class.getName());
 
     public void process(StageFerry ferry) throws StageException {
         if (ferry.getCroppedImage() != null && ferry.getResizedImage() == null) {
@@ -26,7 +29,16 @@ public class ResizeImageStage extends ImageProcessingStage {
 
             double sx = area.getWidth() / cropped.getWidth();
             double sy = area.getHeight() / cropped.getHeight();
-            BufferedImage scaledImage = scale(cropped, (float)area.getMinX(), (float)area.getMinY(),
+
+
+
+            //BufferedImage scaledImage = scale(cropped, (float)area.getMinX(), (float)area.getMinY(),
+                    //(float)sx, (float)sy);
+           
+            log.info("sx : " + sx);
+            log.info("sy : " + sy);
+
+            BufferedImage scaledImage = scale(cropped, 0, 0,
                     (float)sx, (float)sy);
             
             ferry.setResizedImage(scaledImage);

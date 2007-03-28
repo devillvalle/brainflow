@@ -1,12 +1,5 @@
 package com.brainflow.core;
 
-import com.brainflow.display.Property;
-
-import javax.swing.event.ChangeEvent;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.EventObject;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Brad Buchsbaum
@@ -16,32 +9,31 @@ import java.util.EventObject;
  */
 
 
-public class LayerChangeEvent extends ChangeEvent {
+public class LayerChangeEvent extends DisplayChangeEvent {
 
     private ImageLayer affectedLayer;
 
-    private DisplayChangeType changeType;
-
     private IImageDisplayModel model;
 
-    public LayerChangeEvent(IImageDisplayModel _model, DisplayChangeType _changeType, ImageLayer _layer) {
-        super(_model);
+    public LayerChangeEvent(IImageDisplayModel _model, DisplayChangeType _changeType, ImageLayer layer) {
+        super(_changeType);
+        setChangeType(_changeType);
         model = _model;
-        affectedLayer = _layer;
-        changeType = _changeType;
+        affectedLayer = layer;
+        setLayerLindex(model.indexOf(layer));
+
     }
 
-    public DisplayChangeType getChangeType() {
-        return changeType;
+
+    public ImageLayer getAffectedLayer() {
+        return affectedLayer;
     }
 
     public IImageDisplayModel getModel() {
         return model;
     }
 
-    public ImageLayer getAffectedLayer() {
-        return affectedLayer;
-    }
+   
 
 
 }

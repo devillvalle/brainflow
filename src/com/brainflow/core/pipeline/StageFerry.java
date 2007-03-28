@@ -59,12 +59,59 @@ public class StageFerry {
     }
 
 
+
+
     public DisplayChangeType getDisplayChangeType() {
         return displayChangeType;
     }
 
     public IImageDisplayModel getModel() {
         return model;
+    }
+
+    public void clearAll() {
+        layers = null;
+        clearComposition();
+    }
+
+    public void clearLayers() {
+        layers = null;
+        
+    }
+
+    public void clearResizedImage() {
+        resizedImage = null;
+    }
+
+    public void clearCroppedImage() {
+        croppedImage = null;
+        resizedImage = null;
+    }
+
+    public void clearResampledImage(int index) {
+        PipelineLayer layer = layers.get(index);
+        layer.setResampledImage(null);
+
+    }
+
+    public void clearColoredImage(int index) {
+        PipelineLayer layer = layers.get(index);
+        layer.setColoredImage(null);
+        clearComposition();
+    }
+
+    public void clearColoredImages() {
+        for (PipelineLayer layer : layers) {
+            layer.setColoredImage(null);
+        }
+        
+        clearComposition();
+    }
+
+    public void clearComposition() {
+        compositeImage = null;
+        croppedImage = null;
+        resizedImage = null;
     }
 
 
@@ -89,6 +136,10 @@ public class StageFerry {
         return slice;
     }
 
+
+    public void setSlice(AnatomicalPoint1D slice) {
+        this.slice = slice;
+    }
 
     public BufferedImage getCompositeImage() {
         return compositeImage;

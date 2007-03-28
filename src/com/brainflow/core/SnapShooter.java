@@ -33,9 +33,6 @@ public class SnapShooter {
 
     private AnatomicalVolume displayAnatomy;
 
-    private DefaultImageProcurer procurer;
-
-    private DefaultImageCompositor compositor;
 
     private int width;
 
@@ -50,13 +47,9 @@ public class SnapShooter {
 
     public void setDisplayAnatomy(AnatomicalVolume _displayAnatomy) {
         displayAnatomy = _displayAnatomy;
-        compositor = new DefaultImageCompositor();
-        procurer = new DefaultImageProcurer(dset, AnatomicalVolume.getCanonicalAxial());
 
-        ImagePlotRenderer renderer = new ImagePlotRenderer(compositor, procurer);
-
-        emulator = new ComponentImagePlot(displayAnatomy, dset.getImageAxis(displayAnatomy.XAXIS).getRange(),
-                dset.getImageAxis(displayAnatomy.YAXIS).getRange(), renderer);
+        emulator = new ComponentImagePlot(dset, displayAnatomy, dset.getImageAxis(displayAnatomy.XAXIS).getRange(),
+                dset.getImageAxis(displayAnatomy.YAXIS).getRange());
 
 
         width = (int) dset.getImageAxis(displayAnatomy.XAXIS).getRange().getInterval() * 2;
@@ -66,11 +59,7 @@ public class SnapShooter {
 
 
     public ImageIcon shootLayer(double slice, int layer, int width, int height) {
-        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
-        procurer.setSlice(new AnatomicalPoint1D(displayAnatomy.ZAXIS, slice));
-
-        emulator.paint(img.createGraphics(), new Rectangle(0, 0, width, height));
-        return new ImageIcon(img);
+       return null;
 
     }
 
@@ -81,8 +70,8 @@ public class SnapShooter {
 
         BufferedImage img = gf.createCompatibleImage(width, height);
 
-        procurer.setSlice(new AnatomicalPoint1D(displayAnatomy.ZAXIS, slice));
-        emulator.paint(img.createGraphics(), new Rectangle(0, 0, width, height));
+        //procurer.setSlice(new AnatomicalPoint1D(displayAnatomy.ZAXIS, slice));
+        //emulator.paint(img.createGraphics(), new Rectangle(0, 0, width, height));
         return img;
     }
 

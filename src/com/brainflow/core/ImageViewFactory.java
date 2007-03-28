@@ -39,15 +39,8 @@ public class ImageViewFactory {
 
         AxisRange xrange = displayModel.getImageAxis(displayAnatomy.XAXIS).getRange();
         AxisRange yrange = displayModel.getImageAxis(displayAnatomy.YAXIS).getRange();
-        DefaultImageProcurer procurer = new DefaultImageProcurer(displayModel, displayAnatomy);
-
-        ImageSpace3D space = (ImageSpace3D) displayModel.getImageSpace();
-        procurer.setSlice(space.getCentroid().getValue(displayAnatomy.ZAXIS));
-
-        IImageCompositor compositor = new DefaultImageCompositor();
-        ImagePlotRenderer plotRenderer = new ImagePlotRenderer(compositor, procurer);
-
-        return new ComponentImagePlot(displayAnatomy, xrange, yrange, plotRenderer);
+       
+        return new ComponentImagePlot(displayModel, displayAnatomy, xrange, yrange);
 
     }
 

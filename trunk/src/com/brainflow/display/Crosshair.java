@@ -32,37 +32,12 @@ public class Crosshair extends Model implements ICrosshair {
                 viewport.getZAxisMin() + (viewport.getZAxisWidth() / 2));
 
 
-        viewport.addPropertyChangeListener(Viewport3D.BOUNDS_PROPERTY, new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent e) {
-                viewportChanged();
-
-            }
-
-        });
-
-        viewport.addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent e) {
-                //makeLegal();
-
-
-            }
-        });
-
-    }
-
-    private void viewportChanged() {
-        IImageSpace space = viewport.getBounds();
-
-        // danger danger
-        //AnatomicalPoint3D loc = ((ImageSpace3D)space).getCentroid();
-        //setXValue(loc.getX());
-        //setYValue(loc.getY());
-        //setZValue(loc.getZ());
 
     }
 
 
-    private void makeLegal() {
+
+    /*private void makeLegal() {
         if (getXValue() < viewport.getXAxisMin()) {
             setXValue(viewport.getXAxisMin());
         }
@@ -83,7 +58,7 @@ public class Crosshair extends Model implements ICrosshair {
             setZValue(viewport.getZAxisMax());
         }
 
-    }
+    }*/
 
     public Viewport3D getViewport() {
         return viewport;

@@ -9,6 +9,7 @@ import com.jgoodies.binding.list.ArrayListModel;
 import com.jgoodies.binding.list.SelectionInList;
 
 import javax.swing.*;
+import javax.swing.event.ListDataEvent;
 import java.awt.*;
 import java.awt.image.RenderedImage;
 import java.util.ArrayList;
@@ -172,6 +173,19 @@ public class SimpleOrthogonalImageView extends ImageView {
         return ret;
 
 
+    }
+
+
+    public void intervalAdded(ListDataEvent e) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void intervalRemoved(ListDataEvent e) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void contentsChanged(ListDataEvent e) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     private void initView() {

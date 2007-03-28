@@ -10,6 +10,7 @@ import com.brainflow.image.axis.ImageAxis;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
 /**
@@ -27,7 +28,9 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
 
     private java.util.List<IAnnotation> annotationList = new ArrayList<IAnnotation>();
 
-    //private ImagePlotRenderer renderer;
+    private IImageProducer producer;
+
+    private IImageDisplayModel model;
 
     private AnatomicalVolume displayAnatomy;
 
@@ -35,26 +38,37 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
 
     private Rectangle plotArea = new Rectangle(300,300);
 
-    private double scaleX = 1f;
-
-    private double scaleY = 1f;
 
     private String name;
 
+    private Rectangle oldArea = null;
 
 
-    public ComponentImagePlot(AnatomicalVolume displayAnatomy, AxisRange xAxis, AxisRange yAxis) {
+
+    public ComponentImagePlot(IImageDisplayModel model, IImageProducer _producer, AnatomicalVolume displayAnatomy, AxisRange xAxis, AxisRange yAxis) {
         this.xAxis = xAxis;
         this.yAxis = yAxis;
-
         this.displayAnatomy = displayAnatomy;
+        this.model = model;
+        producer = _producer;
+        producer.setModel(model);
+        producer.setPlot(this);
+
     }
 
-    // not necessary?
-    public void paint(Graphics2D g2, Rectangle2D area) {
-        renderer.paint(g2, area, this);
+    public ComponentImagePlot(IImageDisplayModel model, AnatomicalVolume displayAnatomy, AxisRange xAxis, AxisRange yAxis) {
+        this.xAxis = xAxis;
+        this.yAxis = yAxis;
+        this.displayAnatomy = displayAnatomy;
+        this.model = model;
+        producer = new CompositeImageProducer(this, model, displayAnatomy);
+
     }
 
+
+    public IImageDisplayModel getModel() {
+        return model;
+    }
 
     public JComponent getComponent() {
         return this;
@@ -66,47 +80,26 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
 
         Graphics2D g2 = (Graphics2D) g;
         Dimension size = getSize();
-        Insets insets = getInsets();
 
-
-        Rectangle2D available = new Rectangle2D.Double(
-                insets.left + plotInsets.left, insets.top + plotInsets.top,
-                size.getWidth() - insets.left - insets.right - plotInsets.left - plotInsets.right,
-                size.getHeight() - insets.top - insets.bottom - plotInsets.top - plotInsets.bottom
-        );
-
-
-        int drawWidth = (int) available.getWidth();
-        int drawHeight = (int) available.getHeight();
-
-        /*if (drawWidth < this.minimumDrawWidth) {
-            drawWidth = this.minimumDrawWidth;
-
+        Rectangle plotArea = getPlotArea();
+        if (!plotArea.equals(oldArea)) {
+            oldArea = plotArea;
+            producer.updateImage(new DisplayChangeEvent(DisplayChangeType.SCREEN_SIZE_CHANGE));
         }
 
-        if (drawHeight < this.minimumDrawHeight) {
-            drawHeight = this.minimumDrawHeight;
-
-        }*/
-
-
-        plotArea = new Rectangle(
-                insets.left + plotInsets.left, insets.top + plotInsets.top, drawWidth, drawHeight
-        );
-
-        scaleX = plotArea.getWidth() / getXAxisRange().getInterval();
-        scaleY = plotArea.getHeight() / getYAxisRange().getInterval();
-
+        Insets insets = getInsets();
         Color oldColor = g2.getColor();
         g2.setColor(Color.BLACK);
+
         g2.fillRect(insets.left, insets.top,
                 (int) (size.getWidth() - insets.left - insets.right),
                 (int) (size.getHeight() - insets.top - insets.bottom));
 
 
         g2.setColor(oldColor);
+        g2.drawRenderedImage(producer.getImage(), AffineTransform.getTranslateInstance((int)plotArea.getMinX(), (int)plotArea.getMinY()));
+        //g2.drawImage(producer.getImage(), null, (int)plotArea.getMinX(), (int)plotArea.getMaxX());
 
-        renderer.paint(g2, plotArea, this);
         for (IAnnotation ia : annotationList) {
             if (ia.isVisible()) {
                 ia.draw(g2, plotArea, this);
@@ -120,15 +113,36 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
 
 
     public Rectangle getPlotArea() {
+        Insets insets = getInsets();
+        Dimension size = getSize();
+
+        Rectangle2D available = new Rectangle2D.Double(
+                insets.left + plotInsets.left, insets.top + plotInsets.top,
+                size.getWidth() - insets.left - insets.right - plotInsets.left - plotInsets.right,
+                size.getHeight() - insets.top - insets.bottom - plotInsets.top - plotInsets.bottom
+        );
+
+
+        int drawWidth = (int) available.getWidth();
+        int drawHeight = (int) available.getHeight();
+
+
+
+        plotArea = new Rectangle(
+                insets.left + plotInsets.left, insets.top + plotInsets.top, drawWidth, drawHeight
+        );
+
         return plotArea;
     }
 
     public double getScaleX() {
-        return scaleX;
+        return plotArea.getWidth() / getXAxisRange().getInterval();
+
     }
 
     public double getScaleY() {
-        return scaleY;
+        return plotArea.getHeight() / getYAxisRange().getInterval();
+
     }
 
     public void setPlotInsets(Insets insets) {
@@ -202,9 +216,6 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         return yAxis;
     }
 
-    public void setRenderer(ImagePlotRenderer _renderer) {
-        renderer = _renderer;
-    }
 
 
     public void setAnnotations(java.util.List<IAnnotation> _annotationList) {

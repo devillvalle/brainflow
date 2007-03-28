@@ -37,8 +37,7 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
 
     private EventListenerList listenerList = new EventListenerList();
 
-    private CloseHandler closeHandler = new CloseHandler();
-
+   
 
     public ImageCanvas() {
         super();
@@ -334,22 +333,13 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
             view.setLocation(new Point(p.x + 50, p.y + 50));
         }
 
-        view.addPropertyChangeListener(closeHandler);
+        
         canvasModel.addImageView(view);
         rootPane.getLayeredPane().add(view, JLayeredPane.DEFAULT_LAYER);
         rootPane.getLayeredPane().moveToFront(view);
 
     }
 
-    class CloseHandler implements PropertyChangeListener {
-
-        public void propertyChange(PropertyChangeEvent evt) {
-            if (evt.getPropertyName() == ImageView.CLOSED_PROPERTY) {
-                removeImageView((ImageView) evt.getSource());
-
-            }
-        }
-    }
 
 
     public void moveToFront(ImageView view) {

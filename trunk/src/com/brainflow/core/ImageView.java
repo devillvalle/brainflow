@@ -44,13 +44,8 @@ import java.util.logging.Logger;
 
 public abstract class ImageView extends JComponent implements ListDataListener {
 
-    public static final String CLOSED_PROPERTY = "closed";
-
-    private boolean closed = false;
-
     private static final Logger log = Logger.getLogger(ImageView.class.getName());
 
-    protected PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     private String id = "";
 
@@ -60,11 +55,9 @@ public abstract class ImageView extends JComponent implements ListDataListener {
 
     private final List<IAnnotation> annotationList = new ArrayList<IAnnotation>();
 
-    private PropertyChangeListener annotationListener;
-
     private Property<ICrosshair> crosshair;
 
-    protected Viewport3D viewport;
+    protected Property<Viewport3D> viewport;
 
     public ImageView(IImageDisplayModel imodel) {
         super();
@@ -75,15 +68,12 @@ public abstract class ImageView extends JComponent implements ListDataListener {
 
 
     protected void init() {
-        viewport = new Viewport3D(getModel());
+        viewport = new Property<Viewport3D>(new Viewport3D(getModel()));
 
-        crosshair = new Property<ICrosshair>(new Crosshair(viewport));
+        crosshair = new Property<ICrosshair>(new Crosshair(viewport.getProperty()));
 
-        crosshair.addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                //scheduleRepaint(new LayerChangeEvent(crosshair, DisplayAction.SLICE_CHANGED));
-            }
-        });
+        displayModel.addListDataListener(this);
+
 
         crosshair.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent e) {
@@ -91,13 +81,6 @@ public abstract class ImageView extends JComponent implements ListDataListener {
             }
         });
 
-        viewport.addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                //scheduleRepaint(new LayerChangeEvent(new Property<Viewport3D>(viewport), DisplayAction.VIEWPORT_CHANGED));
-            }
-        });
-
-        displayModel.addListDataListener(this);
 
         displayModel.getSelection().addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent e) {
@@ -112,16 +95,6 @@ public abstract class ImageView extends JComponent implements ListDataListener {
         });
 
 
-        annotationListener = new PropertyChangeListener() {
-
-            public void propertyChange(PropertyChangeEvent evt) {
-                IAnnotation annotation = (IAnnotation) evt.getSource();
-               // scheduleRepaint(new LayerChangeEvent(
-                //        new Property<IAnnotation>(annotation),
-                //        DisplayAction.ANNOTATION_CHANGED));
-
-            }
-        };
 
     }
 
@@ -147,7 +120,6 @@ public abstract class ImageView extends JComponent implements ListDataListener {
     }
 
     public void addAnnotation(IAnnotation annotation) {
-        annotation.addPropertyChangeListener(annotationListener);
         annotationList.add(annotation);
         repaint();
     }
@@ -158,7 +130,6 @@ public abstract class ImageView extends JComponent implements ListDataListener {
         while (iter.hasNext()) {
             IAnnotation a = iter.next();
             if (a.getClass().equals(annotation.getClass())) {
-                a.removePropertyChangeListener(annotationListener);
                 index = iter.previousIndex();
             }
         }
@@ -166,7 +137,7 @@ public abstract class ImageView extends JComponent implements ListDataListener {
         if (index == -1) {
             addAnnotation(annotation);
         } else {
-            annotation.addPropertyChangeListener(annotationListener);
+
             annotationList.set(index, annotation);
             repaint();
         }
@@ -175,7 +146,6 @@ public abstract class ImageView extends JComponent implements ListDataListener {
     }
 
     public void removeAnnotation(IAnnotation annotation) {
-        annotation.removePropertyChangeListener(annotationListener);
         annotationList.remove(annotation);
         repaint();
     }
@@ -195,17 +165,7 @@ public abstract class ImageView extends JComponent implements ListDataListener {
     }
 
 
-    public boolean isClosed() {
-        return closed;
-    }
 
-    public void addPropertyChangeListener(PropertyChangeListener x) {
-        changeSupport.addPropertyChangeListener(x);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener x) {
-        changeSupport.removePropertyChangeListener(x);
-    }
 
     public int getSelectedIndex() {
         return displayModel.getSelection().getSelectionIndex();
@@ -221,9 +181,6 @@ public abstract class ImageView extends JComponent implements ListDataListener {
         return displayModel;
     }
 
-    public abstract void scheduleRepaint(LayerChangeEvent e);
-
-
     public String getId() {
         return id;
     }
@@ -236,25 +193,9 @@ public abstract class ImageView extends JComponent implements ListDataListener {
         return crosshair;
     }
 
-
     public Viewport3D getViewport() {
-        return viewport;
+        return viewport.getProperty();
     }
-
-
-    public abstract Point getCrosshairLocation(IImagePlot plot);
-
-    public abstract AnatomicalPoint3D getAnatomicalLocation(Component source, Point screenPoint);
-
-    public abstract IImagePlot whichPlot(Point p);
-
-    public abstract List<IImagePlot> getPlots();
-
-    public abstract SelectionInList getPlotSelection();
-
-    public abstract IImagePlot getSelectedPlot();
-
-    public abstract RenderedImage captureImage();
 
 
     public AnatomicalPoint3D getCentroid() {
@@ -273,37 +214,25 @@ public abstract class ImageView extends JComponent implements ListDataListener {
     }
 
 
-    public void intervalAdded(ListDataEvent e) {
+    public abstract void intervalAdded(ListDataEvent e);
 
-        //scheduleRepaint(new LayerChangeEvent(new Property(new ValueHolder(getModel())), DisplayAction.DATA_CHANGED));
+    public abstract void intervalRemoved(ListDataEvent e);
 
-    }
+    public abstract void contentsChanged(ListDataEvent e);
 
-    public void intervalRemoved(ListDataEvent e) {
+    public abstract Point getCrosshairLocation(IImagePlot plot);
 
-        if (getModel().getNumLayers() == 0) {
-            changeSupport.firePropertyChange(ImageView.CLOSED_PROPERTY, false, true);
-        } else {
-            //scheduleRepaint(new LayerChangeEvent(new Property(new ValueHolder(getModel())), DisplayAction.DATA_CHANGED));
-        }
+    public abstract AnatomicalPoint3D getAnatomicalLocation(Component source, Point screenPoint);
 
+    public abstract IImagePlot whichPlot(Point p);
 
-    }
+    public abstract List<IImagePlot> getPlots();
 
-    public void contentsChanged(ListDataEvent e) {
-        //scheduleRepaint(new LayerChangeEvent(new Property(new ValueHolder(getModel())), DisplayAction.DATA_CHANGED));
+    public abstract SelectionInList getPlotSelection();
 
-    }
+    public abstract IImagePlot getSelectedPlot();
 
-    protected class DirtListener implements ChangeListener {
-        public void stateChanged(ChangeEvent e) {
-
-            LayerChangeEvent de = (LayerChangeEvent) e;
-
-            scheduleRepaint(de);
-
-        }
-    }
+    public abstract RenderedImage captureImage();
 
 
 }

@@ -26,13 +26,19 @@ public class PipelineLayer {
         layer = _layer;
     }
 
+    public void clear() {
+        layer = null;
+        coloredImage = null;
+        rawImage = null;
+        resampledImage = null;
+    }
+
     public boolean isVisible() {
         return layer.isVisible();
     }
 
     public ImageLayer2D getLayer() {
         return layer;
-
     }
 
     public float getOpacity() {

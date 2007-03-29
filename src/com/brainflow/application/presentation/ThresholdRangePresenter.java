@@ -14,19 +14,23 @@ import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.display.Property;
+import com.brainflow.display.Opacity;
+import com.brainflow.display.ThresholdRange;
+import com.brainflow.core.ImageView;
+import com.brainflow.core.ImageLayer;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
 import com.jgoodies.binding.beans.BeanAdapter;
+import com.jgoodies.binding.value.ValueHolder;
 
 import javax.swing.*;
 
 /**
  * @author buchs
  */
-public class ThresholdRangePresenter extends AbstractColorMapPresenter {
+public class ThresholdRangePresenter extends ImageViewPresenter {
 
-    private LinearColorMap colorMap;
-    private BeanAdapter adapter;
+
     private DoubleSliderForm form;
 
     private BoundedRangeAdapter lowSliderAdapter;
@@ -35,43 +39,20 @@ public class ThresholdRangePresenter extends AbstractColorMapPresenter {
     /**
      * Creates a new instance of ColorRangePanel
      */
-    public ThresholdRangePresenter(LinearColorMap cmap) {
-        colorMap = cmap;
-        form = new DoubleSliderForm();
-
-        if (colorMap != null) {
-            initBinding();
-        }
-
-
-    }
-
     public ThresholdRangePresenter() {
-        colorMap = new LinearColorMap(0, 255, ColorTable.GRAYSCALE);
-
         form = new DoubleSliderForm();
         initBinding();
-
-
     }
 
-    public void setColorMap(Property<IColorMap> param) {
-        IColorMap _colorMap = param.getProperty();
 
-        if (_colorMap instanceof LinearColorMap) {
-            colorMap = (LinearColorMap) _colorMap;
-            if (adapter != null) {
-                adapter.setBean(colorMap);
-            } else {
-                initBinding();
-            }
-        } else {
-            //adapter.setBean(null);
-
-        }
-
+    public void viewSelected(ImageView view) {
+        form.setEnabled(true);
+        initBinding();
     }
 
+    public void allViewsDeselected() {
+        form.setEnabled(false);
+    }
 
     public JComponent getComponent() {
         return form;
@@ -79,16 +60,22 @@ public class ThresholdRangePresenter extends AbstractColorMapPresenter {
 
 
     private void initBinding() {
-        adapter = new BeanAdapter(colorMap, true);
+        ImageView view = getSelectedView();
+        if (view == null) return;
 
 
-        lowSliderAdapter = new BoundedRangeAdapter(new PercentageConverter(adapter.getValueModel(LinearColorMap.LOWER_ALPHA_PROPERTY),
-                adapter.getValueModel(LinearColorMap.MINIMUM_VALUE_PROPERTY),
-                adapter.getValueModel(LinearColorMap.MAXIMUM_VALUE_PROPERTY), 100), 0, 0, 100);
+        int idx = view.getModel().getSelectedIndex();
+        ImageLayer layer = view.getModel().getImageLayer(idx);
+        Property<ThresholdRange> threshold = layer.getImageLayerParameters().getThresholdRange();
 
-        highSliderAdapter = new BoundedRangeAdapter(new PercentageConverter(adapter.getValueModel(LinearColorMap.UPPER_ALPHA_PROPERTY),
-                adapter.getValueModel(LinearColorMap.MINIMUM_VALUE_PROPERTY),
-                adapter.getValueModel(LinearColorMap.MAXIMUM_VALUE_PROPERTY), 100), 0, 0, 100);
+
+        lowSliderAdapter = new BoundedRangeAdapter(new PercentageConverter(threshold.getModel(ThresholdRange.MIN_PROPERTY),
+                new ValueHolder(layer.getImageData().getMinValue()),
+                new ValueHolder(layer.getImageData().getMaxValue()), 100), 0, 0, 100);
+
+        highSliderAdapter = new BoundedRangeAdapter(new PercentageConverter(threshold.getModel(ThresholdRange.MAX_PROPERTY),
+                new ValueHolder(layer.getImageData().getMinValue()),
+                new ValueHolder(layer.getImageData().getMaxValue()), 100), 0, 0, 100);
 
         form.getSlider1().setModel(highSliderAdapter);
         form.getSlider2().setModel(lowSliderAdapter);
@@ -96,14 +83,9 @@ public class ThresholdRangePresenter extends AbstractColorMapPresenter {
         form.getSliderLabel1().setText("High: ");
         form.getSliderLabel2().setText("Low: ");
 
-        /*Bindings.bind(form.getValueField1(), ConverterFactory.createStringConverter(
-                adapter.getValueModel(LinearColorMap.UPPER_ALPHA_PROPERTY), NumberFormat.getInstance()));
-
-        Bindings.bind(form.getValueField2(), ConverterFactory.createStringConverter(
-                adapter.getValueModel(LinearColorMap.LOWER_ALPHA_PROPERTY), NumberFormat.getInstance()));      */
-
-        Bindings.bind(form.getValueField1(), adapter.getValueModel(LinearColorMap.UPPER_ALPHA_PROPERTY));
-        Bindings.bind(form.getValueField2(), adapter.getValueModel(LinearColorMap.LOWER_ALPHA_PROPERTY));
+     
+        Bindings.bind(form.getValueField1(), threshold.getModel(ThresholdRange.MAX_PROPERTY));
+        Bindings.bind(form.getValueField2(), threshold.getModel(ThresholdRange.MIN_PROPERTY));
 
 
     }

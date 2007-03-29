@@ -35,7 +35,7 @@ public class ImageLayer2D {
         return properties.getVisible().getProperty().isVisible();
     }
 
-    public float getOpacity() {
+    public double getOpacity() {
         return properties.getOpacity().getProperty().getOpacity();
     }
 

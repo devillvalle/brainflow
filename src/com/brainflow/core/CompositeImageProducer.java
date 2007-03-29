@@ -63,6 +63,7 @@ public class CompositeImageProducer extends AbstractImageProducer {
         try {
             pipeline.addStage(new FetchSlicesStage(), new SynchronousStageDriverFactory());
             pipeline.addStage(new ColorizeImagesStage(), new SynchronousStageDriverFactory());
+            pipeline.addStage(new ThresholdImagesStage(), new SynchronousStageDriverFactory());
             pipeline.addStage(new CreateBufferedImagesStage(), new SynchronousStageDriverFactory());
             pipeline.addStage(new ResampleImagesStage(), new SynchronousStageDriverFactory());
             pipeline.addStage(new ComposeImagesStage(), new SynchronousStageDriverFactory());
@@ -82,14 +83,14 @@ public class CompositeImageProducer extends AbstractImageProducer {
 
 
     public void updateImage(DisplayChangeEvent event) {
-       
+
         switch (event.getChangeType()) {
             case SLICE_CHANGE:
                 ferry.clearAll();
                 ferry.setSlice(getSlice());
                 break;
             case COLOR_MAP_CHANGE:
-                assert event.getLayerLindex() > 0;
+                assert event.getLayerLindex() >= 0;
                 ferry.clearColoredImage(event.getLayerLindex());
                 break;
             case COMPOSITION_CHANGE:
@@ -99,7 +100,7 @@ public class CompositeImageProducer extends AbstractImageProducer {
                 // do nothing for now
                 break;
             case RESAMPLE_CHANGE:
-                assert event.getLayerLindex() > 0;
+                assert event.getLayerLindex() >= 0;
                 ferry.clearResampledImage(event.getLayerLindex());
                 break;
             case RESET_CHANGE:
@@ -111,8 +112,12 @@ public class CompositeImageProducer extends AbstractImageProducer {
             case STRUCTURE_CHANGE:
                 ferry.clearAll();
                 break;
+
             case VIEWPORT_CHANGE:
                 ferry.clearCroppedImage();
+                break;        
+            case THRESHOLD_CHANGED:
+                ferry.clearThresholdedImage(event.getLayerLindex());
                 break;
             case ANNOTATION_CHANGE:
                 // do nothing

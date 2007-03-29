@@ -34,6 +34,7 @@ public class LinearColorMap extends AbstractColorMap {
 
 
     private double binSize;
+
     private double mapRange;
 
     private List<ColorInterval> intervals;
@@ -56,8 +57,7 @@ public class LinearColorMap extends AbstractColorMap {
         int mapSize = icm.getMapSize();
         fillIntervals(mapSize, icm);
 
-        setUpperAlphaThreshold(0);
-        setLowerAlphaThreshold(0);
+
 
 
     }
@@ -76,8 +76,7 @@ public class LinearColorMap extends AbstractColorMap {
         int mapSize = lcm.getMapSize();
         fillIntervals(mapSize, lcm);
 
-        setUpperAlphaThreshold(0);
-        setLowerAlphaThreshold(0);
+
 
 
     }
@@ -85,9 +84,8 @@ public class LinearColorMap extends AbstractColorMap {
 
     public LinearColorMap copy() {
         LinearColorMap cmap = new LinearColorMap(this.getMinimumValue(), this.getMaximumValue(), this);
-        cmap.setUpperAlphaThreshold(upperAlphaThreshold);
-        cmap.setLowerAlphaThreshold(lowerAlphaThreshold);
-        cmap.setAlphaMultiplier(getAlphaMultiplier());
+
+
         cmap.setHighClip(getHighClip());
         cmap.setLowClip(getLowClip());
 
@@ -194,7 +192,7 @@ public class LinearColorMap extends AbstractColorMap {
 
 
 
-    public void setUpperAlphaThreshold(double _upperAlphaThreshold) {
+    /*public void setUpperAlphaThreshold(double _upperAlphaThreshold) {
         double oldValue = getUpperAlphaThreshold();
         double[] range = super.filterHighValue(getLowerAlphaThreshold(), _upperAlphaThreshold);
         upperAlphaThreshold = range[1];
@@ -211,7 +209,7 @@ public class LinearColorMap extends AbstractColorMap {
         }
 
 
-    }
+    } */
 
     public void setHighClip(double _highClip) {
         double oldValue = getHighClip();
@@ -238,7 +236,7 @@ public class LinearColorMap extends AbstractColorMap {
 
     }
 
-    public void setLowerAlphaThreshold(double _lowerAlphaThreshold) {
+    /*public void setLowerAlphaThreshold(double _lowerAlphaThreshold) {
         double oldValue = getLowerAlphaThreshold();
 
         double[] range = super.filterLowValue(_lowerAlphaThreshold, getUpperAlphaThreshold());
@@ -254,7 +252,7 @@ public class LinearColorMap extends AbstractColorMap {
                     oldThresh, upperAlphaThreshold);
         }
 
-    }
+    } */
 
     public void setLowClip(double _lowClip) {
         double oldValue = getLowClip();
@@ -283,14 +281,6 @@ public class LinearColorMap extends AbstractColorMap {
 
     }
 
-    public void setAlphaMultiplier(Double amult) {
-        double oldValue = getAlphaMultiplier();
-        alphaMultiplier = Math.min(amult, 1f);
-        alphaMultiplier = Math.max(amult, 0f);
-
-        changeSupport.firePropertyChange(AbstractColorMap.ALPHA_MULTIPLIER_PROPERTY,
-                oldValue, alphaMultiplier);
-    }
 
 
     public ListIterator<ColorInterval> iterator() {
@@ -324,13 +314,8 @@ public class LinearColorMap extends AbstractColorMap {
             if (bin >= mapSize) bin = mapEnd;
 
             Color clr = intervals.get(bin).getColor();
-            alpha = 0;
-            if (val < lowerAlphaThreshold || val > upperAlphaThreshold) {
-                alpha = (byte) (clr.getAlpha() * alphaMultiplier);
-            }
 
-
-            rgba[offset++] = alpha;
+            rgba[offset++] = (byte)clr.getAlpha();
             rgba[offset++] = (byte) clr.getBlue();
             rgba[offset++] = (byte) clr.getGreen();
             rgba[offset++] = (byte) clr.getRed();
@@ -342,10 +327,6 @@ public class LinearColorMap extends AbstractColorMap {
 
 
     public byte[] getInterleavedRGBAComponents(IImageData data) {
-
-        if (!NumberUtils.equals(getUpperAlphaThreshold(), getLowerAlphaThreshold(), .0001)) {
-            return getThresholdedInterleavedRGBAComponents(data);
-        }
 
 
         int len = data.getNumElements();
@@ -365,9 +346,7 @@ public class LinearColorMap extends AbstractColorMap {
             if (bin >= mapSize) bin = (int) (mapSize - 1);
 
             ColorInterval clr = intervals.get(bin);
-            rgba[offset++] = (byte) (clr.getAlpha() * alphaMultiplier);
-            //rgba[offset] = (byte)255;
-            //rgba[offset++] = (byte)clrs[bin].getRed();
+            rgba[offset++] = (byte) clr.getAlpha();
             rgba[offset++] = (byte) clr.getBlue();
             rgba[offset++] = (byte) clr.getGreen();
             rgba[offset++] = (byte) clr.getRed();
@@ -395,19 +374,19 @@ public class LinearColorMap extends AbstractColorMap {
                 rgba[0][i] = (byte) c0.getRed();
                 rgba[1][i] = (byte) c0.getGreen();
                 rgba[2][i] = (byte) c0.getBlue();
-                rgba[3][i] = (byte) (c0.getAlpha() * alphaMultiplier);
+                rgba[3][i] = (byte) c0.getAlpha();
             } else if (val >= highClip) {
                 rgba[0][i] = (byte) cn.getRed();
                 rgba[1][i] = (byte) cn.getGreen();
                 rgba[2][i] = (byte) cn.getBlue();
-                rgba[3][i] = (byte) (cn.getAlpha() * alphaMultiplier);
+                rgba[3][i] = (byte) cn.getAlpha();
             } else {
                 int bin = (int) Math.round((val - lowClip) / intervals.size());
                 Color ci = getInterval(bin).getColor();
                 rgba[0][i] = (byte) ci.getRed();
                 rgba[1][i] = (byte) ci.getGreen();
                 rgba[2][i] = (byte) ci.getBlue();
-                rgba[3][i] = (byte) (ci.getAlpha() * alphaMultiplier);
+                rgba[3][i] = (byte) ci.getAlpha();
 
             }
         }

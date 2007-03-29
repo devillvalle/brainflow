@@ -47,6 +47,8 @@ public class FetchSlicesStage extends ImageProcessingStage {
         if (stack == null || (stack.size() != ferry.getModel().getNumLayers()) ) {
             log.info("fetching slices");
             doTheWork(ferry);
+        } else {
+            log.info("fetch slices : passing through");
         }
 
         emit(ferry);

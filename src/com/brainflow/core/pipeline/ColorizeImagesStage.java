@@ -32,6 +32,8 @@ public class ColorizeImagesStage extends ImageProcessingStage {
             PipelineLayer layer = layers.get(i);
             if (layer.isVisible() && layer.getColoredImage() == null) {
                 layer.setColoredImage(createRGBAImage(layer.getLayer()));
+            } else {
+                log.info("colorize images : passing through layer " + i);
             }
         }
 

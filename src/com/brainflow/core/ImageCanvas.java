@@ -322,7 +322,8 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
     } */
 
     public void addImageView(ImageView view) {
-
+        //view.pack();
+        //view.setVisible(true);
         view.setSize(view.getPreferredSize());
 
         ImageView squatter = whichView(rootPane.getLayeredPane(), new Point(100, 100));

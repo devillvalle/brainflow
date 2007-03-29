@@ -94,9 +94,33 @@ public class StageFerry {
 
     }
 
+    public void clearThresholdedImage(int index) {
+        if (layers != null) {
+            PipelineLayer layer = layers.get(index);
+            if (layer != null) {
+                layer.setMaskedColoredImage(null);
+                layer.setRawImage(null);
+                layer.setResampledImage(null);
+            }
+
+        }
+
+        clearComposition();
+
+    }
+
     public void clearColoredImage(int index) {
-        PipelineLayer layer = layers.get(index);
-        layer.setColoredImage(null);
+        if (layers != null) {
+            PipelineLayer layer = layers.get(index);
+            if (layer != null) {
+                layer.setColoredImage(null);
+                layer.setMaskedColoredImage(null);
+                layer.setRawImage(null);
+                layer.setResampledImage(null);
+            }
+
+        }
+        
         clearComposition();
     }
 

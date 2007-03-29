@@ -22,6 +22,8 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.swing.JideBorderLayout;
 
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -132,7 +134,8 @@ public class ImageViewportPresenter extends ImageViewPresenter {
         boxView.clearAnnotations();
         boxView.getSelectedPlot().setPlotInsets(new Insets(2, 2, 2, 2));
         boxAnnotation.setVisible(false);
-        boxView.addAnnotation(boxAnnotation);
+        boxView.setAnnotation(boxView.getSelectedPlot(), BoxAnnotation.ID, boxAnnotation);
+
         viewPanel.setLayout(new JideBorderLayout());
         viewPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
         //viewPanel.setBackground(Color.BLACK);
@@ -140,6 +143,20 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
         xfovSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0);
         yfovSlider = new JSlider(JSlider.VERTICAL, 0, 100, 0);
+        xfovSlider.addChangeListener(new ChangeListener() {
+
+            public void stateChanged(ChangeEvent e) {
+                updateTooltips(getSelectedView());
+            }
+        });
+
+        yfovSlider.addChangeListener(new ChangeListener() {
+
+            public void stateChanged(ChangeEvent e) {
+                updateTooltips(getSelectedView());
+            }
+        });
+
 
         viewPanel.setBorder(BorderFactory.createEmptyBorder());
         viewPanel.add(xfovSlider, BorderLayout.SOUTH);
@@ -173,26 +190,30 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
     private double getBoxWidth(ImageView view) {
         IImagePlot plot = view.getSelectedPlot();
-        return view.getViewport().getRange(plot.getXAxisRange().getAnatomicalAxis()).getInterval();
+        Viewport3D viewport = view.getViewport().getProperty();
+        return viewport.getRange(plot.getXAxisRange().getAnatomicalAxis()).getInterval();
 
     }
 
     private double getBoxMinX(ImageView view) {
         IImagePlot plot = view.getSelectedPlot();
-        return view.getViewport().getRange(plot.getXAxisRange().getAnatomicalAxis()).getMinimum();
+        Viewport3D viewport = view.getViewport().getProperty();
+        return viewport.getRange(plot.getXAxisRange().getAnatomicalAxis()).getMinimum();
 
     }
 
     private double getBoxMinY(ImageView view) {
         IImagePlot plot = view.getSelectedPlot();
-        return view.getViewport().getRange(plot.getYAxisRange().getAnatomicalAxis()).getMinimum();
+        Viewport3D viewport = view.getViewport().getProperty();
+        return viewport.getRange(plot.getYAxisRange().getAnatomicalAxis()).getMinimum();
 
     }
 
 
     private double getBoxHeight(ImageView view) {
         IImagePlot plot = view.getSelectedPlot();
-        return view.getViewport().getRange(plot.getYAxisRange().getAnatomicalAxis()).getInterval();
+        Viewport3D viewport = view.getViewport().getProperty();
+        return viewport.getRange(plot.getYAxisRange().getAnatomicalAxis()).getInterval();
 
 
     }
@@ -217,11 +238,21 @@ public class ImageViewportPresenter extends ImageViewPresenter {
         return view.getModel().getImageSpace().getImageAxis(plot.getYAxisRange().getAnatomicalAxis(), true).getRange().getMaximum();
     }
 
+    private void updateTooltips(ImageView view) {
+
+        xfovSlider.setToolTipText(view.getSelectedPlot().getXAxisRange().getAnatomicalAxis().toString() + " : " +
+                 view.getSelectedPlot().getXAxisRange().getInterval());
+
+        yfovSlider.setToolTipText(view.getSelectedPlot().getYAxisRange().getAnatomicalAxis().toString() + " : " +
+                 view.getSelectedPlot().getYAxisRange().getInterval());
+
+    }
+
     private void updateView(ImageView view) {
         viewPanel.remove(boxView);
 
-        xfovSlider.setToolTipText(view.getSelectedPlot().getXAxisRange().getAnatomicalAxis().toString());
-        yfovSlider.setToolTipText(view.getSelectedPlot().getYAxisRange().getAnatomicalAxis().toString());
+        updateTooltips(view);
+
 
         xorigin.setToolTipText("origin: " + view.getSelectedPlot().getXAxisRange().getAnatomicalAxis().min.toString());
         yorigin.setToolTipText("origin: " + view.getSelectedPlot().getYAxisRange().getAnatomicalAxis().min.toString());
@@ -240,8 +271,8 @@ public class ImageViewportPresenter extends ImageViewPresenter {
         boxAnnotation.setWidth(getBoxWidth(view));
         boxAnnotation.setHeight(getBoxHeight(view));
 
-        boxView.addAnnotation(boxAnnotation);
-
+        boxView.setAnnotation(boxView.getSelectedPlot(), BoxAnnotation.ID, boxAnnotation);
+       
         viewPanel.add(boxView);
         boxView.getSelectedPlot().getComponent().addMouseMotionListener(panner);
         boxView.getSelectedPlot().getComponent().addMouseListener((MouseListener) panner);
@@ -271,7 +302,7 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
     private void intializeAdapters() {
         ImageView view = getSelectedView();
-        Viewport3D viewport = view.getViewport();
+        Viewport3D viewport = view.getViewport().getProperty();
         IImagePlot plot = view.getSelectedPlot();
 
         if (viewportAdapter == null) {
@@ -332,7 +363,7 @@ public class ImageViewportPresenter extends ImageViewPresenter {
         Bindings.bind(plotSelector, view.getPlotSelection());
 
 
-        Viewport3D viewport = view.getViewport();
+        Viewport3D viewport = view.getViewport().getProperty();
         IImagePlot plot = view.getSelectedPlot();
 
 
@@ -405,16 +436,26 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
             if (boxAnnotation.containsPoint(plot, e.getPoint())) {
                 AnatomicalPoint2D next = boxAnnotation.translateFromJava2D(plot, e.getPoint());
-                System.out.println("NEXT POINT : " + next);
-                System.out.println("LAST POINT : " + lastPoint);
-                Number xold = (Number) xorigin.getValue();
+                   Number xold = (Number) xorigin.getValue();
                 Number yold = (Number) yorigin.getValue();
 
-                //ImageView selView = getSelectedView();
-                //Viewport3D viewport = selView.getViewport();
 
-                xspinnerModel.setValue(xold.doubleValue() + (next.getX() - lastPoint.getX()));
-                yspinnerModel.setValue(yold.doubleValue() + (next.getY() - lastPoint.getY()));
+                double newx = xold.doubleValue() + (next.getX() - lastPoint.getX());
+                double newy = yold.doubleValue() + (next.getY() - lastPoint.getY());
+                if (newx < plot.getXAxisRange().getMinimum()) {
+                    return;
+                } else if (newy < plot.getYAxisRange().getMinimum()) {
+                    return;
+                }
+
+
+        
+                boxView.setToolTipText("x : " + xorigin.toString());
+                boxView.setToolTipText("y : " + xorigin.toString());
+
+
+                xspinnerModel.setValue(newx);
+                yspinnerModel.setValue(newy);
                 lastPoint = next;
             }
         }

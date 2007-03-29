@@ -8,6 +8,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.AffineTransform;
 import java.awt.*;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.brainflow.core.ImageLayer2D;
 import com.brainflow.image.data.IImageData2D;
@@ -26,6 +27,8 @@ import com.brainflow.image.rendering.RenderUtils;
 
 public class ComposeImagesStage extends ImageProcessingStage {
 
+    private static Logger log = Logger.getLogger(ComposeImagesStage.class.getName());
+
 
     public void process(StageFerry ferry) throws StageException {
         List<PipelineLayer> layers = ferry.getLayers();
@@ -37,10 +40,13 @@ public class ComposeImagesStage extends ImageProcessingStage {
                 ferry.setCompositeImage(null);
             }
             else if (layers.size() == 1) {
-                if (layers.get(0).isVisible()) {
+                if (layers.get(0).isVisible() && layers.get(0).getOpacity() >= 1) {
                     ferry.setCompositeImage(layers.get(0).getResampledImage());
+                } else if (layers.get(0).isVisible() && layers.get(0).getOpacity() < 1) {
+                    ferry.setCompositeImage(compose(layers));                   
                 } else {
                     ferry.setCompositeImage(null);
+
                 }
             } else {
                 ferry.setCompositeImage(compose(layers));
@@ -71,8 +77,8 @@ public class ComposeImagesStage extends ImageProcessingStage {
 
                 double transx = (minx - frameBounds.getMinX()); //+ (-frameBounds.getMinX());
                 double transy = (miny - frameBounds.getMinY()); //+ (-frameBounds.getMinY());
-
-                AlphaComposite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, layer2d.getOpacity());
+                log.info("opacity : " + layer2d.getOpacity());
+                AlphaComposite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float)layer2d.getOpacity());
                 g2.setComposite(composite);
                 g2.drawRenderedImage(rim, AffineTransform.getTranslateInstance(transx, transy));
 

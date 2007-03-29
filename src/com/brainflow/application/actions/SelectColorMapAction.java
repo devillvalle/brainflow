@@ -40,12 +40,13 @@ public class SelectColorMapAction extends BasicAction {
 
                 lmap.setHighClip(lmap2.getHighClip());
                 lmap.setLowClip(lmap2.getLowClip());
-                lmap.setUpperAlphaThreshold(lmap2.getUpperAlphaThreshold());
-                lmap.setLowerAlphaThreshold(lmap2.getLowerAlphaThreshold());
+               
             }
 
             view.getModel().getImageLayer(layer).
                     getImageLayerParameters().getColorMap().setProperty(lmap);
+
+
         }
 
 

@@ -3,7 +3,9 @@ package com.brainflow.core;
 
 import com.brainflow.core.annotations.CrosshairAnnotation;
 import com.brainflow.core.annotations.SelectedPlotAnnotation;
+import com.brainflow.core.annotations.IAnnotation;
 import com.brainflow.display.ICrosshair;
+import com.brainflow.display.Viewport3D;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
@@ -67,9 +69,6 @@ public class SimpleImageView extends ImageView {
 
         CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(getCrosshair().getProperty());
 
-        addAnnotation(crosshairAnnotation);
-        addAnnotation(new SelectedPlotAnnotation(imagePlot));
-
 
         AnatomicalVolume displayAnatomy = getDisplayAnatomy();
         AxisRange xrange = getModel().getImageAxis(displayAnatomy.XAXIS).getRange();
@@ -80,7 +79,11 @@ public class SimpleImageView extends ImageView {
         imagePlot = new ComponentImagePlot(getModel(), producer, displayAnatomy, xrange, yrange);
         imagePlot.setName(displayAnatomy.XY_PLANE.getOrientation().toString());
 
-        imagePlot.setAnnotations(getAnnotations());
+
+        setAnnotation(imagePlot, CrosshairAnnotation.ID, crosshairAnnotation);
+        setAnnotation(imagePlot, SelectedPlotAnnotation.ID, new SelectedPlotAnnotation(imagePlot));
+        
+
 
         ipane = new ImagePane(imagePlot);
 
@@ -98,13 +101,56 @@ public class SimpleImageView extends ImageView {
                     producer.updateImage(new ViewChangeEvent(SimpleImageView.this, DisplayChangeType.SLICE_CHANGE));
                 
                 }
+                
+                imagePlot.getComponent().repaint();
+            }
+        });
 
+        getViewport().addPropertyChangeListener(new PropertyChangeListener() {
+
+            public void propertyChange(PropertyChangeEvent evt) {
+                Viewport3D viewport = (Viewport3D)evt.getSource();
+                imagePlot.setXAxisRange(viewport.getRange(imagePlot.getDisplayAnatomy().XAXIS));
+                imagePlot.setYAxisRange(viewport.getRange(imagePlot.getDisplayAnatomy().YAXIS));
+                producer.updateImage(new ViewChangeEvent(SimpleImageView.this, DisplayChangeType.VIEWPORT_CHANGE));
                 imagePlot.getComponent().repaint();
             }
         });
 
     }
 
+
+    public void clearAnnotations() {
+        imagePlot.clearAnnotations();
+    }
+
+    public IAnnotation getAnnotation(IImagePlot plot, String name) {
+        if (plot != imagePlot) {
+            throw new IllegalArgumentException("View does not contain plot : " + plot);
+        }
+
+        return imagePlot.getAnnotation(name);
+    }
+
+    public void removeAnnotation(IImagePlot plot, String name) {
+        if (plot != imagePlot) {
+            throw new IllegalArgumentException("View does not contain plot : " + plot);
+        }
+
+
+        imagePlot.removeAnnotation(name);
+
+    }
+
+    public void setAnnotation(IImagePlot plot, String name, IAnnotation annotation) {
+        if (plot != imagePlot) {
+            throw new IllegalArgumentException("View does not contain plot : " + plot);
+        }
+
+        imagePlot.setAnnotation(name, annotation);
+       
+
+    }
 
     public RenderedImage captureImage() {
         return ipane.captureImage();

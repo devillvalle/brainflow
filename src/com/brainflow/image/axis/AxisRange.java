@@ -28,7 +28,7 @@ public final class AxisRange implements Cloneable {
 
     public AxisRange(AnatomicalAxis _aaxis, double _begin, double _end) {
         assert _aaxis != null;
-        assert (_begin <= end) : "Error AxisRange: begin must be less than end";
+        assert (_begin <= _end) : "Error AxisRange: begin must be less than end";
 
 
         begin = _begin;

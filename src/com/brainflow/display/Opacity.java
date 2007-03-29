@@ -14,7 +14,7 @@ public class Opacity extends Model {
     public static final String OPACITY_PROPERTY = "opacity";
 
 
-    private float opacity = 1f;
+    private double opacity = 1f;
 
 
     public Opacity() {
@@ -24,12 +24,12 @@ public class Opacity extends Model {
         this.opacity = opacity;
     }
 
-    public float getOpacity() {
+    public double getOpacity() {
         return opacity;
     }
 
-    public void setOpacity(float opacity) {
-        float old = getOpacity();
+    public void setOpacity(double opacity) {
+        double old = getOpacity();
         this.opacity = opacity;
 
        firePropertyChange(OPACITY_PROPERTY, old, getOpacity());

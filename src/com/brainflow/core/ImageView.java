@@ -17,6 +17,7 @@ import com.jgoodies.binding.list.SelectionInList;
 import com.jgoodies.binding.value.ValueHolder;
 import org.bushe.swing.event.EventBus;
 
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -46,14 +47,11 @@ public abstract class ImageView extends JComponent implements ListDataListener {
 
     private static final Logger log = Logger.getLogger(ImageView.class.getName());
 
-
     private String id = "";
 
     private IImageDisplayModel displayModel;
 
     private AnatomicalVolume displayAnatomy = AnatomicalVolume.getCanonicalAxial();
-
-    private final List<IAnnotation> annotationList = new ArrayList<IAnnotation>();
 
     private Property<ICrosshair> crosshair;
 
@@ -73,6 +71,18 @@ public abstract class ImageView extends JComponent implements ListDataListener {
         crosshair = new Property<ICrosshair>(new Crosshair(viewport.getProperty()));
 
         displayModel.addListDataListener(this);
+
+        displayModel.addLayerChangeListener(new LayerChangeListener() {
+
+            public void layerChanged(LayerChangeEvent event) {
+                System.out.println("catching layer changed event " + event.getChangeType());
+                List<IImagePlot> plots = ImageView.this.getPlots();
+                for (IImagePlot iplot : plots) {
+                    iplot.getImageProducer().updateImage(event);
+                    iplot.getComponent().repaint();
+                }
+            }
+        });
 
 
         crosshair.addPropertyChangeListener(new PropertyChangeListener() {
@@ -107,65 +117,8 @@ public abstract class ImageView extends JComponent implements ListDataListener {
         return displayAnatomy;
     }
 
-    public void clearAnnotations() {
-        annotationList.clear();
-    }
 
-    protected List<IAnnotation> getAnnotations() {
-        return annotationList;
-    }
-
-    public Iterator<IAnnotation> annotationIterator() {
-        return annotationList.iterator();
-    }
-
-    public void addAnnotation(IAnnotation annotation) {
-        annotationList.add(annotation);
-        repaint();
-    }
-
-    public void setAnnotation(IAnnotation annotation) {
-        ListIterator<IAnnotation> iter = annotationList.listIterator();
-        int index = -1;
-        while (iter.hasNext()) {
-            IAnnotation a = iter.next();
-            if (a.getClass().equals(annotation.getClass())) {
-                index = iter.previousIndex();
-            }
-        }
-
-        if (index == -1) {
-            addAnnotation(annotation);
-        } else {
-
-            annotationList.set(index, annotation);
-            repaint();
-        }
-
-
-    }
-
-    public void removeAnnotation(IAnnotation annotation) {
-        annotationList.remove(annotation);
-        repaint();
-    }
-
-    // temporary solution to get a particular annotation from an image view.
-    // alternative is to use HashMap of Annotations and for each annotation
-    // String identifier
-    public IAnnotation getAnnotation(Class clazz) {
-        for (IAnnotation i : annotationList) {
-            if (i.getClass().getName().equals(clazz.getName())) {
-                return i;
-            }
-
-        }
-
-        return null;
-    }
-
-
-
+    
 
     public int getSelectedIndex() {
         return displayModel.getSelection().getSelectionIndex();
@@ -193,8 +146,8 @@ public abstract class ImageView extends JComponent implements ListDataListener {
         return crosshair;
     }
 
-    public Viewport3D getViewport() {
-        return viewport.getProperty();
+    public Property<Viewport3D> getViewport() {
+        return viewport;
     }
 
 
@@ -213,7 +166,14 @@ public abstract class ImageView extends JComponent implements ListDataListener {
 
     }
 
+    public abstract IAnnotation getAnnotation(IImagePlot plot, String name);
 
+    public abstract void removeAnnotation(IImagePlot plot, String name);
+
+    public abstract void clearAnnotations();
+
+    public abstract void setAnnotation(IImagePlot plot, String name, IAnnotation annotation);
+       
     public abstract void intervalAdded(ListDataEvent e);
 
     public abstract void intervalRemoved(ListDataEvent e);

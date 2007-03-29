@@ -144,9 +144,9 @@ public class ImageViewFactory {
 
     public static ImageView createSagittalView(ImageView view) {
         ImageView newView = createSagittalView(view.getModel());
-        CrosshairAnnotation annotation = (CrosshairAnnotation) view.getAnnotation(CrosshairAnnotation.class);
+        CrosshairAnnotation annotation = (CrosshairAnnotation) view.getAnnotation(newView.getSelectedPlot(), CrosshairAnnotation.ID);
         if (annotation != null) {
-            newView.setAnnotation(annotation);
+            newView.setAnnotation(newView.getSelectedPlot(), CrosshairAnnotation.ID, annotation);
         }
 
         return newView;
@@ -155,9 +155,9 @@ public class ImageViewFactory {
 
     public static ImageView createCoronalView(ImageView view) {
         ImageView newView = createCoronalView(view.getModel());
-        CrosshairAnnotation annotation = (CrosshairAnnotation) view.getAnnotation(CrosshairAnnotation.class);
+        CrosshairAnnotation annotation = (CrosshairAnnotation) view.getAnnotation(view.getSelectedPlot(), CrosshairAnnotation.ID);
         if (annotation != null) {
-            newView.setAnnotation(annotation);
+            newView.setAnnotation(newView.getSelectedPlot(), CrosshairAnnotation.ID, annotation);
         }
 
         return newView;
@@ -166,9 +166,9 @@ public class ImageViewFactory {
 
     public static ImageView createAxialView(ImageView view) {
         ImageView newView = createAxialView(view.getModel());
-        CrosshairAnnotation annotation = (CrosshairAnnotation) view.getAnnotation(CrosshairAnnotation.class);
+        CrosshairAnnotation annotation = (CrosshairAnnotation) view.getAnnotation(view.getSelectedPlot(), CrosshairAnnotation.ID);
         if (annotation != null) {
-            newView.setAnnotation(annotation);
+            newView.setAnnotation(newView.getSelectedPlot(), CrosshairAnnotation.ID, annotation);
         }
 
         return newView;

@@ -44,12 +44,10 @@ public class CrosshairDialogAction extends BasicAction {
 
 
         if (view != null) {
-            final CrosshairAnnotation icross = (CrosshairAnnotation)view.getAnnotation(CrosshairAnnotation.class);
+            final CrosshairAnnotation icross = (CrosshairAnnotation)view.getAnnotation(view.getSelectedPlot(), CrosshairAnnotation.ID);
             final CrosshairAnnotation safeCopy = (CrosshairAnnotation)icross.safeCopy();
             
             if (icross != null) {
-                log.finest("retrieved crosshair annotation for editing");
-
                 CrosshairPresenter presenter = new CrosshairPresenter((CrosshairAnnotation) icross);
                 Container c = JOptionPane.getFrameForComponent(view);
 

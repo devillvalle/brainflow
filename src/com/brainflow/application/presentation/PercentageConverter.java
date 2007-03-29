@@ -34,12 +34,12 @@ class PercentageConverter extends AbstractConverter {
         Number dmin = (Number) min.getValue();
         Number dmax = (Number) max.getValue();
         Integer val = (Integer) object;
-        System.out.println("min " + dmin);
-        System.out.println("max " + dmax);
-        System.out.println("num units " + numUnits);
+        //System.out.println("min " + dmin);
+        //System.out.println("max " + dmax);
+        //System.out.println("num units " + numUnits);
 
         double newval = (val / numUnits) * (dmax.doubleValue() - dmin.doubleValue()) + dmin.doubleValue();
-        System.out.println("PercentageConverter: new val = " + newval);
+        //System.out.println("PercentageConverter: new val = " + newval);
         subject.setValue(newval);
 
     }

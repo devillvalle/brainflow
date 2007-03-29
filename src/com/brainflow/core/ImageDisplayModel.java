@@ -35,7 +35,6 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     private ArrayListModel imageListModel = new ArrayListModel();
 
-
     private SelectionInList layerSelection = new SelectionInList((ListModel) imageListModel);
 
     private List<LayerChangeListener> layerListeners = new ArrayList<LayerChangeListener>();
@@ -137,15 +136,20 @@ public class ImageDisplayModel implements IImageDisplayModel {
         layer.addPropertyChangeListener(new PropertyChangeListener() {
 
             public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getPropertyName() == ImageLayerProperties.COLOR_MAP_PROPERTY) {
-                    fireLayerChangeEvent(new LayerChangeEvent(ImageDisplayModel.this, DisplayChangeType.COLOR_MAP_CHANGE, (ImageLayer)evt.getSource()));
-                } else if (evt.getPropertyName() == ImageLayerProperties.RESAMPLE_PROPERTY) {
-                    fireLayerChangeEvent(new LayerChangeEvent(ImageDisplayModel.this, DisplayChangeType.RESAMPLE_CHANGE, (ImageLayer)evt.getSource()));
-                } else if (evt.getPropertyName() == ImageLayerProperties.VISIBLE_PROPERTY) {
-                    fireLayerChangeEvent(new LayerChangeEvent(ImageDisplayModel.this, DisplayChangeType.COMPOSITION_CHANGE, (ImageLayer)evt.getSource()));
-                } else if (evt.getPropertyName() == ImageLayerProperties.IMAGEOP_PROPERTY) {
-                    fireLayerChangeEvent(new LayerChangeEvent(ImageDisplayModel.this, DisplayChangeType.IMAGE_FILTER_CHANGE, (ImageLayer)evt.getSource()));
+                System.out.println("catching : " + evt.getPropertyName());
 
+                if (evt.getPropertyName().equals(ImageLayerProperties.COLOR_MAP_PROPERTY)) {
+                    fireLayerChangeEvent(new LayerChangeEvent(ImageDisplayModel.this, DisplayChangeType.COLOR_MAP_CHANGE, (ImageLayer)evt.getSource()));
+                } else if (evt.getPropertyName().equals(ImageLayerProperties.RESAMPLE_PROPERTY)) {
+                    fireLayerChangeEvent(new LayerChangeEvent(ImageDisplayModel.this, DisplayChangeType.RESAMPLE_CHANGE, (ImageLayer)evt.getSource()));
+                } else if (evt.getPropertyName().equals(ImageLayerProperties.VISIBLE_PROPERTY)) {
+                    fireLayerChangeEvent(new LayerChangeEvent(ImageDisplayModel.this, DisplayChangeType.COMPOSITION_CHANGE, (ImageLayer)evt.getSource()));
+                } else if (evt.getPropertyName().equals(ImageLayerProperties.IMAGEOP_PROPERTY)) {
+                    fireLayerChangeEvent(new LayerChangeEvent(ImageDisplayModel.this, DisplayChangeType.IMAGE_FILTER_CHANGE, (ImageLayer)evt.getSource()));
+                } else if (evt.getPropertyName().equals(ImageLayerProperties.OPACITY_PROPERTY)) {
+                    fireLayerChangeEvent(new LayerChangeEvent(ImageDisplayModel.this, DisplayChangeType.COMPOSITION_CHANGE, (ImageLayer)evt.getSource()));
+                } else if (evt.getPropertyName().equals(ImageLayerProperties.THRESHOLD_PROPERTY)) {
+                    fireLayerChangeEvent(new LayerChangeEvent(ImageDisplayModel.this, DisplayChangeType.THRESHOLD_CHANGED, (ImageLayer)evt.getSource()));
                 }
             }
         });

@@ -38,11 +38,11 @@ public class ColorBarAnnotationDialogAction extends BasicAction {
 
 
         if (view != null) {
-            ColorBarAnnotation cbar = (ColorBarAnnotation) view.getAnnotation(ColorBarAnnotation.class);
+            ColorBarAnnotation cbar = (ColorBarAnnotation) view.getAnnotation(view.getSelectedPlot(), ColorBarAnnotation.ID);
 
             if (cbar == null) {
                 cbar = new ColorBarAnnotation(view.getModel());
-                view.setAnnotation(cbar);
+                view.setAnnotation(view.getSelectedPlot(), cbar.getIdentifier(), cbar);
             }
 
 

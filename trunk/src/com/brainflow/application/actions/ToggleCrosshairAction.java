@@ -30,7 +30,7 @@ public class ToggleCrosshairAction extends BasicAction {
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
         if (view != null) {
             setEnabled(true);
-            CrosshairAnnotation annot = (CrosshairAnnotation)view.getAnnotation(CrosshairAnnotation.class);
+            CrosshairAnnotation annot = (CrosshairAnnotation)view.getAnnotation(view.getSelectedPlot(), CrosshairAnnotation.ID);
             if (annot != null) {
                 boolean selected = annot.isVisible();
                 setSelected(selected);
@@ -45,7 +45,7 @@ public class ToggleCrosshairAction extends BasicAction {
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
 
         if (view != null) {
-            CrosshairAnnotation annot = (CrosshairAnnotation)view.getAnnotation(CrosshairAnnotation.class);
+            CrosshairAnnotation annot = (CrosshairAnnotation)view.getAnnotation(view.getSelectedPlot(), CrosshairAnnotation.ID);
             if (annot != null) {
 
                 if (isSelected()) {

@@ -32,8 +32,17 @@ public class BoxAnnotation extends AbstractAnnotation {
     private Paint linePaint = Color.GREEN.brighter();
 
 
+    public BoxAnnotation() {
+    }
+
+    public BoxAnnotation(Rectangle2D rect, Paint fillPaint, Paint linePaint) {
+        this.rect = rect;
+        this.fillPaint = fillPaint;
+        this.linePaint = linePaint;
+    }
+
     public IAnnotation safeCopy() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return new BoxAnnotation((Rectangle2D)rect.clone(), fillPaint, linePaint);
     }
 
 

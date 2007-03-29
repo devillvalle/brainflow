@@ -33,7 +33,7 @@ public class ToggleAxisLabelAction extends BasicAction {
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
         if (view != null) {
             setEnabled(true);
-            AxisLabelAnnotation annot = (AxisLabelAnnotation)view.getAnnotation(AxisLabelAnnotation.class);
+            AxisLabelAnnotation annot = (AxisLabelAnnotation)view.getAnnotation(view.getSelectedPlot(), AxisLabelAnnotation.ID);
             if (annot != null) {
                 boolean selected = annot.isVisible();
                 setSelected(selected);
@@ -48,7 +48,7 @@ public class ToggleAxisLabelAction extends BasicAction {
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
 
         if (view != null) {
-            AxisLabelAnnotation annot = (AxisLabelAnnotation)view.getAnnotation(AxisLabelAnnotation.class);
+            AxisLabelAnnotation annot = (AxisLabelAnnotation)view.getAnnotation(view.getSelectedPlot(), AxisLabelAnnotation.ID);
             if (annot != null) {
 
                 if (isSelected()) {

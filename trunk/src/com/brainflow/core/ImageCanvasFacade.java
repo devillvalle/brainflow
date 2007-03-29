@@ -187,7 +187,7 @@ public class ImageCanvasFacade {
 
 
             AnatomicalPoint3D pt = iview.getAnatomicalLocation(e.getComponent(), e.getPoint());
-            Viewport3D viewport = iview.getViewport();
+            Viewport3D viewport = iview.getViewport().getProperty();
 
             if (pt != null && viewport.inBounds(pt)) {
                 iview.getCrosshair().getProperty().setLocation(pt);

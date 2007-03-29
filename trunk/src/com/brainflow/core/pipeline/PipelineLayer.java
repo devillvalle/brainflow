@@ -18,6 +18,8 @@ public class PipelineLayer {
 
     private RGBAImage coloredImage;
 
+    private RGBAImage maskedColoredImage;
+
     private BufferedImage rawImage;
 
     private BufferedImage resampledImage;
@@ -29,6 +31,7 @@ public class PipelineLayer {
     public void clear() {
         layer = null;
         coloredImage = null;
+        maskedColoredImage = null;
         rawImage = null;
         resampledImage = null;
     }
@@ -41,7 +44,7 @@ public class PipelineLayer {
         return layer;
     }
 
-    public float getOpacity() {
+    public double getOpacity() {
         return layer.getOpacity();
     }
 
@@ -68,5 +71,14 @@ public class PipelineLayer {
 
     public void setResampledImage(BufferedImage resampledImage) {
         this.resampledImage = resampledImage;
+    }
+
+
+    public RGBAImage getMaskedColoredImage() {
+        return maskedColoredImage;
+    }
+
+    public void setMaskedColoredImage(RGBAImage maskedColoredImage) {
+        this.maskedColoredImage = maskedColoredImage;
     }
 }

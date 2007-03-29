@@ -31,7 +31,7 @@ public class ToggleColorbarAction extends BasicAction {
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
         if (view != null) {
             setEnabled(true);
-            ColorBarAnnotation annot = (ColorBarAnnotation)view.getAnnotation(ColorBarAnnotation.class);
+            ColorBarAnnotation annot = (ColorBarAnnotation)view.getAnnotation(view.getSelectedPlot(), ColorBarAnnotation.ID);
             if (annot != null) {
                 boolean selected = annot.isVisible();
                 setSelected(selected);
@@ -49,7 +49,7 @@ public class ToggleColorbarAction extends BasicAction {
         // wow is this ugly
         //todo clean up method
         if (view != null) {
-            ColorBarAnnotation annot = (ColorBarAnnotation)view.getAnnotation(ColorBarAnnotation.class);
+            ColorBarAnnotation annot = (ColorBarAnnotation)view.getAnnotation(view.getSelectedPlot(), ColorBarAnnotation.ID);
             if (annot != null) {
                 if (isSelected()) {
                     annot.setVisible(true);
@@ -59,7 +59,7 @@ public class ToggleColorbarAction extends BasicAction {
                 }
             } else {
                 annot = new ColorBarAnnotation(view.getModel());
-                view.setAnnotation(annot);
+                view.setAnnotation(view.getSelectedPlot(), ColorBarAnnotation.ID, annot);
                 if (isSelected()) {
                     annot.setVisible(true);
                 }

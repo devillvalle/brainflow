@@ -29,12 +29,6 @@ public abstract class AbstractColorMap implements IColorMap {
 
     public static final String MAP_SIZE_PROPERTY = "mapSize";
 
-    public static final String UPPER_ALPHA_PROPERTY = "upperAlphaThreshold";
-
-    public static final String LOWER_ALPHA_PROPERTY = "lowerAlphaThreshold";
-
-    public static final String ALPHA_MULTIPLIER_PROPERTY = "alphaMultiplier";
-
     public static final String MAXIMUM_VALUE_PROPERTY = "maximumValue";
 
     public static final String MINIMUM_VALUE_PROPERTY = "minimumValue";
@@ -48,11 +42,6 @@ public abstract class AbstractColorMap implements IColorMap {
 
     protected double highClip;
 
-    protected double lowerAlphaThreshold;
-
-    protected double upperAlphaThreshold;
-
-    protected double alphaMultiplier = 1f;
 
 
     protected PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
@@ -71,18 +60,6 @@ public abstract class AbstractColorMap implements IColorMap {
     public double getMinimumValue() {
         return minimumValue;
     }
-
-    public double getUpperAlphaThreshold() {
-        return upperAlphaThreshold;
-    }
-
-    public abstract void setUpperAlphaThreshold(double _upperAlphaThreshold);
-
-    public double getLowerAlphaThreshold() {
-        return lowerAlphaThreshold;
-    }
-
-    public abstract void setLowerAlphaThreshold(double _lowerAlphaThreshold);
 
 
     protected double[] filterHighValue(double low, double high) {
@@ -115,12 +92,7 @@ public abstract class AbstractColorMap implements IColorMap {
         return new double[]{low, high};
     }
 
-    public abstract void setAlphaMultiplier(Double amult);
-
-
-    public Double getAlphaMultiplier() {
-        return alphaMultiplier;
-    }
+  
 
     public double getHighClip() {
         return highClip;

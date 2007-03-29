@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -52,7 +53,19 @@ public interface IImagePlot {
 
     public JComponent getComponent();
 
-    public void setAnnotations(List<IAnnotation> annotationList);
+    public IImageProducer getImageProducer();
+
+    public Map<String, IAnnotation> getAnnotations();
+
+    public void setAnnotation(String name, IAnnotation annotation);
+
+    public IAnnotation getAnnotation(String name);
+
+    public void removeAnnotation(String name);
+
+    public void clearAnnotations();
+
+
 
 
 }

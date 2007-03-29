@@ -5,6 +5,7 @@ import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.core.annotations.IAnnotation;
 import com.jgoodies.binding.list.ArrayListModel;
 import com.jgoodies.binding.list.SelectionInList;
 
@@ -41,6 +42,8 @@ public class SimpleOrthogonalImageView extends ImageView {
         plotSelection = new SelectionInList((ListModel) plotList);
         plotSelection.setSelectionIndex(0);
     }
+
+
 
     public void scheduleRepaint(LayerChangeEvent e) {
         repaint();
@@ -176,6 +179,8 @@ public class SimpleOrthogonalImageView extends ImageView {
     }
 
 
+
+
     public void intervalAdded(ListDataEvent e) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
@@ -209,6 +214,23 @@ public class SimpleOrthogonalImageView extends ImageView {
         add(axialPane);
         add(coronalPane);
         add(sagittalPane);
+    }
+
+
+    public void clearAnnotations() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public IAnnotation getAnnotation(IImagePlot plot, String name) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void removeAnnotation(IImagePlot plot, String name) {
+        
+    }
+
+    public void setAnnotation(IImagePlot plot, String name, IAnnotation annotation) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public String toString() {

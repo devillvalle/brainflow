@@ -6,12 +6,15 @@ import com.brainflow.image.anatomy.AnatomicalPoint2D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.axis.ImageAxis;
+import com.sun.istack.internal.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.AffineTransform;
-import java.util.ArrayList;
+import java.util.*;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,7 +29,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
 
     private AxisRange yAxis;
 
-    private java.util.List<IAnnotation> annotationList = new ArrayList<IAnnotation>();
+    private LinkedHashMap<String, IAnnotation> annotationMap = new LinkedHashMap<String, IAnnotation>();
 
     private IImageProducer producer;
 
@@ -43,6 +46,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
 
     private Rectangle oldArea = null;
 
+    private PropertyChangeListener annotationListener;
 
 
     public ComponentImagePlot(IImageDisplayModel model, IImageProducer _producer, AnatomicalVolume displayAnatomy, AxisRange xAxis, AxisRange yAxis) {
@@ -53,6 +57,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         producer = _producer;
         producer.setModel(model);
         producer.setPlot(this);
+        initAnnotationListener();
 
     }
 
@@ -62,7 +67,19 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         this.displayAnatomy = displayAnatomy;
         this.model = model;
         producer = new CompositeImageProducer(this, model, displayAnatomy);
+        initAnnotationListener();
 
+    }
+
+    private void initAnnotationListener() {
+        annotationListener = new PropertyChangeListener() {
+
+            public void propertyChange(PropertyChangeEvent evt) {
+                IAnnotation annot = (IAnnotation)evt.getSource();
+                System.out.println("annotation changed " + annot.getIdentifier());
+                repaint();
+            }
+        };
     }
 
 
@@ -74,6 +91,10 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         return this;
     }
 
+
+    public IImageProducer getImageProducer() {
+        return producer;
+    }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -100,7 +121,8 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         g2.drawRenderedImage(producer.getImage(), AffineTransform.getTranslateInstance((int)plotArea.getMinX(), (int)plotArea.getMinY()));
         //g2.drawImage(producer.getImage(), null, (int)plotArea.getMinX(), (int)plotArea.getMaxX());
 
-        for (IAnnotation ia : annotationList) {
+        for (String annot : annotationMap.keySet()) {
+            IAnnotation ia = annotationMap.get(annot);
             if (ia.isVisible()) {
                 ia.draw(g2, plotArea, this);
             }
@@ -218,9 +240,32 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
 
 
 
-    public void setAnnotations(java.util.List<IAnnotation> _annotationList) {
-        annotationList = _annotationList;
+    public void setAnnotation(String name, IAnnotation annotation) {      
+        annotationMap.put(name, annotation);
+        annotation.addPropertyChangeListener(annotationListener);
+        repaint();
     }
+
+    public IAnnotation getAnnotation(String name) {
+        return annotationMap.get(name);
+    }
+
+    public void removeAnnotation(String name) {
+        IAnnotation annotation = annotationMap.remove(name);
+        if (annotation != null) {
+            annotation.removePropertyChangeListener(annotationListener);
+        }
+    }
+
+    public void clearAnnotations() {
+        annotationMap.clear();
+    }
+
+    public Map<String, IAnnotation> getAnnotations() {
+        return Collections.unmodifiableMap(annotationMap);
+    }
+
+
 
     public void setName(String _name) {
         name = _name;

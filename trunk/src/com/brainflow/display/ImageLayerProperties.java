@@ -22,11 +22,11 @@ import java.io.Serializable;
 
 public class ImageLayerProperties implements Serializable {
 
-    public static final String COLOR_MAP_PROPERTY = "colormap";
+    public static final String THRESHOLD_PROPERTY = "threshold";
 
     public static final String RESAMPLE_PROPERTY = "resampleInterpolation";
 
-    public static final String COLORMAP_PROPERTY = "colorMap";
+    public static final String COLOR_MAP_PROPERTY = "colorMap";
 
     public static final String VISIBLE_PROPERTY  = "visible";
 
@@ -44,6 +44,8 @@ public class ImageLayerProperties implements Serializable {
     private Property<ImageOpListProperty> imageOpList;
 
     private Property<Opacity> opacity;
+
+    private Property<ThresholdRange> threshold;
 
     private SelectionInList resampleSelection;
     
@@ -73,13 +75,17 @@ public class ImageLayerProperties implements Serializable {
         imageOpList = new Property<ImageOpListProperty>(new ImageOpListProperty());
         opacity = new Property<Opacity>(new Opacity(1f));
         resampleSelection = new SelectionInList(InterpolationHint.values(), resampleInterpolation.getModel(InterpolationMethod.INTERPOLATION_PROPERTY));
-
+        threshold = new Property<ThresholdRange>(new ThresholdRange());
 
 
     }
 
     public void addImageOp(String filterName, ImageOp op) {
         imageOpList.getProperty().addImageOp(filterName, op);
+    }
+
+    public Property<ThresholdRange> getThresholdRange() {
+        return threshold;
     }
 
 

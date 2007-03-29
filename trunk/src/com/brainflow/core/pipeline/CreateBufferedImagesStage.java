@@ -29,7 +29,7 @@ public class CreateBufferedImagesStage extends ImageProcessingStage {
         for (int i = 0; i < layers.size(); i++) {
             PipelineLayer layer = layers.get(i);
             if (layer.isVisible() && layer.getRawImage() == null) {
-                layer.setRawImage(createBufferedImage(layer.getColoredImage()));
+                layer.setRawImage(createBufferedImage(layer.getMaskedColoredImage()));
             }
         }
 

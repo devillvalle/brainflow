@@ -36,6 +36,8 @@ public class ResampleImagesStage extends ImageProcessingStage {
             PipelineLayer layer = layers.get(i);
             if (layer.isVisible() && layer.getResampledImage() == null) {
                 layer.setResampledImage(resample(layer.getLayer(), layer.getRawImage()));
+            } else {
+                log.info("resamppe stage : passing through layer " + i);
             }
         }
 

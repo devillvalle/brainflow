@@ -60,15 +60,14 @@ public class TestPipeline {
         pipeline.addStage(new ColorizeImagesStage(), new SynchronousStageDriverFactory());
         pipeline.addStage(new CreateBufferedImagesStage(), new SynchronousStageDriverFactory());
         pipeline.addStage(new ResampleImagesStage(), new SynchronousStageDriverFactory());
-        pipeline.addStage(new WriteBufferedImagesStage(), new SynchronousStageDriverFactory());
+
         pipeline.addStage(new ComposeImagesStage(), new SynchronousStageDriverFactory());
 
-        pipeline.addStage(new WriteCompositeImageStage(), new SynchronousStageDriverFactory());
-        pipeline.addStage(new CropImageStage(), new SynchronousStageDriverFactory());
-        pipeline.addStage(new WriteCroppedImageStage(), new SynchronousStageDriverFactory());
-        pipeline.addStage(new ResizeImageStage(), new SynchronousStageDriverFactory());
-        pipeline.addStage(new WriteResizedImageStage(), new SynchronousStageDriverFactory());
 
+        pipeline.addStage(new CropImageStage(), new SynchronousStageDriverFactory());
+
+        pipeline.addStage(new ResizeImageStage(), new SynchronousStageDriverFactory());
+   
 
         StageFerry ferry = new StageFerry(model,
                 new AnatomicalPoint1D(AnatomicalAxis.INFERIOR_SUPERIOR, 0),

@@ -32,6 +32,10 @@ public class ComposeImagesStage extends ImageProcessingStage {
     private static Logger log = Logger.getLogger(ComposeImagesStage.class.getName());
 
 
+    public void flush() {
+        composite = null;
+    }
+
     public Object filter(Object input) throws StageException {
         List<BufferedImage> resImages = (List<BufferedImage>) input;
         List<ImageLayer2D> layers = (List<ImageLayer2D>) getPipeline().getEnv(ImagePlotPipeline.IMAGE_LAYER_DATA_KEY);

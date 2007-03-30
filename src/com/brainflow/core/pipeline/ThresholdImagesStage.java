@@ -29,6 +29,10 @@ public class ThresholdImagesStage extends ImageProcessingStage {
     private static final Logger log = Logger.getLogger(ThresholdImagesStage.class.getName());
 
 
+    public void flush() {
+        images = null;
+    }
+
     public Object filter(Object input) throws StageException {
         List<RGBAImage> rgbaImages = (List<RGBAImage>) input;
 

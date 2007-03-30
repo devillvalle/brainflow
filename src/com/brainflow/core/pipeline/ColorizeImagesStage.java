@@ -26,7 +26,10 @@ public class ColorizeImagesStage extends ImageProcessingStage {
 
     private static final Logger log = Logger.getLogger(ColorizeImagesStage.class.getName());
 
-   
+
+    public void flush() {
+        images = null;
+    }
 
     public Object filter(Object input) throws StageException {
         List<ImageLayer2D> layers = (List<ImageLayer2D>)input;

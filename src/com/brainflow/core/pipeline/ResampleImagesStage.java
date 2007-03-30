@@ -31,7 +31,10 @@ public class ResampleImagesStage extends ImageProcessingStage {
 
     private List<BufferedImage> images;
 
-   
+
+    public void flush() {
+        images = null;
+    }
 
     public Object filter(Object input) throws StageException {
         List<BufferedImage> resImages = (List<BufferedImage>)input;

@@ -28,7 +28,9 @@ public class CreateBufferedImagesStage extends ImageProcessingStage {
     private static Logger log = Logger.getLogger(CreateBufferedImagesStage.class.getName());
 
 
-
+    public void flush() {
+        images = null;
+    }
 
     public Object filter(Object input) throws StageException {
         List<RGBAImage> rgbaImages = (List<RGBAImage>)input;

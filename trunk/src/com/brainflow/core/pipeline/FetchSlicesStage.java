@@ -37,6 +37,11 @@ public class FetchSlicesStage extends ImageProcessingStage {
     public FetchSlicesStage() {
     }
 
+
+    public void flush() {
+        layers = null;
+    }
+
     public Object filter(Object o) throws StageException {
         IImageDisplayModel model = (IImageDisplayModel)o;
         if (layers == null || layers.size() != model.getNumLayers()) {

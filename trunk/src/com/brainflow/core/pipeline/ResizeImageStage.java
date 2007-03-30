@@ -24,6 +24,11 @@ public class ResizeImageStage extends ImageProcessingStage {
 
     private BufferedImage resized = null;
 
+
+    public void flush() {
+        resized = null;
+    }
+
     public Object filter(Object input) throws StageException {
         BufferedImage cropped = (BufferedImage)input;
         if (cropped != null && resized == null) {

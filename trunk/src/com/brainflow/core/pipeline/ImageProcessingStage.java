@@ -24,6 +24,8 @@ public abstract class ImageProcessingStage<INPUT,OUTPUT> extends BaseStage {
         pipeline = (ImagePlotPipeline)context;
     }
 
+    public abstract void flush();
+
     public IImageDisplayModel getModel() {
         return pipeline.getModel();
     }

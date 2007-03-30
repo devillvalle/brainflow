@@ -26,6 +26,10 @@ public class CropImageStage extends ImageProcessingStage {
     private static Logger log = Logger.getLogger(CropImageStage.class.getName());
 
 
+    public void flush() {
+        croppedImage = null;
+    }
+
     public Object filter(Object input) throws StageException {
         BufferedImage compositeImage = (BufferedImage) input;
 

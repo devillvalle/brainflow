@@ -1,6 +1,7 @@
 package com.brainflow.core.pipeline;
 
 import org.apache.commons.pipeline.Pipeline;
+import org.apache.commons.pipeline.Stage;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.IImagePlot;
 import com.brainflow.core.ImageLayer2D;
@@ -38,7 +39,18 @@ public class ImagePlotPipeline extends Pipeline {
         slice = plot.getImageProducer().getSlice();
     }
 
+   
 
+    public void clearPath(ImageProcessingStage stage) {
+        List<Stage> stages = getStages();
+        int idx = stages.indexOf(stage);
+        for (int i=idx; i<stages.size(); i++) {
+            ImageProcessingStage istage = (ImageProcessingStage)stages.get(i);
+            istage.flush();
+        }
+    }
+
+    
     public IImagePlot getPlot() {
         return plot;
     }

@@ -2,11 +2,13 @@ package com.brainflow.core.pipeline;
 
 import org.apache.commons.pipeline.StageException;
 import com.brainflow.core.IImagePlot;
+import com.brainflow.image.data.IImageData2D;
 
 import java.awt.image.BufferedImage;
 
 import java.awt.geom.Rectangle2D;
 import java.util.logging.Logger;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,29 +19,32 @@ import java.util.logging.Logger;
  */
 public class CropImageStage extends ImageProcessingStage {
 
+
+    private BufferedImage croppedImage;
+
     private static Logger log = Logger.getLogger(CropImageStage.class.getName());
 
-    public void process(StageFerry ferry) throws StageException {
-        log.entering(getClass().getName(), "process");
-        if (ferry.getCompositeImage() != null && ferry.getCroppedImage() == null) {
+
+    public Object filter(Object input) throws StageException {
+        BufferedImage compositeImage = (BufferedImage) input;
+
+        if (croppedImage == null) {
             ImagePlotPipeline pipe = getPipeline();
             IImagePlot plot = pipe.getPlot();
-            Rectangle2D bounds = ImagePlotPipeline.getBounds(ferry.getLayers());
-            log.info("bounds  : " + bounds);
+            List<IImageData2D> layers = (List<IImageData2D>) getPipeline().getEnv(ImagePlotPipeline.IMAGE_LAYER_DATA_KEY);
+            Rectangle2D bounds = ImagePlotPipeline.getBounds(layers);
+           
             Rectangle2D region = new Rectangle2D.Double(plot.getXAxisRange().getMinimum(),
-                plot.getYAxisRange().getMinimum(),
-                plot.getXAxisRange().getInterval(),
-                plot.getYAxisRange().getInterval());
+                    plot.getYAxisRange().getMinimum(),
+                    plot.getXAxisRange().getInterval(),
+                    plot.getYAxisRange().getInterval());
 
-            log.info("region  : " + region);
 
-            BufferedImage composite = ferry.getCompositeImage();
-            BufferedImage cropped = crop(bounds, region, composite );
-            ferry.setCroppedImage(cropped);
+            croppedImage = crop(bounds, region, compositeImage);
+
         }
-        
-        emit(ferry);
 
+        return croppedImage;
     }
 
     private BufferedImage crop(Rectangle2D bounds, Rectangle2D region, BufferedImage image) {

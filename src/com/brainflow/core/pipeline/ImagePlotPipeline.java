@@ -3,6 +3,7 @@ package com.brainflow.core.pipeline;
 import org.apache.commons.pipeline.Pipeline;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.IImagePlot;
+import com.brainflow.core.ImageLayer2D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.data.IImageData2D;
@@ -21,18 +22,11 @@ import java.util.List;
  */
 public class ImagePlotPipeline extends Pipeline {
 
-    public static final String MODEL_KEY = "model";
-
-    public static final String SLICE_KEY = "slice";
-
-    public static final String DISPLAY_ANATOMY_KEY = "displayAnatomy";
-
-    public static final String USE_SLICE_CACHE = "use_slice_cache";
-
+    public static final String IMAGE_LAYER_DATA_KEY = "IMAGE_LAYER_DATA";
+    
     private IImagePlot plot;
 
     private IImageDisplayModel model;
-
 
     private AnatomicalPoint1D slice;
 
@@ -41,6 +35,7 @@ public class ImagePlotPipeline extends Pipeline {
         super();
         model = _model;
         plot = _plot;
+        slice = plot.getImageProducer().getSlice();
     }
 
 
@@ -73,7 +68,7 @@ public class ImagePlotPipeline extends Pipeline {
     }
 
 
-    public static Rectangle2D getBounds(List<PipelineLayer> layers) {
+    public static Rectangle2D getBounds(List<ImageLayer2D> layers) {
         if (layers == null || layers.size() == 0) {
             return new Rectangle2D.Double(0, 0, 0, 0);
         }
@@ -83,9 +78,8 @@ public class ImagePlotPipeline extends Pipeline {
         double minY = Double.MAX_VALUE;
         double maxY = Double.MIN_VALUE;
 
-        for (PipelineLayer layer : layers) {
-            IImageData2D d2 = (IImageData2D) layer.getLayer().getImageData();
-            IImageSpace space = d2.getImageSpace();
+        for (ImageLayer2D layer : layers) {
+            IImageSpace space = layer.getImageData().getImageSpace();
             minX = Math.min(minX, space.getImageAxis(Axis.X_AXIS).getRange().getMinimum());
             minY = Math.min(minY, space.getImageAxis(Axis.Y_AXIS).getRange().getMinimum());
             maxX = Math.max(maxX, space.getImageAxis(Axis.X_AXIS).getRange().getMaximum());

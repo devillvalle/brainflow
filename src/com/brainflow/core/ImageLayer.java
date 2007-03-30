@@ -43,6 +43,10 @@ public class ImageLayer {
         return properties.getVisible().getProperty().isVisible();
     }
 
+     public double getOpacity() {
+        return properties.getOpacity().getProperty().getOpacity();
+    }
+
     public ThresholdRange getThreshold() {
         return properties.getThresholdRange().getProperty();
 

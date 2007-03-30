@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import com.brainflow.image.data.RGBAImage;
 import com.brainflow.image.rendering.RenderUtils;
 import com.brainflow.core.ImageLayer2D;
+import com.brainflow.core.ImageLayer;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,18 +23,31 @@ import com.brainflow.core.ImageLayer2D;
  */
 public class CreateBufferedImagesStage extends ImageProcessingStage {
 
+    private List<BufferedImage> images;
+
     private static Logger log = Logger.getLogger(CreateBufferedImagesStage.class.getName());
 
-    public void process(StageFerry ferry) throws StageException {
-        List<PipelineLayer> layers = ferry.getLayers();
-        for (int i = 0; i < layers.size(); i++) {
-            PipelineLayer layer = layers.get(i);
-            if (layer.isVisible() && layer.getRawImage() == null) {
-                layer.setRawImage(createBufferedImage(layer.getMaskedColoredImage()));
+
+
+
+    public Object filter(Object input) throws StageException {
+        List<RGBAImage> rgbaImages = (List<RGBAImage>)input;
+
+        if (images == null || images.size() != getModel().getNumLayers()) {
+            images = new ArrayList<BufferedImage>();
+            for (int i=0; i<getModel().getNumLayers(); i++) {
+                RGBAImage rgba = rgbaImages.get(i);
+                ImageLayer layer = getModel().getImageLayer(i);
+                if (layer.isVisible() && rgba != null) {
+                    images.add(createBufferedImage(rgba));
+                } else {
+                    images.add(null);
+                }
+
             }
         }
 
-        emit(ferry);
+        return images;
 
     }
 

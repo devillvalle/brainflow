@@ -150,7 +150,7 @@ public abstract class AbstractColorMap implements IColorMap {
 
         }
 
-        RGBAImage rgbaimage = new RGBAImage(
+        RGBAImage rgbaimage = new RGBAImage(data,
                 new UByteImageData2D((ImageSpace2D) data.getImageSpace(), rgba[0]),
                 new UByteImageData2D((ImageSpace2D) data.getImageSpace(), rgba[1]),
                 new UByteImageData2D((ImageSpace2D) data.getImageSpace(), rgba[2]),

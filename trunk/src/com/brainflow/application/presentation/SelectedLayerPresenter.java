@@ -1,8 +1,6 @@
 package com.brainflow.application.presentation;
 
-import com.brainflow.core.IImageDisplayModel;
-import com.brainflow.core.ImageLayer;
-import com.brainflow.core.ImageView;
+import com.brainflow.core.*;
 import com.brainflow.display.ImageLayerProperties;
 import com.brainflow.display.Property;
 import com.brainflow.display.Visibility;
@@ -11,10 +9,13 @@ import com.jgoodies.binding.adapter.SingleListSelectionAdapter;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.swing.CheckBoxList;
+import com.jidesoft.swing.CheckBoxListSelectionModel;
 
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -29,10 +30,12 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
 
     private FormLayout layout;
-    private JLabel label1;
+
+    private JLabel layerLabel;
 
     //private JComboBox layerSelector;
     private CheckBoxList layerSelector;
+
     private VisibilitySelection visibilitySelection;
 
     private JPanel form;
@@ -52,11 +55,28 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
         CellConstraints cc = new CellConstraints();
 
-        label1 = new JLabel("Selected Layer: ");
-        form.add(label1, cc.xy(2, 2));
+        layerLabel = new JLabel("Selected Layer: ");
+        form.add(layerLabel, cc.xy(2, 2));
 
         layerSelector = new CheckBoxList();
-        layerSelector.setBorder(BorderFactory.createEtchedBorder());
+
+        layerSelector.getCheckBoxListSelectionModel().addListSelectionListener(new ListSelectionListener() {
+
+
+            public void valueChanged(ListSelectionEvent e) {
+                int i = e.getFirstIndex();
+                CheckBoxListSelectionModel model = (CheckBoxListSelectionModel)e.getSource();
+                ImageView view = getSelectedView();
+                ImageLayer layer = view.getModel().getImageLayer(i);
+                Visibility vis = layer.getImageLayerParameters().getVisible().getProperty();
+                if (model.isSelectedIndex(i)) {
+                    vis.setVisible(true);
+                } else {
+                    vis.setVisible(false);
+                }
+
+            }
+        });
 
         if (getSelectedView() != null) {
             visibilitySelection = new VisibilitySelection(getSelectedView());
@@ -64,7 +84,6 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
 
         formPane = new JScrollPane(layerSelector);
-        //formPane.setPreferredSize(form.getPreferredSize());
 
         form.add(formPane, cc.xywh(2, 4, 2, 2));
 
@@ -79,6 +98,8 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
     }
 
+
+
     public void viewSelected(ImageView view) {
 
         if (visibilitySelection == null) {
@@ -91,16 +112,22 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
         //assert view.getModel().getSelectedIndex() >= 0;
         //layerSelector.clearSelection();
 
-        if (layerSelector.getModel() == view.getModel().getSelection()) {
-            //SingleListSelectionAdapter adapter = (SingleListSelectionAdapter)layerSelector.getSelectionModel();
-            //adapter.setSelectionInterval(view.getModel().getSelectedIndex(), view.getModel().getSelectedIndex());
-
-        } else {
+        if (layerSelector.getModel() != view.getModel().getSelection()) {
             layerSelector.setSelectionModel(new DefaultListSelectionModel());
             layerSelector.setModel(view.getModel().getSelection());
             layerSelector.setSelectionModel(
                     new SingleListSelectionAdapter(
                             view.getModel().getSelection().getSelectionIndexHolder()));
+
+            int n = view.getModel().getNumLayers();
+            for (int i =0; i<n; i++) {
+                ImageLayer layer = view.getModel().getImageLayer(i);
+                if (layer.isVisible()) {
+                    layerSelector.addCheckBoxListSelectedIndex(i);
+                } else {
+                    layerSelector.removeCheckBoxListSelectedIndex(i);
+                }
+            }
         }
 
 
@@ -117,90 +144,40 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
     }
 
 
-    class VisibilitySelection implements PropertyChangeListener {
+    class VisibilitySelection implements LayerChangeListener  {
 
         ImageView view;
 
         public VisibilitySelection(ImageView _view) {
-            view = _view;
-
-
-            IImageDisplayModel model = view.getModel();
-            model.addListDataListener(new ListDataListener() {
-
-                public void intervalAdded(ListDataEvent e) {
-                    unlisten();
-                    listen();
-
-                }
-
-                public void intervalRemoved(ListDataEvent e) {
-                    unlisten();
-                    listen();
-                }
-
-                public void contentsChanged(ListDataEvent e) {
-                    unlisten();
-                    listen();
-                }
-            });
-
-            listen();
-        }
-
-        public void setImageView(ImageView _view) {
-            unlisten();
-            view = _view;
-            listen();
-
-
-        }
-
-        public void propertyChange(PropertyChangeEvent evt) {
-
-            Visibility property = (Visibility) evt.getSource();
-            ImageLayerProperties params = property.getLayerParameters();
-            ImageLayer layer = getSelectedView().getModel().getLayer(params);
-            int i = getSelectedView().getModel().indexOf(layer);
-            if (property.isVisible()) {
-                layerSelector.getCheckBoxListSelectionModel().addSelectionInterval(i, i);
-            } else {
-                layerSelector.getCheckBoxListSelectionModel().removeSelectionInterval(i, i);
-            }
-
-
+            setImageView(_view);
         }
 
 
-        public void listen() {
-            for (int i = 0; i < view.getModel().getNumLayers(); i++) {
-                Property<Visibility> param = view.getModel().getImageLayer(i).getImageLayerParameters().getVisible();
-                param.addPropertyChangeListener(this);
-
-                Visibility property = param.getProperty();
-                if (property.isVisible()) {
+        public void layerChanged(LayerChangeEvent event) {
+            ImageLayer layer = event.getAffectedLayer();
+            if (layer != null) {
+                int i = getSelectedView().getModel().indexOf(layer);
+                boolean vis = layer.isVisible();
+                if (vis) {
                     layerSelector.getCheckBoxListSelectionModel().addSelectionInterval(i, i);
                 } else {
                     layerSelector.getCheckBoxListSelectionModel().removeSelectionInterval(i, i);
+
                 }
 
             }
         }
 
-        public void unlisten() {
-            for (int i = 0; i < view.getModel().getNumLayers(); i++) {
-                view.getModel().getImageLayer(i).getImageLayerParameters().getVisible().removePropertyChangeListener(this);
+        public void setImageView(ImageView _view) {
+            if (view != null)
+                view.getModel().removeLayerChangeListener(this);
+            view = _view;
+            view.getModel().addLayerChangeListener(this);
 
-            }
-
-        }
-
-        public boolean isSelectedIndex(int index) {
-            IImageDisplayModel model = view.getModel();
-            ImageLayer layer = model.getImageLayer(index);
-            return layer.getImageLayerParameters().getVisible().getProperty().isVisible();
 
         }
+
+      
 
 
     }

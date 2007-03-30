@@ -40,16 +40,36 @@ public class ThresholdRange extends Model implements MaskPredicate {
         firePropertyChange(ThresholdRange.INCLUSIVE_PROPERTY, old, isInclusive());
     }
 
-
     /*public boolean isSymmetrical() {
-        return symmetrical;
+       return symmetrical;
+   }
+
+   public void setSymmetrical(boolean symmetrical) {
+       boolean old = isSymmetrical();
+       this.symmetrical = symmetrical;
+       firePropertyChange(ThresholdRange.SYMMETRICAL_PROPERTY, old, isSymmetrical());
+   } */
+
+
+    protected double[] filterHighValue(double low, double high) {
+
+        if (high < low) {
+            low = high;
+        }
+
+        return new double[]{low, high};
+
+
     }
 
-    public void setSymmetrical(boolean symmetrical) {
-        boolean old = isSymmetrical();
-        this.symmetrical = symmetrical;
-        firePropertyChange(ThresholdRange.SYMMETRICAL_PROPERTY, old, isSymmetrical());
-    } */
+    protected double[] filterLowValue(double low, double high) {
+       
+        if (low > high) {
+            high = low;
+        }
+
+        return new double[]{low, high};
+    }
 
     public double getMin() {
         return min;
@@ -57,8 +77,19 @@ public class ThresholdRange extends Model implements MaskPredicate {
 
     public void setMin(double min) {
         double old = getMin();
-        this.min = min;
+
+        double[] range = filterLowValue(min, getMax());
+        this.min = range[0];
         firePropertyChange(ThresholdRange.MIN_PROPERTY, old, getMin());
+
+        if (range[1] != getMax()) {
+            double oldThresh = getMax();
+            this.max = range[1];
+            firePropertyChange(ThresholdRange.MAX_PROPERTY,
+                    oldThresh, getMax());
+        }
+
+
     }
 
     public double getMax() {
@@ -66,9 +97,22 @@ public class ThresholdRange extends Model implements MaskPredicate {
     }
 
     public void setMax(double max) {
+
         double old = getMax();
-        this.max = max;
+
+        double[] range = filterHighValue(getMin(), max);
+        this.max = range[1];
         firePropertyChange(ThresholdRange.MAX_PROPERTY, old, getMax());
+
+
+        if (range[0] != getMin()) {
+            double oldThresh = getMin();
+            this.min = range[0];
+            firePropertyChange(ThresholdRange.MIN_PROPERTY,
+                    oldThresh, getMin());
+        }
+
+
     }
 
 
@@ -79,6 +123,6 @@ public class ThresholdRange extends Model implements MaskPredicate {
 
 
     public String toString() {
-        return "threshold(" + min + ", " + max +")";
+        return "threshold(" + min + ", " + max + ")";
     }
 }

@@ -34,10 +34,7 @@ public class ResizeImageStage extends ImageProcessingStage {
 
             //BufferedImage scaledImage = scale(cropped, (float)area.getMinX(), (float)area.getMinY(),
                     //(float)sx, (float)sy);
-           
-            log.info("sx : " + sx);
-            log.info("sy : " + sy);
-
+       
             BufferedImage scaledImage = scale(cropped, 0, 0,
                     (float)sx, (float)sy);
             

@@ -3,9 +3,17 @@ package com.brainflow.core.pipeline;
 import org.apache.commons.pipeline.StageException;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import com.brainflow.display.ThresholdRange;
+import com.brainflow.image.data.RGBAImage;
+import com.brainflow.image.data.UByteImageData2D;
+import com.brainflow.image.data.MaskedImageData2D;
+import com.brainflow.image.data.MaskPredicate;
+import com.brainflow.image.iterators.ImageIterator;
+import com.brainflow.core.ImageLayer2D;
+import com.brainflow.core.ImageLayer;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,27 +22,63 @@ import com.brainflow.display.ThresholdRange;
  * Time: 10:19:10 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ThresholdImagesStage extends ImageProcessingStage  {
+public class ThresholdImagesStage extends ImageProcessingStage {
+
+    private List<RGBAImage> images;
 
     private static final Logger log = Logger.getLogger(ThresholdImagesStage.class.getName());
 
 
+    public Object filter(Object input) throws StageException {
+        List<RGBAImage> rgbaImages = (List<RGBAImage>) input;
 
-    public void process(StageFerry ferry) throws StageException {
-        List<PipelineLayer> layers = ferry.getLayers();
-
-        for (int i = 0; i < layers.size(); i++) {
-            PipelineLayer layer = layers.get(i);
-            ThresholdRange range = layer.getLayer().getImageLayerProperties().getThresholdRange().getProperty();
-            if (layer.isVisible() && layer.getMaskedColoredImage() == null) {
-                log.info("thresh : " + range);
-                layer.setMaskedColoredImage(layer.getColoredImage());
-            } else {
-                log.info("resample stage : passing through layer " + i);
+        if (images == null || images.size() != getModel().getNumLayers()) {
+            images = new ArrayList<RGBAImage>();
+            for (int i = 0; i < getModel().getNumLayers(); i++) {
+                RGBAImage rgba = rgbaImages.get(i);
+                ImageLayer layer = getModel().getImageLayer(i);
+                if (rgba != null && layer.isVisible()) {
+                    images.add(threshold(layer, rgba));
+                } else {
+                    images.add(null);
+                }
             }
         }
 
-        emit(ferry);
+        return images;
+
+
+    }
+
+    private RGBAImage threshold(ImageLayer layer, RGBAImage rgba) {
+        ThresholdRange trange = layer.getImageLayerParameters().getThresholdRange().getProperty();
+
+
+        if (Double.compare(trange.getMin(), trange.getMax()) != 0) {
+            UByteImageData2D alpha = rgba.getAlpha();
+            UByteImageData2D out = new UByteImageData2D(alpha.getImageSpace());
+            MaskedImageData2D mask = new MaskedImageData2D(rgba.getSource(), (MaskPredicate) trange);
+
+            ImageIterator sourceIter = alpha.iterator();
+            ImageIterator maskIter = mask.iterator();
+
+            while (sourceIter.hasNext()) {
+                int index = sourceIter.index();
+                double a = sourceIter.next();
+                double b = maskIter.next();
+
+                byte val = (byte) (a * b);
+
+                out.set(index, val);
+            }
+
+            RGBAImage ret = new RGBAImage(rgba.getSource(), rgba.getRed(), rgba.getGreen(), rgba.getBlue(), out);
+            return ret;
+
+        } else {
+            return rgba;
+        }
+
 
     }
 }

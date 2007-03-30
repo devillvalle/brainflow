@@ -12,6 +12,7 @@ import java.awt.geom.AffineTransform;
 import com.brainflow.image.space.ImageSpace2D;
 import com.brainflow.image.space.Axis;
 import com.brainflow.core.ImageLayer2D;
+import com.brainflow.core.ImageLayer;
 import com.brainflow.display.ImageLayerProperties;
 import com.brainflow.display.InterpolationMethod;
 import com.brainflow.display.InterpolationHint;
@@ -28,6 +29,7 @@ public class ResampleImagesStage extends ImageProcessingStage {
 
     private static final Logger log = Logger.getLogger(ResampleImagesStage.class.getName());
 
+    private List<BufferedImage> images;
 
     public void process(StageFerry ferry) throws StageException {
         List<PipelineLayer> layers = ferry.getLayers();
@@ -36,12 +38,32 @@ public class ResampleImagesStage extends ImageProcessingStage {
             PipelineLayer layer = layers.get(i);
             if (layer.isVisible() && layer.getResampledImage() == null) {
                 layer.setResampledImage(resample(layer.getLayer(), layer.getRawImage()));
-            } else {
-                log.info("resamppe stage : passing through layer " + i);
-            }
+            } 
         }
 
         emit(ferry);
+
+    }
+
+
+    public Object filter(Object input) throws StageException {
+        List<BufferedImage> resImages = (List<BufferedImage>)input;
+        if (images == null || images.size() != getModel().getNumLayers()) {
+            images = new ArrayList<BufferedImage>();
+            List<ImageLayer2D> layers = (List<ImageLayer2D>)getPipeline().getEnv(ImagePlotPipeline.IMAGE_LAYER_DATA_KEY);
+             for (int i=0; i<getModel().getNumLayers(); i++) {
+                ImageLayer2D layer = layers.get(i);
+                 BufferedImage bimg = resImages.get(i);
+                if (layer.isVisible() && bimg != null) {
+                    images.add(resample(layer, bimg));
+                } else {
+                    images.add(null);
+                }
+
+             }
+        }
+
+        return images;
 
     }
 
@@ -53,9 +75,6 @@ public class ResampleImagesStage extends ImageProcessingStage {
 
         double sx = ispace.getImageAxis(Axis.X_AXIS).getRange().getInterval() / ispace.getDimension(Axis.X_AXIS);
         double sy = ispace.getImageAxis(Axis.Y_AXIS).getRange().getInterval() / ispace.getDimension(Axis.Y_AXIS);
-
-        double ox = ispace.getImageAxis(Axis.X_AXIS).getRange().getMinimum();
-        double oy = ispace.getImageAxis(Axis.Y_AXIS).getRange().getMinimum();
 
         //AffineTransform at = AffineTransform.getTranslateInstance(ox,oy);
         AffineTransform at = AffineTransform.getTranslateInstance(0, 0);

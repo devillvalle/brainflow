@@ -9,6 +9,7 @@ import com.brainflow.image.data.IImageData;
 import com.brainflow.core.ImageLayer2D;
 import com.brainflow.core.DisplayChangeType;
 import com.brainflow.core.ImageLayer;
+import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.utils.MultiKey;
 
 import org.apache.commons.pipeline.stage.BaseStage;
@@ -28,74 +29,46 @@ import java.util.logging.Logger;
 public class FetchSlicesStage extends ImageProcessingStage {
 
 
-    private static final int MAX_ENTRIES = 50;
+    private List<ImageLayer2D> layers = null;
 
     private static Logger log = Logger.getLogger(FetchSlicesStage.class.getName());
 
 
     public FetchSlicesStage() {
-
-
     }
 
+    public Object filter(Object o) throws StageException {
+        IImageDisplayModel model = (IImageDisplayModel)o;
+        if (layers == null || layers.size() != model.getNumLayers()) {
+            layers = doTheWork(model);
+        }
 
+        getPipeline().setEnv(ImagePlotPipeline.IMAGE_LAYER_DATA_KEY, layers);
+
+        return layers;
+
+    }
   
-    public void process(StageFerry ferry) throws StageException {
 
-        List<PipelineLayer> stack = ferry.getLayers();
-
-        if (stack == null || (stack.size() != ferry.getModel().getNumLayers()) ) {
-            log.info("fetching slices");
-            doTheWork(ferry);
-        } else {
-            log.info("fetch slices : passing through");
-        }
-
-        emit(ferry);
-    }
-
-    private void doTheWork(StageFerry ferry) {
-        List<ImageLayer2D> stack = fetchSlices(ferry);
-        List<PipelineLayer> layers = ferry.getLayers();
-
-        if (layers == null) {
-            layers = new ArrayList<PipelineLayer>();
-            ferry.setLayers(layers);
-         
-        }
-
-        for (int i = 0; i < stack.size(); i++) {
-            layers.add(new PipelineLayer(stack.get(i)));
-        }
-
+    private List<ImageLayer2D> doTheWork(IImageDisplayModel model) {
+        List<ImageLayer2D> stack = fetchSlices(model);
+        return stack;
     }
 
 
-    private List<ImageLayer2D> fetchSlices(StageFerry ferry) {
+    private List<ImageLayer2D> fetchSlices(IImageDisplayModel model) {
 
         List<ImageLayer2D> list = new ArrayList<ImageLayer2D>();
-        AnatomicalPoint1D slice = ferry.getSlice();
+        AnatomicalPoint1D slice = getSlice();
 
 
-        for (int i = 0; i < ferry.getModel().getNumLayers(); i++) {
+        for (int i = 0; i < model.getNumLayers(); i++) {
 
-            ImageLayer layer = ferry.getModel().getImageLayer(i);
+            ImageLayer layer = model.getImageLayer(i);
             IImageData data = layer.getImageData();
-            IImageData2D data2d = null;
 
-            /*if (useCache) {
-                MultiKey key = new MultiKey(data, slice);
-                data2d = cache.get(key);
-            }*/
-
-            if (data2d == null) {
-                ImageSlicer slicer = new ImageSlicer((IImageData3D) data);
-                data2d = slicer.getSlice(ferry.getDisplayAnatomy(), slice);
-
-                //if (useCache) {
-                //    cache.put(new MultiKey(data, slice), data2d);
-                //}
-            }
+            ImageSlicer slicer = new ImageSlicer((IImageData3D) data);
+            IImageData2D  data2d = slicer.getSlice(getDisplayAnatomy(), slice);
 
             ImageLayer2D layer2d = new ImageLayer2D(data2d, layer.getImageLayerParameters());
             list.add(layer2d);
@@ -105,4 +78,9 @@ public class FetchSlicesStage extends ImageProcessingStage {
 
         return list;
     }
+
+
+    
+
+
 }

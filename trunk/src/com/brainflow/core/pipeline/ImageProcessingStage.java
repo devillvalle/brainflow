@@ -3,6 +3,9 @@ package com.brainflow.core.pipeline;
 import org.apache.commons.pipeline.stage.BaseStage;
 import org.apache.commons.pipeline.StageException;
 import org.apache.commons.pipeline.StageContext;
+import com.brainflow.core.IImageDisplayModel;
+import com.brainflow.image.anatomy.AnatomicalPoint1D;
+import com.brainflow.image.anatomy.AnatomicalVolume;
 
 /**
  * Created by IntelliJ IDEA.
@@ -11,7 +14,7 @@ import org.apache.commons.pipeline.StageContext;
  * Time: 5:53:56 PM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class ImageProcessingStage extends BaseStage {
+public abstract class ImageProcessingStage<INPUT,OUTPUT> extends BaseStage {
 
     private ImagePlotPipeline pipeline;
 
@@ -21,14 +24,27 @@ public abstract class ImageProcessingStage extends BaseStage {
         pipeline = (ImagePlotPipeline)context;
     }
 
+    public IImageDisplayModel getModel() {
+        return pipeline.getModel();
+    }
+
+    public AnatomicalPoint1D getSlice() {
+        return pipeline.getSlice();
+    }
+
+    public AnatomicalVolume getDisplayAnatomy() {
+        return pipeline.getDisplayAnatomy();
+    }
+
     protected ImagePlotPipeline getPipeline() {
         return pipeline;
     }
 
     public void process(Object obj) throws StageException {
-        process((StageFerry)obj);
+        Object out = filter(obj);
+        emit(out);
     }
 
-    public abstract void process(StageFerry ferry) throws StageException;
+    public abstract Object filter(Object input) throws StageException;
 
 }

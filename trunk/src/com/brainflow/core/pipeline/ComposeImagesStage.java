@@ -27,39 +27,34 @@ import com.brainflow.image.rendering.RenderUtils;
 
 public class ComposeImagesStage extends ImageProcessingStage {
 
+    private BufferedImage composite = null;
+
     private static Logger log = Logger.getLogger(ComposeImagesStage.class.getName());
 
 
-    public void process(StageFerry ferry) throws StageException {
-        List<PipelineLayer> layers = ferry.getLayers();
-
-        BufferedImage composite = ferry.getCompositeImage();
-
+    public Object filter(Object input) throws StageException {
+        List<BufferedImage> resImages = (List<BufferedImage>) input;
+        List<ImageLayer2D> layers = (List<ImageLayer2D>) getPipeline().getEnv(ImagePlotPipeline.IMAGE_LAYER_DATA_KEY);
         if (composite == null) {
-            if (layers.size() == 0) {
-                ferry.setCompositeImage(null);
-            }
-            else if (layers.size() == 1) {
-                if (layers.get(0).isVisible() && layers.get(0).getOpacity() >= 1) {
-                    ferry.setCompositeImage(layers.get(0).getResampledImage());
-                } else if (layers.get(0).isVisible() && layers.get(0).getOpacity() < 1) {
-                    ferry.setCompositeImage(compose(layers));                   
-                } else {
-                    ferry.setCompositeImage(null);
-
+            if (resImages.size() == 0) {
+                composite = null;
+            } else if (resImages.size() == 1) {
+                if (getModel().getImageLayer(0).isVisible() && getModel().getImageLayer(0).getOpacity() >= 1) {
+                    composite = resImages.get(0);
+                } else if (getModel().getImageLayer(0).isVisible() && getModel().getImageLayer(0).getOpacity() < 1) {
+                    composite = compose(layers, resImages);
                 }
             } else {
-                ferry.setCompositeImage(compose(layers));
+                composite = compose(layers, resImages);
             }
-
         }
 
-        emit(ferry);
+        return composite;
     }
 
-    private BufferedImage compose(List<PipelineLayer> layers) {
+    private BufferedImage compose(List<ImageLayer2D> layers, List<BufferedImage> resImages) {
 
-        Rectangle2D frameBounds = getBounds(layers);
+        Rectangle2D frameBounds = ImagePlotPipeline.getBounds(layers);
 
         BufferedImage sourceImage = RenderUtils.createCompatibleImage((int) frameBounds.getWidth(),
                 (int) frameBounds.getHeight());
@@ -67,10 +62,10 @@ public class ComposeImagesStage extends ImageProcessingStage {
         Graphics2D g2 = sourceImage.createGraphics();
 
         for (int i = 0; i < layers.size(); i++) {
-            ImageLayer2D layer2d = layers.get(i).getLayer();
+            ImageLayer2D layer2d = layers.get(i);
 
             if (layer2d.isVisible()) {
-                RenderedImage rim = layers.get(i).getResampledImage();
+                RenderedImage rim = resImages.get(i);
                 IImageSpace space = layer2d.getImageData().getImageSpace();
                 double minx = space.getImageAxis(Axis.X_AXIS).getRange().getMinimum();
                 double miny = space.getImageAxis(Axis.Y_AXIS).getRange().getMinimum();
@@ -78,7 +73,7 @@ public class ComposeImagesStage extends ImageProcessingStage {
                 double transx = (minx - frameBounds.getMinX()); //+ (-frameBounds.getMinX());
                 double transy = (miny - frameBounds.getMinY()); //+ (-frameBounds.getMinY());
                 log.info("opacity : " + layer2d.getOpacity());
-                AlphaComposite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float)layer2d.getOpacity());
+                AlphaComposite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) layer2d.getOpacity());
                 g2.setComposite(composite);
                 g2.drawRenderedImage(rim, AffineTransform.getTranslateInstance(transx, transy));
 
@@ -91,28 +86,5 @@ public class ComposeImagesStage extends ImageProcessingStage {
         return sourceImage;
     }
 
-    private Rectangle2D getBounds(List<PipelineLayer> layers) {
-        if (layers == null || layers.size() == 0) {
-            return new Rectangle2D.Double(0, 0, 0, 0);
-        }
-
-        double minX = Double.MAX_VALUE;
-        double maxX = Double.MIN_VALUE;
-        double minY = Double.MAX_VALUE;
-        double maxY = Double.MIN_VALUE;
-
-        for (PipelineLayer layer : layers) {
-            IImageData2D d2 = (IImageData2D) layer.getLayer().getImageData();
-            IImageSpace space = d2.getImageSpace();
-            minX = Math.min(minX, space.getImageAxis(Axis.X_AXIS).getRange().getMinimum());
-            minY = Math.min(minY, space.getImageAxis(Axis.Y_AXIS).getRange().getMinimum());
-            maxX = Math.max(maxX, space.getImageAxis(Axis.X_AXIS).getRange().getMaximum());
-            maxY = Math.max(maxY, space.getImageAxis(Axis.Y_AXIS).getRange().getMaximum());
-        }
-
-        Rectangle2D imageBounds = new Rectangle2D.Double(minX, minY, maxX - minX, maxY - minY);
-        return imageBounds;
-    }
-
-
+   
 }

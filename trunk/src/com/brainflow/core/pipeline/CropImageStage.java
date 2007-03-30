@@ -2,6 +2,7 @@ package com.brainflow.core.pipeline;
 
 import org.apache.commons.pipeline.StageException;
 import com.brainflow.core.IImagePlot;
+import com.brainflow.core.ImageLayer2D;
 import com.brainflow.image.data.IImageData2D;
 
 import java.awt.image.BufferedImage;
@@ -28,10 +29,10 @@ public class CropImageStage extends ImageProcessingStage {
     public Object filter(Object input) throws StageException {
         BufferedImage compositeImage = (BufferedImage) input;
 
-        if (croppedImage == null) {
+        if (croppedImage == null && compositeImage != null) {
             ImagePlotPipeline pipe = getPipeline();
             IImagePlot plot = pipe.getPlot();
-            List<IImageData2D> layers = (List<IImageData2D>) getPipeline().getEnv(ImagePlotPipeline.IMAGE_LAYER_DATA_KEY);
+            List<ImageLayer2D> layers = (List<ImageLayer2D>) getPipeline().getEnv(ImagePlotPipeline.IMAGE_LAYER_DATA_KEY);
             Rectangle2D bounds = ImagePlotPipeline.getBounds(layers);
            
             Rectangle2D region = new Rectangle2D.Double(plot.getXAxisRange().getMinimum(),

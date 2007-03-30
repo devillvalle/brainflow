@@ -71,7 +71,7 @@ public class CompositeImageProducer extends AbstractImageProducer {
             pipeline.addStage(new ResizeImageStage(), new SynchronousStageDriverFactory());
             ferry = new StageFerry(getModel(), getSlice(), getDisplayAnatomy(), DisplayChangeType.RESET_CHANGE);
 
-            pipeline.getSourceFeeder().feed(ferry);
+            pipeline.getSourceFeeder().feed(getModel());
         }
         catch (ValidationException e) {
             // can't really handle this exception, so throw uncheckedexception

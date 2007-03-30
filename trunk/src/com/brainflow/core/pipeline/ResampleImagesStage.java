@@ -31,20 +31,7 @@ public class ResampleImagesStage extends ImageProcessingStage {
 
     private List<BufferedImage> images;
 
-    public void process(StageFerry ferry) throws StageException {
-        List<PipelineLayer> layers = ferry.getLayers();
-
-        for (int i = 0; i < layers.size(); i++) {
-            PipelineLayer layer = layers.get(i);
-            if (layer.isVisible() && layer.getResampledImage() == null) {
-                layer.setResampledImage(resample(layer.getLayer(), layer.getRawImage()));
-            } 
-        }
-
-        emit(ferry);
-
-    }
-
+   
 
     public Object filter(Object input) throws StageException {
         List<BufferedImage> resImages = (List<BufferedImage>)input;

@@ -9,6 +9,8 @@ import java.awt.geom.AffineTransform;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
+import com.brainflow.core.IImagePlot;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Brad Buchsbaum
@@ -19,6 +21,25 @@ import java.util.logging.Level;
 public class ResizeImageStage extends ImageProcessingStage {
 
     private static Logger log = Logger.getLogger(ResizeImageStage.class.getName());
+
+    private BufferedImage resized = null;
+
+    public Object filter(Object input) throws StageException {
+        BufferedImage cropped = (BufferedImage)input;
+        if (cropped != null && resized == null) {
+            IImagePlot plot = getPipeline().getPlot();
+            Rectangle area = plot.getPlotArea();
+            double sx = area.getWidth() / cropped.getWidth();
+            double sy = area.getHeight() / cropped.getHeight();
+
+            resized = scale(cropped, 0, 0,
+                    (float)sx, (float)sy);
+
+        }
+
+        return resized;
+
+    }
 
     public void process(StageFerry ferry) throws StageException {
         if (ferry.getCroppedImage() != null && ferry.getResizedImage() == null) {

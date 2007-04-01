@@ -9,12 +9,10 @@ import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.ImageDisplayModel;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageLayer3D;
-import com.brainflow.display.ImageLayerParameters;
+import com.brainflow.display.ImageLayerProperties;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -62,8 +60,8 @@ public class ProjectManager implements EventSubscriber, BrainflowProjectListener
         activeProject.addModel(displayModel);
 
 
-        ImageLayerParameters params = new ImageLayerParameters();
-        params.setColorMap(new LinearColorMap(limg.getData().getMinValue(), limg.getData().getMaxValue(),
+        ImageLayerProperties params = new ImageLayerProperties();
+        params.getColorMap().setProperty(new LinearColorMap(limg.getData().getMinValue(), limg.getData().getMaxValue(),
                 ResourceManager.getInstance().getDefaultColorMap()));
 
         ImageLayer layer = new ImageLayer3D(limg, params);

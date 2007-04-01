@@ -4,12 +4,11 @@ import com.brainflow.application.*;
 import com.brainflow.application.actions.*;
 import com.brainflow.application.presentation.*;
 import com.brainflow.application.services.ImageViewCursorEvent;
-import com.brainflow.application.services.LoadableImageProgressEvent;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.core.*;
-import com.brainflow.display.ImageLayerParameters;
+import com.brainflow.display.ImageLayerProperties;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.data.IImageData3D;
@@ -27,6 +26,7 @@ import com.jidesoft.plaf.LookAndFeelFactory;
 import com.jidesoft.status.LabelStatusBarItem;
 import com.jidesoft.status.StatusBar;
 import com.jidesoft.swing.*;
+import com.jgoodies.binding.beans.PropertyAdapter;
 import de.javasoft.plaf.synthetica.SyntheticaLookAndFeel;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
@@ -37,7 +37,6 @@ import org.bushe.swing.event.EventSubscriber;
 import org.xml.sax.SAXException;
 
 import javax.swing.*;
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -106,7 +105,7 @@ public class Brainflow {
             //SubstanceLookAndFeel.setSkin(new BusinessBlueSteelSkin());
 
             //SyntheticaLookAndFeel lf = new SyntheticaStandardLookAndFeel();
-            SyntheticaLookAndFeel lf = new de.javasoft.plaf.synthetica.SyntheticaBlueIceLookAndFeel();
+            SyntheticaLookAndFeel lf = new de.javasoft.plaf.synthetica.SyntheticaMauveMetallicLookAndFeel();
             //A03LookAndFeel lf = new apprising.api.swing.plaf.a03.A03LookAndFeel();
             UIManager.setLookAndFeel(lf);
             //LookAndFeelFactory.installDefaultLookAndFeelAndExtension();
@@ -131,6 +130,7 @@ public class Brainflow {
 
     public void launch() throws Exception {
         brainFrame = new BrainFrame();
+        
         ImageCanvasManager.getInstance().createCanvas();
 
 
@@ -145,7 +145,6 @@ public class Brainflow {
         initializeToolBar();
         initializeWorkspace();
         initializeResources();
-
 
 
     }
@@ -187,7 +186,11 @@ public class Brainflow {
         //
         menuBar.setOpaque(false);
         menuBar.setPaintBackground(false);
+
+
         //
+
+
 
         JideMenu fileMenu = new JideMenu("File");
 
@@ -285,11 +288,13 @@ public class Brainflow {
         //sliderDirection.add(new JRadioButtonMenuItem("X Axis"));
         //sliderDirection.add(new JRadioButtonMenuItem("Y Axis"));
 
+        JLabel sliceLabel = new JLabel("0 ");
+
         mainToolbar.addSeparator();
 
         ImageViewSliderPresenter sliderPresenter = new ImageViewSliderPresenter();
-        //PropertyAdapter adapter = new PropertyAdapter(sliderDirection, "text");
-        //sliderPresenter.setValueLabel(adapter);
+        PropertyAdapter adapter = new PropertyAdapter(sliceLabel, "text");
+        sliderPresenter.setValueLabel(adapter);
         mainToolbar.add(sliderPresenter.getComponent());
         //mainToolbar.add(sliderDirection);
 
@@ -398,7 +403,7 @@ public class Brainflow {
             DockableFrame dframe = DockWindowManager.getInstance().createDockableFrame("File Manager",
                     "resources/icons/fldr_obj.gif",
                     DockContext.STATE_FRAMEDOCKED,
-                    DockContext.DOCK_SIDE_WEST); 
+                    DockContext.DOCK_SIDE_WEST);
 
 
             dframe.setPreferredSize(new Dimension(275, 200));
@@ -422,7 +427,7 @@ public class Brainflow {
                 "resources/icons/folder_page.png",
                 DockContext.STATE_FRAMEDOCKED,
                 DockContext.DOCK_SIDE_WEST, 1);
-                    
+
         dframe.getContentPane().add(new JScrollPane(projectView.getComponent()));
         dframe.setPreferredSize(new Dimension(275, 200));
 
@@ -453,7 +458,7 @@ public class Brainflow {
 
 
         dframe.getContentPane().add(new JScrollPane(new EventBusMonitor().getComponent()));
-        
+
         dframe.setPreferredSize(new Dimension(800, 200));
         brainFrame.getDockingManager().addFrame(dframe);
 
@@ -468,7 +473,6 @@ public class Brainflow {
 
 
         ColorAdjustmentControl colorAdjustmentControl = new ColorAdjustmentControl();
-        MaskControl maskControl = new MaskControl();
         //colorAdjustmentControl.getComponent().setPreferredSize(new Dimension(250,500));
         CoordinateControls coordinateControls = new CoordinateControls();
         //coordinateControls.getComponent().setPreferredSize(new Dimension(250,500));
@@ -528,41 +532,40 @@ public class Brainflow {
 
             if (ret == JOptionPane.YES_OPTION) {
                 limg.releaseData();
-                loadAndDisplay(limg);
-
-
             }
 
 
-        } else {
-            //loadAndDisplay(limg);
-            //manager.registerLoadableImage(limg);
         }
-
-        return;
-
-
+       
     }
 
-     public void loadAndDisplay(ILoadableImage limg) {
+    public void loadAndDisplay(final ILoadableImage limg) {
 
         if (limg != null) {
-            //register(limg);
+            register(limg);
 
-            ImageProgressDialog id = new ImageProgressDialog(limg);
+
+            ImageProgressDialog id = new ImageProgressDialog(limg, ImageCanvasManager.getInstance().getSelectedCanvas()) {
+
+                protected void done() {
+                    IImageDisplayModel displayModel = ProjectManager.getInstance().addToActiveProject(limg);
+
+                    ImageView iview = ImageViewFactory.createAxialView(displayModel);
+                    iview.setTransferHandler(new ImageViewTransferHandler());
+                    ImageCanvasManager.getInstance().getSelectedCanvas().addImageView(iview);
+                    getDialog().setVisible(false);
+
+
+                }
+            };
+
+
             JDialog dialog = id.getDialog();
             dialog.setVisible(true);
 
             id.execute();
 
 
-
-            IImageDisplayModel displayModel = ProjectManager.getInstance().addToActiveProject(limg);
-
-
-            ImageView iview = ImageViewFactory.createAxialView(displayModel);
-            iview.setTransferHandler(new ImageViewTransferHandler());
-            ImageCanvasManager.getInstance().getSelectedCanvas().addImageView(iview);
         }
 
     }
@@ -577,8 +580,8 @@ public class Brainflow {
                     addLayerWithFadeIn(limg, view);
                 } else {
                     IImageDisplayModel dset = view.getModel();
-                    ImageLayerParameters params = new ImageLayerParameters();
-                    params.setColorMap(new LinearColorMap(data.getMinValue(), data.getMaxValue(), ResourceManager.getInstance().getDefaultColorMap()));
+                    ImageLayerProperties params = new ImageLayerProperties();
+                    params.getColorMap().setProperty(new LinearColorMap(data.getMinValue(), data.getMaxValue(), ResourceManager.getInstance().getDefaultColorMap()));
 
                     ImageLayer layer = new ImageLayer3D(limg, params);
 
@@ -600,7 +603,7 @@ public class Brainflow {
         //final Timer timer = new javax.swing.Timer(25, fade);
         //timer.setCoalesce(true);
         //fade.setTimer(timer);
-        ImageLayerParameters parms = new ImageLayerParameters(new LinearColorMap(limg.getData().getMinValue(), limg.getData().getMaxValue(),
+        ImageLayerProperties parms = new ImageLayerProperties(new LinearColorMap(limg.getData().getMinValue(), limg.getData().getMaxValue(),
                 ResourceManager.getInstance().getDefaultColorMap()));
         ImageLayer3D layer = new ImageLayer3D(limg, parms);
 
@@ -610,32 +613,7 @@ public class Brainflow {
 
     }
 
-    class FadeAction implements ActionListener {
-
-        private Timer timer;
-        private LinearColorMap cmap;
-
-        public FadeAction(LinearColorMap _cmap) {
-            cmap = _cmap;
-        }
-
-        private void setTimer(Timer _timer) {
-            timer = _timer;
-
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            double alpha = cmap.getAlphaMultiplier();
-            if ((alpha >= 1) && (timer != null)) {
-                timer.stop();
-            } else {
-                cmap.setAlphaMultiplier(Math.min(1, alpha + .08));
-            }
-        }
-    }
-
-
-
+    
 
     public SoftLoadableImage[] getSelectedLoadableImages() {
         SoftLoadableImage[] limg = loadingDock.requestLoadableImages();

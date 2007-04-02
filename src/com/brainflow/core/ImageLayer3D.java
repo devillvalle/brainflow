@@ -45,7 +45,7 @@ public class ImageLayer3D extends ImageLayer {
 
         //if (layer == null) {
         IImageData2D data2d = slicer.getSlice(displayAnatomy, _displaySlice);
-        ImageLayer2D layer = new ImageLayer2D(data2d, getImageLayerParameters());
+        ImageLayer2D layer = new ImageLayer2D(data2d, getImageLayerProperties());
         cache.put(_displaySlice.getAnatomy().toString() + _displaySlice.getX(), layer);
 
         //} else {

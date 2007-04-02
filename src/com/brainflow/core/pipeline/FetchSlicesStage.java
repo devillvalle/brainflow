@@ -1,19 +1,14 @@
 package com.brainflow.core.pipeline;
 
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.image.operations.ImageSlicer;
 import com.brainflow.image.data.IImageData2D;
 import com.brainflow.image.data.IImageData3D;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.core.ImageLayer2D;
-import com.brainflow.core.DisplayChangeType;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.IImageDisplayModel;
-import com.brainflow.utils.MultiKey;
 
-import org.apache.commons.pipeline.stage.BaseStage;
-import org.apache.commons.pipeline.StageContext;
 import org.apache.commons.pipeline.StageException;
 
 import java.util.*;
@@ -75,7 +70,7 @@ public class FetchSlicesStage extends ImageProcessingStage {
             ImageSlicer slicer = new ImageSlicer((IImageData3D) data);
             IImageData2D  data2d = slicer.getSlice(getDisplayAnatomy(), slice);
 
-            ImageLayer2D layer2d = new ImageLayer2D(data2d, layer.getImageLayerParameters());
+            ImageLayer2D layer2d = new ImageLayer2D(data2d, layer.getImageLayerProperties());
             list.add(layer2d);
 
 

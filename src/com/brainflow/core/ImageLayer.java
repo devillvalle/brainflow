@@ -132,7 +132,7 @@ public class ImageLayer {
         return limg;
     }
 
-    public ImageLayerProperties getImageLayerParameters() {
+    public ImageLayerProperties getImageLayerProperties() {
         return properties;
     }
 

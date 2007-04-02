@@ -2,6 +2,9 @@ package com.brainflow.core;
 
 import com.brainflow.image.anatomy.AnatomicalVolume;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
+import com.brainflow.image.axis.AxisRange;
+
+import java.awt.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,13 +15,19 @@ import com.brainflow.image.anatomy.AnatomicalPoint1D;
  */
 public abstract class AbstractImageProducer implements IImageProducer {
 
-    private IImagePlot plot;
     
     private IImageDisplayModel model;
 
     private AnatomicalVolume displayAnatomy;
 
     private AnatomicalPoint1D slice;
+
+    private Rectangle screenSize;
+
+    private AxisRange xaxis;
+
+    private AxisRange yaxis;
+
 
     public void setModel(IImageDisplayModel model) {
         this.model = model;
@@ -41,7 +50,33 @@ public abstract class AbstractImageProducer implements IImageProducer {
 
     }
 
+
+    public AxisRange getXAxis() {
+        return xaxis;
+    }
+
+    public void setXAxis(AxisRange xaxis) {
+        this.xaxis = xaxis;
+    }
+
+    public AxisRange getYAxis() {
+        return yaxis;
+    }
+
+    public void setYAxis(AxisRange yaxis) {
+        this.yaxis = yaxis;
+    }
+
     public AnatomicalPoint1D getSlice() {
         return slice;
+    }
+
+
+    public Rectangle getScreenSize() {
+        return screenSize;
+    }
+
+    public void setScreenSize(Rectangle screenSize) {
+        this.screenSize = screenSize;
     }
 }

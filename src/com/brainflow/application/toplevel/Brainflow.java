@@ -38,8 +38,6 @@ import org.xml.sax.SAXException;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.IndexColorModel;
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -694,7 +692,7 @@ public class Brainflow {
 
             double value = idata.getRealValue(x, y, z, new NearestNeighborInterpolator());
 
-            IColorMap cmap = layer.getImageLayerParameters().getColorMap().getProperty();
+            IColorMap cmap = layer.getImageLayerProperties().getColorMap().getProperty();
 
             Color c = null;
             try {

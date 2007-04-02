@@ -112,6 +112,21 @@ public class ImageViewFactory {
         return view;
     }
 
+    public static ImageView createMontageView(IImageDisplayModel displayModel) {
+        MontageImageView view = new MontageImageView(displayModel, AnatomicalVolume.getCanonicalAxial());
+        String id = ImageCanvasManager.getInstance().register(view);
+        view.setId(id);
+        FilledSelectableBorder border = new FilledSelectableBorder(view);
+        view.setBorder(border);
+        view.setName("[" + view.getId() + "] " + view.getModel().getName());
+
+        ITitledBorder tborder = border;
+        tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
+
+
+        return view;
+    }
+
     public static ImageView createOrthogonalView(IImageDisplayModel displayModel) {
         SimpleOrthogonalImageView view = new SimpleOrthogonalImageView(displayModel);
         String id = ImageCanvasManager.getInstance().register(view);

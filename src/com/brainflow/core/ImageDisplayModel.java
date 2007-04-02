@@ -37,7 +37,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     private SelectionInList layerSelection = new SelectionInList((ListModel) imageListModel);
 
-    private List<LayerChangeListener> layerListeners = new ArrayList<LayerChangeListener>();
+    private List<ImageLayerListener> layerListeners = new ArrayList<ImageLayerListener>();
 
     private List<ListDataListener> listenerList = new ArrayList<ListDataListener>();
 
@@ -65,13 +65,13 @@ public class ImageDisplayModel implements IImageDisplayModel {
     public ImageLayerProperties getLayerParameters(int layer) {
         assert layer >= 0 && layer < imageListModel.size();
         ImageLayer ilayer = (ImageLayer) imageListModel.get(layer);
-        return ilayer.getImageLayerParameters();
+        return ilayer.getImageLayerProperties();
     }
 
     public ImageLayer getLayer(ImageLayerProperties params) {
         for (int i = 0; i < imageListModel.size(); i++) {
             ImageLayer layer = (ImageLayer) imageListModel.get(i);
-            if (params == layer.getImageLayerParameters()) return layer;
+            if (params == layer.getImageLayerProperties()) return layer;
         }
 
         return null;
@@ -90,27 +90,20 @@ public class ImageDisplayModel implements IImageDisplayModel {
         return name;
     }
 
-    public void addListDataListener(ListDataListener listener) {
+
+    public void addImageDisplayModelListener(ImageDisplayModelListener listener) {
         listenerList.add(listener);
     }
 
-    public void removeListDataListener(ListDataListener listener) {
+    public void removeImageDisplayModelListener(ImageDisplayModelListener listener) {
         listenerList.remove(listener);
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        changeSupport.addPropertyChangeListener(listener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        changeSupport.removePropertyChangeListener(listener);
-    }
-
-    public void addLayerChangeListener(LayerChangeListener listener) {
+    public void addImageLayerListener(ImageLayerListener listener) {
         layerListeners.add(listener);
     }
 
-    public void removeLayerChangeListener(LayerChangeListener listener) {
+    public void removeImageLayerListener(ImageLayerListener listener) {
         layerListeners.remove(listener);
     }
 
@@ -133,26 +126,48 @@ public class ImageDisplayModel implements IImageDisplayModel {
     }
 
     private void listenToLayer(ImageLayer layer) {
-        layer.addPropertyChangeListener(new PropertyChangeListener() {
 
+        layer.addPropertyChangeListener(ImageLayerProperties.COLOR_MAP_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                System.out.println("catching : " + evt.getPropertyName());
-
-                if (evt.getPropertyName().equals(ImageLayerProperties.COLOR_MAP_PROPERTY)) {
-                    fireLayerChangeEvent(new LayerChangeEvent(ImageDisplayModel.this, DisplayChangeType.COLOR_MAP_CHANGE, (ImageLayer)evt.getSource()));
-                } else if (evt.getPropertyName().equals(ImageLayerProperties.RESAMPLE_PROPERTY)) {
-                    fireLayerChangeEvent(new LayerChangeEvent(ImageDisplayModel.this, DisplayChangeType.RESAMPLE_CHANGE, (ImageLayer)evt.getSource()));
-                } else if (evt.getPropertyName().equals(ImageLayerProperties.VISIBLE_PROPERTY)) {
-                    fireLayerChangeEvent(new LayerChangeEvent(ImageDisplayModel.this, DisplayChangeType.COMPOSITION_CHANGE, (ImageLayer)evt.getSource()));
-                } else if (evt.getPropertyName().equals(ImageLayerProperties.IMAGEOP_PROPERTY)) {
-                    fireLayerChangeEvent(new LayerChangeEvent(ImageDisplayModel.this, DisplayChangeType.IMAGE_FILTER_CHANGE, (ImageLayer)evt.getSource()));
-                } else if (evt.getPropertyName().equals(ImageLayerProperties.OPACITY_PROPERTY)) {
-                    fireLayerChangeEvent(new LayerChangeEvent(ImageDisplayModel.this, DisplayChangeType.COMPOSITION_CHANGE, (ImageLayer)evt.getSource()));
-                } else if (evt.getPropertyName().equals(ImageLayerProperties.THRESHOLD_PROPERTY)) {
-                    fireLayerChangeEvent(new LayerChangeEvent(ImageDisplayModel.this, DisplayChangeType.THRESHOLD_CHANGED, (ImageLayer)evt.getSource()));
+                for (ImageLayerListener listener : layerListeners) {
+                    listener.colorMapChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer)evt.getSource()));
                 }
             }
         });
+
+        layer.addPropertyChangeListener(ImageLayerProperties.OPACITY_PROPERTY, new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                for (ImageLayerListener listener : layerListeners) {
+                    listener.opacityChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer)evt.getSource()));
+                }
+            }
+        });
+
+        layer.addPropertyChangeListener(ImageLayerProperties.RESAMPLE_PROPERTY, new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                for (ImageLayerListener listener : layerListeners) {
+                    listener.interpolationMethodChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer)evt.getSource()));
+                }
+            }
+        });
+
+        layer.addPropertyChangeListener(ImageLayerProperties.THRESHOLD_PROPERTY, new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                for (ImageLayerListener listener : layerListeners) {
+                    listener.thresholdChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer)evt.getSource()));
+                }
+            }
+        });
+
+        layer.addPropertyChangeListener(ImageLayerProperties.VISIBLE_PROPERTY, new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                for (ImageLayerListener listener : layerListeners) {
+                    listener.visibilityChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer)evt.getSource()));
+                }
+            }
+        });
+
+
 
     }
 
@@ -275,12 +290,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
     // }
 
 
-    protected void fireLayerChangeEvent(LayerChangeEvent e) {
-       for (LayerChangeListener listener : layerListeners) {
-           listener.layerChanged(e);
-       }
-    }
-
+   
     public String toString() {
         return getName();
     }

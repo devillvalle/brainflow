@@ -10,28 +10,23 @@ import com.brainflow.display.Viewport3D;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.AnatomicalPoint2D;
 import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.jgoodies.binding.list.SelectionInList;
-import com.jgoodies.binding.value.ValueHolder;
 import org.bushe.swing.event.EventBus;
 
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.RenderedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.logging.Logger;
 
 /**
@@ -43,7 +38,7 @@ import java.util.logging.Logger;
  */
 
 
-public abstract class ImageView extends JComponent implements ListDataListener {
+public abstract class ImageView extends JComponent implements ListDataListener, ImageDisplayModelListener {
 
     private static final Logger log = Logger.getLogger(ImageView.class.getName());
 
@@ -51,11 +46,13 @@ public abstract class ImageView extends JComponent implements ListDataListener {
 
     private IImageDisplayModel displayModel;
 
-    private AnatomicalVolume displayAnatomy = AnatomicalVolume.getCanonicalAxial();
+
 
     private Property<ICrosshair> crosshair;
 
     protected Property<Viewport3D> viewport;
+
+   
 
     public ImageView(IImageDisplayModel imodel) {
         super();
@@ -70,24 +67,14 @@ public abstract class ImageView extends JComponent implements ListDataListener {
 
         crosshair = new Property<ICrosshair>(new Crosshair(viewport.getProperty()));
 
-        displayModel.addListDataListener(this);
-
-        displayModel.addLayerChangeListener(new LayerChangeListener() {
-
-            public void layerChanged(LayerChangeEvent event) {
-                System.out.println("catching layer changed event " + event.getChangeType());
-                List<IImagePlot> plots = ImageView.this.getPlots();
-                for (IImagePlot iplot : plots) {
-                    iplot.getImageProducer().updateImage(event);
-                    iplot.getComponent().repaint();
-                }
-            }
-        });
+        displayModel.addImageDisplayModelListener(this);
 
 
         crosshair.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent e) {
+
                 EventBus.publish(new ImageViewCrosshairEvent(ImageView.this));
+
             }
         });
 
@@ -105,20 +92,18 @@ public abstract class ImageView extends JComponent implements ListDataListener {
         });
 
 
+    }
 
+    public abstract SelectionInList getPlotSelection();
+
+
+    public IImagePlot getSelectedPlot() {
+        return (IImagePlot) getPlotSelection().getSelection();
     }
 
 
-    protected void setDisplayAnatomy(AnatomicalVolume _displayAnatomy) {
-        displayAnatomy = _displayAnatomy;
-    }
-
-    public AnatomicalVolume getDisplayAnatomy() {
-        return displayAnatomy;
-    }
 
 
-    
 
     public int getSelectedIndex() {
         return displayModel.getSelection().getSelectionIndex();
@@ -166,33 +151,133 @@ public abstract class ImageView extends JComponent implements ListDataListener {
 
     }
 
-    public abstract IAnnotation getAnnotation(IImagePlot plot, String name);
+    public void clearAnnotations() {
+        for (IImagePlot plot : getPlots()) {
+            plot.clearAnnotations();
+        }
+    }
 
-    public abstract void removeAnnotation(IImagePlot plot, String name);
+    public IAnnotation getAnnotation(IImagePlot plot, String name) {
 
-    public abstract void clearAnnotations();
+        if (!getPlots().contains(plot)) {
+            throw new IllegalArgumentException("View does not contain plot : " + plot);
+        }
 
-    public abstract void setAnnotation(IImagePlot plot, String name, IAnnotation annotation);
-       
-    public abstract void intervalAdded(ListDataEvent e);
+        return plot.getAnnotation(name);
+    }
 
-    public abstract void intervalRemoved(ListDataEvent e);
+    public void removeAnnotation(IImagePlot plot, String name) {
+        if (!getPlots().contains(plot)) {
+            throw new IllegalArgumentException("View does not contain plot : " + plot);
+        }
 
-    public abstract void contentsChanged(ListDataEvent e);
+        plot.removeAnnotation(name);
 
-    public abstract Point getCrosshairLocation(IImagePlot plot);
+    }
 
-    public abstract AnatomicalPoint3D getAnatomicalLocation(Component source, Point screenPoint);
+    public void setAnnotation(IImagePlot plot, String name, IAnnotation annotation) {
+        if (!getPlots().contains(plot)) {
+            throw new IllegalArgumentException("View does not contain plot : " + plot);
+        }
+
+        plot.setAnnotation(name, annotation);
+
+
+    }
+
+    public Point getCrosshairLocation(IImagePlot plot) {
+        if (!getPlots().contains(plot)) {
+            throw new IllegalArgumentException("View does not contain plot : " + plot);
+        }
+
+        ICrosshair cross = getCrosshair().getProperty();
+
+        AnatomicalPoint1D xpt = cross.getValue(plot.getDisplayAnatomy().XAXIS);
+        AnatomicalPoint1D ypt = cross.getValue(plot.getDisplayAnatomy().YAXIS);
+
+        double percentX = (xpt.getX() - plot.getXAxisRange().getBeginning().getX()) / plot.getXAxisRange().getInterval();
+        double percentY = (ypt.getX() - plot.getYAxisRange().getBeginning().getX()) / plot.getYAxisRange().getInterval();
+
+        Rectangle2D plotArea = plot.getPlotArea();
+
+        double screenX = (percentX * plotArea.getWidth()) + plotArea.getX();
+        double screenY = (percentY * plotArea.getHeight()) + plotArea.getY();
+
+        Point location = new Point((int) Math.round(screenX), (int) Math.round(screenY));
+        return SwingUtilities.convertPoint(plot.getComponent(), location, this);
+
+
+    }
+
+    public AnatomicalPoint3D getAnatomicalLocation(Component source, Point p) {
+
+        Point viewPoint = SwingUtilities.convertPoint(source, p, this);
+        IImagePlot plot = whichPlot(viewPoint);
+
+        if (plot == null) {
+            return null;
+        }
+
+        Point plotPoint = SwingUtilities.convertPoint(this, viewPoint, plot.getComponent());
+
+        AnatomicalPoint2D apoint = plot.translateScreenToAnat(plotPoint);
+
+        AnatomicalVolume displayAnatomy = plot.getDisplayAnatomy();
+        AnatomicalPoint3D ap3d = new AnatomicalPoint3D(
+                AnatomicalVolume.matchAnatomy(
+                        plot.getXAxisRange().getAnatomicalAxis(),
+                        plot.getYAxisRange().getAnatomicalAxis(),
+                        plot.getDisplayAnatomy().ZAXIS),
+                apoint.getX(), apoint.getY(),
+                getCrosshair().getProperty().getValue(displayAnatomy.ZAXIS).getX());
+
+
+        return ap3d;
+    }
+
 
     public abstract IImagePlot whichPlot(Point p);
 
     public abstract List<IImagePlot> getPlots();
 
-    public abstract SelectionInList getPlotSelection();
-
-    public abstract IImagePlot getSelectedPlot();
 
     public abstract RenderedImage captureImage();
 
 
+    public void intervalAdded(ListDataEvent e) {
+        List<IImagePlot> plots = getPlots();
+        for (IImagePlot plot : plots) {
+            plot.getImageProducer().reset();
+            plot.getComponent().repaint();
+        }
+
+    }
+
+    public void intervalRemoved(ListDataEvent e) {
+        List<IImagePlot> plots = getPlots();
+        for (IImagePlot plot : plots) {
+            plot.getImageProducer().reset();
+            plot.getComponent().repaint();
+        }
+    }
+
+    public void contentsChanged(ListDataEvent e) {
+        List<IImagePlot> plots = getPlots();
+        for (IImagePlot plot : plots) {
+
+            plot.getImageProducer().reset();
+            plot.getComponent().repaint();
+        }
+    }
+
+    public void imageSpaceChanged(IImageDisplayModel model, IImageSpace space) {
+        Viewport3D viewport = getViewport().getProperty();
+        List<IImagePlot> plots = getPlots();
+        for (IImagePlot plot : plots) {
+            plot.setXAxisRange(viewport.getRange(plot.getDisplayAnatomy().XAXIS));
+            plot.setYAxisRange(viewport.getRange(plot.getDisplayAnatomy().YAXIS));
+
+        }
+
+    }
 }

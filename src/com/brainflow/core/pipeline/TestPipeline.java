@@ -43,7 +43,7 @@ public class TestPipeline {
         ImageLayer layer2 = new ImageLayer(new MemoryImage(data2),
                 new ImageLayerProperties(new LinearColorMap(data2.getMinValue(), data2.getMaxValue(), ColorTable.SPECTRUM)));
 
-        layer2.getImageLayerParameters().getOpacity().getProperty().setOpacity(.9f);
+        layer2.getImageLayerProperties().getOpacity().getProperty().setOpacity(.9f);
         model.addLayer(layer1);
         model.addLayer(layer2);
 
@@ -55,7 +55,7 @@ public class TestPipeline {
 
 
 
-        pipeline = new ImagePlotPipeline(model, plot);
+        pipeline = new ImagePlotPipeline(plot);
         pipeline.addStage(new FetchSlicesStage(), new SynchronousStageDriverFactory());
         pipeline.addStage(new ColorizeImagesStage(), new SynchronousStageDriverFactory());
         pipeline.addStage(new CreateBufferedImagesStage(), new SynchronousStageDriverFactory());

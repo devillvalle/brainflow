@@ -27,6 +27,7 @@ public class YokeHandler {
     private static final Logger log = Logger.getLogger(YokeHandler.class.getName());
 
     private WeakReference<ImageView> target;
+
     private WeakHashMap<ImageView, Long> sources = new WeakHashMap<ImageView, Long>();
 
     private CrosshairListener crossHandler = new CrosshairListener();
@@ -50,8 +51,7 @@ public class YokeHandler {
 
     public void removeSource(ImageView view) {
         sources.remove(view);
-        log.info("unyoking target : " + target.get());
-        log.info("from from source : " + view);
+      
         view.getCrosshair().removePropertyChangeListener(crossHandler);
     }
 

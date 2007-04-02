@@ -1,5 +1,7 @@
 package com.brainflow.core;
 
+import java.util.EventObject;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Brad Buchsbaum
@@ -9,19 +11,21 @@ package com.brainflow.core;
  */
 
 
-public class LayerChangeEvent extends DisplayChangeEvent {
+public class ImageLayerEvent extends EventObject {
 
     private ImageLayer affectedLayer;
 
     private IImageDisplayModel model;
 
-    public LayerChangeEvent(IImageDisplayModel _model, DisplayChangeType _changeType, ImageLayer layer) {
-        super(_changeType);
-        setChangeType(_changeType);
+    public ImageLayerEvent(IImageDisplayModel _model, ImageLayer layer) {
+        super(_model);
         model = _model;
         affectedLayer = layer;
-        setLayerLindex(model.indexOf(layer));
 
+    }
+
+    public int getLayerIndex() {
+        return model.indexOf(affectedLayer);
     }
 
 

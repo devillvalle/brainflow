@@ -1,8 +1,6 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.core.*;
-import com.brainflow.display.ImageLayerProperties;
-import com.brainflow.display.Property;
 import com.brainflow.display.Visibility;
 import com.jgoodies.binding.adapter.ComboBoxAdapter;
 import com.jgoodies.binding.adapter.SingleListSelectionAdapter;
@@ -12,12 +10,8 @@ import com.jidesoft.swing.CheckBoxList;
 import com.jidesoft.swing.CheckBoxListSelectionModel;
 
 import javax.swing.*;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * Created by IntelliJ IDEA.
@@ -68,7 +62,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
                 CheckBoxListSelectionModel model = (CheckBoxListSelectionModel)e.getSource();
                 ImageView view = getSelectedView();
                 ImageLayer layer = view.getModel().getImageLayer(i);
-                Visibility vis = layer.getImageLayerParameters().getVisible().getProperty();
+                Visibility vis = layer.getImageLayerProperties().getVisible().getProperty();
                 if (model.isSelectedIndex(i)) {
                     vis.setVisible(true);
                 } else {
@@ -144,7 +138,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
     }
 
 
-    class VisibilitySelection implements LayerChangeListener  {
+    class VisibilitySelection implements ImageLayerListener {
 
         ImageView view;
 
@@ -153,8 +147,24 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
         }
 
 
-        public void layerChanged(LayerChangeEvent event) {
-            ImageLayer layer = event.getAffectedLayer();
+        public void thresholdChanged(ImageLayerEvent event) {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public void colorMapChanged(ImageLayerEvent event) {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public void opacityChanged(ImageLayerEvent event) {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public void interpolationMethodChanged(ImageLayerEvent event) {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public void visibilityChanged(ImageLayerEvent event) {
+             ImageLayer layer = event.getAffectedLayer();
             if (layer != null) {
                 int i = getSelectedView().getModel().indexOf(layer);
                 boolean vis = layer.isVisible();
@@ -166,13 +176,16 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
                 }
 
             }
+           
         }
+
+     
 
         public void setImageView(ImageView _view) {
             if (view != null)
-                view.getModel().removeLayerChangeListener(this);
+                view.getModel().removeImageLayerListener(this);
             view = _view;
-            view.getModel().addLayerChangeListener(this);
+            view.getModel().addImageLayerListener(this);
 
 
         }

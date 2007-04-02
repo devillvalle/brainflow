@@ -6,6 +6,8 @@ import com.brainflow.application.toplevel.BrainflowProjectListener;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
+import com.brainflow.core.ImageDisplayModelListener;
+import com.brainflow.image.space.IImageSpace;
 
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
@@ -119,7 +121,7 @@ public class ProjectView extends ImageViewPresenter {
             super(_model);
             model = _model;
 
-            model.addListDataListener(new ListDataListener() {
+            model.addImageDisplayModelListener(new ImageDisplayModelListener() {
 
                 public void intervalAdded(ListDataEvent e) {
                     int idx = e.getIndex0();
@@ -134,8 +136,15 @@ public class ProjectView extends ImageViewPresenter {
 
                 }
 
+
+
                 public void contentsChanged(ListDataEvent e) {
                     // not sure what to do
+                }
+
+
+                public void imageSpaceChanged(IImageDisplayModel model, IImageSpace space) {
+                    //To change body of implemented methods use File | Settings | File Templates.
                 }
             });
         }

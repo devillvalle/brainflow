@@ -10,17 +10,12 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.application.presentation.forms.OpacityForm;
-import com.brainflow.colormap.ColorTable;
-import com.brainflow.colormap.IColorMap;
-import com.brainflow.colormap.LinearColorMap;
-import com.brainflow.colormap.AbstractColorMap;
 import com.brainflow.display.Property;
 import com.brainflow.display.Opacity;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.ImageLayer;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
-import com.jgoodies.binding.beans.BeanAdapter;
 import com.jgoodies.binding.value.ConverterFactory;
 import com.jgoodies.binding.value.ValueHolder;
 
@@ -74,7 +69,7 @@ public class OpacityPresenter extends ImageViewPresenter {
 
         int idx = view.getModel().getSelectedIndex();
         ImageLayer layer = view.getModel().getImageLayer(idx);
-        Property<Opacity> opacity = layer.getImageLayerParameters().getOpacity();
+        Property<Opacity> opacity = layer.getImageLayerProperties().getOpacity();
 
 
         BoundedRangeAdapter opacitySliderAdapter = new BoundedRangeAdapter(

@@ -40,7 +40,7 @@ public class SmoothingAction extends BasicAction {
 
             }
 
-            layer.getImageLayerParameters().addImageOp(SmoothingOp.OP_NAME, new SmoothingOp(fwhm));
+            layer.getImageLayerProperties().addImageOp(SmoothingOp.OP_NAME, new SmoothingOp(fwhm));
 
         }
 

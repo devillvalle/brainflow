@@ -10,11 +10,7 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.application.presentation.forms.DoubleSliderForm;
-import com.brainflow.colormap.ColorTable;
-import com.brainflow.colormap.IColorMap;
-import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.display.Property;
-import com.brainflow.display.Opacity;
 import com.brainflow.display.ThresholdRange;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.ImageLayer;
@@ -73,7 +69,7 @@ public class ThresholdRangePresenter extends ImageViewPresenter {
         int idx = view.getModel().getSelectedIndex();
         ImageLayer layer = view.getModel().getImageLayer(idx);
         System.out.println("layer : " + idx);
-        Property<ThresholdRange> threshold = layer.getImageLayerParameters().getThresholdRange();
+        Property<ThresholdRange> threshold = layer.getImageLayerProperties().getThresholdRange();
 
         if (adapter != null) {
             adapter.setBean(threshold.getProperty());

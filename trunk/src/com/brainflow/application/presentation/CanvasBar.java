@@ -123,12 +123,12 @@ public class CanvasBar extends ImageViewPresenter {
             ImageLayer layer = getSelectedView().getModel().getImageLayer(i);
             JideToggleSplitButton button = new JideToggleSplitButton("" + (i + 1) + ": " + layer);
             button.addItemListener(listener);
-            BasicAction visAction = new LayerVisibilityAction(layer.getImageLayerParameters());
+            BasicAction visAction = new LayerVisibilityAction(layer.getImageLayerProperties());
 
             visAction.setContext(map);
 
             AbstractButton visButton = ActionUIFactory.getInstance().createButton(visAction);
-            Bindings.bind((JCheckBox) visButton, layer.getImageLayerParameters().getVisible().getModel(Visibility.VISIBLE_PROPERTY));
+            Bindings.bind((JCheckBox) visButton, layer.getImageLayerProperties().getVisible().getModel(Visibility.VISIBLE_PROPERTY));
             visButton.setText("Visible");
 
             button.add(visButton);

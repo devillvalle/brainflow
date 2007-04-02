@@ -42,7 +42,7 @@ public abstract class AbstractColorMapPresenter extends ImageViewPresenter {
 
         if (idx >= 0) {
             updateColorMapParameter(view.getModel().
-                    getImageLayer(idx).getImageLayerParameters().
+                    getImageLayer(idx).getImageLayerProperties().
                     getColorMap());
         }
 
@@ -93,7 +93,7 @@ public abstract class AbstractColorMapPresenter extends ImageViewPresenter {
 
     public void layerSelected(ImageLayer layer) {
         if (layer != null) {
-            updateColorMapParameter(layer.getImageLayerParameters().getColorMap());
+            updateColorMapParameter(layer.getImageLayerProperties().getColorMap());
         }
     }
 

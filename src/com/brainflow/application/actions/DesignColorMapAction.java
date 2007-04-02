@@ -32,20 +32,20 @@ public class DesignColorMapAction extends BasicAction {
 
             int layer = view.getModel().getSelectedIndex();
             IColorMap oldMap = view.getModel().getImageLayer(layer).
-                    getImageLayerParameters().getColorMap().getProperty();
+                    getImageLayerProperties().getColorMap().getProperty();
 
             if (oldMap instanceof LinearColorMap) {
                 LinearColorMap lmap = (LinearColorMap) oldMap;
                 LinearColorMap copyMap = lmap.copy();
 
                 ColorBandChartPresenter presenter = new ColorBandChartPresenter(view.getModel().getImageLayer(layer).
-                        getImageLayerParameters().getColorMap());
+                        getImageLayerProperties().getColorMap());
                 int ret = JideOptionPane.showOptionDialog(canvas, presenter.getComponent(), "Design Color Map", JideOptionPane.OK_CANCEL_OPTION, JideOptionPane.PLAIN_MESSAGE,
                         null, null, null);
 
                 if (ret != JideOptionPane.OK_OPTION) {
                     view.getModel().getImageLayer(layer).
-                            getImageLayerParameters().getColorMap().setProperty(copyMap);
+                            getImageLayerProperties().getColorMap().setProperty(copyMap);
 
                 }
 

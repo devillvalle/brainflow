@@ -70,7 +70,7 @@ public class ImageViewSliderPresenter extends ImageViewPresenter {
     }
 
     private Axis getDisplayAxis() {
-        AnatomicalVolume displayAnatomy = getSelectedView().getDisplayAnatomy();
+        AnatomicalVolume displayAnatomy = getSelectedView().getSelectedPlot().getDisplayAnatomy();
         return crosshair.getViewport().getBounds().findAxis(displayAnatomy.ZAXIS);
 
     }

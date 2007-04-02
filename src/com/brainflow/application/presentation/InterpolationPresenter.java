@@ -54,7 +54,7 @@ public class InterpolationPresenter extends ImageViewPresenter {
 
     protected void layerSelected(ImageLayer layer) {
 
-        SelectionInList sel = layer.getImageLayerParameters().getResampleSelection();
+        SelectionInList sel = layer.getImageLayerProperties().getInterpolationMethod();
         Bindings.bind(choices, sel);
 
     }
@@ -73,7 +73,7 @@ public class InterpolationPresenter extends ImageViewPresenter {
 
         if (idx > 0) {
             SelectionInList sel = view.getModel().
-                    getImageLayer(idx).getImageLayerParameters().getResampleSelection();
+                    getImageLayer(idx).getImageLayerProperties().getInterpolationMethod();
 
             Bindings.bind(choices, sel);
         }

@@ -1,9 +1,7 @@
 package com.brainflow.application.actions;
 
-import com.brainflow.core.IImageDisplayModel;
-import com.brainflow.core.ImageCanvas;
-import com.brainflow.core.ImageView;
-import com.brainflow.core.ImageViewFactory;
+import com.brainflow.core.*;
+import com.brainflow.image.anatomy.AnatomicalVolume;
 import org.bushe.swing.action.BasicAction;
 
 import java.awt.event.ActionEvent;
@@ -34,7 +32,8 @@ public class CreateOrthogonalViewAction extends BasicAction {
 
         if (view != null) {
             IImageDisplayModel displayModel = view.getModel();
-            ImageView sview = ImageViewFactory.createOrthogonalView(displayModel);
+            //ImageView sview = ImageViewFactory.createOrthogonalView(displayModel);
+            ImageView sview = ImageViewFactory.createMontageView(displayModel);
             ImageCanvas canvas = (ImageCanvas) getContextValue(ActionContext.SELECTED_CANVAS);
 
             if (canvas != null) {

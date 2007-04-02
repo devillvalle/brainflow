@@ -38,7 +38,7 @@ public interface IImageData2D extends IImageData {
 
     public ImageIterator iterator();
 
-    public RenderedImage snapShot();
+   
 
 
 }

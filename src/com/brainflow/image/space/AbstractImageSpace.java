@@ -181,22 +181,17 @@ public abstract class AbstractImageSpace implements IImageSpace {
         System.out.println("these are same axes, proceeding");
 
         ImageAxis[] axes = new ImageAxis[getNumDimensions()];
-        System.out.println("creating new axes " + axes.length);
+
         for (int i = 0; i < axes.length; i++) {
-            System.out.println("axis " + i);
             AxisRange range1 = other.getImageAxis(Axis.getAxis(i)).getRange();
             AxisRange range2 = getImageAxis(Axis.getAxis(i)).getRange();
 
-            System.out.println("range 1 " + range1);
-            System.out.println("range 2 " + range2);
 
             AxisRange nrange = range1.union(range2);
-            System.out.println("nrange " + nrange);
             axes[i] = new ImageAxis(nrange,
                     Math.min(other.getSpacing(Axis.getAxis(i)), getSpacing(Axis.getAxis(i))));
 
-            System.out.println("new axis : " + axes[i]);
-
+         
         }
 
         return SpaceFactory.createImageSpace(axes);

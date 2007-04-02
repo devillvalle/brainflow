@@ -25,13 +25,12 @@ import java.awt.image.RenderedImage;
 
 public class BasicImageData2D extends BasicImageData implements IImageData2D {
 
-    private int[] dimArray = null;
+
 
     public BasicImageData2D(BasicImageData2D src) {
         space = new ImageSpace2D((ImageSpace2D) src.getImageSpace());
         datatype = src.getDataType();
         fillBuffer(src.storage, space.getNumSamples());
-        dimArray = space.getDimensionVector();
 
     }
 
@@ -40,13 +39,9 @@ public class BasicImageData2D extends BasicImageData implements IImageData2D {
         space = _space;
         datatype = _type;
         data = allocateBuffer(space.getNumSamples());
-        dimArray = space.getDimensionVector();
 
     }
 
-    public int getDimension(int dimnum) {
-        return dimArray[dimnum];
-    }
 
     public ImageInfo getImageInfo() {
         return new ImageInfo(this);
@@ -58,7 +53,7 @@ public class BasicImageData2D extends BasicImageData implements IImageData2D {
         storage = array;
         establishDataType(storage);
         data = allocateBuffer(space.getNumSamples());
-        dimArray = space.getDimensionVector();
+       
     }
 
 
@@ -103,22 +98,6 @@ public class BasicImageData2D extends BasicImageData implements IImageData2D {
 
     public ImageIterator iterator() {
         return new Iterator2D();
-    }
-
-    public RenderedImage snapShot() {
-        byte[] idat = ArrayUtils.scaleToBytes(storage, getMinValue(), getMaxValue(), 255);
-        return RenderUtils.createSingleBandedImage(idat, space.getDimension(Axis.X_AXIS), space.getDimension(Axis.Y_AXIS));
-    }
-
-
-    public byte[] toBytes() {
-        byte[] idat = ArrayUtils.scaleToBytes(storage, getMinValue(), getMaxValue(), 255);
-        return idat;
-    }
-
-    public byte[] toBytes(double min, double max) {
-        byte[] idat = ArrayUtils.scaleToBytes(storage, min, max, 255);
-        return idat;
     }
 
 

@@ -25,15 +25,15 @@ import com.brainflow.utils.Index3D;
 public class BasicImageData3D extends BasicImageData implements IImageData3D {
 
 
-    int planeSize;
-    private int[] dimArray = null;
+    private int planeSize;
+    private int dim0;
 
     public BasicImageData3D(BasicImageData3D src) {
         space = new ImageSpace3D((ImageSpace3D) src.getImageSpace());
         datatype = src.getDataType();
         fillBuffer(src.storage, space.getNumSamples());
         planeSize = space.getDimension(Axis.X_AXIS) * space.getDimension(Axis.Y_AXIS);
-        dimArray = space.getDimensionVector();
+        dim0 = space.getDimension(Axis.X_AXIS);
     }
 
 
@@ -43,7 +43,7 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
         datatype = _type;
         data = allocateBuffer(space.getNumSamples());
         planeSize = space.getDimension(Axis.X_AXIS) * space.getDimension(Axis.Y_AXIS);
-        dimArray = space.getDimensionVector();
+        dim0 = space.getDimension(Axis.X_AXIS);
 
     }
 
@@ -54,12 +54,11 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
         establishDataType(storage);
         data = allocateBuffer(space.getNumSamples());
         planeSize = space.getDimension(Axis.X_AXIS) * space.getDimension(Axis.Y_AXIS);
-        dimArray = space.getDimensionVector();
+        dim0 = space.getDimension(Axis.X_AXIS);
+
     }
 
-    public int getDimensionSize(int dimnum) {
-        return dimArray[dimnum];
-    }
+
 
     public double getMaxValue() {
         if (!recomputeMax) {
@@ -122,7 +121,7 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
     }
 
     public final int indexOf(int x, int y, int z) {
-        return (z * planeSize) + dimArray[0] * y + x;
+        return (z * planeSize) + dim0 * y + x;
     }
 
     public BasicImageData2D getOrthogonalCut(int dimIndex, int orientation) {
@@ -295,6 +294,8 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
     public String toString() {
         return this.getImageLabel();
     }
+
+
 
 
     public static void main(String[] args) {

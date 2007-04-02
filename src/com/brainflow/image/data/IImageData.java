@@ -16,24 +16,22 @@ import com.brainflow.utils.DataType;
  */
 public interface IImageData {
 
-    IImageSpace getImageSpace();
+    public IImageSpace getImageSpace();
 
-    DataType getDataType();
+    public DataType getDataType();
 
-    Anatomy getAnatomy();
+    public Anatomy getAnatomy();
 
-    int getDimension(Axis axisNum);
+    public int getDimension(Axis axisNum);
 
+    public double getMaxValue();
 
-    double getMaxValue();
+    public double getMinValue();
 
-    double getMinValue();
+    public int getNumElements();
 
-    int getNumElements();
+    public ImageInfo getImageInfo();
 
-    ImageInfo getImageInfo();
-
-    public byte[] toBytes();
 
     public void setImageLabel(String imageLabel);
 

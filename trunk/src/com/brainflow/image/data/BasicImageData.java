@@ -21,13 +21,15 @@ public abstract class BasicImageData extends AbstractImageData {
 
 
     protected DataBuffer data;
+
     protected Object storage;
 
-
     protected double minValue;
+
     protected double maxValue;
 
     protected boolean recomputeMax = true;
+
     protected boolean recomputeMin = true;
 
     protected int identifier = 0;
@@ -61,13 +63,10 @@ public abstract class BasicImageData extends AbstractImageData {
         } else if (datatype == DataType.SHORT) {
             data = new DataBufferShort((short[]) storage, size);
         } else if (datatype == DataType.INTEGER) {
-
             data = new DataBufferInt((int[]) storage, size);
         } else if (datatype == DataType.FLOAT) {
-
             data = new DataBufferFloat((float[]) storage, size);
         } else if (datatype == DataType.DOUBLE) {
-
             data = new DataBufferDouble((double[]) storage, size);
         } else {
             throw new IllegalArgumentException("BasicImageData: cannot allocate data of type " + datatype.toString());

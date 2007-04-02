@@ -2,10 +2,11 @@ package com.brainflow.image.rendering;
 
 import com.brainflow.utils.ArrayUtils;
 
-import javax.media.jai.*;
+
 import java.awt.*;
+import java.awt.color.ColorSpace;
 import java.awt.image.*;
-import java.awt.image.renderable.ParameterBlock;
+
 
 /**
  * <p>Title: </p>
@@ -22,7 +23,7 @@ public class RenderUtils {
     public RenderUtils() {
     }
 
-    public static BufferedImage createRGBAImage(byte[] rgba, int width, int height) {
+    /*public static BufferedImage createRGBAImage(byte[] rgba, int width, int height) {
         SampleModel sm = RasterFactory.createPixelInterleavedSampleModel(DataBuffer.TYPE_BYTE, width, height, 4);
 
         BufferedImage bimg = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
@@ -48,9 +49,22 @@ public class RenderUtils {
         //RenderedImageAdapter img = new RenderedImageAdapter((RenderedImage) tiledImage);
 
 
+    } */
+
+
+    public static BufferedImage createBufferedImage(byte[][] rgba, int width, int height) {
+        ComponentColorModel cm = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_LINEAR_RGB),
+                true, false, Transparency.TRANSLUCENT, DataBuffer.TYPE_BYTE);
+
+        DataBufferByte buffer = new DataBufferByte(rgba, width*height);
+        BandedSampleModel sm = new BandedSampleModel(DataBuffer.TYPE_BYTE, width, height, 4);
+
+        WritableRaster raster = Raster.createWritableRaster(sm, buffer, new Point(0,0));
+        BufferedImage bimg = new BufferedImage(cm, raster,false, null);
+        return bimg;
     }
 
-    public static RenderedImage createRGBAImage(byte[][] rgba, int width, int height) {
+   /* public static RenderedImage createRGBAImage(byte[][] rgba, int width, int height) {
 
 
         SampleModel sm = RasterFactory.createBandedSampleModel(DataBuffer.TYPE_BYTE,
@@ -73,7 +87,7 @@ public class RenderUtils {
         RenderedImageAdapter img = new RenderedImageAdapter((RenderedImage) tiledImage);
 
         return img;
-    }
+    }  */
 
     public static RenderedImage createSingleBandedImage(byte[] data, int width, int height) {
 
@@ -88,22 +102,7 @@ public class RenderUtils {
     }
 
 
-    public static RenderedImage insertColorMap(RenderedImage img, IndexColorModel icm) {
-        if (!(img.getColorModel() instanceof IndexColorModel)) {
-            throw new IllegalArgumentException("Image must have Color Model of class IndexColorModel!");
-        }
 
-
-        Raster raster = img.getData();
-        TiledImage timg = new TiledImage(raster.getMinX(), raster.getMinY(), raster.getWidth(), raster.getHeight(), 0, 0,
-                raster.getSampleModel(), icm);
-
-
-        timg.setData(raster);
-
-        return timg;
-
-    }
 
     public static IndexColorModel createIndexColorModel(double[][] table) {
         int numbands = table.length;
@@ -126,7 +125,7 @@ public class RenderUtils {
     }
 
 
-    public static RenderedImage createTiledImage(byte[] data, int width, int height, IndexColorModel icm) {
+    /*public static RenderedImage createTiledImage(byte[] data, int width, int height, IndexColorModel icm) {
         WritableRaster raster = WritableRaster.createInterleavedRaster(DataBuffer.TYPE_BYTE,
                 width, height, 1, new Point(0, 0));
         raster.setDataElements(0, 0, width, height, data);
@@ -145,10 +144,10 @@ public class RenderUtils {
         return JAI.create("format", pb, hints);
 
 
-    }
+    }*/
 
 
-    public static RenderedImage paletteToRGB(RenderedImage src, boolean hasAlpha) {
+    /*public static RenderedImage paletteToRGB(RenderedImage src, boolean hasAlpha) {
         if (hasAlpha)
             return RenderUtils.paletteToRGB(src);
 
@@ -170,10 +169,10 @@ public class RenderUtils {
         }
 
         return dst;
-    }
+    } */
 
 
-    public static RenderedImage paletteToRGB(RenderedImage src) {
+    /*public static RenderedImage paletteToRGB(RenderedImage src) {
         RenderedImage dst = null;
 
         if (src.getColorModel() instanceof IndexColorModel) {
@@ -196,7 +195,7 @@ public class RenderUtils {
         }
 
         return dst;
-    }
+    }  */
 
 
     public static RenderedImage createImage(byte[] data, int width, int height, IndexColorModel icm) {
@@ -222,7 +221,6 @@ public class RenderUtils {
             return RenderUtils.createImage(data, width, height, icm);
         }
 
-        //icm = org.lcbr.gui.GeneralLuts.removeAlphaBand(icm);
         RenderedImage dst = null;
 
         BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_INDEXED, icm);

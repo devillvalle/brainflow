@@ -67,9 +67,4 @@ public class BinaryImageData2D extends BinaryImageData implements IImageData2D {
 
     
 
-    public RenderedImage snapShot() {
-        byte[] idat = this.toBytes();
-        return RenderUtils.createSingleBandedImage(idat, space.getDimension(Axis.X_AXIS), space.getDimension(Axis.Y_AXIS));
-
-    }
 }

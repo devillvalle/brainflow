@@ -3,6 +3,7 @@ package com.brainflow.core;
 import com.brainflow.core.annotations.IAnnotation;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.axis.AxisRange;
 
 import javax.swing.*;
@@ -33,6 +34,8 @@ public interface IImagePlot {
   
     public void updateAxis(AxisRange range);
 
+    
+
     public void setXAxisRange(AxisRange drange);
 
     public void setYAxisRange(AxisRange drange);
@@ -40,6 +43,10 @@ public interface IImagePlot {
     public double getScaleX();
 
     public double getScaleY();
+
+    public void setSlice(AnatomicalPoint1D slice);
+
+    public AnatomicalPoint1D getSlice();
 
     public Point translateAnatToScreen(AnatomicalPoint2D pt);
 
@@ -54,6 +61,8 @@ public interface IImagePlot {
     public JComponent getComponent();
 
     public IImageProducer getImageProducer();
+
+    public void setImageProducer(IImageProducer producer);
 
     public Map<String, IAnnotation> getAnnotations();
 

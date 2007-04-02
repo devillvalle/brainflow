@@ -27,16 +27,16 @@ public class ImagePlotPipeline extends Pipeline {
     
     private IImagePlot plot;
 
-    private IImageDisplayModel model;
 
     private AnatomicalPoint1D slice;
 
 
-    public ImagePlotPipeline(IImageDisplayModel _model, IImagePlot _plot) {
+    public ImagePlotPipeline(IImagePlot _plot) {
         super();
-        model = _model;
+
         plot = _plot;
-        slice = plot.getImageProducer().getSlice();
+
+        slice = plot.getSlice();
     }
 
    
@@ -60,26 +60,20 @@ public class ImagePlotPipeline extends Pipeline {
     }
 
     public IImageDisplayModel getModel() {
-        return model;
+        return plot.getModel();
     }
 
-    public void setModel(IImageDisplayModel model) {
-        this.model = model;
-    }
+
 
     public AnatomicalVolume getDisplayAnatomy() {
         return plot.getDisplayAnatomy();
     }
 
     public AnatomicalPoint1D getSlice() {
-        return slice;
+        return plot.getSlice();
     }
 
-    public void setSlice(AnatomicalPoint1D slice) {
-        this.slice = slice;
-    }
-
-
+   
     public static Rectangle2D getBounds(List<ImageLayer2D> layers) {
         if (layers == null || layers.size() == 0) {
             return new Rectangle2D.Double(0, 0, 0, 0);

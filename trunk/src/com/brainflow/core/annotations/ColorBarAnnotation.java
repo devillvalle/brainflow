@@ -117,11 +117,11 @@ public class ColorBarAnnotation extends AbstractAnnotation {
 
         if (colorBar == null || layer != selectedLayer) {
             selectedLayer = layer;
-            colorBar = selectedLayer.getImageLayerParameters().getColorMap().getProperty().createColorBar();
+            colorBar = selectedLayer.getImageLayerProperties().getColorMap().getProperty().createColorBar();
             colorBar.setOrientation(orientation);
             colorBar.setDrawOutline(true);
-        } else if (colorBar.getColorMap() != selectedLayer.getImageLayerParameters().getColorMap().getProperty()) {
-            colorBar = selectedLayer.getImageLayerParameters().getColorMap().getProperty().createColorBar();
+        } else if (colorBar.getColorMap() != selectedLayer.getImageLayerProperties().getColorMap().getProperty()) {
+            colorBar = selectedLayer.getImageLayerProperties().getColorMap().getProperty().createColorBar();
             colorBar.setOrientation(orientation);
         }
 

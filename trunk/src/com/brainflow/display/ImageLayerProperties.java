@@ -47,7 +47,7 @@ public class ImageLayerProperties implements Serializable {
 
     private Property<ThresholdRange> threshold;
 
-    private SelectionInList resampleSelection;
+    private SelectionInList interpolationMethod;
     
 
     public ImageLayerProperties() {
@@ -74,7 +74,7 @@ public class ImageLayerProperties implements Serializable {
         visible = new Property<Visibility>(new Visibility(this, true));
         imageOpList = new Property<ImageOpListProperty>(new ImageOpListProperty());
         opacity = new Property<Opacity>(new Opacity(1f));
-        resampleSelection = new SelectionInList(InterpolationHint.values(), resampleInterpolation.getModel(InterpolationMethod.INTERPOLATION_PROPERTY));
+        interpolationMethod = new SelectionInList(InterpolationHint.values(), resampleInterpolation.getModel(InterpolationMethod.INTERPOLATION_PROPERTY));
         threshold = new Property<ThresholdRange>(new ThresholdRange());
 
 
@@ -93,8 +93,8 @@ public class ImageLayerProperties implements Serializable {
         return visible;
     }
 
-    public SelectionInList getResampleSelection() {
-        return resampleSelection;
+    public SelectionInList getInterpolationMethod() {
+        return interpolationMethod;
     }
 
 

@@ -45,7 +45,7 @@ public class SimpleOrthogonalImageView extends ImageView {
 
 
 
-    public void scheduleRepaint(LayerChangeEvent e) {
+    public void scheduleRepaint(ImageLayerEvent e) {
         repaint();
     }
 

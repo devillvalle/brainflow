@@ -10,7 +10,6 @@ import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.jgoodies.binding.list.SelectionInList;
 
-import javax.swing.event.ChangeListener;
 import javax.swing.event.ListDataListener;
 import java.util.List;
 import java.beans.PropertyChangeListener;
@@ -31,22 +30,17 @@ public interface IImageDisplayModel {
 
     public int getSelectedIndex();
 
-    public void addListDataListener(ListDataListener listener);
+    public void addImageDisplayModelListener(ImageDisplayModelListener listener);
 
-    public void removeListDataListener(ListDataListener listener);
+    public void removeImageDisplayModelListener(ImageDisplayModelListener listener);
 
-    public void addPropertyChangeListener(PropertyChangeListener listener);
+    public void addImageLayerListener(ImageLayerListener listener);
 
-    public void removePropertyChangeListener(PropertyChangeListener listener);
-
-    public void addLayerChangeListener(LayerChangeListener listener);
-
-    public void removeLayerChangeListener(LayerChangeListener listener);
+    public void removeImageLayerListener(ImageLayerListener listener);
 
     public String getLayerName(int idx);
 
-    ImageLayer getLayer(ImageLayerProperties params);
-
+  
     public List<Integer> indexOf(IImageData data);
 
     public int indexOf(ImageLayer layer);

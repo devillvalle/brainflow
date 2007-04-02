@@ -1,6 +1,7 @@
 package com.brainflow.display;
 
 import com.brainflow.core.IImageDisplayModel;
+import com.brainflow.core.ImageDisplayModelListener;
 import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.axis.AxisRange;
@@ -8,6 +9,7 @@ import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.jgoodies.binding.beans.Model;
 
+import javax.swing.event.ListDataEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -56,13 +58,31 @@ public class Viewport3D extends Model {
     public Viewport3D(IImageDisplayModel _displayModel) {
         displayModel = _displayModel;
         bounds = displayModel.getImageSpace();
-        displayModel.addPropertyChangeListener(new PropertyChangeListener() {
+        displayModel.addImageDisplayModelListener(new ImageDisplayModelListener() {
 
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (!bounds.equals(displayModel.getImageSpace())) {
-                    displayModel.getImageSpace();
+
+            public void imageSpaceChanged(IImageDisplayModel model, IImageSpace space) {
+                if (!bounds.equals(space)) {
+                    model.getImageSpace();
                     init();
                 }
+
+            }
+
+            public void intervalAdded(ListDataEvent e) {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public void intervalRemoved(ListDataEvent e) {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public void contentsChanged(ListDataEvent e) {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public void propertyChange(PropertyChangeEvent evt) {
+
             }
 
         });
@@ -201,8 +221,7 @@ public class Viewport3D extends Model {
             throw new IllegalArgumentException("value " + zAxisMin + "outside of image bounds");
         }
 
-        System.out.println("SETTING VIEWPORT Z MIN : " + zAxisMin);
-
+      
         double oldValue = this.ZAxisMin;
         this.ZAxisMin = zAxisMin;
         this.ZAxisMax = ZAxisMin + ZAxisWidth;

@@ -12,7 +12,6 @@ import com.brainflow.image.data.UByteImageData2D;
 import com.brainflow.image.data.MaskedImageData2D;
 import com.brainflow.image.data.MaskPredicate;
 import com.brainflow.image.iterators.ImageIterator;
-import com.brainflow.core.ImageLayer2D;
 import com.brainflow.core.ImageLayer;
 
 /**
@@ -55,7 +54,7 @@ public class ThresholdImagesStage extends ImageProcessingStage {
     }
 
     private RGBAImage threshold(ImageLayer layer, RGBAImage rgba) {
-        ThresholdRange trange = layer.getImageLayerParameters().getThresholdRange().getProperty();
+        ThresholdRange trange = layer.getImageLayerProperties().getThresholdRange().getProperty();
 
 
         if (Double.compare(trange.getMin(), trange.getMax()) != 0) {

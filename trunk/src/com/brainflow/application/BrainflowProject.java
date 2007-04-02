@@ -1,8 +1,10 @@
 package com.brainflow.application;
 
 import com.brainflow.core.IImageDisplayModel;
+import com.brainflow.core.ImageDisplayModelListener;
 import com.brainflow.application.toplevel.BrainflowProjectListener;
 import com.brainflow.application.toplevel.BrainflowProjectEvent;
+import com.brainflow.image.space.IImageSpace;
 
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -33,7 +35,7 @@ public class BrainflowProject {
     public void addModel(IImageDisplayModel model) {
         if (!modelList.contains(model)) {
             modelList.add(model);
-            model.addListDataListener(listener);
+            model.addImageDisplayModelListener(listener);
             fireModelAdded(new BrainflowProjectEvent(this, model, null));
         } else {
             log.warning("BrainflowProject already contains model supplied as argument, not adding.");
@@ -146,7 +148,7 @@ public class BrainflowProject {
     }
 
 
-    class ModelListDataListener implements ListDataListener {
+    class ModelListDataListener implements ImageDisplayModelListener {
 
 
         public void intervalAdded(ListDataEvent e) {
@@ -161,6 +163,10 @@ public class BrainflowProject {
         public void contentsChanged(ListDataEvent e) {
             fireContentsChanged(e);
 
+        }
+
+        public void imageSpaceChanged(IImageDisplayModel model, IImageSpace space) {
+            //To change body of implemented methods use File | Settings | File Templates.
         }
     }
 

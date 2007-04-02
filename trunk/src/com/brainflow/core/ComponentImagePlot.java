@@ -4,6 +4,7 @@ import com.brainflow.core.annotations.IAnnotation;
 import com.brainflow.image.anatomy.AnatomicalPlane;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.axis.ImageAxis;
 import com.sun.istack.internal.NotNull;
@@ -24,6 +25,8 @@ import java.beans.PropertyChangeEvent;
  * To change this template use File | Settings | File Templates.
  */
 public class ComponentImagePlot extends JComponent implements IImagePlot {
+
+    private AnatomicalPoint1D slice;
 
     private AxisRange xAxis;
 
@@ -49,14 +52,13 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
     private PropertyChangeListener annotationListener;
 
 
-    public ComponentImagePlot(IImageDisplayModel model, IImageProducer _producer, AnatomicalVolume displayAnatomy, AxisRange xAxis, AxisRange yAxis) {
+    private ComponentImagePlot(IImageDisplayModel model, IImageProducer _producer, AnatomicalVolume displayAnatomy, AxisRange xAxis, AxisRange yAxis) {
         this.xAxis = xAxis;
         this.yAxis = yAxis;
         this.displayAnatomy = displayAnatomy;
         this.model = model;
         producer = _producer;
-        producer.setModel(model);
-        producer.setPlot(this);
+       
         initAnnotationListener();
 
     }
@@ -66,7 +68,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         this.yAxis = yAxis;
         this.displayAnatomy = displayAnatomy;
         this.model = model;
-        producer = new CompositeImageProducer(this, model, displayAnatomy);
+        //producer = new CompositeImageProducer(this,  displayAnatomy);
         initAnnotationListener();
 
     }
@@ -83,6 +85,20 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
     }
 
 
+    public void setSlice(AnatomicalPoint1D slice) {
+        if (getSlice() == null || !getSlice().equals(slice)) {
+            this.slice = slice;
+            producer.setSlice(slice);
+
+        }
+
+        repaint();
+    }
+
+    public AnatomicalPoint1D getSlice() {
+        return slice;
+    }
+
     public IImageDisplayModel getModel() {
         return model;
     }
@@ -91,6 +107,11 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         return this;
     }
 
+
+    public void setImageProducer(IImageProducer producer) {
+        this.producer = producer;
+        producer.setPlot(this);
+    }
 
     public IImageProducer getImageProducer() {
         return producer;
@@ -103,9 +124,11 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         Dimension size = getSize();
 
         Rectangle plotArea = getPlotArea();
+
+        
         if (!plotArea.equals(oldArea)) {
             oldArea = plotArea;
-            producer.updateImage(new DisplayChangeEvent(DisplayChangeType.SCREEN_SIZE_CHANGE));
+            producer.setScreenSize(plotArea);
         }
 
         Insets insets = getInsets();
@@ -195,10 +218,14 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
 
     public void setXAxisRange(AxisRange xrange) {
         xAxis = xrange;
+        producer.setXAxis(xrange);
+        repaint();
     }
 
     public void setYAxisRange(AxisRange yrange) {
         yAxis = yrange;
+        producer.setYAxis(yrange);
+        repaint();
     }
 
     public Point translateAnatToScreen(AnatomicalPoint2D pt) {
@@ -279,5 +306,9 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
     }
 
 
-
+    public static ComponentImagePlot createComponentImagePlot(IImageDisplayModel model, IImageProducer _producer, AnatomicalVolume displayAnatomy, AxisRange xAxis, AxisRange yAxis) {
+        ComponentImagePlot plot =  new ComponentImagePlot(model, _producer, displayAnatomy, xAxis, yAxis);
+        plot.producer.setPlot(plot);
+        return plot;
+    }
 }

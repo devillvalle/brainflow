@@ -2,9 +2,12 @@ package com.brainflow.core;
 
 import com.jgoodies.binding.list.SelectionInList;
 import com.jgoodies.binding.list.ArrayListModel;
+import com.brainflow.core.annotations.SelectedPlotAnnotation;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 import java.awt.image.RenderedImage;
 import java.util.*;
 import java.util.List;
@@ -16,21 +19,22 @@ import java.util.List;
  * Time: 11:50:38 PM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class AbstractGriddedImageView extends ImageView {
+public abstract class AbstractGriddedImageView extends ImageView implements MouseListener {
 
     private ArrayListModel plots = new ArrayListModel();
 
     private SelectionInList plotSelection = new SelectionInList((ListModel) plots);
 
-    private int NRows = 2;
+    private int NRows = 3;
 
-    private int NCols = 2;
+    private int NCols = 3;
 
-    GridLayout layout;
+    private GridLayout layout;
 
 
     public AbstractGriddedImageView(IImageDisplayModel imodel) {
         super(imodel);
+        //addMouseListener(this);
 
 
     }
@@ -40,7 +44,9 @@ public abstract class AbstractGriddedImageView extends ImageView {
         setLayout(layout);
         for (int i=0; i<getNRows(); i++) {
             for (int j=0; j<getNCols(); j++) {
-                add(makePlot(i,j).getComponent());
+                IImagePlot plot = makePlot(i,j);
+                plots.add(plot);
+                add(plot.getComponent());
             }
 
         }
@@ -103,4 +109,33 @@ public abstract class AbstractGriddedImageView extends ImageView {
     }
 
 
+    public void mouseClicked(MouseEvent e) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void mousePressed(MouseEvent e) {
+        IImagePlot plot = whichPlot(e.getPoint());
+        if (plot != null) {
+            SelectedPlotAnnotation annotation = (SelectedPlotAnnotation)getAnnotation(getSelectedPlot(), SelectedPlotAnnotation.ID);
+
+            if (annotation != null) {
+                removeAnnotation(getSelectedPlot(), SelectedPlotAnnotation.ID);
+                annotation.setSelectedPlot(plot);
+            }
+            getPlotSelection().setSelection(plot);
+            repaint();
+        }
+    }
+
+    public void mouseReleased(MouseEvent e) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void mouseEntered(MouseEvent e) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void mouseExited(MouseEvent e) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

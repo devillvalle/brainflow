@@ -15,6 +15,7 @@ import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.jgoodies.binding.list.SelectionInList;
+import com.jgoodies.binding.list.ArrayListModel;
 import org.bushe.swing.event.EventBus;
 
 
@@ -46,8 +47,7 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
 
     private IImageDisplayModel displayModel;
 
-
-
+    
     private Property<ICrosshair> crosshair;
 
     protected Property<Viewport3D> viewport;

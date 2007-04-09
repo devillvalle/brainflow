@@ -7,6 +7,7 @@ import com.brainflow.image.axis.AxisRange;
 import com.brainflow.core.annotations.CrosshairAnnotation;
 import com.brainflow.core.annotations.SelectedPlotAnnotation;
 import com.brainflow.display.ICrosshair;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
@@ -38,17 +39,16 @@ public class MontageImageView extends AbstractGriddedImageView {
     }
 
     public MontageImageView(IImageDisplayModel imodel, AnatomicalVolume displayAnatomy, int nrows, int ncols, double sliceGap) {
-            super(imodel);
-            this.displayAnatomy = displayAnatomy;
+        super(imodel, nrows, ncols);
+        this.displayAnatomy = displayAnatomy;
 
-            sliceController = new MontageSliceController(getCrosshair().getProperty().getValue(displayAnatomy.ZAXIS), sliceGap);
+        sliceController = new MontageSliceController(getCrosshair().getProperty().getValue(displayAnatomy.ZAXIS), sliceGap);
         sliceController.sliceGap = sliceGap;
-            getCrosshair().addPropertyChangeListener(new CrosshairHandler());
+        getCrosshair().addPropertyChangeListener(new CrosshairHandler());
 
-            layoutGrid();
-            initLocal();
-        }
-
+        layoutGrid();
+        initLocal();
+    }
 
 
     public AnatomicalVolume getDisplayAnatomy() {
@@ -66,10 +66,6 @@ public class MontageImageView extends AbstractGriddedImageView {
             setAnnotation(plot, CrosshairAnnotation.ID, crosshairAnnotation);
 
         }
-
-
-
-
 
 
     }
@@ -118,7 +114,7 @@ public class MontageImageView extends AbstractGriddedImageView {
 
 
     public Dimension getPreferredSize() {
-        return new Dimension(150*getNRows(), 150*getNCols());
+        return new Dimension(150 * getNRows(), 150 * getNCols());
     }
 
     class CrosshairHandler implements PropertyChangeListener {
@@ -154,23 +150,20 @@ public class MontageImageView extends AbstractGriddedImageView {
         public MontageSliceController(AnatomicalPoint1D sentinel) {
             this.sentinel = sentinel;
             sliceGap = getModel().getImageSpace().getImageAxis(displayAnatomy.ZAXIS, true).getSpacing();
-            sliceRange = new AxisRange(sentinel.getAnatomy(), sentinel.getX(), sentinel.getX() + getNumPlots()*sliceGap);
+            sliceRange = new AxisRange(sentinel.getAnatomy(), sentinel.getX(), sentinel.getX() + getNumPlots() * sliceGap);
         }
 
 
         public MontageSliceController(AnatomicalPoint1D sentinel, double sliceGap) {
             this.sentinel = sentinel;
             this.sliceGap = sliceGap;
-            sliceRange = new AxisRange(sentinel.getAnatomy(), sentinel.getX(), sentinel.getX() + getNumPlots()*sliceGap);
+            sliceRange = new AxisRange(sentinel.getAnatomy(), sentinel.getX(), sentinel.getX() + getNumPlots() * sliceGap);
         }
-
-
 
 
         public double getSliceGap() {
             return sliceGap;
         }
-
 
 
         public AnatomicalPoint1D getSlice() {
@@ -183,12 +176,12 @@ public class MontageImageView extends AbstractGriddedImageView {
         }
 
         public AnatomicalPoint1D getSliceForPlot(int plotIndex) {
-            return new AnatomicalPoint1D(sentinel.getAnatomy(), sentinel.getX() + plotIndex*sliceGap);
+            return new AnatomicalPoint1D(sentinel.getAnatomy(), sentinel.getX() + plotIndex * sliceGap);
         }
 
         public double nearestSlice(AnatomicalPoint1D slice) {
             double minDist = Double.MAX_VALUE;
-            for (int i=0; i<getNumPlots(); i++) {
+            for (int i = 0; i < getNumPlots(); i++) {
                 AnatomicalPoint1D pt = getSliceForPlot(i);
                 minDist = Math.min(Math.abs(pt.getX() - slice.getX()), minDist);
             }
@@ -197,9 +190,9 @@ public class MontageImageView extends AbstractGriddedImageView {
         }
 
         public int whichPlot(AnatomicalPoint1D slice, double tolerance) {
-            int index=-1;
+            int index = -1;
             double minDist = Double.MAX_VALUE;
-            for (int i=0; i<getNumPlots(); i++) {
+            for (int i = 0; i < getNumPlots(); i++) {
                 AnatomicalPoint1D pt = getSliceForPlot(i);
                 double dist = Math.abs(pt.getX() - slice.getX());
                 if (dist < minDist) {
@@ -214,9 +207,8 @@ public class MontageImageView extends AbstractGriddedImageView {
                 return -1;
             }
 
-           
-        }
 
+        }
 
 
         public void setSlice(AnatomicalPoint1D slice) {
@@ -228,7 +220,7 @@ public class MontageImageView extends AbstractGriddedImageView {
             }
 
             sentinel = slice;
-            sliceRange = new AxisRange(sentinel.getAnatomy(), sentinel.getX(), sentinel.getX() + getNumPlots()*sliceGap);
+            sliceRange = new AxisRange(sentinel.getAnatomy(), sentinel.getX(), sentinel.getX() + getNumPlots() * sliceGap);
             updateSlices();
         }
 

@@ -99,14 +99,12 @@ public class ImageViewFactory {
         return view;
     }
 
-    public static ImageView createMontageView(IImageDisplayModel displayModel) {
-        MontageImageView view = new MontageImageView(displayModel, AnatomicalVolume.getCanonicalAxial());
+    public static ImageView createMontageView(IImageDisplayModel displayModel, int nrows, int ncols, double sliceGap) {
+        MontageImageView view = new MontageImageView(displayModel, AnatomicalVolume.getCanonicalAxial(), nrows, ncols, sliceGap);
         String id = ImageCanvasManager.getInstance().register(view);
         view.setId(id);
-     view.setName("[" + view.getId() + "] " + view.getModel().getName());
+        view.setName("[" + view.getId() + "] " + view.getModel().getName());
 
-        //ITitledBorder tborder = border;
-       // tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
 
 
         return view;

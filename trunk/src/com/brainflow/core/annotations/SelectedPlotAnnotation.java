@@ -1,6 +1,7 @@
 package com.brainflow.core.annotations;
 
 import com.brainflow.core.IImagePlot;
+import com.brainflow.core.ImageView;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -15,18 +16,18 @@ public class SelectedPlotAnnotation extends AbstractAnnotation {
 
     public static final String ID = "plot delimiter";
 
-    private IImagePlot selectedPlot;
+    private ImageView view;
 
     private Stroke stroke = new BasicStroke(1, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND, 10f, new float[]{2f, 2f}, 0f);
 
-    private Composite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .3f);
+    private Composite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .8f);
 
-    public SelectedPlotAnnotation(IImagePlot selectedPlot) {
-        this.selectedPlot = selectedPlot;
+    public SelectedPlotAnnotation(ImageView view) {
+        this.view = view;
     }
 
     public void draw(Graphics2D g2d, Rectangle2D plotArea, IImagePlot plot) {
-        if (plot == selectedPlot) {
+         if (plot == view.getSelectedPlot()) {
 
             Paint oldPaint = g2d.getPaint();
             Stroke oldStroke = g2d.getStroke();
@@ -50,13 +51,7 @@ public class SelectedPlotAnnotation extends AbstractAnnotation {
         return ID;
     }
 
-    public IImagePlot getSelectedPlot() {
-        return selectedPlot;
-    }
-
-    public void setSelectedPlot(IImagePlot selectedPlot) {
-        this.selectedPlot = selectedPlot;
-    }
+    
 
     public IAnnotation safeCopy() {
         return this;

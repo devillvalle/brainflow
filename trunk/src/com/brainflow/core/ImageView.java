@@ -15,7 +15,6 @@ import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.jgoodies.binding.list.SelectionInList;
-import com.jgoodies.binding.list.ArrayListModel;
 import org.bushe.swing.event.EventBus;
 
 
@@ -23,6 +22,9 @@ import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import java.awt.*;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.RenderedImage;
 import java.beans.PropertyChangeEvent;
@@ -47,28 +49,25 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
 
     private IImageDisplayModel displayModel;
 
-    
     private Property<ICrosshair> crosshair;
 
     protected Property<Viewport3D> viewport;
 
-   
 
     public ImageView(IImageDisplayModel imodel) {
         super();
-
         displayModel = imodel;
-        init();
+        initView();
     }
 
 
-    protected void init() {
+    private void initView() {
         viewport = new Property<Viewport3D>(new Viewport3D(getModel()));
-
         crosshair = new Property<ICrosshair>(new Crosshair(viewport.getProperty()));
 
         displayModel.addImageDisplayModelListener(this);
 
+        viewport.addPropertyChangeListener(new ViewportHandler());
 
         crosshair.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent e) {
@@ -91,18 +90,19 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
             }
         });
 
+        addMouseListener(new PlotSelectionHandler());
+
 
     }
 
     public abstract SelectionInList getPlotSelection();
 
+    public abstract SliceController getSliceController();
+
 
     public IImagePlot getSelectedPlot() {
         return (IImagePlot) getPlotSelection().getSelection();
     }
-
-
-
 
 
     public int getSelectedIndex() {
@@ -280,4 +280,35 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
         }
 
     }
+
+    class ViewportHandler implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            List<IImagePlot> plots = ImageView.this.getPlots();
+            for (IImagePlot plot : plots) {
+                plot.setXAxisRange(viewport.getProperty().getRange(plot.getDisplayAnatomy().XAXIS));
+                plot.setYAxisRange(viewport.getProperty().getRange(plot.getDisplayAnatomy().YAXIS));
+
+            }
+
+
+        }
+    }
+
+    class PlotSelectionHandler extends MouseAdapter {
+        public void mousePressed(MouseEvent e) {
+            IImagePlot plot = whichPlot(e.getPoint());
+            if (plot != null && plot != getSelectedPlot()) {
+                IImagePlot oldPlot = getSelectedPlot();
+
+                getPlotSelection().setSelection(plot);
+                plot.getComponent().repaint();
+
+                if (oldPlot != null)
+                    oldPlot.getComponent().repaint();
+            }
+        }
+
+    }
+
 }

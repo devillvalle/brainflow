@@ -2,6 +2,7 @@ package com.brainflow.application.actions;
 
 import com.brainflow.core.ImageCanvas;
 import com.brainflow.core.ImageView;
+import com.brainflow.core.ImageCanvas2;
 import org.bushe.swing.action.BasicAction;
 
 import java.awt.event.ActionEvent;
@@ -20,7 +21,7 @@ public class CloseViewAction extends BasicAction {
     protected void execute(ActionEvent actionEvent) throws Exception {
 
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
-        ImageCanvas canvas = (ImageCanvas) getContextValue(ActionContext.SELECTED_CANVAS);
+        ImageCanvas2 canvas = (ImageCanvas2) getContextValue(ActionContext.SELECTED_CANVAS);
 
         if (view != null && canvas != null) {
             view.setVisible(false);

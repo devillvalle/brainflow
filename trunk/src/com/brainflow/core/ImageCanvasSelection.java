@@ -25,7 +25,7 @@ import java.awt.geom.Point2D;
 public class ImageCanvasSelection implements MouseListener, MouseMotionListener {
 
 
-    private ImageCanvas canvas;
+    private ImageCanvas2 canvas;
     private ImageCanvasMode canvasMode;
 
     private ImageView preSelectedView;
@@ -56,20 +56,20 @@ public class ImageCanvasSelection implements MouseListener, MouseMotionListener 
     private CURSOR_STATE cursorState = CURSOR_STATE.ELSEWHERE;
 
 
-    public ImageCanvasSelection(ImageCanvas canvas) {
+    public ImageCanvasSelection(ImageCanvas2 canvas) {
         this.canvas = canvas;
 
-        resizeMode = new PlotResizeMode(canvas);
-        translateMode = new PlotTranslationMode(canvas);
-        crosshairMode = new MoveCrosshairMode(canvas);
+        //resizeMode = new PlotResizeMode(canvas);
+        //translateMode = new PlotTranslationMode(canvas);
+        //crosshairMode = new MoveCrosshairMode(canvas);
 
     }
 
-    public void setCanvas(ImageCanvas canvas) {
+    public void setCanvas(ImageCanvas2 canvas) {
         this.canvas = canvas;
     }
 
-    public ImageCanvas getCanvas() {
+    public ImageCanvas2 getCanvas() {
         return canvas;
     }
 
@@ -387,8 +387,8 @@ public class ImageCanvasSelection implements MouseListener, MouseMotionListener 
             clearSelection();
             setSelectedView(null);
         } else if (view != canvas.getSelectedView()) {
-            canvas.getCanvasSelection().clearPreSelection();
-            canvas.getCanvasSelection().setSelectedView(mouseevent, view);
+           // canvas.getCanvasSelection().clearPreSelection();
+           // canvas.getCanvasSelection().setSelectedView(mouseevent, view);
             computeState(mouseevent);
             canvasMode.mousePressed(mouseevent);
         } else if (canvasMode != null) {

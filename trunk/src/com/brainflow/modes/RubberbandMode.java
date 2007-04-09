@@ -7,6 +7,7 @@
 package com.brainflow.modes;
 import com.brainflow.graphics.*;
 import com.brainflow.core.ImageCanvas;
+import com.brainflow.core.ImageCanvas2;
 
 import java.awt.event.*;
 import java.awt.*;
@@ -23,7 +24,7 @@ public class RubberbandMode extends com.brainflow.modes.ImageCanvasMode implemen
     public RubberbandMode() {
     }
     
-    public RubberbandMode(ImageCanvas _canvas) {
+    public RubberbandMode(ImageCanvas2 _canvas) {
         super.setImageCanvas(_canvas);
         rubberband = new Rubberband(canvas);
         rubberband.setActive(true);

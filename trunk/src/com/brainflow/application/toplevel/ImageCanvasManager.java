@@ -10,10 +10,7 @@ import com.brainflow.application.services.ImageViewCrosshairEvent;
 import com.brainflow.application.services.ImageViewCursorEvent;
 import com.brainflow.application.services.ImageViewSelectionEvent;
 import com.brainflow.application.YokeHandler;
-import com.brainflow.core.IImageDisplayModel;
-import com.brainflow.core.ImageCanvas;
-import com.brainflow.core.ImageCanvasModel;
-import com.brainflow.core.ImageView;
+import com.brainflow.core.*;
 import com.brainflow.display.Viewport3D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import org.bushe.swing.event.EventBus;
@@ -39,9 +36,9 @@ public class ImageCanvasManager  {
 
     private static final Logger log = Logger.getLogger(ImageCanvasManager.class.getName());
 
-    private List<ImageCanvas> canvasList = new ArrayList<ImageCanvas>();
+    private List<ImageCanvas2> canvasList = new ArrayList<ImageCanvas2>();
 
-    private ImageCanvas selectedCanvas = null;
+    private ImageCanvas2 selectedCanvas = null;
 
     public static final String SELECTED_CANVAS_PROPERTY = "selectedCanvas";
 
@@ -51,9 +48,9 @@ public class ImageCanvasManager  {
 
     private CanvasPropertyChangeListener canvasListener;
 
-    private MouseListener localMouseListener;
 
-    private MouseMotionListener localMouseMotionListener;
+
+
 
     private Map<ImageView, YokeHandler> yokeHandlers = new HashMap<ImageView, YokeHandler>();
 
@@ -73,16 +70,15 @@ public class ImageCanvasManager  {
         return (ImageCanvasManager) SingletonRegistry.REGISTRY.getInstance("com.brainflow.application.toplevel.ImageCanvasManager");
     }
 
-    private void listenToCanvas(ImageCanvas canvas) {
+    private void listenToCanvas(ImageCanvas2 canvas) {
         if (canvasListener == null) canvasListener = new CanvasPropertyChangeListener();
-        if (localMouseListener == null) localMouseListener = new ImageViewMouseListener();
-        if (localMouseMotionListener == null) localMouseMotionListener = new ImageViewMouseMotionListener();
+
+
         if (contextMenuHandler == null) contextMenuHandler = new ContextMenuHandler();
 
         canvas.getImageCanvasModel().addPropertyChangeListener(canvasListener);
-        canvas.addSpecialMouseMotionListener(localMouseMotionListener);
-        canvas.addSpecialMouseListener(localMouseListener);
-        canvas.addSpecialMouseListener(contextMenuHandler);
+
+        canvas.addMouseListener(contextMenuHandler);
 
 
     }
@@ -106,7 +102,7 @@ public class ImageCanvasManager  {
     }
 
 
-    public void addImageCanvas(ImageCanvas _canvas) {
+    public void addImageCanvas(ImageCanvas2 _canvas) {
         canvasList.add(_canvas);
         if (selectedCanvas == null)
             selectedCanvas = _canvas;
@@ -129,13 +125,13 @@ public class ImageCanvasManager  {
         support.removePropertyChangeListener(listener);
     }
 
-    public ImageCanvas getSelectedCanvas() {
+    public ImageCanvas2 getSelectedCanvas() {
         return selectedCanvas;
     }
 
-    public void setSelectedCanvas(ImageCanvas canvas) {
+    public void setSelectedCanvas(ImageCanvas2 canvas) {
         if (canvasList.contains(canvas)) {
-            ImageCanvas oldCanvas = this.selectedCanvas;
+            ImageCanvas2 oldCanvas = this.selectedCanvas;
             selectedCanvas = canvas;
             support.firePropertyChange(SELECTED_CANVAS_PROPERTY, oldCanvas, selectedCanvas);
         } else {
@@ -144,31 +140,31 @@ public class ImageCanvasManager  {
     }
 
 
-    public ImageCanvas[] getImageCanvases() {
-        ImageCanvas[] canvi = new ImageCanvas[canvasList.size()];
+    public ImageCanvas2[] getImageCanvases() {
+        ImageCanvas2[] canvi = new ImageCanvas2[canvasList.size()];
         canvasList.toArray(canvi);
         return canvi;
     }
 
-    public ImageCanvas createCanvas() {
-        ImageCanvas canvas = new ImageCanvas();
+    public ImageCanvas2 createCanvas() {
+        ImageCanvas2 canvas = new ImageCanvas2();
         addImageCanvas(canvas);
         return canvas;
     }
 
-    public ImageCanvas getImageCanvas(int idx) {
+    public ImageCanvas2 getImageCanvas(int idx) {
         if (canvasList.size() > idx && idx >= 0)
-            return (ImageCanvas) canvasList.get(idx);
+            return (ImageCanvas2) canvasList.get(idx);
         else {
             throw new IllegalArgumentException("No canvas exists at index" + idx);
         }
     }
 
-    public void removeImageCanvas(ImageCanvas canvas) {
+    public void removeImageCanvas(ImageCanvas2 canvas) {
         if (canvasList.contains(canvas)) {
             canvasList.remove(canvas);
-            canvas.removeSpecialMouseListener(localMouseListener);
-            canvas.removeSpecialMouseMotionListener(localMouseMotionListener);
+
+
             canvas.removePropertyChangeListener(canvasListener);
         }
 
@@ -178,7 +174,7 @@ public class ImageCanvasManager  {
     public void addImageView(ImageView view) {
         if (!registeredViews.containsKey(view)) {
             register(view);
-            ImageCanvas canvas = getSelectedCanvas();
+            ImageCanvas2 canvas = getSelectedCanvas();
             if (canvas != null) {
                 canvas.add(view);
             }
@@ -240,7 +236,8 @@ public class ImageCanvasManager  {
         public void propertyChange(PropertyChangeEvent e) {
 
             if (e.getPropertyName() == ImageCanvasModel.SELECTED_VIEW_PROPERTY) {
-                ImageView selectedView = (ImageView) e.getNewValue();
+
+                ImageView selectedView = (ImageView) e.getNewValue();              
                 EventBus.publish(new ImageViewSelectionEvent(selectedView));
 
             }
@@ -256,8 +253,7 @@ public class ImageCanvasManager  {
             Action unyokeAction = ActionManager.getInstance().getAction("unyoke-views");
             if (e.isPopupTrigger()) {
                 JPopupMenu popup = new JPopupMenu();
-                System.out.println(yokeAction);
-                System.out.println(unyokeAction);
+             
                 popup.add(ActionUIFactory.getInstance().createMenuItem(yokeAction));
                 popup.add(ActionUIFactory.getInstance().createMenuItem(unyokeAction));
                 popup.setInvoker(getSelectedCanvas());
@@ -284,27 +280,6 @@ public class ImageCanvasManager  {
         }
     }
 
-    class ImageViewMouseListener extends MouseAdapter {
-
-        public void mousePressed(MouseEvent e) {
-            Point p = e.getPoint();
-
-            ImageView iview = selectedCanvas.whichView((Component) e.getSource(), p);
-            if (iview == null || iview != selectedCanvas.getSelectedView()) {
-                return;
-            }
-
-
-            AnatomicalPoint3D pt = iview.getAnatomicalLocation(e.getComponent(), e.getPoint());
-            Viewport3D viewport = iview.getViewport().getProperty();
-
-            if (pt != null && viewport.inBounds(pt)) {
-                iview.getCrosshair().getProperty().setLocation(pt);
-            }
-        }
-
-
-    }
 
 
 

@@ -5,6 +5,7 @@ import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.core.ImageCanvas;
 import com.brainflow.core.ImageView;
+import com.brainflow.core.ImageCanvas2;
 import com.jidesoft.dialog.JideOptionPane;
 import org.bushe.swing.action.BasicAction;
 
@@ -27,7 +28,7 @@ public class DesignColorMapAction extends BasicAction {
     protected void execute(ActionEvent actionEvent) throws Exception {
 
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
-        ImageCanvas canvas = (ImageCanvas) getContextValue(ActionContext.SELECTED_CANVAS);
+        ImageCanvas2 canvas = (ImageCanvas2) getContextValue(ActionContext.SELECTED_CANVAS);
         if (view != null) {
 
             int layer = view.getModel().getSelectedIndex();

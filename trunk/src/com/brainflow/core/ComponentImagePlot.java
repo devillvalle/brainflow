@@ -40,7 +40,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
 
     private AnatomicalVolume displayAnatomy;
 
-    private Insets plotInsets = new Insets(30, 30, 30, 30);
+    private Insets plotInsets = new Insets(18, 18, 18, 18);
 
     private Rectangle plotArea = new Rectangle(300,300);
 
@@ -131,6 +131,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
             producer.setScreenSize(plotArea);
         }
 
+
         Insets insets = getInsets();
         Color oldColor = g2.getColor();
         g2.setColor(Color.BLACK);
@@ -145,7 +146,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         //g2.drawImage(producer.getImage(), null, (int)plotArea.getMinX(), (int)plotArea.getMaxX());
 
         for (String annot : annotationMap.keySet()) {
-            IAnnotation ia = annotationMap.get(annot);
+           IAnnotation ia = annotationMap.get(annot);
             if (ia.isVisible()) {
                 ia.draw(g2, plotArea, this);
             }

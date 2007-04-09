@@ -2,6 +2,7 @@ package com.brainflow.modes;
 
 import com.brainflow.core.ImageCanvas;
 import com.brainflow.core.ImageView;
+import com.brainflow.core.ImageCanvas2;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -19,7 +20,7 @@ import java.awt.event.MouseEvent;
 public class PlotSelectorMode extends ImageCanvasMode {
 
 
-    public PlotSelectorMode(ImageCanvas _canvas) {
+    public PlotSelectorMode(ImageCanvas2 _canvas) {
         super.setImageCanvas(_canvas);
     }
 
@@ -32,15 +33,15 @@ public class PlotSelectorMode extends ImageCanvasMode {
 
         if (view == null) {
 
-            canvas.getCanvasSelection().clearSelection();
+            //canvas.getCanvasSelection().clearSelection();
             canvas.setSelectedView(null);
         } else if (view == canvas.getSelectedView()) {
 
             return;
         } else if (view != null) {
 
-            canvas.getCanvasSelection().clearPreSelection();
-            canvas.getCanvasSelection().setSelectedView(event, view);
+            //canvas.getCanvasSelection().clearPreSelection();
+            //canvas.getCanvasSelection().setSelectedView(event, view);
 
         } else {
            

@@ -50,12 +50,8 @@ public class ImageViewFactory {
         String id = ImageCanvasManager.getInstance().register(view);
         ImageCanvasManager.getInstance().yoke(source, view);
         view.setId(id);
-        FilledSelectableBorder border = new FilledSelectableBorder(view);
-        view.setBorder(border);
-        view.setName("[" + view.getId() + "] " + view.getModel().getName());
 
-        ITitledBorder tborder = border;
-        tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
+        view.setName("[" + view.getId() + "] " + view.getModel().getName());
 
 
         return view;
@@ -67,12 +63,9 @@ public class ImageViewFactory {
         String id = ImageCanvasManager.getInstance().register(view);
         ImageCanvasManager.getInstance().yoke(source, view);
         view.setId(id);
-        FilledSelectableBorder border = new FilledSelectableBorder(view);
-        view.setBorder(border);
+
         view.setName("[" + view.getId() + "] " + view.getModel().getName());
 
-        ITitledBorder tborder = border;
-        tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
 
 
         return view;
@@ -85,12 +78,9 @@ public class ImageViewFactory {
         String id = ImageCanvasManager.getInstance().register(view);
         ImageCanvasManager.getInstance().yoke(source, view);
         view.setId(id);
-        FilledSelectableBorder border = new FilledSelectableBorder(view);
-        view.setBorder(border);
+
         view.setName("[" + view.getId() + "] " + view.getModel().getName());
 
-        ITitledBorder tborder = border;
-        tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
 
 
         return view;
@@ -101,12 +91,9 @@ public class ImageViewFactory {
         SimpleImageView view = new SimpleImageView(displayModel, AnatomicalVolume.getCanonicalAxial());
         String id = ImageCanvasManager.getInstance().register(view);
         view.setId(id);
-        FilledSelectableBorder border = new FilledSelectableBorder(view);
-        view.setBorder(border);
-        view.setName("[" + view.getId() + "] " + view.getModel().getName());
 
-        ITitledBorder tborder = border;
-        tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
+        //ITitledBorder tborder = border;
+        //tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
 
 
         return view;
@@ -116,12 +103,10 @@ public class ImageViewFactory {
         MontageImageView view = new MontageImageView(displayModel, AnatomicalVolume.getCanonicalAxial());
         String id = ImageCanvasManager.getInstance().register(view);
         view.setId(id);
-        FilledSelectableBorder border = new FilledSelectableBorder(view);
-        view.setBorder(border);
-        view.setName("[" + view.getId() + "] " + view.getModel().getName());
+     view.setName("[" + view.getId() + "] " + view.getModel().getName());
 
-        ITitledBorder tborder = border;
-        tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
+        //ITitledBorder tborder = border;
+       // tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
 
 
         return view;
@@ -131,12 +116,11 @@ public class ImageViewFactory {
         SimpleOrthogonalImageView view = new SimpleOrthogonalImageView(displayModel);
         String id = ImageCanvasManager.getInstance().register(view);
         view.setId(id);
-        FilledSelectableBorder border = new FilledSelectableBorder(view);
-        view.setBorder(border);
+
         view.setName("[" + view.getId() + "] " + view.getModel().getName());
 
-        ITitledBorder tborder = border;
-        tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
+        //ITitledBorder tborder = border;
+        //tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
 
 
         return view;
@@ -146,13 +130,12 @@ public class ImageViewFactory {
         SimpleImageView view = new SimpleImageView(displayModel, AnatomicalVolume.getCanonicalCoronal());
         String id = ImageCanvasManager.getInstance().register(view);
         view.setId(id);
-        FilledSelectableBorder border = new FilledSelectableBorder(view);
-        view.setBorder(border);
+
         view.setName("[" + view.getId() + "] " + view.getModel().getName());
 
 
-        ITitledBorder tborder = border;
-        tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
+        //ITitledBorder tborder = border;
+        //tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
 
         return view;
     }
@@ -195,13 +178,12 @@ public class ImageViewFactory {
         String id = ImageCanvasManager.getInstance().register(view);
 
         view.setId(id);
-        FilledSelectableBorder border = new FilledSelectableBorder(view);
-        view.setBorder(border);
+
         view.setName("[" + view.getId() + "] " + view.getModel().getName());
 
 
-        ITitledBorder tborder = border;
-        tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
+        //ITitledBorder tborder = border;
+        //tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
 
 
         return view;

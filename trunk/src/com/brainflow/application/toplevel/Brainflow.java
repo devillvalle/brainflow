@@ -28,6 +28,7 @@ import com.jidesoft.status.StatusBar;
 import com.jidesoft.swing.*;
 import com.jgoodies.binding.beans.PropertyAdapter;
 import de.javasoft.plaf.synthetica.SyntheticaLookAndFeel;
+import de.javasoft.plaf.synthetica.SyntheticaStandardLookAndFeel;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.VFS;
@@ -46,6 +47,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import apprising.api.swing.plaf.a03.A03LookAndFeel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -102,14 +105,15 @@ public class Brainflow {
             //org.jvnet.substance.SubstanceLookAndFeel lf = new SubstanceLookAndFeel();
             //SubstanceLookAndFeel.setSkin(new BusinessBlueSteelSkin());
 
-            //SyntheticaLookAndFeel lf = new SyntheticaStandardLookAndFeel();
-            SyntheticaLookAndFeel lf = new de.javasoft.plaf.synthetica.SyntheticaMauveMetallicLookAndFeel();
+            SyntheticaLookAndFeel lf = new SyntheticaStandardLookAndFeel();
+            //SyntheticaLookAndFeel lf = new de.javasoft.plaf.synthetica.SyntheticaMauveMetallicLookAndFeel();
             //A03LookAndFeel lf = new apprising.api.swing.plaf.a03.A03LookAndFeel();
             UIManager.setLookAndFeel(lf);
             //LookAndFeelFactory.installDefaultLookAndFeelAndExtension();
 
 
             LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
+            //LookAndFeelFactory.installJideExtension(LookAndFeelFactory.OFFICE2003_STYLE);
 
             Brainflow bflow = getInstance();
             bflow.launch();
@@ -171,8 +175,7 @@ public class Brainflow {
 
 
     private void intializeKeyActions() {
-        ImageCanvas canvas = ImageCanvasManager.getInstance().getSelectedCanvas();
-
+     
 
     }
 
@@ -314,6 +317,7 @@ public class Brainflow {
         mainToolbar.add(colorbarToggle);
 
         brainFrame.getContentPane().add(mainToolbar, BorderLayout.NORTH);
+        
         ActionManager.mapKeystrokeForAction(documentPane, ActionManager.getInstance().getAction("view-close"));
         ActionManager.mapKeystrokeForAction(documentPane, ActionManager.getInstance().getAction("view-axial"));
         ActionManager.mapKeystrokeForAction(documentPane, ActionManager.getInstance().getAction("view-coronal"));
@@ -330,7 +334,7 @@ public class Brainflow {
         brainFrame.getDockingManager().getWorkspace().setLayout(new BorderLayout());
         brainFrame.getDockingManager().getWorkspace().add(documentPane, "Center");
 
-        ImageCanvas canvas = ImageCanvasManager.getInstance().getSelectedCanvas();
+        ImageCanvas2 canvas = ImageCanvasManager.getInstance().getSelectedCanvas();
         canvas.setRequestFocusEnabled(true);
         canvas.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
@@ -362,7 +366,7 @@ public class Brainflow {
         CanvasBar cbar = new CanvasBar();
 
         /// TODO add automatic updating of canvas to Canvas Bar via EventBus
-        cbar.setImageCanvas(canvas);
+        //cbar.setImageCanvas(canvas);
         ////////////////////////////////////////////////////////////////////
         canvas.add(cbar.getComponent(), BorderLayout.NORTH);
 
@@ -630,7 +634,7 @@ public class Brainflow {
                     ColorTable.createImageIcon(icm, 40, 12), icm);
 
 
-            ImageCanvas canvas = ImageCanvasManager.getInstance().
+            ImageCanvas2 canvas = ImageCanvasManager.getInstance().
                     getSelectedCanvas();
 
             Map map = new HashMap();

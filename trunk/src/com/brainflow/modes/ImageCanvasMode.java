@@ -2,6 +2,7 @@ package com.brainflow.modes;
 
 import com.brainflow.core.ImageCanvas;
 import com.brainflow.core.ImagePane;
+import com.brainflow.core.ImageCanvas2;
 
 import java.util.*;
 import java.util.List;
@@ -20,14 +21,14 @@ import java.awt.event.*;
 
 public abstract class ImageCanvasMode implements MouseListener, MouseMotionListener, KeyListener {
 
-    protected ImageCanvas canvas;
+    protected ImageCanvas2 canvas;
 
     
-    public void setImageCanvas(ImageCanvas _canvas) {
+    public void setImageCanvas(ImageCanvas2 _canvas) {
         canvas = _canvas;
     }
 
-    public ImageCanvas getImageCanvas() {
+    public ImageCanvas2 getImageCanvas() {
         return canvas;
     }
 

@@ -11,7 +11,6 @@ import com.jgoodies.binding.beans.Model;
 
 import javax.swing.event.ListDataEvent;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,9 +31,9 @@ public class Viewport3D extends Model {
     public static final String Z_AXIS_MAX_PROPERTY = "ZAxisMax";
 
 
-    public static final String X_AXIS_WIDTH_PROPERTY = "XAxisWidth";
-    public static final String Y_AXIS_WIDTH_PROPERTY = "YAxisWidth";
-    public static final String Z_AXIS_WIDTH_PROPERTY = "ZAxisWidth";
+    public static final String X_AXIS_EXTENT_PROPERTY = "XAxisExtent";
+    public static final String Y_AXIS_EXTENT_PROPERTY = "YAxisExtent";
+    public static final String Z_AXIS_EXTENT_PROPERTY = "ZAxisExtent";
 
     public static final String BOUNDS_PROPERTY = "bounds";
 
@@ -50,9 +49,9 @@ public class Viewport3D extends Model {
     private double YAxisMax;
     private double ZAxisMax;
 
-    private double XAxisWidth;
-    private double YAxisWidth;
-    private double ZAxisWidth;
+    private double XAxisExtent;
+    private double YAxisExtent;
+    private double ZAxisExtent;
 
 
     public Viewport3D(IImageDisplayModel _displayModel) {
@@ -105,6 +104,10 @@ public class Viewport3D extends Model {
         return true;
     }
 
+    public boolean inBounds(AnatomicalAxis axis, double val) {
+        return bounds.getImageAxis(axis,true).getRange().contains(val);       
+    }
+
     public double getXAxisMin() {
         return XAxisMin;
     }
@@ -113,9 +116,9 @@ public class Viewport3D extends Model {
         setXAxisMin(bounds.getImageAxis(Axis.X_AXIS).getRange().getMinimum());
         setYAxisMin(bounds.getImageAxis(Axis.Y_AXIS).getRange().getMinimum());
         setZAxisMin(bounds.getImageAxis(Axis.Z_AXIS).getRange().getMinimum());
-        setXAxisWidth(bounds.getImageAxis(Axis.X_AXIS).getRange().getInterval());
-        setYAxisWidth(bounds.getImageAxis(Axis.Y_AXIS).getRange().getInterval());
-        setZAxisWidth(bounds.getImageAxis(Axis.Z_AXIS).getRange().getInterval());
+        setXAxisExtent(bounds.getImageAxis(Axis.X_AXIS).getRange().getInterval());
+        setYAxisExtent(bounds.getImageAxis(Axis.Y_AXIS).getRange().getInterval());
+        setZAxisExtent(bounds.getImageAxis(Axis.Z_AXIS).getRange().getInterval());
 
     }
 
@@ -157,13 +160,13 @@ public class Viewport3D extends Model {
 
     }
 
-    public String getWidthPropertyName(AnatomicalAxis axis) {
+    public String getExtentPropertyName(AnatomicalAxis axis) {
         if (axis.sameAxis(getXAxis())) {
-            return Viewport3D.X_AXIS_WIDTH_PROPERTY;
+            return Viewport3D.X_AXIS_EXTENT_PROPERTY;
         } else if (axis.sameAxis(getYAxis())) {
-            return Viewport3D.Y_AXIS_WIDTH_PROPERTY;
+            return Viewport3D.Y_AXIS_EXTENT_PROPERTY;
         } else if (axis.sameAxis(getZAxis())) {
-            return Viewport3D.Z_AXIS_WIDTH_PROPERTY;
+            return Viewport3D.Z_AXIS_EXTENT_PROPERTY;
         }
 
         throw new IllegalArgumentException("Invalid axis " + axis + " for viewport");
@@ -178,20 +181,102 @@ public class Viewport3D extends Model {
             return new AxisRange(axis, getYAxisMin(), getYAxisMax());
         } else if (axis.sameAxis(getZAxis())) {
             return new AxisRange(axis, getZAxisMin(), getZAxisMax());
+        } else {
+            throw new IllegalArgumentException("Invalid axis for viewport: " + axis);
         }
-
-        throw new IllegalArgumentException("Invalid axis for viewport: " + axis);
     }
 
-    public void setXAxisMin(double xAxisMin) {
+    public void setAxesRange(AnatomicalAxis axis1, double min1, double max1,
+                             AnatomicalAxis axis2, double min2, double max2) {
+        setAxisRange(axis1, min1, max1-min1);
+        setAxisRange(axis2, min2, max2-min2);
+
+
+    }
+
+
+    private void setAxisRange0(AnatomicalAxis axis, double min, double extent) {
+        if (axis.sameAxis(getXAxis())) {
+            setXAxisMin0(min);
+            setXAxisExtent0(extent);
+        } else if (axis.sameAxis(getYAxis())) {
+            setYAxisMin0(min);
+            setYAxisExtent0(extent);
+        } else if (axis.sameAxis(getZAxis())) {
+            setZAxisMin0(min);
+            setZAxisExtent0(extent);
+        } else {
+            throw new IllegalArgumentException("Invalid axis for viewport: " + axis);
+        }
+    }
+
+    public void setAxisRange(AnatomicalAxis axis, double min, double extent) {
+        if (axis.sameAxis(getXAxis())) {
+            setXAxisMin(min);
+            setXAxisExtent(extent);
+        } else if (axis.sameAxis(getYAxis())) {
+            setYAxisMin(min);
+            setYAxisExtent(extent);
+        } else if (axis.sameAxis(getZAxis())) {
+            setZAxisMin(min);
+            setZAxisExtent(extent);
+        } else {
+            throw new IllegalArgumentException("Invalid axis for viewport: " + axis);
+        }
+    }
+
+    public void setAxisMin(AnatomicalAxis axis, double min) {
+        if (axis.sameAxis(getXAxis())) {
+            setXAxisMin(min);
+        } else if (axis.sameAxis(getYAxis())) {
+            setYAxisMin(min);
+        } else if (axis.sameAxis(getZAxis())) {
+            setZAxisMin(min);
+        } else {
+            throw new IllegalArgumentException("Invalid axis for viewport: " + axis);
+        }
+
+
+    }
+
+    public void setAxisExtent(AnatomicalAxis axis, double extent) {
+        if (axis.sameAxis(getXAxis())) {
+            setXAxisExtent(extent);
+        } else if (axis.sameAxis(getYAxis())) {
+            setYAxisExtent(extent);
+        } else if (axis.sameAxis(getZAxis())) {
+            setZAxisExtent(extent);
+        } else {
+            throw new IllegalArgumentException("Invalid axis for viewport: " + axis);
+        }
+
+
+    }
+
+    private void setXAxisMin0(double xAxisMin) {
         if (xAxisMin < bounds.getImageAxis(Axis.X_AXIS).getRange().getMinimum()) {
             throw new IllegalArgumentException("value " + xAxisMin + "outside of image bounds");
+            //xAxisMin = bounds.getImageAxis(Axis.X_AXIS).getRange().getMinimum();
         }
 
 
         double oldValue = this.XAxisMin;
         this.XAxisMin = xAxisMin;
-        this.XAxisMax = XAxisMin + XAxisWidth;
+        this.XAxisMax = XAxisMin + XAxisExtent;
+        this.firePropertyChange(Viewport3D.X_AXIS_MIN_PROPERTY, oldValue, xAxisMin);
+    }
+
+
+    public void setXAxisMin(double xAxisMin) {
+        if (xAxisMin < bounds.getImageAxis(Axis.X_AXIS).getRange().getMinimum()) {
+            throw new IllegalArgumentException("value " + xAxisMin + "outside of image bounds");
+            //xAxisMin = bounds.getImageAxis(Axis.X_AXIS).getRange().getMinimum();
+        }
+
+
+        double oldValue = this.XAxisMin;
+        this.XAxisMin = xAxisMin;
+        this.XAxisMax = XAxisMin + XAxisExtent;
         this.firePropertyChange(Viewport3D.X_AXIS_MIN_PROPERTY, oldValue, xAxisMin);
     }
 
@@ -199,16 +284,31 @@ public class Viewport3D extends Model {
         return YAxisMin;
     }
 
-    public void setYAxisMin(double yAxisMin) {
+    private void setYAxisMin0(double yAxisMin) {
         if (yAxisMin < bounds.getImageAxis(Axis.Y_AXIS).getRange().getMinimum()) {
             throw new IllegalArgumentException("value " + yAxisMin + " is outside of image bounds");
+
+            //yAxisMin = bounds.getImageAxis(Axis.Y_AXIS).getRange().getMinimum();
         }
 
-        
 
         double oldValue = this.YAxisMin;
         this.YAxisMin = yAxisMin;
-        this.YAxisMax = YAxisMin + YAxisWidth;
+        this.YAxisMax = YAxisMin + YAxisExtent;
+
+    }
+
+    public void setYAxisMin(double yAxisMin) {
+        if (yAxisMin < bounds.getImageAxis(Axis.Y_AXIS).getRange().getMinimum()) {
+            throw new IllegalArgumentException("value " + yAxisMin + " is outside of image bounds");
+
+            //yAxisMin = bounds.getImageAxis(Axis.Y_AXIS).getRange().getMinimum();
+        }
+
+
+        double oldValue = this.YAxisMin;
+        this.YAxisMin = yAxisMin;
+        this.YAxisMax = YAxisMin + YAxisExtent;
         this.firePropertyChange(Viewport3D.Y_AXIS_MIN_PROPERTY, oldValue, yAxisMin);
     }
 
@@ -216,15 +316,29 @@ public class Viewport3D extends Model {
         return ZAxisMin;
     }
 
+    private void setZAxisMin0(double zAxisMin) {
+        if (zAxisMin < bounds.getImageAxis(Axis.Z_AXIS).getRange().getMinimum()) {
+            throw new IllegalArgumentException("value " + zAxisMin + "outside of image bounds");
+            //zAxisMin = bounds.getImageAxis(Axis.Z_AXIS).getRange().getMinimum();
+        }
+
+
+        double oldValue = this.ZAxisMin;
+        this.ZAxisMin = zAxisMin;
+        this.ZAxisMax = ZAxisMin + ZAxisExtent;
+
+    }
+
     public void setZAxisMin(double zAxisMin) {
         if (zAxisMin < bounds.getImageAxis(Axis.Z_AXIS).getRange().getMinimum()) {
             throw new IllegalArgumentException("value " + zAxisMin + "outside of image bounds");
+            //zAxisMin = bounds.getImageAxis(Axis.Z_AXIS).getRange().getMinimum();
         }
 
-      
+
         double oldValue = this.ZAxisMin;
         this.ZAxisMin = zAxisMin;
-        this.ZAxisMax = ZAxisMin + ZAxisWidth;
+        this.ZAxisMax = ZAxisMin + ZAxisExtent;
         this.firePropertyChange(Viewport3D.Z_AXIS_MIN_PROPERTY, oldValue, zAxisMin);
     }
 
@@ -241,37 +355,54 @@ public class Viewport3D extends Model {
         return ZAxisMax;
     }
 
-    public double getXAxisWidth() {
-        return XAxisWidth;
+    public double getXAxisExtent() {
+        return XAxisExtent;
     }
 
-    public void setXAxisWidth(double xAxisWidth) {
-        double oldValue = this.XAxisWidth;
-        this.XAxisWidth = xAxisWidth;
-        this.XAxisMax = XAxisMin + XAxisWidth;
-        this.firePropertyChange(Viewport3D.X_AXIS_WIDTH_PROPERTY, oldValue, xAxisWidth);
+    public void setXAxisExtent(double xAxisExtent) {
+        double oldValue = this.XAxisExtent;
+        this.XAxisExtent = xAxisExtent;
+        this.XAxisMax = XAxisMin + XAxisExtent;
+        this.firePropertyChange(Viewport3D.X_AXIS_EXTENT_PROPERTY, oldValue, xAxisExtent);
     }
 
-    public double getYAxisWidth() {
-        return YAxisWidth;
+    private void setXAxisExtent0(double xAxisExtent) {
+        this.XAxisExtent = xAxisExtent;
+        this.XAxisMax = XAxisMin + XAxisExtent;
     }
 
-    public void setYAxisWidth(double yAxisWidth) {
-        double oldValue = this.YAxisWidth;
-        this.YAxisWidth = yAxisWidth;
-        this.YAxisMax = YAxisMin + YAxisWidth;
-        this.firePropertyChange(Viewport3D.Y_AXIS_WIDTH_PROPERTY, oldValue, yAxisWidth);
+    public double getYAxisExtent() {
+        return YAxisExtent;
     }
 
-    public double getZAxisWidth() {
-        return ZAxisWidth;
+    public void setYAxisExtent(double yAxisExtent) {
+        double oldValue = this.YAxisExtent;
+        this.YAxisExtent = yAxisExtent;
+        this.YAxisMax = YAxisMin + YAxisExtent;
+        this.firePropertyChange(Viewport3D.Y_AXIS_EXTENT_PROPERTY, oldValue, yAxisExtent);
     }
 
-    public void setZAxisWidth(double zAxisWidth) {
-        double oldValue = this.ZAxisWidth;
-        this.ZAxisWidth = zAxisWidth;
-        this.ZAxisMax = ZAxisMin + ZAxisWidth;
-        this.firePropertyChange(Viewport3D.Z_AXIS_WIDTH_PROPERTY, oldValue, zAxisWidth);
+    private void setYAxisExtent0(double yAxisExtent) {
+        this.YAxisExtent = yAxisExtent;
+        this.YAxisMax = YAxisMin + YAxisExtent;
+
+    }
+
+    public double getZAxisExtent() {
+        return ZAxisExtent;
+    }
+
+    public void setZAxisExtent(double zAxisExtent) {
+        double oldValue = this.ZAxisExtent;
+        this.ZAxisExtent = zAxisExtent;
+        this.ZAxisMax = ZAxisMin + ZAxisExtent;
+        this.firePropertyChange(Viewport3D.Z_AXIS_EXTENT_PROPERTY, oldValue, zAxisExtent);
+    }
+
+    private void setZAxisExtent0(double zAxisExtent) {
+        this.ZAxisExtent = zAxisExtent;
+        this.ZAxisMax = ZAxisMin + ZAxisExtent;
+
     }
 
 

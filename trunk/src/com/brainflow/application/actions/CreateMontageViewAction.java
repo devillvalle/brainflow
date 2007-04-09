@@ -1,9 +1,12 @@
 package com.brainflow.application.actions;
 
-import com.brainflow.core.*;
-import com.brainflow.image.anatomy.AnatomicalVolume;
 import org.bushe.swing.action.BasicAction;
+import com.brainflow.core.ImageView;
+import com.brainflow.core.IImageDisplayModel;
+import com.brainflow.core.ImageViewFactory;
+import com.brainflow.core.ImageCanvas2;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -13,7 +16,7 @@ import java.awt.event.ActionEvent;
  * Time: 11:42:04 PM
  * To change this template use File | Settings | File Templates.
  */
-public class CreateOrthogonalViewAction extends BasicAction {
+public class CreateMontageViewAction extends BasicAction {
 
 
     protected void contextChanged() {
@@ -32,8 +35,8 @@ public class CreateOrthogonalViewAction extends BasicAction {
 
         if (view != null) {
             IImageDisplayModel displayModel = view.getModel();
-            ImageView sview = ImageViewFactory.createOrthogonalView(displayModel);
-            //ImageView sview = ImageViewFactory.createMontageView(displayModel);
+            //ImageView sview = ImageViewFactory.createOrthogonalView(displayModel);
+            ImageView sview = ImageViewFactory.createMontageView(displayModel);
             ImageCanvas2 canvas = (ImageCanvas2) getContextValue(ActionContext.SELECTED_CANVAS);
 
             if (canvas != null) {
@@ -42,4 +45,6 @@ public class CreateOrthogonalViewAction extends BasicAction {
         }
 
     }
+
+    
 }

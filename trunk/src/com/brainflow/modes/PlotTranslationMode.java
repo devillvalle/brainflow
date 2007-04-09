@@ -2,6 +2,7 @@ package com.brainflow.modes;
 
 import com.brainflow.core.ImageCanvas;
 import com.brainflow.core.ImageView;
+import com.brainflow.core.ImageCanvas2;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,7 +31,7 @@ public class PlotTranslationMode extends ImageCanvasMode {
     private JComponent currentPane = null;
     private Rectangle lastShadow = null;
 
-    public PlotTranslationMode(ImageCanvas _canvas) {
+    public PlotTranslationMode(ImageCanvas2 _canvas) {
         super.setImageCanvas(_canvas);
 
     }

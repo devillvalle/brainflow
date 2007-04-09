@@ -6,6 +6,7 @@ import com.brainflow.application.services.ImageDisplayModelEvent;
 import com.brainflow.core.ImageCanvas;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
+import com.brainflow.core.ImageCanvas2;
 import com.brainflow.display.Visibility;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jidesoft.action.CommandBar;
@@ -41,7 +42,7 @@ public class CanvasBar extends ImageViewPresenter {
 
     private ButtonSelectionListener listener = new ButtonSelectionListener();
 
-    private ImageCanvas canvas;
+
 
     private JideSplitButton emptyButton = new JideSplitButton("Tabula Rasa");
 
@@ -71,11 +72,7 @@ public class CanvasBar extends ImageViewPresenter {
         update();
     }
 
-    public void setImageCanvas(ImageCanvas _canvas) {
-        canvas = _canvas;
-    }
-
-
+   
     protected void layerSelected(ImageLayer layer) {
         if (layer != getSelectedLayer()) {
             ImageView view = getSelectedView();

@@ -9,6 +9,7 @@ package com.brainflow.application.actions;
 import com.brainflow.application.toplevel.ImageCanvasManager;
 import com.brainflow.core.ImageCanvas;
 import com.brainflow.core.ImageView;
+import com.brainflow.core.ImageCanvas2;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -43,7 +44,7 @@ public class SavePNGAction extends AbstractAction {
      */
     public void actionPerformed(ActionEvent e) {
 
-        ImageCanvas canvas = ImageCanvasManager.getInstance().getSelectedCanvas();
+        ImageCanvas2 canvas = ImageCanvasManager.getInstance().getSelectedCanvas();
         ImageView view = canvas.getSelectedView();
 
         if (view == null) {

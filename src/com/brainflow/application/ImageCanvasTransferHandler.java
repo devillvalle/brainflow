@@ -3,6 +3,7 @@ package com.brainflow.application;
 import com.brainflow.application.toplevel.Brainflow;
 import com.brainflow.core.ImageCanvas;
 import com.brainflow.core.ImageView;
+import com.brainflow.core.ImageCanvas2;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -71,10 +72,10 @@ public class ImageCanvasTransferHandler extends TransferHandler {
 
             Component c = support.getComponent();
 
-            if (c instanceof ImageCanvas) {
+            if (c instanceof ImageCanvas2) {
                 Point p = support.getDropLocation().getDropPoint();
 
-                ImageCanvas canvas = (ImageCanvas) c;
+                ImageCanvas2 canvas = (ImageCanvas2) c;
                 ImageView view = canvas.whichView(c, p);
                 if (view != null)
                     Brainflow.getInstance().loadAndDisplay(limg[0], view, true);

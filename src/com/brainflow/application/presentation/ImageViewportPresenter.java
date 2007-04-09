@@ -311,8 +311,8 @@ public class ImageViewportPresenter extends ImageViewPresenter {
             viewportAdapter.setBean(viewport);
         }
 
-        ValueModel xextent = viewportAdapter.getValueModel(viewport.getWidthPropertyName(plot.getXAxisRange().getAnatomicalAxis()));
-        ValueModel yextent = viewportAdapter.getValueModel(viewport.getWidthPropertyName(plot.getYAxisRange().getAnatomicalAxis()));
+        ValueModel xextent = viewportAdapter.getValueModel(viewport.getExtentPropertyName(plot.getXAxisRange().getAnatomicalAxis()));
+        ValueModel yextent = viewportAdapter.getValueModel(viewport.getExtentPropertyName(plot.getYAxisRange().getAnatomicalAxis()));
 
 
         xfovAdapter = new BoundedRangeAdapter(new PercentageConverter(xextent,
@@ -372,8 +372,8 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
         ValueModel xval = viewportAdapter.getValueModel(viewport.getMinPropertyName(plot.getXAxisRange().getAnatomicalAxis()));
         ValueModel yval = viewportAdapter.getValueModel(viewport.getMinPropertyName(plot.getYAxisRange().getAnatomicalAxis()));
-        ValueModel wval = viewportAdapter.getValueModel(viewport.getWidthPropertyName(plot.getXAxisRange().getAnatomicalAxis()));
-        ValueModel hval = viewportAdapter.getValueModel(viewport.getWidthPropertyName(plot.getYAxisRange().getAnatomicalAxis()));
+        ValueModel wval = viewportAdapter.getValueModel(viewport.getExtentPropertyName(plot.getXAxisRange().getAnatomicalAxis()));
+        ValueModel hval = viewportAdapter.getValueModel(viewport.getExtentPropertyName(plot.getYAxisRange().getAnatomicalAxis()));
 
         connectBox(xval, yval, wval, hval);
 
@@ -396,6 +396,7 @@ public class ImageViewportPresenter extends ImageViewPresenter {
         xorigin.setEnabled(b);
         yorigin.setEnabled(b);
         xfovSlider.setEnabled(b);
+        yfovSlider.setEnabled(b);
 
 
     }
@@ -451,7 +452,7 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
         
                 boxView.setToolTipText("x : " + xorigin.toString());
-                boxView.setToolTipText("y : " + xorigin.toString());
+                boxView.setToolTipText("y : " + yorigin.toString());
 
 
                 xspinnerModel.setValue(newx);

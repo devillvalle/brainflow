@@ -4,11 +4,7 @@ import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.AnatomicalVolume;
-import com.brainflow.image.space.IImageSpace;
 import com.jgoodies.binding.beans.Model;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,9 +23,9 @@ public class Crosshair extends Model implements ICrosshair {
     public Crosshair(Viewport3D _viewport) {
         viewport = _viewport;
         location = new AnatomicalPoint3D((AnatomicalVolume) viewport.getBounds().getAnatomy(),
-                viewport.getXAxisMin() + (viewport.getXAxisWidth() / 2),
-                viewport.getYAxisMin() + (viewport.getYAxisWidth() / 2),
-                viewport.getZAxisMin() + (viewport.getZAxisWidth() / 2));
+                viewport.getXAxisMin() + (viewport.getXAxisExtent() / 2),
+                viewport.getYAxisMin() + (viewport.getYAxisExtent() / 2),
+                viewport.getZAxisMin() + (viewport.getZAxisExtent() / 2));
 
 
 

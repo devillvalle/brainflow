@@ -48,7 +48,7 @@ public abstract class BaseStage implements Stage {
     private Feeder downstreamFeeder;
     
     /**
-     * This implementation of init() simply stores a reference to the
+     * This implementation of initView() simply stores a reference to the
      * stage context.
      */
     public void init(StageContext context) {

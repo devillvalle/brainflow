@@ -50,6 +50,10 @@ public class SimpleOrthogonalImageView extends ImageView {
     }
 
 
+    public SliceController getSliceController() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     private Point getCrosshairLocation(ImagePane ipane) {
         IImagePlot plot = ipane.getImagePlot();
         Rectangle plotArea = plot.getPlotArea();

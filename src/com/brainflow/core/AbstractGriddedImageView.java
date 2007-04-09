@@ -19,7 +19,7 @@ import java.util.List;
  * Time: 11:50:38 PM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class AbstractGriddedImageView extends ImageView implements MouseListener {
+public abstract class AbstractGriddedImageView extends ImageView  {
 
     private ArrayListModel plots = new ArrayListModel();
 
@@ -34,22 +34,31 @@ public abstract class AbstractGriddedImageView extends ImageView implements Mous
 
     public AbstractGriddedImageView(IImageDisplayModel imodel) {
         super(imodel);
-        //addMouseListener(this);
+      
+    }
 
 
+    protected AbstractGriddedImageView(IImageDisplayModel imodel, int NRows, int NCols) {
+        super(imodel);
+        this.NRows = NRows;
+        this.NCols = NCols;
     }
 
     protected void layoutGrid() {
         layout = new GridLayout(getNRows(), getNCols());
         setLayout(layout);
+
+        int count = 0;
         for (int i=0; i<getNRows(); i++) {
             for (int j=0; j<getNCols(); j++) {
-                IImagePlot plot = makePlot(i,j);
+                IImagePlot plot = makePlot(count++, i,j);
                 plots.add(plot);
                 add(plot.getComponent());
             }
 
         }
+
+        plotSelection.setSelection(plots.get(0));
 
     }
 
@@ -57,7 +66,7 @@ public abstract class AbstractGriddedImageView extends ImageView implements Mous
         return plotSelection;
     }
 
-    public abstract IImagePlot makePlot(int row, int column);
+    protected abstract IImagePlot makePlot(int index, int row, int column);
 
 
     public int getNRows() {
@@ -74,6 +83,10 @@ public abstract class AbstractGriddedImageView extends ImageView implements Mous
 
     public void setNCols(int NCols) {
         this.NCols = NCols;
+    }
+
+    public int getNumPlots() {
+        return plots.size();
     }
 
     public int getSelectedPlotIndex() {
@@ -109,33 +122,7 @@ public abstract class AbstractGriddedImageView extends ImageView implements Mous
     }
 
 
-    public void mouseClicked(MouseEvent e) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+   
 
-    public void mousePressed(MouseEvent e) {
-        IImagePlot plot = whichPlot(e.getPoint());
-        if (plot != null) {
-            SelectedPlotAnnotation annotation = (SelectedPlotAnnotation)getAnnotation(getSelectedPlot(), SelectedPlotAnnotation.ID);
 
-            if (annotation != null) {
-                removeAnnotation(getSelectedPlot(), SelectedPlotAnnotation.ID);
-                annotation.setSelectedPlot(plot);
-            }
-            getPlotSelection().setSelection(plot);
-            repaint();
-        }
-    }
-
-    public void mouseReleased(MouseEvent e) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public void mouseEntered(MouseEvent e) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public void mouseExited(MouseEvent e) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
 }

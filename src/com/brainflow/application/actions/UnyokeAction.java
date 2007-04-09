@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.brainflow.core.ImageView;
 import com.brainflow.core.ImageCanvas;
+import com.brainflow.core.ImageCanvas2;
 import com.brainflow.application.toplevel.ImageCanvasManager;
 
 /**
@@ -29,7 +30,7 @@ public class UnyokeAction extends BasicAction {
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
 
         if (view != null) {
-            ImageCanvas canvas = ImageCanvasManager.getInstance().getSelectedCanvas();
+            ImageCanvas2 canvas = ImageCanvasManager.getInstance().getSelectedCanvas();
             List<ImageView> views = canvas.getViews();
 
             for (ImageView v : views) {

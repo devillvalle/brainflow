@@ -59,6 +59,14 @@
                 actionClass="com.brainflow.application.actions.CreateOrthogonalViewAction"
                 desc="Creates three-plane orthogonal view">
         </action>
+        <action id="view-montage"
+                name="montage"
+                mnemonic="m"
+                accel="control M"
+                smicon="/resources/icons/application_view_tile.png"
+                actionClass="com.brainflow.application.actions.CreateMontageViewAction"
+                desc="Creates a montage image view">
+        </action>
         <action id="view-close"
                 name="close"
                 accel="del"

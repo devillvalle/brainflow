@@ -36,6 +36,7 @@ public class CreateBufferedImagesStage extends ImageProcessingStage {
         List<RGBAImage> rgbaImages = (List<RGBAImage>)input;
 
         if (images == null || images.size() != getModel().getNumLayers()) {
+            System.out.println("creating buffered images ...");
             images = new ArrayList<BufferedImage>();
             for (int i=0; i<getModel().getNumLayers(); i++) {
                 RGBAImage rgba = rgbaImages.get(i);

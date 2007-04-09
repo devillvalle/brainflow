@@ -1,9 +1,6 @@
 package com.brainflow.application.actions;
 
-import com.brainflow.core.IImageDisplayModel;
-import com.brainflow.core.ImageCanvas;
-import com.brainflow.core.ImageView;
-import com.brainflow.core.ImageViewFactory;
+import com.brainflow.core.*;
 import org.bushe.swing.action.BasicAction;
 
 import java.awt.event.ActionEvent;
@@ -34,7 +31,7 @@ public class CreateCoronalViewAction extends BasicAction {
         if (view != null) {
 
             ImageView sview = ImageViewFactory.createYokedCoronalView(view);
-            ImageCanvas canvas = (ImageCanvas) getContextValue(ActionContext.SELECTED_CANVAS);
+            ImageCanvas2 canvas = (ImageCanvas2) getContextValue(ActionContext.SELECTED_CANVAS);
 
             if (canvas != null) {
                 canvas.addImageView(sview);

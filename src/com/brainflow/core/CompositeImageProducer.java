@@ -74,7 +74,7 @@ public class CompositeImageProducer extends AbstractImageProducer {
     public void setScreenSize(Rectangle screenSize) {
         super.setScreenSize(screenSize);
 
-        pipeline.clearPath(fetchSlicesStage);
+        pipeline.clearPath(resizeImageStage);
     }
 
     public void reset() {
@@ -98,13 +98,15 @@ public class CompositeImageProducer extends AbstractImageProducer {
         initPipeline();
     }
 
-
-    public void setXaxis(AxisRange xaxis) {
+    @Override
+    public void setXAxis(AxisRange xaxis) {
+        System.out.println("new axis  " + xaxis);
         super.setXAxis(xaxis);
         pipeline.clearPath(cropImageStage);
     }
 
-    public void setYaxis(AxisRange yaxis) {
+    @Override
+    public void setYAxis(AxisRange yaxis) {
         super.setYAxis(yaxis);
         pipeline.clearPath(cropImageStage);
     }

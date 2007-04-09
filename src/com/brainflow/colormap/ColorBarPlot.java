@@ -18,7 +18,6 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.general.DatasetChangeEvent;
 import org.jfree.data.general.DatasetChangeListener;
-import org.jfree.ui.RectangleInsets;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +25,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.net.URL;
 
 /**
  * @author buchs
@@ -84,7 +82,7 @@ public class ColorBarPlot extends ChartPanel {
 
     public void setPlotOrientation(PlotOrientation _orientation) {
         orientation = _orientation;
-        //init();
+        //initView();
     }
 
 

@@ -58,32 +58,32 @@ public class ImageExtentPresenter extends AbstractPresenter {
         viewportAdapter = new BeanAdapter(viewport, true);
 
 
-        xExtentAdapter = new BoundedRangeAdapter(new PercentageConverter(viewportAdapter.getValueModel(Viewport3D.X_AXIS_WIDTH_PROPERTY),
+        xExtentAdapter = new BoundedRangeAdapter(new PercentageConverter(viewportAdapter.getValueModel(Viewport3D.X_AXIS_EXTENT_PROPERTY),
                 new ValueHolder(10),
                 new ValueHolder(viewport.getBounds().getImageAxis(Axis.X_AXIS).getRange().getInterval()), 100), 0, 0, 100);
 
 
         form.getSlider1().setModel(xExtentAdapter);
 
-        yExtentAdapter = new BoundedRangeAdapter(new PercentageConverter(viewportAdapter.getValueModel(Viewport3D.Y_AXIS_WIDTH_PROPERTY),
+        yExtentAdapter = new BoundedRangeAdapter(new PercentageConverter(viewportAdapter.getValueModel(Viewport3D.Y_AXIS_EXTENT_PROPERTY),
                 new ValueHolder(10),
                 new ValueHolder(viewport.getBounds().getImageAxis(Axis.Y_AXIS).getRange().getInterval()), 100), 0, 0, 100);
 
 
         form.getSlider2().setModel(yExtentAdapter);
 
-        zExtentAdapter = new BoundedRangeAdapter(new PercentageConverter(viewportAdapter.getValueModel(Viewport3D.Z_AXIS_WIDTH_PROPERTY),
+        zExtentAdapter = new BoundedRangeAdapter(new PercentageConverter(viewportAdapter.getValueModel(Viewport3D.Z_AXIS_EXTENT_PROPERTY),
                 new ValueHolder(10),
                 new ValueHolder(viewport.getBounds().getImageAxis(Axis.Z_AXIS).getRange().getInterval()), 100), 0, 0, 100);
 
         form.getSlider3().setModel(zExtentAdapter);
 
-        Bindings.bind(form.getValueLabel1(), viewportAdapter.getValueModel(Viewport3D.X_AXIS_WIDTH_PROPERTY));
+        Bindings.bind(form.getValueLabel1(), viewportAdapter.getValueModel(Viewport3D.X_AXIS_EXTENT_PROPERTY));
 
 
-        Bindings.bind(form.getValueLabel2(), viewportAdapter.getValueModel(Viewport3D.Y_AXIS_WIDTH_PROPERTY));
+        Bindings.bind(form.getValueLabel2(), viewportAdapter.getValueModel(Viewport3D.Y_AXIS_EXTENT_PROPERTY));
 
-        Bindings.bind(form.getValueLabel3(), viewportAdapter.getValueModel(Viewport3D.Z_AXIS_WIDTH_PROPERTY));
+        Bindings.bind(form.getValueLabel3(), viewportAdapter.getValueModel(Viewport3D.Z_AXIS_EXTENT_PROPERTY));
 
         // Bindings.bind(control.getLowField(), adapter.getValueModel(LinearColorMap.LOWER_ALPHA_PROPERTY));
 

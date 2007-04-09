@@ -49,7 +49,7 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
         add(rootPane, "Center");
 
 
-        canvasSelection = new ImageCanvasSelection(this);
+        //canvasSelection = new ImageCanvasSelection(this);
         initListener();
 
 

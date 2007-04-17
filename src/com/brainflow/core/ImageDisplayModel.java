@@ -1,8 +1,8 @@
 package com.brainflow.core;
 
-import com.brainflow.display.ImageLayerProperties;
+import com.brainflow.core.ImageLayerProperties;
 import com.brainflow.image.anatomy.AnatomicalAxis;
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.space.Axis;
@@ -46,9 +46,9 @@ public class ImageDisplayModel implements IImageDisplayModel {
     private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
 
-    private static IImageSpace EMPTY_SPACE = new ImageSpace3D(new ImageAxis(0, 100, AnatomicalVolume.getCanonicalAxial().XAXIS, 100),
-            new ImageAxis(0, 100, AnatomicalVolume.getCanonicalAxial().YAXIS, 100),
-            new ImageAxis(0, 100, AnatomicalVolume.getCanonicalAxial().ZAXIS, 100));
+    private static IImageSpace EMPTY_SPACE = new ImageSpace3D(new ImageAxis(0, 100, Anatomy3D.getCanonicalAxial().XAXIS, 100),
+            new ImageAxis(0, 100, Anatomy3D.getCanonicalAxial().YAXIS, 100),
+            new ImageAxis(0, 100, Anatomy3D.getCanonicalAxial().ZAXIS, 100));
 
     private IImageSpace imageSpace = EMPTY_SPACE;
 
@@ -111,11 +111,11 @@ public class ImageDisplayModel implements IImageDisplayModel {
     public String getLayerName(int idx) {
         assert idx >= 0 && idx < imageListModel.size();
         ImageLayer layer = (ImageLayer) imageListModel.get(idx);
-        return layer.getImageData().getImageLabel();
+        return layer.getLabel();
     }
 
 
-    public void addLayer(ImageLayer layer) {
+    public void addLayer(AbstractLayer layer) {
         listenToLayer(layer);
         imageListModel.add(layer);
         if (imageListModel.size() == 1) {
@@ -125,7 +125,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     }
 
-    private void listenToLayer(ImageLayer layer) {
+    private void listenToLayer(AbstractLayer layer) {
 
         layer.addPropertyChangeListener(ImageLayerProperties.COLOR_MAP_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
@@ -176,9 +176,8 @@ public class ImageDisplayModel implements IImageDisplayModel {
         IImageSpace uspace = null;
 
         if (!imageListModel.isEmpty()) {
-            for (int i = 0; i < imageListModel.size(); i++) {
-                IImageData data = getImageData(i);
-                IImageSpace space = data.getImageSpace();
+            for (int i = 0; i < imageListModel.size(); i++) {                
+                IImageSpace space = getLayer(i).getImageSpace();
                 if (uspace == null) {
                     uspace = space;
                 } else {
@@ -200,7 +199,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
     }
 
 
-    public int indexOf(ImageLayer layer) {
+    public int indexOf(AbstractLayer layer) {
         return imageListModel.indexOf(layer);
 
 
@@ -209,8 +208,9 @@ public class ImageDisplayModel implements IImageDisplayModel {
     public List<Integer> indexOf(IImageData data) {
         List<Integer> ret = new ArrayList<Integer>();
         for (int i = 0; i < imageListModel.size(); i++) {
-            ImageLayer layer = (ImageLayer) imageListModel.get(i);
-            if (layer.getImageData() == data) {
+            AbstractLayer layer = (AbstractLayer) imageListModel.get(i);
+                    
+            if (layer.getData() == data) {
                 ret.add(i);
 
             }
@@ -226,25 +226,19 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     }
 
-    public void removeLayer(ImageLayer layer) {
+    public void removeLayer(AbstractLayer layer) {
         assert imageListModel.contains(layer);
         int idx = imageListModel.indexOf(layer);
         removeLayer(idx);
     }
 
-    public boolean containsLayer(ImageLayer layer) {
+    public boolean containsLayer(AbstractLayer layer) {
         return imageListModel.contains(layer);
     }
 
-    public ImageLayer getImageLayer(int layer) {
+    public AbstractLayer getLayer(int layer) {
         assert layer >= 0 && layer < imageListModel.size();
         return (ImageLayer) imageListModel.get(layer);
-    }
-
-    public IImageData getImageData(int layer) {
-        assert layer >= 0 && layer < imageListModel.size();
-        ImageLayer ilayer = (ImageLayer) imageListModel.get(layer);
-        return ilayer.getImageData();
     }
 
 

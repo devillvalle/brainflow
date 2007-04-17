@@ -5,7 +5,7 @@ import com.brainflow.core.ImageView;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.ImageViewFactory;
 import com.brainflow.core.ImageCanvas2;
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.ImageAxis;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -74,7 +74,7 @@ public class CreateMontageViewAction extends BasicAction {
             colSpinner = new JSpinner(new SpinnerNumberModel(3, 1, 6, 1));
 
 
-            AnatomicalVolume anatomy = view.getSelectedPlot().getDisplayAnatomy();
+            Anatomy3D anatomy = view.getSelectedPlot().getDisplayAnatomy();
             ImageAxis iaxis = view.getModel().getImageSpace().getImageAxis(anatomy.ZAXIS, true);
             gapSpinner = new JSpinner(new SpinnerNumberModel(iaxis.getSpacing(), iaxis.getSpacing(), 20, 1));
 

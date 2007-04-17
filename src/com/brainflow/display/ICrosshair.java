@@ -1,11 +1,9 @@
 package com.brainflow.display;
 
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
-
-import java.util.Observable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,7 +21,7 @@ public interface ICrosshair {
 
     Viewport3D getViewport();
 
-    AnatomicalVolume getAnatomy();
+    Anatomy3D getAnatomy();
 
     double getXValue();
 

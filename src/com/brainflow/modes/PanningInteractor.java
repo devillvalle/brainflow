@@ -2,7 +2,7 @@ package com.brainflow.modes;
 
 import com.brainflow.core.ImageView;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.display.Viewport3D;
 
 import javax.swing.*;
@@ -45,7 +45,7 @@ public class PanningInteractor extends ImageViewInteractor {
             double dx = curpos.getX() - lastpos.getX();
             double dy = curpos.getY() - lastpos.getY();
 
-            AnatomicalVolume anatomy = view.getSelectedPlot().getDisplayAnatomy();
+            Anatomy3D anatomy = view.getSelectedPlot().getDisplayAnatomy();
             Viewport3D viewport = view.getViewport().getProperty();
             viewport.setAxisMin(anatomy.XAXIS, viewport.getXAxisMin() + dx);
             viewport.setAxisMin(anatomy.YAXIS, viewport.getYAxisMin() + dy);

@@ -1,7 +1,7 @@
 package com.brainflow.image.operations;
 
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.data.BasicImageData2D;
 import com.brainflow.image.data.IImageData3D;
 import com.brainflow.image.data.ImageFiller;
@@ -27,7 +27,7 @@ public class ImageSlicer {
     private IImageData3D image;
     private IImageSpace space;
 
-    private AnatomicalVolume displayAnatomy = AnatomicalVolume.AXIAL_LAI;
+    private Anatomy3D displayAnatomy = Anatomy3D.AXIAL_LAI;
 
 
     public ImageSlicer(IImageData3D _image) {
@@ -37,16 +37,16 @@ public class ImageSlicer {
     }
 
 
-    public AnatomicalVolume getDisplayAnatomy() {
+    public Anatomy3D getDisplayAnatomy() {
         return displayAnatomy;
     }
 
-    public void setDisplayAnatomy(AnatomicalVolume displayAnatomy) {
+    public void setDisplayAnatomy(Anatomy3D displayAnatomy) {
         this.displayAnatomy = displayAnatomy;
     }
 
 
-    public BasicImageData2D getSlice(AnatomicalVolume displayAnatomy, AnatomicalPoint1D displaySlice) {
+    public BasicImageData2D getSlice(Anatomy3D displayAnatomy, AnatomicalPoint1D displaySlice) {
 
         // retrieves the ImageAxis for the image in data space
         // these axes may well be "flipped" with respect to the display space

@@ -1,9 +1,10 @@
-package com.brainflow.display;
+package com.brainflow.core;
 
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.utils.Range;
+import com.brainflow.display.*;
 import com.jgoodies.binding.list.SelectionInList;
 
 import java.awt.image.IndexColorModel;

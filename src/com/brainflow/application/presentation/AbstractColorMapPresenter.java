@@ -1,8 +1,8 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.colormap.IColorMap;
-import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
+import com.brainflow.core.AbstractLayer;
 import com.brainflow.display.Property;
 import com.jgoodies.binding.beans.DelayedPropertyChangeHandler;
 
@@ -42,7 +42,7 @@ public abstract class AbstractColorMapPresenter extends ImageViewPresenter {
 
         if (idx >= 0) {
             updateColorMapParameter(view.getModel().
-                    getImageLayer(idx).getImageLayerProperties().
+                    getLayer(idx).getImageLayerProperties().
                     getColorMap());
         }
 
@@ -91,7 +91,7 @@ public abstract class AbstractColorMapPresenter extends ImageViewPresenter {
     }
 
 
-    public void layerSelected(ImageLayer layer) {
+    public void layerSelected(AbstractLayer layer) {
         if (layer != null) {
             updateColorMapParameter(layer.getImageLayerProperties().getColorMap());
         }

@@ -14,6 +14,7 @@ import com.brainflow.display.Property;
 import com.brainflow.display.Opacity;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.ImageLayer;
+import com.brainflow.core.AbstractLayer;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
 import com.jgoodies.binding.value.ConverterFactory;
@@ -53,7 +54,7 @@ public class OpacityPresenter extends ImageViewPresenter {
     }
 
 
-    protected void layerSelected(ImageLayer layer) {
+    protected void layerSelected(AbstractLayer layer) {
         initBinding();
     }
 
@@ -68,7 +69,7 @@ public class OpacityPresenter extends ImageViewPresenter {
 
 
         int idx = view.getModel().getSelectedIndex();
-        ImageLayer layer = view.getModel().getImageLayer(idx);
+        AbstractLayer layer = view.getModel().getLayer(idx);
         Property<Opacity> opacity = layer.getImageLayerProperties().getOpacity();
 
 

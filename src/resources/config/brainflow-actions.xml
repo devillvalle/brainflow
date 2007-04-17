@@ -75,8 +75,8 @@
                 desc="Closes the current view">
         </action>
     </action-list>
-    <action-list id="appearance-menu" name="Appearance">
-        <action id="appearance-crosshair"
+    <action-list id="annotation-menu" name="Annotations">
+        <action id="annotation-crosshair"
                 name="crosshair"
                 mnemonic="h"
                 accel="control H"
@@ -84,7 +84,7 @@
                 actionClass="com.brainflow.application.actions.CrosshairDialogAction"
                 desc="Change crosshair appearance">
         </action>
-        <action id="appearance-colorbar"
+        <action id="annotation-colorbar"
                 name="colorbar"
                 mnemonic="c"
                 accel="control Q"
@@ -92,13 +92,21 @@
                 actionClass="com.brainflow.application.actions.ColorBarAnnotationDialogAction"
                 desc="Change color bar annotation properties">
         </action>
-        <action id="appearance-margins"
+        <action id="annotation-margins"
                 name="margins"
                 mnemonic="m"
                 accel="control M"
                 smicon="/resources/icons/layout_header.png"
                 actionClass="com.brainflow.application.actions.AdjustMarginsAction"
                 desc="Change crosshair appearance">
+        </action>
+        <action id="annotation-coordinates"
+                name="coordinates"
+                mnemonic="n"
+                accel="control alt c"
+                smicon="/resources/icons/layout_header.png"
+                actionClass="com.brainflow.application.actions.LoadCoordinatesAction"
+                desc="Load and view a set of image coordinates ">
         </action>
     </action-list>
     <action-list id="navigation-menu" name="Navigation">

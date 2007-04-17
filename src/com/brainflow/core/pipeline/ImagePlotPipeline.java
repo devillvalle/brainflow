@@ -5,9 +5,8 @@ import org.apache.commons.pipeline.Stage;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.IImagePlot;
 import com.brainflow.core.ImageLayer2D;
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.data.IImageData2D;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.Axis;
 
@@ -65,7 +64,7 @@ public class ImagePlotPipeline extends Pipeline {
 
 
 
-    public AnatomicalVolume getDisplayAnatomy() {
+    public Anatomy3D getDisplayAnatomy() {
         return plot.getDisplayAnatomy();
     }
 

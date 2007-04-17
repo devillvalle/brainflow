@@ -1,15 +1,13 @@
 package com.brainflow.core;
 
 import com.brainflow.application.ILoadableImage;
-import com.brainflow.display.ImageLayerProperties;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.anatomy.AnatomicalVolume;
-import com.brainflow.image.data.IImageData2D;
+import com.brainflow.core.ImageLayerProperties;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.image.space.Axis;
+import com.brainflow.image.space.IImageSpace;
+import com.brainflow.image.interpolation.NearestNeighborInterpolator;
+import com.brainflow.image.data.IImageData;
 import com.brainflow.image.data.IImageData3D;
-import com.brainflow.image.operations.ImageSlicer;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,40 +19,21 @@ import java.util.Map;
 public class ImageLayer3D extends ImageLayer {
 
 
-    private static final int MAX_ENTRIES = 50;
-
-
-    private ImageSlicer slicer;
-
-    private Map<String, ImageLayer2D> cache = new LinkedHashMap<String, ImageLayer2D>(MAX_ENTRIES, .75F, true) {
-        protected boolean removeEldestEntry(Map.Entry eldest) {
-            return size() > MAX_ENTRIES;
-        }
-    };
-
-
     public ImageLayer3D(ILoadableImage limg, ImageLayerProperties _params) {
         super(limg, _params);
-        slicer = new ImageSlicer((IImageData3D) getImageData());
+
     }
 
-
-    public ImageLayer2D getSlice(AnatomicalVolume displayAnatomy, AnatomicalPoint1D _displaySlice) {
-        //String key = _displaySlice.getAnatomy().toString() + _displaySlice.getX();
-        //ImageLayer2D layer = cache.get(key);
-
-        //if (layer == null) {
-        IImageData2D data2d = slicer.getSlice(displayAnatomy, _displaySlice);
-        ImageLayer2D layer = new ImageLayer2D(data2d, getImageLayerProperties());
-        cache.put(_displaySlice.getAnatomy().toString() + _displaySlice.getX(), layer);
-
-        //} else {
-        //    System.out.println("RETURNING CACHED IMAGE");
-
-        //}
-
-        return layer;
+    public IImageData3D getData() {
+        return (IImageData3D) super.getData();    //To change body of overridden methods use File | Settings | File Templates.
     }
 
+    public double getValue(AnatomicalPoint3D pt) {
+        IImageSpace space = getImageSpace();
+        double x = pt.getValue(space.getAnatomicalAxis(Axis.X_AXIS)).getX();
+        double y = pt.getValue(space.getAnatomicalAxis(Axis.Y_AXIS)).getX();
+        double z = pt.getValue(space.getAnatomicalAxis(Axis.Z_AXIS)).getX();
 
+        return getData().getRealValue(x, y, z, new NearestNeighborInterpolator());
+    }
 }

@@ -1,9 +1,7 @@
 package com.brainflow.core;
 
-import com.brainflow.display.ImageLayerProperties;
+import com.brainflow.core.ImageLayerProperties;
 import com.brainflow.image.data.IImageData2D;
-
-import java.awt.image.BufferedImage;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,7 +10,7 @@ import java.awt.image.BufferedImage;
  * Time: 6:10:00 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ImageLayer2D {
+public class ImageLayer2D  {
 
     private IImageData2D data;
 

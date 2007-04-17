@@ -31,7 +31,7 @@ public class SelectColorMapAction extends BasicAction {
         if (view != null) {
 
             int layer = view.getModel().getSelectedIndex();
-            IColorMap map = view.getModel().getImageLayer(layer).
+            IColorMap map = view.getModel().getLayer(layer).
                     getImageLayerProperties().getColorMap().getProperty();
 
             LinearColorMap lmap = new LinearColorMap(map.getMinimumValue(), map.getMaximumValue(), icm);
@@ -43,7 +43,7 @@ public class SelectColorMapAction extends BasicAction {
                
             }
 
-            view.getModel().getImageLayer(layer).
+            view.getModel().getLayer(layer).
                     getImageLayerProperties().getColorMap().setProperty(lmap);
 
 

@@ -2,6 +2,7 @@ package com.brainflow.application.actions;
 
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
+import com.brainflow.core.AbstractLayer;
 import com.brainflow.display.SmoothingOp;
 import com.jidesoft.dialog.JideOptionPane;
 import org.bushe.swing.action.BasicAction;
@@ -26,7 +27,7 @@ public class SmoothingAction extends BasicAction {
 
         if (view != null) {
             int idx = view.getSelectedIndex();
-            ImageLayer layer = view.getModel().getImageLayer(idx);
+            AbstractLayer layer = view.getModel().getLayer(idx);
 
 
             String result = JideOptionPane.showInputDialog(view, "Smoothing Radius (FWHM): ", 0);

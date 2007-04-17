@@ -13,6 +13,7 @@ import com.brainflow.image.data.MaskedImageData2D;
 import com.brainflow.image.data.MaskPredicate;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.core.ImageLayer;
+import com.brainflow.core.AbstractLayer;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,7 +40,7 @@ public class ThresholdImagesStage extends ImageProcessingStage {
             images = new ArrayList<RGBAImage>();
             for (int i = 0; i < getModel().getNumLayers(); i++) {
                 RGBAImage rgba = rgbaImages.get(i);
-                ImageLayer layer = getModel().getImageLayer(i);
+                AbstractLayer layer = getModel().getLayer(i);
                 if (rgba != null && layer.isVisible()) {
                     images.add(threshold(layer, rgba));
                 } else {
@@ -53,7 +54,7 @@ public class ThresholdImagesStage extends ImageProcessingStage {
 
     }
 
-    private RGBAImage threshold(ImageLayer layer, RGBAImage rgba) {
+    private RGBAImage threshold(AbstractLayer layer, RGBAImage rgba) {
         ThresholdRange trange = layer.getImageLayerProperties().getThresholdRange().getProperty();
 
 

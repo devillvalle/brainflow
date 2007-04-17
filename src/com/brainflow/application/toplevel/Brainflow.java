@@ -8,7 +8,7 @@ import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.core.*;
-import com.brainflow.display.ImageLayerProperties;
+import com.brainflow.core.ImageLayerProperties;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.data.IImageData3D;
@@ -27,8 +27,6 @@ import com.jidesoft.status.LabelStatusBarItem;
 import com.jidesoft.status.StatusBar;
 import com.jidesoft.swing.*;
 import com.jgoodies.binding.beans.PropertyAdapter;
-import de.javasoft.plaf.synthetica.SyntheticaLookAndFeel;
-import de.javasoft.plaf.synthetica.SyntheticaStandardLookAndFeel;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.VFS;
@@ -47,8 +45,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import apprising.api.swing.plaf.a03.A03LookAndFeel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -105,13 +101,13 @@ public class Brainflow {
             //org.jvnet.substance.SubstanceLookAndFeel lf = new SubstanceLookAndFeel();
             //SubstanceLookAndFeel.setSkin(new BusinessBlueSteelSkin());
 
-            SyntheticaLookAndFeel lf = new SyntheticaStandardLookAndFeel();
+            //SyntheticaLookAndFeel lf = new SyntheticaStandardLookAndFeel();
             //SyntheticaLookAndFeel lf = new de.javasoft.plaf.synthetica.SyntheticaMauveMetallicLookAndFeel();
             //A03LookAndFeel lf = new apprising.api.swing.plaf.a03.A03LookAndFeel();
-            UIManager.setLookAndFeel(lf);
+            //UIManager.setLookAndFeel(lf);
             //LookAndFeelFactory.installDefaultLookAndFeelAndExtension();
 
-
+            LookAndFeelFactory.installDefaultLookAndFeel();
             LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
             //LookAndFeelFactory.installJideExtension(LookAndFeelFactory.OFFICE2003_STYLE);
 
@@ -217,8 +213,8 @@ public class Brainflow {
         ActionList navList = ActionManager.getInstance().getActionList("navigation-menu");
         brainFrame.getJMenuBar().add(ActionUIFactory.getInstance().createMenu(navList));
 
-        ActionList appearanceList = ActionManager.getInstance().getActionList("appearance-menu");
-        brainFrame.getJMenuBar().add(ActionUIFactory.getInstance().createMenu(appearanceList));
+        ActionList annotationList = ActionManager.getInstance().getActionList("annotation-menu");
+        brainFrame.getJMenuBar().add(ActionUIFactory.getInstance().createMenu(annotationList));
 
 
         ActionList debugList = ActionManager.getInstance().getActionList("debug-menu");
@@ -682,20 +678,10 @@ public class Brainflow {
 
 
             AnatomicalPoint3D gpoint = event.getLocation();
-            ImageLayer layer = view.getModel().getImageLayer(view.getModel().getSelectedIndex());
+            AbstractLayer layer = view.getModel().getLayer(view.getModel().getSelectedIndex());
+            double value = layer.getValue(gpoint);
 
-
-            IImageData3D idata = (IImageData3D) layer.getImageData();
-            IImageSpace space = idata.getImageSpace();
-            space.getAnatomicalAxis(Axis.X_AXIS);
-
-
-            double x = gpoint.getValue(space.getAnatomicalAxis(Axis.X_AXIS)).getX();
-            double y = gpoint.getValue(space.getAnatomicalAxis(Axis.Y_AXIS)).getX();
-            double z = gpoint.getValue(space.getAnatomicalAxis(Axis.Z_AXIS)).getX();
-
-            double value = idata.getRealValue(x, y, z, new NearestNeighborInterpolator());
-
+          
             IColorMap cmap = layer.getImageLayerProperties().getColorMap().getProperty();
 
             Color c = null;

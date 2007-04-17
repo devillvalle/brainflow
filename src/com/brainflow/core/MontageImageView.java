@@ -1,8 +1,7 @@
 package com.brainflow.core;
 
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.anatomy.AnatomicalPoint;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.core.annotations.CrosshairAnnotation;
 import com.brainflow.core.annotations.SelectedPlotAnnotation;
@@ -10,7 +9,6 @@ import com.brainflow.display.ICrosshair;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
 import java.util.List;
 import java.awt.*;
 
@@ -23,11 +21,11 @@ import java.awt.*;
  */
 public class MontageImageView extends AbstractGriddedImageView {
 
-    private AnatomicalVolume displayAnatomy;
+    private Anatomy3D displayAnatomy;
 
     private MontageSliceController sliceController;
 
-    public MontageImageView(IImageDisplayModel imodel, AnatomicalVolume displayAnatomy) {
+    public MontageImageView(IImageDisplayModel imodel, Anatomy3D displayAnatomy) {
         super(imodel);
         this.displayAnatomy = displayAnatomy;
 
@@ -38,7 +36,7 @@ public class MontageImageView extends AbstractGriddedImageView {
         initLocal();
     }
 
-    public MontageImageView(IImageDisplayModel imodel, AnatomicalVolume displayAnatomy, int nrows, int ncols, double sliceGap) {
+    public MontageImageView(IImageDisplayModel imodel, Anatomy3D displayAnatomy, int nrows, int ncols, double sliceGap) {
         super(imodel, nrows, ncols);
         this.displayAnatomy = displayAnatomy;
 
@@ -51,7 +49,7 @@ public class MontageImageView extends AbstractGriddedImageView {
     }
 
 
-    public AnatomicalVolume getDisplayAnatomy() {
+    public Anatomy3D getDisplayAnatomy() {
         return displayAnatomy;
     }
 
@@ -86,7 +84,7 @@ public class MontageImageView extends AbstractGriddedImageView {
 
     }
 
-    //public void setDisplayAnatomy(AnatomicalVolume displayAnatomy) {
+    //public void setDisplayAnatomy(Anatomy3D displayAnatomy) {
     //    this.displayAnatomy = displayAnatomy;
     //}
 

@@ -2,14 +2,12 @@ package com.brainflow.core;
 
 import com.brainflow.core.annotations.IAnnotation;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.axis.AxisRange;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Rectangle2D;
-import java.util.List;
 import java.util.Map;
 
 
@@ -28,7 +26,7 @@ public interface IImagePlot {
 
     public void setPlotInsets(Insets insets);
 
-    public AnatomicalVolume getDisplayAnatomy();
+    public Anatomy3D getDisplayAnatomy();
 
     public IImageDisplayModel getModel();
   

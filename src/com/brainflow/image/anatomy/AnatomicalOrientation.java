@@ -71,21 +71,21 @@ public class AnatomicalOrientation implements java.io.Serializable {
     private static AnatomicalOrientation createAxialOrientation() {
         AnatomicalOrientation o = new AnatomicalOrientation();
         o.orientationLabel = __AXIAL;
-        //o.anatomies = AnatomicalVolume.getAxialFamily();
+        //o.anatomies = Anatomy3D.getAxialFamily();
         return o;
     }
 
     private static AnatomicalOrientation createCoronalOrientation() {
         AnatomicalOrientation o = new AnatomicalOrientation();
         o.orientationLabel = __CORONAL;
-        //o.anatomies = AnatomicalVolume.getCoronalFamily();
+        //o.anatomies = Anatomy3D.getCoronalFamily();
         return o;
     }
 
     private static AnatomicalOrientation createSagittalOrientation() {
         AnatomicalOrientation o = new AnatomicalOrientation();
         o.orientationLabel = __SAGITTAL;
-        //o.anatomies = AnatomicalVolume.getSagittalFamily();
+        //o.anatomies = Anatomy3D.getSagittalFamily();
         return o;
 
     }

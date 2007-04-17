@@ -1,6 +1,6 @@
 package com.brainflow.core;
 
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.axis.AxisRange;
 
@@ -18,7 +18,7 @@ public abstract class AbstractImageProducer implements IImageProducer {
     
     private IImageDisplayModel model;
 
-    private AnatomicalVolume displayAnatomy;
+    private Anatomy3D displayAnatomy;
 
     private AnatomicalPoint1D slice;
 
@@ -37,11 +37,11 @@ public abstract class AbstractImageProducer implements IImageProducer {
         return model;
     }
 
-    public void setDisplayAnatomy(AnatomicalVolume displayAnatomy)  {
+    public void setDisplayAnatomy(Anatomy3D displayAnatomy)  {
         this.displayAnatomy = displayAnatomy;
     }
 
-    public AnatomicalVolume getDisplayAnatomy() {
+    public Anatomy3D getDisplayAnatomy() {
         return displayAnatomy;
     }
 

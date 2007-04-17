@@ -12,8 +12,7 @@ import java.awt.geom.AffineTransform;
 import com.brainflow.image.space.ImageSpace2D;
 import com.brainflow.image.space.Axis;
 import com.brainflow.core.ImageLayer2D;
-import com.brainflow.core.ImageLayer;
-import com.brainflow.display.ImageLayerProperties;
+import com.brainflow.core.ImageLayerProperties;
 import com.brainflow.display.InterpolationMethod;
 import com.brainflow.display.InterpolationHint;
 

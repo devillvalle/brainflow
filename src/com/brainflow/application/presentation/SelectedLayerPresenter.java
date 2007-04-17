@@ -61,7 +61,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
                 int i = e.getFirstIndex();
                 CheckBoxListSelectionModel model = (CheckBoxListSelectionModel)e.getSource();
                 ImageView view = getSelectedView();
-                ImageLayer layer = view.getModel().getImageLayer(i);
+                AbstractLayer layer = view.getModel().getLayer(i);
                 Visibility vis = layer.getImageLayerProperties().getVisible().getProperty();
                 if (model.isSelectedIndex(i)) {
                     vis.setVisible(true);
@@ -115,7 +115,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
             int n = view.getModel().getNumLayers();
             for (int i =0; i<n; i++) {
-                ImageLayer layer = view.getModel().getImageLayer(i);
+                AbstractLayer layer = view.getModel().getLayer(i);
                 if (layer.isVisible()) {
                     layerSelector.addCheckBoxListSelectedIndex(i);
                 } else {
@@ -129,7 +129,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
     }
 
-    public void layerSelected(ImageLayer layer) {
+    public void layerSelected(AbstractLayer layer) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 

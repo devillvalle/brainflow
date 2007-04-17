@@ -3,14 +3,14 @@ package com.brainflow.core.pipeline;
 import com.brainflow.core.*;
 import com.brainflow.image.io.analyze.AnalyzeIO;
 import com.brainflow.image.data.IImageData;
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.space.Axis;
 import com.brainflow.application.BrainflowException;
 import com.brainflow.application.MemoryImage;
-import com.brainflow.display.ImageLayerProperties;
+import com.brainflow.core.ImageLayerProperties;
 import com.brainflow.utils.Range;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.LinearColorMap;
@@ -37,10 +37,10 @@ public class TestPipeline {
         Range range = new Range(data.getMinValue(), data.getMaxValue());
 
 
-        ImageLayer layer1 = new ImageLayer(new MemoryImage(data),
+        ImageLayer layer1 = new ImageLayer3D(new MemoryImage(data),
                 new ImageLayerProperties(new LinearColorMap(range.getMin(), range.getMax(), ColorTable.GRAYSCALE)));
 
-        ImageLayer layer2 = new ImageLayer(new MemoryImage(data2),
+        ImageLayer layer2 = new ImageLayer3D(new MemoryImage(data2),
                 new ImageLayerProperties(new LinearColorMap(data2.getMinValue(), data2.getMaxValue(), ColorTable.SPECTRUM)));
 
         layer2.getImageLayerProperties().getOpacity().getProperty().setOpacity(.9f);
@@ -48,7 +48,7 @@ public class TestPipeline {
         model.addLayer(layer2);
 
 
-        IImagePlot plot = new ComponentImagePlot(model, AnatomicalVolume.getCanonicalAxial(),
+        IImagePlot plot = new ComponentImagePlot(model, Anatomy3D.getCanonicalAxial(),
                 new AxisRange(model.getImageAxis(Axis.X_AXIS).getAnatomicalAxis(), -50, 50),
                 new AxisRange(model.getImageAxis(Axis.Y_AXIS).getAnatomicalAxis(), -50, 50));
         
@@ -71,7 +71,7 @@ public class TestPipeline {
 
         StageFerry ferry = new StageFerry(model,
                 new AnatomicalPoint1D(AnatomicalAxis.INFERIOR_SUPERIOR, 0),
-                AnatomicalVolume.getCanonicalAxial(),
+                Anatomy3D.getCanonicalAxial(),
                 DisplayChangeType.SLICE_CHANGE);
 
         pipeline.getSourceFeeder().feed(ferry);

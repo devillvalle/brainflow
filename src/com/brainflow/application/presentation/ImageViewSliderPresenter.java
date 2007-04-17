@@ -3,7 +3,7 @@ package com.brainflow.application.presentation;
 import com.brainflow.core.ImageView;
 import com.brainflow.display.Crosshair;
 import com.brainflow.display.ICrosshair;
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.space.Axis;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
 import com.jgoodies.binding.beans.BeanAdapter;
@@ -70,7 +70,7 @@ public class ImageViewSliderPresenter extends ImageViewPresenter {
     }
 
     private Axis getDisplayAxis() {
-        AnatomicalVolume displayAnatomy = getSelectedView().getSelectedPlot().getDisplayAnatomy();
+        Anatomy3D displayAnatomy = getSelectedView().getSelectedPlot().getDisplayAnatomy();
         return crosshair.getViewport().getBounds().findAxis(displayAnatomy.ZAXIS);
 
     }

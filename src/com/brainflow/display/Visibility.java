@@ -1,6 +1,7 @@
 package com.brainflow.display;
 
 import com.jgoodies.binding.beans.Model;
+import com.brainflow.core.ImageLayerProperties;
 
 /**
  * Created by IntelliJ IDEA.

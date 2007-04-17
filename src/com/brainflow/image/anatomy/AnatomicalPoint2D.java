@@ -13,7 +13,7 @@ import java.beans.PropertyChangeSupport;
  */
 public class AnatomicalPoint2D implements AnatomicalPoint {
 
-    private AnatomicalPlane anatomy;
+    private Anatomy2D anatomy;
 
     private double x;
     private double y;
@@ -21,7 +21,7 @@ public class AnatomicalPoint2D implements AnatomicalPoint {
 
     private PropertyChangeSupport changeSupport = new ExtendedPropertyChangeSupport(this);
 
-    public AnatomicalPoint2D(AnatomicalPlane _anatomy, double x, double y) {
+    public AnatomicalPoint2D(Anatomy2D _anatomy, double x, double y) {
         this.x = x;
         this.y = y;
 
@@ -50,7 +50,7 @@ public class AnatomicalPoint2D implements AnatomicalPoint {
         changeSupport.firePropertyChange("y", oldProperty, this.y);
     }
 
-    public AnatomicalPlane getAnatomy() {
+    public Anatomy2D getAnatomy() {
         return anatomy;
     }
 

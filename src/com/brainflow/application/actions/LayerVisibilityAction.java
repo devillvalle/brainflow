@@ -1,6 +1,6 @@
 package com.brainflow.application.actions;
 
-import com.brainflow.display.ImageLayerProperties;
+import com.brainflow.core.ImageLayerProperties;
 import org.bushe.swing.action.ActionManager;
 import org.bushe.swing.action.BasicAction;
 

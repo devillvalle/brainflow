@@ -11,6 +11,7 @@ public interface AnatomicalPoint {
 
 
     public int getNumDimensions();
+
     public double getValue(int axisNum);
 
 

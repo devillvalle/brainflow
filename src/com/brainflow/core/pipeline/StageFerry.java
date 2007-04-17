@@ -3,7 +3,7 @@ package com.brainflow.core.pipeline;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.DisplayChangeType;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 
 import java.util.List;
 import java.awt.image.BufferedImage;
@@ -23,7 +23,7 @@ public class StageFerry {
 
     private AnatomicalPoint1D slice;
 
-    private AnatomicalVolume displayAnatomy;
+    private Anatomy3D displayAnatomy;
 
     private DisplayChangeType displayChangeType;
 
@@ -41,7 +41,7 @@ public class StageFerry {
 
 
     public StageFerry(IImageDisplayModel model, AnatomicalPoint1D slice,
-                      AnatomicalVolume displayAnatomy, DisplayChangeType type) {
+                      Anatomy3D displayAnatomy, DisplayChangeType type) {
         this.model = model;
         this.slice = slice;
         this.displayAnatomy = displayAnatomy;
@@ -49,7 +49,7 @@ public class StageFerry {
     }
 
     public StageFerry(IImageDisplayModel model, AnatomicalPoint1D slice,
-                      AnatomicalVolume displayAnatomy, DisplayChangeType type, int affectedLayer) {
+                      Anatomy3D displayAnatomy, DisplayChangeType type, int affectedLayer) {
 
         this.model = model;
         this.slice = slice;
@@ -152,7 +152,7 @@ public class StageFerry {
         return affectedLayer;
     }
 
-    public AnatomicalVolume getDisplayAnatomy() {
+    public Anatomy3D getDisplayAnatomy() {
         return displayAnatomy;
     }
 

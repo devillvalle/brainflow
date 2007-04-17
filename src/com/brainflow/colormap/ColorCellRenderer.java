@@ -12,7 +12,7 @@ import java.awt.*;
  * Time: 1:00:29 PM
  * To change this template use File | Settings | File Templates.
  */
-class ColorCellRenderer extends JLabel implements TableCellRenderer {
+public class ColorCellRenderer extends JLabel implements TableCellRenderer {
 
     Border unselectedBorder = null;
     Border selectedBorder = null;

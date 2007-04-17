@@ -3,15 +3,11 @@ package com.brainflow.application.presentation;
 import com.brainflow.application.BrainflowProject;
 import com.brainflow.application.toplevel.BrainflowProjectEvent;
 import com.brainflow.application.toplevel.BrainflowProjectListener;
-import com.brainflow.core.IImageDisplayModel;
-import com.brainflow.core.ImageLayer;
-import com.brainflow.core.ImageView;
-import com.brainflow.core.ImageDisplayModelListener;
+import com.brainflow.core.*;
 import com.brainflow.image.space.IImageSpace;
 
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.util.Enumeration;
@@ -125,7 +121,7 @@ public class ProjectView extends ImageViewPresenter {
 
                 public void intervalAdded(ListDataEvent e) {
                     int idx = e.getIndex0();
-                    ImageLayer layer = model.getImageLayer(idx);
+                    AbstractLayer layer = model.getLayer(idx);
                     ImageDisplayModelNode.this.add(new DefaultMutableTreeNode(layer, false));
                     treeModel.nodesWereInserted(ImageDisplayModelNode.this, new int[]{ImageDisplayModelNode.this.getChildCount() - 1});
                 }

@@ -1,13 +1,11 @@
 package com.brainflow.core;
 
-import com.brainflow.image.anatomy.AnatomicalPlane;
+import com.brainflow.image.anatomy.Anatomy2D;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
-import com.brainflow.colormap.operations.ColorMapUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.util.logging.Logger;
@@ -94,7 +92,7 @@ public class ImagePane extends JComponent {
         Insets plotInsets = plot.getPlotInsets();
         double x = (screenPoint.getX() - insets.left - plotInsets.left) / plot.getScaleX();
         double y = (screenPoint.getY() - insets.top - plotInsets.top) / plot.getScaleY();
-        return new AnatomicalPoint2D(AnatomicalPlane.matchAnatomy(
+        return new AnatomicalPoint2D(Anatomy2D.matchAnatomy(
                 plot.getXAxisRange().getAnatomicalAxis(),
                 plot.getYAxisRange().getAnatomicalAxis()),
                 x + plot.getXAxisRange().getMinimum(),

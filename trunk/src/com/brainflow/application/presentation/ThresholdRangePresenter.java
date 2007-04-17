@@ -14,6 +14,7 @@ import com.brainflow.display.Property;
 import com.brainflow.display.ThresholdRange;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.ImageLayer;
+import com.brainflow.core.AbstractLayer;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
 import com.jgoodies.binding.beans.BeanAdapter;
@@ -49,7 +50,7 @@ public class ThresholdRangePresenter extends ImageViewPresenter {
     }
 
 
-    protected void layerSelected(ImageLayer layer) {
+    protected void layerSelected(AbstractLayer layer) {
         initBinding();
     }
 
@@ -67,7 +68,7 @@ public class ThresholdRangePresenter extends ImageViewPresenter {
         if (view == null) return;
 
         int idx = view.getModel().getSelectedIndex();
-        ImageLayer layer = view.getModel().getImageLayer(idx);
+        AbstractLayer layer = view.getModel().getLayer(idx);
         System.out.println("layer : " + idx);
         Property<ThresholdRange> threshold = layer.getImageLayerProperties().getThresholdRange();
 
@@ -84,12 +85,12 @@ public class ThresholdRangePresenter extends ImageViewPresenter {
 
 
             BoundedRangeAdapter lowSliderAdapter = new BoundedRangeAdapter(new PercentageConverter(adapter.getValueModel(ThresholdRange.MIN_PROPERTY),
-                    new ValueHolder(layer.getImageData().getMinValue()),
-                    new ValueHolder(layer.getImageData().getMaxValue()), 100), 0, 0, 100);
+                    new ValueHolder(layer.getMinValue()),
+                    new ValueHolder(layer.getMaxValue()), 100), 0, 0, 100);
 
             BoundedRangeAdapter highSliderAdapter = new BoundedRangeAdapter(new PercentageConverter(adapter.getValueModel(ThresholdRange.MAX_PROPERTY),
-                    new ValueHolder(layer.getImageData().getMinValue()),
-                    new ValueHolder(layer.getImageData().getMaxValue()), 100), 0, 0, 100);
+                    new ValueHolder(layer.getMinValue()),
+                    new ValueHolder(layer.getMaxValue()), 100), 0, 0, 100);
 
             form.getSlider1().setModel(highSliderAdapter);
             form.getSlider2().setModel(lowSliderAdapter);

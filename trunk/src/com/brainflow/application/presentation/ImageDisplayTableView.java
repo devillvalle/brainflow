@@ -1,12 +1,9 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.application.presentation.forms.ImageLayerEditor;
-import com.brainflow.core.ImageDisplayModel;
-import com.brainflow.core.ImageLayer;
-import com.brainflow.core.ImageView;
-import com.brainflow.core.SnapShooter;
+import com.brainflow.core.*;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.jidesoft.grid.*;
 
 import javax.media.jai.JAI;
@@ -125,8 +122,8 @@ public class ImageDisplayTableView extends ImageViewPresenter {
         ImageDisplayModel dmodel = new ImageDisplayModel("snapshot");
         dmodel.addLayer(layer);
 
-        AnatomicalPoint1D point = dmodel.getImageAxis(AnatomicalVolume.getCanonicalAxial().ZAXIS).getRange().getCenter();
-        SnapShooter shooter = new SnapShooter(dmodel, AnatomicalVolume.getCanonicalAxial());
+        AnatomicalPoint1D point = dmodel.getImageAxis(Anatomy3D.getCanonicalAxial().ZAXIS).getRange().getCenter();
+        SnapShooter shooter = new SnapShooter(dmodel, Anatomy3D.getCanonicalAxial());
         RenderedImage rimg = shooter.shoot(point.getX());
         float sx = (float) width / (float) rimg.getWidth();
         float sy = (float) height / (float) rimg.getHeight();
@@ -213,7 +210,7 @@ public class ImageDisplayTableView extends ImageViewPresenter {
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
             if (columnIndex == 2) {
                 ImageView view = ImageDisplayTableView.this.getSelectedView();
-                ImageLayer layer = view.getModel().getImageLayer(rowIndex);
+                AbstractLayer layer = view.getModel().getLayer(rowIndex);
                 layer.getImageLayerProperties().getVisible().getProperty().setVisible((Boolean) aValue);
 
             }
@@ -225,11 +222,11 @@ public class ImageDisplayTableView extends ImageViewPresenter {
 
             switch (columnIndex) {
                 case 0:
-                    return view.getModel().getImageLayer(rowIndex);
+                    return view.getModel().getLayer(rowIndex);
                 case 1:
                     return "visible";
                 case 2:
-                    return view.getModel().getImageLayer(rowIndex).
+                    return view.getModel().getLayer(rowIndex).
                             getImageLayerProperties().getVisible().getProperty().isVisible();
 
             }
@@ -260,7 +257,7 @@ public class ImageDisplayTableView extends ImageViewPresenter {
 
         public Object getChildValueAt(int i) {
             ImageView view = ImageDisplayTableView.this.getSelectedView();
-            return view.getModel().getImageLayer(i);
+            return view.getModel().getLayer(i);
         }
 
         public boolean isCellStyleOn() {

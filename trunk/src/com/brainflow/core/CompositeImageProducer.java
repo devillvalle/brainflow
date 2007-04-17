@@ -1,8 +1,7 @@
 package com.brainflow.core;
 
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.core.pipeline.*;
 
@@ -41,7 +40,7 @@ public class CompositeImageProducer extends AbstractImageProducer {
     private TerminalFeeder terminal = new TerminalFeeder();
 
 
-    public CompositeImageProducer(IImagePlot plot, AnatomicalVolume displayAnatomy) {
+    public CompositeImageProducer(IImagePlot plot, Anatomy3D displayAnatomy) {
         this.plot = plot;
 
 
@@ -57,7 +56,7 @@ public class CompositeImageProducer extends AbstractImageProducer {
     }
 
     public CompositeImageProducer(IImagePlot plot,
-                                  AnatomicalVolume displayAnatomy, AnatomicalPoint1D slice) {
+                                  Anatomy3D displayAnatomy, AnatomicalPoint1D slice) {
         this.plot = plot;
         setDisplayAnatomy(displayAnatomy);
 

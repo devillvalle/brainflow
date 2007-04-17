@@ -9,7 +9,7 @@ import com.brainflow.display.Property;
 import com.brainflow.display.Viewport3D;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
 import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.image.space.Axis;
@@ -22,7 +22,6 @@ import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import java.awt.*;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.geom.Rectangle2D;
@@ -146,7 +145,7 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
         AnatomicalPoint1D y = a2.getRange().getCenter();
         AnatomicalPoint1D z = a3.getRange().getCenter();
 
-        return new AnatomicalPoint3D((AnatomicalVolume) compositeSpace.getAnatomy(), x.getX(), y.getX(), z.getX());
+        return new AnatomicalPoint3D((Anatomy3D) compositeSpace.getAnatomy(), x.getX(), y.getX(), z.getX());
 
 
     }
@@ -222,9 +221,9 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
 
         AnatomicalPoint2D apoint = plot.translateScreenToAnat(plotPoint);
 
-        AnatomicalVolume displayAnatomy = plot.getDisplayAnatomy();
+        Anatomy3D displayAnatomy = plot.getDisplayAnatomy();
         AnatomicalPoint3D ap3d = new AnatomicalPoint3D(
-                AnatomicalVolume.matchAnatomy(
+                Anatomy3D.matchAnatomy(
                         plot.getXAxisRange().getAnatomicalAxis(),
                         plot.getYAxisRange().getAnatomicalAxis(),
                         plot.getDisplayAnatomy().ZAXIS),

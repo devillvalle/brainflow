@@ -3,10 +3,9 @@ package com.brainflow.application.presentation;
 import com.brainflow.application.actions.ActionContext;
 import com.brainflow.application.actions.LayerVisibilityAction;
 import com.brainflow.application.services.ImageDisplayModelEvent;
-import com.brainflow.core.ImageCanvas;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
-import com.brainflow.core.ImageCanvas2;
+import com.brainflow.core.AbstractLayer;
 import com.brainflow.display.Visibility;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jidesoft.action.CommandBar;
@@ -73,7 +72,7 @@ public class CanvasBar extends ImageViewPresenter {
     }
 
    
-    protected void layerSelected(ImageLayer layer) {
+    protected void layerSelected(AbstractLayer layer) {
         if (layer != getSelectedLayer()) {
             ImageView view = getSelectedView();
             int idx = view.getSelectedIndex();
@@ -117,7 +116,7 @@ public class CanvasBar extends ImageViewPresenter {
         map.put(ActionContext.SELECTED_IMAGE_VIEW, getSelectedView());
 
         for (int i = 0; i < getSelectedView().getModel().getNumLayers(); i++) {
-            ImageLayer layer = getSelectedView().getModel().getImageLayer(i);
+            AbstractLayer layer = getSelectedView().getModel().getLayer(i);
             JideToggleSplitButton button = new JideToggleSplitButton("" + (i + 1) + ": " + layer);
             button.addItemListener(listener);
             BasicAction visAction = new LayerVisibilityAction(layer.getImageLayerProperties());

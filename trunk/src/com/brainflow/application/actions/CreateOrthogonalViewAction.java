@@ -1,7 +1,6 @@
 package com.brainflow.application.actions;
 
 import com.brainflow.core.*;
-import com.brainflow.image.anatomy.AnatomicalVolume;
 import org.bushe.swing.action.BasicAction;
 
 import java.awt.event.ActionEvent;

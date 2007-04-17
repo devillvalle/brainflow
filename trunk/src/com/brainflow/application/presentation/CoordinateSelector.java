@@ -3,7 +3,7 @@ package com.brainflow.application.presentation;
 import com.brainflow.core.ImageCanvasModel;
 import com.brainflow.core.ImageView;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.jgoodies.binding.adapter.SpinnerAdapterFactory;
 import com.jgoodies.binding.beans.BeanAdapter;
 import com.jgoodies.binding.beans.ExtendedPropertyChangeSupport;
@@ -40,7 +40,7 @@ public class CoordinateSelector extends JComponent {
     private ExtendedPropertyChangeSupport changeSupport = new ExtendedPropertyChangeSupport(this);
 
 
-    private AnatomicalPoint3D crosshairVoxel = new AnatomicalPoint3D(AnatomicalVolume.getCanonicalAxial(), 0, 0, 0);
+    private AnatomicalPoint3D crosshairVoxel = new AnatomicalPoint3D(Anatomy3D.getCanonicalAxial(), 0, 0, 0);
     private BeanAdapter crosshairVoxelBean = new BeanAdapter(crosshairVoxel, true);
 
 

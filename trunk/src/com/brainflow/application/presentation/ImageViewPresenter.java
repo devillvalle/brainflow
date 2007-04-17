@@ -4,6 +4,7 @@ import com.brainflow.application.services.ImageViewLayerSelectionEvent;
 import com.brainflow.application.services.ImageViewSelectionEvent;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
+import com.brainflow.core.AbstractLayer;
 import com.brainflow.gui.AbstractPresenter;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventServiceEvent;
@@ -57,7 +58,7 @@ public abstract class ImageViewPresenter extends AbstractPresenter {
                     int idx = selectedView.getModel().getSelectedIndex();
 
                     if (idx >= 0) {
-                        ImageLayer newLayer = selectedView.getModel().getImageLayer(idx);
+                        AbstractLayer newLayer = selectedView.getModel().getLayer(idx);
                         assert newLayer != null;
 
                         layerSelected(newLayer);
@@ -77,7 +78,7 @@ public abstract class ImageViewPresenter extends AbstractPresenter {
 
     public abstract void allViewsDeselected();
 
-    protected void layerSelected(ImageLayer layer) {
+    protected void layerSelected(AbstractLayer layer) {
     }
 
 
@@ -85,10 +86,10 @@ public abstract class ImageViewPresenter extends AbstractPresenter {
         return selectedView;
     }
 
-    public ImageLayer getSelectedLayer() {
+    public AbstractLayer getSelectedLayer() {
         if (selectedView == null) return null;
         int idx = selectedView.getModel().getSelectedIndex();
-        return selectedView.getModel().getImageLayer(idx);
+        return selectedView.getModel().getLayer(idx);
 
     }
 }

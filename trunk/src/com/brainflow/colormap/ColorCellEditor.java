@@ -19,7 +19,8 @@ import java.awt.event.ActionListener;
 * the implementation of TableCellEditor methods
 * from the source code for DefaultCellEditor.
 */
-class ColorCellEditor extends DefaultCellEditor {
+
+public class ColorCellEditor extends DefaultCellEditor {
 
 
     private Color currentColor = null;

@@ -1,8 +1,7 @@
 package com.brainflow.modes;
 
 import com.brainflow.core.ImageView;
-import com.brainflow.image.anatomy.AnatomicalVolume;
-import com.brainflow.image.anatomy.AnatomicalPoint2D;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.display.Viewport3D;
 
@@ -36,7 +35,7 @@ public class MouseWheelInteractor extends ImageViewInteractor {
 
     private void scrollUp(Point p) {
         ImageView view = getView();
-        AnatomicalVolume anatomy = view.getSelectedPlot().getDisplayAnatomy();
+        Anatomy3D anatomy = view.getSelectedPlot().getDisplayAnatomy();
         Viewport3D viewport = view.getViewport().getProperty();
         AxisRange xrange = viewport.getRange(anatomy.XAXIS);
         AxisRange yrange = viewport.getRange(anatomy.YAXIS);
@@ -68,7 +67,7 @@ public class MouseWheelInteractor extends ImageViewInteractor {
 
     private void scrollDown(Point p) {
         ImageView view = getView();
-        AnatomicalVolume anatomy = view.getSelectedPlot().getDisplayAnatomy();
+        Anatomy3D anatomy = view.getSelectedPlot().getDisplayAnatomy();
         Viewport3D viewport = view.getViewport().getProperty();
         AxisRange xrange = viewport.getRange(anatomy.XAXIS);
         AxisRange yrange = viewport.getRange(anatomy.YAXIS);

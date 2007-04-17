@@ -4,7 +4,7 @@ import com.brainflow.display.ICrosshair;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.core.annotations.IAnnotation;
 import com.jgoodies.binding.list.ArrayListModel;
 import com.jgoodies.binding.list.SelectionInList;
@@ -27,11 +27,14 @@ public class SimpleOrthogonalImageView extends ImageView {
 
 
     private ImagePane axialPane;
+
     private ImagePane coronalPane;
+
     private ImagePane sagittalPane;
 
 
     private ArrayListModel plotList = new ArrayListModel();
+    
     private SelectionInList plotSelection;
 
 
@@ -129,9 +132,9 @@ public class SimpleOrthogonalImageView extends ImageView {
 
         AnatomicalPoint2D apoint = ipane.translateScreenToValue(panePoint);
 
-        AnatomicalVolume displayAnatomy = plot.getDisplayAnatomy();
+        Anatomy3D displayAnatomy = plot.getDisplayAnatomy();
         AnatomicalPoint3D ap3d = new AnatomicalPoint3D(
-                AnatomicalVolume.matchAnatomy(
+                Anatomy3D.matchAnatomy(
                         plot.getXAxisRange().getAnatomicalAxis(),
                         plot.getYAxisRange().getAnatomicalAxis(),
                         plot.getDisplayAnatomy().ZAXIS),

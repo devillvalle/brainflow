@@ -3,7 +3,7 @@ package com.brainflow.display;
 import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.jgoodies.binding.beans.Model;
 
 /**
@@ -22,7 +22,7 @@ public class Crosshair extends Model implements ICrosshair {
 
     public Crosshair(Viewport3D _viewport) {
         viewport = _viewport;
-        location = new AnatomicalPoint3D((AnatomicalVolume) viewport.getBounds().getAnatomy(),
+        location = new AnatomicalPoint3D((Anatomy3D) viewport.getBounds().getAnatomy(),
                 viewport.getXAxisMin() + (viewport.getXAxisExtent() / 2),
                 viewport.getYAxisMin() + (viewport.getYAxisExtent() / 2),
                 viewport.getZAxisMin() + (viewport.getZAxisExtent() / 2));
@@ -60,7 +60,7 @@ public class Crosshair extends Model implements ICrosshair {
         return viewport;
     }
 
-    public AnatomicalVolume getAnatomy() {
+    public Anatomy3D getAnatomy() {
         return location.getAnatomy();
     }
 

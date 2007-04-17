@@ -3,7 +3,6 @@ package com.brainflow.application.actions;
 import com.brainflow.application.presentation.ColorBandChartPresenter;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMap;
-import com.brainflow.core.ImageCanvas;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.ImageCanvas2;
 import com.jidesoft.dialog.JideOptionPane;
@@ -32,20 +31,20 @@ public class DesignColorMapAction extends BasicAction {
         if (view != null) {
 
             int layer = view.getModel().getSelectedIndex();
-            IColorMap oldMap = view.getModel().getImageLayer(layer).
+            IColorMap oldMap = view.getModel().getLayer(layer).
                     getImageLayerProperties().getColorMap().getProperty();
 
             if (oldMap instanceof LinearColorMap) {
                 LinearColorMap lmap = (LinearColorMap) oldMap;
                 LinearColorMap copyMap = lmap.copy();
 
-                ColorBandChartPresenter presenter = new ColorBandChartPresenter(view.getModel().getImageLayer(layer).
+                ColorBandChartPresenter presenter = new ColorBandChartPresenter(view.getModel().getLayer(layer).
                         getImageLayerProperties().getColorMap());
                 int ret = JideOptionPane.showOptionDialog(canvas, presenter.getComponent(), "Design Color Map", JideOptionPane.OK_CANCEL_OPTION, JideOptionPane.PLAIN_MESSAGE,
                         null, null, null);
 
                 if (ret != JideOptionPane.OK_OPTION) {
-                    view.getModel().getImageLayer(layer).
+                    view.getModel().getLayer(layer).
                             getImageLayerProperties().getColorMap().setProperty(copyMap);
 
                 }

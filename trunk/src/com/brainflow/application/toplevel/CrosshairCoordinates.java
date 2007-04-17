@@ -2,7 +2,7 @@ package com.brainflow.application.toplevel;
 
 import com.brainflow.application.services.ImageViewCrosshairEvent;
 import com.brainflow.display.ICrosshair;
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.jidesoft.status.LabelStatusBarItem;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
@@ -57,7 +57,7 @@ public class CrosshairCoordinates extends LabelStatusBarItem implements EventSub
             String y = format.format(new Object[]{"y", cross.getYValue()});
             String z = format.format(new Object[]{"z", cross.getZValue()});
 
-            AnatomicalVolume anatomy = cross.getAnatomy();
+            Anatomy3D anatomy = cross.getAnatomy();
 
             xaxisLabel.setText(format.format(new Object[]{
                     anatomy.XAXIS.toString().substring(0, 1),

@@ -2,14 +2,11 @@ package com.brainflow.core.pipeline;
 
 import org.apache.commons.pipeline.StageException;
 
-import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
-import com.brainflow.display.ImageLayerProperties;
 import com.brainflow.core.ImageLayer2D;
-import com.brainflow.core.ImageLayer;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.image.data.RGBAImage;
 

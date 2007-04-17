@@ -1,7 +1,5 @@
 package com.brainflow.image.anatomy;
 
-import com.jgoodies.binding.beans.ExtendedPropertyChangeSupport;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
@@ -19,7 +17,7 @@ public class AnatomicalPoint3D implements AnatomicalPoint {
     public static final String Z_PROPERTY = "z";
 
 
-    private AnatomicalVolume anatomy;
+    private Anatomy3D anatomy;
 
     private double x;
     private double y;
@@ -27,14 +25,14 @@ public class AnatomicalPoint3D implements AnatomicalPoint {
 
     private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
-    public AnatomicalPoint3D(AnatomicalVolume _anatomy, double x, double y, double z) {
+    public AnatomicalPoint3D(Anatomy3D _anatomy, double x, double y, double z) {
         this.x = x;
         this.y = y;
         this.z = z;
         anatomy = _anatomy;
     }
 
-    public AnatomicalVolume getAnatomy() {
+    public Anatomy3D getAnatomy() {
         return anatomy;
     }
 

@@ -2,7 +2,7 @@ package com.brainflow.image.space;
 
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.utils.Index3D;
 import com.brainflow.utils.Point3D;
@@ -20,7 +20,7 @@ public class ImageSpace3D extends AbstractImageSpace {
     private IImageOrigin origin;
 
     public ImageSpace3D(ImageAxis xaxis, ImageAxis yaxis, ImageAxis zaxis) {
-        AnatomicalVolume check = AnatomicalVolume.matchAnatomy(xaxis.getAnatomicalAxis(), yaxis.getAnatomicalAxis(), zaxis.getAnatomicalAxis());
+        Anatomy3D check = Anatomy3D.matchAnatomy(xaxis.getAnatomicalAxis(), yaxis.getAnatomicalAxis(), zaxis.getAnatomicalAxis());
         assert check != null;
 
         setAnatomy(check);
@@ -50,7 +50,7 @@ public class ImageSpace3D extends AbstractImageSpace {
         AnatomicalPoint1D y = a2.getRange().getCenter();
         AnatomicalPoint1D z = a3.getRange().getCenter();
 
-        return new AnatomicalPoint3D((AnatomicalVolume) getAnatomy(), x.getX(), y.getX(), z.getX());
+        return new AnatomicalPoint3D((Anatomy3D) getAnatomy(), x.getX(), y.getX(), z.getX());
 
 
     }
@@ -72,7 +72,7 @@ public class ImageSpace3D extends AbstractImageSpace {
     }
 
     /*public AnatomicalPoint3D convertPoint(AnatomicalPoint3D otherPoint3D) {
-        AnatomicalVolume avol = otherPoint3D.getAnatomy();
+        Anatomy3D avol = otherPoint3D.getAnatomy();
 
         AnatomicalAxis xaxis = avol.findAxis(getAnatomicalAxis(Axis.X_AXIS));
         AnatomicalAxis yaxis = avol.findAxis(getAnatomicalAxis(Axis.Y_AXIS));
@@ -82,7 +82,7 @@ public class ImageSpace3D extends AbstractImageSpace {
         double y = yaxis.convertValue(this.getAnatomicalAxis(Axis.Y_AXIS), otherPoint3D.getY());
         double z = zaxis.convertValue(this.getAnatomicalAxis(Axis.Z_AXIS), otherPoint3D.getZ());
 
-        return new AnatomicalPoint3D((AnatomicalVolume) getAnatomy(), x, y, z);
+        return new AnatomicalPoint3D((Anatomy3D) getAnatomy(), x, y, z);
 
 
     } */

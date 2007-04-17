@@ -1,7 +1,7 @@
 package com.brainflow.image;
 
 import com.brainflow.image.anatomy.AnatomicalAxis;
-import com.brainflow.image.anatomy.AnatomicalPlane;
+import com.brainflow.image.anatomy.Anatomy2D;
 import com.brainflow.image.axis.ImageAxis;
 
 /**
@@ -15,14 +15,14 @@ import com.brainflow.image.axis.ImageAxis;
 
 public class PlaneArray {
 
-    AnatomicalPlane anatPlane;
+    Anatomy2D anatPlane;
 
     ImageAxis ixaxis;
     ImageAxis iyaxis;
 
 
     public PlaneArray(ImageAxis _xArray, ImageAxis _yArray) {
-        anatPlane = AnatomicalPlane.matchAnatomy(_xArray.getAnatomicalAxis(), _yArray.getAnatomicalAxis());
+        anatPlane = Anatomy2D.matchAnatomy(_xArray.getAnatomicalAxis(), _yArray.getAnatomicalAxis());
         ixaxis = _xArray;
         iyaxis = _yArray;
 
@@ -45,7 +45,7 @@ public class PlaneArray {
     }
 
 
-    public PlaneArray matchPlane(AnatomicalPlane other) {
+    public PlaneArray matchPlane(Anatomy2D other) {
 
 
         if (other.getOrientation() != anatPlane.getOrientation()) {
@@ -111,7 +111,7 @@ public class PlaneArray {
         return iyaxis.getSampleArray();
     }
 
-    public AnatomicalPlane getAnatomicalPlane() {
+    public Anatomy2D getAnatomicalPlane() {
         return anatPlane;
     }
 

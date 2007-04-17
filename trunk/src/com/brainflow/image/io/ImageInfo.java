@@ -1,9 +1,8 @@
 package com.brainflow.image.io;
 
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.anatomy.Anatomy;
 import com.brainflow.image.axis.ImageAxis;
-import com.brainflow.image.data.BasicImageData;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
@@ -46,9 +45,9 @@ public class ImageInfo implements java.io.Serializable {
 
     // SPM Default anatomy is LPI (Neurological)
 
-    public static AnatomicalVolume DEFAULT_ANATOMY = AnatomicalVolume.AXIAL_LPI;
+    public static Anatomy3D DEFAULT_ANATOMY = Anatomy3D.AXIAL_LPI;
 
-    private AnatomicalVolume anatomy = AnatomicalVolume.AXIAL_LPI;
+    private Anatomy3D anatomy = Anatomy3D.AXIAL_LPI;
 
     private DataType dataType = DataType.BYTE;
 
@@ -89,7 +88,7 @@ public class ImageInfo implements java.io.Serializable {
 
         assert dimensions.length >= 3;
 
-        setAnatomy((AnatomicalVolume) space.getAnatomy());
+        setAnatomy((Anatomy3D) space.getAnatomy());
 
         setArrayDim(new Dimension3D<Integer>(dimensions[0], dimensions[1], dimensions[2]));
         setDataType(data.getDataType());
@@ -200,7 +199,7 @@ public class ImageInfo implements java.io.Serializable {
         return scaleFactor;
     }
 
-    public void setAnatomy(AnatomicalVolume _anatomy) {
+    public void setAnatomy(Anatomy3D _anatomy) {
         anatomy = _anatomy;
     }
 

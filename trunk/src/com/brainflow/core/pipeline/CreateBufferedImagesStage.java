@@ -11,8 +11,8 @@ import java.util.logging.Logger;
 
 import com.brainflow.image.data.RGBAImage;
 import com.brainflow.image.rendering.RenderUtils;
-import com.brainflow.core.ImageLayer2D;
 import com.brainflow.core.ImageLayer;
+import com.brainflow.core.AbstractLayer;
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,11 +36,10 @@ public class CreateBufferedImagesStage extends ImageProcessingStage {
         List<RGBAImage> rgbaImages = (List<RGBAImage>)input;
 
         if (images == null || images.size() != getModel().getNumLayers()) {
-            System.out.println("creating buffered images ...");
             images = new ArrayList<BufferedImage>();
             for (int i=0; i<getModel().getNumLayers(); i++) {
                 RGBAImage rgba = rgbaImages.get(i);
-                ImageLayer layer = getModel().getImageLayer(i);
+                AbstractLayer layer = getModel().getLayer(i);
                 if (layer.isVisible() && rgba != null) {
                     images.add(createBufferedImage(rgba));
                 } else {

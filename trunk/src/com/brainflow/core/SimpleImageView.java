@@ -5,7 +5,7 @@ import com.brainflow.core.annotations.CrosshairAnnotation;
 import com.brainflow.core.annotations.SelectedPlotAnnotation;
 import com.brainflow.display.ICrosshair;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.image.space.Axis;
@@ -35,11 +35,11 @@ public class SimpleImageView extends ImageView {
 
     private IImagePlot imagePlot = null;
 
-    private AnatomicalVolume displayAnatomy = AnatomicalVolume.getCanonicalAxial();
+    private Anatomy3D displayAnatomy = Anatomy3D.getCanonicalAxial();
 
     private SliceController sliceController = new SimpleSliceController();
 
-    public SimpleImageView(ImageView source, AnatomicalVolume _displayAnatomy) {
+    public SimpleImageView(ImageView source, Anatomy3D _displayAnatomy) {
         super(source.getModel());
         setDisplayAnatomy(_displayAnatomy);
         initLocal();
@@ -53,22 +53,22 @@ public class SimpleImageView extends ImageView {
     }
 
 
-    public SimpleImageView(IImageDisplayModel dset, AnatomicalVolume _displayAnatomy) {
+    public SimpleImageView(IImageDisplayModel dset, Anatomy3D _displayAnatomy) {
         super(dset);
         setDisplayAnatomy(_displayAnatomy);
         initLocal();
     }
 
-    protected void setDisplayAnatomy(AnatomicalVolume _displayAnatomy) {
+    protected void setDisplayAnatomy(Anatomy3D _displayAnatomy) {
         displayAnatomy = _displayAnatomy;
     }
 
-    public AnatomicalVolume getDisplayAnatomy() {
+    public Anatomy3D getDisplayAnatomy() {
         return displayAnatomy;
     }
 
     private void initLocal() {
-        AnatomicalVolume displayAnatomy = getDisplayAnatomy();
+        Anatomy3D displayAnatomy = getDisplayAnatomy();
         AxisRange xrange = getModel().getImageAxis(displayAnatomy.XAXIS).getRange();
         AxisRange yrange = getModel().getImageAxis(displayAnatomy.YAXIS).getRange();
 

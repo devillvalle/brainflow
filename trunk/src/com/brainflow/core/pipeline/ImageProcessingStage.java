@@ -5,7 +5,7 @@ import org.apache.commons.pipeline.StageException;
 import org.apache.commons.pipeline.StageContext;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,7 +34,7 @@ public abstract class ImageProcessingStage<INPUT,OUTPUT> extends BaseStage {
         return pipeline.getSlice();
     }
 
-    public AnatomicalVolume getDisplayAnatomy() {
+    public Anatomy3D getDisplayAnatomy() {
         return pipeline.getDisplayAnatomy();
     }
 

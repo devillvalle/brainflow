@@ -5,8 +5,7 @@ import com.brainflow.application.MemoryImage;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.colormap.DiscreteColorMap;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.io.analyze.AnalyzeIO;
 
@@ -31,7 +30,7 @@ public class SnapShooter {
 
     private IImagePlot emulator;
 
-    private AnatomicalVolume displayAnatomy;
+    private Anatomy3D displayAnatomy;
 
 
     private int width;
@@ -39,13 +38,13 @@ public class SnapShooter {
     private int height;
 
 
-    public SnapShooter(IImageDisplayModel _dset, AnatomicalVolume _displayAnatomy) {
+    public SnapShooter(IImageDisplayModel _dset, Anatomy3D _displayAnatomy) {
         dset = _dset;
         setDisplayAnatomy(_displayAnatomy);
 
     }
 
-    public void setDisplayAnatomy(AnatomicalVolume _displayAnatomy) {
+    public void setDisplayAnatomy(Anatomy3D _displayAnatomy) {
         displayAnatomy = _displayAnatomy;
 
         emulator = new ComponentImagePlot(dset, displayAnatomy, dset.getImageAxis(displayAnatomy.XAXIS).getRange(),
@@ -178,7 +177,7 @@ public class SnapShooter {
        dset.addLayer(layer2);
 
 
-       SnapShooter shooter = new SnapShooter(dset, AnatomicalVolume.getCanonicalAxial());
+       SnapShooter shooter = new SnapShooter(dset, Anatomy3D.getCanonicalAxial());
        shooter.shootContinuouslyAndSave("/r/d5/despo/buchs/", "TDiagnosis_Axial", -45, 45, 4);
 
 

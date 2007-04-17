@@ -2,8 +2,7 @@ package com.brainflow.image.space;
 
 import com.brainflow.image.anatomy.AnatomicalDirection;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
-import com.brainflow.image.anatomy.AnatomicalVolume;
-import com.brainflow.image.anatomy.AnatomicalAxis;
+import com.brainflow.image.anatomy.Anatomy3D;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,7 +18,7 @@ public class ImageOrigin3D implements IImageOrigin {
 
     public ImageOrigin3D(AnatomicalDirection a1, AnatomicalDirection a2, AnatomicalDirection a3, double x, double y, double z) {
 
-        origin = new AnatomicalPoint3D(AnatomicalVolume.matchAnatomy(a1,a2,a3), x,y,z);
+        origin = new AnatomicalPoint3D(Anatomy3D.matchAnatomy(a1,a2,a3), x,y,z);
 
         dirs = new AnatomicalDirection[3];
         dirs[0] = a1;

@@ -4,6 +4,7 @@ import com.brainflow.colormap.AbstractColorBar;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.IImagePlot;
 import com.brainflow.core.ImageLayer;
+import com.brainflow.core.AbstractLayer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +33,7 @@ public class ColorBarAnnotation extends AbstractAnnotation {
     public static final String MARGIN_PROPERTY = "margin";
 
 
-    private ImageLayer selectedLayer;
+    private AbstractLayer selectedLayer;
 
     private IImageDisplayModel model;
 
@@ -59,9 +60,9 @@ public class ColorBarAnnotation extends AbstractAnnotation {
                 if (obj instanceof Integer && isVisible()) {
                     // hack to force repaints on selected layer change
 
-                    ImageLayer oldLayer = selectedLayer;
+                    AbstractLayer oldLayer = selectedLayer;
                     int selectedIndex = (Integer) evt.getNewValue();
-                    selectedLayer = ColorBarAnnotation.this.model.getImageLayer(selectedIndex);
+                    selectedLayer = ColorBarAnnotation.this.model.getLayer(selectedIndex);
                     System.out.println("layer changed! repaint me");
                     support.firePropertyChange("LAYER_CHANGED", oldLayer, selectedLayer);
                 }
@@ -113,7 +114,7 @@ public class ColorBarAnnotation extends AbstractAnnotation {
         if (!isVisible() || model.getNumLayers() == 0) return;
 
         
-        ImageLayer layer = model.getImageLayer(model.getSelectedIndex());
+        AbstractLayer layer = model.getLayer(model.getSelectedIndex());
 
         if (colorBar == null || layer != selectedLayer) {
             selectedLayer = layer;

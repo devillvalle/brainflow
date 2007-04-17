@@ -8,10 +8,9 @@ import com.brainflow.core.*;
 import com.brainflow.image.io.analyze.AnalyzeIO;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.application.BrainflowException;
-import com.brainflow.application.ILoadableImage;
 import com.brainflow.application.MemoryImage;
 import com.brainflow.application.BrainFrame;
-import com.brainflow.display.ImageLayerProperties;
+import com.brainflow.core.ImageLayerProperties;
 
 import javax.swing.*;
 

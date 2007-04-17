@@ -5,11 +5,8 @@ import com.brainflow.application.ILoadableImage;
 import com.brainflow.application.services.ImageDisplayModelEvent;
 import com.brainflow.application.services.LoadableImageStatusEvent;
 import com.brainflow.colormap.LinearColorMap;
-import com.brainflow.core.IImageDisplayModel;
-import com.brainflow.core.ImageDisplayModel;
-import com.brainflow.core.ImageLayer;
-import com.brainflow.core.ImageLayer3D;
-import com.brainflow.display.ImageLayerProperties;
+import com.brainflow.core.*;
+import com.brainflow.core.ImageLayerProperties;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 
@@ -96,13 +93,13 @@ public class ProjectManager implements EventSubscriber, BrainflowProjectListener
 
             if (idx.size() > 0) {
 
-                List<ImageLayer> removables = new ArrayList<ImageLayer>();
+                List<AbstractLayer> removables = new ArrayList<AbstractLayer>();
 
                 for (int i : idx) {
-                    removables.add(dmodel.getImageLayer(i));
+                    removables.add(dmodel.getLayer(i));
                 }
 
-                for (ImageLayer layer : removables) {
+                for (AbstractLayer layer : removables) {
                     dmodel.removeLayer(layer);
                 }
             }

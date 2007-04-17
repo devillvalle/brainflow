@@ -7,7 +7,6 @@ import com.brainflow.application.toplevel.BrainflowProjectEvent;
 import com.brainflow.image.space.IImageSpace;
 
 import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -82,13 +81,13 @@ public class BrainflowProject {
         listenerList.remove(listener);
     }
 
-    public List<ILoadableImage> getImageList() {
+    /*public List<ILoadableImage> getImageList() {
 
         List<ILoadableImage> list = new ArrayList<ILoadableImage>();
         for (IImageDisplayModel model : modelList) {
             int n = model.getNumLayers();
             for (int i = 0; i < n; i++) {
-                ILoadableImage limg = model.getImageLayer(i).getLoadableImage();
+                ILoadableImage limg = model.getLayer(i).getLoadableImage();
                 if (!list.contains(limg)) {
                     list.add(limg);
                 }
@@ -98,7 +97,7 @@ public class BrainflowProject {
 
         return list;
 
-    }
+    }  */
 
 
     public String toString() {

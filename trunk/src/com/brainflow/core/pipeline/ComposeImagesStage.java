@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.brainflow.core.ImageLayer2D;
-import com.brainflow.image.data.IImageData2D;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.rendering.RenderUtils;
@@ -43,9 +42,9 @@ public class ComposeImagesStage extends ImageProcessingStage {
             if (resImages.size() == 0) {
                 composite = null;
             } else if (resImages.size() == 1) {
-                if (getModel().getImageLayer(0).isVisible() && getModel().getImageLayer(0).getOpacity() >= 1) {
+                if (getModel().getLayer(0).isVisible() && getModel().getLayer(0).getOpacity() >= 1) {
                     composite = resImages.get(0);
-                } else if (getModel().getImageLayer(0).isVisible() && getModel().getImageLayer(0).getOpacity() < 1) {
+                } else if (getModel().getLayer(0).isVisible() && getModel().getLayer(0).getOpacity() < 1) {
                     composite = compose(layers, resImages);
                 }
             } else {

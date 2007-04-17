@@ -1,6 +1,6 @@
 package com.brainflow.core;
 
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.axis.AxisRange;
 
@@ -25,7 +25,7 @@ public interface IImageProducer {
   
     public IImageDisplayModel getModel();
 
-    public AnatomicalVolume getDisplayAnatomy();
+    public Anatomy3D getDisplayAnatomy();
 
     public void setSlice(AnatomicalPoint1D slice);
 

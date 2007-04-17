@@ -16,7 +16,7 @@ public class ImageOrigin2D implements IImageOrigin {
 
      public ImageOrigin2D(AnatomicalDirection a1, AnatomicalDirection a2, double x, double y) {
 
-        origin = new AnatomicalPoint2D(AnatomicalPlane.matchAnatomy(a1,a2), x,y);
+        origin = new AnatomicalPoint2D(Anatomy2D.matchAnatomy(a1,a2), x,y);
 
         dirs = new AnatomicalDirection[3];
         dirs[0] = a1;

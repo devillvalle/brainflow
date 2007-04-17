@@ -12,34 +12,35 @@ import com.brainflow.image.anatomy.AnatomicalPoint1D;
  * Time: 11:30:47 AM
  * To change this template use Options | File Templates.
  */
-public class ImageAxis {
+public class ImageAxis extends CoordinateAxis {
 
-    protected AnatomicalAxis axis;
+
     protected int samples;
 
-    protected AxisRange range;
     protected int[] sampleArray;
+
     protected double spacing;
 
 
     public ImageAxis() {
-        axis = AnatomicalAxis.LEFT_RIGHT;
+        super(AnatomicalAxis.LEFT_RIGHT);
         samples = 1;
         sampleArray = new int[1];
         spacing = 1;
     }
 
     public ImageAxis(ImageAxis src) {
-        range = src.getRange();
+        super(src.getAxis(), src.getRange());
+
+        setAxis(src.getAxis());
         samples = src.samples;
-        axis = src.axis;
+
         spacing = src.spacing;
 
     }
 
     public ImageAxis(AxisRange range, double spacing) {
-        this.range = range;
-        this.axis = range.getAnatomicalAxis();
+        super(range.getAnatomicalAxis(), range);
         this.samples = (int) (range.getInterval() / spacing);
         this.spacing = spacing;
 
@@ -47,110 +48,92 @@ public class ImageAxis {
 
 
     public ImageAxis(double begin, double end, AnatomicalAxis _axis, int _samples) {
-        range = new AxisRange(_axis, begin, end);
+        super(_axis, new AxisRange(_axis, begin, end));
         samples = _samples;
-        axis = _axis;
-        spacing = range.getInterval() / samples;
+        spacing = getRange().getInterval() / samples;
     }
 
     public ImageAxis flip() {
-        return new ImageAxis(range.getBeginning().getX(), range.getEnd().getX(), axis.getFlippedAxis(), samples);
+        return new ImageAxis(getRange().getBeginning().getX(), getRange().getEnd().getX(), getAxis().getFlippedAxis(), samples);
     }
 
 
     public ImageAxis anchorAxis(AnatomicalDirection adir, double value) {
-        if (adir == axis.getMaxDirection()) {
-            return new ImageAxis(new AxisRange(getAnatomicalAxis(), value - range.getInterval(), value), spacing);
-        } else if (adir == axis.getMinDirection()) {
-            return new ImageAxis(new AxisRange(getAnatomicalAxis(), value, value + range.getInterval()), spacing);
+        if (adir == getAxis().getMaxDirection()) {
+            return new ImageAxis(new AxisRange(getAxis(), value - getRange().getInterval(), value), spacing);
+        } else if (adir == getAxis().getMinDirection()) {
+            return new ImageAxis(new AxisRange(getAxis(), value, value + getRange().getInterval()), spacing);
         } else {
-            throw new ImageAxis.IncompatibleAxisException("cannot anchor to axis direction: " + adir + " for axis " + getAnatomicalAxis());
+            throw new ImageAxis.IncompatibleAxisException("cannot anchor to axis direction: " + adir + " for axis " + getAxis());
         }
     }
 
     public ImageAxis matchAxis(AnatomicalAxis aaxis) {
-        if (aaxis == getAnatomicalAxis()) {
+        if (aaxis == getAxis()) {
             return this;
-        } else if (aaxis == getAnatomicalAxis().getFlippedAxis()) {
+        } else if (aaxis == getAxis().getFlippedAxis()) {
             return flip();
         }
 
-        throw new ImageAxis.IncompatibleAxisException("cannot match axes: " + aaxis + " and " + getAnatomicalAxis());
+        throw new ImageAxis.IncompatibleAxisException("cannot match axes: " + aaxis + " and " + getAxis());
 
     }
 
     public ImageAxis matchAxis(ImageAxis src) {
-        if (src.getAnatomicalAxis() == getAnatomicalAxis()) {
+        if (src.getAxis() == getAxis()) {
             return src;
-        } else if (src.getAnatomicalAxis() == getAnatomicalAxis().getFlippedAxis()) {
+        } else if (src.getAxis() == getAxis().getFlippedAxis()) {
             return flip();
         }
 
-        throw new ImageAxis.IncompatibleAxisException("cannot match axes: " + src.getAnatomicalAxis() + " and " + getAnatomicalAxis());
+        throw new ImageAxis.IncompatibleAxisException("cannot match axes: " + src.getAxis() + " and " + getAxis());
     }
 
 
-    public double getExtent() {
-        return range.getInterval();
-    }
 
-    public AnatomicalPoint1D getEdgePoint(AnatomicalDirection adir) {
-        if (adir != axis.getMinDirection() && adir != axis.getMaxDirection()) {
-            throw new IncompatibleAxisException("ImageAxis.getEndPoint: supplied Axis Direction " + adir + " is incorrect");
-        }
 
-        return range.getEdgePoint(adir);
 
-    }
-
-    public AxisRange getRange() {
-        return range;
-    }
-
-    public AnatomicalAxis getAnatomicalAxis() {
-        return axis;
-    }
 
     public int getNumSamples() {
         return samples;
     }
 
     public final int nearestSample(double pt) {
-        int idx = (int) (Math.abs(pt - range.getMinimum()) / spacing);
+        int idx = (int) (Math.abs(pt - getRange().getMinimum()) / spacing);
         idx = Math.max(idx, 0);
         idx = Math.min(idx, getNumSamples() - 1);
         return getSamples()[idx];
     }
 
     public final int nearestSample(AnatomicalPoint1D pt) {
-        assert pt.getAnatomy().sameAxis(axis);
+        assert pt.getAnatomy().sameAxis(getAxis());
 
 
-        if (pt.getAnatomy() == axis.getFlippedAxis()) {
+        if (pt.getAnatomy() == getAxis().getFlippedAxis()) {
             pt = pt.mirrorPoint(this);
         }
 
-        int idx = (int) (Math.abs(pt.getX() - range.getMinimum()) / spacing);
+        int idx = (int) (Math.abs(pt.getX() - getRange().getMinimum()) / spacing);
         idx = Math.max(idx, 0);
         idx = Math.min(idx, getNumSamples() - 1);
         return getSamples()[idx];
     }
 
     public double valueOf(AnatomicalPoint1D sample) {
-        assert sample.getAnatomy().sameAxis(axis);
+        assert sample.getAnatomy().sameAxis(getAxis());
 
-        if (sample.getAnatomy() == axis.getFlippedAxis()) {
+        if (sample.getAnatomy() == getAxis().getFlippedAxis()) {
             sample = sample.mirrorPoint(this);
         }
 
         double relpos = sample.getX() * spacing + spacing / 2f;
-        return relpos + range.getMinimum();
+        return relpos + getRange().getMinimum();
     }
 
 
     public AnatomicalPoint1D valueOf(int sample) {
         double relpos = sample * spacing + spacing / 2f;
-        return new AnatomicalPoint1D(axis, relpos + range.getMinimum());
+        return new AnatomicalPoint1D(getAxis(), relpos + getRange().getMinimum());
     }
 
     public int[] getSampleArray() {
@@ -181,22 +164,22 @@ public class ImageAxis {
     }
 
     public boolean contains(double pt) {
-        return range.contains(pt);
+        return getRange().contains(pt);
     }
 
 
     public final double fractionalSample(double pt) {
-        return ((pt - range.getMinimum()) / spacing);
+        return ((pt - getRange().getMinimum()) / spacing);
     }
 
 
     public double taxi(double current, double step, AnatomicalDirection adir) {
-        assert (adir == axis.getMaxDirection()) || (adir == axis.getMinDirection());
+        assert (adir == getAxis().getMaxDirection()) || (adir == getAxis().getMinDirection());
 
         double ret = 0;
-        if (adir == axis.getMaxDirection()) {
+        if (adir == getAxis().getMaxDirection()) {
             ret = current + step;
-        } else if (adir == axis.getMinDirection()) {
+        } else if (adir == getAxis().getMinDirection()) {
             ret = current - step;
         }
 
@@ -206,8 +189,8 @@ public class ImageAxis {
     public String toString() {
         StringBuffer sb = new StringBuffer();
 
-        sb.append("anatomical axis: " + axis.toString())
-                .append("axis range: " + range.toString())
+        sb.append("anatomical axis: " + getAxis().toString())
+                .append("axis range: " + getRange().toString())
                 .append("samples: " + samples)
                 .append("spacing: " + spacing);
 

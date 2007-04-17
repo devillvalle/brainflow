@@ -1,13 +1,12 @@
 package com.brainflow.core;
 
 import com.brainflow.core.annotations.IAnnotation;
-import com.brainflow.image.anatomy.AnatomicalPlane;
+import com.brainflow.image.anatomy.Anatomy2D;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.axis.ImageAxis;
-import com.sun.istack.internal.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +37,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
 
     private IImageDisplayModel model;
 
-    private AnatomicalVolume displayAnatomy;
+    private Anatomy3D displayAnatomy;
 
     private Insets plotInsets = new Insets(18, 18, 18, 18);
 
@@ -52,7 +51,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
     private PropertyChangeListener annotationListener;
 
 
-    private ComponentImagePlot(IImageDisplayModel model, IImageProducer _producer, AnatomicalVolume displayAnatomy, AxisRange xAxis, AxisRange yAxis) {
+    private ComponentImagePlot(IImageDisplayModel model, IImageProducer _producer, Anatomy3D displayAnatomy, AxisRange xAxis, AxisRange yAxis) {
         this.xAxis = xAxis;
         this.yAxis = yAxis;
         this.displayAnatomy = displayAnatomy;
@@ -63,7 +62,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
 
     }
 
-    public ComponentImagePlot(IImageDisplayModel model, AnatomicalVolume displayAnatomy, AxisRange xAxis, AxisRange yAxis) {
+    public ComponentImagePlot(IImageDisplayModel model, Anatomy3D displayAnatomy, AxisRange xAxis, AxisRange yAxis) {
         this.xAxis = xAxis;
         this.yAxis = yAxis;
         this.displayAnatomy = displayAnatomy;
@@ -195,7 +194,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         plotInsets = insets;
     }
 
-    public AnatomicalVolume getDisplayAnatomy() {
+    public Anatomy3D getDisplayAnatomy() {
         return displayAnatomy;
 
     }
@@ -250,7 +249,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         Insets plotInsets = getPlotInsets();
         double x = (screenPoint.getX() - insets.left - plotInsets.left) / getScaleX();
         double y = (screenPoint.getY() - insets.top - plotInsets.top) / getScaleY();
-        return new AnatomicalPoint2D(AnatomicalPlane.matchAnatomy(
+        return new AnatomicalPoint2D(Anatomy2D.matchAnatomy(
                 getXAxisRange().getAnatomicalAxis(),
                 getYAxisRange().getAnatomicalAxis()),
                 x + getXAxisRange().getMinimum(),
@@ -307,7 +306,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
     }
 
 
-    public static ComponentImagePlot createComponentImagePlot(IImageDisplayModel model, IImageProducer _producer, AnatomicalVolume displayAnatomy, AxisRange xAxis, AxisRange yAxis) {
+    public static ComponentImagePlot createComponentImagePlot(IImageDisplayModel model, IImageProducer _producer, Anatomy3D displayAnatomy, AxisRange xAxis, AxisRange yAxis) {
         ComponentImagePlot plot =  new ComponentImagePlot(model, _producer, displayAnatomy, xAxis, yAxis);
         plot.producer.setPlot(plot);
         return plot;

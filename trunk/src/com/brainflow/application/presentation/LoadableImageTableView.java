@@ -10,10 +10,10 @@ import com.brainflow.core.ImageDisplayModel;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageLayer3D;
 import com.brainflow.core.SnapShooter;
-import com.brainflow.display.ImageLayerProperties;
+import com.brainflow.core.ImageLayerProperties;
 import com.brainflow.gui.AbstractPresenter;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.anatomy.AnatomicalVolume;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.jidesoft.grid.*;
 import com.jidesoft.swing.NullButton;
 import com.jidesoft.swing.NullJideButton;
@@ -182,8 +182,8 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
 
             dmodel.addLayer(layer);
 
-            AnatomicalPoint1D point = dmodel.getImageAxis(AnatomicalVolume.getCanonicalAxial().ZAXIS).getRange().getCenter();
-            SnapShooter shooter = new SnapShooter(dmodel, AnatomicalVolume.getCanonicalAxial());
+            AnatomicalPoint1D point = dmodel.getImageAxis(Anatomy3D.getCanonicalAxial().ZAXIS).getRange().getCenter();
+            SnapShooter shooter = new SnapShooter(dmodel, Anatomy3D.getCanonicalAxial());
             RenderedImage rimg = shooter.shoot(point.getX());
             float sx = (float) width / (float) rimg.getWidth();
             float sy = (float) height / (float) rimg.getHeight();

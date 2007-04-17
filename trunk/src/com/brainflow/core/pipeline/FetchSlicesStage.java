@@ -8,6 +8,7 @@ import com.brainflow.image.data.IImageData;
 import com.brainflow.core.ImageLayer2D;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.IImageDisplayModel;
+import com.brainflow.core.AbstractLayer;
 
 import org.apache.commons.pipeline.StageException;
 
@@ -64,14 +65,18 @@ public class FetchSlicesStage extends ImageProcessingStage {
 
         for (int i = 0; i < model.getNumLayers(); i++) {
 
-            ImageLayer layer = model.getImageLayer(i);
-            IImageData data = layer.getImageData();
+            AbstractLayer layer = model.getLayer(i);
 
-            ImageSlicer slicer = new ImageSlicer((IImageData3D) data);
-            IImageData2D  data2d = slicer.getSlice(getDisplayAnatomy(), slice);
+            if (layer instanceof ImageLayer) {
+                ImageLayer ilayer = (ImageLayer)layer;
+                IImageData data = ilayer.getData();
 
-            ImageLayer2D layer2d = new ImageLayer2D(data2d, layer.getImageLayerProperties());
-            list.add(layer2d);
+                ImageSlicer slicer = new ImageSlicer((IImageData3D) data);
+                IImageData2D  data2d = slicer.getSlice(getDisplayAnatomy(), slice);
+
+                ImageLayer2D layer2d = new ImageLayer2D(data2d, layer.getImageLayerProperties());
+                list.add(layer2d);
+            }
 
 
         }

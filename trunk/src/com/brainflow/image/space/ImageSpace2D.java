@@ -1,6 +1,6 @@
 package com.brainflow.image.space;
 
-import com.brainflow.image.anatomy.AnatomicalPlane;
+import com.brainflow.image.anatomy.Anatomy2D;
 import com.brainflow.image.anatomy.AnatomicalPoint;
 import com.brainflow.image.axis.ImageAxis;
 
@@ -16,7 +16,7 @@ public class ImageSpace2D extends AbstractImageSpace {
     private ImageOrigin2D origin;
 
     public ImageSpace2D(ImageAxis xaxis, ImageAxis yaxis) {
-        AnatomicalPlane check = AnatomicalPlane.matchAnatomy(xaxis.getAnatomicalAxis(), yaxis.getAnatomicalAxis());
+        Anatomy2D check = Anatomy2D.matchAnatomy(xaxis.getAnatomicalAxis(), yaxis.getAnatomicalAxis());
         assert check != null;
 
         setAnatomy(check);

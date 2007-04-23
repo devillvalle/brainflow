@@ -11,10 +11,6 @@ import com.brainflow.core.*;
 import com.brainflow.core.ImageLayerProperties;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.data.IImageData;
-import com.brainflow.image.data.IImageData3D;
-import com.brainflow.image.interpolation.NearestNeighborInterpolator;
-import com.brainflow.image.space.Axis;
-import com.brainflow.image.space.IImageSpace;
 import com.jidesoft.action.CommandBar;
 import com.jidesoft.action.CommandMenuBar;
 import com.jidesoft.docking.DefaultDockingManager;
@@ -314,7 +310,7 @@ public class Brainflow {
 
         brainFrame.getContentPane().add(mainToolbar, BorderLayout.NORTH);
         
-        ActionManager.mapKeystrokeForAction(documentPane, ActionManager.getInstance().getAction("view-close"));
+        ActionManager.mapKeystrokeForAction(documentPane, ActionManager.getInstance().getAction("view-random"));
         ActionManager.mapKeystrokeForAction(documentPane, ActionManager.getInstance().getAction("view-axial"));
         ActionManager.mapKeystrokeForAction(documentPane, ActionManager.getInstance().getAction("view-coronal"));
         ActionManager.mapKeystrokeForAction(documentPane, ActionManager.getInstance().getAction("view-sagittal"));
@@ -420,13 +416,13 @@ public class Brainflow {
     }
 
     private void initProjectView() throws IOException {
-        ProjectView projectView = new ProjectView(ProjectManager.getInstance().getActiveProject());
+        ProjectTreeView projectTreeView = new ProjectTreeView(ProjectManager.getInstance().getActiveProject());
         DockableFrame dframe = DockWindowManager.getInstance().createDockableFrame("Project",
                 "resources/icons/folder_page.png",
                 DockContext.STATE_FRAMEDOCKED,
                 DockContext.DOCK_SIDE_WEST, 1);
 
-        dframe.getContentPane().add(new JScrollPane(projectView.getComponent()));
+        dframe.getContentPane().add(new JScrollPane(projectTreeView.getComponent()));
         dframe.setPreferredSize(new Dimension(275, 200));
 
         brainFrame.getDockingManager().addFrame(dframe);

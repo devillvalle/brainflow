@@ -123,7 +123,7 @@ public class MontageImageView extends AbstractGriddedImageView {
             AnatomicalPoint1D slice = cross.getLocation().getValue(MontageImageView.this.getSelectedPlot().getDisplayAnatomy().ZAXIS);
             double val = sliceController.nearestSlice(slice);
             if (val < .1) {
-                int index = sliceController.whichPlot(slice, .11);
+                //int index = sliceController.whichPlot(slice, .11);
                 //getPlotSelection().setSelectionIndex(index);
                 for (IImagePlot plot : getPlots()) {
                     // can we just call repaint rather than looping?

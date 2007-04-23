@@ -19,12 +19,32 @@ public class ImageSpace3D extends AbstractImageSpace {
 
     private IImageOrigin origin;
 
+
+    public ImageSpace3D(ICoordinateSpace cspace) {
+        Anatomy3D anat = (Anatomy3D)cspace.getAnatomy();
+        Anatomy3D check = Anatomy3D.matchAnatomy(anat.XAXIS, anat.YAXIS, anat.ZAXIS);
+        assert check != null;
+
+        setAnatomy(check);
+
+        createImageAxes(3);
+
+        initAxis(new ImageAxis(cspace.getImageAxis(Axis.X_AXIS).getRange(), 1), Axis.X_AXIS);
+        initAxis(new ImageAxis(cspace.getImageAxis(Axis.Y_AXIS).getRange(), 1), Axis.Y_AXIS);
+        initAxis(new ImageAxis(cspace.getImageAxis(Axis.Z_AXIS).getRange(), 1), Axis.Z_AXIS);
+
+        origin = cspace.getImageOrigin();
+
+    }
+
     public ImageSpace3D(ImageAxis xaxis, ImageAxis yaxis, ImageAxis zaxis) {
         Anatomy3D check = Anatomy3D.matchAnatomy(xaxis.getAnatomicalAxis(), yaxis.getAnatomicalAxis(), zaxis.getAnatomicalAxis());
         assert check != null;
 
         setAnatomy(check);
+
         createImageAxes(3);
+
         initAxis(xaxis, Axis.X_AXIS);
         initAxis(yaxis, Axis.Y_AXIS);
         initAxis(zaxis, Axis.Z_AXIS);

@@ -1,6 +1,10 @@
 package com.brainflow.application.presentation.wizards;
 
 import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.image.anatomy.AnatomicalAxis;
+import com.brainflow.image.space.CoordinateSpace3D;
+import com.brainflow.image.space.ICoordinateSpace;
+import com.brainflow.image.axis.CoordinateAxis;
 
 import java.beans.PropertyChangeSupport;
 import java.awt.*;
@@ -26,6 +30,8 @@ public class CoordinateTableSetupInfo {
 
     public static final String ANATOMY_PROPERTY = "anatomy";
 
+    public static final String COORDINATE_SPACE_PROPERTY = "coordinateSpace";
+
 
     private double defaultOpacity = 1;
 
@@ -37,9 +43,9 @@ public class CoordinateTableSetupInfo {
 
     private Color defaultColor = Color.ORANGE;
 
-    private Anatomy3D anatomy = Anatomy3D.getCanonicalAxial();
+    private ICoordinateSpace coordinateSpace;
 
-    PropertyChangeSupport support = new PropertyChangeSupport(this);
+    private PropertyChangeSupport support = new PropertyChangeSupport(this);
 
 
     public double getDefaultOpacity() {
@@ -76,6 +82,16 @@ public class CoordinateTableSetupInfo {
         return defaultColor;
     }
 
+    public ICoordinateSpace getCoordinateSpace() {
+        return coordinateSpace;
+    }
+
+    public void setCoordinateSpace(ICoordinateSpace coordinateSpace) {
+        ICoordinateSpace old = getCoordinateSpace();
+        this.coordinateSpace = coordinateSpace;
+        support.firePropertyChange(COORDINATE_SPACE_PROPERTY, old, getCoordinateSpace());
+    }
+
     public double getDefaultRadius() {
         return defaultRadius;
     }
@@ -90,21 +106,13 @@ public class CoordinateTableSetupInfo {
     public void setDefaultColor(Color defaultColor) {
         Color old = getDefaultColor();
         this.defaultColor = defaultColor;
-
-
         support.firePropertyChange(DEFAULT_COLOR_PROPERTY, old, getDefaultColor());
 
     }
 
     public Anatomy3D getAnatomy() {
-        return anatomy;
+        return (Anatomy3D)coordinateSpace.getAnatomy();
     }
 
-    public void setAnatomy(Anatomy3D anatomy) {
-        Anatomy3D old = getAnatomy();
-        this.anatomy = anatomy;
-        support.firePropertyChange(DEFAULT_COLOR_PROPERTY, old, getAnatomy());
 
-
-    }
 }

@@ -26,6 +26,7 @@ public class ImagePlotPipeline extends Pipeline {
     
     private IImagePlot plot;
 
+    private Rectangle2D frameBounds;
 
     private AnatomicalPoint1D slice;
 
@@ -62,7 +63,13 @@ public class ImagePlotPipeline extends Pipeline {
         return plot.getModel();
     }
 
+    public Rectangle2D getFrameBounds() {
+        return frameBounds;
+    }
 
+    public void setFrameBounds(Rectangle2D frameBounds) {
+        this.frameBounds = frameBounds;
+    }
 
     public Anatomy3D getDisplayAnatomy() {
         return plot.getDisplayAnatomy();

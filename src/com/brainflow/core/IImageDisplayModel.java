@@ -5,9 +5,11 @@ package com.brainflow.core;
 import com.brainflow.core.ImageLayerProperties;
 import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.axis.ImageAxis;
+import com.brainflow.image.axis.CoordinateAxis;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
+import com.brainflow.image.space.ICoordinateSpace;
 import com.jgoodies.binding.list.SelectionInList;
 
 import java.util.List;
@@ -45,13 +47,10 @@ public interface IImageDisplayModel {
 
     public void addLayer(AbstractLayer layer);
 
-    //public void setLayer(int index, ImageLayer layer);
-
+  
     public void removeLayer(int layer);
 
     public void removeLayer(AbstractLayer layer);
-
-    //public ListModel getListModel();
 
     public ImageLayerProperties getLayerParameters(int layer);
 
@@ -60,10 +59,6 @@ public interface IImageDisplayModel {
     public int getNumLayers();
 
     public IImageSpace getImageSpace();
-
-    public double getSpacing(Axis axis);
-
-    public double getSpacing(AnatomicalAxis axis);
 
     public ImageAxis getImageAxis(Axis axis);
 

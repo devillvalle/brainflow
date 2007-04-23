@@ -26,6 +26,7 @@ import java.util.List;
 public class ProjectManager implements EventSubscriber, BrainflowProjectListener {
 
     private List<BrainflowProject> projects = new ArrayList<BrainflowProject>();
+    
     private BrainflowProject activeProject = new BrainflowProject();
 
     protected ProjectManager() {

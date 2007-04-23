@@ -12,8 +12,10 @@ import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
 import com.brainflow.image.axis.ImageAxis;
+import com.brainflow.image.axis.CoordinateAxis;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
+import com.brainflow.image.space.ICoordinateSpace;
 import com.jgoodies.binding.list.SelectionInList;
 import org.bushe.swing.event.EventBus;
 
@@ -136,10 +138,10 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
 
 
     public AnatomicalPoint3D getCentroid() {
-        IImageSpace compositeSpace = displayModel.getImageSpace();
-        ImageAxis a1 = compositeSpace.getImageAxis(Axis.X_AXIS);
-        ImageAxis a2 = compositeSpace.getImageAxis(Axis.Y_AXIS);
-        ImageAxis a3 = compositeSpace.getImageAxis(Axis.Z_AXIS);
+        ICoordinateSpace compositeSpace = displayModel.getImageSpace();
+        CoordinateAxis a1 = compositeSpace.getImageAxis(Axis.X_AXIS);
+        CoordinateAxis a2 = compositeSpace.getImageAxis(Axis.Y_AXIS);
+        CoordinateAxis a3 = compositeSpace.getImageAxis(Axis.Z_AXIS);
 
         AnatomicalPoint1D x = a1.getRange().getCenter();
         AnatomicalPoint1D y = a2.getRange().getCenter();

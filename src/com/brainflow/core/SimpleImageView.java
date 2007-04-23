@@ -158,6 +158,7 @@ public class SimpleImageView extends ImageView {
     class SimpleSliceController implements SliceController {
 
 
+
         public AnatomicalPoint1D getSlice() {
             return getCrosshair().getProperty().getValue(getSelectedPlot().getDisplayAnatomy().ZAXIS);
         }

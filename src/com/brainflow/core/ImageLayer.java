@@ -44,7 +44,7 @@ public abstract class ImageLayer extends AbstractLayer {
         return limg.getData().getImageLabel();
     }
 
-    public IImageSpace getImageSpace() {
+    public IImageSpace getCoordinateSpace() {
         return limg.getData().getImageSpace();
     }
 

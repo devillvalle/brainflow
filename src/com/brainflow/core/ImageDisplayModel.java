@@ -3,11 +3,14 @@ package com.brainflow.core;
 import com.brainflow.core.ImageLayerProperties;
 import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.axis.ImageAxis;
+import com.brainflow.image.axis.CoordinateAxis;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace3D;
+import com.brainflow.image.space.ICoordinateSpace;
 import com.jgoodies.binding.list.ArrayListModel;
 import com.jgoodies.binding.list.SelectionInList;
 
@@ -29,9 +32,9 @@ import java.util.logging.Logger;
  */
 public class ImageDisplayModel implements IImageDisplayModel {
 
+    private final static Logger log = Logger.getLogger(ImageDisplayModel.class.getName());
 
     public static final String IMAGE_SPACE_PROPERTY = "imageSpace";
-
 
     private ArrayListModel imageListModel = new ArrayListModel();
 
@@ -51,8 +54,6 @@ public class ImageDisplayModel implements IImageDisplayModel {
             new ImageAxis(0, 100, Anatomy3D.getCanonicalAxial().ZAXIS, 100));
 
     private IImageSpace imageSpace = EMPTY_SPACE;
-
-    private final static Logger log = Logger.getLogger(ImageDisplayModel.class.getName());
 
     private String name;
 
@@ -89,6 +90,8 @@ public class ImageDisplayModel implements IImageDisplayModel {
     public String getName() {
         return name;
     }
+
+
 
 
     public void addImageDisplayModelListener(ImageDisplayModelListener listener) {
@@ -130,7 +133,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         layer.addPropertyChangeListener(ImageLayerProperties.COLOR_MAP_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 for (ImageLayerListener listener : layerListeners) {
-                    listener.colorMapChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer)evt.getSource()));
+                    listener.colorMapChanged(new ImageLayerEvent(ImageDisplayModel.this, (AbstractLayer) evt.getSource()));
                 }
             }
         });
@@ -138,7 +141,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         layer.addPropertyChangeListener(ImageLayerProperties.OPACITY_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 for (ImageLayerListener listener : layerListeners) {
-                    listener.opacityChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer)evt.getSource()));
+                    listener.opacityChanged(new ImageLayerEvent(ImageDisplayModel.this, (AbstractLayer) evt.getSource()));
                 }
             }
         });
@@ -146,7 +149,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         layer.addPropertyChangeListener(ImageLayerProperties.RESAMPLE_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 for (ImageLayerListener listener : layerListeners) {
-                    listener.interpolationMethodChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer)evt.getSource()));
+                    listener.interpolationMethodChanged(new ImageLayerEvent(ImageDisplayModel.this, (AbstractLayer) evt.getSource()));
                 }
             }
         });
@@ -154,7 +157,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         layer.addPropertyChangeListener(ImageLayerProperties.THRESHOLD_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 for (ImageLayerListener listener : layerListeners) {
-                    listener.thresholdChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer)evt.getSource()));
+                    listener.thresholdChanged(new ImageLayerEvent(ImageDisplayModel.this, (AbstractLayer) evt.getSource()));
                 }
             }
         });
@@ -162,11 +165,10 @@ public class ImageDisplayModel implements IImageDisplayModel {
         layer.addPropertyChangeListener(ImageLayerProperties.VISIBLE_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 for (ImageLayerListener listener : layerListeners) {
-                    listener.visibilityChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer)evt.getSource()));
+                    listener.visibilityChanged(new ImageLayerEvent(ImageDisplayModel.this, (AbstractLayer) evt.getSource()));
                 }
             }
         });
-
 
 
     }
@@ -176,13 +178,12 @@ public class ImageDisplayModel implements IImageDisplayModel {
         IImageSpace uspace = null;
 
         if (!imageListModel.isEmpty()) {
-            for (int i = 0; i < imageListModel.size(); i++) {                
-                IImageSpace space = getLayer(i).getImageSpace();
+            for (int i = 0; i < imageListModel.size(); i++) {
+                ICoordinateSpace cspace = getLayer(i).getCoordinateSpace();
                 if (uspace == null) {
-                    uspace = space;
+                    uspace = new ImageSpace3D(cspace);
                 } else {
-                    uspace = uspace.union(space);
-
+                    uspace = (IImageSpace)uspace.union(cspace);
                 }
             }
         } else {
@@ -190,8 +191,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         }
 
         if (!uspace.equals(imageSpace)) {
-
-            IImageSpace old = imageSpace;
+            ICoordinateSpace old = imageSpace;
             imageSpace = uspace;
             changeSupport.firePropertyChange(ImageDisplayModel.IMAGE_SPACE_PROPERTY, old, imageSpace);
         }
@@ -209,7 +209,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         List<Integer> ret = new ArrayList<Integer>();
         for (int i = 0; i < imageListModel.size(); i++) {
             AbstractLayer layer = (AbstractLayer) imageListModel.get(i);
-                    
+
             if (layer.getData() == data) {
                 ret.add(i);
 
@@ -238,7 +238,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     public AbstractLayer getLayer(int layer) {
         assert layer >= 0 && layer < imageListModel.size();
-        return (ImageLayer) imageListModel.get(layer);
+        return (AbstractLayer)imageListModel.get(layer);
     }
 
 
@@ -284,12 +284,9 @@ public class ImageDisplayModel implements IImageDisplayModel {
     // }
 
 
-   
     public String toString() {
         return getName();
     }
-
-
 
 
     class ForwardingListDataListener implements ListDataListener {

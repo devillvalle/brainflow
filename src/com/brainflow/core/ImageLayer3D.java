@@ -3,10 +3,10 @@ package com.brainflow.core;
 import com.brainflow.application.ILoadableImage;
 import com.brainflow.core.ImageLayerProperties;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.interpolation.NearestNeighborInterpolator;
-import com.brainflow.image.data.IImageData;
 import com.brainflow.image.data.IImageData3D;
 
 /**
@@ -29,11 +29,15 @@ public class ImageLayer3D extends ImageLayer {
     }
 
     public double getValue(AnatomicalPoint3D pt) {
-        IImageSpace space = getImageSpace();
+        IImageSpace space = getCoordinateSpace();
         double x = pt.getValue(space.getAnatomicalAxis(Axis.X_AXIS)).getX();
         double y = pt.getValue(space.getAnatomicalAxis(Axis.Y_AXIS)).getX();
         double z = pt.getValue(space.getAnatomicalAxis(Axis.Z_AXIS)).getX();
 
         return getData().getRealValue(x, y, z, new NearestNeighborInterpolator());
+    }
+
+    public SliceRenderer getSliceRenderer(AnatomicalPoint1D slice) {
+        return new BasicImageSliceRenderer(this, slice);
     }
 }

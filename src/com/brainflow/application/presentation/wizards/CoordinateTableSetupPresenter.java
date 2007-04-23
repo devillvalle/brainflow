@@ -2,6 +2,7 @@ package com.brainflow.application.presentation.wizards;
 
 import com.brainflow.gui.AbstractPresenter;
 import com.brainflow.core.annotations.CrosshairAnnotation;
+import com.brainflow.image.space.ICoordinateSpace;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
 import com.jgoodies.binding.adapter.SpinnerAdapterFactory;
 import com.jgoodies.binding.adapter.Bindings;
@@ -29,6 +30,11 @@ public class CoordinateTableSetupPresenter extends AbstractPresenter {
 
     public CoordinateTableSetupPresenter() {
         initBindings();
+
+    }
+
+    public void setCoordinateSpace(ICoordinateSpace space) {
+        info.setCoordinateSpace(space);
     }
 
     public JComponent getComponent() {

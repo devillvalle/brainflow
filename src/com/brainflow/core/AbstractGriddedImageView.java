@@ -73,17 +73,12 @@ public abstract class AbstractGriddedImageView extends ImageView  {
         return NRows;
     }
 
-    public void setNRows(int NRows) {
-        this.NRows = NRows;
-    }
+   
 
     public int getNCols() {
         return NCols;
     }
 
-    public void setNCols(int NCols) {
-        this.NCols = NCols;
-    }
 
     public int getNumPlots() {
         return plots.size();

@@ -23,6 +23,11 @@ public class CoordinateAxis {
         range = new AxisRange(axis, 0, 100);
     }
 
+    public CoordinateAxis(AxisRange range) {
+        this.range = range;
+        axis = range.getAnatomicalAxis();
+    }
+
     public CoordinateAxis(AnatomicalAxis axis) {
         this.axis = axis;
         range = new AxisRange(axis, 0, 100);
@@ -33,7 +38,7 @@ public class CoordinateAxis {
         this.range = range;
     }
 
-    public AnatomicalAxis getAxis() {
+    public AnatomicalAxis getAnatomicalAxis() {
         return axis;
     }
 
@@ -41,7 +46,7 @@ public class CoordinateAxis {
         return range;
     }
 
-    protected void setAxis(AnatomicalAxis axis) {
+    protected void setAnatomicalAxis(AnatomicalAxis axis) {
         this.axis = axis;
     }
 

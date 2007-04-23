@@ -13,6 +13,7 @@ public class ImageOrigin1D implements IImageOrigin {
 
 
     private AnatomicalPoint1D origin;
+
     private AnatomicalDirection[] dirs;
 
     public ImageOrigin1D(AnatomicalDirection a1, double x) {

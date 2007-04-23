@@ -67,12 +67,21 @@
                 actionClass="com.brainflow.application.actions.CreateMontageViewAction"
                 desc="Creates a montage image view">
         </action>
-        <action id="view-close"
-                name="close"
-                accel="del"
-                smicon="/resources/icons/delete.png"
-                actionClass="com.brainflow.application.actions.CloseViewAction"
-                desc="Closes the current view">
+        <action id="view-expanded"
+                name="expanded"
+                mnemonic="e"
+                accel="control E"
+                smicon="/resources/icons/application_view_tile.png"
+                actionClass="com.brainflow.application.actions.CreateExpandedViewAction"
+                desc="Creates an expanded (non-stacked) image view">
+        </action>
+        <action id="view-random"
+                name="random"
+                mnemonic="r"
+                accel="control R"
+                smicon="/resources/icons/application_go.png"
+                actionClass="com.brainflow.application.actions.DoRandomThingAction"
+                desc="Do an Action">
         </action>
     </action-list>
     <action-list id="annotation-menu" name="Annotations">

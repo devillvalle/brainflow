@@ -6,6 +6,8 @@ import com.jidesoft.dialog.ButtonEvent;
 import com.jidesoft.dialog.ButtonNames;
 import com.jidesoft.swing.JideSwingUtilities;
 import com.brainflow.application.presentation.wizards.CoordinateTableSetupForm;
+import com.brainflow.application.presentation.ProjectListView;
+import com.brainflow.application.toplevel.ProjectManager;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -21,15 +23,18 @@ import java.awt.*;
 public class LoadCoordinatesWizard {
 
     private static final String WELCOME_TITLE = "Welcome to the Coordinates Wizard";
-    private static final String COMPLETION_TITLE = "Completing Coordinates Wizard";
+
+    private static final String REFERENCE_SPACE_TITLE = "Choose Reference Layer";
     private static final String DATASOURCE_TITLE = "Select Data Source";
     private static final String SETUPTABLE_TITLE = "Table Properties";
     private static final String SHOWTABLE_TITLE = "Table Entry";
-
+    private static final String COMPLETION_TITLE = "Completing Coordinates Wizard";
 
     private WizardDialog wizard;
 
     private CoordinateTableSetupPresenter setupPresenter;
+
+    private ProjectListView projectListView;
 
     private CoordinateTableView tableView;
 
@@ -40,6 +45,7 @@ public class LoadCoordinatesWizard {
         wizard = new WizardDialog(frame, "Coordinates Wizard");
 
         final WizardDialog wizard = new WizardDialog(frame, "JIDE Wizard Demo");
+        wizard.setSize(550, 450);
         wizard.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
         wizard.addWindowListener(new WindowAdapter() {
@@ -51,12 +57,14 @@ public class LoadCoordinatesWizard {
         });
 
         setupPresenter = new CoordinateTableSetupPresenter();
+        projectListView = new ProjectListView(ProjectManager.getInstance().getActiveProject());
 
         // setup model
         PageList model = new PageList();
 
         model.append(new WelcomePage(WELCOME_TITLE, "A wizard for loading a set of 3D image coordinates"));
         model.append(new DataSourcePage(DATASOURCE_TITLE, ""));
+        model.append(new ChooseReferencePage(REFERENCE_SPACE_TITLE, "Select reference space for coordinate table"));
         model.append(new SetupTablePage(SETUPTABLE_TITLE, "Set up coordinate table"));
         model.append(new ShowTablePage(SHOWTABLE_TITLE, "View and edit coordinate table"));
         CompletionPage cpage = new CompletionPage(COMPLETION_TITLE, "You have successfully loaded a set of image coordinates");
@@ -84,7 +92,7 @@ public class LoadCoordinatesWizard {
             }
         });
 
-        wizard.pack();
+        //wizard.pack();
         
         wizard.setResizable(true); // for wizard, it's better to make it not resizable.
         JideSwingUtilities.globalCenterWindow(wizard);
@@ -158,6 +166,41 @@ public class LoadCoordinatesWizard {
     }
 
 
+    public class ChooseReferencePage extends DefaultWizardPage {
+
+        public ChooseReferencePage(String title, String description) {
+            super(title, description);
+
+
+        }
+
+
+
+        protected void initContentPane() {
+            super.initContentPane();
+
+            addComponent(projectListView.getComponent());
+
+        }
+
+        public void setupWizardButtons() {
+            fireButtonEvent(ButtonEvent.ENABLE_BUTTON, ButtonNames.BACK);
+            fireButtonEvent(ButtonEvent.ENABLE_BUTTON, ButtonNames.NEXT);
+            fireButtonEvent(ButtonEvent.HIDE_BUTTON, ButtonNames.FINISH);
+            updateNextPage();
+        }
+
+        private void updateNextPage() {
+
+            getOwner().setNextPage(getOwner().getPageByTitle(SETUPTABLE_TITLE));
+
+        }
+
+
+
+    }
+
+
     public class SetupTablePage extends DefaultWizardPage {
 
         public SetupTablePage(String title, String description) {
@@ -172,7 +215,7 @@ public class LoadCoordinatesWizard {
 
         protected void initContentPane() {
             super.initContentPane();
-
+            setupPresenter.getInfo().setCoordinateSpace(projectListView.getSelectedLayer().getCoordinateSpace());
             addComponent(setupPresenter.getComponent());
             
         }
@@ -252,9 +295,9 @@ public class LoadCoordinatesWizard {
 
         private void updateNextPage() {
             if (_button1.isSelected() && getOwner() != null) {
-                getOwner().setNextPage(getOwner().getPageByTitle(SETUPTABLE_TITLE));
+                getOwner().setNextPage(getOwner().getPageByTitle(REFERENCE_SPACE_TITLE));
             } else if (_button2.isSelected() && getOwner() != null) {
-                getOwner().setNextPage(getOwner().getPageByTitle(SETUPTABLE_TITLE));
+                getOwner().setNextPage(getOwner().getPageByTitle(REFERENCE_SPACE_TITLE));
             }
 
 

@@ -9,7 +9,7 @@ package com.brainflow.image.anatomy;
  * @version 1.0
  */
 
-public class AnatomicalDirection {
+public class AnatomicalDirection implements Anatomy {
 
   public static final AnatomicalDirection ANTERIOR = new AnatomicalDirection("Anterior", 0);
   public static final AnatomicalDirection POSTERIOR = new AnatomicalDirection("Posterior", 1);

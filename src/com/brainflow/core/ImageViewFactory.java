@@ -96,6 +96,18 @@ public class ImageViewFactory {
         return view;
     }
 
+
+    public static ImageView createExpandedView(IImageDisplayModel displayModel) {
+        ExpandedImageView view = new ExpandedImageView(displayModel, Anatomy3D.getCanonicalAxial());
+        String id = ImageCanvasManager.getInstance().register(view);
+        view.setId(id);
+        view.setName("[" + view.getId() + "] " + view.getModel().getName());
+
+
+
+        return view;
+    }
+
     public static ImageView createMontageView(IImageDisplayModel displayModel, int nrows, int ncols, double sliceGap) {
         MontageImageView view = new MontageImageView(displayModel, Anatomy3D.getCanonicalAxial(), nrows, ncols, sliceGap);
         String id = ImageCanvasManager.getInstance().register(view);

@@ -50,13 +50,16 @@ public class BrainflowProject {
         }
     }
 
+    public IImageDisplayModel getModel(int index) {
+        return modelList.get(index);
+    }
+
 
     public Iterator<IImageDisplayModel> iterator() {
         return modelList.iterator();
     }
 
-    public List<IImageDisplayModel> getModelList() {
-        
+    public List<IImageDisplayModel> getModelList() {       
         return Collections.unmodifiableList(modelList);
     }
 

@@ -36,8 +36,8 @@ public class CropImageStage extends ImageProcessingStage {
         if (croppedImage == null && compositeImage != null) {
             ImagePlotPipeline pipe = getPipeline();
             IImagePlot plot = pipe.getPlot();
-            List<ImageLayer2D> layers = (List<ImageLayer2D>) getPipeline().getEnv(ImagePlotPipeline.IMAGE_LAYER_DATA_KEY);
-            Rectangle2D bounds = ImagePlotPipeline.getBounds(layers);
+
+            Rectangle2D bounds = pipe.getFrameBounds();
            
             Rectangle2D region = new Rectangle2D.Double(plot.getXAxisRange().getMinimum(),
                     plot.getYAxisRange().getMinimum(),

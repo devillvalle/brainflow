@@ -28,12 +28,12 @@ public class CompositeImageProducer extends AbstractImageProducer {
     private ImageLayerListener layerListener;
 
 
-    private ImageProcessingStage fetchSlicesStage;
-    private ImageProcessingStage colorizeImagesStage;
-    private ImageProcessingStage thresholdImagesStage;
-    private ImageProcessingStage createImagesStage;
-    private ImageProcessingStage resampleImagesStage;
-    private ImageProcessingStage composeImageStage;
+    private ImageProcessingStage gatherRenderersStage;
+    private ImageProcessingStage renderLayersStage;
+
+
+    //private ImageProcessingStage renderCoordinatesStage;
+
     private ImageProcessingStage cropImageStage;
     private ImageProcessingStage resizeImageStage;
 
@@ -77,14 +77,14 @@ public class CompositeImageProducer extends AbstractImageProducer {
     }
 
     public void reset() {
-        pipeline.clearPath(fetchSlicesStage);
+        pipeline.clearPath(gatherRenderersStage);
         //getPlot().getComponent().repaint();
     }
 
     public void setSlice(AnatomicalPoint1D slice) {
         super.setSlice(slice);
 
-        pipeline.clearPath(fetchSlicesStage);
+        pipeline.clearPath(gatherRenderersStage);
     }
 
     public void setPlot(IImagePlot plot) {
@@ -122,23 +122,13 @@ public class CompositeImageProducer extends AbstractImageProducer {
     private void initPipeline() {
         pipeline = new ImagePlotPipeline(getPlot());
         try {
-            fetchSlicesStage = new FetchSlicesStage();
-            pipeline.addStage(fetchSlicesStage, new SynchronousStageDriverFactory());
+            gatherRenderersStage = new GatherRenderersStage();
+            pipeline.addStage(gatherRenderersStage, new SynchronousStageDriverFactory());
 
-            colorizeImagesStage = new ColorizeImagesStage();
-            pipeline.addStage(colorizeImagesStage, new SynchronousStageDriverFactory());
 
-            thresholdImagesStage = new ThresholdImagesStage();
-            pipeline.addStage(thresholdImagesStage, new SynchronousStageDriverFactory());
+            renderLayersStage = new RenderLayersStage();
+            pipeline.addStage(renderLayersStage, new SynchronousStageDriverFactory());
 
-            createImagesStage = new CreateBufferedImagesStage();
-            pipeline.addStage(createImagesStage, new SynchronousStageDriverFactory());
-
-            resampleImagesStage = new ResampleImagesStage();
-            pipeline.addStage(resampleImagesStage, new SynchronousStageDriverFactory());
-
-            composeImageStage = new ComposeImagesStage();
-            pipeline.addStage(composeImageStage, new SynchronousStageDriverFactory());
 
             cropImageStage = new CropImageStage();
             pipeline.addStage(cropImageStage, new SynchronousStageDriverFactory());
@@ -226,27 +216,27 @@ public class CompositeImageProducer extends AbstractImageProducer {
     class PipelineLayerListener implements ImageLayerListener {
 
         public void thresholdChanged(ImageLayerEvent event) {
-            pipeline.clearPath(thresholdImagesStage);
+            pipeline.clearPath(gatherRenderersStage);
             plot.getComponent().repaint();
         }
 
         public void colorMapChanged(ImageLayerEvent event) {
-            pipeline.clearPath(colorizeImagesStage);
+            pipeline.clearPath(gatherRenderersStage);
             plot.getComponent().repaint();
         }
 
         public void opacityChanged(ImageLayerEvent event) {
-            pipeline.clearPath(composeImageStage);
+            pipeline.clearPath(gatherRenderersStage);
             plot.getComponent().repaint();
         }
 
         public void interpolationMethodChanged(ImageLayerEvent event) {
-            pipeline.clearPath(resampleImagesStage);
+            pipeline.clearPath(gatherRenderersStage);
             plot.getComponent().repaint();
         }
 
         public void visibilityChanged(ImageLayerEvent event) {
-            pipeline.clearPath(composeImageStage);
+            pipeline.clearPath(gatherRenderersStage);
             plot.getComponent().repaint();
         }
     }

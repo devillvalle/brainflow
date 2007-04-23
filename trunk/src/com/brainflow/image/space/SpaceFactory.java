@@ -5,6 +5,7 @@ import com.brainflow.image.LinearSet1D;
 import com.brainflow.image.LinearSet3D;
 import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.image.axis.AxisRange;
+import com.brainflow.image.axis.CoordinateAxis;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,6 +32,28 @@ public class SpaceFactory {
         }
         else if (axes.length == 3) {
             return new ImageSpace3D(axes[0], axes[1], axes[2]);
+        }
+
+        else throw new RuntimeException();
+
+    }
+
+    public static ICoordinateSpace createCoordinateSpace(CoordinateAxis... axes) {
+
+        if (axes.length > 3) {
+            throw new IllegalArgumentException("Cannot create an IImageSpace with more than three axes");
+        }
+
+        if (axes.length == 1) {
+            // todo implement CoordinateSpace1D  ??
+            throw new UnsupportedOperationException();
+        }
+        else if (axes.length == 2) {
+            // todo implement CoordinateSpace2D
+            throw new UnsupportedOperationException();
+        }
+        else if (axes.length == 3) {
+            return new CoordinateSpace3D(axes[0], axes[1], axes[2]);
         }
 
         else throw new RuntimeException();

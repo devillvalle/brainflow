@@ -1,10 +1,6 @@
 package com.brainflow.application.actions;
 
 import com.brainflow.core.ImageView;
-import com.brainflow.display.ICrosshair;
-import com.brainflow.image.anatomy.Anatomy3D;
-import com.brainflow.image.axis.ImageAxis;
-import com.brainflow.image.space.Axis;
 import org.bushe.swing.action.BasicAction;
 
 import java.awt.event.ActionEvent;
@@ -24,9 +20,10 @@ public class NextSliceAction extends BasicAction {
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
 
         if (view != null) {
-            ICrosshair cross = view.getCrosshair().getProperty();
-            
-            Anatomy3D displayAnatomy = view.getSelectedPlot().getDisplayAnatomy();
+            //ICrosshair cross = view.getCrosshair().getProperty();
+            view.getSliceController().nextSlice();
+
+            /*Anatomy3D displayAnatomy = view.getSelectedPlot().getDisplayAnatomy();
             Axis axis = cross.getViewport().getBounds().findAxis(displayAnatomy.ZAXIS);
             ImageAxis iaxis = view.getModel().getImageAxis(axis);
 
@@ -34,7 +31,7 @@ public class NextSliceAction extends BasicAction {
             int nsample = sample + 1;
             if (nsample >= 0 && nsample < iaxis.getNumSamples()) {
                 cross.setValue(iaxis.valueOf(nsample));
-            }
+            } */
         }
 
 

@@ -25,14 +25,12 @@ public class ImageSlicer {
     private Logger log = Logger.getLogger("com.brainflow.image");
 
     private IImageData3D image;
-    private IImageSpace space;
 
     private Anatomy3D displayAnatomy = Anatomy3D.AXIAL_LAI;
 
 
     public ImageSlicer(IImageData3D _image) {
         image = _image;
-        space = image.getImageSpace();
 
     }
 

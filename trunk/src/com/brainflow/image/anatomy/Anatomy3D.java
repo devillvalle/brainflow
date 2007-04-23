@@ -214,15 +214,17 @@ public class Anatomy3D implements Anatomy {
         return rets;
     }
 
+
+
     public String toString() {
         StringBuffer sb = new StringBuffer();
-        sb.append("Orientation: " + orientation.getOrientationLabel() + "\n");
-        sb.append("X Axis: \n");
-        sb.append("\t" + XAXIS + "\n");
-        sb.append("Y Axis: \n");
-        sb.append("\t" + YAXIS + "\n");
-        sb.append("Z Axis: \n");
-        sb.append("\t" + ZAXIS + "\n");
+        sb.append(XAXIS.getMinDirection().toString());
+        sb.append("-");
+        sb.append(YAXIS.getMinDirection().toString());
+        sb.append("-");
+        sb.append(ZAXIS.getMinDirection().toString());
+        
+
         return sb.toString();
 
     }

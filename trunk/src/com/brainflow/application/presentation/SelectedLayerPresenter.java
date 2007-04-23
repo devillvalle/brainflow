@@ -164,7 +164,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
         }
 
         public void visibilityChanged(ImageLayerEvent event) {
-             ImageLayer layer = event.getAffectedLayer();
+             AbstractLayer layer = event.getAffectedLayer();
             if (layer != null) {
                 int i = getSelectedView().getModel().indexOf(layer);
                 boolean vis = layer.isVisible();

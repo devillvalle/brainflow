@@ -45,7 +45,7 @@ public class LinearColorMap extends AbstractColorMap {
     }
 
     public LinearColorMap(double min, double max, IndexColorModel icm) {
-        assert max > min : "max must exceed min in LinearColorMap";
+        assert max >= min : "max must exceed min in LinearColorMap";
 
 
         minimumValue = min;
@@ -64,7 +64,7 @@ public class LinearColorMap extends AbstractColorMap {
 
 
     public LinearColorMap(double min, double max, LinearColorMap lcm) {
-        assert max > min : "max must exceed min in LinearColorMap";
+        assert max >= min : "max must exceed min in LinearColorMap";
 
 
         minimumValue = min;

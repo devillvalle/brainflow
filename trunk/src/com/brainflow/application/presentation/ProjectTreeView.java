@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import java.util.Enumeration;
 import java.util.Iterator;
 
@@ -21,16 +22,17 @@ import java.util.Iterator;
  * Time: 4:54:31 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ProjectView extends ImageViewPresenter {
+public class ProjectTreeView extends ImageViewPresenter {
 
     private BrainflowProject project;
 
     private DefaultTreeModel treeModel;
+
     private ProjectNode rootNode;
 
     private JTree tree;
 
-    public ProjectView(BrainflowProject _project) {
+    public ProjectTreeView(BrainflowProject _project) {
         project = _project;
         rootNode = new ProjectNode(project);
 
@@ -42,7 +44,9 @@ public class ProjectView extends ImageViewPresenter {
 
 
     public void viewSelected(ImageView view) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        TreePath path = new TreePath(view.getModel());
+        //tree.setS
+
     }
 
     public void allViewsDeselected() {
@@ -143,6 +147,14 @@ public class ProjectView extends ImageViewPresenter {
                     //To change body of implemented methods use File | Settings | File Templates.
                 }
             });
+        }
+
+        public Object getUserObject() {
+            return model;
+        }
+
+        public IImageDisplayModel getModel() {
+            return model;
         }
 
         public boolean isLeaf() {

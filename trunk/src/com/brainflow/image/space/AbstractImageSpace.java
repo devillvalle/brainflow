@@ -21,11 +21,11 @@ public abstract class AbstractImageSpace implements IImageSpace {
     private Anatomy anatomy = null;
 
 
-    void createImageAxes(int num) {
+    protected void createImageAxes(int num) {
         axes = new ImageAxis[num];
     }
 
-    void initAxis(ImageAxis iaxis, Axis aaxis) {
+    protected void initAxis(ImageAxis iaxis, Axis aaxis) {
         axes[aaxis.getId()] = iaxis;
     }
 
@@ -157,12 +157,11 @@ public abstract class AbstractImageSpace implements IImageSpace {
         return null;
     }
 
-    public boolean sameAxes(IImageSpace other) {
+    public boolean sameAxes(ICoordinateSpace other) {
         if (other.getNumDimensions() != getNumDimensions()) {
             return false;
         }
         for (int i = 0; i < getNumDimensions(); i++) {
-            System.out.println("checking dim : " + i);
             if (getAnatomicalAxis(Axis.getAxis(i)) != other.getAnatomicalAxis(Axis.getAxis(i))) {
                 return false;
             }
@@ -172,7 +171,8 @@ public abstract class AbstractImageSpace implements IImageSpace {
         return true;
     }
 
-    public IImageSpace union(IImageSpace other) {
+    @Override
+    public IImageSpace union(ICoordinateSpace other) {
         assert sameAxes(other) : "cannot perform union for ImageSpaces with different axis orientations";
         if (!sameAxes(other)) {
             throw new IllegalArgumentException("cannot perform union for ImageSpaces with different axis orientations");
@@ -188,9 +188,14 @@ public abstract class AbstractImageSpace implements IImageSpace {
 
 
             AxisRange nrange = range1.union(range2);
-            axes[i] = new ImageAxis(nrange,
-                    Math.min(other.getSpacing(Axis.getAxis(i)), getSpacing(Axis.getAxis(i))));
 
+            if (other instanceof IImageSpace) {
+                IImageSpace tmp = (IImageSpace)other;
+
+                axes[i] = new ImageAxis(nrange, Math.min(tmp.getSpacing(Axis.getAxis(i)), getSpacing(Axis.getAxis(i))));
+            } else {
+                axes[i] = new ImageAxis(nrange, getSpacing(Axis.getAxis(i)));                                 
+            }
          
         }
 
@@ -198,7 +203,7 @@ public abstract class AbstractImageSpace implements IImageSpace {
 
     }
 
-    void setAnatomy(Anatomy _anatomy) {
+    protected void setAnatomy(Anatomy _anatomy) {
         anatomy = _anatomy;
     }
 

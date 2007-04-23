@@ -7,6 +7,7 @@ import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
+import com.brainflow.image.space.ICoordinateSpace;
 import com.jgoodies.binding.beans.Model;
 
 import javax.swing.event.ListDataEvent;
@@ -56,7 +57,7 @@ public class Viewport3D extends Model {
 
     public Viewport3D(IImageDisplayModel _displayModel) {
         displayModel = _displayModel;
-        bounds = displayModel.getImageSpace();
+        bounds = _displayModel.getImageSpace();
         displayModel.addImageDisplayModelListener(new ImageDisplayModelListener() {
 
 

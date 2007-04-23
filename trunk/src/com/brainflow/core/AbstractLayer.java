@@ -1,7 +1,9 @@
 package com.brainflow.core;
 
 import com.brainflow.image.space.IImageSpace;
+import com.brainflow.image.space.ICoordinateSpace;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.display.ThresholdRange;
 
 import java.beans.PropertyChangeListener;
@@ -48,6 +50,8 @@ public abstract class AbstractLayer {
     }
 
     public abstract double getValue(AnatomicalPoint3D pt);
+
+    public abstract SliceRenderer getSliceRenderer(AnatomicalPoint1D slice);
 
 
     public boolean isVisible() {
@@ -117,7 +121,7 @@ public abstract class AbstractLayer {
     }
 
 
-    public abstract IImageSpace getImageSpace();
+    public abstract ICoordinateSpace getCoordinateSpace();
 
     public abstract double getMinValue();
 

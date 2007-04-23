@@ -13,11 +13,11 @@ import java.util.EventObject;
 
 public class ImageLayerEvent extends EventObject {
 
-    private ImageLayer affectedLayer;
+    private AbstractLayer affectedLayer;
 
     private IImageDisplayModel model;
 
-    public ImageLayerEvent(IImageDisplayModel _model, ImageLayer layer) {
+    public ImageLayerEvent(IImageDisplayModel _model, AbstractLayer layer) {
         super(_model);
         model = _model;
         affectedLayer = layer;
@@ -29,7 +29,7 @@ public class ImageLayerEvent extends EventObject {
     }
 
 
-    public ImageLayer getAffectedLayer() {
+    public AbstractLayer getAffectedLayer() {
         return affectedLayer;
     }
 

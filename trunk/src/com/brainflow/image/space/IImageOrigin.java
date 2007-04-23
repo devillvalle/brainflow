@@ -16,6 +16,7 @@ public interface IImageOrigin {
 
 
     public AnatomicalDirection[] getOriginalDirection();
+
     public AnatomicalPoint getOrigin();
 
 

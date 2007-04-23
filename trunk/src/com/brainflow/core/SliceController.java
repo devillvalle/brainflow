@@ -14,7 +14,7 @@ import java.beans.PropertyChangeSupport;
 public interface SliceController {
 
 
-
+    
     public AnatomicalPoint1D getSlice();
 
     public void setSlice(AnatomicalPoint1D slice);

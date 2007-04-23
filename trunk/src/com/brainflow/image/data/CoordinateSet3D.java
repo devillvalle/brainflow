@@ -2,9 +2,15 @@ package com.brainflow.image.data;
 
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.Anatomy3D;
-import com.brainflow.image.space.ImageSpace3D;
+import com.brainflow.image.anatomy.AnatomicalPoint1D;
+import com.brainflow.image.anatomy.AnatomicalAxis;
+import com.brainflow.image.space.CoordinateSpace3D;
+import com.brainflow.image.space.Axis;
+import com.brainflow.image.space.ICoordinateSpace;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
 
 import cern.colt.list.DoubleArrayList;
 import cern.colt.matrix.DoubleMatrix2D;
@@ -24,9 +30,9 @@ public class CoordinateSet3D {
 
     private DoubleArrayList values;
 
-    private DoubleArrayList pointSize;
+    private DoubleArrayList pointRadius;
 
-    private ImageSpace3D space;
+    private ICoordinateSpace space;
 
 
     public CoordinateSet3D(double[][] points) {
@@ -37,7 +43,7 @@ public class CoordinateSet3D {
     }
 
 
-    public CoordinateSet3D(ImageSpace3D _space, double[][] _points) {
+    public CoordinateSet3D(ICoordinateSpace _space, double[][] _points) {
         space = _space;
 
         if (_points[0].length != 3) {
@@ -47,7 +53,7 @@ public class CoordinateSet3D {
         init(_points);
     }
 
-    public CoordinateSet3D(ImageSpace3D _space, double[][] _points, double fillValue, double fillSize) {
+    public CoordinateSet3D(ICoordinateSpace _space, double[][] _points, double fillValue, double fillSize) {
         space = _space;
 
         if (_points[0].length != 3) {
@@ -57,14 +63,14 @@ public class CoordinateSet3D {
         init(_points, fillValue, fillSize);
     }
 
-    public CoordinateSet3D(ImageSpace3D _space, double[][] _points, double[] _values, double[] _sizes) {
+    public CoordinateSet3D(ICoordinateSpace _space, double[][] _points, double[] _values, double[] _sizes) {
         space = _space;
 
         if (_points[0].length != 3) {
             throw new IllegalArgumentException("points array must have 3 columns (x, y, z)");
         }
 
-        if ( (_sizes.length != _points.length) || (_values.length != _points.length) ) {
+        if ((_sizes.length != _points.length) || (_values.length != _points.length)) {
             throw new IllegalArgumentException("values and size arrays must have same number of rows as points array");
 
         }
@@ -80,7 +86,7 @@ public class CoordinateSet3D {
         Arrays.fill(v, fillValue);
         Arrays.fill(s, fillSize);
         values = new DoubleArrayList(v);
-        pointSize = new DoubleArrayList(s);
+        pointRadius = new DoubleArrayList(s);
     }
 
     private void init(double[][] _points) {
@@ -90,13 +96,13 @@ public class CoordinateSet3D {
         Arrays.fill(v, 1);
         Arrays.fill(s, 1);
         values = new DoubleArrayList(v);
-        pointSize = new DoubleArrayList(s);
+        pointRadius = new DoubleArrayList(s);
     }
 
     private void init(double[][] _points, double[] _values, double[] _sizes) {
         points = new DenseDoubleMatrix2D(_points);
         values = new DoubleArrayList(_values);
-        pointSize = new DoubleArrayList(_sizes);
+        pointRadius = new DoubleArrayList(_sizes);
     }
 
 
@@ -124,16 +130,16 @@ public class CoordinateSet3D {
 
     }
 
-     public void setXCoordinate(int index, double x) {
+    public void setXCoordinate(int index, double x) {
         points.set(index, 0, x);
 
     }
 
-     public void setYCoordinate(int index,double y) {
+    public void setYCoordinate(int index, double y) {
         points.set(index, 1, y);
     }
 
-     public void setZCoordinate(int index, double z) {
+    public void setZCoordinate(int index, double z) {
         points.set(index, 2, z);
 
     }
@@ -143,7 +149,7 @@ public class CoordinateSet3D {
     }
 
     public void setRadius(int index, double value) {
-        pointSize.set(index, value);
+        pointRadius.set(index, value);
     }
 
     public double getValue(int index) {
@@ -151,38 +157,80 @@ public class CoordinateSet3D {
     }
 
     public double getRadius(int index) {
-        return pointSize.get(index);
+        return pointRadius.get(index);
     }
 
     public double getXCoordinate(int index) {
         return points.get(index, 0);
-
     }
 
-     public double getYCoordinate(int index) {
+    public double getYCoordinate(int index) {
         return points.get(index, 1);
     }
 
-     public double getZCoordinate(int index) {
+    public double getZCoordinate(int index) {
         return points.get(index, 2);
 
     }
 
-    public ImageSpace3D getSpace() {
+    public ICoordinateSpace getSpace() {
         return space;
     }
 
-    public double[] getCoordinate(int index) {
+    public double[] getCoordinates(int index) {
         if (index < 0 || index >= getRows()) {
             throw new IndexOutOfBoundsException("illegal index " + index);
         }
 
         double[] ret = new double[3];
-        ret[0] = points.get(index,0);
-        ret[1] = points.get(index,1);
-        ret[2] = points.get(index,2);
+        ret[0] = points.get(index, 0);
+        ret[1] = points.get(index, 1);
+        ret[2] = points.get(index, 2);
 
         return ret;
+
+    }
+
+    public double getCoordinate(int index, AnatomicalAxis axis) {
+        if (getSpace().getImageAxis(Axis.Z_AXIS).getAnatomicalAxis() == axis) {
+            return points.get(index, 2);
+        } else if (getSpace().getImageAxis(Axis.Y_AXIS).getAnatomicalAxis() == axis) {
+            return points.get(index, 1);
+        } else if (getSpace().getImageAxis(Axis.X_AXIS).getAnatomicalAxis() == axis) {
+            return points.get(index, 0);
+        } else {
+            throw new IllegalArgumentException("axis does not match coordinate space");
+        }
+
+    }
+
+    public List<Integer> indicesWithinPlane(AnatomicalPoint1D slice) {
+        List<Integer> idx = new ArrayList<Integer>();
+
+        for (int i = 0; i < getRows(); i++) {
+            double coord = getCoordinate(i, slice.getAnatomy());
+            double radius = getRadius(i);
+            if (Math.abs(slice.getX() - coord) < radius) {
+                idx.add(i);
+            }
+
+        }
+
+        return idx;
+    }
+
+    public List<AnatomicalPoint3D> pointsWithinPlane(AnatomicalPoint1D slice) {
+        List<AnatomicalPoint3D> pts = new ArrayList<AnatomicalPoint3D>();
+        for (int i = 0; i < getRows(); i++) {
+            double coord = getCoordinate(i, slice.getAnatomy());
+            double radius = getRadius(i);
+            if (Math.abs(slice.getX() - coord) < radius) {
+                pts.add(getAnatomicalPoint(i));
+            }
+
+        }
+
+        return pts;
 
     }
 
@@ -191,12 +239,9 @@ public class CoordinateSet3D {
             throw new IndexOutOfBoundsException("illegal index " + index);
         }
 
-
-        return new AnatomicalPoint3D((Anatomy3D)space.getAnatomy(), points.get(index,0), points.get(index,1), points.get(index,2));
+        return new AnatomicalPoint3D((Anatomy3D) space.getAnatomy(), points.get(index, 0), points.get(index, 1), points.get(index, 2));
 
     }
-
-   
 
 
 }

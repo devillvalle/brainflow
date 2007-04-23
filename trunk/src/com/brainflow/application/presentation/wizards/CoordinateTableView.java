@@ -71,7 +71,7 @@ public class CoordinateTableView extends AbstractPresenter {
 
 
         public CoordinateTableModel() {
-            ctable = new CoordinateSet3D(info.getAnatomy(), new double[info.getTableSize()][3], info.getDefaultValue(), info.getDefaultRadius());
+            ctable = new CoordinateSet3D(info.getCoordinateSpace(), new double[info.getTableSize()][3], info.getDefaultValue(), info.getDefaultRadius());
             columnNames = Arrays.asList(names);
         }
 
@@ -133,9 +133,9 @@ public class CoordinateTableView extends AbstractPresenter {
                 case 4 :
                     return ctable.getRadius(rowIndex);
                 case 5 :
-                    return 1;
+                    return info.getDefaultOpacity();
                 case 6 :
-                    return Color.RED;
+                    return info.getDefaultColor();
                 default :
                     throw new AssertionError();
             }

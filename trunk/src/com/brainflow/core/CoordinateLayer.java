@@ -1,7 +1,11 @@
 package com.brainflow.core;
 
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.space.IImageSpace;
+import com.brainflow.image.space.CoordinateSpace3D;
+import com.brainflow.image.space.ImageSpace3D;
+import com.brainflow.image.space.ICoordinateSpace;
 import com.brainflow.image.data.CoordinateSet3D;
 
 /**
@@ -17,6 +21,7 @@ public class CoordinateLayer extends AbstractLayer {
 
     public CoordinateLayer(ImageLayerProperties properties, CoordinateSet3D coords) {
         super(properties);
+        coordinates = coords;
     }
 
     public double getValue(AnatomicalPoint3D pt) {
@@ -27,20 +32,24 @@ public class CoordinateLayer extends AbstractLayer {
         return coordinates;
     }
 
-    public IImageSpace getImageSpace() {
+    public ICoordinateSpace getCoordinateSpace() {
         // could be such a thing a "coordinate space" which image space extends
         return coordinates.getSpace();
     }
 
     public double getMinValue() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return coordinates.getMinValue();
     }
 
     public double getMaxValue() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return coordinates.getMaxValue();
     }
 
     public String getLabel() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return "coordinates";
+    }
+
+    public SliceRenderer getSliceRenderer(AnatomicalPoint1D slice) {
+        return new BasicCoordinateSliceRenderer(this, slice);
     }
 }

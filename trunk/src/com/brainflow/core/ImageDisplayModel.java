@@ -315,7 +315,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         private void fireContentsChanged(ListDataEvent e) {
             ListDataEvent ne = new ListDataEvent(ImageDisplayModel.this, e.getType(), e.getIndex0(), e.getIndex1());
             for (ListDataListener l : listenerList) {
-                l.intervalAdded(ne);
+                l.contentsChanged(ne);
 
             }
 
@@ -324,7 +324,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         private void fireIntervalRemoved(ListDataEvent e) {
             ListDataEvent ne = new ListDataEvent(ImageDisplayModel.this, e.getType(), e.getIndex0(), e.getIndex1());
             for (ListDataListener l : listenerList) {
-                l.intervalAdded(ne);
+                l.intervalRemoved(ne);
 
             }
 

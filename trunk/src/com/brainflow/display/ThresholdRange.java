@@ -17,7 +17,9 @@ public class ThresholdRange extends Model implements MaskPredicate {
 
     //public static final String SYMMETRICAL_PROPERTY = "symmetrical";
     public static final String INCLUSIVE_PROPERTY = "inclusive";
+
     public static final String MIN_PROPERTY = "min";
+
     public static final String MAX_PROPERTY = "max";
 
 

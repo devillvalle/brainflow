@@ -214,7 +214,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
         if (Double.compare(trange.getMin(), trange.getMax()) != 0) {
             UByteImageData2D alpha = rgba.getAlpha();
             UByteImageData2D out = new UByteImageData2D(alpha.getImageSpace());
-            MaskedImageData2D mask = new MaskedImageData2D(rgba.getSource(), (MaskPredicate) trange);
+            MaskedData2D mask = new MaskedData2D(rgba.getSource(), (MaskPredicate) trange);
 
             ImageIterator sourceIter = alpha.iterator();
             ImageIterator maskIter = mask.iterator();

@@ -15,14 +15,14 @@ import com.brainflow.utils.DataType;
  * Time: 9:50:11 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MaskedImageData2D implements IImageData2D {
+public class MaskedData2D implements IImageData2D {
 
     private IImageData2D source;
 
     private MaskPredicate predicate;
 
 
-    public MaskedImageData2D(IImageData2D src, MaskPredicate predicate) {
+    public MaskedData2D(IImageData2D src, MaskPredicate predicate) {
         super();
         source = src;
         this.predicate = predicate;

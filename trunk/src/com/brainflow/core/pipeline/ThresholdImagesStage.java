@@ -9,10 +9,9 @@ import java.util.logging.Logger;
 import com.brainflow.display.ThresholdRange;
 import com.brainflow.image.data.RGBAImage;
 import com.brainflow.image.data.UByteImageData2D;
-import com.brainflow.image.data.MaskedImageData2D;
+import com.brainflow.image.data.MaskedData2D;
 import com.brainflow.image.data.MaskPredicate;
 import com.brainflow.image.iterators.ImageIterator;
-import com.brainflow.core.ImageLayer;
 import com.brainflow.core.AbstractLayer;
 
 /**
@@ -61,7 +60,7 @@ public class ThresholdImagesStage extends ImageProcessingStage {
         if (Double.compare(trange.getMin(), trange.getMax()) != 0) {
             UByteImageData2D alpha = rgba.getAlpha();
             UByteImageData2D out = new UByteImageData2D(alpha.getImageSpace());
-            MaskedImageData2D mask = new MaskedImageData2D(rgba.getSource(), (MaskPredicate) trange);
+            MaskedData2D mask = new MaskedData2D(rgba.getSource(), (MaskPredicate) trange);
 
             ImageIterator sourceIter = alpha.iterator();
             ImageIterator maskIter = mask.iterator();

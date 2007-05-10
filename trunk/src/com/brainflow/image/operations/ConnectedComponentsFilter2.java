@@ -25,6 +25,7 @@ public class ConnectedComponentsFilter2 extends AbstractImageFilter {
 
 
     private IntegerStack stack;
+
     private ISearchKernel3D searchKernel;
 
     public IImageData getOutput() {

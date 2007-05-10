@@ -5,8 +5,11 @@ import com.brainflow.image.rendering.RenderUtils;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace2D;
+import com.brainflow.image.iterators.ImageIterator;
 
 import java.awt.image.RenderedImage;
+
+import cern.colt.bitvector.BitVector;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,12 +21,58 @@ import java.awt.image.RenderedImage;
 public class BinaryImageData2D extends BinaryImageData implements IImageData2D {
 
 
+    private BinaryImageData2D(IImageSpace _space, BitVector bits) {
+        super(_space);
+
+        this.bits = bits;
+
+        if (bits.size() != getImageSpace().getNumSamples()) {
+            throw new IllegalArgumentException("BitVector has wrong number of samples: " + bits.size());
+        }
+
+    }
+
     public BinaryImageData2D(BinaryImageData2D src) {
         super(new ImageSpace2D((ImageSpace2D) src.getImageSpace()));
     }
 
+    public BinaryImageData2D(MaskedData2D src) {
+        super(src.getImageSpace());
+        bits = new BitVector(space.getNumSamples());
+
+        ImageIterator iter = src.iterator();
+        while (iter.hasNext()) {
+            int i = iter.index();
+            double val = iter.next();
+            if (val > 0) {
+                bits.set(i);    
+            }
+        }
+
+    }
+
     public BinaryImageData2D(IImageSpace _space) {
         super(_space);
+    }
+
+
+    public BinaryImageData2D OR(BinaryImageData data) {
+        if (data.getNumElements() != this.getNumElements()) {
+            throw new IllegalArgumentException("cannot combine images of unequal size");
+        }
+        BitVector ret = bits.copy();
+        ret.or(data.getBitVector());
+        return new BinaryImageData2D(getImageSpace(), ret);
+    }
+
+    public BinaryImageData2D AND(BinaryImageData data) {
+        if (data.getNumElements() != this.getNumElements()) {
+            throw new IllegalArgumentException("cannot combine images of unequal size");
+        }
+        BitVector ret = bits.copy();
+        ret.or(data.getBitVector());
+        return new BinaryImageData2D(getImageSpace(), ret);
+
     }
 
     public int indexOf(int x, int y) {

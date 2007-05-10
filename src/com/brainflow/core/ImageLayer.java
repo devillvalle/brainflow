@@ -28,37 +28,44 @@ import java.beans.PropertyChangeEvent;
 public abstract class ImageLayer extends AbstractLayer {
 
 
-    private ILoadableImage limg;
+    private IImageData data;
 
     
     public ImageLayer(ILoadableImage _limg, ImageLayerProperties _properties) {
         super(_properties);
-        limg = _limg;
+        data = _limg.getData();
     }
 
+    public ImageLayer(IImageData data, ImageLayerProperties _properties) {
+        super(_properties);
+        this.data = data;
+    }
+
+
+
     public IImageData getData() {
-        return limg.getData();
+        return data;
     }
     
     public String getLabel() {
-        return limg.getData().getImageLabel();
+        return data.getImageLabel();
     }
 
     public IImageSpace getCoordinateSpace() {
-        return limg.getData().getImageSpace();
+        return data.getImageSpace();
     }
 
     public double getMaxValue() {
-        return limg.getData().getMaxValue();
+        return data.getMaxValue();
     }
 
     public double getMinValue() {
-        return limg.getData().getMinValue();
+        return data.getMinValue();
     }
 
 
     public String toString() {
-        return limg.getStem();
+        return data.getImageLabel();
     }
 
 

@@ -11,21 +11,26 @@ import com.brainflow.image.space.IImageSpace;
  * Time: 1:06:03 PM
  * To change this template use File | Settings | File Templates.
  */
-public class BinaryImageData extends AbstractImageData {
+public abstract class BinaryImageData extends AbstractImageData {
 
 
-    private BitVector bits;
+    protected BitVector bits;
 
 
     public BinaryImageData(IImageSpace _space) {
         space = _space;
         bits = new BitVector(space.getNumSamples());
-
     }
 
     protected BitVector getBitVector() {
         return bits;
     }
+
+    public abstract BinaryImageData OR(BinaryImageData data);
+
+    public abstract BinaryImageData AND(BinaryImageData data);
+
+
 
     public BinaryImageData(IImageSpace _space, boolean[] elements) {
         assert _space.getNumSamples() == elements.length : "array size does not match ImageSpace dimensions";

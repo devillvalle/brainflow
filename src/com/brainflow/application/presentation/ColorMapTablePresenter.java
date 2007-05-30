@@ -6,6 +6,7 @@ import com.brainflow.utils.ResourceLoader;
 import com.jgoodies.binding.beans.DelayedPropertyChangeHandler;
 import com.jidesoft.dialog.ButtonPanel;
 import com.jidesoft.swing.JideBoxLayout;
+import com.jidesoft.grid.TableUtils;
 import org.bushe.swing.action.BasicAction;
 
 import javax.imageio.ImageIO;
@@ -32,11 +33,13 @@ public class ColorMapTablePresenter extends AbstractColorMapPresenter {
 
 
     private ColorMapTable colorTable;
+
     private JScrollPane scrollPane;
 
     private ButtonPanel buttonPanel;
 
     private JButton applyButton;
+
     private JButton resetButton;
 
     private JSpinner segmentSpinner;
@@ -100,6 +103,8 @@ public class ColorMapTablePresenter extends AbstractColorMapPresenter {
         });
 
         initSegmentSpinner();
+
+        TableUtils.autoResizeAllColumns(colorTable.getComponent());
 
     }
 

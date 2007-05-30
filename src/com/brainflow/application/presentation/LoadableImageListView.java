@@ -47,10 +47,14 @@ public class LoadableImageListView extends JList {
     private DefaultListModel listModel = new DefaultListModel();
 
     private LoadableImageManager manager;
-    private Map<ILoadableImage, ImageIcon> imap = new HashMap<ILoadableImage, ImageIcon>();
+
+
+    /*private Map<ILoadableImage, ImageIcon> imap = new HashMap<ILoadableImage, ImageIcon>();
 
     public static final int ICON_WIDTH = 40;
     public static final int ICON_HEIGHT = 40;
+
+    */
 
     private Map context = new HashMap();
     private BasicAction removeAction;
@@ -66,22 +70,6 @@ public class LoadableImageListView extends JList {
 
     public LoadableImageListView(LoadableImageManager _manager) {
         manager = _manager;
-        /*manager.addImageStatusEventListener(new EventSubscriber() {
-
-            public void eventOccurred(LoadableImageStatusEvent e) {
-                final LoadableImageStatusEvent event = e;
-
-                if (e.getEventID() == LoadableImageStatusEvent.EventID.IMAGE_REGISTERED) {
-                    SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            listModel.addElement(event.getSource());
-                        }
-                    });
-                }
-                ;
-
-            }
-        });*/
 
         buildPrototypeCell();
         setCellRenderer(new LoadableImageCellRenderer());
@@ -97,16 +85,15 @@ public class LoadableImageListView extends JList {
         });
 
 
-        this.addMouseListener(new MouseAdapter() {
+        addMouseListener(new MouseAdapter() {
 
 
             public void mouseReleased(MouseEvent e) {
                 if (e.isPopupTrigger()) {
                     JPopupMenu popup = createPopup();
-
                     popup.show(LoadableImageListView.this, e.getX(), e.getY());
                 } else {
-                    System.out.println("not popup trigger");
+
                 }
 
             }
@@ -150,9 +137,9 @@ public class LoadableImageListView extends JList {
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             ILoadableImage limg = (ILoadableImage) value;
 
-            ImageIcon icon = imap.get(limg);
+            //ImageIcon icon = imap.get(limg);
 
-            if (icon == null) {
+            /*if (icon == null) {
                 ImageDisplayModel dmodel = new ImageDisplayModel("" + limg.getUniqueID());
 
                 ImageLayerProperties parms = new ImageLayerProperties(new LinearColorMap(limg.getData().getMinValue(), limg.getData().getMaxValue(), ColorTable.GRAYSCALE));
@@ -178,9 +165,9 @@ public class LoadableImageListView extends JList {
 
 
                 imap.put(limg, icon);
-            }
+            } */
 
-            cellPrototype.getIconLabel().setIcon(icon);
+            //cellPrototype.getIconLabel().setIcon(icon);
             cellPrototype.getFilenameLabel().setText(limg.getStem());
             StyledLabel infoLabel = (StyledLabel) cellPrototype.getInfoLabel();
             infoLabel.setStyleRange(new StyleRange(0, infoLabel.getText().length(), Font.ITALIC, Color.GRAY));

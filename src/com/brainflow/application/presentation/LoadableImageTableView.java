@@ -221,7 +221,8 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
 
         JComponent createTextPanel() {
             NullPanel panel = new NullPanel(new GridLayout(4, 1, 5, 1));
-            panel.add(new NullLabel(limg.getStem(), getSnapshot(limg, SMALL_ICON_WIDTH, SMALL_ICON_HEIGHT), JLabel.LEADING));
+            //panel.add(new NullLabel(limg.getStem(), getSnapshot(limg, SMALL_ICON_WIDTH, SMALL_ICON_HEIGHT), JLabel.LEADING));
+            panel.add(new NullLabel(limg.getStem(), JLabel.LEADING));
 
             final NullJideButton supportButton = new NullJideButton("");
             supportButton.setHorizontalAlignment(SwingConstants.LEADING);
@@ -293,7 +294,7 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
             if (value instanceof ILoadableImage) {
                 ILoadableImage limg = (ILoadableImage) value;
                 JLabel label = (JLabel) super.getTableCellRendererComponent(table, limg.getStem(), isSelected, hasFocus, row, column);
-                label.setIcon(getSnapshot(limg, SMALL_ICON_WIDTH, SMALL_ICON_HEIGHT));
+                //label.setIcon(getSnapshot(limg, SMALL_ICON_WIDTH, SMALL_ICON_HEIGHT));
                 return label;
             } else {
                 return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);

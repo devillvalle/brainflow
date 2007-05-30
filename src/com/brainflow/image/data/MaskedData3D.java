@@ -31,9 +31,10 @@ public class MaskedData3D implements IMaskedData3D {
         return predicate;
     }
 
-    public void setPredicate(MaskPredicate predicate) {
-        this.predicate = predicate;
+    public IImageData3D getSource() {
+        return source;
     }
+
 
     public Index3D voxelOf(int idx, Index3D voxel) {
         return source.voxelOf(idx, voxel);
@@ -139,6 +140,18 @@ public class MaskedData3D implements IMaskedData3D {
         source.setIdentifier(identifier);
     }
 
+    public int cardinality() {
+        MaskedIterator iter = new MaskedIterator();
+        int count = 0;
+        while (iter.hasNext()) {
+            if (iter.next() > 0) {
+                count++;
+            }
+        }
+
+        return count;
+
+    }
 
     class MaskedIterator implements ImageIterator {
 

@@ -41,8 +41,6 @@ public class CanvasBar extends ImageViewPresenter {
 
     private ButtonSelectionListener listener = new ButtonSelectionListener();
 
-
-
     private JideSplitButton emptyButton = new JideSplitButton("Tabula Rasa");
 
     public CanvasBar() {

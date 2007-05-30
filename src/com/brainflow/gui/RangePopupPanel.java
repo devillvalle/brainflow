@@ -58,7 +58,7 @@ public class RangePopupPanel extends PopupPanel {
         add(new JLabel("From: "), cc.xy(2, 2));
 
         minField = new JFormattedTextField(NumberFormat.getNumberInstance());
-        minField.setValue(rangeModel.getMinRange());
+        minField.setValue(rangeModel.getMin());
         minField.setColumns(7);
         Bindings.bind(minField, adapter.getValueModel(RangeModel.RANGE_MIN_PROPERTY));
 
@@ -67,7 +67,7 @@ public class RangePopupPanel extends PopupPanel {
 
 
         maxField = new JFormattedTextField(NumberFormat.getNumberInstance());
-        maxField.setValue(rangeModel.getMaxRange());
+        maxField.setValue(rangeModel.getMax());
         maxField.setColumns(7);
 
         Bindings.bind(maxField, adapter.getValueModel(RangeModel.RANGE_MAX_PROPERTY));

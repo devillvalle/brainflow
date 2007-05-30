@@ -2,6 +2,8 @@ package com.brainflow.gui;
 
 import com.brainflow.utils.Range;
 import com.brainflow.utils.RangeModel;
+import com.brainflow.utils.IRange;
+import com.brainflow.colormap.RangeCellEditor;
 import com.jidesoft.combobox.AbstractComboBox;
 import com.jidesoft.combobox.PopupPanel;
 
@@ -17,9 +19,10 @@ import java.awt.event.ActionListener;
  */
 public class RangeComboBox extends AbstractComboBox {
 
-    private RangeModel rangeModel;
+    private RangeModel rangeModel = new RangeModel(new Range(0,0));
 
-    private RangeEditorComponent editorComponent = new RangeEditorComponent(Range.class);
+    private RangeEditorComponent editorComponent = new RangeEditorComponent(IRange.class);
+
     private RangePopupPanel popup;
 
     public RangeComboBox() {
@@ -27,10 +30,18 @@ public class RangeComboBox extends AbstractComboBox {
         setEditable(false);
         setBorder(BorderFactory.createEmptyBorder());
         initComponent();
+        setRange(rangeModel);
+
+        
+        
     }
 
     public RangeComboBox(RangeModel _range) {
-        rangeModel = _range;
+        super(DROPDOWN);
+        setEditable(false);
+        setBorder(BorderFactory.createEmptyBorder());
+        initComponent();
+        setRange(_range);
     }
 
 
@@ -41,12 +52,16 @@ public class RangeComboBox extends AbstractComboBox {
     public void setRange(RangeModel range) {
         this.rangeModel = range;
         editorComponent.setItem(range);
+        setSelectedItem(range);
+       
 
         if (popup != null)
             popup.setRangeModel(rangeModel);
 
     }
 
+    
+    @Override
     public EditorComponent createEditorComponent() {
         return editorComponent;
 
@@ -85,6 +100,8 @@ public class RangeComboBox extends AbstractComboBox {
 
         }
 
+
+
         public String getText() {
             return rangeModel.toString();
 
@@ -97,10 +114,14 @@ public class RangeComboBox extends AbstractComboBox {
             super.setItem(value);
 
             if (value instanceof RangeModel) {
+
                 RangeModel r = (RangeModel) value;
+
                 setText(r.toString());
+                _textField.setText(r.toString());
             } else {
-                setText(value.toString());
+                
+                _textField.setText(value.toString());
             }
         }
 

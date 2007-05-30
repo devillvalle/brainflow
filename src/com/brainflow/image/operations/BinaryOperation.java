@@ -3,12 +3,13 @@ package com.brainflow.image.operations;
 /**
  * Created by IntelliJ IDEA.
  * User: Brad Buchsbaum
- * Date: May 10, 2007
- * Time: 1:41:14 AM
+ * Date: May 28, 2007
+ * Time: 11:29:58 AM
  * To change this template use File | Settings | File Templates.
  */
-public enum BitWise {
+public enum BinaryOperation {
 
     AND,
-    OR
+    OR,
+    
 }

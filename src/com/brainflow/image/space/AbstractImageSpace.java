@@ -3,6 +3,7 @@ package com.brainflow.image.space;
 import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.AnatomicalDirection;
 import com.brainflow.image.anatomy.Anatomy;
+import com.brainflow.image.anatomy.AnatomicalPoint;
 import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.image.axis.AxisRange;
 
@@ -190,18 +191,36 @@ public abstract class AbstractImageSpace implements IImageSpace {
             AxisRange nrange = range1.union(range2);
 
             if (other instanceof IImageSpace) {
-                IImageSpace tmp = (IImageSpace)other;
+                IImageSpace tmp = (IImageSpace) other;
 
                 axes[i] = new ImageAxis(nrange, Math.min(tmp.getSpacing(Axis.getAxis(i)), getSpacing(Axis.getAxis(i))));
             } else {
-                axes[i] = new ImageAxis(nrange, getSpacing(Axis.getAxis(i)));                                 
+                axes[i] = new ImageAxis(nrange, getSpacing(Axis.getAxis(i)));
             }
-         
+
         }
 
         return SpaceFactory.createImageSpace(axes);
 
     }
+
+    public boolean sameGeometry(IImageSpace other) {
+        if (other.getNumDimensions() != getNumDimensions()) return false;
+
+        for (int i=0; i<getNumDimensions(); i++) {
+            ImageAxis axis1 = getImageAxis(Axis.getAxis(i));
+            ImageAxis axis2 = other.getImageAxis(Axis.getAxis(i));
+            if (!axis1.equals(axis2)) {
+                return false;
+            }
+
+        }
+
+        return true;
+    }
+
+
+
 
     protected void setAnatomy(Anatomy _anatomy) {
         anatomy = _anatomy;

@@ -12,6 +12,7 @@ public interface IMaskedData3D extends IImageData3D {
 
     public MaskPredicate getPredicate();
 
+    public int cardinality();
     
 
 

@@ -21,13 +21,17 @@ import javax.swing.*;
 public class WorldCoordinatePresenter extends AbstractPresenter {
 
     private TripleSliderForm form;
+    
     private ICrosshair crosshair;
 
     private BeanAdapter crosshairAdapter;
+
     private BeanAdapter viewportAdapter;
 
     private BoundedRangeAdapter XSliderAdapter;
+
     private BoundedRangeAdapter YSliderAdapter;
+
     private BoundedRangeAdapter ZSliderAdapter;
 
     public WorldCoordinatePresenter(ICrosshair _crosshair) {

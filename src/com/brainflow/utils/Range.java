@@ -12,7 +12,7 @@ import java.text.NumberFormat;
  * @version 1.0
  */
 
-public class Range {
+public class Range implements IRange {
 
     double min;
     double max;

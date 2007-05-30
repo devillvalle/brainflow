@@ -30,6 +30,8 @@ public interface IImageSpace extends ICoordinateSpace {
 
     public int getNumSamples();
 
+    public boolean sameGeometry(IImageSpace other);
+
     // todo should be a static library method
     //public IImageSpace union(IImageSpace other);
 

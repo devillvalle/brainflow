@@ -19,6 +19,7 @@ import java.beans.PropertyChangeListener;
 public abstract class AbstractColorMapPresenter extends ImageViewPresenter {
 
     private Property<IColorMap> colorMapParameter;
+
     private PropertyChangeListener substitutionHandler = new ParameterHandler();
 
     private long delay = 0;

@@ -2,11 +2,10 @@ package com.brainflow.colormap;
 
 import com.brainflow.gui.AbstractPresenter;
 import com.brainflow.utils.Range;
+import com.brainflow.utils.IRange;
+import com.brainflow.utils.RangeModel;
 import com.jidesoft.converter.ObjectConverterManager;
-import com.jidesoft.grid.CellEditorManager;
-import com.jidesoft.grid.CellRendererManager;
-import com.jidesoft.grid.CellStyleTable;
-import com.jidesoft.grid.JideTable;
+import com.jidesoft.grid.*;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -22,7 +21,9 @@ import java.awt.*;
 public class ColorMapTable extends AbstractPresenter {
 
     private IColorMap colorMap;
+
     private JideTable colorTable;
+    
     private ColorMapTableModel tableModel;
 
 
@@ -48,10 +49,16 @@ public class ColorMapTable extends AbstractPresenter {
         colorTable.setRowHeight(18);
         colorTable.setColumnAutoResizable(true);
         colorTable.setDefaultEditor(Color.class, (TableCellEditor) CellEditorManager.getEditor(Color.class));
+        colorTable.setDefaultEditor(IRange.class, new RangeCellEditor());
+        colorTable.setDefaultRenderer(IRange.class, new RangeCellRenderer());
         colorTable.setDefaultEditor(Range.class, new RangeCellEditor());
         colorTable.setDefaultRenderer(Range.class, new RangeCellRenderer());
+        colorTable.setDefaultEditor(RangeModel.class, new RangeCellEditor());
+        colorTable.setDefaultRenderer(RangeModel.class, new RangeCellRenderer());
+
         colorTable.setDefaultRenderer(Color.class, CellRendererManager.getRenderer(Color.class));
         setUpColorRenderer(colorTable);
+
 
 
     }

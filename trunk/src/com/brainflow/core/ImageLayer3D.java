@@ -8,6 +8,7 @@ import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.interpolation.NearestNeighborInterpolator;
 import com.brainflow.image.data.IImageData3D;
+import com.brainflow.image.data.IImageData;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,7 +22,10 @@ public class ImageLayer3D extends ImageLayer {
 
     public ImageLayer3D(ILoadableImage limg, ImageLayerProperties _params) {
         super(limg, _params);
+    }
 
+    public ImageLayer3D(IImageData data, ImageLayerProperties _properties) {
+        super(data, _properties);
     }
 
     public IImageData3D getData() {

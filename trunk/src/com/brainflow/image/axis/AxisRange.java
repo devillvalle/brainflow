@@ -1,6 +1,7 @@
 package com.brainflow.image.axis;
 
 import com.brainflow.utils.ToStringGenerator;
+import com.brainflow.utils.NumberUtils;
 import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.AnatomicalDirection;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
@@ -21,10 +22,12 @@ import java.util.logging.Logger;
 public final class AxisRange implements Cloneable {
 
     private double begin;
+
     private double end;
+
     private AnatomicalAxis aaxis;
 
-    private static Logger log = Logger.getLogger(AxisRange.class.getName());
+    private static final Logger log = Logger.getLogger(AxisRange.class.getName());
 
     public AxisRange(AnatomicalAxis _aaxis, double _begin, double _end) {
         assert _aaxis != null;
@@ -41,7 +44,7 @@ public final class AxisRange implements Cloneable {
     }
 
     public AnatomicalPoint1D getCenter() {
-        AnatomicalPoint1D center = new AnatomicalPoint1D(aaxis,(begin + end) / 2 );
+        AnatomicalPoint1D center = new AnatomicalPoint1D(aaxis, (begin + end) / 2);
         return center;
     }
 
@@ -128,20 +131,18 @@ public final class AxisRange implements Cloneable {
         }
         AxisRange rhs = (AxisRange) other;
 
-        if ((rhs.begin == begin) &
-            (rhs.end == end) &&
-            (rhs.aaxis.equals(aaxis))
-        )  { return true; }
-        else return false;
+        if (!NumberUtils.equals(rhs.begin, begin, .001)) return false;
+        if (!NumberUtils.equals(rhs.end, end, .001)) return false;
+        if (!rhs.aaxis.equals(aaxis)) return false;
+
+        return true;
 
 
     }
 
     public String toString() {
         StringBuffer sb = new StringBuffer();
-        sb.append("begin: " + begin)
-                .append("end: " + end)
-                .append("Anatomical Axis: " + aaxis);
+        sb.append("begin: " + begin).append("end: " + end).append("Anatomical Axis: " + aaxis);
 
         return sb.toString();
     }

@@ -3,6 +3,7 @@ package com.brainflow.image.axis;
 import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.AnatomicalDirection;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
+import com.brainflow.utils.NumberUtils;
 
 
 /**
@@ -183,6 +184,29 @@ public class ImageAxis extends CoordinateAxis {
         }
 
         return ret;
+    }
+
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ImageAxis imageAxis = (ImageAxis) o;
+
+        if (samples != imageAxis.samples) return false;
+        if (!NumberUtils.equals(imageAxis.spacing, spacing, .001) ) return false;
+        if (!getRange().equals(imageAxis.getRange())) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result;
+        long temp;
+        result = samples;
+        temp = spacing != +0.0d ? Double.doubleToLongBits(spacing) : 0L;
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
     }
 
     public String toString() {

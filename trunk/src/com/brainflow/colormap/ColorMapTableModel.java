@@ -1,6 +1,7 @@
 package com.brainflow.colormap;
 
 import com.brainflow.utils.Range;
+import com.brainflow.utils.IRange;
 
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
@@ -89,14 +90,15 @@ public class ColorMapTableModel extends AbstractTableModel {
     * rather than a check box.
     */
     public Class getColumnClass(int c) {
-        Object obj = getValueAt(0, c);
-        if (obj == null) {
-            System.out.println("obj is null");
-            assert false;
+        if (c == 0) {
+            return IRange.class;
+        } else if (c == 1) {
+            return Color.class;
+        } else if (c == 2) {
+            return Integer.class;
+        } else {
+            throw new IllegalArgumentException();
         }
-        return obj.getClass();
-
-
     }
 
     /*
@@ -113,7 +115,7 @@ public class ColorMapTableModel extends AbstractTableModel {
     public void setValueAt(Object value, int row, int col) {
         ColorInterval interval = colorMap.getInterval(row);
         if (col == 0) {
-            Range range = (Range) value;
+            IRange range = (IRange) value;
             Interval current = colorMap.getInterval(row);
             if (current == null || (range.getMin() > current.getMaximum()) || (range.getMax() < current.getMinimum())) {
                 return;

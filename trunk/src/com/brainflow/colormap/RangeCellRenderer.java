@@ -1,6 +1,7 @@
 package com.brainflow.colormap;
 
 import com.brainflow.utils.Range;
+import com.brainflow.utils.IRange;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -15,7 +16,7 @@ import java.text.NumberFormat;
  * Time: 1:01:22 PM
  * To change this template use File | Settings | File Templates.
  */
-class RangeCellRenderer extends DefaultTableCellRenderer implements TableCellRenderer {
+public class RangeCellRenderer extends DefaultTableCellRenderer implements TableCellRenderer {
 
     private NumberFormat format = NumberFormat.getNumberInstance();
 
@@ -30,7 +31,7 @@ class RangeCellRenderer extends DefaultTableCellRenderer implements TableCellRen
             int row, int column) {
 
 
-        Range curRange = (Range) range;
+        IRange curRange = (IRange) range;
         Component c = super.getTableCellRendererComponent(table, range, isSelected, hasFocus, row, column);
         setText(format.format(curRange.getMin()) + ", " + format.format(curRange.getMax()));
         return c;

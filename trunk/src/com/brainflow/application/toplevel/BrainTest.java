@@ -102,7 +102,7 @@ public class BrainTest {
         com.jidesoft.utils.Lm.verifyLicense("UIN", "BrainFlow", "S5XiLlHH0VReaWDo84sDmzPxpMJvjP3");
 
         try {
-            SyntheticaLookAndFeel lf = new de.javasoft.plaf.synthetica.SyntheticaMauveMetallicLookAndFeel();
+            SyntheticaLookAndFeel lf = new de.javasoft.plaf.synthetica.SyntheticaSkyMetallicLookAndFeel();
             UIManager.setLookAndFeel(lf);
 
 

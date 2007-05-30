@@ -27,9 +27,13 @@ public class ColorAdjustmentControl {
     private CollapsiblePanes cpanes;
 
     private SelectedLayerPresenter selectedLayerPresenter;
+
     private ColorRangePresenter colorRangePresenter;
+
     private ThresholdRangePresenter thresholdRangePresenter;
+
     private OpacityPresenter opacityPresenter;
+    
     private ColorBarPresenter colorBarPresenter;
     //private InterpolationPresenter interpolationPresenter;
 

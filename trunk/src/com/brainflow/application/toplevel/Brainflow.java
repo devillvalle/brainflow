@@ -42,6 +42,9 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.javasoft.plaf.synthetica.SyntheticaSkyMetallicLookAndFeel;
+import de.javasoft.plaf.synthetica.SyntheticaLookAndFeel;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Owner
@@ -98,14 +101,14 @@ public class Brainflow {
             //SubstanceLookAndFeel.setSkin(new BusinessBlueSteelSkin());
 
             //SyntheticaLookAndFeel lf = new SyntheticaStandardLookAndFeel();
-            //SyntheticaLookAndFeel lf = new de.javasoft.plaf.synthetica.SyntheticaMauveMetallicLookAndFeel();
+            //SyntheticaLookAndFeel lf = new SyntheticaSkyMetallicLookAndFeel();
             //A03LookAndFeel lf = new apprising.api.swing.plaf.a03.A03LookAndFeel();
             //UIManager.setLookAndFeel(lf);
             //LookAndFeelFactory.installDefaultLookAndFeelAndExtension();
 
             LookAndFeelFactory.installDefaultLookAndFeel();
-            LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
-            //LookAndFeelFactory.installJideExtension(LookAndFeelFactory.OFFICE2003_STYLE);
+            //LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
+            LookAndFeelFactory.installJideExtension(LookAndFeelFactory.OFFICE2003_STYLE);
 
             Brainflow bflow = getInstance();
             bflow.launch();

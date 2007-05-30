@@ -6,6 +6,7 @@ import com.brainflow.image.data.IImageData;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.utils.ArrayUtils;
 import com.brainflow.utils.Range;
+import com.brainflow.utils.IRange;
 
 /**
  * <p>Title: </p>
@@ -29,7 +30,7 @@ public class Histogram {
     private double minValue;
     private double maxValue;
 
-    private Range ignore;
+    private IRange ignore;
 
     private boolean computed;
 
@@ -72,7 +73,7 @@ public class Histogram {
         return binList.elements();
     }
 
-    public void ignoreRange(Range range) {
+    public void ignoreRange(IRange range) {
         ignore = range;
     }
 

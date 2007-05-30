@@ -14,8 +14,6 @@ public class SegmentArray {
 
     private double[] boundaries;
 
-
-
     private List<Interval> intervals;
 
 

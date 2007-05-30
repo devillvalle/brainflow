@@ -40,13 +40,13 @@ public class LoadableImageCell2 extends javax.swing.JPanel {
         this.filenameLabel = filenameLabel;
     }
 
-    public JLabel getIconLabel() {
-        return iconLabel;
-    }
+    //public JLabel getIconLabel() {
+    //    return iconLabel;
+    //}
 
-    public void setIconLabel(JLabel iconLabel) {
-        this.iconLabel = iconLabel;
-    }
+    //public void setIconLabel(JLabel iconLabel) {
+    //    this.iconLabel = iconLabel;
+    //}
 
     public JLabel getInfoLabel() {
         return infoLabel;
@@ -66,7 +66,7 @@ public class LoadableImageCell2 extends javax.swing.JPanel {
         CellConstraints cc = new CellConstraints();
 
 
-        iconLabel = new JLabel();
+        //iconLabel = new JLabel();
         filenameLabel = new JLabel();
         infoLabel = new StyledLabel("test");
 
@@ -76,8 +76,8 @@ public class LoadableImageCell2 extends javax.swing.JPanel {
         removeButton.setButtonStyle(JideButton.HYPERLINK_STYLE);
         removeButton.setAlwaysShowHyperlink(true);
 
-        add(iconLabel, cc.xywh(2, 1, 1, 5));
-        add(filenameLabel, cc.xy(4, 3));
+        //add(iconLabel, cc.xywh(2, 1, 1, 5));
+        add(filenameLabel, cc.xywh(2, 1, 1, 5));
         add(infoLabel, cc.xy(4, 4));
         add(openButton, cc.xy(6, 3));
         add(removeButton, cc.xy(6, 4));

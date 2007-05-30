@@ -17,9 +17,23 @@ public abstract class BinaryImageData extends AbstractImageData {
     protected BitVector bits;
 
 
-    public BinaryImageData(IImageSpace _space) {
-        space = _space;
+    protected BinaryImageData() {
+    }
+
+    protected void allocateBits() {
         bits = new BitVector(space.getNumSamples());
+
+    }
+
+    protected void allocateBits(boolean[] elements) {
+        assert space.getNumSamples() == elements.length : "array size does not match ImageSpace dimensions";
+
+        bits = new BitVector(elements.length);
+        for (int i = 0; i < elements.length; i++) {
+            bits.putQuick(i, elements[i]);
+        }
+
+
     }
 
     protected BitVector getBitVector() {
@@ -32,19 +46,6 @@ public abstract class BinaryImageData extends AbstractImageData {
 
 
 
-    public BinaryImageData(IImageSpace _space, boolean[] elements) {
-        assert _space.getNumSamples() == elements.length : "array size does not match ImageSpace dimensions";
-
-        bits = new BitVector(elements.length);
-        for (int i = 0; i < elements.length; i++) {
-            bits.putQuick(i, elements[i]);
-        }
-
-        space = _space;
-
-    }
-
-
     public double getMaxValue() {
         if (bits.cardinality() > 0) return 1;
         else return 0;
@@ -54,6 +55,10 @@ public abstract class BinaryImageData extends AbstractImageData {
         if (bits.cardinality() == bits.size()) return 1;
         else return 0;
 
+    }
+
+    public int cardinality() {
+        return bits.cardinality();
     }
 
     public int getNumElements() {

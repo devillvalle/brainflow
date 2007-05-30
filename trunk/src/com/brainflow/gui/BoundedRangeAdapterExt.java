@@ -1,4 +1,4 @@
-package com.brainflow.application.presentation;
+package com.brainflow.gui;
 
 import com.jgoodies.binding.value.ValueModel;
 

@@ -23,11 +23,15 @@ import java.awt.image.IndexColorModel;
 public class ColorBandChartPresenter extends AbstractColorMapPresenter {
 
     private LinearColorMap colorMap;
+    
     private JPanel panel;
 
     private ColorBandChart chartRed;
+
     private ColorBandChart chartGreen;
+
     private ColorBandChart chartBlue;
+
     private ColorBandChart chartAlpha;
 
 

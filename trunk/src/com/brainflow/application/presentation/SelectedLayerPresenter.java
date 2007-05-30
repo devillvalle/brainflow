@@ -2,6 +2,7 @@ package com.brainflow.application.presentation;
 
 import com.brainflow.core.*;
 import com.brainflow.display.Visibility;
+import com.brainflow.image.space.IImageSpace;
 import com.jgoodies.binding.adapter.ComboBoxAdapter;
 import com.jgoodies.binding.adapter.SingleListSelectionAdapter;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -12,6 +13,7 @@ import com.jidesoft.swing.CheckBoxListSelectionModel;
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListDataEvent;
 
 /**
  * Created by IntelliJ IDEA.
@@ -33,6 +35,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
     private VisibilitySelection visibilitySelection;
 
     private JPanel form;
+
     private JScrollPane formPane;
 
     private ComboBoxAdapter adapter;
@@ -54,19 +57,27 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
         layerSelector = new CheckBoxList();
 
+
         layerSelector.getCheckBoxListSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
 
             public void valueChanged(ListSelectionEvent e) {
-                int i = e.getFirstIndex();
-                CheckBoxListSelectionModel model = (CheckBoxListSelectionModel)e.getSource();
+                int f1 = e.getFirstIndex();
+                int f2 = e.getLastIndex();
+                CheckBoxListSelectionModel model = (CheckBoxListSelectionModel) e.getSource();
                 ImageView view = getSelectedView();
-                AbstractLayer layer = view.getModel().getLayer(i);
-                Visibility vis = layer.getImageLayerProperties().getVisible().getProperty();
-                if (model.isSelectedIndex(i)) {
-                    vis.setVisible(true);
-                } else {
-                    vis.setVisible(false);
+
+                for (int i = f1; i <= f2; i++) {
+                    AbstractLayer layer = view.getModel().getLayer(i);
+                    Visibility vis = layer.getImageLayerProperties().getVisible().getProperty();
+
+                    if (model.isSelectedIndex(i)) {
+
+                        vis.setVisible(true);
+                    } else {
+
+                        vis.setVisible(false);
+                    }
                 }
 
             }
@@ -93,7 +104,6 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
     }
 
 
-
     public void viewSelected(ImageView view) {
 
         if (visibilitySelection == null) {
@@ -114,7 +124,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
                             view.getModel().getSelection().getSelectionIndexHolder()));
 
             int n = view.getModel().getNumLayers();
-            for (int i =0; i<n; i++) {
+            for (int i = 0; i < n; i++) {
                 AbstractLayer layer = view.getModel().getLayer(i);
                 if (layer.isVisible()) {
                     layerSelector.addCheckBoxListSelectedIndex(i);
@@ -130,12 +140,27 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
     }
 
     public void layerSelected(AbstractLayer layer) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
+    }
+
+    public void intervalAdded(ListDataEvent e) {
+        int index = e.getIndex0();
+        ImageView view = getSelectedView();
+        AbstractLayer layer = view.getModel().getLayer(index);
+        boolean vis = layer.getImageLayerProperties().getVisible().getProperty().isVisible();
+        if (vis) {
+            layerSelector.getCheckBoxListSelectionModel().addSelectionInterval(index, index);
+        } else {
+            layerSelector.getCheckBoxListSelectionModel().removeSelectionInterval(index, index);
+
+        }
     }
 
     public JComponent getComponent() {
         return form;
     }
+
+    
 
 
     class VisibilitySelection implements ImageLayerListener {
@@ -164,7 +189,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
         }
 
         public void visibilityChanged(ImageLayerEvent event) {
-             AbstractLayer layer = event.getAffectedLayer();
+            AbstractLayer layer = event.getAffectedLayer();
             if (layer != null) {
                 int i = getSelectedView().getModel().indexOf(layer);
                 boolean vis = layer.isVisible();
@@ -176,10 +201,9 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
                 }
 
             }
-           
+
         }
 
-     
 
         public void setImageView(ImageView _view) {
             if (view != null)
@@ -189,8 +213,6 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
 
         }
-
-      
 
 
     }

@@ -3,6 +3,7 @@ package com.brainflow.colormap;
 import com.brainflow.gui.RangeComboBox;
 import com.brainflow.utils.Range;
 import com.brainflow.utils.RangeModel;
+import com.brainflow.utils.IRange;
 import com.jidesoft.grid.ContextSensitiveCellEditor;
 import com.jidesoft.swing.JideSwingUtilities;
 
@@ -20,15 +21,16 @@ import java.awt.event.ItemListener;
  * Time: 1:01:53 PM
  * To change this template use File | Settings | File Templates.
  */
-class RangeCellEditor extends ContextSensitiveCellEditor implements ItemListener, ActionListener {
+public class RangeCellEditor extends ContextSensitiveCellEditor implements ItemListener, ActionListener {
 
-    private Range currentRange;
+    private IRange currentRange;
+
     private RangeComboBox comboBox = new RangeComboBox();
 
 
     public RangeCellEditor() {
         super();
-        this.setClickCountToStart(1);
+        setClickCountToStart(1);
     }
 
 
@@ -42,11 +44,14 @@ class RangeCellEditor extends ContextSensitiveCellEditor implements ItemListener
             JideSwingUtilities.installColorsAndFont(comboBox, table.getBackground(), table.getForeground(), table.getFont());
         }
 
-        currentRange = (Range) value;
+        currentRange = (IRange) value;
         comboBox.setRange(new RangeModel(currentRange));
+        
         comboBox.setConverterContext(getConverterContext());
         comboBox.addItemListener(this);
         comboBox.addTextFieldActionListener(this);
+       
+
         return comboBox;
 
 

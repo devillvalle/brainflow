@@ -16,6 +16,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Logger;
+import java.net.URL;
+
+import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs.VFS;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
 
 /**
  * <p>Title: </p>
@@ -71,6 +77,51 @@ public class AnalyzeIO {
 
 
         return data;
+    }
+
+
+     public static IImageData readAnalyzeImage(URL header) throws BrainflowException {
+         IImageData data = null;
+         try {
+             log.info("AnalyzeIO.readAnalyzeImage " + header);
+             AnalyzeInfoReader reader = new AnalyzeInfoReader();
+             FileSystemManager fsManager = VFS.getManager();
+             FileObject fobj = fsManager.resolveFile(header.getPath());
+             ImageInfo info = reader.readInfo(fobj);
+             log.info("AnalyzeInfo: " + info);
+
+             BasicImageReader ireader = new BasicImageReader(info);
+             data = ireader.readImage(info, new ProgressListener() {
+                 public void setValue(int val) {
+
+                 }
+
+                 public void setMinimum(int val) {
+                     //To change body of implemented methods use File | Settings | File Templates.
+                 }
+
+                 public void setMaximum(int val) {
+                     //To change body of implemented methods use File | Settings | File Templates.
+                 }
+
+                 public void setString(String message) {
+                     log.info("Progress: " + message);
+                 }
+
+                 public void setIndeterminate(boolean b) {
+                     //To change body of implemented methods use File | Settings | File Templates.
+                 }
+
+                 public void finished() {
+                     //To change body of implemented methods use File | Settings | File Templates.
+                 }
+             });
+         } catch (FileSystemException e) {
+            throw new BrainflowException(e.getMessage(), e);
+         }
+
+
+         return data;
     }
 
 

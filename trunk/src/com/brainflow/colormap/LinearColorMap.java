@@ -50,11 +50,16 @@ public class LinearColorMap extends AbstractColorMap {
 
         minimumValue = min;
         maximumValue = max;
-        highClip = max;
-        lowClip = min;
-        mapRange = highClip - lowClip;
-
         int mapSize = icm.getMapSize();
+        binSize = (getMaximumValue() - getMinimumValue()) / (mapSize - 1);
+
+        highClip = max - binSize;
+        lowClip = min + binSize;
+        mapRange = getMaximumValue() - getMinimumValue();
+
+
+
+
         fillIntervals(mapSize, icm);
 
 

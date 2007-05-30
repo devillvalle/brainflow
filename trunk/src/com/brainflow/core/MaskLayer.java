@@ -5,6 +5,7 @@ import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.data.MaskedData3D;
+import com.brainflow.image.data.IImageData;
 import com.brainflow.image.interpolation.NearestNeighborInterpolator;
 
 /**
@@ -19,9 +20,12 @@ public class MaskLayer extends ImageLayer {
 
     private MaskedData3D mask;
 
+
+
     public MaskLayer(MaskedData3D _mask, ImageLayerProperties _properties) {
         super(_mask, _properties);
         mask = _mask;
+
 
     }
 

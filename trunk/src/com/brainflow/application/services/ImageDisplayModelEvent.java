@@ -30,6 +30,7 @@ public class ImageDisplayModelEvent extends AbstractEventServiceEvent {
     }
 
     private BrainflowProjectEvent event;
+    
     private TYPE type;
    
 

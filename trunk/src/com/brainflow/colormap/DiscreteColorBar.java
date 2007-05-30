@@ -64,7 +64,7 @@ public class DiscreteColorBar extends AbstractColorBar {
             Graphics2D g2d = bimage.createGraphics();
             int ncolors = colorMap.getMapSize();
             double distance = colorMap.getMaximumValue() - colorMap.getMinimumValue();
-            System.out.println("distance = " + distance);
+            
             double start = colorMap.getMinimumValue();
 
             for (int i = 0; i < ncolors; i++) {

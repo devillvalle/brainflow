@@ -44,6 +44,7 @@ public class CanvasBar extends ImageViewPresenter {
     private JideSplitButton emptyButton = new JideSplitButton("Tabula Rasa");
 
     public CanvasBar() {
+        super();
         EventBus.subscribeStrongly(ImageDisplayModelEvent.class, new EventSubscriber() {
 
             public void onEvent(Object evt) {
@@ -69,13 +70,14 @@ public class CanvasBar extends ImageViewPresenter {
         update();
     }
 
-   
+    @Override
     protected void layerSelected(AbstractLayer layer) {
-        if (layer != getSelectedLayer()) {
-            ImageView view = getSelectedView();
-            int idx = view.getSelectedIndex();
-            buttonGroup.setSelected(layerButtonList.get(idx).getModel(), true);
-        }
+
+        ImageView view = getSelectedView();
+        int idx = view.getSelectedIndex();
+
+        buttonGroup.setSelected(layerButtonList.get(idx).getModel(), true);
+
     }
 
     private CommandBar createCanvasBar() {
@@ -92,7 +94,7 @@ public class CanvasBar extends ImageViewPresenter {
             emptyButton.setEnabled(false);
             commandBar.add(emptyButton);
         }
-        
+
         for (AbstractButton button : layerButtonList) {
             commandBar.add(button);
         }
@@ -139,10 +141,20 @@ public class CanvasBar extends ImageViewPresenter {
         commandBar.removeAll();
 
         layerButtonList = buttonList();
+
+
+
         for (AbstractButton button : layerButtonList) {
             commandBar.add(button);
 
         }
+
+        if (getSelectedView() != null) {
+            int selIdx = getSelectedView().getSelectedIndex();
+            buttonGroup.setSelected(layerButtonList.get(selIdx).getModel(), true);
+        }
+
+
 
 
         commandBar.revalidate();

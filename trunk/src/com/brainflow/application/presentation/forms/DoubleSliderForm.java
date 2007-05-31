@@ -59,7 +59,7 @@ public class DoubleSliderForm extends JPanel {
 
     private void buildGUI() {
 
-        layout = new FormLayout("6dlu, p, 3dlu, max(p;30dlu), p:g, 5dlu, 3dlu", "6dlu, p, 3dlu, p, 8dlu, p, 3dlu, p, 6dlu");
+        layout = new FormLayout("6dlu, p, 3dlu, max(p;40dlu), p:g, 5dlu, 3dlu", "6dlu, p, 3dlu, p, 8dlu, p, 3dlu, p, 6dlu");
         setLayout(layout);
 
         slider1 = new JSlider();
@@ -75,9 +75,9 @@ public class DoubleSliderForm extends JPanel {
 
 
         valueField1 = new JFormattedTextField(format);
-        valueField1.setText("0000");
+        valueField1.setText("   ");
         valueField2 = new JFormattedTextField(format);
-        valueField2.setText("0000");
+        valueField2.setText("   ");
 
         CellConstraints cc = new CellConstraints();
 

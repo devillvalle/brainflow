@@ -15,10 +15,12 @@ import com.brainflow.display.ThresholdRange;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.AbstractLayer;
+import com.brainflow.colormap.LinearColorMap;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
 import com.jgoodies.binding.beans.BeanAdapter;
 import com.jgoodies.binding.value.ValueHolder;
+import com.jgoodies.binding.value.ValueModel;
 
 import javax.swing.*;
 
@@ -69,7 +71,7 @@ public class ThresholdRangePresenter extends ImageViewPresenter {
 
         int idx = view.getModel().getSelectedIndex();
         AbstractLayer layer = view.getModel().getLayer(idx);
-        System.out.println("layer : " + idx);
+
         Property<ThresholdRange> threshold = layer.getImageLayerProperties().getThresholdRange();
 
         if (adapter != null) {
@@ -77,23 +79,27 @@ public class ThresholdRangePresenter extends ImageViewPresenter {
 
         } else {
 
-            adapter = new BeanAdapter(threshold.getProperty());
+            adapter = new BeanAdapter(threshold.getProperty(), true);
 
-            System.out.println("threshold : " + threshold.getProperty());
-            Bindings.bind(form.getValueField1(), adapter.getValueModel(ThresholdRange.MAX_PROPERTY));
-            Bindings.bind(form.getValueField2(), adapter.getValueModel(ThresholdRange.MIN_PROPERTY));
+            ValueModel highThresh = adapter.getValueModel(ThresholdRange.MAX_PROPERTY);
+            ValueModel lowThresh = adapter.getValueModel(ThresholdRange.MIN_PROPERTY);
+
+            Bindings.bind(form.getValueField1(), highThresh);
+            Bindings.bind(form.getValueField2(), lowThresh);
 
 
-            BoundedRangeAdapter lowSliderAdapter = new BoundedRangeAdapter(new PercentageConverter(adapter.getValueModel(ThresholdRange.MIN_PROPERTY),
+            BoundedRangeAdapter lowSliderAdapter = new BoundedRangeAdapter(new PercentageConverter(lowThresh,
                     new ValueHolder(layer.getMinValue()),
                     new ValueHolder(layer.getMaxValue()), 100), 0, 0, 100);
 
-            BoundedRangeAdapter highSliderAdapter = new BoundedRangeAdapter(new PercentageConverter(adapter.getValueModel(ThresholdRange.MAX_PROPERTY),
+            BoundedRangeAdapter highSliderAdapter = new BoundedRangeAdapter(new PercentageConverter(highThresh,
                     new ValueHolder(layer.getMinValue()),
                     new ValueHolder(layer.getMaxValue()), 100), 0, 0, 100);
 
             form.getSlider1().setModel(highSliderAdapter);
             form.getSlider2().setModel(lowSliderAdapter);
+
+
         }
 
 

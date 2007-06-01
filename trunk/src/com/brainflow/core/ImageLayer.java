@@ -13,6 +13,7 @@ import com.brainflow.application.ILoadableImage;
 import com.brainflow.core.ImageLayerProperties;
 import com.brainflow.display.ThresholdRange;
 import com.brainflow.image.data.IImageData;
+import com.brainflow.image.data.IImageData3D;
 import com.brainflow.image.space.IImageSpace;
 
 import java.beans.PropertyChangeSupport;
@@ -30,18 +31,31 @@ public abstract class ImageLayer extends AbstractLayer {
 
     private IImageData data;
 
+    private MaskList maskList;
+
     
     public ImageLayer(ILoadableImage _limg, ImageLayerProperties _properties) {
         super(_properties);
         data = _limg.getData();
+        initMaskList();
     }
 
     public ImageLayer(IImageData data, ImageLayerProperties _properties) {
         super(_properties);
         this.data = data;
+        initMaskList();
     }
 
+    private void initMaskList() {
+        MaskItem root = new MaskItem((IImageData3D)getData(),
+                getImageLayerProperties().getThresholdRange().getProperty(), 1);
+        maskList = new MaskList(root);
 
+    }
+
+    public MaskList getMaskList() {
+        return maskList;
+    }
 
     public IImageData getData() {
         return data;

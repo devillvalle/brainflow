@@ -30,6 +30,7 @@ import org.bushe.swing.action.*;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 import org.xml.sax.SAXException;
+import org.jdesktop.swingx.plaf.nimbus.NimbusLookAndFeel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -101,14 +102,15 @@ public class Brainflow {
             //SubstanceLookAndFeel.setSkin(new BusinessBlueSteelSkin());
 
             //SyntheticaLookAndFeel lf = new SyntheticaStandardLookAndFeel();
-            //SyntheticaLookAndFeel lf = new SyntheticaSkyMetallicLookAndFeel();
+            //NimbusLookAndFeel nimbus = new NimbusLookAndFeel();
+            SyntheticaLookAndFeel lf = new SyntheticaSkyMetallicLookAndFeel();
             //A03LookAndFeel lf = new apprising.api.swing.plaf.a03.A03LookAndFeel();
-            //UIManager.setLookAndFeel(lf);
+            UIManager.setLookAndFeel(lf);
             //LookAndFeelFactory.installDefaultLookAndFeelAndExtension();
 
-            LookAndFeelFactory.installDefaultLookAndFeel();
-            //LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
-            LookAndFeelFactory.installJideExtension(LookAndFeelFactory.OFFICE2003_STYLE);
+            //LookAndFeelFactory.installDefaultLookAndFeel();
+            LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
+            //LookAndFeelFactory.installJideExtension(LookAndFeelFactory.OFFICE2003_STYLE);
 
             Brainflow bflow = getInstance();
             bflow.launch();
@@ -402,7 +404,7 @@ public class Brainflow {
                     DockContext.STATE_FRAMEDOCKED,
                     DockContext.DOCK_SIDE_WEST);
 
-
+             //explorer.getComponent().setPreferredSize(new Dimension(400,200));
             dframe.setPreferredSize(new Dimension(275, 200));
 
             //JScrollPane jsp = new JScrollPane(explorer.getComponent());
@@ -479,9 +481,11 @@ public class Brainflow {
 
         ColorMapTablePresenter tablePresenter = new ColorMapTablePresenter();
 
+        MaskListPresenter maskPresenter = new MaskListPresenter();
+
         tabbedPane.addTab("Adjustment", new JScrollPane(colorAdjustmentControl.getComponent()));
         tabbedPane.addTab("Color Table", tablePresenter.getComponent());
-        //tabbedPane.addTab("Mask", maskControl.getComponent());
+        tabbedPane.addTab("Mask Table", maskPresenter.getComponent());
         tabbedPane.addTab("Coordinates", new JScrollPane(coordinateControls.getComponent()));
 
 
@@ -489,7 +493,7 @@ public class Brainflow {
         //dframe.getContext().setInitMode(DockContext.STATE_AUTOHIDE);
         dframe.getContext().setInitSide(DockContext.DOCK_SIDE_EAST);
         dframe.getContext().setInitIndex(1);
-        dframe.setPreferredSize(new Dimension(285, 500));
+        dframe.setPreferredSize(new Dimension(400, 500));
         brainFrame.getDockingManager().addFrame(dframe);
 
     }

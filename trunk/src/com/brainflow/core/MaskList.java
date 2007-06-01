@@ -22,8 +22,6 @@ public class MaskList {
 
     private List<MaskItem> maskItems = new ArrayList<MaskItem>();
 
-    private IImageDisplayModel model;
-
     private MaskItem root;
 
     private ExtendedPropertyChangeSupport support = new ExtendedPropertyChangeSupport(this);
@@ -32,10 +30,14 @@ public class MaskList {
 
     private List<ListDataListener> listDataListeners = new ArrayList<ListDataListener>();
 
-    public MaskList(IImageDisplayModel model, MaskItem root) {
+
+    public MaskList() {
+
+    }
+
+    public MaskList(MaskItem root) {
         maskItems.add(root);
         this.root = root;
-        this.model = model;
 
         root.addPropertyChangeListener(propertyListener);
 
@@ -68,12 +70,8 @@ public class MaskList {
     }
 
 
-    public IImageDisplayModel getModel() {
-        return model;
 
-    }
-
-    public List<IImageData> getCongruentImages() {
+    public List<IImageData> getCongruentImages(IImageDisplayModel model) {
         List<IImageData> list = new ArrayList<IImageData>();
         for (int i = 0; i < model.getNumLayers(); i++) {
             AbstractLayer layer = model.getLayer(i);
@@ -89,6 +87,8 @@ public class MaskList {
     }
 
     public boolean isCongruent(IImageData data) {
+        if (root == null) return false;
+
         if (root.getSource().getImageSpace().sameGeometry(data.getImageSpace())) {
             return true;
         } else {
@@ -97,14 +97,24 @@ public class MaskList {
     }
 
     public MaskItem getLastItem() {
+        if (maskItems.size() == 0) {
+            throw new IllegalStateException("MaskList is empty, cannot access last item");
+        }
         return maskItems.get(maskItems.size() - 1);
     }
 
     public MaskItem getFirstItem() {
+        if (maskItems.size() == 0) {
+            throw new IllegalStateException("MaskList is empty, cannot access first item");
+        }
+
         return maskItems.get(0);
     }
 
     public MaskItem getMaskItem(int index) {
+        if (maskItems.size() == 0) {
+            throw new IllegalStateException("MaskList is empty, cannot access " + index + "th item");
+        }
         return maskItems.get(index);
     }
 
@@ -145,6 +155,10 @@ public class MaskList {
 
         if (!isCongruent(item.getSource())) {
             throw new IllegalArgumentException("Argument has different geomtry than this mask group");
+        }
+
+        if (maskItems.size() == 0) {
+            root = item;
         }
 
         maskItems.add(item);

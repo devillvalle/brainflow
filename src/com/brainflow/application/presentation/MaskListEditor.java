@@ -1,34 +1,24 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.core.*;
-import com.brainflow.utils.Range;
-import com.brainflow.utils.RangeModel;
 import com.brainflow.utils.IRange;
 import com.brainflow.image.data.IImageData;
-import com.brainflow.image.data.MaskedData3D;
 import com.brainflow.image.data.IImageData3D;
 import com.brainflow.image.io.analyze.AnalyzeIO;
 import com.brainflow.image.operations.BinaryOperation;
 import com.brainflow.display.ThresholdRange;
-import com.brainflow.application.BrainflowException;
 import com.brainflow.colormap.RangeCellEditor;
 import com.brainflow.colormap.RangeCellRenderer;
 
 import com.jidesoft.grid.*;
-import com.jidesoft.combobox.AbstractComboBox;
 import com.jidesoft.combobox.ListComboBox;
 import com.jidesoft.swing.JideSwingUtilities;
 
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableCellEditor;
 import javax.swing.*;
-import javax.swing.event.CellEditorListener;
 
-import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ActionEvent;
 import java.awt.*;
 
 import java.net.URL;
@@ -49,7 +39,7 @@ import de.javasoft.plaf.synthetica.SyntheticaSkyMetallicLookAndFeel;
  * Time: 2:03:56 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MaskTableEditor extends JComponent {
+public class MaskListEditor extends JComponent {
 
 
     private MaskList maskList;
@@ -58,8 +48,12 @@ public class MaskTableEditor extends JComponent {
 
     private MaskTableModel tableModel;
 
+    private IImageDisplayModel model;
 
-    public MaskTableEditor(MaskList maskList) {
+
+    public MaskListEditor(IImageDisplayModel model, MaskList maskList) {
+        this.model = model;
+
         this.maskList = maskList;
 
         tableModel = new MaskTableModel();
@@ -85,7 +79,7 @@ public class MaskTableEditor extends JComponent {
         CellEditorManager.registerEditor(boolean.class, editorFactory, BooleanCheckBoxCellEditor.CONTEXT);
 
 
-        maskTable.setDefaultEditor(Integer.class, new GroupCellEditor());
+        maskTable.setDefaultEditor(Integer.class, new GroupCellEditor(new DefaultComboBoxModel()));
         maskTable.setDefaultEditor(IRange.class, new RangeCellEditor());
         maskTable.setDefaultEditor(IImageData.class, new ImageCellEditor());
         maskTable.setDefaultRenderer(IImageData.class, CellRendererManager.getRenderer(String.class));
@@ -96,9 +90,9 @@ public class MaskTableEditor extends JComponent {
 
 
         add(new JScrollPane(maskTable), BorderLayout.CENTER);
-        final JButton addButton = new JButton("Add Row");
 
 
+        /*final JButton addButton = new JButton("Add Row");
         final JButton removeButton = new JButton("Remove Row");
         removeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -125,13 +119,15 @@ public class MaskTableEditor extends JComponent {
         JPanel panel = new JPanel();
         panel.add(addButton);
         panel.add(removeButton);
-        add(panel, BorderLayout.SOUTH);
+        add(panel, BorderLayout.SOUTH);  */
 
 
         initColumns();
 
         TableUtils.autoResizeAllColumns(maskTable);
     }
+
+
 
 
     private void initColumns() {
@@ -142,6 +138,24 @@ public class MaskTableEditor extends JComponent {
         maskTable.getColumn("Group").setMaxWidth(55);
     }
 
+
+    public IImageDisplayModel getModel() {
+        return model;
+    }
+
+    public void setModel(IImageDisplayModel model) {
+        this.model = model;
+        AbstractLayer layer = model.getLayer(model.getSelectedIndex());
+        if (layer instanceof ImageLayer) {
+            ImageLayer ilayer = (ImageLayer)layer;
+            maskList = ilayer.getMaskList();
+            tableModel.fireTableDataChanged();
+        } else {
+            // empy list ...
+            maskList = new MaskList();
+        }
+
+    }
 
     public void addMaskItem() {
         tableModel.addRow();
@@ -171,13 +185,13 @@ public class MaskTableEditor extends JComponent {
             data = AnalyzeIO.readAnalyzeImage(url);
             model.addLayer(new ImageLayer3D(data, new ImageLayerProperties()));
 
-            MaskList mlist = new MaskList(model, new MaskItem((IImageData3D) data, new ThresholdRange(-50, 16000), 1));
+            MaskList mlist = new MaskList(new MaskItem((IImageData3D) data, new ThresholdRange(-50, 16000), 1));
             mlist.addMask(new MaskItem((IImageData3D) data, new ThresholdRange(0, 12000), 1));
             mlist.addMask(new MaskItem((IImageData3D) data, new ThresholdRange(0, 18000), 2));
             mlist.addMask(new MaskItem((IImageData3D) data, new ThresholdRange(0, 22000), 2));
 
             JFrame jf = new JFrame();
-            MaskTableEditor editor = new MaskTableEditor(mlist);
+            MaskListEditor editor = new MaskListEditor(model, mlist);
 
 
             jf.add(editor, BorderLayout.CENTER);
@@ -193,7 +207,7 @@ public class MaskTableEditor extends JComponent {
 
     class MaskTableModel extends AbstractTableModel {
 
-        private String[] columnNames = new String[]{"Image", "Range", "Group", "Oper", "On/Off"};
+        private String[] columnNames = new String[]{"Mask", "Range", "Group", "Oper", "On"};
 
 
         private Map<String, Integer> columnMap = new HashMap<String, Integer>();
@@ -215,7 +229,6 @@ public class MaskTableEditor extends JComponent {
                     IndexedPropertyChangeEvent ievt = (IndexedPropertyChangeEvent) evt;
 
                     int idx = ievt.getIndex();
-                    System.out.println("updating cell " + idx + ", " + columnMap.get(ievt.getPropertyName()));
                     fireTableCellUpdated(idx, columnMap.get(ievt.getPropertyName()));
 
                 }
@@ -258,7 +271,6 @@ public class MaskTableEditor extends JComponent {
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
             switch (columnIndex) {
                 case 0:
-                    System.out.println("setting source " + aValue);
                     maskList.getMaskItem(rowIndex).setSource((IImageData3D) aValue);
                     break;
                 case 1:
@@ -306,62 +318,34 @@ public class MaskTableEditor extends JComponent {
         }
     }
 
-    class GroupCellEditor extends ContextSensitiveCellEditor implements ItemListener {
+    class GroupCellEditor extends ListComboBoxCellEditor implements ItemListener {
 
-        ListComboBox comboBox = new ListComboBox(new Integer[]{1, 2, 3});
 
         Integer group;
 
-        public GroupCellEditor() {
-            comboBox.setBorder(BorderFactory.createEmptyBorder());
-            comboBox.setEditable(false);
+        public GroupCellEditor(ComboBoxModel model) {
+            super(model);
 
 
         }
 
-        public Object getCellEditorValue() {
-
-            return comboBox.getSelectedItem();
-        }
 
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
 
-            if (table != null) {
-                JideSwingUtilities.installColorsAndFont(comboBox, table.getBackground(), table.getForeground(), table.getFont());
-            }
-
-
-            comboBox.setConverterContext(getConverterContext());
             MaskItem item = maskList.getMaskItem(row);
             int gnum = item.getGroup();
 
             if (item == maskList.getLastItem() && row == 0) {
-                comboBox.setModel(new DefaultComboBoxModel(new Integer[]{gnum}));
+                _comboBox.setModel(new DefaultComboBoxModel(new Integer[]{gnum}));
             } else
             if (item == maskList.getLastItem() && (row > 0) && (gnum == maskList.getMaskItem(row - 1).getGroup())) {
-                comboBox.setModel(new DefaultComboBoxModel(new Integer[]{gnum, gnum + 1}));
+                _comboBox.setModel(new DefaultComboBoxModel(new Integer[]{gnum, gnum + 1}));
             } else {
 
-                comboBox.setModel(new DefaultComboBoxModel(new Integer[]{gnum}));
+                _comboBox.setModel(new DefaultComboBoxModel(new Integer[]{gnum}));
             }
 
-            comboBox.setSelectedIndex(0);
-
-            group = gnum;
-            comboBox.addItemListener(this);
-
-            return comboBox;
-        }
-
-        public boolean stopCellEditing() {
-            comboBox.setPopupVisible(false);
-            return super.stopCellEditing();
-        }
-
-        public void itemStateChanged(ItemEvent e) {
-
-            comboBox.removeItemListener(this);
-            stopCellEditing();
+            return super.getTableCellEditorComponent(table, value, isSelected, row, column);
 
         }
 
@@ -369,40 +353,15 @@ public class MaskTableEditor extends JComponent {
     }
 
 
-    class OpCellEditor extends ContextSensitiveCellEditor implements ItemListener {
-
-        private ListComboBox comboBox = new ListComboBox(new Object[]{BinaryOperation.AND, BinaryOperation.OR});
-
+    class OpCellEditor extends ListComboBoxCellEditor implements ItemListener {
+        
         public OpCellEditor() {
-            comboBox.setBorder(BorderFactory.createEmptyBorder());
-            comboBox.setEditable(false);
-
-
-        }
-
-        public Object getCellEditorValue() {
-
-            return comboBox.getSelectedItem();
+            super(new DefaultComboBoxModel(new BinaryOperation[]{BinaryOperation.AND, BinaryOperation.OR}));
         }
 
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-
-            if (table != null) {
-                JideSwingUtilities.installColorsAndFont(comboBox, table.getBackground(), table.getForeground(), table.getFont());
-            }
-
-            comboBox.setConverterContext(getConverterContext());
-
-            comboBox.setSelectedItem(maskList.getMaskItem(row).getOperation());
-            
-            comboBox.addItemListener(this);
-            return comboBox;
-        }
-
-        public void itemStateChanged(ItemEvent e) {
-            comboBox.removeItemListener(this);
-            stopCellEditing();
-
+           _comboBox.setSelectedItem(maskList.getMaskItem(row).getOperation());
+            return super.getTableCellEditorComponent(table, value, isSelected, row, column);
         }
 
 
@@ -430,7 +389,7 @@ public class MaskTableEditor extends JComponent {
                 JideSwingUtilities.installColorsAndFont(comboBox, table.getBackground(), table.getForeground(), table.getFont());
             }
 
-            List<IImageData> list = maskList.getCongruentImages();
+            List<IImageData> list = maskList.getCongruentImages(model);
             ComboBoxModel model = new DefaultComboBoxModel(list.toArray());
             //comboBox.setConverterContext(getConverterContext());
 
@@ -449,7 +408,7 @@ public class MaskTableEditor extends JComponent {
         }
 
         public void itemStateChanged(ItemEvent e) {
-            System.out.println("" + e.getStateChange());
+          
             comboBox.removeItemListener(this);
             stopCellEditing();
 

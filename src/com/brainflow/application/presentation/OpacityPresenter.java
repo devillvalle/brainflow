@@ -19,6 +19,7 @@ import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
 import com.jgoodies.binding.value.ConverterFactory;
 import com.jgoodies.binding.value.ValueHolder;
+import com.jgoodies.binding.beans.BeanAdapter;
 
 import javax.swing.*;
 import java.text.NumberFormat;
@@ -31,6 +32,8 @@ public class OpacityPresenter extends ImageViewPresenter {
 
 
     private OpacityForm form;
+
+    private BeanAdapter adapter;
 
    
     /**

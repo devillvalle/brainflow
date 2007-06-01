@@ -11,6 +11,8 @@ import com.brainflow.application.BrainflowException;
 import com.brainflow.application.MemoryImage;
 import com.brainflow.application.BrainFrame;
 import com.brainflow.core.ImageLayerProperties;
+import com.brainflow.colormap.LinearColorMap;
+import com.brainflow.colormap.ColorTable;
 
 import javax.swing.*;
 
@@ -18,6 +20,7 @@ import de.javasoft.plaf.synthetica.SyntheticaLookAndFeel;
 
 import java.util.logging.Logger;
 import java.awt.*;
+import java.net.URL;
 
 /**
  * Created by IntelliJ IDEA.
@@ -84,10 +87,22 @@ public class BrainTest {
     }
     public ImageView createView() {
         try {
-            String fname = "c:/code/icbm/icbm452_atlas_probability_white";
-            IImageData data = AnalyzeIO.readAnalyzeImage(fname);
+            URL url = ClassLoader.getSystemResource("resources/data/icbm452_atlas_probability_gray.hdr");
+            IImageData data1 = AnalyzeIO.readAnalyzeImage(url);
+
+            url = ClassLoader.getSystemResource("resources/data/icbm452_atlas_probability_white.hdr");
+            IImageData data2 = AnalyzeIO.readAnalyzeImage(url);
+
+            
             IImageDisplayModel model = new ImageDisplayModel("model");
-            ImageLayer layer = new ImageLayer3D(new MemoryImage(data), new ImageLayerProperties());
+            ImageLayer layer = new ImageLayer3D(new MemoryImage(data1),
+                    new ImageLayerProperties(new LinearColorMap(data1.getMinValue(), data1.getMaxValue(), ColorTable.GRAYSCALE)));
+            model.addLayer(layer);
+
+            layer = new ImageLayer3D(new MemoryImage(data2),
+                    new ImageLayerProperties(new LinearColorMap(data2.getMinValue(), data2.getMaxValue(), ColorTable.GRAYSCALE)));
+
+
             model.addLayer(layer);
             view = new SimpleImageView(model);
             return view;

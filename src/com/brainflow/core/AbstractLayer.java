@@ -5,6 +5,7 @@ import com.brainflow.image.space.ICoordinateSpace;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.display.ThresholdRange;
+import com.brainflow.colormap.IColorMap;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
@@ -21,6 +22,7 @@ public abstract class AbstractLayer {
 
     private PropertyChangeSupport support = new PropertyChangeSupport(this);
 
+   
     private ImageLayerProperties properties;
 
     protected AbstractLayer(ImageLayerProperties properties) {

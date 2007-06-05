@@ -18,6 +18,7 @@ import com.jidesoft.docking.DockContext;
 import com.jidesoft.docking.DockableFrame;
 import com.jidesoft.document.DocumentComponent;
 import com.jidesoft.document.DocumentPane;
+
 import com.jidesoft.plaf.LookAndFeelFactory;
 import com.jidesoft.status.LabelStatusBarItem;
 import com.jidesoft.status.StatusBar;
@@ -45,6 +46,7 @@ import java.util.logging.Logger;
 
 import de.javasoft.plaf.synthetica.SyntheticaSkyMetallicLookAndFeel;
 import de.javasoft.plaf.synthetica.SyntheticaLookAndFeel;
+import de.javasoft.plaf.synthetica.SyntheticaStandardLookAndFeel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -485,7 +487,7 @@ public class Brainflow {
 
         tabbedPane.addTab("Adjustment", new JScrollPane(colorAdjustmentControl.getComponent()));
         tabbedPane.addTab("Color Table", tablePresenter.getComponent());
-        tabbedPane.addTab("Mask Table", maskPresenter.getComponent());
+        tabbedPane.addTab("Mask Table", new JScrollPane(maskPresenter.getComponent()));
         tabbedPane.addTab("Coordinates", new JScrollPane(coordinateControls.getComponent()));
 
 

@@ -32,7 +32,7 @@ public class ResizeImageStage extends ImageProcessingStage {
     public Object filter(Object input) throws StageException {
         BufferedImage cropped = (BufferedImage)input;
         if (cropped != null && resized == null) {
-            System.out.println("resizing image ...");
+            //System.out.println("resizing image ...");
             IImagePlot plot = getPipeline().getPlot();
             Rectangle area = plot.getPlotArea();
             double sx = area.getWidth() / cropped.getWidth();

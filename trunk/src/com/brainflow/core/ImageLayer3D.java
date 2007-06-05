@@ -20,6 +20,10 @@ import com.brainflow.image.data.IImageData;
 public class ImageLayer3D extends ImageLayer {
 
 
+    public ImageLayer3D(IImageData data) {
+        super(data);
+    }
+
     public ImageLayer3D(ILoadableImage limg, ImageLayerProperties _params) {
         super(limg, _params);
     }

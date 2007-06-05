@@ -51,8 +51,8 @@ public class ColorAdjustmentControl {
 
     private void addCollapsiblePane(AbstractPresenter presenter, String title) {
         CollapsiblePane cp = new CollapsiblePane();
-        cp.setStyle(CollapsiblePane.TREE_STYLE);
-        cp.setUI(new VsnetCollapsiblePaneUI());
+
+        //cp.setUI(new VsnetCollapsiblePaneUI());
         cp.setContentPane(presenter.getComponent());
         cp.setTitle(title);
 

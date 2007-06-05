@@ -114,7 +114,7 @@ public class BoxAnnotation extends AbstractAnnotation {
     }
 
     public void setXmin(double xmin) {
-        System.out.println("SETTING BOX X MIN TO : " + xmin);
+
         double old = getXmin();
         rect.setRect(xmin, rect.getY(), rect.getWidth(), rect.getHeight());
         support.firePropertyChange(BoxAnnotation.XMIN_PROPERTY, old, getXmin());
@@ -125,7 +125,7 @@ public class BoxAnnotation extends AbstractAnnotation {
     }
 
     public void setYmin(double ymin) {
-        System.out.println("SETTING BOX Y MIN TO : " + ymin);
+
         double old = getYmin();
 
         rect.setRect(getXmin(), ymin, getWidth(), getHeight());
@@ -137,7 +137,7 @@ public class BoxAnnotation extends AbstractAnnotation {
     }
 
     public void setWidth(double width) {
-        System.out.println("SETTING BOX WIDTH TO : " + width);
+
         double old = getWidth();
         rect.setRect(getXmin(), getYmin(), width, rect.getHeight());
         support.firePropertyChange(BoxAnnotation.WIDTH_PROPERTY, old, getWidth());
@@ -148,7 +148,7 @@ public class BoxAnnotation extends AbstractAnnotation {
     }
 
     public void setHeight(double height) {
-        System.out.println("SETTING BOX HEIGHT TO : " + height);
+        
         double old = getHeight();
         rect.setRect(getXmin(), getYmin(), rect.getWidth(), height);
         support.firePropertyChange(BoxAnnotation.HEIGHT_PROPERTY, old, getHeight());

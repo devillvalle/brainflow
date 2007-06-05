@@ -50,7 +50,7 @@ public class CrosshairInteractor extends ImageViewInteractor {
         ImageView iview = getView();
 
         AnatomicalPoint3D ap = iview.getAnatomicalLocation(source, p);
-        if (iview.getViewport().getProperty().inBounds(ap)) {
+        if (ap != null && iview.getViewport().getProperty().inBounds(ap)) {
             iview.getCrosshair().getProperty().setLocation(ap);
         }
 

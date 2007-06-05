@@ -3,12 +3,12 @@ package com.brainflow.application.presentation;
 import com.brainflow.core.*;
 import com.brainflow.utils.IRange;
 import com.brainflow.image.data.IImageData;
-import com.brainflow.image.data.IImageData3D;
 import com.brainflow.image.io.analyze.AnalyzeIO;
 import com.brainflow.image.operations.BinaryOperation;
 import com.brainflow.display.ThresholdRange;
 import com.brainflow.colormap.RangeCellEditor;
 import com.brainflow.colormap.RangeCellRenderer;
+
 
 import com.jidesoft.grid.*;
 import com.jidesoft.combobox.ListComboBox;
@@ -39,10 +39,10 @@ import de.javasoft.plaf.synthetica.SyntheticaSkyMetallicLookAndFeel;
  * Time: 2:03:56 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MaskListEditor extends JComponent {
+public class MaskListEditor {
 
 
-    private MaskList maskList;
+    private ImageMaskList maskList;
 
     private JideTable maskTable;
 
@@ -51,7 +51,7 @@ public class MaskListEditor extends JComponent {
     private IImageDisplayModel model;
 
 
-    public MaskListEditor(IImageDisplayModel model, MaskList maskList) {
+    public MaskListEditor(IImageDisplayModel model, ImageMaskList maskList) {
         this.model = model;
 
         this.maskList = maskList;
@@ -59,8 +59,8 @@ public class MaskListEditor extends JComponent {
         tableModel = new MaskTableModel();
 
         maskTable = new CellStyleTable(tableModel);
-
         maskTable.setRowHeight(23);
+        maskTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 
         CellEditorManager.initDefaultEditor();
@@ -81,15 +81,11 @@ public class MaskListEditor extends JComponent {
 
         maskTable.setDefaultEditor(Integer.class, new GroupCellEditor(new DefaultComboBoxModel()));
         maskTable.setDefaultEditor(IRange.class, new RangeCellEditor());
-        maskTable.setDefaultEditor(IImageData.class, new ImageCellEditor());
-        maskTable.setDefaultRenderer(IImageData.class, CellRendererManager.getRenderer(String.class));
+        maskTable.setDefaultEditor(AbstractLayer.class, new MaskCellEditor());
+        maskTable.setDefaultRenderer(AbstractLayer.class, CellRendererManager.getRenderer(String.class));
 
         maskTable.setDefaultRenderer(IRange.class, new RangeCellRenderer());
         maskTable.setDefaultEditor(BinaryOperation.class, new OpCellEditor());
-        setLayout(new BorderLayout());
-
-
-        add(new JScrollPane(maskTable), BorderLayout.CENTER);
 
 
         /*final JButton addButton = new JButton("Add Row");
@@ -128,7 +124,9 @@ public class MaskListEditor extends JComponent {
     }
 
 
-
+    public JTable getTable() {
+        return maskTable;
+    }
 
     private void initColumns() {
         maskTable.setColumnAutoResizable(true);
@@ -152,7 +150,7 @@ public class MaskListEditor extends JComponent {
             tableModel.fireTableDataChanged();
         } else {
             // empy list ...
-            maskList = new MaskList();
+            maskList = new ImageMaskList();
         }
 
     }
@@ -185,16 +183,16 @@ public class MaskListEditor extends JComponent {
             data = AnalyzeIO.readAnalyzeImage(url);
             model.addLayer(new ImageLayer3D(data, new ImageLayerProperties()));
 
-            MaskList mlist = new MaskList(new MaskItem((IImageData3D) data, new ThresholdRange(-50, 16000), 1));
-            mlist.addMask(new MaskItem((IImageData3D) data, new ThresholdRange(0, 12000), 1));
-            mlist.addMask(new MaskItem((IImageData3D) data, new ThresholdRange(0, 18000), 2));
-            mlist.addMask(new MaskItem((IImageData3D) data, new ThresholdRange(0, 22000), 2));
+            ImageMaskList mlist = new ImageMaskList(new MaskItem<ImageLayer>(new ImageLayer3D(data), new ThresholdRange(-50, 16000), 1));
+            mlist.addMask(new MaskItem<ImageLayer>(new ImageLayer3D(data), new ThresholdRange(0, 12000), 1));
+            mlist.addMask(new MaskItem<ImageLayer>(new ImageLayer3D(data), new ThresholdRange(0, 18000), 2));
+            mlist.addMask(new MaskItem<ImageLayer>(new ImageLayer3D(data), new ThresholdRange(0, 22000), 2));
 
             JFrame jf = new JFrame();
             MaskListEditor editor = new MaskListEditor(model, mlist);
 
 
-            jf.add(editor, BorderLayout.CENTER);
+            jf.add(editor.getTable(), BorderLayout.CENTER);
             jf.pack();
             jf.setVisible(true);
 
@@ -212,7 +210,7 @@ public class MaskListEditor extends JComponent {
 
         private Map<String, Integer> columnMap = new HashMap<String, Integer>();
 
-        private Class[] colClasses = new Class[]{IImageData.class, IRange.class, Integer.class, BinaryOperation.class, Boolean.class};
+        private Class[] colClasses = new Class[]{AbstractLayer.class, IRange.class, Integer.class, BinaryOperation.class, Boolean.class};
 
 
         public MaskTableModel() {
@@ -251,6 +249,8 @@ public class MaskListEditor extends JComponent {
         }
 
         public boolean isCellEditable(int rowIndex, int columnIndex) {
+            if (rowIndex == 0) return false;
+
             return true;
         }
 
@@ -271,7 +271,9 @@ public class MaskListEditor extends JComponent {
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
             switch (columnIndex) {
                 case 0:
-                    maskList.getMaskItem(rowIndex).setSource((IImageData3D) aValue);
+                    MaskItem item = maskList.getMaskItem(rowIndex);
+                    item.setSource((AbstractLayer)aValue);
+                    //maskList.getMaskItem(rowIndex).setSource((IImageData3D) aValue);
                     break;
                 case 1:
                     maskList.getMaskItem(rowIndex).setPredicate((ThresholdRange) aValue);
@@ -297,6 +299,7 @@ public class MaskListEditor extends JComponent {
 
             switch (columnIndex) {
                 case 0:
+                    if (rowIndex == 0) return "This";
                     return maskList.getMaskItem(rowIndex).getSource();
                 case 1:
                     return maskList.getMaskItem(rowIndex).getPredicate();
@@ -367,15 +370,15 @@ public class MaskListEditor extends JComponent {
 
     }
 
-    class ImageCellEditor extends ContextSensitiveCellEditor implements ItemListener {
+    class MaskCellEditor extends ContextSensitiveCellEditor implements ItemListener {
 
         private ListComboBox comboBox = new ListComboBox(new Object[]{});
 
-        public ImageCellEditor() {
+
+        public MaskCellEditor() {
             comboBox.setBorder(BorderFactory.createEmptyBorder());
             comboBox.setEditable(false);
-
-
+            
         }
 
         public Object getCellEditorValue() {
@@ -389,7 +392,8 @@ public class MaskListEditor extends JComponent {
                 JideSwingUtilities.installColorsAndFont(comboBox, table.getBackground(), table.getForeground(), table.getFont());
             }
 
-            List<IImageData> list = maskList.getCongruentImages(model);
+            List<AbstractLayer> list = maskList.getCongruentLayers(model);
+            System.out.println("num congruent layers : " + list.size());
             ComboBoxModel model = new DefaultComboBoxModel(list.toArray());
             //comboBox.setConverterContext(getConverterContext());
 

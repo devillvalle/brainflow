@@ -58,7 +58,25 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
         layerSelector = new CheckBoxList();
 
 
-        layerSelector.getCheckBoxListSelectionModel().addListSelectionListener(new ListSelectionListener() {
+        if (getSelectedView() != null) {
+            visibilitySelection = new VisibilitySelection(getSelectedView());
+        }
+
+        initVisibilityModel();
+
+
+        formPane = new JScrollPane(layerSelector);
+
+        form.add(formPane, cc.xywh(2, 4, 2, 2));
+
+        layout.addGroupedColumn(2);
+
+    }
+
+    private void initVisibilityModel() {
+        CheckBoxListSelectionModel model = new CheckBoxListSelectionModel();
+        layerSelector.setCheckBoxListSelectionModel(model);
+        model.addListSelectionListener(new ListSelectionListener() {
 
 
             public void valueChanged(ListSelectionEvent e) {
@@ -83,16 +101,19 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
             }
         });
 
-        if (getSelectedView() != null) {
-            visibilitySelection = new VisibilitySelection(getSelectedView());
+        ImageView view = getSelectedView();
+        if (view != null) {
+
+            int n = view.getModel().getNumLayers();
+            for (int i = 0; i < n; i++) {
+                AbstractLayer layer = view.getModel().getLayer(i);
+                if (layer.isVisible()) {
+                    layerSelector.addCheckBoxListSelectedIndex(i);
+                } else {
+                    layerSelector.removeCheckBoxListSelectedIndex(i);
+                }
+            }
         }
-
-
-        formPane = new JScrollPane(layerSelector);
-
-        form.add(formPane, cc.xywh(2, 4, 2, 2));
-
-        layout.addGroupedColumn(2);
 
 
     }
@@ -123,15 +144,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
                     new SingleListSelectionAdapter(
                             view.getModel().getSelection().getSelectionIndexHolder()));
 
-            int n = view.getModel().getNumLayers();
-            for (int i = 0; i < n; i++) {
-                AbstractLayer layer = view.getModel().getLayer(i);
-                if (layer.isVisible()) {
-                    layerSelector.addCheckBoxListSelectedIndex(i);
-                } else {
-                    layerSelector.removeCheckBoxListSelectedIndex(i);
-                }
-            }
+            initVisibilityModel();
         }
 
 
@@ -159,8 +172,6 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
     public JComponent getComponent() {
         return form;
     }
-
-    
 
 
     class VisibilitySelection implements ImageLayerListener {

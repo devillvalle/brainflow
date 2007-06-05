@@ -10,6 +10,7 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.application.presentation.forms.DoubleSliderForm;
+import com.brainflow.application.presentation.forms.DoubleSliderForm3;
 import com.brainflow.display.Property;
 import com.brainflow.display.ThresholdRange;
 import com.brainflow.core.ImageView;
@@ -30,7 +31,7 @@ import javax.swing.*;
 public class ThresholdRangePresenter extends ImageViewPresenter {
 
 
-    private DoubleSliderForm form;
+    private DoubleSliderForm3 form;
 
     private BeanAdapter adapter;
 
@@ -38,7 +39,7 @@ public class ThresholdRangePresenter extends ImageViewPresenter {
      * Creates a new instance of ColorRangePanel
      */
     public ThresholdRangePresenter() {
-        form = new DoubleSliderForm();
+        form = new DoubleSliderForm3();
         form.getSliderLabel1().setText("High: ");
         form.getSliderLabel2().setText("Low: ");
 

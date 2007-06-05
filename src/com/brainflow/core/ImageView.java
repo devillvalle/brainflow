@@ -112,7 +112,9 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
 
     public void setSelectedIndex(int selectedIndex) {
         assert selectedIndex < getModel().getNumLayers() & selectedIndex >= 0;
-        displayModel.getSelection().setSelectionIndex(selectedIndex);
+
+        if (selectedIndex != displayModel.getSelectedIndex())
+            displayModel.getSelection().setSelectionIndex(selectedIndex);
     }
 
 

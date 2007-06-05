@@ -1,7 +1,6 @@
 package com.brainflow.core;
 
 import com.brainflow.image.data.IImageData;
-import com.jgoodies.binding.beans.Model;
 import com.jgoodies.binding.beans.ExtendedPropertyChangeSupport;
 
 import javax.swing.event.ListDataListener;
@@ -18,11 +17,11 @@ import java.beans.PropertyChangeEvent;
  * Time: 3:02:24 AM
  * To change this template use File | Settings | File Templates.
  */
-public class MaskList {
+public class ImageMaskList {
 
-    private List<MaskItem> maskItems = new ArrayList<MaskItem>();
+    private List<MaskItem<ImageLayer>> maskItems = new ArrayList<MaskItem<ImageLayer>>();
 
-    private MaskItem root;
+    private MaskItem<ImageLayer> root;
 
     private ExtendedPropertyChangeSupport support = new ExtendedPropertyChangeSupport(this);
 
@@ -31,13 +30,14 @@ public class MaskList {
     private List<ListDataListener> listDataListeners = new ArrayList<ListDataListener>();
 
 
-    public MaskList() {
+    public ImageMaskList() {
 
     }
 
-    public MaskList(MaskItem root) {
+    public ImageMaskList(MaskItem<ImageLayer> root) {
         maskItems.add(root);
         this.root = root;
+
 
         root.addPropertyChangeListener(propertyListener);
 
@@ -71,14 +71,14 @@ public class MaskList {
 
 
 
-    public List<IImageData> getCongruentImages(IImageDisplayModel model) {
-        List<IImageData> list = new ArrayList<IImageData>();
+    public List<AbstractLayer> getCongruentLayers(IImageDisplayModel model) {
+        List<AbstractLayer> list = new ArrayList<AbstractLayer>();
         for (int i = 0; i < model.getNumLayers(); i++) {
             AbstractLayer layer = model.getLayer(i);
             if (layer instanceof ImageLayer) {
                 ImageLayer il = (ImageLayer) layer;
-                if (root.getSource().getImageSpace().sameGeometry(il.getData().getImageSpace())) {
-                    list.add(il.getData());
+                if (root.getSource().getData().getImageSpace().sameGeometry(il.getData().getImageSpace())) {
+                    list.add(il);
                 }
             }
         }
@@ -86,40 +86,42 @@ public class MaskList {
         return list;
     }
 
-    public boolean isCongruent(IImageData data) {
+    public boolean isCongruent(AbstractLayer layer) {
         if (root == null) return false;
-
-        if (root.getSource().getImageSpace().sameGeometry(data.getImageSpace())) {
-            return true;
-        } else {
-            return false;
+        if (layer instanceof ImageLayer) {
+            ImageLayer ilayer = (ImageLayer)layer;
+            if (root.getSource().getData().getImageSpace().sameGeometry(ilayer.getData().getImageSpace())) {
+                return true;
+            }
         }
+
+        return false;
     }
 
-    public MaskItem getLastItem() {
+    public MaskItem<ImageLayer> getLastItem() {
         if (maskItems.size() == 0) {
-            throw new IllegalStateException("MaskList is empty, cannot access last item");
+            throw new IllegalStateException("ImageMaskList is empty, cannot access last item");
         }
         return maskItems.get(maskItems.size() - 1);
     }
 
-    public MaskItem getFirstItem() {
+    public MaskItem<ImageLayer> getFirstItem() {
         if (maskItems.size() == 0) {
-            throw new IllegalStateException("MaskList is empty, cannot access first item");
+            throw new IllegalStateException("ImageMaskList is empty, cannot access first item");
         }
 
         return maskItems.get(0);
     }
 
-    public MaskItem getMaskItem(int index) {
+    public MaskItem<ImageLayer> getMaskItem(int index) {
         if (maskItems.size() == 0) {
-            throw new IllegalStateException("MaskList is empty, cannot access " + index + "th item");
+            throw new IllegalStateException("ImageMaskList is empty, cannot access " + index + "th item");
         }
         return maskItems.get(index);
     }
 
     public void removeMaskItem(int idx) {
-        if (idx == 0) throw new IllegalArgumentException("Cannot remove root item form MaskList");
+        if (idx == 0) throw new IllegalArgumentException("Cannot remove root item form ImageMaskList");
 
         MaskItem item = maskItems.get(idx);
         item.removePropertyChangeListener(propertyListener);
@@ -144,7 +146,7 @@ public class MaskList {
     }
 
 
-    public void addMask(MaskItem item) {
+    public void addMask(MaskItem<ImageLayer> item) {
         if (item.getGroup() > (getLastItem().getGroup() + 1)) {
             throw new IllegalArgumentException("Illegal Group number for MaskItem : " + item + " " + item.getGroup());
         }

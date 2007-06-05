@@ -13,7 +13,7 @@ import com.jgoodies.binding.beans.Model;
  * Time: 10:45:44 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MaskItem extends Model {
+public class MaskItem<T extends AbstractLayer> extends Model {
 
     public static final String SOURCE_IMAGE_PROPERTY = "source";
 
@@ -25,7 +25,7 @@ public class MaskItem extends Model {
 
     public static final String ACTIVE_PROPERTY = "active";
    
-    private IImageData3D source;
+    private T source;
 
     private ThresholdRange predicate;
 
@@ -37,14 +37,14 @@ public class MaskItem extends Model {
 
 
     
-    public MaskItem(IImageData3D source, ThresholdRange predicate, int group) {
+    public MaskItem(T source, ThresholdRange predicate, int group) {
         this.source = source;
         this.predicate = predicate;
         this.group = group;
         operation = BinaryOperation.AND;
     }
 
-    public MaskItem(IImageData3D source, ThresholdRange predicate, int group, BinaryOperation operation) {
+    public MaskItem(T source, ThresholdRange predicate, int group, BinaryOperation operation) {
         this.source = source;
         this.predicate = predicate;
         this.group = group;
@@ -61,19 +61,18 @@ public class MaskItem extends Model {
         firePropertyChange(MaskItem.BINARY_OPERATION_PROPERTY, old, getOperation());
     }
 
-    public IImageData3D getSource() {
+    public T getSource() {
         return source;
     }
 
-    public void setSource(IImageData3D source) {
-        IImageData old = getSource();
+    public void setSource(T source) {
+        T old = getSource();
         this.source = source;
         firePropertyChange(MaskItem.SOURCE_IMAGE_PROPERTY, old, getSource());
 
     }
 
     public ThresholdRange getPredicate() {
-
         return predicate;
     }
 

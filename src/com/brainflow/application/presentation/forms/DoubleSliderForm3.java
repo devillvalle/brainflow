@@ -2,9 +2,13 @@ package com.brainflow.application.presentation.forms;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import com.zookitec.layout.Expression;
 
 import javax.swing.*;
 import java.text.NumberFormat;
+
+import org.pietschy.explicit.TableBuilder;
+import org.pietschy.explicit.DebugPanel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,11 +17,11 @@ import java.text.NumberFormat;
  * Time: 9:03:44 PM
  * To change this template use File | Settings | File Templates.
  */
-public class DoubleSliderForm extends JPanel {
+public class DoubleSliderForm3 extends JPanel {
 
 
 
-    private FormLayout layout;
+    private TableBuilder builder;
 
     private JSlider slider1;
     private JSlider slider2;
@@ -28,7 +32,7 @@ public class DoubleSliderForm extends JPanel {
     private JFormattedTextField valueField1;
     private JFormattedTextField valueField2;
 
-    public DoubleSliderForm() {
+    public DoubleSliderForm3() {
         buildGUI();
     }
 
@@ -61,17 +65,19 @@ public class DoubleSliderForm extends JPanel {
 
     private void buildGUI() {
 
-        layout = new FormLayout("6dlu, p, 3dlu, max(p;40dlu), p:g, 5dlu, 3dlu", "6dlu, p, 3dlu, p, 8dlu, p, 3dlu, p, 6dlu");
-        setLayout(layout);
+        //builder = new TableBuilder(new DebugPanel());
+        builder = new TableBuilder();
+        builder.setMargin(builder.layoutStyle().dialogMargin());
+
 
         slider1 = new JSlider();
         slider2 = new JSlider();
 
+
+
         sliderLabel1 = new JLabel("X:");
         sliderLabel2 = new JLabel("Y:");
-
         NumberFormat format = NumberFormat.getInstance();
-
         format.setMaximumFractionDigits(2);
         format.setMinimumIntegerDigits(1);
 
@@ -81,17 +87,33 @@ public class DoubleSliderForm extends JPanel {
         valueField2 = new JFormattedTextField(format);
         valueField2.setText("   ");
 
-        CellConstraints cc = new CellConstraints();
+        // add some components.
+        int row = 0;
 
-        add(slider1, cc.xywh(2, 4, 4, 1));
-        add(slider2, cc.xywh(2, 8, 4, 1));
+        builder.add(sliderLabel1, row, 0).alignLeft();
+        builder.add(valueField1,  row, 1, 1, 2).alignLeft().minimumWidth(45);
+        row++;
+        builder.add(slider1, row, 0, 1, 2).fillX();
 
-        add(sliderLabel1, cc.xy(2, 2));
-        add(sliderLabel2, cc.xy(2, 6));
+        row++;
 
-        add(valueField1, cc.xy(4, 2));
-        add(valueField2, cc.xy(4, 6));
+        builder.add(sliderLabel2, row, 0).alignLeft();
+        builder.add(valueField2,  row, 1, 1, 2).alignLeft().minimumWidth(45);
+        row++;
+        builder.add(slider2, row, 0, 1, 2).fillX();
 
+        builder.buildLayout();
+        add(builder.getPanel());
+
+
+
+    }
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame();
+        frame.add(new DoubleSliderForm3());
+        frame.pack();
+        frame.setVisible(true);
 
     }
 

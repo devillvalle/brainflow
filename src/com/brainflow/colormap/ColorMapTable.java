@@ -56,7 +56,7 @@ public class ColorMapTable extends AbstractPresenter {
         colorTable.setDefaultEditor(RangeModel.class, new RangeCellEditor());
         colorTable.setDefaultRenderer(RangeModel.class, new RangeCellRenderer());
 
-        colorTable.setDefaultRenderer(Color.class, CellRendererManager.getRenderer(Color.class));
+        //colorTable.setDefaultRenderer(Color.class, CellRendererManager.getRenderer(Color.class));
         setUpColorRenderer(colorTable);
 
 

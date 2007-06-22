@@ -8,6 +8,7 @@ import com.brainflow.core.ImageCanvas2;
 import com.jidesoft.dialog.JideOptionPane;
 import org.bushe.swing.action.BasicAction;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -40,10 +41,10 @@ public class DesignColorMapAction extends BasicAction {
 
                 ColorBandChartPresenter presenter = new ColorBandChartPresenter(view.getModel().getLayer(layer).
                         getImageLayerProperties().getColorMap());
-                int ret = JideOptionPane.showOptionDialog(canvas, presenter.getComponent(), "Design Color Map", JideOptionPane.OK_CANCEL_OPTION, JideOptionPane.PLAIN_MESSAGE,
+                int ret = JOptionPane.showOptionDialog(canvas, presenter.getComponent(), "Design Color Map", JideOptionPane.OK_CANCEL_OPTION, JideOptionPane.PLAIN_MESSAGE,
                         null, null, null);
 
-                if (ret != JideOptionPane.OK_OPTION) {
+                if (ret != JOptionPane.OK_OPTION) {
                     view.getModel().getLayer(layer).
                             getImageLayerProperties().getColorMap().setProperty(copyMap);
 

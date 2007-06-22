@@ -9,5 +9,6 @@ package com.brainflow.image.data;
  */
 public interface MaskPredicate {
 
+       
     public int mask(double value);
 }

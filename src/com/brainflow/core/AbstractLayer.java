@@ -10,6 +10,7 @@ import com.brainflow.colormap.IColorMap;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeSupport;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,7 +23,9 @@ public abstract class AbstractLayer {
 
     private PropertyChangeSupport support = new PropertyChangeSupport(this);
 
-   
+    // instantiate to a NullMaskList or something to that effect.
+    private IMaskList maskList;
+
     private ImageLayerProperties properties;
 
     protected AbstractLayer(ImageLayerProperties properties) {
@@ -49,6 +52,14 @@ public abstract class AbstractLayer {
 
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         support.removePropertyChangeListener(listener);
+    }
+
+    protected void setMaskList(IMaskList list) {
+        maskList = list;
+    }
+
+    public IMaskList getMaskList() {
+        return maskList;
     }
 
     public abstract double getValue(AnatomicalPoint3D pt);
@@ -130,5 +141,8 @@ public abstract class AbstractLayer {
     public abstract double getMaxValue();
 
     public abstract String getLabel();
+
+
+    
 
 }

@@ -1,9 +1,13 @@
 package com.brainflow.colormap;
 
+import com.jidesoft.swing.JideSwingUtilities;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,21 +18,33 @@ import java.awt.*;
  */
 public class ColorCellRenderer extends JLabel implements TableCellRenderer {
 
-    Border unselectedBorder = null;
-    Border selectedBorder = null;
-    boolean isBordered = true;
+    private Border unselectedBorder = null;
+
+    private Border selectedBorder = null;
+
+    private boolean isBordered = true;
+
+    private static final Map<Color, ImageIcon> colorIconMap = new HashMap<Color, ImageIcon>();
 
     public ColorCellRenderer(boolean isBordered) {
         super();
         this.isBordered = isBordered;
-        setOpaque(true); //MUST do this for background to show up.
+        setOpaque(true);
     }
 
-    public Component getTableCellRendererComponent(
-            JTable table, Object color,
-            boolean isSelected, boolean hasFocus,
+    public Component getTableCellRendererComponent(JTable table, Object color, boolean isSelected, boolean hasFocus,
             int row, int column) {
-        setBackground((Color) color);
+
+
+        //setBackground((Color) color);
+
+        ImageIcon icon = colorIconMap.get(color);
+        if (icon == null) {
+            icon = ColorTable.createImageIcon((Color)color, 75, 25);
+        }
+        setIcon(icon);
+
+
         if (isBordered) {
             if (isSelected) {
                 if (selectedBorder == null) {

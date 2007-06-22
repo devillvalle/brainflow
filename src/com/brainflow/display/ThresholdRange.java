@@ -33,7 +33,13 @@ public class ThresholdRange extends Model implements MaskPredicate, IRange {
 
     public ThresholdRange(double min, double max) {
         range = new Range(min,max);
+    }
 
+    public ThresholdRange copy() {
+        ThresholdRange trange = new ThresholdRange(range.getMin(), range.getMax());
+        trange.inclusive = inclusive;
+        trange.symmetrical = symmetrical;
+        return trange;
     }
 
     public boolean isInclusive() {

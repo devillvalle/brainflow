@@ -209,6 +209,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
 
 
     private RGBAImage thresholdRGBA(RGBAImage rgba) {
+        
         ThresholdRange trange = layer.getImageLayerProperties().getThresholdRange().getProperty();
 
         if (Double.compare(trange.getMin(), trange.getMax()) != 0) {

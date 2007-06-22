@@ -1,7 +1,11 @@
 package com.brainflow.core;
 
-import com.brainflow.image.data.IImageData;
 import com.jgoodies.binding.beans.ExtendedPropertyChangeSupport;
+import com.brainflow.image.operations.BinaryOperation;
+import com.brainflow.image.data.IMaskedData3D;
+import com.brainflow.image.data.MaskedData3D;
+import com.brainflow.image.data.IImageData3D;
+import com.brainflow.image.data.MaskedDataNode3D;
 
 import javax.swing.event.ListDataListener;
 import javax.swing.event.ListDataEvent;
@@ -17,11 +21,11 @@ import java.beans.PropertyChangeEvent;
  * Time: 3:02:24 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ImageMaskList {
+public class ImageMaskList implements IMaskList {
 
-    private List<MaskItem<ImageLayer>> maskItems = new ArrayList<MaskItem<ImageLayer>>();
+    private List<ImageMaskItem> maskItems = new ArrayList<ImageMaskItem>();
 
-    private MaskItem<ImageLayer> root;
+    private ImageMaskItem root;
 
     private ExtendedPropertyChangeSupport support = new ExtendedPropertyChangeSupport(this);
 
@@ -30,14 +34,9 @@ public class ImageMaskList {
     private List<ListDataListener> listDataListeners = new ArrayList<ListDataListener>();
 
 
-    public ImageMaskList() {
-
-    }
-
-    public ImageMaskList(MaskItem<ImageLayer> root) {
+    public ImageMaskList(ImageLayer layer) {
+        root = new ImageMaskItem(layer, layer.getThreshold(), 0);
         maskItems.add(root);
-        this.root = root;
-
 
         root.addPropertyChangeListener(propertyListener);
 
@@ -69,10 +68,91 @@ public class ImageMaskList {
         listDataListeners.remove(listener);
     }
 
+    private int firstItemWithinGroup(int group) {
+        for (int i=0; i<size(); i++) {
+            if (getMaskItem(i).getGroup() == group) {
+                return i;
+            }
+        }
+
+        throw new AssertionError("assertion failed in mathod: firstItemWithinGroup");
+    }
 
 
-    public List<AbstractLayer> getCongruentLayers(IImageDisplayModel model) {
-        List<AbstractLayer> list = new ArrayList<AbstractLayer>();
+    private int lastItemWithinGroup(int group) {
+        for (int i=0; i<size(); i++) {
+            if (getMaskItem(i).getGroup() > group) {
+                return i-1;
+            }
+        }
+
+        throw new AssertionError("assertion failed in mathod: firstItemWithinGroup");
+    }
+
+
+    private IMaskedData3D makeGroupNode(List<ImageMaskItem> itemList, IMaskedData3D node, int current, int group) {
+        if (current == itemList.size()) return node;
+
+        IMaskItem item = itemList.get(current);
+        if (item.getGroup() > group) {
+            return node;
+        } else {
+            return makeGroupNode(itemList, new MaskedDataNode3D(node, new MaskedData3D((IImageData3D)(item.getSource().getData()),
+                    item.getPredicate()), item.getOperation()), current+1, item.getGroup());
+        }
+
+
+
+    }
+
+
+    private IMaskedData3D makeTreeNode(List<IMaskedData3D> groupList, IMaskedData3D node, int current) {
+
+        if (current == groupList.size() ) {
+            return node;
+        } else {
+            IMaskItem item = getMaskItem(current);
+            IImageData3D data = (IImageData3D)item.getSource().getData();
+            MaskedDataNode3D newNode = new MaskedDataNode3D(node, new MaskedData3D(data, item.getPredicate()), item.getOperation());
+
+            return makeTreeNode(groupList, newNode, current+1);
+
+
+        }
+
+    }
+
+
+    public IMaskedData3D composeMask(boolean lazy) {
+        if (this.size() == 1) {
+            IMaskItem item = getFirstItem();
+            return new MaskedData3D((IImageData3D)(item.getSource().getData()), item.getPredicate());
+        } else {
+
+            List<IMaskedData3D> groupList = new ArrayList<IMaskedData3D>();
+            int numGroups = getLastItem().getGroup();
+            int group = getFirstItem().getGroup();
+            IMaskedData3D startNode = new MaskedData3D((IImageData3D)(getFirstItem().getSource().getData()), getFirstItem().getPredicate());
+
+            int itemNum = 0;
+            while (group <= numGroups) {
+                itemNum = firstItemWithinGroup(group);
+                groupList.add(makeGroupNode(maskItems,  startNode, itemNum++, group ));
+                group++;
+            }
+
+            return makeTreeNode(groupList, groupList.get(0), 1);
+            
+
+
+        }
+
+    }
+
+
+
+    public List<ImageLayer> getCongruentLayers(IImageDisplayModel model) {
+        List<ImageLayer> list = new ArrayList<ImageLayer>();
         for (int i = 0; i < model.getNumLayers(); i++) {
             AbstractLayer layer = model.getLayer(i);
             if (layer instanceof ImageLayer) {
@@ -98,14 +178,18 @@ public class ImageMaskList {
         return false;
     }
 
-    public MaskItem<ImageLayer> getLastItem() {
+    public int indexOf(IMaskItem item) {
+        return maskItems.indexOf(item);
+    }
+
+    public ImageMaskItem getLastItem() {
         if (maskItems.size() == 0) {
             throw new IllegalStateException("ImageMaskList is empty, cannot access last item");
         }
         return maskItems.get(maskItems.size() - 1);
     }
 
-    public MaskItem<ImageLayer> getFirstItem() {
+    public ImageMaskItem getFirstItem() {
         if (maskItems.size() == 0) {
             throw new IllegalStateException("ImageMaskList is empty, cannot access first item");
         }
@@ -113,7 +197,7 @@ public class ImageMaskList {
         return maskItems.get(0);
     }
 
-    public MaskItem<ImageLayer> getMaskItem(int index) {
+    public ImageMaskItem getMaskItem(int index) {
         if (maskItems.size() == 0) {
             throw new IllegalStateException("ImageMaskList is empty, cannot access " + index + "th item");
         }
@@ -133,6 +217,7 @@ public class ImageMaskList {
         return maskItems.size();
     }
 
+    
     public void fireItemAdded(int index) {
         for (ListDataListener listener : listDataListeners) {
             listener.intervalAdded(new ListDataEvent(this, ListDataEvent.INTERVAL_ADDED, index, index));
@@ -145,8 +230,18 @@ public class ImageMaskList {
         }
     }
 
+    public IMaskItem dupMask() {
+        ImageMaskItem item = new ImageMaskItem(getLastItem().getSource(), 
+                getLastItem().getPredicate().copy(),
+                getLastItem().getGroup(), BinaryOperation.AND, false);
 
-    public void addMask(MaskItem<ImageLayer> item) {
+        addMask(item);
+        return item;
+
+
+    }
+
+    public void addMask(ImageMaskItem item) {
         if (item.getGroup() > (getLastItem().getGroup() + 1)) {
             throw new IllegalArgumentException("Illegal Group number for MaskItem : " + item + " " + item.getGroup());
         }
@@ -174,7 +269,7 @@ public class ImageMaskList {
     class MaskItemChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
-            MaskItem item = (MaskItem) evt.getSource();
+            IMaskItem item = (IMaskItem) evt.getSource();
             int index = maskItems.indexOf(item);
             support.fireIndexedPropertyChange(evt.getPropertyName(), index, evt.getOldValue(), evt.getNewValue());
         }

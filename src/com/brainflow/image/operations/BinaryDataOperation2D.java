@@ -50,7 +50,7 @@ public class BinaryDataOperation2D implements IBinaryOperation2D {
         result = null;
         if (left != null) {
             left.clear();
-        }        
+        }
         if (right != null) {
             right.clear();
         }
@@ -63,18 +63,16 @@ public class BinaryDataOperation2D implements IBinaryOperation2D {
 
         if (result != null) {
             return result;
-        }
+        } else {
 
-        switch(operation) {
-            case OR :
-                result =  left.compute().OR(right.compute());
-                break;
-            case AND :
+            if (operation == BinaryOperation.OR) {
+                result = left.compute().OR(right.compute());
+            } else if (operation == BinaryOperation.AND) {
                 result = left.compute().AND(right.compute());
-                break;
-            default :
+            } else {
                 throw new AssertionError();
 
+            }
         }
 
         return result;

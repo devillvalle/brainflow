@@ -5,16 +5,17 @@ import com.brainflow.display.Visibility;
 import com.jidesoft.grid.*;
 import com.jidesoft.swing.JideSwingUtilities;
 import com.jidesoft.swing.CheckBoxListSelectionModel;
+import com.jidesoft.swing.JideBoxLayout;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.MouseWheelListener;
+import java.awt.image.BufferedImage;
+import java.awt.event.*;
 import java.util.HashMap;
 
 /**
@@ -38,6 +39,8 @@ public class MaskListPresenter extends ImageViewPresenter {
     private ImageLayerTableModel layerModel;
 
     private ListSelectionModelGroup group = new ListSelectionModelGroup();
+
+    private JPanel form;
 
 
     public MaskListPresenter() {
@@ -69,7 +72,8 @@ public class MaskListPresenter extends ImageViewPresenter {
                 editor.getTable().setBorder(BorderFactory.createEmptyBorder());
                 editor.getTable().setBackground(BG2);
                 TreeLikeHierarchicalPanel treeLikeHierarchicalPanel = new TreeLikeHierarchicalPanel(new FitScrollPane(editor.getTable()));
-                treeLikeHierarchicalPanel.setBackground(editor.getTable().getBackground());
+
+                //treeLikeHierarchicalPanel.setBackground(editor.getTable().getBackground());
                 //treeLikeHierarchicalPanel.setBackground(BG2);
 
                 group.add(editor.getTable().getSelectionModel());
@@ -116,6 +120,38 @@ public class MaskListPresenter extends ImageViewPresenter {
         });
 
 
+
+        form = new JPanel();
+        form.setLayout(new JideBoxLayout(form, JideBoxLayout.Y_AXIS));
+
+        form.add(createToolBar(), JideBoxLayout.FIX);
+        form.add(new JScrollPane(hierTable), JideBoxLayout.VARY);
+
+
+
+
+    }
+
+
+    private JToolBar createToolBar() {
+
+        JToolBar tbar;
+
+        try {
+            tbar = new JToolBar();
+            BufferedImage icon = ImageIO.read(getClass().getClassLoader().getResource("resources/icons/add.png"));
+            Action addAction = new AddItemAction("add mask", new ImageIcon(icon));
+            tbar.add(addAction);
+        } catch(Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+
+        return tbar;
+
+
+
     }
 
     protected void layerSelected(AbstractLayer layer) {
@@ -137,7 +173,7 @@ public class MaskListPresenter extends ImageViewPresenter {
     }
 
     public JComponent getComponent() {
-        return hierTable;
+        return form;
     }
 
     class LayerCellRenderer extends DefaultTableCellRenderer {
@@ -289,6 +325,37 @@ public class MaskListPresenter extends ImageViewPresenter {
             ((JComponent) parent).scrollRectToVisible(aRect);
             aRect.x -= dx;
             aRect.y -= dy;
+        }
+    }
+
+
+
+
+    class MaskItemRow extends DefaultExpandableRow {
+        public Object getValueAt(int i) {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        
+    }
+
+
+    class AddItemAction extends AbstractAction {
+
+        public AddItemAction(String name, Icon icon) {
+            super(name, icon);
+        }
+
+        public void actionPerformed(ActionEvent e) {
+
+            if (hierTable.getSelectedRow() < 0) {
+                System.out.println("slected row : " + hierTable.getSelectedRow());
+                return;
+            }
+            
+            System.out.println("selected row : " + hierTable.getSelectedRow());
+            Class c = hierTable.getModel().getValueAt(hierTable.getSelectedRow(), hierTable.getSelectedColumn()).getClass();
+            System.out.println("class : " + c.getCanonicalName());
         }
     }
 

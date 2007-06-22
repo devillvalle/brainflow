@@ -31,6 +31,7 @@ public class RangeCellEditor extends ContextSensitiveCellEditor implements ItemL
     public RangeCellEditor() {
         super();
         setClickCountToStart(1);
+        
     }
 
 

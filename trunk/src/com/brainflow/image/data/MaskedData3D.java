@@ -22,7 +22,7 @@ public class MaskedData3D implements IMaskedData3D {
 
     private MaskPredicate predicate;
 
-     public MaskedData3D(IImageData3D src, MaskPredicate predicate) {
+    public MaskedData3D(IImageData3D src, MaskPredicate predicate) {
         source = src;
         this.predicate = predicate;
     }
@@ -50,6 +50,15 @@ public class MaskedData3D implements IMaskedData3D {
 
     public double getRealValue(double realx, double realy, double realz, InterpolationFunction3D interp) {
         return predicate.mask(source.getRealValue(realx, realy, realz, interp));
+    }
+
+    public int isTrue(int index) {
+        return predicate.mask(source.getInt(index));
+
+    }
+
+    public int isTrue(int x, int y, int z) {
+        return predicate.mask(source.getInt(x, y, z));
     }
 
     public double getValue(int index) {

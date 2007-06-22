@@ -7,9 +7,28 @@ package com.brainflow.image.operations;
  * Time: 11:29:58 AM
  * To change this template use File | Settings | File Templates.
  */
-public enum BinaryOperation {
+public abstract class BinaryOperation {
 
-    AND,
-    OR,
+    public static final BinaryOperation AND = new _AND_();
+
+    public static final BinaryOperation OR = new _OR_();
+
+    public abstract int compute(int left, int right);
+
+
+    private static class _AND_ extends BinaryOperation {
+        public final int compute(int left, int right) {
+            return left & right;
+        }
+    }
+
+    private static class _OR_ extends BinaryOperation {
+        public final int compute(int left, int right) {
+            return left | right;
+        }
+    }
+
+
+
     
 }

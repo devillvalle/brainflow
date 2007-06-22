@@ -17,11 +17,11 @@ import cern.colt.bitvector.BitVector;
  * Time: 11:53:21 AM
  * To change this template use File | Settings | File Templates.
  */
-public class BinaryImageData3D extends BinaryImageData implements IImageData3D {
+public class BinaryImageData3D extends BinaryImageData implements IMaskedData3D {
 
 
     private int planeSize;
-    
+
     private int dim0;
 
     public BinaryImageData3D(ImageSpace3D _space) {
@@ -95,7 +95,7 @@ public class BinaryImageData3D extends BinaryImageData implements IImageData3D {
 
         BitVector ret = bits.copy();
         ret.and(data.getBitVector());
-        return new BinaryImageData3D((ImageSpace3D)getImageSpace(), ret);
+        return new BinaryImageData3D((ImageSpace3D) getImageSpace(), ret);
 
     }
 
@@ -141,7 +141,7 @@ public class BinaryImageData3D extends BinaryImageData implements IImageData3D {
     }
 
     public final float getFloat(int x, int y, int z) {
-       return getBitVector().getQuick(indexOf(x, y, z)) ? 1f : 0f;
+        return getBitVector().getQuick(indexOf(x, y, z)) ? 1f : 0f;
     }
 
     public int getInt(int x, int y, int z) {
@@ -154,16 +154,24 @@ public class BinaryImageData3D extends BinaryImageData implements IImageData3D {
     }
 
     public final void setValue(int x, int y, int z, double val) {
-        getBitVector().putQuick(indexOf(x,y,z), val > 0);
+        getBitVector().putQuick(indexOf(x, y, z), val > 0);
 
     }
 
     public final void setFloat(int x, int y, int z, float val) {
-        getBitVector().putQuick(indexOf(x,y,z), val > 0);
-
+        getBitVector().putQuick(indexOf(x, y, z), val > 0);
     }
 
     public final void setInt(int x, int y, int z, int val) {
-        getBitVector().putQuick(indexOf(x,y,z), val > 0);
+        getBitVector().putQuick(indexOf(x, y, z), val > 0);
+    }
+
+    public final int isTrue(int x, int y, int z) {
+        return getBitVector().getQuick(indexOf(x, y, z)) ? 1 : 0;
+    }
+
+    public final int isTrue(int index) {
+        return getBitVector().getQuick(index) ? 1 : 0;
+
     }
 }

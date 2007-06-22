@@ -1,7 +1,5 @@
 package com.brainflow.core;
 
-import com.brainflow.image.data.IImageData3D;
-import com.brainflow.image.data.IImageData;
 import com.brainflow.image.operations.BinaryOperation;
 import com.brainflow.display.ThresholdRange;
 import com.jgoodies.binding.beans.Model;
@@ -13,19 +11,9 @@ import com.jgoodies.binding.beans.Model;
  * Time: 10:45:44 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MaskItem<T extends AbstractLayer> extends Model {
+public class MaskItem extends Model implements IMaskItem {
 
-    public static final String SOURCE_IMAGE_PROPERTY = "source";
-
-    public static final String THRESHOLD_PREDICATE_PROPERTY = "predicate";
-
-    public static final String BINARY_OPERATION_PROPERTY = "operation";
-
-    public static final String GROUP_PROPERTY = "group";
-
-    public static final String ACTIVE_PROPERTY = "active";
-   
-    private T source;
+    private AbstractLayer source;
 
     private ThresholdRange predicate;
 
@@ -36,20 +24,28 @@ public class MaskItem<T extends AbstractLayer> extends Model {
     private BinaryOperation operation;
 
 
-    
-    public MaskItem(T source, ThresholdRange predicate, int group) {
+    public MaskItem(AbstractLayer source, ThresholdRange predicate, int group) {
         this.source = source;
         this.predicate = predicate;
         this.group = group;
         operation = BinaryOperation.AND;
     }
 
-    public MaskItem(T source, ThresholdRange predicate, int group, BinaryOperation operation) {
+    public MaskItem(AbstractLayer source, ThresholdRange predicate, int group, BinaryOperation operation) {
         this.source = source;
         this.predicate = predicate;
         this.group = group;
         this.operation = operation;
     }
+
+    public MaskItem(AbstractLayer source, ThresholdRange predicate, int group, BinaryOperation operation, boolean active) {
+        this.source = source;
+        this.predicate = predicate;
+        this.group = group;
+        this.operation = operation;
+        this.active = active;
+    }
+
 
     public BinaryOperation getOperation() {
         return operation;
@@ -58,17 +54,17 @@ public class MaskItem<T extends AbstractLayer> extends Model {
     public void setOperation(BinaryOperation operation) {
         BinaryOperation old = getOperation();
         this.operation = operation;
-        firePropertyChange(MaskItem.BINARY_OPERATION_PROPERTY, old, getOperation());
+        firePropertyChange(IMaskItem.BINARY_OPERATION_PROPERTY, old, getOperation());
     }
 
-    public T getSource() {
+    public AbstractLayer getSource() {
         return source;
     }
 
-    public void setSource(T source) {
-        T old = getSource();
+    public void setSource(AbstractLayer source) {
+        AbstractLayer old = getSource();
         this.source = source;
-        firePropertyChange(MaskItem.SOURCE_IMAGE_PROPERTY, old, getSource());
+        firePropertyChange(IMaskItem.SOURCE_IMAGE_PROPERTY, old, getSource());
 
     }
 
@@ -77,13 +73,13 @@ public class MaskItem<T extends AbstractLayer> extends Model {
     }
 
     public void setPredicate(ThresholdRange predicate) {
-        
+
         ThresholdRange old = getPredicate();
         this.predicate = predicate;
-        firePropertyChange(MaskItem.THRESHOLD_PREDICATE_PROPERTY, old, getPredicate());
+        firePropertyChange(IMaskItem.THRESHOLD_PREDICATE_PROPERTY, old, getPredicate());
     }
 
-  
+
     public boolean isActive() {
         return active;
     }
@@ -91,7 +87,7 @@ public class MaskItem<T extends AbstractLayer> extends Model {
     public void setActive(boolean active) {
         boolean old = isActive();
         this.active = active;
-        firePropertyChange(MaskItem.ACTIVE_PROPERTY, old, isActive());
+        firePropertyChange(IMaskItem.ACTIVE_PROPERTY, old, isActive());
     }
 
     public int getGroup() {
@@ -101,6 +97,6 @@ public class MaskItem<T extends AbstractLayer> extends Model {
     public void setGroup(int group) {
         int old = getGroup();
         this.group = group;
-        firePropertyChange(MaskItem.GROUP_PROPERTY, old, getGroup());
+        firePropertyChange(IMaskItem.GROUP_PROPERTY, old, getGroup());
     }
 }

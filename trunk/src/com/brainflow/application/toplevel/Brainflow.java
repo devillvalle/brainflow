@@ -8,9 +8,9 @@ import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.core.*;
-import com.brainflow.core.ImageLayerProperties;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.data.IImageData;
+import com.jgoodies.binding.beans.PropertyAdapter;
 import com.jidesoft.action.CommandBar;
 import com.jidesoft.action.CommandMenuBar;
 import com.jidesoft.docking.DefaultDockingManager;
@@ -18,12 +18,15 @@ import com.jidesoft.docking.DockContext;
 import com.jidesoft.docking.DockableFrame;
 import com.jidesoft.document.DocumentComponent;
 import com.jidesoft.document.DocumentPane;
-
 import com.jidesoft.plaf.LookAndFeelFactory;
 import com.jidesoft.status.LabelStatusBarItem;
 import com.jidesoft.status.StatusBar;
-import com.jidesoft.swing.*;
-import com.jgoodies.binding.beans.PropertyAdapter;
+import com.jidesoft.swing.JideBoxLayout;
+import com.jidesoft.swing.JideMenu;
+import com.jidesoft.swing.JideTabbedPane;
+import de.javasoft.plaf.synthetica.SyntheticaLookAndFeel;
+import de.javasoft.plaf.synthetica.SyntheticaSkyMetallicLookAndFeel;
+import de.javasoft.plaf.synthetica.SyntheticaStandardLookAndFeel;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.VFS;
@@ -31,7 +34,10 @@ import org.bushe.swing.action.*;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 import org.xml.sax.SAXException;
-import org.jdesktop.swingx.plaf.nimbus.NimbusLookAndFeel;
+import org.jvnet.substance.skin.SubstanceRavenGraphiteLookAndFeel;
+import org.jvnet.substance.skin.SubstanceEmeraldDuskLookAndFeel;
+import org.jvnet.substance.skin.SubstanceSaharaLookAndFeel;
+import org.jvnet.substance.skin.SubstanceOfficeSilver2007LookAndFeel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,10 +49,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import de.javasoft.plaf.synthetica.SyntheticaSkyMetallicLookAndFeel;
-import de.javasoft.plaf.synthetica.SyntheticaLookAndFeel;
-import de.javasoft.plaf.synthetica.SyntheticaStandardLookAndFeel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -96,31 +98,35 @@ public class Brainflow {
     public static void main(String[] args) {
 
         com.jidesoft.utils.Lm.verifyLicense("UIN", "BrainFlow", "S5XiLlHH0VReaWDo84sDmzPxpMJvjP3");
-        //com.jgoodies.looks.plastic.Plastic3DLookAndFeel plastic = new Plastic3DLookAndFeel();
 
         try {
-
-            //org.jvnet.substance.SubstanceLookAndFeel lf = new SubstanceLookAndFeel();
-            //SubstanceLookAndFeel.setSkin(new BusinessBlueSteelSkin());
-
             //SyntheticaLookAndFeel lf = new SyntheticaStandardLookAndFeel();
-            //NimbusLookAndFeel nimbus = new NimbusLookAndFeel();
-            SyntheticaLookAndFeel lf = new SyntheticaSkyMetallicLookAndFeel();
-            //A03LookAndFeel lf = new apprising.api.swing.plaf.a03.A03LookAndFeel();
-            UIManager.setLookAndFeel(lf);
-            //LookAndFeelFactory.installDefaultLookAndFeelAndExtension();
-
+            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceModerateLookAndFeel());
+            //UIManager.setLookAndFeel(lf);
             //LookAndFeelFactory.installDefaultLookAndFeel();
             LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
             //LookAndFeelFactory.installJideExtension(LookAndFeelFactory.OFFICE2003_STYLE);
-
-            Brainflow bflow = getInstance();
-            bflow.launch();
         } catch (Exception e) {
-            Logger.getAnonymousLogger().severe("Could not load Look and Feel, aborting");
+            Logger.getAnonymousLogger().severe("Error Loading LookAndFeel, exiting");
             e.printStackTrace();
             System.exit(-1);
+
         }
+        final Brainflow bflow = getInstance();
+
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    bflow.launch();
+                } catch (Exception e) {
+                    Logger.getAnonymousLogger().severe("Error Launching Brainflow, exiting");
+                    e.printStackTrace();
+                    System.exit(-1);
+                }
+
+            }
+        });
+
     }
 
 
@@ -129,16 +135,45 @@ public class Brainflow {
     }
 
 
+
+    private void splashMessage(String message) {
+        Graphics2D g = SplashScreen.getSplashScreen().createGraphics();
+        //g.setComposite(AlphaComposite.Clear);
+        //g.fillRect(20,430,100,460);
+        //g.setPaintMode();
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("helvetica", Font.PLAIN, 16));
+        g.drawString(message, 20, 430);
+        SplashScreen.getSplashScreen().update();
+        
+    }
+
+
     public void launch() throws Exception {
+        final SplashScreen splash = SplashScreen.getSplashScreen();
+
+        if (splash == null) {
+            throw new RuntimeException("Cannot create splash screen");
+            
+        }
+
+        //splash.setImageURL(getClass().getClassLoader().getResource("resources/icons/logo.png"));
+        //splash.update();
+        //Graphics2D splashGraphics = (Graphics2D)splash.createGraphics();
+
+
+        //splashMessage("Lauching Brainflow ...");
+        
         brainFrame = new BrainFrame();
         
         ImageCanvasManager.getInstance().createCanvas();
 
 
-        log.info("launching Brainflow version 0.1");
 
 
+        //splashMessage("Initializing IO manager ...");
         initImageIO();
+        //splashMessage("Initializing actions ...");
         initializeActions();
         intializeKeyActions();
         initializeMenu();
@@ -174,7 +209,7 @@ public class Brainflow {
 
 
     private void intializeKeyActions() {
-     
+
 
     }
 
@@ -187,9 +222,7 @@ public class Brainflow {
         menuBar.setOpaque(false);
         menuBar.setPaintBackground(false);
 
-
         //
-
 
 
         JideMenu fileMenu = new JideMenu("File");
@@ -316,7 +349,7 @@ public class Brainflow {
         mainToolbar.add(colorbarToggle);
 
         brainFrame.getContentPane().add(mainToolbar, BorderLayout.NORTH);
-        
+
         ActionManager.mapKeystrokeForAction(documentPane, ActionManager.getInstance().getAction("view-random"));
         ActionManager.mapKeystrokeForAction(documentPane, ActionManager.getInstance().getAction("view-axial"));
         ActionManager.mapKeystrokeForAction(documentPane, ActionManager.getInstance().getAction("view-coronal"));
@@ -406,7 +439,7 @@ public class Brainflow {
                     DockContext.STATE_FRAMEDOCKED,
                     DockContext.DOCK_SIDE_WEST);
 
-             //explorer.getComponent().setPreferredSize(new Dimension(400,200));
+            //explorer.getComponent().setPreferredSize(new Dimension(400,200));
             dframe.setPreferredSize(new Dimension(275, 200));
 
             //JScrollPane jsp = new JScrollPane(explorer.getComponent());
@@ -483,11 +516,11 @@ public class Brainflow {
 
         ColorMapTablePresenter tablePresenter = new ColorMapTablePresenter();
 
-        MaskListPresenter maskPresenter = new MaskListPresenter();
+        MaskTablePresenter maskPresenter = new MaskTablePresenter();
 
         tabbedPane.addTab("Adjustment", new JScrollPane(colorAdjustmentControl.getComponent()));
         tabbedPane.addTab("Color Table", tablePresenter.getComponent());
-        tabbedPane.addTab("Mask Table", new JScrollPane(maskPresenter.getComponent()));
+        tabbedPane.addTab("Mask Table", maskPresenter.getComponent());
         tabbedPane.addTab("Coordinates", new JScrollPane(coordinateControls.getComponent()));
 
 
@@ -539,7 +572,7 @@ public class Brainflow {
 
 
         }
-       
+
     }
 
     public void loadAndDisplay(final ILoadableImage limg) {
@@ -616,7 +649,6 @@ public class Brainflow {
 
     }
 
-    
 
     public SoftLoadableImage[] getSelectedLoadableImages() {
         SoftLoadableImage[] limg = loadingDock.requestLoadableImages();
@@ -686,7 +718,7 @@ public class Brainflow {
             AbstractLayer layer = view.getModel().getLayer(view.getModel().getSelectedIndex());
             double value = layer.getValue(gpoint);
 
-          
+
             IColorMap cmap = layer.getImageLayerProperties().getColorMap().getProperty();
 
             Color c = null;

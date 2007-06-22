@@ -249,7 +249,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
             }
 
             if (dtm != null) {
-                log.finest("firing nodeStructureChanged event");
+
                 dtm.nodeStructureChanged(parent);
             }
 

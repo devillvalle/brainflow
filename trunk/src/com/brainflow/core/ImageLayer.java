@@ -28,11 +28,12 @@ public abstract class ImageLayer extends AbstractLayer {
 
     private IImageData data;
 
-    private ImageMaskList maskList;
+
 
     public ImageLayer(IImageData data) {
         super(new ImageLayerProperties(ColorTable.GRAYSCALE, new Range(data.getMinValue(), data.getMaxValue())));
         this.data = data;
+        initMaskList();
     }
 
     public ImageLayer(ILoadableImage _limg, ImageLayerProperties _properties) {
@@ -48,14 +49,13 @@ public abstract class ImageLayer extends AbstractLayer {
     }
 
     private void initMaskList() {
-        MaskItem<ImageLayer> root = new MaskItem<ImageLayer>(this,
-                getImageLayerProperties().getThresholdRange().getProperty(), 1);
-        maskList = new ImageMaskList(root);
+
+        setMaskList(new ImageMaskList(this));
 
     }
 
     public ImageMaskList getMaskList() {
-        return maskList;
+        return (ImageMaskList)(super.getMaskList());
     }
 
     public IImageData getData() {

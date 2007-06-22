@@ -10,9 +10,14 @@ package com.brainflow.image.data;
 public interface IMaskedData3D extends IImageData3D {
 
 
-    public MaskPredicate getPredicate();
 
     public int cardinality();
+
+    public int isTrue(int x, int y, int z);
+
+    public int isTrue(int index);
+
+    
     
 
 

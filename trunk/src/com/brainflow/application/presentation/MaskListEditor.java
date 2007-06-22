@@ -150,7 +150,7 @@ public class MaskListEditor {
             tableModel.fireTableDataChanged();
         } else {
             // empy list ...
-            maskList = new ImageMaskList();
+            //maskList = new ImageMaskList();
         }
 
     }
@@ -183,10 +183,10 @@ public class MaskListEditor {
             data = AnalyzeIO.readAnalyzeImage(url);
             model.addLayer(new ImageLayer3D(data, new ImageLayerProperties()));
 
-            ImageMaskList mlist = new ImageMaskList(new MaskItem<ImageLayer>(new ImageLayer3D(data), new ThresholdRange(-50, 16000), 1));
-            mlist.addMask(new MaskItem<ImageLayer>(new ImageLayer3D(data), new ThresholdRange(0, 12000), 1));
-            mlist.addMask(new MaskItem<ImageLayer>(new ImageLayer3D(data), new ThresholdRange(0, 18000), 2));
-            mlist.addMask(new MaskItem<ImageLayer>(new ImageLayer3D(data), new ThresholdRange(0, 22000), 2));
+            ImageMaskList mlist = new ImageMaskList(new ImageLayer3D(data));
+            mlist.addMask(new ImageMaskItem(new ImageLayer3D(data), new ThresholdRange(0, 12000), 1));
+            mlist.addMask(new ImageMaskItem(new ImageLayer3D(data), new ThresholdRange(0, 18000), 2));
+            mlist.addMask(new ImageMaskItem(new ImageLayer3D(data), new ThresholdRange(0, 22000), 2));
 
             JFrame jf = new JFrame();
             MaskListEditor editor = new MaskListEditor(model, mlist);
@@ -214,11 +214,11 @@ public class MaskListEditor {
 
 
         public MaskTableModel() {
-            columnMap.put(MaskItem.SOURCE_IMAGE_PROPERTY, 0);
-            columnMap.put(MaskItem.THRESHOLD_PREDICATE_PROPERTY, 1);
-            columnMap.put(MaskItem.GROUP_PROPERTY, 2);
-            columnMap.put(MaskItem.BINARY_OPERATION_PROPERTY, 3);
-            columnMap.put(MaskItem.ACTIVE_PROPERTY, 4);
+            columnMap.put(IMaskItem.SOURCE_IMAGE_PROPERTY, 0);
+            columnMap.put(IMaskItem.THRESHOLD_PREDICATE_PROPERTY, 1);
+            columnMap.put(IMaskItem.GROUP_PROPERTY, 2);
+            columnMap.put(IMaskItem.BINARY_OPERATION_PROPERTY, 3);
+            columnMap.put(IMaskItem.ACTIVE_PROPERTY, 4);
 
 
             maskList.addPropertyChangeListener(new PropertyChangeListener() {
@@ -255,7 +255,7 @@ public class MaskListEditor {
         }
 
         public void addRow() {
-            MaskItem item = new MaskItem(maskList.getMaskItem(0).getSource(), new ThresholdRange(0, 0), maskList.getLastItem().getGroup());
+            ImageMaskItem item = new ImageMaskItem(maskList.getMaskItem(0).getSource(), new ThresholdRange(0, 0), maskList.getLastItem().getGroup());
             item.setActive(false);
             maskList.addMask(item);
 
@@ -271,7 +271,7 @@ public class MaskListEditor {
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
             switch (columnIndex) {
                 case 0:
-                    MaskItem item = maskList.getMaskItem(rowIndex);
+                    IMaskItem item = maskList.getMaskItem(rowIndex);
                     item.setSource((AbstractLayer)aValue);
                     //maskList.getMaskItem(rowIndex).setSource((IImageData3D) aValue);
                     break;
@@ -335,7 +335,7 @@ public class MaskListEditor {
 
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
 
-            MaskItem item = maskList.getMaskItem(row);
+            IMaskItem item = maskList.getMaskItem(row);
             int gnum = item.getGroup();
 
             if (item == maskList.getLastItem() && row == 0) {
@@ -392,7 +392,7 @@ public class MaskListEditor {
                 JideSwingUtilities.installColorsAndFont(comboBox, table.getBackground(), table.getForeground(), table.getFont());
             }
 
-            List<AbstractLayer> list = maskList.getCongruentLayers(model);
+            List<? extends AbstractLayer> list = maskList.getCongruentLayers(model);
             System.out.println("num congruent layers : " + list.size());
             ComboBoxModel model = new DefaultComboBoxModel(list.toArray());
             //comboBox.setConverterContext(getConverterContext());

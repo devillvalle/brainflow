@@ -18,7 +18,7 @@ public class BinaryDataOperation3D implements IBinaryOperation3D {
 
     private BinaryDataOperation3D right;
 
-    private BinaryOperation operation;
+    private BinaryOperation operation = BinaryOperation.AND;
 
     private BinaryImageData3D result;
 
@@ -59,24 +59,23 @@ public class BinaryDataOperation3D implements IBinaryOperation3D {
     }
 
     public BinaryImageData3D compute() {
-        if (right == null) {
-            return left.compute();
-        }
-
         if (result != null) {
             return result;
         }
 
-        switch(operation) {
-            case OR :
-                result =  left.compute().OR(right.compute());
-                break;
-            case AND :
+
+        if (right == null) {
+            result = left.compute();
+        } else {
+
+            if (operation == BinaryOperation.OR) {
+                result = left.compute().OR(right.compute());
+            } else if (operation == BinaryOperation.AND) {
                 result = left.compute().AND(right.compute());
-                break;
-            default :
+            } else {
                 throw new AssertionError();
 
+            }
         }
 
         return result;

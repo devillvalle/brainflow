@@ -34,27 +34,17 @@ public class ColorMapTablePresenter extends AbstractColorMapPresenter {
 
     private ColorMapTable colorTable;
 
-    private JScrollPane scrollPane;
-
-    private ButtonPanel buttonPanel;
-
-    private JButton applyButton;
-
-    private JButton resetButton;
-
     private JSpinner segmentSpinner;
-
-    private Box topPanel;
 
     private JPanel form;
 
 
     public ColorMapTablePresenter() {
         colorTable = new ColorMapTable(new LinearColorMap(0, 255, ColorTable.SPECTRUM));
-        scrollPane = new JScrollPane(colorTable.getComponent());
+        JScrollPane scrollPane = new JScrollPane(colorTable.getComponent());
 
 
-        topPanel = Box.createHorizontalBox();
+        Box topPanel = Box.createHorizontalBox();
         topPanel.setBorder(BorderFactory.createEmptyBorder(5, 2, 5, 2));
 
 
@@ -75,11 +65,11 @@ public class ColorMapTablePresenter extends AbstractColorMapPresenter {
         topPanel.add(new JLabel("Color Segments: "));
         topPanel.add(segmentSpinner);
 
-        buttonPanel = new ButtonPanel();
+        ButtonPanel buttonPanel = new ButtonPanel();
         buttonPanel.setSizeContraint(ButtonPanel.NO_LESS_THAN);
 
-        applyButton = new JButton("Apply");
-        resetButton = new JButton("Cancel");
+        JButton applyButton = new JButton("Apply");
+        JButton resetButton = new JButton("Cancel");
 
         buttonPanel.addButton(applyButton, ButtonPanel.AFFIRMATIVE_BUTTON);
         buttonPanel.addButton(resetButton, ButtonPanel.CANCEL_BUTTON);
@@ -113,6 +103,8 @@ public class ColorMapTablePresenter extends AbstractColorMapPresenter {
         toolBar.add(new SelectAllAction());
         toolBar.add(new EqualBinsAction());
         toolBar.add(new ColorGradientAction());
+
+        toolBar.setOpaque(false);
         return toolBar;
     }
 

@@ -48,8 +48,8 @@ public class LinearColorMap extends AbstractColorMap {
         assert max >= min : "max must exceed min in LinearColorMap";
 
 
-        minimumValue = min;
-        maximumValue = max;
+        setMinimumValue(min);
+        setMaximumValue(max);
         int mapSize = icm.getMapSize();
         binSize = (getMaximumValue() - getMinimumValue()) / (mapSize - 1);
 
@@ -72,8 +72,9 @@ public class LinearColorMap extends AbstractColorMap {
         assert max >= min : "max must exceed min in LinearColorMap";
 
 
-        minimumValue = min;
-        maximumValue = max;
+        setMinimumValue(min);
+        setMaximumValue(max);
+        
         highClip = max;
         lowClip = min;
         mapRange = highClip - lowClip;
@@ -106,12 +107,12 @@ public class LinearColorMap extends AbstractColorMap {
         colors = new ColorInterval[mapSize];
 
         Color c0 = lcm.getInterval(0).getColor();
-        colors[0] = new ColorInterval(new OpenClosedInterval(minimumValue, lowClip),
+        colors[0] = new ColorInterval(new OpenClosedInterval(getMinimumValue(), lowClip),
                 new Color(c0.getRed(), c0.getGreen(),
                         c0.getBlue(), c0.getAlpha()));
 
         Color cn = lcm.getInterval(lcm.getMapSize() - 1).getColor();
-        colors[mapSize - 1] = new ColorInterval(new OpenInterval(highClip, maximumValue),
+        colors[mapSize - 1] = new ColorInterval(new OpenInterval(highClip, getMaximumValue()),
                 new Color(cn.getRed(), cn.getGreen(),
                         cn.getBlue(), cn.getAlpha()));
 
@@ -140,10 +141,10 @@ public class LinearColorMap extends AbstractColorMap {
         ColorInterval[] colors = new ColorInterval[mapSize];
         binSize = (getHighClip() - getLowClip()) / (mapSize - 1);
         colors = new ColorInterval[mapSize];
-        colors[0] = new ColorInterval(new OpenClosedInterval(minimumValue, lowClip),
+        colors[0] = new ColorInterval(new OpenClosedInterval(getMinimumValue(), lowClip),
                 new Color(sourceModel.getRed(0), sourceModel.getGreen(0),
                         sourceModel.getBlue(0), sourceModel.getAlpha(0)));
-        colors[mapSize - 1] = new ColorInterval(new OpenInterval(highClip, maximumValue),
+        colors[mapSize - 1] = new ColorInterval(new OpenInterval(highClip, getMaximumValue()),
                 new Color(sourceModel.getRed(mapSize - 1), sourceModel.getGreen(mapSize - 1),
                         sourceModel.getBlue(mapSize - 1), sourceModel.getAlpha(mapSize - 1)));
 
@@ -166,14 +167,7 @@ public class LinearColorMap extends AbstractColorMap {
 
 
 
-    public void addPropertyChangeListener(PropertyChangeListener x) {
-        changeSupport.addPropertyChangeListener(x);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener x) {
-        changeSupport.removePropertyChangeListener(x);
-    }
-
+   
 
 
     public int getMapSize() {

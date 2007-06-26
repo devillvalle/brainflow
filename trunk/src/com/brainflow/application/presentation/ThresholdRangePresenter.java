@@ -31,7 +31,7 @@ import javax.swing.*;
 public class ThresholdRangePresenter extends ImageViewPresenter {
 
 
-    private DoubleSliderForm3 form;
+    private DoubleSliderForm form;
 
     private BeanAdapter adapter;
 
@@ -39,7 +39,7 @@ public class ThresholdRangePresenter extends ImageViewPresenter {
      * Creates a new instance of ColorRangePanel
      */
     public ThresholdRangePresenter() {
-        form = new DoubleSliderForm3();
+        form = new DoubleSliderForm();
         form.getSliderLabel1().setText("High: ");
         form.getSliderLabel2().setText("Low: ");
 
@@ -68,6 +68,7 @@ public class ThresholdRangePresenter extends ImageViewPresenter {
 
     private void initBinding() {
         ImageView view = getSelectedView();
+        
         if (view == null) return;
 
         int idx = view.getModel().getSelectedIndex();
@@ -88,7 +89,7 @@ public class ThresholdRangePresenter extends ImageViewPresenter {
             Bindings.bind(form.getValueField1(), highThresh);
             Bindings.bind(form.getValueField2(), lowThresh);
 
-
+            //todo this is fucked up
             BoundedRangeAdapter lowSliderAdapter = new BoundedRangeAdapter(new PercentageConverter(lowThresh,
                     new ValueHolder(layer.getMinValue()),
                     new ValueHolder(layer.getMaxValue()), 100), 0, 0, 100);

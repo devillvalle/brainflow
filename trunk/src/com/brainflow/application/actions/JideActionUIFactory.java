@@ -3,6 +3,7 @@ package com.brainflow.application.actions;
 import com.jidesoft.action.CommandBar;
 import com.jidesoft.swing.JideButton;
 import com.jidesoft.swing.JideToggleButton;
+import com.jidesoft.swing.JideMenu;
 import org.bushe.swing.action.ActionList;
 import org.bushe.swing.action.ActionManager;
 import org.bushe.swing.action.ActionUIFactory;
@@ -30,6 +31,14 @@ public class JideActionUIFactory extends ActionUIFactory {
     protected CommandBar instantiateCommandBar() {
         CommandBar cbar = new CommandBar();
         return cbar;
+    }
+
+    protected JMenu instantiateJMenu(String menuName) {
+        return new JideMenu(menuName);
+    }
+
+    protected JMenu instantiateJMenu(Action menuAction) {
+        return new JideMenu(menuAction);
     }
 
     public CommandBar createCommandBar(ActionList actions) {

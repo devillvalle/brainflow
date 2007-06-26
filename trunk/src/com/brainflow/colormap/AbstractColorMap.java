@@ -34,9 +34,9 @@ public abstract class AbstractColorMap implements IColorMap {
     public static final String MINIMUM_VALUE_PROPERTY = "minimumValue";
 
 
-    protected double minimumValue;
+    private double minimumValue;
 
-    protected double maximumValue;
+    private double maximumValue;
 
     protected double lowClip;
 
@@ -59,6 +59,14 @@ public abstract class AbstractColorMap implements IColorMap {
 
     public double getMinimumValue() {
         return minimumValue;
+    }
+
+    protected void setMaximumValue(double _max) {
+        maximumValue = _max;
+    }
+
+     protected void setMinimumValue(double _min) {
+        minimumValue = _min;
     }
 
 

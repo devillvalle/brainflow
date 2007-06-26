@@ -58,21 +58,28 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
 
 
     public static final int BAND_SAMPLES = 256;
+
     public static final int DEFAULT_INTERCEPT = 127;
 
     private EventListenerList listeners = new EventListenerList();
 
 
     private JFreeChart chart;
+
     private ChartPanel chartPanel;
+
     private XYPlot plot;
+
     private DynamicXYDataset controlPoints;
+
     private DynamicSplineXYDataset fittedLine;
 
     private IColorMap colorMap;
+
     private ColorBand colorBand = ColorBandChart.ColorBand.RED;
 
     private boolean dragging = false;
+
     private int lockedOnItem = -1;
 
 
@@ -290,6 +297,19 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
     }
 
 
+    private void setNewXValue(int series, int item, int value) {
+        System.out.println("new x: " + value);
+        /*if (value >= colorMap.getMapSize()) {
+            value = colorMap.getMapSize() - 1;
+        } else if (value < 0) {
+            value = 0;
+        } */
+
+        fittedLine.setXValue(series, item, value);  
+        fireChangeEvent(new ChangeEvent(this));
+
+    }
+
     private void setNewYValue(int series, int item, double value) {
         if (value > 255) value = 255;
         else if (value < 0) value = 0;
@@ -343,8 +363,46 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
     }
 
 
+    private void horizontalDrag(Point p) {
+        Rectangle2D dataArea = chartPanel.getChartRenderingInfo().getPlotInfo().getDataArea();
+
+        ValueAxis hAxis = plot.getDomainAxis();
+        ValueAxis vAxis = plot.getRangeAxis();
+
+        double y = vAxis.java2DToValue(p.getY(), dataArea, plot.getRangeAxisEdge());
+        double x = hAxis.java2DToValue(p.getX(), dataArea, plot.getDomainAxisEdge());
+
+        if (lockedOnItem != -1) {
+            double hdist = controlPoints.horizontalDistance(0, x, y, lockedOnItem);
+
+            double perc = hdist / hAxis.getRange().getLength();
+
+            if (perc < .1) {
+                lockedOnItem = -1;
+            } else {
+                setNewXValue(0, lockedOnItem, (int)x);
+            }
+
+            return;
+        }
+
+        int item = controlPoints.nearestItem(0, x, y);
+
+        if (item != -1) {
+            lockedOnItem = item;
+            setNewXValue(0, item, (int)x);
+        }
+
+    }
+
+
     public void mouseDragged(MouseEvent e) {
-        dragging = true;
+
+     
+        if (e.isControlDown()) {
+            horizontalDrag(e.getPoint());
+            return;
+        }
 
         Rectangle2D dataArea = chartPanel.getChartRenderingInfo().getPlotInfo().getDataArea();
 
@@ -354,12 +412,14 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
         double y = vAxis.java2DToValue(e.getY(), dataArea, plot.getRangeAxisEdge());
         double x = hAxis.java2DToValue(e.getX(), dataArea, plot.getDomainAxisEdge());
 
+        dragging = true;
+
 
         if (lockedOnItem != -1) {
             double hdist = controlPoints.horizontalDistance(0, x, y, lockedOnItem);
 
             double perc = hdist / hAxis.getRange().getLength();
-            System.out.println("perc dist: " + perc);
+            //System.out.println("perc dist: " + perc);
             if (perc < .1) {
                 lockedOnItem = -1;
             } else {
@@ -391,13 +451,12 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
 
 
         int item = controlPoints.nearestItem(0, x, y);
-        System.out.println("nearest item: " + item);
 
         if (item != -1) {
             double hdist = controlPoints.horizontalDistance(0, x, y, item);
 
             double perc = hdist / hAxis.getRange().getLength();
-            System.out.println("perc dist: " + perc);
+            //System.out.println("perc dist: " + perc);
         }
 
     }

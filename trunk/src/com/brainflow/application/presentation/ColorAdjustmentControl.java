@@ -17,6 +17,7 @@ import com.jidesoft.plaf.office2003.Office2003CollapsiblePaneUI;
 import com.jidesoft.plaf.vsnet.VsnetCollapsiblePaneUI;
 
 import javax.swing.*;
+import java.beans.PropertyVetoException;
 
 /**
  * @author buchs
@@ -35,7 +36,8 @@ public class ColorAdjustmentControl {
     private OpacityPresenter opacityPresenter;
     
     private ColorBarPresenter colorBarPresenter;
-    //private InterpolationPresenter interpolationPresenter;
+
+    private InterpolationPresenter interpolationPresenter;
 
     /**
      * Creates a new instance of LayerControlPanel
@@ -49,7 +51,7 @@ public class ColorAdjustmentControl {
         return cpanes;
     }
 
-    private void addCollapsiblePane(AbstractPresenter presenter, String title) {
+    private void addCollapsiblePane(AbstractPresenter presenter, String title, boolean collapsed) {
         CollapsiblePane cp = new CollapsiblePane();
 
         //cp.setUI(new VsnetCollapsiblePaneUI());
@@ -58,6 +60,13 @@ public class ColorAdjustmentControl {
 
         cp.setEmphasized(true);
         cp.setOpaque(false);
+
+
+        try {
+            cp.setCollapsed(collapsed);
+        } catch(PropertyVetoException e ) {
+            // not that important ...
+        }
 
         cpanes.add(cp);
 
@@ -69,22 +78,22 @@ public class ColorAdjustmentControl {
         cpanes = new CollapsiblePanes();
 
         selectedLayerPresenter = new SelectedLayerPresenter();
-        addCollapsiblePane(selectedLayerPresenter, "Selection");
+        addCollapsiblePane(selectedLayerPresenter, "Selection", false);
 
         colorBarPresenter = new ColorBarPresenter();
-        addCollapsiblePane(colorBarPresenter, "Color Map");
+        addCollapsiblePane(colorBarPresenter, "Color Map", false);
 
         colorRangePresenter = new ColorRangePresenter();
-        addCollapsiblePane(colorRangePresenter, "Color Range");
+        addCollapsiblePane(colorRangePresenter, "Color Range", false);
 
         thresholdRangePresenter = new ThresholdRangePresenter();
-        addCollapsiblePane(thresholdRangePresenter, "Thresholds");
+        addCollapsiblePane(thresholdRangePresenter, "Thresholds", true);
 
         opacityPresenter = new OpacityPresenter();
-        addCollapsiblePane(opacityPresenter, "Opacity");
+        addCollapsiblePane(opacityPresenter, "Opacity", true);
 
-        //interpolationPresenter = new InterpolationPresenter();
-        //addCollapsiblePane(interpolationPresenter, "Resample Method");
+        interpolationPresenter = new InterpolationPresenter();
+        addCollapsiblePane(interpolationPresenter, "Resample Method", true);
 
         cpanes.addExpansion();
 

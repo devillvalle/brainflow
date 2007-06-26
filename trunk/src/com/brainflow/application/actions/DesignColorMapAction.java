@@ -3,8 +3,10 @@ package com.brainflow.application.actions;
 import com.brainflow.application.presentation.ColorBandChartPresenter;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMap;
+import com.brainflow.colormap.ColorTable;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.ImageCanvas2;
+import com.brainflow.display.Property;
 import com.jidesoft.dialog.JideOptionPane;
 import org.bushe.swing.action.BasicAction;
 
@@ -19,6 +21,29 @@ import java.awt.event.ActionEvent;
  * To change this template use File | Settings | File Templates.
  */
 public class DesignColorMapAction extends BasicAction {
+
+
+    public static void main(String[] args) {
+
+        try {
+            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceModerateLookAndFeel());
+
+
+            JFrame frame = new JFrame();
+            frame.setVisible(true);
+            frame.setSize(800, 800);
+
+
+            int ret = JOptionPane.showOptionDialog(frame, new JPanel(), "Option", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
+                    null, null, null);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
 
     public DesignColorMapAction(String string) {
         super(string);
@@ -41,7 +66,7 @@ public class DesignColorMapAction extends BasicAction {
 
                 ColorBandChartPresenter presenter = new ColorBandChartPresenter(view.getModel().getLayer(layer).
                         getImageLayerProperties().getColorMap());
-                int ret = JOptionPane.showOptionDialog(canvas, presenter.getComponent(), "Design Color Map", JideOptionPane.OK_CANCEL_OPTION, JideOptionPane.PLAIN_MESSAGE,
+                int ret = JOptionPane.showOptionDialog(JOptionPane.getFrameForComponent(presenter.getComponent()), presenter.getComponent(), "Design Color Map", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
                         null, null, null);
 
                 if (ret != JOptionPane.OK_OPTION) {

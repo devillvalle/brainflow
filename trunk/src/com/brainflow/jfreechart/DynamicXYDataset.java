@@ -84,13 +84,23 @@ public class DynamicXYDataset extends AbstractDataset implements org.jfree.data.
         int index = xlist.indexOf(xvalue);
         return index;
     }
+
+    public void setXValue(int series, int item, double value) {
+        DoubleArrayList xlist = getSeries(series, DOMAIN);
+        if (item >= 0 && item < xlist.size()) {
+            xlist.set(item, value);
+            fireDatasetChanged();
+        }
+             
+    }
     
     public void setYValue(int series, int item, double value) {
         DoubleArrayList ylist = getSeries(series, RANGE);
         if (item >= 0 && item < ylist.size()) {
             ylist.set(item, value);
+            fireDatasetChanged();
         }
-        fireDatasetChanged();
+
     }
     
     

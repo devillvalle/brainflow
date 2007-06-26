@@ -125,7 +125,6 @@ public class BasicImageSliceRenderer implements SliceRenderer {
             double transx = (minx - frame.getMinX()); //+ (-frameBounds.getMinX());
             double transy = (miny - frame.getMinY()); //+ (-frameBounds.getMinY());
 
-           
 
             Composite oldComposite = g2.getComposite();
             AlphaComposite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) layer.getOpacity());
@@ -209,32 +208,61 @@ public class BasicImageSliceRenderer implements SliceRenderer {
 
 
     private RGBAImage thresholdRGBA(RGBAImage rgba) {
-        
-        ThresholdRange trange = layer.getImageLayerProperties().getThresholdRange().getProperty();
 
-        if (Double.compare(trange.getMin(), trange.getMax()) != 0) {
-            UByteImageData2D alpha = rgba.getAlpha();
-            UByteImageData2D out = new UByteImageData2D(alpha.getImageSpace());
-            MaskedData2D mask = new MaskedData2D(rgba.getSource(), (MaskPredicate) trange);
+        ImageSlicer slicer = new ImageSlicer(layer.getMaskList().composeMask(true));
+        IImageData2D maskData = slicer.getSlice(getDisplayAnatomy(), getSlice());
 
-            ImageIterator sourceIter = alpha.iterator();
-            ImageIterator maskIter = mask.iterator();
+        UByteImageData2D alpha = rgba.getAlpha();
+        UByteImageData2D out = new UByteImageData2D(alpha.getImageSpace());
 
-            while (sourceIter.hasNext()) {
-                int index = sourceIter.index();
-                double a = sourceIter.next();
-                double b = maskIter.next();
+        ImageIterator sourceIter = alpha.iterator();
+        ImageIterator maskIter = maskData.iterator();
 
-                byte val = (byte) (a * b);
+        while (sourceIter.hasNext()) {
+            int index = sourceIter.index();
+            double a = sourceIter.next();
+            double b = maskIter.next();
 
-                out.set(index, val);
-            }
+            double val = a * b;
 
-            RGBAImage ret = new RGBAImage(rgba.getSource(), rgba.getRed(), rgba.getGreen(), rgba.getBlue(), out);
-            return ret;
-
-        } else {
-            return rgba;
+            out.set(index, (byte) val);
         }
+
+        RGBAImage ret = new RGBAImage(rgba.getSource(), rgba.getRed(), rgba.getGreen(), rgba.getBlue(), out);
+        return ret;
+
     }
 }
+
+/*private RGBAImage thresholdRGBA(RGBAImage rgba) {
+
+ThresholdRange trange = layer.getImageLayerProperties().getThresholdRange().getProperty();
+
+if (Double.compare(trange.getMin(), trange.getMax()) != 0) {
+   UByteImageData2D alpha = rgba.getAlpha();
+   UByteImageData2D out = new UByteImageData2D(alpha.getImageSpace());
+
+   MaskedData2D mask = new MaskedData2D(rgba.getSource(), (MaskPredicate) trange);
+
+   ImageIterator sourceIter = alpha.iterator();
+   ImageIterator maskIter = mask.iterator();
+
+   while (sourceIter.hasNext()) {
+       int index = sourceIter.index();
+       double a = sourceIter.next();
+       double b = maskIter.next();
+
+       double val = a * b;
+
+       out.set(index, (byte)val);
+   }
+
+   RGBAImage ret = new RGBAImage(rgba.getSource(), rgba.getRed(), rgba.getGreen(), rgba.getBlue(), out);
+   return ret;
+
+} else {
+   System.out.println("min thresh = max thresh");
+   return rgba;
+}
+}     */
+

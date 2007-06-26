@@ -87,6 +87,9 @@ public class Brainflow {
 
     private SelectedViewStatus viewStatus = new SelectedViewStatus();
 
+
+    private static final String JIDE_FACTORY = "jide_factory";
+
     protected Brainflow() {
         // Exists only to thwart instantiation.
     }
@@ -157,6 +160,10 @@ public class Brainflow {
             
         }
 
+
+
+        JFrame.setDefaultLookAndFeelDecorated(true);
+
         //splash.setImageURL(getClass().getClassLoader().getResource("resources/icons/logo.png"));
         //splash.update();
         //Graphics2D splashGraphics = (Graphics2D)splash.createGraphics();
@@ -168,6 +175,9 @@ public class Brainflow {
         
         ImageCanvasManager.getInstance().createCanvas();
 
+        JideActionUIFactory jideFactory = new JideActionUIFactory(ActionManager.getInstance());
+
+        ActionUIFactory.setInstance(Brainflow.JIDE_FACTORY, jideFactory);
 
 
 
@@ -244,17 +254,17 @@ public class Brainflow {
 
 
         ActionList viewList = ActionManager.getInstance().getActionList("view-menu");
-        brainFrame.getJMenuBar().add(ActionUIFactory.getInstance().createMenu(viewList));
+        brainFrame.getJMenuBar().add(ActionUIFactory.getInstance(JIDE_FACTORY).createMenu(viewList));
 
         ActionList navList = ActionManager.getInstance().getActionList("navigation-menu");
-        brainFrame.getJMenuBar().add(ActionUIFactory.getInstance().createMenu(navList));
+        brainFrame.getJMenuBar().add(ActionUIFactory.getInstance(JIDE_FACTORY).createMenu(navList));
 
         ActionList annotationList = ActionManager.getInstance().getActionList("annotation-menu");
-        brainFrame.getJMenuBar().add(ActionUIFactory.getInstance().createMenu(annotationList));
+        brainFrame.getJMenuBar().add(ActionUIFactory.getInstance(JIDE_FACTORY).createMenu(annotationList));
 
 
         ActionList debugList = ActionManager.getInstance().getActionList("debug-menu");
-        brainFrame.getJMenuBar().add(ActionUIFactory.getInstance().createMenu(debugList));
+        brainFrame.getJMenuBar().add(ActionUIFactory.getInstance(JIDE_FACTORY).createMenu(debugList));
 
         brainFrame.getJMenuBar().add(DockWindowManager.getInstance().getDockMenu());
 
@@ -300,16 +310,13 @@ public class Brainflow {
 
     private void initializeToolBar() {
 
-        JideActionUIFactory jideFactory = new JideActionUIFactory(ActionManager.getInstance());
-
-        ActionUIFactory.setInstance("jidefactory", jideFactory);
 
         ActionList globalList = ActionManager.getInstance().getActionList("view-menu");
         ActionAttributes attr = new ActionAttributes();
         attr.putValue(ActionManager.TOOLBAR_SHOWS_TEXT, true);
 
 
-        CommandBar mainToolbar = ((JideActionUIFactory) ActionUIFactory.getInstance("jidefactory")).createCommandBar(globalList);
+        CommandBar mainToolbar = ((JideActionUIFactory) ActionUIFactory.getInstance(JIDE_FACTORY)).createCommandBar(globalList);
 
         /// hack from jidesoft for synthetica lookandfeel
         mainToolbar.setPaintBackground(false);
@@ -334,17 +341,17 @@ public class Brainflow {
 
         mainToolbar.addSeparator();
         Action crossAction = ActionManager.getInstance().getAction("toggle-cross");
-        AbstractButton crossToggle = ((JideActionUIFactory) ActionUIFactory.getInstance("jidefactory")).
+        AbstractButton crossToggle = ((JideActionUIFactory) ActionUIFactory.getInstance(JIDE_FACTORY)).
                 createJideButton(crossAction);
         mainToolbar.add(crossToggle);
 
         Action axisLabelAction = ActionManager.getInstance().getAction("toggle-axislabel");
-        AbstractButton axisLabelToggle = ((JideActionUIFactory) ActionUIFactory.getInstance("jidefactory")).
+        AbstractButton axisLabelToggle = ((JideActionUIFactory) ActionUIFactory.getInstance(JIDE_FACTORY)).
                 createJideButton(axisLabelAction);
         mainToolbar.add(axisLabelToggle);
 
         Action colorbarAction = ActionManager.getInstance().getAction("toggle-colorbar");
-        AbstractButton colorbarToggle = ((JideActionUIFactory) ActionUIFactory.getInstance("jidefactory")).
+        AbstractButton colorbarToggle = ((JideActionUIFactory) ActionUIFactory.getInstance(JIDE_FACTORY)).
                 createJideButton(colorbarAction);
         mainToolbar.add(colorbarToggle);
 
@@ -528,7 +535,7 @@ public class Brainflow {
         //dframe.getContext().setInitMode(DockContext.STATE_AUTOHIDE);
         dframe.getContext().setInitSide(DockContext.DOCK_SIDE_EAST);
         dframe.getContext().setInitIndex(1);
-        dframe.setPreferredSize(new Dimension(400, 500));
+        dframe.setPreferredSize(new Dimension(300, 500));
         brainFrame.getDockingManager().addFrame(dframe);
 
     }

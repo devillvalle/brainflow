@@ -138,8 +138,11 @@ public class ThresholdRange extends Model implements MaskPredicate, IRange {
     }
 
     public int mask(double value) {
-        if (value <= getMin() || value >= getMax()) return 1;
-        return 0;
+        if ( (value < getMin()) || (value > getMax()) ) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
 

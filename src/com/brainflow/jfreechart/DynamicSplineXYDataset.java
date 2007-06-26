@@ -139,6 +139,13 @@ public class DynamicSplineXYDataset extends DynamicXYDataset {
         return data;
     }
 
+    public void setXValue(int series, int item, double value) {
+        dataset.setXValue(series, item, value);
+        updateSpline(series);
+        fireDatasetChanged();
+
+    }
+
 
     public void setYValue(int series, int item, double value) {
         dataset.setYValue(series, item, value);

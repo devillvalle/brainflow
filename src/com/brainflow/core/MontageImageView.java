@@ -5,8 +5,14 @@ import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.core.annotations.CrosshairAnnotation;
 import com.brainflow.core.annotations.SelectedPlotAnnotation;
+import com.brainflow.core.annotations.SliceAnnotation;
 import com.brainflow.display.ICrosshair;
+import com.jidesoft.swing.JideBoxLayout;
+import com.jgoodies.forms.layout.FormLayout;
 
+import javax.swing.*;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.util.List;
@@ -25,6 +31,8 @@ public class MontageImageView extends AbstractGriddedImageView {
 
     private MontageSliceController sliceController;
 
+    //private MontageControlPanel controlPanel;
+
     public MontageImageView(IImageDisplayModel imodel, Anatomy3D displayAnatomy) {
         super(imodel);
         this.displayAnatomy = displayAnatomy;
@@ -34,6 +42,9 @@ public class MontageImageView extends AbstractGriddedImageView {
 
         layoutGrid();
         initLocal();
+        initControlPanel();
+
+
     }
 
     public MontageImageView(IImageDisplayModel imodel, Anatomy3D displayAnatomy, int nrows, int ncols, double sliceGap) {
@@ -46,7 +57,16 @@ public class MontageImageView extends AbstractGriddedImageView {
 
         layoutGrid();
         initLocal();
+        //initControlPanel();
     }
+
+    private void initControlPanel() {
+        //controlPanel = new MontageControlPanel();
+       // add(controlPanel, BorderLayout.SOUTH);
+
+    }
+
+    
 
 
     public Anatomy3D getDisplayAnatomy() {
@@ -59,9 +79,13 @@ public class MontageImageView extends AbstractGriddedImageView {
         CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(getCrosshair().getProperty());
 
         SelectedPlotAnnotation plotAnnotation = new SelectedPlotAnnotation(this);
+
+        SliceAnnotation sliceAnnotation = new SliceAnnotation();
+        
         for (IImagePlot plot : getPlots()) {
             setAnnotation(plot, SelectedPlotAnnotation.ID, plotAnnotation);
             setAnnotation(plot, CrosshairAnnotation.ID, crosshairAnnotation);
+            setAnnotation(plot, SliceAnnotation.ID, sliceAnnotation);
 
         }
 
@@ -230,4 +254,43 @@ public class MontageImageView extends AbstractGriddedImageView {
             setSlice(new AnatomicalPoint1D(sentinel.getAnatomy(), sentinel.getX() - sliceGap));
         }
     }
+
+    /*class MontageControlPanel extends JPanel {
+
+        private JSpinner rowSpinner;
+
+        private JSpinner columnSpinner;
+
+
+
+        public MontageControlPanel() {
+            super();
+
+            SpinnerNumberModel rowModel = new SpinnerNumberModel(MontageImageView.this.getNRows(), 1, 5, 1);
+            rowSpinner = new JSpinner(rowModel);
+
+            SpinnerNumberModel columnModel = new SpinnerNumberModel(MontageImageView.this.getNCols(), 1, 5, 1);
+            columnSpinner = new JSpinner(columnModel);
+
+            JideBoxLayout layout = new JideBoxLayout(this, JideBoxLayout.X_AXIS);
+            layout.setGap(8);
+            setLayout(layout);
+
+
+
+            setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+            add(new JLabel("Rows "), JideBoxLayout.FIX);
+            add(rowSpinner, JideBoxLayout.FIX);
+
+            add(new JLabel("Cols "), JideBoxLayout.FIX);
+            add(columnSpinner, JideBoxLayout.FIX);
+
+            rowSpinner.addChangeListener(new ChangeListener() {
+                public void stateChanged(ChangeEvent e) {
+                    layoutGrid();
+                }
+            });
+
+        }
+    }  */
 }

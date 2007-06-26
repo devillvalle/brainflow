@@ -13,6 +13,7 @@ import com.brainflow.colormap.LinearColorMap;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.swing.JideSplitButton;
+import com.jidesoft.combobox.ColorComboBox;
 
 /**
  * @author buchs
@@ -20,7 +21,9 @@ import com.jidesoft.swing.JideSplitButton;
 public class ColorBarForm extends javax.swing.JPanel {
 
     private IColorMap colorMap;
+
     private ColorBarPlot colorPlot;
+
     private JideSplitButton colorMenu;
 
     private FormLayout layout;
@@ -32,12 +35,15 @@ public class ColorBarForm extends javax.swing.JPanel {
         colorMap = _colorMap;
         colorPlot = new ColorBarPlot(colorMap);
         colorMenu = new JideSplitButton("Select Map");
+
         buildGUI();
     }
 
     public ColorBarForm() {
         colorMap = new LinearColorMap(0, 255, ColorTable.SPECTRUM);
         colorPlot = new ColorBarPlot(colorMap);
+        colorMenu = new JideSplitButton("Select Map");
+
         buildGUI();
 
     }
@@ -62,6 +68,7 @@ public class ColorBarForm extends javax.swing.JPanel {
 
         add(colorPlot, cc.xywh(2, 4, 2, 1));
         add(colorMenu, cc.xy(2, 2));
+
     }
 
 

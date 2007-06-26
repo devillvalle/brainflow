@@ -142,7 +142,6 @@ public class ImageMaskList implements IMaskList {
             }
 
             return makeTreeNode(groupList, groupList.get(0), 1);
-            
 
 
         }

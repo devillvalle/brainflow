@@ -21,8 +21,10 @@ public class ImageSpace3D extends AbstractImageSpace {
 
 
     public ImageSpace3D(ICoordinateSpace cspace) {
+        // todo how can coordinate space be argument here, without sampling grid info?
         Anatomy3D anat = (Anatomy3D)cspace.getAnatomy();
         Anatomy3D check = Anatomy3D.matchAnatomy(anat.XAXIS, anat.YAXIS, anat.ZAXIS);
+
         assert check != null;
 
         setAnatomy(check);

@@ -16,7 +16,7 @@ import java.awt.image.BufferedImage;
 public class LinearColorBar extends AbstractColorBar {
 
 
-    public LinearColorBar(LinearColorMap cmap, int orientation) {
+    public LinearColorBar(IColorMap cmap, int orientation) {
         super(cmap, orientation);
         initListener(cmap);
         initBackground();

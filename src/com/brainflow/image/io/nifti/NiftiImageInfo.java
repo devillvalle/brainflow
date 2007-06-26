@@ -14,6 +14,7 @@ public class NiftiImageInfo extends ImageInfo {
     public int qfac = 1;
 
     public double[][] qform;
+
     public double[][] sform;
 
     public double[] quaternion;

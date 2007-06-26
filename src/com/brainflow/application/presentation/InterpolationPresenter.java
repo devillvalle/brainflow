@@ -3,6 +3,7 @@ package com.brainflow.application.presentation;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.AbstractLayer;
 import com.jgoodies.binding.adapter.Bindings;
+import com.jgoodies.binding.adapter.BasicComponentFactory;
 import com.jgoodies.binding.list.SelectionInList;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -19,9 +20,12 @@ import javax.swing.*;
 public class InterpolationPresenter extends ImageViewPresenter {
 
     private JComboBox choices;
+
     private JPanel form;
+
     private FormLayout layout;
-    private JLabel label1;
+    
+    private JLabel interpolationLabel;
 
     public InterpolationPresenter() {
         buildGUI();
@@ -34,8 +38,8 @@ public class InterpolationPresenter extends ImageViewPresenter {
 
         CellConstraints cc = new CellConstraints();
 
-        label1 = new JLabel("Interpolation: ");
-        form.add(label1, cc.xy(2, 2));
+        interpolationLabel = new JLabel("Interpolation: ");
+        form.add(interpolationLabel, cc.xy(2, 2));
 
         choices = new JComboBox();
 
@@ -53,7 +57,6 @@ public class InterpolationPresenter extends ImageViewPresenter {
 
 
     protected void layerSelected(AbstractLayer layer) {
-
         SelectionInList sel = layer.getImageLayerProperties().getInterpolationMethod();
         Bindings.bind(choices, sel);
 
@@ -61,19 +64,22 @@ public class InterpolationPresenter extends ImageViewPresenter {
 
 
     public void allViewsDeselected() {
-        label1.setEnabled(false);
+        interpolationLabel.setEnabled(false);
         choices.setEnabled(false);
 
     }
 
     public void viewSelected(ImageView view) {
-        label1.setEnabled(true);
+        interpolationLabel.setEnabled(true);
         choices.setEnabled(true);
         int idx = view.getSelectedIndex();
 
-        if (idx > 0) {
+        if (idx >= 0) {
             SelectionInList sel = view.getModel().
                     getLayer(idx).getImageLayerProperties().getInterpolationMethod();
+
+
+
 
             Bindings.bind(choices, sel);
         }

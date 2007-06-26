@@ -3,6 +3,7 @@ package com.brainflow.core;
 
 import com.brainflow.core.annotations.CrosshairAnnotation;
 import com.brainflow.core.annotations.SelectedPlotAnnotation;
+import com.brainflow.core.annotations.SliceAnnotation;
 import com.brainflow.display.ICrosshair;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.Anatomy3D;
@@ -109,6 +110,8 @@ public class SimpleImageView extends ImageView {
         CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(getCrosshair().getProperty());
         setAnnotation(imagePlot, CrosshairAnnotation.ID, crosshairAnnotation);
         setAnnotation(imagePlot, SelectedPlotAnnotation.ID, new SelectedPlotAnnotation(this));
+        setAnnotation(imagePlot, SelectedPlotAnnotation.ID, new SliceAnnotation());
+
     }
 
 

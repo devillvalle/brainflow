@@ -31,9 +31,12 @@ public abstract class AbstractGriddedImageView extends ImageView  {
 
     private GridLayout layout;
 
+    private JPanel gridPanel;
+
 
     public AbstractGriddedImageView(IImageDisplayModel imodel) {
         super(imodel);
+        setLayout(new BorderLayout());
       
     }
 
@@ -42,23 +45,34 @@ public abstract class AbstractGriddedImageView extends ImageView  {
         super(imodel);
         this.NRows = NRows;
         this.NCols = NCols;
+        setLayout(new BorderLayout());
     }
 
     protected void layoutGrid() {
+        plots.clear();
+        if (gridPanel == null) {
+            gridPanel = new JPanel();
+        } else {
+            gridPanel.removeAll();
+            remove(gridPanel);
+        }
+
         layout = new GridLayout(getNRows(), getNCols());
-        setLayout(layout);
+        gridPanel.setLayout(layout);
 
         int count = 0;
         for (int i=0; i<getNRows(); i++) {
             for (int j=0; j<getNCols(); j++) {
                 IImagePlot plot = makePlot(count++, i,j);
                 plots.add(plot);
-                add(plot.getComponent());
+                gridPanel.add(plot.getComponent());
             }
 
         }
 
         plotSelection.setSelection(plots.get(0));
+        add(gridPanel, BorderLayout.CENTER);
+       
 
     }
 

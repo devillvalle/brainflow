@@ -20,9 +20,15 @@ import java.util.Map;
  */
 public interface IImagePlot {
 
+    public void setPreserveAspectRatio(boolean b);
+
+    public boolean isPreserveAspectRatio();
+
     public void setName(String name);
 
     public Insets getPlotInsets();
+
+    public Insets getPlotMargins();
 
     public void setPlotInsets(Insets insets);
 
@@ -31,8 +37,6 @@ public interface IImagePlot {
     public IImageDisplayModel getModel();
   
     public void updateAxis(AxisRange range);
-
-    
 
     public void setXAxisRange(AxisRange drange);
 

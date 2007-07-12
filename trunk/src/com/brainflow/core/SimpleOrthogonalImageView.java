@@ -6,6 +6,7 @@ import com.brainflow.image.anatomy.AnatomicalPoint2D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.core.annotations.IAnnotation;
+import com.brainflow.application.toplevel.ImageViewFactory;
 import com.jgoodies.binding.list.ArrayListModel;
 import com.jgoodies.binding.list.SelectionInList;
 

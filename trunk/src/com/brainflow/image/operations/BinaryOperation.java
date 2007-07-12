@@ -15,17 +15,35 @@ public abstract class BinaryOperation {
 
     public abstract int compute(int left, int right);
 
+    protected BinaryOperand operand = BinaryOperand.AND;
+
 
     private static class _AND_ extends BinaryOperation {
+
+        public _AND_() {
+            operand = BinaryOperand.AND;
+        }
+
         public final int compute(int left, int right) {
             return left & right;
         }
     }
 
     private static class _OR_ extends BinaryOperation {
+
+        public _OR_() {
+            operand = BinaryOperand.OR;
+        }
+
         public final int compute(int left, int right) {
             return left | right;
         }
+    }
+
+
+    public BinaryOperand getOperand() {
+        return operand;
+
     }
 
 

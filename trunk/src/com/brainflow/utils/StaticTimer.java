@@ -13,6 +13,7 @@ package com.brainflow.utils;
 public class StaticTimer {
     
     static long curTime;
+    
     /** Creates a new instance of StaticTimer */
     private StaticTimer() {
     }

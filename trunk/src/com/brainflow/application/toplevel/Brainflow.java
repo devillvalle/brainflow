@@ -10,7 +10,12 @@ import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.core.*;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.data.IImageData;
+import com.brainflow.utils.Range;
+import com.brainflow.utils.StaticTimer;
 import com.jgoodies.binding.beans.PropertyAdapter;
+import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
+import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
+import com.jgoodies.looks.windows.WindowsLookAndFeel;
 import com.jidesoft.action.CommandBar;
 import com.jidesoft.action.CommandMenuBar;
 import com.jidesoft.docking.DefaultDockingManager;
@@ -24,9 +29,10 @@ import com.jidesoft.status.StatusBar;
 import com.jidesoft.swing.JideBoxLayout;
 import com.jidesoft.swing.JideMenu;
 import com.jidesoft.swing.JideTabbedPane;
-import de.javasoft.plaf.synthetica.SyntheticaLookAndFeel;
-import de.javasoft.plaf.synthetica.SyntheticaSkyMetallicLookAndFeel;
-import de.javasoft.plaf.synthetica.SyntheticaStandardLookAndFeel;
+import com.pietschy.command.group.CommandGroup;
+import com.pietschy.command.CommandContainer;
+import com.pietschy.command.GuiCommands;
+import com.pietschy.command.configuration.ParseException;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.VFS;
@@ -34,10 +40,6 @@ import org.bushe.swing.action.*;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 import org.xml.sax.SAXException;
-import org.jvnet.substance.skin.SubstanceRavenGraphiteLookAndFeel;
-import org.jvnet.substance.skin.SubstanceEmeraldDuskLookAndFeel;
-import org.jvnet.substance.skin.SubstanceSaharaLookAndFeel;
-import org.jvnet.substance.skin.SubstanceOfficeSilver2007LookAndFeel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,6 +51,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import a03.swing.plaf.A03LookAndFeel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -77,7 +81,7 @@ public class Brainflow {
 
     private ImageFileExplorer loadingDock = null;
 
-    // STATUS BAR
+
 
     private StatusBar statusBar = new StatusBar();
 
@@ -86,6 +90,8 @@ public class Brainflow {
     private CrosshairCoordinates crosshairCoordinates = new CrosshairCoordinates();
 
     private SelectedViewStatus viewStatus = new SelectedViewStatus();
+
+    private CommandContainer commandContainer;
 
 
     private static final String JIDE_FACTORY = "jide_factory";
@@ -104,7 +110,10 @@ public class Brainflow {
 
         try {
             //SyntheticaLookAndFeel lf = new SyntheticaStandardLookAndFeel();
-            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceModerateLookAndFeel());
+
+            UIManager.setLookAndFeel(new PlasticXPLookAndFeel());
+            
+            //UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceAutumnLookAndFeel());
             //UIManager.setLookAndFeel(lf);
             //LookAndFeelFactory.installDefaultLookAndFeel();
             LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
@@ -139,6 +148,8 @@ public class Brainflow {
 
 
 
+
+
     private void splashMessage(String message) {
         Graphics2D g = SplashScreen.getSplashScreen().createGraphics();
         //g.setComposite(AlphaComposite.Clear);
@@ -164,13 +175,6 @@ public class Brainflow {
 
         JFrame.setDefaultLookAndFeelDecorated(true);
 
-        //splash.setImageURL(getClass().getClassLoader().getResource("resources/icons/logo.png"));
-        //splash.update();
-        //Graphics2D splashGraphics = (Graphics2D)splash.createGraphics();
-
-
-        //splashMessage("Lauching Brainflow ...");
-        
         brainFrame = new BrainFrame();
         
         ImageCanvasManager.getInstance().createCanvas();
@@ -179,18 +183,70 @@ public class Brainflow {
 
         ActionUIFactory.setInstance(Brainflow.JIDE_FACTORY, jideFactory);
 
+        StaticTimer.start();
+        loadCommands();
+        bindContainer();
+        StaticTimer.end("loading and binding took: ");
 
-
-        //splashMessage("Initializing IO manager ...");
+        StaticTimer.start();
         initImageIO();
-        //splashMessage("Initializing actions ...");
+        StaticTimer.end("init image io took: ");
+
+
+        StaticTimer.start();
         initializeActions();
+        StaticTimer.end("init actions took: ");
+
+        StaticTimer.start();
         intializeKeyActions();
+        StaticTimer.end("init key actions took: ");
+
+        StaticTimer.start();
         initializeMenu();
+        StaticTimer.end("init menu took: ");
+
+        StaticTimer.start();
         initializeStatusBar();
+        StaticTimer.end("init status took: ");
+
+        StaticTimer.start();
         initializeToolBar();
+        StaticTimer.end("init toolbar took: ");
+
+        StaticTimer.start();
         initializeWorkspace();
+        StaticTimer.end("init workspace took: ");
+
+        StaticTimer.start();
         initializeResources();
+        StaticTimer.end("init resources took: ");
+
+
+    }
+
+
+    private void loadCommands() {
+        try {
+            GuiCommands.load("resources/commands/ImageViewCommands");
+        } catch(ParseException e) {
+            log.severe(e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    public CommandContainer getCommandContainer() {
+        return commandContainer;
+    }
+
+    private void bindContainer() {
+        commandContainer = new CommandContainer();
+        commandContainer.bind(brainFrame);
+
+
+        CommandGroup imageViewGroup = new CommandGroup("image-view-menu");
+
+
+        imageViewGroup.bind(brainFrame);
 
 
     }
@@ -341,18 +397,21 @@ public class Brainflow {
 
         mainToolbar.addSeparator();
         Action crossAction = ActionManager.getInstance().getAction("toggle-cross");
+
         AbstractButton crossToggle = ((JideActionUIFactory) ActionUIFactory.getInstance(JIDE_FACTORY)).
                 createJideButton(crossAction);
         mainToolbar.add(crossToggle);
 
         Action axisLabelAction = ActionManager.getInstance().getAction("toggle-axislabel");
+
         AbstractButton axisLabelToggle = ((JideActionUIFactory) ActionUIFactory.getInstance(JIDE_FACTORY)).
                 createJideButton(axisLabelAction);
         mainToolbar.add(axisLabelToggle);
 
         Action colorbarAction = ActionManager.getInstance().getAction("toggle-colorbar");
         AbstractButton colorbarToggle = ((JideActionUIFactory) ActionUIFactory.getInstance(JIDE_FACTORY)).
-                createJideButton(colorbarAction);
+                createButton(colorbarAction);
+
         mainToolbar.add(colorbarToggle);
 
         brainFrame.getContentPane().add(mainToolbar, BorderLayout.NORTH);
@@ -514,12 +573,7 @@ public class Brainflow {
 
 
         ColorAdjustmentControl colorAdjustmentControl = new ColorAdjustmentControl();
-        //colorAdjustmentControl.getComponent().setPreferredSize(new Dimension(250,500));
         CoordinateControls coordinateControls = new CoordinateControls();
-        //coordinateControls.getComponent().setPreferredSize(new Dimension(250,500));
-
-        //Box layerAdjustmentPanel = new Box(BoxLayout.Y_AXIS);
-        //layerAdjustmentPanel.add(new ImageDisplayTableView().getComponent());
 
         ColorMapTablePresenter tablePresenter = new ColorMapTablePresenter();
 
@@ -532,7 +586,7 @@ public class Brainflow {
 
 
         dframe.getContentPane().add(tabbedPane);
-        //dframe.getContext().setInitMode(DockContext.STATE_AUTOHIDE);
+        dframe.getContext().setInitMode(DockContext.STATE_AUTOHIDE);
         dframe.getContext().setInitSide(DockContext.DOCK_SIDE_EAST);
         dframe.getContext().setInitIndex(1);
         dframe.setPreferredSize(new Dimension(300, 500));
@@ -623,7 +677,9 @@ public class Brainflow {
                     addLayerWithFadeIn(limg, view);
                 } else {
                     IImageDisplayModel dset = view.getModel();
-                    ImageLayerProperties params = new ImageLayerProperties();
+
+                    //todo data range should be a property of ImageLayerProperties, not IColorMap
+                    ImageLayerProperties params = new ImageLayerProperties(new Range(data.getMinValue(), data.getMaxValue()));
                     params.getColorMap().setProperty(new LinearColorMap(data.getMinValue(), data.getMaxValue(), ResourceManager.getInstance().getDefaultColorMap()));
 
                     ImageLayer layer = new ImageLayer3D(limg, params);

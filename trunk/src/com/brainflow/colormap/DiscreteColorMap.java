@@ -64,6 +64,25 @@ public class DiscreteColorMap extends AbstractColorMap {
         equalizeIntervals(0, getMapSize() - 1);
     }
 
+    public DiscreteColorMap(List<Color> clrs, List<Double> boundaries) {
+        if (clrs.size() < 1) {
+            throw new IllegalArgumentException("Supplied Color List must have length >= 1");
+        }
+
+        intervals = new ArrayList<ColorInterval>(boundaries.size() -1);
+        segments = new SegmentArray(boundaries.size());
+        segments.setLowerBound(0, boundaries.get(0));
+
+        for (int i=0; i< (boundaries.size()-1); i++) {
+            segments.setUpperBound(i, boundaries.get(i+1));
+            Color clr = clrs.get(i % clrs.size());
+            intervals.add(new ColorInterval(segments.getInterval(i), clr));
+        }
+
+   
+
+    }
+
     public DiscreteColorMap(IColorMap cmap) {
         segments = new SegmentArray(cmap.getMapSize());
         segments.setLowerBound(0, cmap.getMinimumValue());

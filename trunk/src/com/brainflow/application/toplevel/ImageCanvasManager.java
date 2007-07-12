@@ -13,6 +13,7 @@ import com.brainflow.application.YokeHandler;
 import com.brainflow.core.*;
 import com.brainflow.display.Viewport3D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.modes.ImageViewInteractor;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 import org.bushe.swing.action.BasicAction;
@@ -48,7 +49,7 @@ public class ImageCanvasManager  {
 
     private CanvasPropertyChangeListener canvasListener;
 
-
+    private ImageViewMouseMotionListener cursorListener;
 
 
 
@@ -72,14 +73,13 @@ public class ImageCanvasManager  {
 
     private void listenToCanvas(ImageCanvas2 canvas) {
         if (canvasListener == null) canvasListener = new CanvasPropertyChangeListener();
-
-
         if (contextMenuHandler == null) contextMenuHandler = new ContextMenuHandler();
+        if (cursorListener == null) cursorListener = new ImageViewMouseMotionListener();
 
         canvas.getImageCanvasModel().addPropertyChangeListener(canvasListener);
 
         canvas.addMouseListener(contextMenuHandler);
-
+        canvas.addInteractor(cursorListener);
 
     }
 
@@ -264,13 +264,13 @@ public class ImageCanvasManager  {
     }
 
 
-    class ImageViewMouseMotionListener extends MouseMotionAdapter {
+    class ImageViewMouseMotionListener extends ImageViewInteractor {
 
 
         public void mouseMoved(MouseEvent e) {
             Point p = e.getPoint();
             ImageView iview = selectedCanvas.whichView((Component) e.getSource(), p);
-
+            System.out.println("mouse view is : " + iview);
             if (iview != selectedCanvas.getSelectedView()) {
                 return;
             }

@@ -64,9 +64,10 @@ public class ImagePane extends JComponent {
 
     public Dimension getPreferredSize() {
         Insets insets = this.getInsets();
-        Insets plotInsets = plot.getPlotInsets();
-        double w = plot.getXAxisRange().getInterval() + plotInsets.left + plotInsets.right + insets.left + insets.right;
-        double h = plot.getYAxisRange().getInterval() + plotInsets.top + plotInsets.bottom + insets.left + insets.right;
+        Insets plotMargins = plot.getPlotMargins();
+        //Insets plotSlack = plot.getP
+        double w = plot.getXAxisRange().getInterval() + plotMargins.left + plotMargins.right + insets.left + insets.right;
+        double h = plot.getYAxisRange().getInterval() + plotMargins.top + plotMargins.bottom + insets.left + insets.right;
         return new Dimension((int) w, (int) h);
     }
 
@@ -80,18 +81,18 @@ public class ImagePane extends JComponent {
 
     public Point translateValueToScreen(Point2D value) {
         Insets insets = getInsets();
-        Insets plotInsets = plot.getPlotInsets();
-        int x = (int) (value.getX() * plot.getScaleX() + insets.left + plotInsets.left);
-        int y = (int) (value.getY() * plot.getScaleY() + insets.top + plotInsets.top);
+        Insets plotMargins = plot.getPlotMargins();
+        int x = (int) (value.getX() * plot.getScaleX() + insets.left + plotMargins.left);
+        int y = (int) (value.getY() * plot.getScaleY() + insets.top + plotMargins.top);
         return new Point(x, y);
     }
 
 
     public AnatomicalPoint2D translateScreenToValue(Point screenPoint) {
         Insets insets = getInsets();
-        Insets plotInsets = plot.getPlotInsets();
-        double x = (screenPoint.getX() - insets.left - plotInsets.left) / plot.getScaleX();
-        double y = (screenPoint.getY() - insets.top - plotInsets.top) / plot.getScaleY();
+        Insets plotMargins = plot.getPlotMargins();
+        double x = (screenPoint.getX() - insets.left - plotMargins.left) / plot.getScaleX();
+        double y = (screenPoint.getY() - insets.top - plotMargins.top) / plot.getScaleY();
         return new AnatomicalPoint2D(Anatomy2D.matchAnatomy(
                 plot.getXAxisRange().getAnatomicalAxis(),
                 plot.getYAxisRange().getAnatomicalAxis()),

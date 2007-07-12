@@ -41,8 +41,11 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
 
     private Insets plotInsets = new Insets(18, 18, 18, 18);
 
+    private Insets plotSlack = new Insets(0,0,0,0);
+
     private Rectangle plotArea = new Rectangle(300,300);
 
+    private boolean preserveAspectRatio = true;
 
     private String name;
 
@@ -83,6 +86,14 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         };
     }
 
+    public boolean isPreserveAspectRatio() {
+        return preserveAspectRatio;
+    }
+
+    public void setPreserveAspectRatio(boolean b) {
+        preserveAspectRatio = b;
+        repaint();
+    }
 
     public void setSlice(AnatomicalPoint1D slice) {
         if (getSlice() == null || !getSlice().equals(slice)) {
@@ -106,6 +117,18 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         return this;
     }
 
+    private Insets getPlotSlack() {
+        return plotSlack;
+    }
+
+    public Insets getPlotMargins() {
+        Insets plotSlack = getPlotSlack();
+        Insets plotInsets = getPlotInsets();
+        Insets insets = new Insets(plotInsets.top + plotSlack.top, plotInsets.left + plotSlack.left,
+                plotInsets.bottom + plotSlack.bottom, plotInsets.right + plotSlack.right );
+
+        return insets;
+    }
 
     public void setImageProducer(IImageProducer producer) {
         this.producer = producer;
@@ -168,13 +191,42 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         );
 
 
-        int drawWidth = (int) available.getWidth();
-        int drawHeight = (int) available.getHeight();
+        int maxDrawWidth = (int) available.getWidth();
+        int maxDrawHeight = (int) available.getHeight();
 
+        int drawWidth = maxDrawWidth;
+        int drawHeight = maxDrawHeight;
+
+        Anatomy3D anatomy = getDisplayAnatomy();
+
+        double xspace = getModel().getImageSpace().getImageAxis(anatomy.XAXIS, true).getRange().getInterval();
+        double yspace = getModel().getImageSpace().getImageAxis(anatomy.YAXIS, true).getRange().getInterval();
+
+        double sx = maxDrawWidth/xspace;
+        double sy = maxDrawHeight/yspace;
+
+        if (isPreserveAspectRatio()) {
+
+            double sxy = Math.min(sx,sy);
+
+            drawWidth = (int)(sxy * xspace);
+            drawHeight = (int)(sxy * yspace);
+
+            plotSlack.left = (int)((maxDrawWidth - drawWidth)/2.0);
+            plotSlack.right = (int)Math.round((maxDrawWidth - drawWidth)/2.0);
+            plotSlack.top = (int)((maxDrawHeight - drawHeight)/2.0);
+            plotSlack.bottom = (int)Math.round((maxDrawHeight - drawHeight)/2.0);
+
+        } else {
+            plotSlack.left = 0;
+            plotSlack.right=0;
+            plotSlack.top =0;
+            plotSlack.bottom=0;
+        }
 
 
         plotArea = new Rectangle(
-                insets.left + plotInsets.left, insets.top + plotInsets.top, drawWidth, drawHeight
+                insets.left + plotInsets.left + plotSlack.left, insets.top + plotInsets.top + plotSlack.top, drawWidth, drawHeight
         );
 
         return plotArea;
@@ -237,18 +289,20 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         }
 
         Insets insets = getInsets();
-        Insets plotInsets = getPlotInsets();
-        int x = (int) (pt.getX() * getScaleX() + plotInsets.left + insets.left);
-        int y = (int) (pt.getY() * getScaleY() + plotInsets.top + insets.top);
+        Insets plotMargins = getPlotMargins();
+
+        int x = (int) (pt.getX() * getScaleX() + plotMargins.left + insets.left);
+        int y = (int) (pt.getY() * getScaleY() + plotMargins.top + insets.top);
         return new Point(x, y);
     }
 
 
     public AnatomicalPoint2D translateScreenToAnat(Point screenPoint) {
         Insets insets = getInsets();
-        Insets plotInsets = getPlotInsets();
-        double x = (screenPoint.getX() - insets.left - plotInsets.left) / getScaleX();
-        double y = (screenPoint.getY() - insets.top - plotInsets.top) / getScaleY();
+        Insets plotMargins = getPlotMargins();
+
+        double x = (screenPoint.getX() - insets.left - plotMargins.left) / getScaleX();
+        double y = (screenPoint.getY() - insets.top - plotMargins.top) / getScaleY();
         return new AnatomicalPoint2D(Anatomy2D.matchAnatomy(
                 getXAxisRange().getAnatomicalAxis(),
                 getYAxisRange().getAnatomicalAxis()),

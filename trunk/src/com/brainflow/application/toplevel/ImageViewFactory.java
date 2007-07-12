@@ -1,10 +1,19 @@
-package com.brainflow.core;
+package com.brainflow.application.toplevel;
 
 import com.brainflow.application.toplevel.ImageCanvasManager;
+import com.brainflow.application.actions.SetPreserveAspectCommand;
 import com.brainflow.core.annotations.CrosshairAnnotation;
+import com.brainflow.core.*;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.utils.StringGenerator;
+import com.brainflow.gui.PopupAdapter;
+import com.pietschy.command.ActionCommand;
+import com.pietschy.command.CommandContainer;
+import com.pietschy.command.group.CommandGroup;
+
+import javax.swing.*;
+import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,6 +25,8 @@ import com.brainflow.utils.StringGenerator;
 
 
 public class ImageViewFactory {
+
+    private static final Logger log = Logger.getLogger(ImageViewFactory.class.getCanonicalName());
 
 
     public static IImagePlot createAxialPlot(IImageDisplayModel displayModel) {
@@ -36,7 +47,7 @@ public class ImageViewFactory {
 
         AxisRange xrange = displayModel.getImageAxis(displayAnatomy.XAXIS).getRange();
         AxisRange yrange = displayModel.getImageAxis(displayAnatomy.YAXIS).getRange();
-       
+
         return new ComponentImagePlot(displayModel, displayAnatomy, xrange, yrange);
 
     }
@@ -64,7 +75,6 @@ public class ImageViewFactory {
         view.setName("[" + view.getId() + "] " + view.getModel().getName());
 
 
-
         return view;
     }
 
@@ -79,7 +89,6 @@ public class ImageViewFactory {
         view.setName("[" + view.getId() + "] " + view.getModel().getName());
 
 
-
         return view;
     }
 
@@ -89,8 +98,22 @@ public class ImageViewFactory {
         String id = ImageCanvasManager.getInstance().register(view);
         view.setId(id);
 
-        //ITitledBorder tborder = border;
-        //tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
+
+        CommandContainer viewContainer = new CommandContainer();
+        viewContainer.setParentCommandContainer(Brainflow.getInstance().getCommandContainer());
+        viewContainer.bind(view);
+
+        ActionCommand aspectCommand = new SetPreserveAspectCommand(view);
+        aspectCommand.bind(view);
+
+
+
+       
+        CommandGroup viewGroup = new CommandGroup("image-view-menu");
+        
+        viewGroup.bind(view);
+        
+        PopupAdapter adapter = new PopupAdapter(view, viewGroup.createPopupMenu());
 
 
         return view;
@@ -104,7 +127,6 @@ public class ImageViewFactory {
         view.setName("[" + view.getId() + "] " + view.getModel().getName());
 
 
-
         return view;
     }
 
@@ -113,7 +135,6 @@ public class ImageViewFactory {
         String id = ImageCanvasManager.getInstance().register(view);
         view.setId(id);
         view.setName("[" + view.getId() + "] " + view.getModel().getName());
-
 
 
         return view;
@@ -139,7 +160,6 @@ public class ImageViewFactory {
         view.setId(id);
 
         view.setName("[" + view.getId() + "] " + view.getModel().getName());
-
 
         //ITitledBorder tborder = border;
         //tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
@@ -187,7 +207,6 @@ public class ImageViewFactory {
         view.setId(id);
 
         view.setName("[" + view.getId() + "] " + view.getModel().getName());
-
 
         //ITitledBorder tborder = border;
         //tborder.setTitleGenerator(new ImageViewTitleGenerator(view));

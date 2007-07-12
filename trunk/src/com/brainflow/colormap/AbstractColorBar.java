@@ -37,6 +37,8 @@ public abstract class AbstractColorBar extends JPanel {
     protected AbstractColorBar(IColorMap _colorMap, int orientation) {
         this.orientation = orientation;
         colorMap = _colorMap;
+        initListener(colorMap);
+        initBackground();
     }
 
     public int getOrientation() {

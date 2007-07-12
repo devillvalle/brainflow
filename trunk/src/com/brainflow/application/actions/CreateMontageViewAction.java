@@ -3,11 +3,10 @@ package com.brainflow.application.actions;
 import org.bushe.swing.action.BasicAction;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.IImageDisplayModel;
-import com.brainflow.core.ImageViewFactory;
+import com.brainflow.application.toplevel.ImageViewFactory;
 import com.brainflow.core.ImageCanvas2;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.ImageAxis;
-import com.brainflow.image.axis.CoordinateAxis;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.CellConstraints;
 

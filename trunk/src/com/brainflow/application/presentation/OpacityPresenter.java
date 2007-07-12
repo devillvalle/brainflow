@@ -69,24 +69,28 @@ public class OpacityPresenter extends ImageViewPresenter {
         ImageView view = getSelectedView();
         if (view == null) return;
 
-
-
         int idx = view.getModel().getSelectedIndex();
         AbstractLayer layer = view.getModel().getLayer(idx);
         Property<Opacity> opacity = layer.getImageLayerProperties().getOpacity();
 
+        if (adapter == null) {
 
-        BoundedRangeAdapter opacitySliderAdapter = new BoundedRangeAdapter(
-                new PercentageConverter(opacity.getModel(Opacity.OPACITY_PROPERTY),
+            adapter = new BeanAdapter(opacity.getProperty(), true);
+
+            BoundedRangeAdapter opacitySliderAdapter = new BoundedRangeAdapter(
+                new PercentageConverter(adapter.getValueModel(Opacity.OPACITY_PROPERTY),
                         new ValueHolder(0),
                         new ValueHolder(1), 100), 0, 0, 100);
 
 
-        form.getOpacitySlider().setModel(opacitySliderAdapter);
+            form.getOpacitySlider().setModel(opacitySliderAdapter);
 
-        Bindings.bind(form.getValueLabel(),
-                ConverterFactory.createStringConverter(opacity.getModel(Opacity.OPACITY_PROPERTY),
+            Bindings.bind(form.getValueLabel(),
+                ConverterFactory.createStringConverter(adapter.getValueModel(Opacity.OPACITY_PROPERTY),
                         NumberFormat.getInstance()));
+        } else {
+            adapter.setBean(opacity.getProperty());
+        }
     }
 
 

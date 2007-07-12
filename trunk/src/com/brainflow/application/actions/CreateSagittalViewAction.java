@@ -1,8 +1,7 @@
 package com.brainflow.application.actions;
 
-import com.brainflow.core.ImageCanvas;
 import com.brainflow.core.ImageView;
-import com.brainflow.core.ImageViewFactory;
+import com.brainflow.application.toplevel.ImageViewFactory;
 import com.brainflow.core.ImageCanvas2;
 import org.bushe.swing.action.BasicAction;
 

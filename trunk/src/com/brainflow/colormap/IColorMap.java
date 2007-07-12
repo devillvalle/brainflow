@@ -3,6 +3,7 @@ package com.brainflow.colormap;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.data.RGBAImage;
 import com.brainflow.image.data.IImageData2D;
+import com.brainflow.utils.IRange;
 
 import java.awt.*;
 import java.beans.PropertyChangeListener;
@@ -24,6 +25,8 @@ public interface IColorMap {
     public ColorInterval getInterval(int index);
 
     public Color getColor(double value);
+
+    
 
     public double getMaximumValue();
 

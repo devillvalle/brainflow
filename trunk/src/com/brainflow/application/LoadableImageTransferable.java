@@ -14,13 +14,15 @@ import java.io.IOException;
  */
 public class LoadableImageTransferable implements Transferable {
 
-    String localObject = DataFlavor.javaJVMLocalObjectMimeType +
+    private String localObject = DataFlavor.javaJVMLocalObjectMimeType +
                                     ";class=com.brainflow.application.ILoadableImage";
 
 
-    DataFlavor loadableImageFlavor = null;
-    DataFlavor[] flavors = new DataFlavor[1];
-    ILoadableImage[] limg;
+    private DataFlavor loadableImageFlavor = null;
+
+    private DataFlavor[] flavors = new DataFlavor[1];
+
+    private ILoadableImage[] limg;
 
     public LoadableImageTransferable(ILoadableImage[] _limg) {
         try {

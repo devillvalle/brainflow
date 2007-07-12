@@ -54,8 +54,8 @@ public class ImageLayerProperties implements Serializable {
     private SelectionInList interpolationMethod;
     
 
-    public ImageLayerProperties() {
-        IColorMap imap = new LinearColorMap(0, 255, ColorTable.GRAYSCALE);
+    public ImageLayerProperties(IRange _dataRange) {
+        IColorMap imap = new LinearColorMap(_dataRange.getMin(), _dataRange.getMax(), ColorTable.GRAYSCALE);
         init(imap);
     }
 
@@ -79,7 +79,8 @@ public class ImageLayerProperties implements Serializable {
         imageOpList = new Property<ImageOpListProperty>(new ImageOpListProperty());
         opacity = new Property<Opacity>(new Opacity(1f));
         interpolationMethod = new SelectionInList(InterpolationHint.values(), resampleInterpolation.getModel(InterpolationMethod.INTERPOLATION_PROPERTY));
-        threshold = new Property<ThresholdRange>(new ThresholdRange(0,0));
+        threshold = new Property<ThresholdRange>(new ThresholdRange(map.getMinimumValue(),
+                map.getMinimumValue(), new Range(map.getMinimumValue(), map.getMaximumValue())));
 
 
 

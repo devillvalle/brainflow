@@ -22,6 +22,7 @@ public class MaskedData3D implements IMaskedData3D {
 
     private MaskPredicate predicate;
 
+    
     public MaskedData3D(IImageData3D src, MaskPredicate predicate) {
         source = src;
         this.predicate = predicate;
@@ -114,11 +115,11 @@ public class MaskedData3D implements IMaskedData3D {
     }
 
     public double getMaxValue() {
-        return source.getMaxValue();
+        return 1;
     }
 
     public double getMinValue() {
-        return source.getMinValue();
+        return 0;
     }
 
     public int getNumElements() {

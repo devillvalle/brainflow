@@ -444,9 +444,9 @@ public class ImageViewportPresenter extends ImageViewPresenter {
                 double newx = xold.doubleValue() + (next.getX() - lastPoint.getX());
                 double newy = yold.doubleValue() + (next.getY() - lastPoint.getY());
                 if (newx < plot.getXAxisRange().getMinimum()) {
-                    return;
+                    newx = plot.getXAxisRange().getMinimum();
                 } else if (newy < plot.getYAxisRange().getMinimum()) {
-                    return;
+                    newy = plot.getYAxisRange().getMinimum();
                 }
 
 

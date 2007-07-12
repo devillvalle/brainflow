@@ -14,9 +14,14 @@ import java.text.NumberFormat;
 
 public class Range implements IRange {
 
-    double min;
-    double max;
+    private double min;
+    private double max;
 
+
+    public Range(IRange range) {
+        min = range.getMin();
+        max = range.getMax();
+    }
 
     public Range(double _min, double _max) {
         //assert _max >= _min;
@@ -34,6 +39,16 @@ public class Range implements IRange {
 
     public final double getMax() {
         return max;
+    }
+
+    public void setRange(double _min, double _max) {
+        if (_min > _max) {
+            throw new IllegalArgumentException("min cannot exceed max " + _min + " > " + _max);
+        }
+
+        this.min = _min;
+        this.max = _max;
+
     }
 
     public void setMax(double max) {

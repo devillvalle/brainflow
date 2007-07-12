@@ -2,9 +2,8 @@ package com.brainflow.application.actions;
 
 import org.bushe.swing.action.BasicAction;
 import com.brainflow.core.*;
-import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.application.toplevel.ImageViewFactory;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**

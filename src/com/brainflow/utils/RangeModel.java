@@ -28,6 +28,10 @@ public class RangeModel extends Model implements IRange {
         return range.contains(val);
     }
 
+    public void setRange(double min, double max) {
+        range.setRange(min, max);
+    }
+
     public void setMin(double min) {
         double old = range.getMin();
         range.setMin(min);

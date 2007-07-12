@@ -3,6 +3,8 @@ package com.brainflow.application.presentation;
 import com.brainflow.application.actions.ActionContext;
 import com.brainflow.application.actions.LayerVisibilityAction;
 import com.brainflow.application.services.ImageDisplayModelEvent;
+import com.brainflow.application.toplevel.ImageCanvasManager;
+import com.brainflow.application.dnd.AbstractLayerTransferable;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.AbstractLayer;
@@ -18,8 +20,8 @@ import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 
 import javax.swing.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
+import java.awt.datatransfer.Transferable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,8 +45,14 @@ public class CanvasBar extends ImageViewPresenter {
 
     private JideSplitButton emptyButton = new JideSplitButton("Tabula Rasa");
 
+    private TransferHandler transferHandler = new CanvasBarTransferHandler();
+
+    private MouseAdapter dragListener = new DragListener();
+
     public CanvasBar() {
         super();
+
+
         EventBus.subscribeStrongly(ImageDisplayModelEvent.class, new EventSubscriber() {
 
             public void onEvent(Object evt) {
@@ -82,6 +90,12 @@ public class CanvasBar extends ImageViewPresenter {
 
     private CommandBar createCanvasBar() {
         commandBar = new CommandBar();
+        //commandBar.setDr
+        commandBar.setTransferHandler(transferHandler);
+        //ImageCanvasManager.getInstance().getSelectedCanvas().setTransferHandler(transferHandler);
+
+
+        commandBar.addMouseListener(dragListener);
 
         //
         commandBar.setPaintBackground(false);
@@ -118,7 +132,12 @@ public class CanvasBar extends ImageViewPresenter {
         for (int i = 0; i < getSelectedView().getModel().getNumLayers(); i++) {
             AbstractLayer layer = getSelectedView().getModel().getLayer(i);
             JideToggleSplitButton button = new JideToggleSplitButton("" + (i + 1) + ": " + layer);
+
             button.addItemListener(listener);
+            button.addMouseListener(dragListener);
+            button.setTransferHandler(transferHandler);
+
+
             BasicAction visAction = new LayerVisibilityAction(layer.getImageLayerProperties());
 
             visAction.setContext(map);
@@ -143,7 +162,6 @@ public class CanvasBar extends ImageViewPresenter {
         layerButtonList = buttonList();
 
 
-
         for (AbstractButton button : layerButtonList) {
             commandBar.add(button);
 
@@ -153,8 +171,6 @@ public class CanvasBar extends ImageViewPresenter {
             int selIdx = getSelectedView().getSelectedIndex();
             buttonGroup.setSelected(layerButtonList.get(selIdx).getModel(), true);
         }
-
-
 
 
         commandBar.revalidate();
@@ -187,4 +203,57 @@ public class CanvasBar extends ImageViewPresenter {
 
         }
     }
+
+
+    class CanvasBarTransferHandler extends TransferHandler {
+
+        public void exportAsDrag(JComponent comp, InputEvent e, int action) {
+            int index = layerButtonList.indexOf(comp);
+            ImageView view = getSelectedView();
+            if (index >= 0) {
+                AbstractLayer layer = view.getModel().getLayer(index);
+                System.out.println("trying to drag layer : " + layer);
+                super.exportAsDrag(comp, e, action);
+            }
+        }
+
+        public boolean canImport(TransferSupport support) {
+            System.out.println("canImport");
+            return true;
+        }
+
+        public boolean importData(TransferSupport support) {
+            System.out.println("importData");
+            return super.importData(support);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public int getSourceActions(JComponent c) {
+            return MOVE;
+        }
+
+        protected Transferable createTransferable(JComponent c) {
+            int index = layerButtonList.indexOf(c);
+            ImageView view = getSelectedView();
+            if (index >= 0) {
+                AbstractLayer layer = view.getModel().getLayer(index);
+                return new AbstractLayerTransferable(layer);
+            }
+            
+            return null;
+
+
+        }
+    }
+
+    class DragListener extends MouseAdapter {
+        public void mousePressed(MouseEvent e) {
+            JComponent c = (JComponent) e.getSource();
+            TransferHandler th = c.getTransferHandler();
+            th.exportAsDrag(c, e, TransferHandler.MOVE);
+        }
+
+
+    }
+
+    ;
 }

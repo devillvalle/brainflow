@@ -52,7 +52,6 @@ public class ImageSlicer {
         //ImageAxis a2 = space.getImageAxis(displayAnatomy.YAXIS, true);
         //ImageAxis a3 = space.getImageAxis(displayAnatomy.ZAXIS, true);
 
-
         ImageFiller filler = new ImageFiller();
         return filler.fillImage(image, displayAnatomy.XAXIS, displayAnatomy.YAXIS, displaySlice);
 

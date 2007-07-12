@@ -3,6 +3,7 @@ package com.brainflow.application.presentation;
 import com.brainflow.colormap.*;
 import com.brainflow.display.Property;
 import com.brainflow.utils.ResourceLoader;
+import com.brainflow.core.ImageView;
 import com.jgoodies.binding.beans.DelayedPropertyChangeHandler;
 import com.jidesoft.dialog.ButtonPanel;
 import com.jidesoft.swing.JideBoxLayout;
@@ -87,8 +88,12 @@ public class ColorMapTablePresenter extends AbstractColorMapPresenter {
         applyButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                // color map already be set and therefore property change event never fired.
-                ColorMapTablePresenter.this.getColorMapParameter().setProperty(colorTable.getEditedColorMap());
+                ImageView view = getSelectedView();
+
+                if (view != null) {
+                    // !!! ?? color map already may be set and therefore property change event never fired?
+                    ColorMapTablePresenter.this.getColorMapParameter().setProperty(colorTable.getEditedColorMap());
+                }
             }
         });
 

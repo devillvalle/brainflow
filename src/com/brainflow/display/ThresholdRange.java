@@ -4,8 +4,7 @@ import com.jgoodies.binding.beans.Model;
 import com.brainflow.image.data.MaskPredicate;
 import com.brainflow.utils.IRange;
 import com.brainflow.utils.Range;
-
-import java.beans.PropertyChangeEvent;
+import com.brainflow.utils.ExclusiveRange;
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,26 +16,61 @@ import java.beans.PropertyChangeEvent;
 public class ThresholdRange extends Model implements MaskPredicate, IRange {
 
 
-    //public static final String SYMMETRICAL_PROPERTY = "symmetrical";
+    public static final String SYMMETRICAL_PROPERTY = "symmetrical";
+
     public static final String INCLUSIVE_PROPERTY = "inclusive";
 
     public static final String MIN_PROPERTY = "min";
 
     public static final String MAX_PROPERTY = "max";
 
+    public boolean inclusive = false;
 
-    public boolean inclusive = true;
+    public boolean symmetrical = false;
 
-    public boolean symmetrical;
+    private IRange thresholdRange = new ExclusiveRange(0, 0);
 
-    IRange range = new Range(0,0);
+    // make a bound property with min and max
+    private IRange globalRange = new Range(Double.MIN_VALUE, Double.MAX_VALUE);
 
-    public ThresholdRange(double min, double max) {
-        range = new Range(min,max);
+
+    public ThresholdRange(double tmin, double tmax) {
+        thresholdRange = new ExclusiveRange(tmin, tmax);
+        globalRange = new Range(Double.MIN_VALUE, Double.MAX_VALUE);
     }
 
+    public ThresholdRange(double min, double max, IRange globalRange) {
+        if (inclusive) {
+            thresholdRange = new Range(min, max);
+        } else {
+            thresholdRange = new ExclusiveRange(min, max);
+        }
+
+        // todo check if valid
+        this.globalRange = globalRange;
+
+
+    }
+
+
+    public ThresholdRange(double min, double max, IRange globalRange, boolean inclusive, boolean symmetrical) {
+        if (inclusive) {
+            thresholdRange = new Range(min, max);
+        } else {
+            thresholdRange = new ExclusiveRange(min, max);
+        }
+
+        // todo check if valid
+        this.globalRange = globalRange;
+
+        this.symmetrical = symmetrical;
+    }
+
+
     public ThresholdRange copy() {
-        ThresholdRange trange = new ThresholdRange(range.getMin(), range.getMax());
+        ThresholdRange trange = new ThresholdRange(thresholdRange.getMin(), thresholdRange.getMax(),
+                globalRange, inclusive, symmetrical);
+
         trange.inclusive = inclusive;
         trange.symmetrical = symmetrical;
         return trange;
@@ -47,26 +81,56 @@ public class ThresholdRange extends Model implements MaskPredicate, IRange {
     }
 
     public void setInclusive(boolean inclusive) {
+        if (inclusive == isInclusive()) return;
+
         boolean old = isInclusive();
+
         this.inclusive = inclusive;
+
+        if (isInclusive()) {
+            thresholdRange = new Range(thresholdRange);
+        } else {
+            thresholdRange = new ExclusiveRange(thresholdRange);
+        }
+
+
         firePropertyChange(ThresholdRange.INCLUSIVE_PROPERTY, old, isInclusive());
     }
 
-    /*public boolean isSymmetrical() {
-       return symmetrical;
-   }
+    public void setRange(double min, double max) {
+        if (isSymmetrical()) {
+            max = Math.abs(max);
+            min = -Math.abs(max);
+        }
 
-   public void setSymmetrical(boolean symmetrical) {
-       boolean old = isSymmetrical();
-       this.symmetrical = symmetrical;
-       firePropertyChange(ThresholdRange.SYMMETRICAL_PROPERTY, old, isSymmetrical());
-   } */
+        setMin(min);
+        setMax(max);
+    }
+
+    public boolean isSymmetrical() {
+        return symmetrical;
+    }
+
+    public void setSymmetrical(boolean symmetrical) {
+        boolean old = isSymmetrical();
+        this.symmetrical = symmetrical;
+
+        firePropertyChange(ThresholdRange.SYMMETRICAL_PROPERTY, old, isSymmetrical());
+
+        setMax(Math.abs(thresholdRange.getMax()));
+        setMin(-getMax());
+    }
 
 
     protected double[] filterHighValue(double low, double high) {
 
         if (high < low) {
             low = high;
+        }
+
+        if (isSymmetrical()) {
+            high = Math.abs(high);
+            low = -high;
         }
 
         return new double[]{low, high};
@@ -80,23 +144,37 @@ public class ThresholdRange extends Model implements MaskPredicate, IRange {
             high = low;
         }
 
+        if (isSymmetrical()) {
+            high = Math.abs(high);
+            low = -high;
+        }
+
+        if (high > globalRange.getMax()) {
+            high = globalRange.getMax();
+        }
+
+        if (low < globalRange.getMin()) {
+            low = globalRange.getMin();
+        }
+
+
         return new double[]{low, high};
     }
 
     public double getMin() {
-        return range.getMin();
+        return thresholdRange.getMin();
     }
 
     public void setMin(double min) {
         double old = getMin();
 
         double[] rvals = filterLowValue(min, getMax());
-        range.setMin(rvals[0]);
+        thresholdRange.setMin(rvals[0]);
         firePropertyChange(ThresholdRange.MIN_PROPERTY, old, getMin());
 
         if (rvals[1] != getMax()) {
             double oldThresh = getMax();
-            range.setMax(rvals[1]);
+            thresholdRange.setMax(rvals[1]);
             firePropertyChange(ThresholdRange.MAX_PROPERTY,
                     oldThresh, getMax());
         }
@@ -105,21 +183,21 @@ public class ThresholdRange extends Model implements MaskPredicate, IRange {
     }
 
     public double getMax() {
-        return range.getMax();
+        return thresholdRange.getMax();
     }
 
     public void setMax(double max) {
 
         double old = getMax();
 
-        double[] rvals= filterHighValue(getMin(), max);
-        range.setMax(rvals[1]);
+        double[] rvals = filterHighValue(getMin(), max);
+        thresholdRange.setMax(rvals[1]);
         firePropertyChange(ThresholdRange.MAX_PROPERTY, old, getMax());
 
 
         if (rvals[0] != getMin()) {
             double oldThresh = getMin();
-            range.setMin(rvals[0]);
+            thresholdRange.setMin(rvals[0]);
             firePropertyChange(ThresholdRange.MIN_PROPERTY,
                     oldThresh, getMin());
         }
@@ -128,17 +206,15 @@ public class ThresholdRange extends Model implements MaskPredicate, IRange {
     }
 
     public double getInterval() {
-        return getMax() - getMin();
+        return thresholdRange.getInterval();
     }
 
     public boolean contains(double val) {
-        if (val >= getMin() && val <= getMax())
-            return true;
-        return false;
+        return thresholdRange.contains(val);
     }
 
-    public int mask(double value) {
-        if ( (value < getMin()) || (value > getMax()) ) {
+    public final int mask(double value) {
+        if (thresholdRange.contains(value)) {
             return 1;
         } else {
             return 0;
@@ -147,6 +223,6 @@ public class ThresholdRange extends Model implements MaskPredicate, IRange {
 
 
     public String toString() {
-        return range.toString();
+        return thresholdRange.toString();
     }
 }

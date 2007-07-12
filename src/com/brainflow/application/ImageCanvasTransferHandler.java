@@ -31,8 +31,9 @@ public class ImageCanvasTransferHandler extends TransferHandler {
 
 
     // need to make it so that different handler can "register"
-    private final static Logger log = Logger.getLogger(ImageCanvasTransferHandler.class.getName());
-    DataFlavor loadableImageFlavor;
+    private static final Logger log = Logger.getLogger(ImageCanvasTransferHandler.class.getName());
+
+    private DataFlavor loadableImageFlavor;
 
     public ImageCanvasTransferHandler() {
         try {
@@ -68,7 +69,7 @@ public class ImageCanvasTransferHandler extends TransferHandler {
                 }
             }
 
-            assert limg != null;
+           
 
             Component c = support.getComponent();
 
@@ -77,8 +78,13 @@ public class ImageCanvasTransferHandler extends TransferHandler {
 
                 ImageCanvas2 canvas = (ImageCanvas2) c;
                 ImageView view = canvas.whichView(c, p);
-                if (view != null)
+                if (limg == null || limg.length == 0) {
+                    return false;
+
+                }
+                if (view != null) {
                     Brainflow.getInstance().loadAndDisplay(limg[0], view, true);
+                }
                 else {
                     Brainflow.getInstance().loadAndDisplay(limg[0]);
                 }
@@ -118,8 +124,7 @@ public class ImageCanvasTransferHandler extends TransferHandler {
     }
 
     protected Transferable createTransferable(JComponent c) {
-        log.info("creating Transferable");
-
+       
         if (c instanceof JTree) {
             JTree tree = (JTree) c;
             TreePath path = tree.getSelectionPath();

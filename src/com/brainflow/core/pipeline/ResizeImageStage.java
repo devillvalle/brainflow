@@ -50,9 +50,10 @@ public class ResizeImageStage extends ImageProcessingStage {
   
 
     private BufferedImage scale(BufferedImage bimg, float ox, float oy, float sx, float sy) {
+
         AffineTransform at = AffineTransform.getTranslateInstance(ox, oy);
         at.scale(sx, sy);
-        AffineTransformOp aop = new AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC);
+        AffineTransformOp aop = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
         return aop.filter(bimg, null);   
     }
 }

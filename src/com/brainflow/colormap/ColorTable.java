@@ -94,6 +94,71 @@ public class ColorTable {
         return icon;
     }
 
+
+
+
+    public static IndexColorModel createHueIntensityRamp(Color clr) {
+
+        byte[] reds = new byte[256];
+        byte[] greens = new byte[256];
+        byte[] blues = new byte[256];
+        byte[] alpha = new byte[256];
+
+        double curRed = clr.getRed();
+        double curGreen = clr.getGreen();
+        double curBlue = clr.getBlue();
+
+        float[] hsb = Color.RGBtoHSB(clr.getRed(), clr.getGreen(), clr.getBlue(), null);
+
+
+        float hue = hsb[0];
+        float sat = hsb[1];
+        float brightness = .25f;
+
+        float brightnessIncrement = (float)(.75/256);
+
+
+        for (int i = 0; i < 256; i++) {
+
+
+            Color c = Color.getHSBColor(hue, sat, brightness);
+
+            brightness = brightness + brightnessIncrement;
+
+            reds[i] = (byte) c.getRed();
+            greens[i] = (byte) c.getGreen();
+            blues[i] = (byte) c.getBlue();
+            alpha[i] = (byte) 255;
+        }
+
+        IndexColorModel icm = new IndexColorModel(8, reds.length, reds, greens, blues, alpha);
+        return icm;
+
+
+    }
+
+
+    public static IndexColorModel createIndexColorModel(List<Color> clrs) {
+        byte[] red = new byte[clrs.size()];
+        byte[] green = new byte[clrs.size()];
+        byte[] blue = new byte[clrs.size()];
+        byte[] alpha= new byte[clrs.size()];
+
+        int i=0;
+        for (Color clr : clrs) {
+            red[i] = (byte)clr.getRed();
+            green[i] = (byte)clr.getGreen();
+            blue[i] = (byte)clr.getBlue();
+            alpha[i] = (byte)clr.getAlpha();
+            i++;
+
+        }
+
+        IndexColorModel icm = new IndexColorModel(8, red.length, red, green, blue, alpha);
+        return icm;
+
+    }
+
     public static java.util.List<Color> createColorGradient(Color c1, Color c2, int bins) {
         List<Color> glist = new ArrayList<Color>();
         int r1, r2;
@@ -117,9 +182,7 @@ public class ColorTable {
             } else if (i == bins) {
                 glist.add(c2);
             } else {
-                System.out.println("red: " + (r1 + rslope * i));
-                System.out.println("green: " + (g1 + gslope * i));
-                System.out.println("blue: " + (b1 + bslope * i));
+
                 glist.add(new Color((int) (r1 + rslope * i), (int) (g1 + gslope * i), (int) (b1 + bslope * i)));
 
             }

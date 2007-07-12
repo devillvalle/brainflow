@@ -120,6 +120,8 @@ public abstract class AbstractColorMap implements IColorMap {
 
 
     public RGBAImage getRGBAImage(IImageData2D data) {
+
+
         int len = data.getNumElements();
 
         byte[][] rgba = new byte[4][len];
@@ -130,18 +132,18 @@ public abstract class AbstractColorMap implements IColorMap {
         Color c0 = getInterval(0).getColor();
         Color cn = getInterval(lastidx).getColor();
 
-      
+        assert getLowClip() <= getHighClip();
         while (iter.hasNext()) {
 
             int i = iter.index();
             double val = iter.next();
 
-            if (val <= getLowClip()) {
+            if (val < getLowClip()) {
                 rgba[0][i] = (byte) c0.getRed();
                 rgba[1][i] = (byte) c0.getGreen();
                 rgba[2][i] = (byte) c0.getBlue();
                 rgba[3][i] = (byte) c0.getAlpha();
-            } else if (val >= getHighClip()) {
+            } else if (val > getHighClip()) {
                 rgba[0][i] = (byte) cn.getRed();
                 rgba[1][i] = (byte) cn.getGreen();
                 rgba[2][i] = (byte) cn.getBlue();

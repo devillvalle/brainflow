@@ -7,6 +7,7 @@ import com.brainflow.application.services.LoadableImageStatusEvent;
 import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.core.*;
 import com.brainflow.core.ImageLayerProperties;
+import com.brainflow.utils.Range;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 
@@ -58,8 +59,12 @@ public class ProjectManager implements EventSubscriber, BrainflowProjectListener
         activeProject.addModel(displayModel);
 
 
-        ImageLayerProperties params = new ImageLayerProperties();
-        params.getColorMap().setProperty(new LinearColorMap(limg.getData().getMinValue(), limg.getData().getMaxValue(),
+        ImageLayerProperties params = new ImageLayerProperties(
+                new Range(limg.getData().getMinValue(),
+                        limg.getData().getMaxValue()));
+
+        params.getColorMap().setProperty(new LinearColorMap(limg.getData().getMinValue(),
+                limg.getData().getMaxValue(),
                 ResourceManager.getInstance().getDefaultColorMap()));
 
         ImageLayer layer = new ImageLayer3D(limg, params);

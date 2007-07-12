@@ -4,7 +4,10 @@ import com.brainflow.image.LinearSet1D;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.RoundRectangle2D;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
+import java.util.ListIterator;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,14 +21,103 @@ public class LinearColorBar extends AbstractColorBar {
 
     public LinearColorBar(IColorMap cmap, int orientation) {
         super(cmap, orientation);
-        initListener(cmap);
-        initBackground();
 
+    }
+
+    private float[] getFractions() {
+        IColorMap model = getColorMap();
+        float[] frac = new float[model.getMapSize()];
+
+
+        double cRange = model.getMaximumValue() - model.getMinimumValue();
+
+
+        frac[0] = 0;
+        frac[model.getMapSize() - 1] = 1f;
+
+        for (int i = 1; i < model.getMapSize() - 1; i++) {
+
+            ColorInterval ci = model.getInterval(i);
+            double max = ci.getMaximum();
+            double diff = max - model.getMinimumValue();
+            float f = (float) (diff / cRange);
+
+            frac[i] = f;
+            
+
+        }
+
+        return frac;
 
     }
 
 
+    private Color[] getColors() {
+        IColorMap model = getColorMap();
+        Color[] clrs = new Color[model.getMapSize()];
+        ListIterator<ColorInterval> iter = model.iterator();
+        int i = 0;
+        while (iter.hasNext()) {
+            ColorInterval ci = iter.next();
+            clrs[i] = ci.getColor();
+            i++;
+        }
+
+        return clrs;
+
+
+    }
+
+    private Paint createGradientPaint(int length) {
+        Paint paint = null;
+
+        if (getColorMap().getMapSize() == 1) {
+            paint = getColorMap().getInterval(0).getColor();
+        }
+        else if (getOrientation() == SwingConstants.HORIZONTAL) {
+            paint = new LinearGradientPaint(0f, 0f, (float) length, (float) 0, getFractions(), getColors());
+        } else {
+            paint = new LinearGradientPaint(0f, 0f, (float) 0, (float) length, getFractions(), getColors());
+        }
+
+
+        return paint;
+
+    }
+
+    //@Override
     protected BufferedImage renderOffscreen() {
+        
+        Paint p;
+        int ncolors = getColorMap().getMapSize();
+        BufferedImage bimage;
+        Rectangle fillRect;
+
+        if (getOrientation() == SwingConstants.HORIZONTAL) {
+            p = createGradientPaint(ncolors);
+            fillRect = new Rectangle(0, 0, ncolors, 10);
+            bimage = new BufferedImage(ncolors, 10, BufferedImage.TYPE_4BYTE_ABGR);
+        } else {
+            p = createGradientPaint(ncolors);
+            fillRect = new Rectangle(0, 0, 10, ncolors);
+            bimage = new BufferedImage(10, ncolors, BufferedImage.TYPE_4BYTE_ABGR);
+
+        }
+
+
+        Graphics2D g2 = bimage.createGraphics();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        g2.setPaint(p);
+
+        g2.fill(fillRect);
+
+        cachedImage = bimage;
+        return cachedImage;
+    }
+
+
+    protected BufferedImage renderOffscreen2() {
         BufferedImage bimage;
         LinearSet1D set = new LinearSet1D(colorMap.getMinimumValue(), colorMap.getMaximumValue(), colorMap.getMapSize());
         double[] samples = set.getSamples();

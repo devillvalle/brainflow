@@ -7,6 +7,15 @@ import com.brainflow.image.space.Axis;
 import com.brainflow.image.data.MaskedData3D;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.interpolation.NearestNeighborInterpolator;
+import com.brainflow.colormap.DiscreteColorMap;
+import com.brainflow.colormap.ColorTable;
+import com.brainflow.colormap.IColorMap;
+import com.brainflow.colormap.LinearColorMap;
+
+
+import java.awt.image.IndexColorModel;
+import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,16 +24,30 @@ import com.brainflow.image.interpolation.NearestNeighborInterpolator;
  * Time: 10:16:05 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MaskLayer extends ImageLayer {
+public class MaskLayer extends ImageLayer3D {
 
 
     private MaskedData3D mask;
 
 
 
+
     public MaskLayer(MaskedData3D _mask, ImageLayerProperties _properties) {
         super(_mask, _properties);
         mask = _mask;
+
+        java.util.List<Color> clrs = new ArrayList<Color>();
+        clrs.add(Color.BLACK);
+        clrs.add(Color.RED);
+
+
+        java.util.List<Double> bounds = new ArrayList<Double>();
+        bounds.add(0.0);
+        bounds.add(.5);
+        bounds.add(1.0);
+
+        DiscreteColorMap dmap = new DiscreteColorMap(clrs, bounds);
+        getImageLayerProperties().getColorMap().setProperty(dmap);
 
 
     }

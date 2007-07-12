@@ -1,6 +1,7 @@
 package com.brainflow.application.actions;
 
 import com.brainflow.core.*;
+import com.brainflow.application.toplevel.ImageViewFactory;
 import org.bushe.swing.action.BasicAction;
 
 import java.awt.event.ActionEvent;

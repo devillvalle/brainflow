@@ -11,12 +11,15 @@ import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
-import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.image.axis.CoordinateAxis;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ICoordinateSpace;
 import com.jgoodies.binding.list.SelectionInList;
+import com.pietschy.command.ActionCommand;
+import com.pietschy.command.CommandContainer;
+import com.pietschy.command.toggle.ToggleCommand;
+import com.pietschy.command.toggle.ToggleVetoException;
 import org.bushe.swing.event.EventBus;
 
 
@@ -31,6 +34,9 @@ import java.awt.image.RenderedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.LinkedHashSet;
 import java.util.logging.Logger;
 
 /**
@@ -44,9 +50,14 @@ import java.util.logging.Logger;
 
 public abstract class ImageView extends JComponent implements ListDataListener, ImageDisplayModelListener {
 
+
+    public static final String PRESERVE_ASPECT_PROPERTY = "preserveAspect";
+
     private static final Logger log = Logger.getLogger(ImageView.class.getName());
 
     private String id = "";
+
+    private boolean preserveAspect = false;
 
     private IImageDisplayModel displayModel;
 
@@ -54,15 +65,38 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
 
     protected Property<Viewport3D> viewport;
 
+    private CommandContainer commandContainer;
+
+    private static final Set<String> commandIds = new LinkedHashSet<String>();
+
 
     public ImageView(IImageDisplayModel imodel) {
         super();
         displayModel = imodel;
         initView();
+        commandContainer = new CommandContainer();
+
+    }
+
+    public ImageView(IImageDisplayModel imodel, CommandContainer parentContainer) {
+        super();
+        displayModel = imodel;
+        initView();
+
+        commandContainer = new CommandContainer(parentContainer);
+
+
+    }
+
+
+    protected void initCommands() {
+
     }
 
 
     private void initView() {
+
+
         viewport = new Property<Viewport3D>(new Viewport3D(getModel()));
         crosshair = new Property<ICrosshair>(new Crosshair(viewport.getProperty()));
 
@@ -100,6 +134,23 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
 
     public abstract SliceController getSliceController();
 
+
+    public boolean isPreserveAspect() {
+        return preserveAspect;
+    }
+
+    public void setPreserveAspect(boolean preserveAspect) {
+        boolean old = preserveAspect;
+        this.preserveAspect = preserveAspect;
+        Iterator<IImagePlot> iter = getPlots().iterator();
+        while (iter.hasNext()) {
+            IImagePlot plot = iter.next();
+            plot.setPreserveAspectRatio(preserveAspect);
+        }
+
+
+        this.firePropertyChange(ImageView.PRESERVE_ASPECT_PROPERTY, old, isPreserveAspect());
+    }
 
     public IImagePlot getSelectedPlot() {
         return (IImagePlot) getPlotSelection().getSelection();
@@ -311,6 +362,26 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
                     oldPlot.getComponent().repaint();
             }
         }
+
+    }
+
+
+    public class SetPreserveAspectCommand extends ToggleCommand {
+
+        private ImageView view;
+
+        public SetPreserveAspectCommand(ImageView view) {
+            super("preserve-aspect");
+            this.view = view;
+            setSelected(view.isPreserveAspect());
+        }
+
+        protected void handleSelection(boolean b) throws ToggleVetoException {
+            if (view.isPreserveAspect() != b)
+                view.setPreserveAspect(b);
+
+        }
+
 
     }
 

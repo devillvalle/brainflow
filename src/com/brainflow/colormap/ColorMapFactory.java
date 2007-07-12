@@ -7,6 +7,8 @@
 
 package com.brainflow.colormap;
 
+import org.jdom.Document;
+
 /**
  * @author Bradley
  */
@@ -16,6 +18,7 @@ public class ColorMapFactory {
      * Creates a new instance of ColorMapFactory
      */
     public ColorMapFactory() {
+        Document doc;
     }
 
     //public IntervalColorModel readFromXml() {

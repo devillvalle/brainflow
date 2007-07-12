@@ -1,7 +1,7 @@
 package com.brainflow.application.actions;
 
 import com.brainflow.core.*;
-import com.brainflow.core.annotations.CrosshairAnnotation;
+import com.brainflow.application.toplevel.ImageViewFactory;
 import org.bushe.swing.action.BasicAction;
 
 import java.awt.event.ActionEvent;
@@ -32,10 +32,10 @@ public class CreateAxialViewAction extends BasicAction {
 
         if (view != null) {
             
-            ImageView sview = ImageViewFactory.createYokedAxialView(view);
-            System.out.println("selected view: " + sview);
+            ImageView sview = ImageViewFactory.createAxialView(view);
+
             ImageCanvas2 canvas = (ImageCanvas2) getContextValue(ActionContext.SELECTED_CANVAS);
-            System.out.println("selected canvas: " + canvas);
+
             if (canvas != null) {
                 canvas.addImageView(sview);
             }

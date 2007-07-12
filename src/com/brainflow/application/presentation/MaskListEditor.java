@@ -2,6 +2,7 @@ package com.brainflow.application.presentation;
 
 import com.brainflow.core.*;
 import com.brainflow.utils.IRange;
+import com.brainflow.utils.Range;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.analyze.AnalyzeIO;
 import com.brainflow.image.operations.BinaryOperation;
@@ -177,11 +178,11 @@ public class MaskListEditor {
 
 
             IImageDisplayModel model = new ImageDisplayModel("none");
-            model.addLayer(new ImageLayer3D(data, new ImageLayerProperties()));
+            model.addLayer(new ImageLayer3D(data, new ImageLayerProperties(new Range(0,256))));
 
             url = ClassLoader.getSystemResource("resources/data/icbm452_atlas_probability_gray.hdr");
             data = AnalyzeIO.readAnalyzeImage(url);
-            model.addLayer(new ImageLayer3D(data, new ImageLayerProperties()));
+            model.addLayer(new ImageLayer3D(data, new ImageLayerProperties(new Range(0,256))));
 
             ImageMaskList mlist = new ImageMaskList(new ImageLayer3D(data));
             mlist.addMask(new ImageMaskItem(new ImageLayer3D(data), new ThresholdRange(0, 12000), 1));

@@ -19,27 +19,44 @@ class PercentageConverter extends AbstractConverter {
 
     }
 
+
+    public ValueModel getMax() {
+        return max;
+    }
+
+    public void setMax(ValueModel max) {
+        this.max = max;
+    }
+
+    public ValueModel getMin() {
+        return min;
+    }
+
+    public void setMin(ValueModel min) {
+        this.min = min;
+    }
+
     public Object convertFromSubject(Object object) {
         Double val = (Double) object;
+
         Number dmin = (Number) min.getValue();
         Number dmax = (Number) max.getValue();
         double percent = (val - dmin.doubleValue()) / (dmax.doubleValue() - dmin.doubleValue()) * numUnits;
+
+
         return new Integer((int) Math.round(percent));
 
 
     }
 
     public void setValue(Object object) {
-
         Number dmin = (Number) min.getValue();
         Number dmax = (Number) max.getValue();
         Integer val = (Integer) object;
-        //System.out.println("min " + dmin);
-        //System.out.println("max " + dmax);
-        //System.out.println("num units " + numUnits);
 
         double newval = (val / numUnits) * (dmax.doubleValue() - dmin.doubleValue()) + dmin.doubleValue();
-        //System.out.println("PercentageConverter: new val = " + newval);
+       
+
         subject.setValue(newval);
 
     }

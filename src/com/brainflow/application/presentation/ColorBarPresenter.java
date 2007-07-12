@@ -22,6 +22,8 @@ import com.brainflow.colormap.ConstantColorMap;
 import com.brainflow.core.ImageView;
 import com.brainflow.display.Property;
 import com.jidesoft.swing.JideSplitButton;
+import com.jidesoft.swing.JideBoxLayout;
+import com.jidesoft.dialog.JideOptionPane;
 import org.bushe.swing.action.BasicAction;
 
 import javax.swing.*;
@@ -39,7 +41,7 @@ public class ColorBarPresenter extends AbstractColorMapPresenter {
     private ColorBarForm form;
 
     private IColorMap colorMap;
-    
+
     private List<Action> actions;
 
     /**
@@ -72,7 +74,7 @@ public class ColorBarPresenter extends AbstractColorMapPresenter {
             colorMenu.add(iter.next());
         }
 
-        colorMenu.add(new SolidColorAction("Solid Color ..."));
+        colorMenu.add(new GradientColorAction("Solid Color ..."));
     }
 
     public void viewSelected(ImageView view) {
@@ -125,35 +127,82 @@ public class ColorBarPresenter extends AbstractColorMapPresenter {
         return actions;
     }
 
+    class SolidColorPanel extends JPanel {
+        JCheckBox intensityCheckBox = new JCheckBox("ramp intensity");
 
-    class SolidColorAction extends AbstractAction {
+        JColorChooser chooser = new JColorChooser();
 
-        public SolidColorAction(String name) {
+        JPanel southPanel = new JPanel();
+
+        public SolidColorPanel() {
+            setLayout(new BorderLayout());
+
+            chooser.setBorder(BorderFactory.createEtchedBorder());
+            add(chooser, BorderLayout.CENTER);
+
+            southPanel.setLayout(new JideBoxLayout(southPanel, JideBoxLayout.X_AXIS));
+            southPanel.add(intensityCheckBox, JideBoxLayout.FIX);
+            southPanel.setBorder(BorderFactory.createEtchedBorder());
+
+            add(southPanel, BorderLayout.SOUTH);
+
+        }
+
+        public Color getColor() {
+            return chooser.getColor();
+        }
+
+        public boolean getIntensityRamp() {
+            return intensityCheckBox.isSelected();
+        }
+    }
+
+
+    class GradientColorAction extends AbstractAction {
+
+
+        public GradientColorAction(String name) {
             super(name);
         }
 
         public void actionPerformed(ActionEvent e) {
-            JColorChooser chooser = new JColorChooser();
-            chooser.setVisible(true);
-
-            JOptionPane.showMessageDialog(getComponent(), chooser,
-                        "Select Color", JOptionPane.PLAIN_MESSAGE);
-
-            Color clr = chooser.getColor();
-
-
             ImageView view = getSelectedView();
             int layer = view.getModel().getSelectedIndex();
 
             IColorMap oldMap = view.getModel().getLayer(layer).
-                                getImageLayerProperties().getColorMap().getProperty();
+                                    getImageLayerProperties().getColorMap().getProperty();
+
+            ColorGradientEditor chooser = new ColorGradientEditor(oldMap.getMinimumValue(), oldMap.getMaximumValue());
+
+            String[] options = {
+                    "OK",
+                    "Cancel",
+
+            };
 
 
-            ConstantColorMap cmap = new ConstantColorMap(oldMap.getMinimumValue(), oldMap.getMaximumValue(), clr);
+            int result = JOptionPane.showOptionDialog(
+                    getComponent(),                             // the parent that the dialog blocks
+                    chooser,                                  // the dialog message array
+                    "Create Color Map",                 // the title of the dialog window
+                    JOptionPane.OK_CANCEL_OPTION,                 // option type
+                    JOptionPane.INFORMATION_MESSAGE,            // message type
+                    null,                                       // optional icon, use null to use the default icon
+                    options,                                    // options string array, will be made into buttons
+                    options[0]                                  // option that should be made into a default button
+            );
 
 
-            view.getModel().getLayer(layer).
-                    getImageLayerProperties().getColorMap().setProperty(cmap);
+            if (result == 0) {
+
+
+
+
+                IColorMap newMap = chooser.getColorMap();
+               
+                view.getModel().getLayer(layer).
+                        getImageLayerProperties().getColorMap().setProperty(newMap);
+            }
 
 
         }

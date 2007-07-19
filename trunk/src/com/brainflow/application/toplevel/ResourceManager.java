@@ -1,6 +1,5 @@
 package com.brainflow.application.toplevel;
 
-import com.brainflow.application.BrainflowException;
 import com.brainflow.colormap.ColorTable;
 
 import java.awt.image.IndexColorModel;
@@ -85,7 +84,7 @@ public class ResourceManager {
                 IndexColorModel icm = ColorTable.createFromXMLInputStream(url.openStream());
 
                 cachedMaps.put(name, icm);
-            } catch (BrainflowException bfe) {
+            } catch (Exception bfe) {
                 log.severe("Failed to load colormap: " + name + ", at: " + location);
                 throw new RuntimeException("Failed to load colormap: " + name + ", at: " + location, bfe);
             }

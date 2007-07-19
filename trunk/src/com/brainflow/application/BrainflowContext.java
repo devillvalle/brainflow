@@ -40,7 +40,6 @@ public class BrainflowContext {
                 ActionManager.getInstance().putContextValueForAll(ActionContext.SELECTED_IMAGE_VIEW,
                         event.getSelectedImageView());
 
-                
 
             }
         });

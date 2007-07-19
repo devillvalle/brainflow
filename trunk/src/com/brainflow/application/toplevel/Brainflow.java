@@ -14,8 +14,6 @@ import com.brainflow.utils.Range;
 import com.brainflow.utils.StaticTimer;
 import com.jgoodies.binding.beans.PropertyAdapter;
 import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
-import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
-import com.jgoodies.looks.windows.WindowsLookAndFeel;
 import com.jidesoft.action.CommandBar;
 import com.jidesoft.action.CommandMenuBar;
 import com.jidesoft.docking.DefaultDockingManager;
@@ -29,10 +27,10 @@ import com.jidesoft.status.StatusBar;
 import com.jidesoft.swing.JideBoxLayout;
 import com.jidesoft.swing.JideMenu;
 import com.jidesoft.swing.JideTabbedPane;
-import com.pietschy.command.group.CommandGroup;
 import com.pietschy.command.CommandContainer;
 import com.pietschy.command.GuiCommands;
 import com.pietschy.command.configuration.ParseException;
+import com.pietschy.command.group.CommandGroup;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.VFS;
@@ -52,7 +50,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import a03.swing.plaf.A03LookAndFeel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -80,7 +77,6 @@ public class Brainflow {
     private DocumentPane documentPane = new DocumentPane();
 
     private ImageFileExplorer loadingDock = null;
-
 
 
     private StatusBar statusBar = new StatusBar();
@@ -111,9 +107,9 @@ public class Brainflow {
         try {
             //SyntheticaLookAndFeel lf = new SyntheticaStandardLookAndFeel();
 
-            UIManager.setLookAndFeel(new PlasticXPLookAndFeel());
-            
-            //UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceAutumnLookAndFeel());
+            UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
+
+            //UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceMagmaLookAndFeel());
             //UIManager.setLookAndFeel(lf);
             //LookAndFeelFactory.installDefaultLookAndFeel();
             LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
@@ -147,9 +143,6 @@ public class Brainflow {
     }
 
 
-
-
-
     private void splashMessage(String message) {
         Graphics2D g = SplashScreen.getSplashScreen().createGraphics();
         //g.setComposite(AlphaComposite.Clear);
@@ -159,7 +152,7 @@ public class Brainflow {
         g.setFont(new Font("helvetica", Font.PLAIN, 16));
         g.drawString(message, 20, 430);
         SplashScreen.getSplashScreen().update();
-        
+
     }
 
 
@@ -167,16 +160,14 @@ public class Brainflow {
         final SplashScreen splash = SplashScreen.getSplashScreen();
 
         if (splash == null) {
-            throw new RuntimeException("Cannot create splash screen");
-            
+            //throw new RuntimeException("Cannot create splash screen");
+
         }
 
-
-
-        JFrame.setDefaultLookAndFeelDecorated(true);
+        //JFrame.setDefaultLookAndFeelDecorated(true);
 
         brainFrame = new BrainFrame();
-        
+
         ImageCanvasManager.getInstance().createCanvas();
 
         JideActionUIFactory jideFactory = new JideActionUIFactory(ActionManager.getInstance());
@@ -228,7 +219,7 @@ public class Brainflow {
     private void loadCommands() {
         try {
             GuiCommands.load("resources/commands/ImageViewCommands");
-        } catch(ParseException e) {
+        } catch (ParseException e) {
             log.severe(e.getMessage());
             throw new RuntimeException(e);
         }

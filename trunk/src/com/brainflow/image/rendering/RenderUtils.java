@@ -2,7 +2,6 @@ package com.brainflow.image.rendering;
 
 import com.brainflow.utils.ArrayUtils;
 
-
 import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.image.*;
@@ -56,38 +55,38 @@ public class RenderUtils {
         ComponentColorModel cm = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_LINEAR_RGB),
                 true, false, Transparency.TRANSLUCENT, DataBuffer.TYPE_BYTE);
 
-        DataBufferByte buffer = new DataBufferByte(rgba, width*height);
+        DataBufferByte buffer = new DataBufferByte(rgba, width * height);
         BandedSampleModel sm = new BandedSampleModel(DataBuffer.TYPE_BYTE, width, height, 4);
 
-        WritableRaster raster = Raster.createWritableRaster(sm, buffer, new Point(0,0));
-        BufferedImage bimg = new BufferedImage(cm, raster,false, null);
+        WritableRaster raster = Raster.createWritableRaster(sm, buffer, new Point(0, 0));
+        BufferedImage bimg = new BufferedImage(cm, raster, false, null);
         return bimg;
     }
 
-   /* public static RenderedImage createRGBAImage(byte[][] rgba, int width, int height) {
+    /* public static RenderedImage createRGBAImage(byte[][] rgba, int width, int height) {
 
 
-        SampleModel sm = RasterFactory.createBandedSampleModel(DataBuffer.TYPE_BYTE,
-                width,
-                height,
-                4);
+      SampleModel sm = RasterFactory.createBandedSampleModel(DataBuffer.TYPE_BYTE,
+              width,
+              height,
+              4);
 
 
-        ColorModel cm = PlanarImage.createColorModel(sm);
+      ColorModel cm = PlanarImage.createColorModel(sm);
 
-        // create a TiledImage using the float SampleModel
-        TiledImage tiledImage = new TiledImage(0, 0, width, height, 0, 0, sm, cm);
-        DataBuffer buffer = new DataBufferByte(rgba, width * height);
+      // create a TiledImage using the float SampleModel
+      TiledImage tiledImage = new TiledImage(0, 0, width, height, 0, 0, sm, cm);
+      DataBuffer buffer = new DataBufferByte(rgba, width * height);
 
-        Raster raster = RasterFactory.createWritableRaster(sm, buffer, new Point(0, 0));
+      Raster raster = RasterFactory.createWritableRaster(sm, buffer, new Point(0, 0));
 
-        // set the TiledImage data to that of the Raster
-        tiledImage.setData(raster);
+      // set the TiledImage data to that of the Raster
+      tiledImage.setData(raster);
 
-        RenderedImageAdapter img = new RenderedImageAdapter((RenderedImage) tiledImage);
+      RenderedImageAdapter img = new RenderedImageAdapter((RenderedImage) tiledImage);
 
-        return img;
-    }  */
+      return img;
+  }  */
 
     public static RenderedImage createSingleBandedImage(byte[] data, int width, int height) {
 
@@ -100,8 +99,6 @@ public class RenderUtils {
 
         return bimg;
     }
-
-
 
 
     public static IndexColorModel createIndexColorModel(double[][] table) {
@@ -124,7 +121,6 @@ public class RenderUtils {
         return new IndexColorModel(8, 256, red, green, blue, alpha);
     }
 
-
     /*public static RenderedImage createTiledImage(byte[] data, int width, int height, IndexColorModel icm) {
         WritableRaster raster = WritableRaster.createInterleavedRaster(DataBuffer.TYPE_BYTE,
                 width, height, 1, new Point(0, 0));
@@ -146,56 +142,54 @@ public class RenderUtils {
 
     }*/
 
-
     /*public static RenderedImage paletteToRGB(RenderedImage src, boolean hasAlpha) {
-        if (hasAlpha)
-            return RenderUtils.paletteToRGB(src);
+       if (hasAlpha)
+           return RenderUtils.paletteToRGB(src);
 
-        RenderedImage dst = null;
-        if (src.getColorModel() instanceof IndexColorModel) {
-            IndexColorModel icm = (IndexColorModel) src.getColorModel();
-            byte[][] data = new byte[3][icm.getMapSize()];
-            //System.out.println("num components = " + icm.getNumComponents());
-            icm.getReds(data[0]);
-            icm.getGreens(data[1]);
-            icm.getBlues(data[2]);
+       RenderedImage dst = null;
+       if (src.getColorModel() instanceof IndexColorModel) {
+           IndexColorModel icm = (IndexColorModel) src.getColorModel();
+           byte[][] data = new byte[3][icm.getMapSize()];
+           //System.out.println("num components = " + icm.getNumComponents());
+           icm.getReds(data[0]);
+           icm.getGreens(data[1]);
+           icm.getBlues(data[2]);
 
 
-            LookupTableJAI lut = new LookupTableJAI(data);
+           LookupTableJAI lut = new LookupTableJAI(data);
 
-            dst = JAI.create("lookup", src, lut);
-        } else {
-            dst = src;
-        }
+           dst = JAI.create("lookup", src, lut);
+       } else {
+           dst = src;
+       }
 
-        return dst;
-    } */
-
+       return dst;
+   } */
 
     /*public static RenderedImage paletteToRGB(RenderedImage src) {
-        RenderedImage dst = null;
+      RenderedImage dst = null;
 
-        if (src.getColorModel() instanceof IndexColorModel) {
-            IndexColorModel icm = (IndexColorModel) src.getColorModel();
-            byte[][] data = new byte[icm.getNumComponents()][icm.getMapSize()];
-            //System.out.println("num components = " + icm.getNumComponents());
-            icm.getReds(data[0]);
-            icm.getGreens(data[1]);
-            icm.getBlues(data[2]);
+      if (src.getColorModel() instanceof IndexColorModel) {
+          IndexColorModel icm = (IndexColorModel) src.getColorModel();
+          byte[][] data = new byte[icm.getNumComponents()][icm.getMapSize()];
+          //System.out.println("num components = " + icm.getNumComponents());
+          icm.getReds(data[0]);
+          icm.getGreens(data[1]);
+          icm.getBlues(data[2]);
 
-            if (icm.hasAlpha())
-                icm.getAlphas(data[3]);
+          if (icm.hasAlpha())
+              icm.getAlphas(data[3]);
 
 
-            LookupTableJAI lut = new LookupTableJAI(data);
+          LookupTableJAI lut = new LookupTableJAI(data);
 
-            dst = JAI.create("lookup", src, lut);
-        } else {
-            dst = src;
-        }
+          dst = JAI.create("lookup", src, lut);
+      } else {
+          dst = src;
+      }
 
-        return dst;
-    }  */
+      return dst;
+  }  */
 
 
     public static RenderedImage createImage(byte[] data, int width, int height, IndexColorModel icm) {
@@ -236,7 +230,7 @@ public class RenderUtils {
         GraphicsEnvironment local = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice screen = local.getDefaultScreenDevice();
         GraphicsConfiguration config = screen.getDefaultConfiguration();
-        return config.createCompatibleImage(width, height);
+        return config.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
     }
 
     public static byte[][] extractTable(IndexColorModel icm) {

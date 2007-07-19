@@ -14,11 +14,11 @@ public class ExclusiveRange implements IRange {
     private double max;
 
 
-     public ExclusiveRange(IRange range) {
+    public ExclusiveRange(IRange range) {
         min = range.getMin();
         max = range.getMax();
 
-         if (min > max) {
+        if (min > max) {
             throw new IllegalStateException("min cannot exceed max " + min + " > " + max);
         }
     }
@@ -43,7 +43,7 @@ public class ExclusiveRange implements IRange {
     }
 
     public boolean contains(double val) {
-        if (val <= min || val >= max)
+        if (val < min || val > max)
             return true;
         return false;
     }

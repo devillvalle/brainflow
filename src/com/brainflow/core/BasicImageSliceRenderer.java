@@ -1,24 +1,26 @@
 package com.brainflow.core;
 
+import com.brainflow.colormap.IColorMap;
+import com.brainflow.display.InterpolationHint;
+import com.brainflow.display.InterpolationMethod;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.Anatomy3D;
-import com.brainflow.image.operations.ImageSlicer;
-import com.brainflow.image.data.*;
+import com.brainflow.image.data.IImageData2D;
+import com.brainflow.image.data.IImageData3D;
+import com.brainflow.image.data.RGBAImage;
+import com.brainflow.image.data.UByteImageData2D;
 import com.brainflow.image.iterators.ImageIterator;
+import com.brainflow.image.operations.ImageSlicer;
 import com.brainflow.image.rendering.RenderUtils;
-import com.brainflow.image.space.ImageSpace2D;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
-import com.brainflow.colormap.IColorMap;
-import com.brainflow.display.ThresholdRange;
-import com.brainflow.display.InterpolationMethod;
-import com.brainflow.display.InterpolationHint;
+import com.brainflow.image.space.ImageSpace2D;
 
-import java.awt.image.BufferedImage;
-import java.awt.image.AffineTransformOp;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 
 /**
  * Created by IntelliJ IDEA.

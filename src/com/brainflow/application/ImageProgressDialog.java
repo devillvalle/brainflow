@@ -2,17 +2,11 @@ package com.brainflow.application;
 
 import com.brainflow.image.data.IImageData;
 import com.brainflow.utils.ProgressListener;
-import com.brainflow.application.services.LoadableImageProgressEvent;
 import com.jidesoft.dialog.JideOptionPane;
 
 import javax.swing.*;
-import java.util.List;
-import java.util.Arrays;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
 import java.awt.*;
-
-import org.bushe.swing.event.EventBus;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -86,8 +80,6 @@ public class ImageProgressDialog extends SwingWorker<IImageData, Integer> implem
         dialog.setModalityType(Dialog.ModalityType.MODELESS);
         dialog.pack();
 
-       
-       
 
     }
 
@@ -97,13 +89,10 @@ public class ImageProgressDialog extends SwingWorker<IImageData, Integer> implem
     }
 
 
-
-
-
     protected void process(List<Integer> chunks) {
         for (Integer i : chunks) {
-            double perc = ((double)i)/getMax();
-            int prog = (int)(perc*100f);
+            double perc = ((double) i) / getMax();
+            int prog = (int) (perc * 100f);
             System.out.println("processing " + prog);
             progressBar.setValue(prog);
 
@@ -155,6 +144,6 @@ public class ImageProgressDialog extends SwingWorker<IImageData, Integer> implem
     }
 
     public void finished() {
-        progressBar.setValue(100);
+        //
     }
 }

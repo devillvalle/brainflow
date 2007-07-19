@@ -1,31 +1,23 @@
 package com.brainflow.application.presentation;
 
-import com.jidesoft.combobox.ColorComboBox;
-import com.jidesoft.plaf.LookAndFeelFactory;
 import com.brainflow.colormap.*;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ConstantSize;
-import com.jgoodies.forms.layout.Sizes;
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.binding.adapter.Bindings;
+import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.adapter.BasicComponentFactory;
 import com.jgoodies.binding.value.ValueModel;
-import com.jgoodies.binding.beans.PropertyAdapter;
-import com.jgoodies.binding.beans.PropertyConnector;
-import com.jgoodies.binding.PresentationModel;
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.Sizes;
+import com.jidesoft.combobox.ColorComboBox;
+import com.jidesoft.plaf.LookAndFeelFactory;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
-import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.image.IndexColorModel;
 import java.util.logging.Logger;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-import org.pietschy.explicit.DebugPanel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -71,7 +63,6 @@ public class ColorGradientEditor extends JPanel {
     public ColorGradientEditor() {
         colorMap = new ConstantColorMap(0, 255, colorOne);
         initGUI();
-        
 
 
     }
@@ -83,7 +74,6 @@ public class ColorGradientEditor extends JPanel {
 
 
     }
-
 
 
     private void initGUI() {
@@ -120,7 +110,6 @@ public class ColorGradientEditor extends JPanel {
             }
         });
 
-
         //PropertyAdapter adapter = new PropertyAdapter(this, ColorGradientEditor.TWO_COLOR_GRADIENT_PROPERTY);
         //System.out.println("" + twoColorButton.isSelected());
         //Bindings.bind(twoColorButton, adapter, Boolean.TRUE);
@@ -137,7 +126,7 @@ public class ColorGradientEditor extends JPanel {
         JPanel mainPanel = new JPanel();
         FormLayout layout = new FormLayout("l:p:g, 12dlu, l:p, 3dlu, p:g");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout, mainPanel);
-        layout.setColumnGroups(new int[][] { { 2, 4 }});
+        layout.setColumnGroups(new int[][]{{2, 4}});
         builder.setLineGapSize(Sizes.dluX(8));
 
         builder.appendSeparator("Preview");
@@ -153,16 +142,12 @@ public class ColorGradientEditor extends JPanel {
         builder.append("Color 1:", colorComboOne);
         builder.nextLine();
         builder.append(twoColorButton);
-        
+
         builder.append("Color 2: ", colorComboTwo);
 
 
         setLayout(new BorderLayout());
         add(builder.getPanel(), BorderLayout.CENTER);
-
-        
-
-
 
 
     }
@@ -178,12 +163,12 @@ public class ColorGradientEditor extends JPanel {
     private void updateColorMap() {
         if (gradientSetting == ColorGradientEditor.TWO_COLOR_GRADIENT) {
             IndexColorModel icm = ColorTable.createIndexColorModel(ColorTable.createColorGradient(colorOne, colorTwo, 256));
-            colorMap = new LinearColorMap(colorMap.getMinimumValue(),colorMap.getMaximumValue(), icm);
+            colorMap = new LinearColorMap(colorMap.getMinimumValue(), colorMap.getMaximumValue(), icm);
             colorBar.setColorMap(colorMap);
         } else {
             IndexColorModel icm = ColorTable.createConstantMap(colorOne);
-            colorMap = new LinearColorMap(colorMap.getMinimumValue(),colorMap.getMaximumValue(), icm);
-            colorBar.setColorMap(new LinearColorMap(0,100, icm));
+            colorMap = new LinearColorMap(colorMap.getMinimumValue(), colorMap.getMaximumValue(), icm);
+            colorBar.setColorMap(new LinearColorMap(0, 100, icm));
 
         }
 
@@ -207,20 +192,15 @@ public class ColorGradientEditor extends JPanel {
     }
 
 
-
-
-
-
-
     public static void main(String[] args) {
-         com.jidesoft.utils.Lm.verifyLicense("UIN", "BrainFlow", "S5XiLlHH0VReaWDo84sDmzPxpMJvjP3");
+        com.jidesoft.utils.Lm.verifyLicense("UIN", "BrainFlow", "S5XiLlHH0VReaWDo84sDmzPxpMJvjP3");
 
         try {
 
             UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceModerateLookAndFeel());
 
             LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
-            
+
         } catch (Exception e) {
             Logger.getAnonymousLogger().severe("Error Loading LookAndFeel, exiting");
             e.printStackTrace();

@@ -6,23 +6,22 @@
 
 package com.brainflow.application.toplevel;
 
-import com.brainflow.application.services.ImageViewCrosshairEvent;
+import com.brainflow.application.YokeHandler;
 import com.brainflow.application.services.ImageViewCursorEvent;
 import com.brainflow.application.services.ImageViewSelectionEvent;
-import com.brainflow.application.YokeHandler;
-import com.brainflow.core.*;
-import com.brainflow.display.Viewport3D;
-import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.core.IImageDisplayModel;
+import com.brainflow.core.ImageCanvas2;
+import com.brainflow.core.ImageCanvasModel;
+import com.brainflow.core.ImageView;
 import com.brainflow.modes.ImageViewInteractor;
-import org.bushe.swing.event.EventBus;
-import org.bushe.swing.event.EventSubscriber;
-import org.bushe.swing.action.BasicAction;
 import org.bushe.swing.action.ActionManager;
 import org.bushe.swing.action.ActionUIFactory;
+import org.bushe.swing.event.EventBus;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -33,7 +32,7 @@ import java.util.logging.Logger;
 /**
  * @author Bradley
  */
-public class ImageCanvasManager  {
+public class ImageCanvasManager {
 
     private static final Logger log = Logger.getLogger(ImageCanvasManager.class.getName());
 
@@ -50,7 +49,6 @@ public class ImageCanvasManager  {
     private CanvasPropertyChangeListener canvasListener;
 
     private ImageViewMouseMotionListener cursorListener;
-
 
 
     private Map<ImageView, YokeHandler> yokeHandlers = new HashMap<ImageView, YokeHandler>();
@@ -204,9 +202,9 @@ public class ImageCanvasManager  {
 
     }
 
-    
+
     public void yoke(ImageView target1, ImageView target2) {
-        
+
         log.info("Yoking : " + target1 + " to " + target2);
         YokeHandler handler = yokeHandlers.get(target1);
         if (handler == null) {
@@ -225,10 +223,7 @@ public class ImageCanvasManager  {
         handler.addSource(target1);
 
 
-
     }
-
-
 
 
     class CanvasPropertyChangeListener implements PropertyChangeListener {
@@ -237,7 +232,7 @@ public class ImageCanvasManager  {
 
             if (e.getPropertyName() == ImageCanvasModel.SELECTED_VIEW_PROPERTY) {
 
-                ImageView selectedView = (ImageView) e.getNewValue();              
+                ImageView selectedView = (ImageView) e.getNewValue();
                 EventBus.publish(new ImageViewSelectionEvent(selectedView));
 
             }
@@ -253,7 +248,7 @@ public class ImageCanvasManager  {
             Action unyokeAction = ActionManager.getInstance().getAction("unyoke-views");
             if (e.isPopupTrigger()) {
                 JPopupMenu popup = new JPopupMenu();
-             
+
                 popup.add(ActionUIFactory.getInstance().createMenuItem(yokeAction));
                 popup.add(ActionUIFactory.getInstance().createMenuItem(unyokeAction));
                 popup.setInvoker(getSelectedCanvas());
@@ -270,7 +265,7 @@ public class ImageCanvasManager  {
         public void mouseMoved(MouseEvent e) {
             Point p = e.getPoint();
             ImageView iview = selectedCanvas.whichView((Component) e.getSource(), p);
-            System.out.println("mouse view is : " + iview);
+
             if (iview != selectedCanvas.getSelectedView()) {
                 return;
             }
@@ -279,10 +274,6 @@ public class ImageCanvasManager  {
 
         }
     }
-
-
-
-
 
 
 }

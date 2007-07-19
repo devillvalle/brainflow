@@ -1,18 +1,15 @@
 package com.brainflow.core.pipeline;
 
-import org.apache.commons.pipeline.StageException;
-
-import java.awt.image.BufferedImage;
-import java.awt.geom.Rectangle2D;
-import java.awt.*;
-import java.util.List;
-
 import com.brainflow.core.SliceRenderer;
-import com.brainflow.core.ImageLayer2D;
 import com.brainflow.image.rendering.RenderUtils;
-import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.ICoordinateSpace;
+import org.apache.commons.pipeline.StageException;
+
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -37,6 +34,7 @@ public class RenderLayersStage extends ImageProcessingStage {
         Rectangle2D frameBounds = getBounds(renderers);
 
         if (renderers.size() == 0 || allTransparent(renderers)) {
+            System.out.println("renderer size = 0 or all transparent");
             composite = null;
         } else if (renderers.size() == 1 && renderers.get(0).getLayer().getOpacity() >= 1) {
             SliceRenderer renderer = renderers.get(0);
@@ -48,7 +46,6 @@ public class RenderLayersStage extends ImageProcessingStage {
 
             Graphics2D g2 = (Graphics2D) sourceImage.getGraphics();
 
-            
 
             for (SliceRenderer renderer : renderers) {
                 if (renderer != null)  // temporary hack
@@ -56,7 +53,6 @@ public class RenderLayersStage extends ImageProcessingStage {
             }
 
             g2.dispose();
-
 
 
             composite = sourceImage;
@@ -69,7 +65,7 @@ public class RenderLayersStage extends ImageProcessingStage {
 
     }
 
-    public boolean allTransparent(List<SliceRenderer> rendererList) {       
+    public boolean allTransparent(List<SliceRenderer> rendererList) {
         for (SliceRenderer renderer : rendererList) {
             if (renderer.isVisible() || renderer.getLayer().getOpacity() == 0) return false;
         }

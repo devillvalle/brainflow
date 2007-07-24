@@ -4,28 +4,18 @@ import com.brainflow.application.ILoadableImage;
 import com.brainflow.application.actions.ActionContext;
 import com.brainflow.application.presentation.forms.LoadableImageCell2;
 import com.brainflow.application.toplevel.LoadableImageManager;
-import com.brainflow.colormap.ColorTable;
-import com.brainflow.colormap.LinearColorMap;
-import com.brainflow.core.*;
-import com.brainflow.core.ImageLayerProperties;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.space.Axis;
 import com.jidesoft.swing.StyleRange;
 import com.jidesoft.swing.StyledLabel;
 import org.bushe.swing.action.ActionManager;
 import org.bushe.swing.action.BasicAction;
 
-import javax.media.jai.JAI;
-import javax.media.jai.RenderedImageAdapter;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.RenderedImage;
-import java.awt.image.renderable.ParameterBlock;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,7 +37,6 @@ public class LoadableImageListView extends JList {
     private DefaultListModel listModel = new DefaultListModel();
 
     private LoadableImageManager manager;
-
 
     /*private Map<ILoadableImage, ImageIcon> imap = new HashMap<ILoadableImage, ImageIcon>();
 
@@ -180,7 +169,7 @@ public class LoadableImageListView extends JList {
             int d2 = limg.getData().getDimension(Axis.Y_AXIS);
             int d3 = limg.getData().getDimension(Axis.Z_AXIS);
 
-            String dimstr = d1 + "x" + d2 + "x" + d3;
+            String dimstr = d1 + "zero" + d2 + "zero" + d3;
             infoLabel.setText(dimstr);
             setColorsForSelectionState(cellPrototype, isSelected);
 

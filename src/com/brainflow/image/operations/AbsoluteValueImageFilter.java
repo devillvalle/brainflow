@@ -28,7 +28,7 @@ public class AbsoluteValueImageFilter extends AbstractImageFilter {
     public IImageData getOutput() {
         List sources = getSources();
         if (sources.size() == 0)
-            throw new RuntimeException("AbsoluteValueImageFilter requires one input operations");
+            throw new RuntimeException("AbsoluteValueImageFilter requires zero input operations");
 
         BasicImageData first = (BasicImageData) sources.get(0);
         if (first == null) return null;

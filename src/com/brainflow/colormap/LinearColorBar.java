@@ -4,8 +4,6 @@ import com.brainflow.image.LinearSet1D;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.RoundRectangle2D;
-import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.util.ListIterator;
 
@@ -43,7 +41,7 @@ public class LinearColorBar extends AbstractColorBar {
             float f = (float) (diff / cRange);
 
             frac[i] = f;
-            
+
 
         }
 
@@ -73,8 +71,8 @@ public class LinearColorBar extends AbstractColorBar {
 
         if (getColorMap().getMapSize() == 1) {
             paint = getColorMap().getInterval(0).getColor();
-        }
-        else if (getOrientation() == SwingConstants.HORIZONTAL) {
+        } else if (getOrientation() == SwingConstants.HORIZONTAL) {
+            // todo check for correct increasing fractions
             paint = new LinearGradientPaint(0f, 0f, (float) length, (float) 0, getFractions(), getColors());
         } else {
             paint = new LinearGradientPaint(0f, 0f, (float) 0, (float) length, getFractions(), getColors());
@@ -87,7 +85,7 @@ public class LinearColorBar extends AbstractColorBar {
 
     //@Override
     protected BufferedImage renderOffscreen() {
-        
+
         Paint p;
         int ncolors = getColorMap().getMapSize();
         BufferedImage bimage;

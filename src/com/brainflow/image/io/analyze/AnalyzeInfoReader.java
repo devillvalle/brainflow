@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -197,19 +199,34 @@ public class AnalyzeInfoReader implements ImageInfoReader {
                 pixdim[i] = istream.readFloat();
             }
 
-            info.setSpacing(new Dimension3D(Math.abs(pixdim[1]), Math.abs(pixdim[2]), Math.abs(pixdim[3])));
+            info.setSpacing(new Dimension3D<Double>((double) (Math.abs(pixdim[1])),
+                    (double) (Math.abs(pixdim[2])), (double) (Math.abs(pixdim[3]))));
 
             info.setOrigin(new Point3D(pixdim[4], pixdim[5], pixdim[6]));
 
-            info.setRealDim(new Dimension3D(Math.abs(pixdim[1]) * dim[1], Math.abs(pixdim[2]) * dim[2], Math.abs(pixdim[3]) * dim[3]));
+            /*info.setRealDim(new Dimension3D<Double>((double)(Math.abs(pixdim[1]) * dim[1]),
+                    (double)(Math.abs(pixdim[2]) * dim[2]),
+                    (double)(Math.abs(pixdim[3]) * dim[3])));  */
+
+
             vox_offset = istream.readFloat();
 
             spmScale = istream.readFloat();
-            if (spmScale < .00001) {
+
+            // need to rethink this
+            if (spmScale >= 0 && spmScale < .000001) {
                 spmScale = 1f;
             }
+            /////////////////////////////////////
 
-            info.setScaleFactor(spmScale);
+            List<Double> sfList = new ArrayList<Double>();
+            sfList.add((double) spmScale);
+            info.setScaleFactors(sfList);
+
+            List<Double> interList = new ArrayList<Double>();
+            interList.add((double) 0);
+            info.setIntercepts(interList);
+
             funused2 = istream.readFloat();
             funused3 = istream.readFloat();
 

@@ -83,17 +83,17 @@ public class CoordinateSelector extends JComponent {
 
 
         xSpinner.setEditor(new JSpinner.NumberEditor(xSpinner, "###"));
-        ValueModel xmodel = crosshairVoxelBean.getValueModel("x");
+        ValueModel xmodel = crosshairVoxelBean.getValueModel("zero");
         SpinnerAdapterFactory.connect(xSpinner.getModel(), xmodel, 0);
         //xSpinner.addChangeListener(this);
 
         ySpinner.setEditor(new JSpinner.NumberEditor(ySpinner, "###"));
-        ValueModel ymodel = crosshairVoxelBean.getValueModel("y");
+        ValueModel ymodel = crosshairVoxelBean.getValueModel("zero");
         SpinnerAdapterFactory.connect(ySpinner.getModel(), ymodel, 0);
         //ySpinner.addChangeListener(this);
 
         zSpinner.setEditor(new JSpinner.NumberEditor(zSpinner, "###"));
-        ValueModel zmodel = crosshairVoxelBean.getValueModel("z");
+        ValueModel zmodel = crosshairVoxelBean.getValueModel("one");
         SpinnerAdapterFactory.connect(zSpinner.getModel(), zmodel, 0);
         //zSpinner.addChangeListener(this);
 

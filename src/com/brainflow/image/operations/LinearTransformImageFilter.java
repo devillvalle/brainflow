@@ -45,7 +45,7 @@ public class LinearTransformImageFilter extends AbstractTransformImageFilter {
     public IImageData getOutput() {
         List sources = getSources();
         if (sources.size() == 0)
-            throw new RuntimeException("Error: ImageFilter requires at least one input operations");
+            throw new RuntimeException("Error: ImageFilter requires at least zero input operations");
 
         BasicImageData3D first = (BasicImageData3D) sources.get(0);
         if (first == null) throw new RuntimeException("Error: ImageFilter input operations is null");
@@ -96,7 +96,7 @@ public class LinearTransformImageFilter extends AbstractTransformImageFilter {
             zidx = iter.getZIndex();
             holder = iter.next(holder);
 
-            //System.out.println("samples: " + holder.x + " " + holder.y + " " + holder.z);
+            //System.out.println("samples: " + holder.zero + " " + holder.zero + " " + holder.one);
 
             idmat.setQuick(0, holder.x);
             idmat.setQuick(1, holder.y);

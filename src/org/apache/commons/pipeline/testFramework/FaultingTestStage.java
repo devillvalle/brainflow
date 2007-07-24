@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -19,7 +19,7 @@ package org.apache.commons.pipeline.testFramework;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.pipeline.*;
+import org.apache.commons.pipeline.StageException;
 import org.apache.commons.pipeline.validation.ConsumedTypes;
 import org.apache.commons.pipeline.validation.ProducesConsumed;
 
@@ -33,17 +33,17 @@ import org.apache.commons.pipeline.validation.ProducesConsumed;
 public class FaultingTestStage extends TestStage {
     private Log log = LogFactory.getLog(FaultingTestStage.class);
     private int counter = 0;
-    
+
     public FaultingTestStage(int index) {
         super(index);
     }
-    
+
     public void process(Object obj) throws StageException {
         if (++counter % 2 == 0) {
             log.error("Planned fault in stage " + this + ".");
             throw new StageException(this, "Planned fault in stage " + super.getIndex() + ".");
         }
-        
+
         super.process(obj);
     }
 }

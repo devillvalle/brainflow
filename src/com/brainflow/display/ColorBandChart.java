@@ -298,14 +298,14 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
 
 
     private void setNewXValue(int series, int item, int value) {
-        System.out.println("new x: " + value);
+        System.out.println("new zero: " + value);
         /*if (value >= colorMap.getMapSize()) {
             value = colorMap.getMapSize() - 1;
         } else if (value < 0) {
             value = 0;
         } */
 
-        fittedLine.setXValue(series, item, value);  
+        fittedLine.setXValue(series, item, value);
         fireChangeEvent(new ChangeEvent(this));
 
     }
@@ -380,7 +380,7 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
             if (perc < .1) {
                 lockedOnItem = -1;
             } else {
-                setNewXValue(0, lockedOnItem, (int)x);
+                setNewXValue(0, lockedOnItem, (int) x);
             }
 
             return;
@@ -390,7 +390,7 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
 
         if (item != -1) {
             lockedOnItem = item;
-            setNewXValue(0, item, (int)x);
+            setNewXValue(0, item, (int) x);
         }
 
     }
@@ -398,7 +398,7 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
 
     public void mouseDragged(MouseEvent e) {
 
-     
+
         if (e.isControlDown()) {
             horizontalDrag(e.getPoint());
             return;

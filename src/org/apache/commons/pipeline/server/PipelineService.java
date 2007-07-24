@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -22,8 +22,10 @@ package org.apache.commons.pipeline.server;
  *
  */
 public class PipelineService extends Thread {
-    
-    /** Creates a new instance of PipelineService */
+
+    /**
+     * Creates a new instance of PipelineService
+     */
     public PipelineService() {
     }
 
@@ -34,6 +36,7 @@ public class PipelineService extends Thread {
 
     /**
      * Getter for property serviceInterval.
+     *
      * @return Value of property serviceInterval.
      */
     public long getServiceInterval() {
@@ -43,6 +46,7 @@ public class PipelineService extends Thread {
 
     /**
      * Setter for property serviceInterval.
+     *
      * @param serviceInterval New value of property serviceInterval.
      */
     public void setServiceInterval(long serviceInterval) {
@@ -51,8 +55,8 @@ public class PipelineService extends Thread {
     }
 
     public void run() {
-        
+
 
     }
-    
+
 }

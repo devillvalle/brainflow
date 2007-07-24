@@ -1,6 +1,5 @@
 package com.brainflow.application;
 
-import com.brainflow.application.services.LoadableImageProgressEvent;
 import com.brainflow.image.data.BasicImageData;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.ImageInfo;
@@ -8,7 +7,6 @@ import com.brainflow.image.io.ImageInfoReader;
 import com.brainflow.image.io.ImageReader;
 import com.brainflow.utils.ProgressListener;
 import org.apache.commons.vfs.FileObject;
-import org.bushe.swing.event.EventBus;
 
 import java.lang.ref.SoftReference;
 import java.util.logging.Logger;
@@ -27,9 +25,12 @@ public class SoftLoadableImage implements ILoadableImage {
     final static Logger log = Logger.getLogger(SoftLoadableImage.class.getCanonicalName());
 
     private ImageIODescriptor descriptor;
+
     private FileObject header;
+
     private FileObject dataFile;
-    private SoftReference dataRef = new SoftReference(null);
+
+    private SoftReference<IImageData> dataRef = new SoftReference<IImageData>(null);
 
 
     private ImageInfo imageInfo = null;
@@ -51,6 +52,14 @@ public class SoftLoadableImage implements ILoadableImage {
         dataRef.enqueue();
     }
 
+    public boolean isLoaded() {
+        if (dataRef.get() == null) {
+            return false;
+        }
+
+        return true;
+    }
+
     public IImageData getData() {
         if (dataRef.get() == null) {
             try {
@@ -61,7 +70,7 @@ public class SoftLoadableImage implements ILoadableImage {
             }
         }
 
-        return (IImageData) dataRef.get();
+        return dataRef.get();
     }
 
     public String getStem() {
@@ -154,7 +163,7 @@ public class SoftLoadableImage implements ILoadableImage {
                 }
 
                 public void setString(String message) {
-                   log.info(message);
+                    log.info(message);
                 }
 
                 public void setIndeterminate(boolean b) {
@@ -210,8 +219,6 @@ public class SoftLoadableImage implements ILoadableImage {
         result = 17 * result + getFileFormat().hashCode();
         return result;
     }
-
-
 
 
 }

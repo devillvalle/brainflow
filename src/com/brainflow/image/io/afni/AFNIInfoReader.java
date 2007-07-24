@@ -1,7 +1,6 @@
 package com.brainflow.image.io.afni;
 
 import com.brainflow.application.BrainflowException;
-import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.io.ImageInfoReader;
 import org.apache.commons.vfs.FileObject;
 
@@ -17,19 +16,45 @@ import java.net.URL;
  */
 public class AFNIInfoReader implements ImageInfoReader {
 
+    private AFNIImageInfo info = new AFNIImageInfo();
 
-    public ImageInfo readInfo(URL url) throws BrainflowException {
+    public AFNIImageInfo readInfo(URL url) throws BrainflowException {
+        try {
+            readHeader(url.openStream());
+        } catch (IOException e) {
+            throw new BrainflowException(e);
+        }
+
+        return info;
+    }
+
+    public AFNIImageInfo readInfo(FileObject fobj) throws BrainflowException {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public ImageInfo readInfo(FileObject fobj) throws BrainflowException {
+    public AFNIImageInfo readInfo(File f) throws BrainflowException {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public ImageInfo readInfo(File f) throws BrainflowException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
 
+    private void readHeader(InputStream istream) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(istream));
+
+        AFNIAttribute ret = null;
+        skipNewLines(reader);
+        do {
+            ret = parseElement(reader);
+            if (ret != null) {
+                info.putAttribute(ret.getKey(), ret);
+                System.out.println(ret.toString());
+            }
+
+        } while (ret != null);
+
+        System.out.println("info : " + info);
+
+
+    }
 
     private void skipNewLines(BufferedReader reader) throws IOException {
         String str = null;
@@ -66,7 +91,7 @@ public class AFNIInfoReader implements ImageInfoReader {
 
         AFNIAttribute.AFNI_ATTRIBUTE_TYPE type = AFNIAttribute.parseType(typeStr.replaceFirst("-", "_"));
 
-        return AFNIAttribute.createAttribute(type, AFNIAttribute.parseName(nameStr),
+        return AFNIAttribute.createAttribute(type, AFNIAttributeKey.valueOf(AFNIAttribute.parseName(nameStr)),
                 AFNIAttribute.parseCount(countStr), sb.toString());
 
     }
@@ -83,18 +108,9 @@ public class AFNIInfoReader implements ImageInfoReader {
     public static void main(String[] args) {
         File f = null;
         try {
-            f = new File("C:/javacode/googlecode/brainflow/test/data/ANOVA_lag+orig.HEAD");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
-            AFNIInfoReader areader = new AFNIInfoReader();
-            Object ret = null;
-            areader.skipNewLines(reader);
-            do {
-                ret = areader.parseElement(reader);
-
-                if (ret != null) {
-                    System.out.println(ret);
-                }
-            } while (ret != null);
+            URL url = ClassLoader.getSystemResource("resources/data/avg152T1_brainRPI+orig.HEAD");
+            AFNIInfoReader reader = new AFNIInfoReader();
+            reader.readInfo(url);
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }

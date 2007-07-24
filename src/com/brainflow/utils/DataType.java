@@ -21,7 +21,8 @@ public enum DataType implements Serializable {
     INTEGER("Integer", 4, 8),
     FLOAT("Float", 4, 16),
     DOUBLE("Double", 8, 32),
-    LONG("Long", 8, 64);
+    LONG("Long", 8, 64),
+    COMPLEX("Complex", 16, 128);
 
 
     private final String idString;

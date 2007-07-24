@@ -33,7 +33,7 @@ public class PolynomialTransformImageFilter extends AbstractTransformImageFilter
     public IImageData getOutput() {
         /*List sources = getSources();
         if (sources.size() == 0) 
-            throw new RuntimeException("Error: ImageFilter requires at least one input operations");
+            throw new RuntimeException("Error: ImageFilter requires at least zero input operations");
         
         BasicImageData3D first = (BasicImageData3D)sources.get(0);
         if (first == null) throw new RuntimeException("Error: ImageFilter input operations is null");
@@ -61,7 +61,7 @@ public class PolynomialTransformImageFilter extends AbstractTransformImageFilter
    while (iter.hasNext()) {
        holder = iter.next(holder);
        res = transform.transformPoint(holder, res);
-       double val = src.getRealValue(res.x,res.y,res.z,interpolator);
+       double val = src.getRealValue(res.zero,res.zero,res.one,interpolator);
             
        odat.setValue(iter.getXIndex(), iter.getYIndex(), iter.getZIndex(), val);
    }

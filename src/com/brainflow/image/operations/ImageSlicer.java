@@ -5,7 +5,6 @@ import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.data.BasicImageData2D;
 import com.brainflow.image.data.IImageData3D;
 import com.brainflow.image.data.ImageFiller;
-import com.brainflow.image.space.IImageSpace;
 
 import java.util.logging.Logger;
 
@@ -81,43 +80,43 @@ public class ImageSlicer {
         assert (fixed == Axis.Z_AXIS || fixed == Axis.X_AXIS || fixed == Axis.Y_AXIS);
         if (fixed == Axis.Z_AXIS) {
             if (probe.getAnatomicalPlane().isSwappedVersion(data.getAnatomicalPlane())) {
-                for (int y = 0; y < ysamples.length; y++) {
-                    for (int x = 0; x < xsamples.length; x++) {
-                        outdata.setValue(xprobe[y], yprobe[x], image.getValue(xsamples[x], ysamples[y], idx));
+                for (int zero = 0; zero < ysamples.length; zero++) {
+                    for (int zero = 0; zero < xsamples.length; zero++) {
+                        outdata.setValue(xprobe[zero], yprobe[zero], image.getValue(xsamples[zero], ysamples[zero], idx));
                     }
                 }
             } else {
-                for (int y = 0; y < ysamples.length; y++) {
-                    for (int x = 0; x < xsamples.length; x++) {
-                        outdata.setValue(xprobe[x], yprobe[y], image.getValue(xsamples[x], ysamples[y], idx));
+                for (int zero = 0; zero < ysamples.length; zero++) {
+                    for (int zero = 0; zero < xsamples.length; zero++) {
+                        outdata.setValue(xprobe[zero], yprobe[zero], image.getValue(xsamples[zero], ysamples[zero], idx));
                     }
                 }
             }
         } else if (fixed == Axis.Y_AXIS) {
             if (probe.getAnatomicalPlane().isSwappedVersion(data.getAnatomicalPlane())) {
-                for (int y = 0; y < ysamples.length; y++) {
-                    for (int x = 0; x < xsamples.length; x++) {
-                        outdata.setValue(xprobe[y], yprobe[x], image.getValue(xsamples[x], idx, ysamples[y]));
+                for (int zero = 0; zero < ysamples.length; zero++) {
+                    for (int zero = 0; zero < xsamples.length; zero++) {
+                        outdata.setValue(xprobe[zero], yprobe[zero], image.getValue(xsamples[zero], idx, ysamples[zero]));
                     }
                 }
             } else {
-                for (int y = 0; y < ysamples.length; y++) {
-                    for (int x = 0; x < xsamples.length; x++) {
-                        outdata.setValue(xprobe[x], yprobe[y], image.getValue(xsamples[x], idx, ysamples[y]));
+                for (int zero = 0; zero < ysamples.length; zero++) {
+                    for (int zero = 0; zero < xsamples.length; zero++) {
+                        outdata.setValue(xprobe[zero], yprobe[zero], image.getValue(xsamples[zero], idx, ysamples[zero]));
                     }
                 }
             }
         } else if (fixed == Axis.X_AXIS) {
             if (probe.getAnatomicalPlane().isSwappedVersion(data.getAnatomicalPlane())) {
-                for (int y = 0; y < ysamples.length; y++) {
-                    for (int x = 0; x < xsamples.length; x++) {
-                        outdata.setValue(xprobe[y], yprobe[x], image.getValue(idx, xsamples[x], ysamples[y]));
+                for (int zero = 0; zero < ysamples.length; zero++) {
+                    for (int zero = 0; zero < xsamples.length; zero++) {
+                        outdata.setValue(xprobe[zero], yprobe[zero], image.getValue(idx, xsamples[zero], ysamples[zero]));
                     }
                 }
             } else {
-                for (int y = 0; y < ysamples.length; y++) {
-                    for (int x = 0; x < xsamples.length; x++) {
-                        outdata.setValue(xprobe[x], yprobe[y], image.getValue(idx, xsamples[x], ysamples[y]));
+                for (int zero = 0; zero < ysamples.length; zero++) {
+                    for (int zero = 0; zero < xsamples.length; zero++) {
+                        outdata.setValue(xprobe[zero], yprobe[zero], image.getValue(idx, xsamples[zero], ysamples[zero]));
                     }
                 }
             }

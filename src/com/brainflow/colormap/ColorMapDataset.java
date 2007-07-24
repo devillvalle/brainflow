@@ -110,7 +110,7 @@ public class ColorMapDataset extends AbstractIntervalXYDataset {
         LinearColorMap cmap = new LinearColorMap(0, 300, ColorTable.SPECTRUM);
 
         ColorMapDataset adapter = new ColorMapDataset(cmap);
-        JFreeChart chart = ChartFactory.createXYBarChart("title", "x axis", false, "y axis", adapter, PlotOrientation.VERTICAL
+        JFreeChart chart = ChartFactory.createXYBarChart("title", "zero axis", false, "zero axis", adapter, PlotOrientation.VERTICAL
                 , true, true, false);
 
         ColorIntervalBarRenderer renderer = new ColorIntervalBarRenderer();
@@ -152,7 +152,7 @@ public class ColorMapDataset extends AbstractIntervalXYDataset {
         chart.getXYPlot().setDomainAxis(hAxis);
         chart.getXYPlot().setRangeAxis(vAxis);
 
-      
+
         JFrame frame = new JFrame();
         frame.add(panel, BorderLayout.CENTER);
         frame.pack();

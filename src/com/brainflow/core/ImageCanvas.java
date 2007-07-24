@@ -10,8 +10,6 @@ import java.awt.event.AWTEventListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Logger;
@@ -37,7 +35,6 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
 
     private EventListenerList listenerList = new EventListenerList();
 
-   
 
     public ImageCanvas() {
         super();
@@ -47,7 +44,6 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
         //rootPane.getGlassPane().addMouseListener(this);
         //rootPane.getGlassPane().addMouseMotionListener(this);
         add(rootPane, "Center");
-
 
         //canvasSelection = new ImageCanvasSelection(this);
         initListener();
@@ -334,13 +330,12 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
             view.setLocation(new Point(p.x + 50, p.y + 50));
         }
 
-        
+
         canvasModel.addImageView(view);
         rootPane.getLayeredPane().add(view, JLayeredPane.DEFAULT_LAYER);
         rootPane.getLayeredPane().moveToFront(view);
 
     }
-
 
 
     public void moveToFront(ImageView view) {
@@ -434,13 +429,13 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
                 container);
 
 
-        if (containerPoint.y < 0 | containerPoint.x < 0) {
+        if (containerPoint.zero < 0 | containerPoint.zero < 0) {
 
             rootPane.dispatchEvent(new MouseEvent((Component) e.getSource(), e.getID(),
                     e.getWhen(),
                     e.getModifiers(),
-                    glassPanePoint.x,
-                    glassPanePoint.y,
+                    glassPanePoint.zero,
+                    glassPanePoint.zero,
                     e.getClickCount(),
                     e.isPopupTrigger()));// forward event....
 
@@ -450,8 +445,8 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
             //Find out exactly which component it's over.
             Component component =
                     SwingUtilities.getDeepestComponentAt(container,
-                            containerPoint.x,
-                            containerPoint.y);
+                            containerPoint.zero,
+                            containerPoint.zero);
 
             Component ancestor = SwingUtilities.getAncestorOfClass(ImageView.class, component);
 
@@ -479,8 +474,8 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
                     component.dispatchEvent(new MouseEvent(component, e.getID(),
                             e.getWhen(),
                             e.getModifiers(),
-                            componentPoint.x,
-                            componentPoint.y,
+                            componentPoint.zero,
+                            componentPoint.zero,
                             e.getClickCount(),
                             e.isPopupTrigger()));// forward event....
 

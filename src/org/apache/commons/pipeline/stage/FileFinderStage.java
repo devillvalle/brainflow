@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -17,18 +17,19 @@
 
 package org.apache.commons.pipeline.stage;
 
-import java.io.File;
-import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pipeline.StageException;
 import org.apache.commons.pipeline.validation.ConsumedTypes;
 import org.apache.commons.pipeline.validation.ProducedTypes;
 
+import java.io.File;
+import java.util.regex.Pattern;
+
 /**
  * <p>This {@link org.apache.commons.pipeline.Pipeline$Stage Stage} is used
  * to recursively find (non-directory) files that match the specified regex.</p>
- *
+ * <p/>
  * <p>File elements in the stage's queue will be recursively searched with the
  * resulting File objects placed on the subsequent stage's queue.</p>
  */
@@ -38,10 +39,13 @@ public class FileFinderStage extends BaseStage {
     private final Log log = LogFactory.getLog(FileFinderStage.class);
     private String filePattern = ".*";
     Pattern pattern;
-    
-    /** Creates a new instance of FileFinder */
-    public FileFinderStage() { }
-    
+
+    /**
+     * Creates a new instance of FileFinder
+     */
+    public FileFinderStage() {
+    }
+
     /**
      * Precompiles the regex pattern for matching against filenames
      */
@@ -49,7 +53,7 @@ public class FileFinderStage extends BaseStage {
         super.preprocess();
         this.pattern = Pattern.compile(this.filePattern);
     }
-    
+
     /**
      * This method inspects a File object to determine if
      * it matches this FileFinder's filePattern property. If the File
@@ -58,9 +62,9 @@ public class FileFinderStage extends BaseStage {
      * on the next stage's queue.
      */
     public void process(Object obj) {
-        File file = (obj instanceof String) ? new File((String) obj) : (File) obj;        
+        File file = (obj instanceof String) ? new File((String) obj) : (File) obj;
         log.debug("Examining file " + file.getAbsolutePath());
-        
+
         if (!file.exists()) {
             log.info("File " + file + " does not exist.");
         } else if (file.isDirectory()) {
@@ -69,24 +73,26 @@ public class FileFinderStage extends BaseStage {
             for (int i = 0; i < files.length; i++) {
                 process(files[i]);
             }
-        } else if (this.pattern.matcher(file.getName()).matches()){
+        } else if (this.pattern.matcher(file.getName()).matches()) {
             this.emit(file);
         }
-        }
-    
-    /** Getter for property filePattern.
-     * @return Value of property filePattern.
+    }
+
+    /**
+     * Getter for property filePattern.
      *
+     * @return Value of property filePattern.
      */
     public String getFilePattern() {
         return this.filePattern;
     }
-    
-    /** Setter for property filePattern.
-     * @param pattern Value of property filePattern.
+
+    /**
+     * Setter for property filePattern.
      *
+     * @param pattern Value of property filePattern.
      */
     public void setFilePattern(String pattern) {
         this.filePattern = pattern;
-    }    
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
+ * Licensed to the Apache Software Foundation (ASF) under zero
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
  * regarding copyright ownership.  The ASF licenses this file
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.    
- */ 
+ */
 
 package org.apache.commons.pipeline.event;
 
@@ -29,13 +29,15 @@ import java.util.EventObject;
  */
 public class KeyAvailableEvent<T> extends EventObject {
     private T key;
-    
-    /** Creates a new instance of KeyAvailableEvent */
+
+    /**
+     * Creates a new instance of KeyAvailableEvent
+     */
     public KeyAvailableEvent(Object source, T key) {
         super(source);
         this.key = key;
     }
-    
+
     /**
      * Returns the key.
      */

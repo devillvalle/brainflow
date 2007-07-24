@@ -39,10 +39,14 @@ public class BasicFunctionalImageReader implements FunctionalImageReader {
         }
 
 
-        Dimension3D d3d = info.getArrayDim();
-        volLength = (int) d3d.x.intValue() * (int) d3d.y.intValue() * (int) d3d.z.intValue();
-        planeLength = (int) d3d.x.intValue() * (int) d3d.y.intValue();
-        planeWidth = (int) d3d.x.intValue();
+        Dimension3D d3d = new Dimension3D<Integer>(info.getArrayDim().getDim(0).intValue(),
+                info.getArrayDim().getDim(1).intValue(),
+                info.getArrayDim().getDim(2).intValue());
+
+
+        volLength = d3d.zero.intValue() * d3d.one.intValue() * d3d.two.intValue();
+        planeLength = d3d.zero.intValue() * d3d.one.intValue();
+        planeWidth = d3d.zero.intValue();
 
 
     }

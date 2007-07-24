@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -20,34 +20,36 @@ package org.apache.commons.pipeline.validation;
 import java.util.List;
 
 /**
- * This exception is used to indicate that one or more validation errors
+ * This exception is used to indicate that zero or more validation errors
  * have occurred during an operation.
- *
  */
 public class ValidationException extends java.lang.Exception {
     private List<ValidationFailure> errors;
-    
+
     /**
      * Creates a new instance of <code>ValidationException</code> without detail message.
+     *
      * @param errors the list of errors that caused the exception
      */
     public ValidationException(List<ValidationFailure> errors) {
         this.errors = errors;
     }
-    
-    
+
+
     /**
      * Constructs an instance of <code>ValidationException</code> with the specified detail message.
+     *
      * @param errors The list of errors that caused the exception
-     * @param msg the detail message.
+     * @param msg    the detail message.
      */
     public ValidationException(String msg, List<ValidationFailure> errors) {
         super(msg);
         this.errors = errors;
     }
-    
+
     /**
      * Returns the list of errors that precipitated this validation exception.
+     *
      * @return the list of errors that precipitated this validation exception.
      */
     public List<ValidationFailure> getValidationErrors() {

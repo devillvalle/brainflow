@@ -72,7 +72,7 @@ public class ButtonList extends JComponent implements ListDataListener {
     protected void initComponents() {
 
         int selIndex = selectionModel.getMinSelectionIndex();
-        
+
         removeAll();
         buttons.clear();
 
@@ -123,7 +123,7 @@ public class ButtonList extends JComponent implements ListDataListener {
         }
 
         /* Remove the forwarding ListSelectionListener from the old
-         * selectionModel, and add it to the new one, if necessary.
+         * selectionModel, and add it to the new zero, if necessary.
          */
 
 

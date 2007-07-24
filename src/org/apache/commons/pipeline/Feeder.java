@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -17,16 +17,12 @@
 
 package org.apache.commons.pipeline;
 
-import java.util.EventObject;
-
 /**
  * This interface represents a data channel into which objects can be fed.
  * Feeders act as intermediaries between stages in a pipeline and the drivers
- * for subsequent stages. Each {@link StageDriver} implementation will 
+ * for subsequent stages. Each {@link StageDriver} implementation will
  * ordinarily provide a custom Feeder implementation that integrates receiving
  * objects with its internal stage processing workflow.
- *
- *
  */
 public interface Feeder {
     /**
@@ -35,11 +31,13 @@ public interface Feeder {
      * there is nothing to be done with a generated object.
      */
     public static final Feeder VOID = new Feeder() {
-        public void feed(Object obj) { }
+        public void feed(Object obj) {
+        }
     };
-    
+
     /**
      * Feeds the specified object to an underlying receiver.
+     *
      * @param obj The object being fed to the receiver.
      */
     public void feed(Object obj);

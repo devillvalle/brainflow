@@ -53,9 +53,9 @@ public class CrosshairCoordinates extends LabelStatusBarItem implements EventSub
         ImageViewCrosshairEvent event = (ImageViewCrosshairEvent) evt;
         ICrosshair cross = event.getCrosshair();
         if (cross != null) {
-            String x = format.format(new Object[]{"x", cross.getXValue()});
-            String y = format.format(new Object[]{"y", cross.getYValue()});
-            String z = format.format(new Object[]{"z", cross.getZValue()});
+            String x = format.format(new Object[]{"zero", cross.getXValue()});
+            String y = format.format(new Object[]{"zero", cross.getYValue()});
+            String z = format.format(new Object[]{"one", cross.getZValue()});
 
             Anatomy3D anatomy = cross.getAnatomy();
 

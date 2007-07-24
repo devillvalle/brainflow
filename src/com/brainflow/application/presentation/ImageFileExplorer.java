@@ -1,6 +1,7 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.application.CompositeFileSelector;
+import com.brainflow.application.ILoadableImage;
 import com.brainflow.application.LoadableImageProvider;
 import com.brainflow.application.SoftLoadableImage;
 import com.brainflow.application.toplevel.ImageIOManager;
@@ -18,10 +19,7 @@ import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreePath;
+import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -83,6 +81,30 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
             }
         });
 
+        explorer.getJTree().setCellRenderer(new DefaultTreeCellRenderer() {
+            @Override
+            public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+                JLabel label = (JLabel) super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
+
+                if (value instanceof ImageFileObjectNode) {
+                    ImageFileObjectNode node = (ImageFileObjectNode) value;
+                    Object userObject = node.getUserObject();
+                    if (userObject instanceof ILoadableImage) {
+                        ILoadableImage limg = (ILoadableImage) userObject;
+                        if (limg.isLoaded() && !selected) {
+                            label.setForeground(Color.BLUE.brighter().brighter().brighter());
+                        }
+
+                    }
+
+                }
+
+                return label;
+            }
+
+
+        });
+
 
         explorer.addTreeSelectionListener(this);
 
@@ -136,7 +158,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
     public SoftLoadableImage[] requestLoadableImages() {
         TreePath[] paths = explorer.getJTree().getSelectionPaths();
         if (paths == null) return new SoftLoadableImage[0];
-        List<SoftLoadableImage> list = new ArrayList<SoftLoadableImage>();
+        List<ILoadableImage> list = new ArrayList<ILoadableImage>();
         for (int p = 0; p < paths.length; p++) {
             Object[] obj = paths[p].getPath();
 
@@ -144,8 +166,8 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) obj[i];
                 if (node.isLeaf()) {
                     Object userObject = node.getUserObject();
-                    if (userObject instanceof SoftLoadableImage) {
-                        list.add((SoftLoadableImage) userObject);
+                    if (userObject instanceof ILoadableImage) {
+                        list.add((ILoadableImage) userObject);
 
                     }
                 }
@@ -349,9 +371,11 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
     public static class ImageFileObjectNode extends DefaultMutableTreeNode {
 
         private boolean areChildrenDefined = false;
+
         private boolean leaf;
 
         private FileObject fileObject;
+
         private FileSelector selector;
 
 

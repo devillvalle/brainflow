@@ -49,6 +49,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
 
     private Anatomy3D displayAnatomy = Anatomy3D.getCanonicalAxial();
 
+
     public BasicImageSliceRenderer(ImageLayer layer, AnatomicalPoint1D slice) {
         this.slice = slice;
         this.layer = layer;

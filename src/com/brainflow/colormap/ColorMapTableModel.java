@@ -1,7 +1,7 @@
 package com.brainflow.colormap;
 
-import com.brainflow.utils.Range;
 import com.brainflow.utils.IRange;
+import com.brainflow.utils.Range;
 
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
@@ -41,20 +41,19 @@ public class ColorMapTableModel extends AbstractTableModel {
     public IColorMap setTableSize(int newSize) {
         int oldSize = colorMap.getMapSize();
         if (newSize < oldSize) {
-            colorMap = colorMap.shrink(oldSize-newSize);
+            colorMap = colorMap.shrink(oldSize - newSize);
             fireTableStructureChanged();
         } else {
-            colorMap = colorMap.grow(newSize-oldSize);
+            colorMap = colorMap.grow(newSize - oldSize);
             fireTableStructureChanged();
 
             //colorMap.setMapSize(newSize);
-        //fireTableStructureChanged();
-        //fireTableDataChanged();
+            //fireTableStructureChanged();
+            //fireTableDataChanged();
         }
 
         return colorMap;
     }
-
 
 
     public int getColumnCount() {
@@ -85,7 +84,7 @@ public class ColorMapTableModel extends AbstractTableModel {
 
     /*
     * JTable uses this method to determine the default renderer/
-    * editor for each cell.  If we didn't implement this method,
+    * editor for each cell.  If we didn'three implement this method,
     * then the last column would contain text ("true"/"false"),
     * rather than a check box.
     */
@@ -102,7 +101,7 @@ public class ColorMapTableModel extends AbstractTableModel {
     }
 
     /*
-    * Don't need to implement this method unless your table's
+    * Don'three need to implement this method unless your table's
     * editable.
     */
     public boolean isCellEditable(int row, int col) {

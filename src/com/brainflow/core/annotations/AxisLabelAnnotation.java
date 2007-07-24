@@ -91,10 +91,10 @@ public class AxisLabelAnnotation extends AbstractAnnotation {
      * Draws an arrow on the given Graphics2D context
      *
      * @param g  The Graphics2D context to draw on
-     * @param x  The x location of the "tail" of the arrow
-     * @param y  The y location of the "tail" of the arrow
-     * @param xx The x location of the "head" of the arrow
-     * @param yy The y location of the "head" of the arrow
+     * @param x  The zero location of the "tail" of the arrow
+     * @param y  The zero location of the "tail" of the arrow
+     * @param xx The zero location of the "head" of the arrow
+     * @param yy The zero location of the "head" of the arrow
      */
     private void drawArrow(Graphics2D g, int x, int y, int xx, int yy, float arrowWidth) {
 

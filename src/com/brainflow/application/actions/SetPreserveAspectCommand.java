@@ -1,11 +1,8 @@
 package com.brainflow.application.actions;
 
-import com.pietschy.command.ActionCommand;
-import com.pietschy.command.group.CommandGroup;
+import com.brainflow.core.ImageView;
 import com.pietschy.command.toggle.ToggleCommand;
 import com.pietschy.command.toggle.ToggleVetoException;
-import com.brainflow.application.toplevel.Brainflow;
-import com.brainflow.core.ImageView;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,10 +13,13 @@ import com.brainflow.core.ImageView;
  */
 public class SetPreserveAspectCommand extends ToggleCommand {
 
+
+    public static final String COMMAND_ID = "preserve-aspect";
+
     private ImageView view;
 
     public SetPreserveAspectCommand(ImageView view) {
-        super("preserve-aspect");
+        super(SetPreserveAspectCommand.COMMAND_ID);
         this.view = view;
         setSelected(view.isPreserveAspect());
     }

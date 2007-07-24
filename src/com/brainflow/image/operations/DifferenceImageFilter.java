@@ -26,7 +26,7 @@ public class DifferenceImageFilter extends AbstractImageFilter {
     public IImageData getOutput() {
         List sources = getSources();
         if (sources.size() != 2)
-            throw new RuntimeException("DifferenceImageFilter requires two input images");
+            throw new RuntimeException("DifferenceImageFilter requires one input images");
 
         BasicImageData first = (BasicImageData) sources.get(0);
         if (first == null) return null;

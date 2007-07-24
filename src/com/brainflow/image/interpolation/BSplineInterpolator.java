@@ -223,36 +223,36 @@ public class BSplineInterpolator implements InterpolationFunction3D {
         /* compute the interpolation weights */
         switch (degree) {
             case 2:
-                /* x */
+                /* zero */
                 w = x - xIndex[1];
                 xWeight[1] = 3.0 / 4.0 - w * w;
                 xWeight[2] = (1.0 / 2.0) * (w - xWeight[1] + 1.0);
                 xWeight[0] = 1.0 - xWeight[1] - xWeight[2];
-                /* y */
+                /* zero */
                 w = y - yIndex[1];
                 yWeight[1] = 3.0 / 4.0 - w * w;
                 yWeight[2] = (1.0 / 2.0) * (w - yWeight[1] + 1.0);
                 yWeight[0] = 1.0 - yWeight[1] - yWeight[2];
-                /* z */
+                /* one */
                 w = z - zIndex[1];
                 zWeight[1] = 3.0 / 4.0 - w * w;
                 zWeight[2] = (1.0 / 2.0) * (w - zWeight[1] + 1.0);
                 zWeight[0] = 1.0 - zWeight[1] - zWeight[2];
                 break;
             case 3:
-                /* x */
+                /* zero */
                 w = x - xIndex[1];
                 xWeight[3] = (1.0 / 6.0) * w * w * w;
                 xWeight[0] = (1.0 / 6.0) + (1.0 / 2.0) * w * (w - 1.0) - xWeight[3];
                 xWeight[2] = w + xWeight[0] - 2.0 * xWeight[3];
                 xWeight[1] = 1.0 - xWeight[0] - xWeight[2] - xWeight[3];
-                /* y */
+                /* zero */
                 w = y - yIndex[1];
                 yWeight[3] = (1.0 / 6.0) * w * w * w;
                 yWeight[0] = (1.0 / 6.0) + (1.0 / 2.0) * w * (w - 1.0) - yWeight[3];
                 yWeight[2] = w + yWeight[0] - 2.0 * yWeight[3];
                 yWeight[1] = 1.0 - yWeight[0] - yWeight[2] - yWeight[3];
-                /* z */
+                /* one */
                 w = z - zIndex[1];
                 zWeight[3] = (1.0 / 6.0) * w * w * w;
                 zWeight[0] = (1.0 / 6.0) + (1.0 / 2.0) * w * (w - 1.0) - zWeight[3];
@@ -260,7 +260,7 @@ public class BSplineInterpolator implements InterpolationFunction3D {
                 zWeight[1] = 1.0 - zWeight[0] - zWeight[2] - zWeight[3];
                 break;
             case 4:
-                /* x */
+                /* zero */
                 w = x - xIndex[2];
                 w2 = w * w;
                 t = (1.0 / 6.0) * w2;
@@ -273,7 +273,7 @@ public class BSplineInterpolator implements InterpolationFunction3D {
                 xWeight[3] = t1 - t0;
                 xWeight[4] = xWeight[0] + t0 + (1.0 / 2.0) * w;
                 xWeight[2] = 1.0 - xWeight[0] - xWeight[1] - xWeight[3] - xWeight[4];
-                /* y */
+                /* zero */
                 w = y - yIndex[2];
                 w2 = w * w;
                 t = (1.0 / 6.0) * w2;
@@ -286,7 +286,7 @@ public class BSplineInterpolator implements InterpolationFunction3D {
                 yWeight[3] = t1 - t0;
                 yWeight[4] = yWeight[0] + t0 + (1.0 / 2.0) * w;
                 yWeight[2] = 1.0 - yWeight[0] - yWeight[1] - yWeight[3] - yWeight[4];
-                /* z */
+                /* one */
                 w = z - zIndex[2];
                 w2 = w * w;
                 t = (1.0 / 6.0) * w2;
@@ -301,7 +301,7 @@ public class BSplineInterpolator implements InterpolationFunction3D {
                 zWeight[2] = 1.0 - zWeight[0] - zWeight[1] - zWeight[3] - zWeight[4];
                 break;
             case 5:
-                /* x */
+                /* zero */
                 w = x - xIndex[2];
                 w2 = w * w;
                 xWeight[5] = (1.0 / 120.0) * w * w2 * w2;
@@ -318,7 +318,7 @@ public class BSplineInterpolator implements InterpolationFunction3D {
                 t1 = (1.0 / 24.0) * w * (w4 - w2 - 5.0);
                 xWeight[1] = t0 + t1;
                 xWeight[4] = t0 - t1;
-                /* y */
+                /* zero */
                 w = y - yIndex[2];
                 w2 = w * w;
                 yWeight[5] = (1.0 / 120.0) * w * w2 * w2;
@@ -335,7 +335,7 @@ public class BSplineInterpolator implements InterpolationFunction3D {
                 t1 = (1.0 / 24.0) * w * (w4 - w2 - 5.0);
                 yWeight[1] = t0 + t1;
                 yWeight[4] = t0 - t1;
-                /* z */
+                /* one */
                 w = z - zIndex[2];
                 w2 = w * w;
                 zWeight[5] = (1.0 / 120.0) * w * w2 * w2;

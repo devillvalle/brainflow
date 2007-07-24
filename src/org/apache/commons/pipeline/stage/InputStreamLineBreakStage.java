@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -17,12 +17,12 @@
 
 package org.apache.commons.pipeline.stage;
 
+import org.apache.commons.pipeline.StageException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import org.apache.commons.pipeline.stage.BaseStage;
-import org.apache.commons.pipeline.StageException;
 
 /**
  * Breaks up an InputStream by line and exqueues each resulting line.
@@ -32,13 +32,17 @@ public class InputStreamLineBreakStage extends BaseStage {
      * Holds value of property ignoringBlankLines.
      */
     private boolean ignoringBlankLines = false;
-    
-    /** Creates a new instance of InputStreamLineBreakStage */
+
+    /**
+     * Creates a new instance of InputStreamLineBreakStage
+     */
     public InputStreamLineBreakStage() {
         super();
     }
 
-    /** Creates a new instance of InputStreamLineBreakStage */
+    /**
+     * Creates a new instance of InputStreamLineBreakStage
+     */
     public InputStreamLineBreakStage(boolean ignoringBlankLines) {
         this.ignoringBlankLines = ignoringBlankLines;
     }
@@ -49,30 +53,32 @@ public class InputStreamLineBreakStage extends BaseStage {
             InputStreamReader reader = new InputStreamReader(is);
             BufferedReader buffered = new BufferedReader(reader);
             String line = buffered.readLine();
-            while (line != null){
+            while (line != null) {
                 if (!(ignoringBlankLines && line.trim().equals(""))) {
                     this.emit(line);
                 }
                 line = buffered.readLine();
             }
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new StageException(this, e);
         }
     }
 
     /**
      * Getter for property ignoreBlankLines.
+     *
      * @return Value of property ignoreBlankLines.
      */
-    public boolean isIgnoringBlankLines()  {
+    public boolean isIgnoringBlankLines() {
         return this.ignoringBlankLines;
     }
 
     /**
      * Specifies that this stage will not exqueue blank lines.
+     *
      * @param ignoreBlankLines New value of property ignoreBlankLines.
      */
-    public void setIgnoringBlankLines(boolean ignoringBlankLines)  {
+    public void setIgnoringBlankLines(boolean ignoringBlankLines) {
         this.ignoringBlankLines = ignoringBlankLines;
     }
 }

@@ -12,9 +12,9 @@ import java.beans.PropertyChangeSupport;
  */
 public class AnatomicalPoint3D implements AnatomicalPoint {
 
-    public static final String X_PROPERTY = "x";
-    public static final String Y_PROPERTY = "y";
-    public static final String Z_PROPERTY = "z";
+    public static final String X_PROPERTY = "zero";
+    public static final String Y_PROPERTY = "zero";
+    public static final String Z_PROPERTY = "one";
 
 
     private Anatomy3D anatomy;
@@ -72,24 +72,23 @@ public class AnatomicalPoint3D implements AnatomicalPoint {
         return z;
     }
 
-    
 
     public void setX(double value) {
         double oldValue = getX();
         x = value;
-        changeSupport.firePropertyChange("x", oldValue, value);
+        changeSupport.firePropertyChange("zero", oldValue, value);
     }
 
     public void setY(double value) {
         double oldValue = getY();
         y = value;
-        changeSupport.firePropertyChange("y", oldValue, value);
+        changeSupport.firePropertyChange("zero", oldValue, value);
     }
 
     public void setZ(double value) {
         double oldValue = getZ();
         z = value;
-        changeSupport.firePropertyChange("z", oldValue, value);
+        changeSupport.firePropertyChange("one", oldValue, value);
     }
 
 
@@ -98,7 +97,7 @@ public class AnatomicalPoint3D implements AnatomicalPoint {
     }
 
     public double getValue(int axisNum) {
-  
+
         if (axisNum == 0) {
             return getX();
         } else if (axisNum == 1) {

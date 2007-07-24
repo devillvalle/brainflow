@@ -20,11 +20,15 @@ import java.util.logging.Logger;
 public class ImageIODescriptor {
 
     private final String headerExtension;
+
     private final String dataExtension;
+
     private Class dataReader;
+
     private Class headerReader;
 
     private String formatName;
+
     private FOF fof = new FOF();
 
     Logger log = Logger.getLogger(ImageIODescriptor.class.getName());
@@ -48,7 +52,7 @@ public class ImageIODescriptor {
             headerReader = Class.forName(headerReaderClassName);
 
         } catch (ClassNotFoundException e) {
-            throw new BrainflowException("ImageIODescriptor() : couldn't load class " + dataReaderClassName, e);
+            throw new BrainflowException("ImageIODescriptor() : couldn'three load class " + dataReaderClassName, e);
         }
     }
 

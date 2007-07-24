@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
+ * Licensed to the Apache Software Foundation (ASF) under zero
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
  * regarding copyright ownership.  The ASF licenses this file
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.    
- */ 
+ */
 
 package org.apache.commons.pipeline;
 
@@ -24,7 +24,7 @@ package org.apache.commons.pipeline;
  * a driver for a {@link Stage} when that stage is added to the pipeline. The factory
  * pattern is used here to ensure that each stage is run by a unique driver
  * instance.</p>
- *
+ * <p/>
  * <p>In order to guarantee that StageDriverFactory instances can be used
  * effectively in configuration frameworks, each StageDriverFactory implementation
  * <em>must</em> provide a no-argument constructor.
@@ -33,7 +33,8 @@ public interface StageDriverFactory {
     /**
      * This method is used to create a driver that will run the specified stage
      * in the specified context.
-     * @param stage The stage to be run by the newly created driver.
+     *
+     * @param stage   The stage to be run by the newly created driver.
      * @param context The context in which the stage will be run
      * @return The newly created driver
      */

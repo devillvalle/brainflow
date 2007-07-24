@@ -8,20 +8,19 @@ import com.brainflow.image.io.BasicImageReader;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.io.nifti.NiftiInfoReader;
 import com.brainflow.utils.DataType;
-import com.brainflow.utils.Dimension3D;
+import com.brainflow.utils.IDimension;
 import com.brainflow.utils.ProgressListener;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs.VFS;
 
 import javax.imageio.stream.FileImageOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.logging.Logger;
 import java.net.URL;
-
-import org.apache.commons.vfs.FileSystemManager;
-import org.apache.commons.vfs.VFS;
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemException;
+import java.util.logging.Logger;
 
 /**
  * <p>Title: </p>
@@ -80,48 +79,48 @@ public class AnalyzeIO {
     }
 
 
-     public static IImageData readAnalyzeImage(URL header) throws BrainflowException {
-         IImageData data = null;
-         try {
-             log.info("AnalyzeIO.readAnalyzeImage " + header);
-             AnalyzeInfoReader reader = new AnalyzeInfoReader();
-             FileSystemManager fsManager = VFS.getManager();
-             FileObject fobj = fsManager.resolveFile(header.getPath());
-             ImageInfo info = reader.readInfo(fobj);
-             log.info("AnalyzeInfo: " + info);
+    public static IImageData readAnalyzeImage(URL header) throws BrainflowException {
+        IImageData data = null;
+        try {
+            log.info("AnalyzeIO.readAnalyzeImage " + header);
+            AnalyzeInfoReader reader = new AnalyzeInfoReader();
+            FileSystemManager fsManager = VFS.getManager();
+            FileObject fobj = fsManager.resolveFile(header.getPath());
+            ImageInfo info = reader.readInfo(fobj);
+            log.info("AnalyzeInfo: " + info);
 
-             BasicImageReader ireader = new BasicImageReader(info);
-             data = ireader.readImage(info, new ProgressListener() {
-                 public void setValue(int val) {
+            BasicImageReader ireader = new BasicImageReader(info);
+            data = ireader.readImage(info, new ProgressListener() {
+                public void setValue(int val) {
 
-                 }
+                }
 
-                 public void setMinimum(int val) {
-                     //To change body of implemented methods use File | Settings | File Templates.
-                 }
+                public void setMinimum(int val) {
+                    //To change body of implemented methods use File | Settings | File Templates.
+                }
 
-                 public void setMaximum(int val) {
-                     //To change body of implemented methods use File | Settings | File Templates.
-                 }
+                public void setMaximum(int val) {
+                    //To change body of implemented methods use File | Settings | File Templates.
+                }
 
-                 public void setString(String message) {
-                     log.info("Progress: " + message);
-                 }
+                public void setString(String message) {
+                    log.info("Progress: " + message);
+                }
 
-                 public void setIndeterminate(boolean b) {
-                     //To change body of implemented methods use File | Settings | File Templates.
-                 }
+                public void setIndeterminate(boolean b) {
+                    //To change body of implemented methods use File | Settings | File Templates.
+                }
 
-                 public void finished() {
-                     //To change body of implemented methods use File | Settings | File Templates.
-                 }
-             });
-         } catch (FileSystemException e) {
+                public void finished() {
+                    //To change body of implemented methods use File | Settings | File Templates.
+                }
+            });
+        } catch (FileSystemException e) {
             throw new BrainflowException(e.getMessage(), e);
-         }
+        }
 
 
-         return data;
+        return data;
     }
 
 
@@ -167,8 +166,8 @@ public class AnalyzeIO {
         info.setDimensionality(3);
 
         BasicImageReader ireader = new BasicImageReader(info);
-        Dimension3D dim3d = info.getArrayDim();
-        ireader.setByteOffset((int) (timeNum * dim3d.x.intValue() * dim3d.y.intValue() * dim3d.z.intValue()));
+        IDimension dim3d = info.getArrayDim();
+        ireader.setByteOffset((timeNum * dim3d.getDim(0).intValue() * dim3d.getDim(1).intValue() * dim3d.getDim(2).intValue()));
 
 
         IImageData data = null;
@@ -208,8 +207,8 @@ public class AnalyzeIO {
         FileImageOutputStream ostream = null;
         String fname = info.getImageFile().getName().getPath();
 
-        Dimension3D dim3d = info.getArrayDim();
-        int pos = (int) (imgNum * info.getDataType().getBytesPerUnit() * dim3d.x.intValue() * dim3d.y.intValue() * dim3d.z.intValue());
+        IDimension dim3d = info.getArrayDim();
+        int pos = (int) (imgNum * info.getDataType().getBytesPerUnit() * dim3d.getDim(0).intValue() * dim3d.getDim(1).intValue() * dim3d.getDim(2).intValue());
 
 
         try {
@@ -313,9 +312,6 @@ public class AnalyzeIO {
             }
         }
     }
-
-
-
 
 
 }

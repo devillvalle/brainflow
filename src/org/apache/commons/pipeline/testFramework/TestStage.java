@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -17,13 +17,16 @@
 
 package org.apache.commons.pipeline.testFramework;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.pipeline.*;
+import org.apache.commons.pipeline.Stage;
+import org.apache.commons.pipeline.StageContext;
+import org.apache.commons.pipeline.StageException;
 import org.apache.commons.pipeline.validation.ConsumedTypes;
 import org.apache.commons.pipeline.validation.ProducesConsumed;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @ConsumedTypes(Object.class)
 @ProducesConsumed
@@ -37,25 +40,26 @@ public class TestStage implements Stage {
     public boolean preprocessed = false;
     public boolean postprocessed = false;
     public boolean released = false;
-    
+
     /**
-     * Construct a TestStage with a numeric index used to easily identify this stage. 
+     * Construct a TestStage with a numeric index used to easily identify this stage.
      * The {@link getIndex} and {@link toString} methods use this index.
+     *
      * @param index acts as an identification number
      */
     public TestStage(int index) {
         this.index = index;
     }
-    
+
     public int getIndex() {
         return this.index;
     }
 
-    public void init(StageContext context) {        
+    public void init(StageContext context) {
         this.context = context;
         this.initialized = true;
     }
-    
+
     public void preprocess() throws StageException {
         this.preprocessed = true;
     }
@@ -65,7 +69,7 @@ public class TestStage implements Stage {
         this.processedObjects.add(obj);
         this.context.getDownstreamFeeder(this).feed(obj);
     }
-    
+
     public void postprocess() throws StageException {
         this.postprocessed = true;
     }

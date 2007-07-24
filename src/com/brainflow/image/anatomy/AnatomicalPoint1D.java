@@ -1,6 +1,5 @@
 package com.brainflow.image.anatomy;
 
-import com.jgoodies.binding.beans.ExtendedPropertyChangeSupport;
 import com.brainflow.image.axis.ImageAxis;
 
 import java.beans.PropertyChangeSupport;
@@ -18,12 +17,12 @@ public class AnatomicalPoint1D implements AnatomicalPoint {
     private AnatomicalAxis anatomy;
 
     private double x;
-    
+
     private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     public AnatomicalPoint1D(AnatomicalAxis _anatomy, double x) {
-        this.x=x;
-        anatomy=_anatomy;
+        this.x = x;
+        anatomy = _anatomy;
     }
 
     public AnatomicalAxis getAnatomy() {
@@ -37,7 +36,7 @@ public class AnatomicalPoint1D implements AnatomicalPoint {
     public void setX(double x) {
         double oldProperty = this.x;
         this.x = x;
-        changeSupport.firePropertyChange("x", oldProperty, this.x);
+        changeSupport.firePropertyChange("zero", oldProperty, this.x);
     }
 
 
@@ -53,14 +52,13 @@ public class AnatomicalPoint1D implements AnatomicalPoint {
             return new AnatomicalPoint1D(anatomy, getX());
         } else {
             double nvalue = otherAxis.getRange().getEnd().getX() - getX()
-                    +  otherAxis.getRange().getBeginning().getX();
+                    + otherAxis.getRange().getBeginning().getX();
 
             return new AnatomicalPoint1D(otherAxis.getAnatomicalAxis(), nvalue);
         }
 
 
     }
-
 
 
     public double getValue(int axisNum) {

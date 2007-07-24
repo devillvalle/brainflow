@@ -1,6 +1,9 @@
 package com.brainflow.image.io.afni;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,18 +23,20 @@ public abstract class AFNIAttribute {
     }
 
 
-    public AFNIAttribute(String _name, int _count, String _content) {
-        name = _name;
+    public AFNIAttribute(AFNIAttributeKey _key, int _count, String _content) {
+        name = _key.toString();
         count = _count;
         content = _content;
+        key = _key;
     }
 
+    public AFNIAttributeKey key;
 
-    String name;
+    protected String name;
 
-    int count;
+    protected int count;
 
-    String content;
+    protected String content;
 
     public String toString() {
         StringBuffer sb = new StringBuffer();
@@ -42,10 +47,21 @@ public abstract class AFNIAttribute {
         sb.append("count = " + count);
         sb.append("\n");
 
+
         return sb.toString();
     }
 
-    public abstract Object getData();
+    public String getName() {
+        return name;
+    }
+
+    public AFNIAttributeKey getKey() {
+        return key;
+    }
+
+    public abstract List<?> getData();
+
+    public abstract int size();
 
     public abstract AFNI_ATTRIBUTE_TYPE getType();
 
@@ -86,19 +102,19 @@ public abstract class AFNIAttribute {
 
     }
 
-    public static AFNIAttribute createAttribute(AFNI_ATTRIBUTE_TYPE type, String name, int count, String content) {
+    public static AFNIAttribute createAttribute(AFNI_ATTRIBUTE_TYPE type, AFNIAttributeKey key, int count, String content) {
 
         AFNIAttribute attr = null;
 
         switch (type) {
             case integer_attribute:
-                attr = new IntegerAttribute(name, count, content);
+                attr = new IntegerAttribute(key, count, content);
                 break;
             case float_attribute:
-                attr = new FloatAttribute(name, count, content);
+                attr = new FloatAttribute(key, count, content);
                 break;
             case string_attribute:
-                attr = new StringAttribute(name, count, content);
+                attr = new StringAttribute(key, count, content);
                 break;
             default:
                 throw new RuntimeException("unrecognized attribute : " + type);
@@ -113,8 +129,8 @@ public abstract class AFNIAttribute {
 
         List<Integer> data = new ArrayList<Integer>();
 
-        public IntegerAttribute(String name, int count, String content) {
-            super(name, count, content);
+        public IntegerAttribute(AFNIAttributeKey key, int count, String content) {
+            super(key, count, content);
             parseContent();
         }
 
@@ -129,6 +145,10 @@ public abstract class AFNIAttribute {
             return AFNI_ATTRIBUTE_TYPE.integer_attribute;
         }
 
+        public int size() {
+            return data.size();
+        }
+
         public List<Integer> getData() {
             return data;
         }
@@ -138,7 +158,7 @@ public abstract class AFNIAttribute {
             String ret = super.toString();
             StringBuffer sb = new StringBuffer();
             sb.append(ret);
-           
+
             sb.append(Arrays.toString(data.toArray()));
             return sb.toString();
         }
@@ -148,8 +168,8 @@ public abstract class AFNIAttribute {
 
         List<String> data = new ArrayList<String>();
 
-        public StringAttribute(String name, int count, String content) {
-            super(name, count, content);
+        public StringAttribute(AFNIAttributeKey key, int count, String content) {
+            super(key, count, content);
             parseContent();
         }
 
@@ -169,6 +189,10 @@ public abstract class AFNIAttribute {
             return data;
         }
 
+        public int size() {
+            return data.size();
+        }
+
         public String toString() {
             String ret = super.toString();
             StringBuffer sb = new StringBuffer();
@@ -183,8 +207,8 @@ public abstract class AFNIAttribute {
 
         List<Float> data = new ArrayList<Float>();
 
-        public FloatAttribute(String name, int count, String content) {
-            super(name, count, content);
+        public FloatAttribute(AFNIAttributeKey key, int count, String content) {
+            super(key, count, content);
             parseContent();
         }
 
@@ -197,6 +221,10 @@ public abstract class AFNIAttribute {
 
         public AFNI_ATTRIBUTE_TYPE getType() {
             return AFNI_ATTRIBUTE_TYPE.float_attribute;
+        }
+
+        public int size() {
+            return data.size();
         }
 
         public List<Float> getData() {

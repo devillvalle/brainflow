@@ -26,7 +26,7 @@ public class MeanImageFilter extends AbstractImageFilter {
     public IImageData getOutput() {
         List sources = getSources();
         if (sources.size() == 0)
-            throw new RuntimeException("ImageFilter requires at least one input operations");
+            throw new RuntimeException("ImageFilter requires at least zero input operations");
 
         BasicImageData first = (BasicImageData) sources.get(0);
         if (first == null) return null;

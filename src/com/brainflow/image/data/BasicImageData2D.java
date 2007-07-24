@@ -3,14 +3,10 @@ package com.brainflow.image.data;
 import com.brainflow.image.interpolation.InterpolationFunction2D;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.iterators.ImageIterator;
-import com.brainflow.image.rendering.RenderUtils;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace2D;
-import com.brainflow.utils.ArrayUtils;
 import com.brainflow.utils.DataType;
-
-import java.awt.image.RenderedImage;
 
 
 /**
@@ -24,7 +20,6 @@ import java.awt.image.RenderedImage;
  */
 
 public class BasicImageData2D extends BasicImageData implements IImageData2D {
-
 
 
     public BasicImageData2D(BasicImageData2D src) {
@@ -53,7 +48,7 @@ public class BasicImageData2D extends BasicImageData implements IImageData2D {
         storage = array;
         establishDataType(storage);
         data = allocateBuffer(space.getNumSamples());
-       
+
     }
 
 
@@ -158,7 +153,7 @@ public class BasicImageData2D extends BasicImageData implements IImageData2D {
         }
 
         public double nextPlane() {
-            throw new java.lang.UnsupportedOperationException("ImageIterator2D.nextPlane(): only one plane in 2D iterator!");
+            throw new java.lang.UnsupportedOperationException("ImageIterator2D.nextPlane(): only zero plane in 2D iterator!");
         }
 
         public boolean hasNextRow() {
@@ -187,7 +182,7 @@ public class BasicImageData2D extends BasicImageData implements IImageData2D {
         }
 
         public double previousPlane() {
-            throw new java.lang.UnsupportedOperationException("ImageIterator2D.previousPlane(): only one plane in 2D iterator!");
+            throw new java.lang.UnsupportedOperationException("ImageIterator2D.previousPlane(): only zero plane in 2D iterator!");
         }
 
         public int index() {

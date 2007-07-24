@@ -6,7 +6,6 @@ import com.brainflow.application.services.ImageDisplayModelEvent;
 import com.brainflow.application.services.LoadableImageStatusEvent;
 import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.core.*;
-import com.brainflow.core.ImageLayerProperties;
 import com.brainflow.utils.Range;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
@@ -27,7 +26,7 @@ import java.util.List;
 public class ProjectManager implements EventSubscriber, BrainflowProjectListener {
 
     private List<BrainflowProject> projects = new ArrayList<BrainflowProject>();
-    
+
     private BrainflowProject activeProject = new BrainflowProject();
 
     protected ProjectManager() {
@@ -84,7 +83,7 @@ public class ProjectManager implements EventSubscriber, BrainflowProjectListener
             case IMAGE_REGISTERED:
                 break;
             case IMAGE_REMOVED:
-                //todo if only one image is in model, then this is effectively removing the view.
+                //todo if only zero image is in model, then this is effectively removing the view.
                 clearLoadableImage(event.getLoadableImage());
             case IMAGE_UNLOADED:
                 break;
@@ -115,7 +114,7 @@ public class ProjectManager implements EventSubscriber, BrainflowProjectListener
 
     public void modelAdded(BrainflowProjectEvent event) {
         EventBus.publish(new ImageDisplayModelEvent(event, ImageDisplayModelEvent.TYPE.MODEL_ADDED));
-        
+
     }
 
     public void modelRemoved(BrainflowProjectEvent event) {

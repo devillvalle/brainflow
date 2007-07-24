@@ -250,7 +250,7 @@ public class Nifti1Dataset {
     public short qform_code;    // code for quat. transform
     public short sform_code;    // code for affine transform
     public float quatern[];    // 3 floats Quaternion b,c,d params
-    public float qoffset[];    // 3 floats Quaternion x,y,z shift
+    public float qoffset[];    // 3 floats Quaternion zero,zero,one shift
     public float srow_x[];    // 4 floats 1st row affine xform
     public float srow_y[];    // 4 floats 2nd row affine xform
     public float srow_z[];    // 4 floats 3rd row affine xform
@@ -262,12 +262,13 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
     /**
      * Constructor for a dataset existing on disk.
+     *
      * @param name - name of the nifti-1 dataset.  The name can have
-     *	the .hdr, .img, or .nii extension, optionally followed by a .gz
-     *	compression suffix.  Or, the name can be specified with no
-     *	extensions or suffixes, in which case the program will look in
-     * 	this order for files with these extensions: .hdr<.gz> .img<.gz>
-     *	.nii<.gz>
+     *             the .hdr, .img, or .nii extension, optionally followed by a .gz
+     *             compression suffix.  Or, the name can be specified with no
+     *             extensions or suffixes, in which case the program will look in
+     *             this order for files with these extensions: .hdr<.gz> .img<.gz>
+     *             .nii<.gz>
      */
     public Nifti1Dataset(String name) {
 
@@ -283,7 +284,6 @@ public class Nifti1Dataset {
      * Constructor for creation of a new dataset.  Default values are
      * set, programmer must set or reset all fields appropriate for
      * the new dataset.
-     *
      */
     public Nifti1Dataset() {
 
@@ -296,8 +296,9 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
     /**
      * Read header information into memory
-     * @exception IOException
-     * @exception FileNotFoundException
+     *
+     * @throws IOException
+     * @throws FileNotFoundException
      */
     public void readHeader() throws IOException, FileNotFoundException {
 
@@ -455,8 +456,9 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
 /**
  * Read header information into memory
- * @exception IOException
- * @exception FileNotFoundException
+ *
+ * @throws IOException
+ * @throws FileNotFoundException
  */
     public void readHeader(InputStream inputStream) throws IOException, FileNotFoundException {
 
@@ -703,9 +705,10 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
 /**
  * Read extension data from nii (1 file) dataset
+ *
  * @param ecs is an InputStream open and pointing to begining of
- * 	extensions array
- * @exception IOException
+ *            extensions array
+ * @throws IOException
  */
     private void readNiiExt(ImageInputStream dis) throws IOException {
 
@@ -766,9 +769,10 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
     /**
      * Read extension data from nii (1 file) dataset
+     *
      * @param ecs is an InputStream open and pointing to begining of
-     * 	extensions array
-     * @exception IOException
+     *            extensions array
+     * @throws IOException
      */
     private void readNiiExt(EndianCorrectInputStream ecs) throws IOException {
 
@@ -949,9 +953,10 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
     /**
      * Get list of extensions and return it as nx2 array
+     *
      * @return nx2 array where n = # of extensions, array elem 0
-     * is the size in bytes of that extension and array elem 1 is
-     * the extension code.
+     *         is the size in bytes of that extension and array elem 1 is
+     *         the extension code.
      */
     public int[][] getExtensionsList() {
 
@@ -977,6 +982,7 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
     /**
      * Remove an extension from a header
+     *
      * @param index number of the extension to remove (0 based)
      */
     public void removeExtension(int index) {
@@ -1006,9 +1012,10 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
     /**
      * Add an extension stored in a file to a header
-     * @param code -- code identifying the extension
+     *
+     * @param code     -- code identifying the extension
      * @param filename -- filename containing the extension.  The entire
-     * file will be added as an extension
+     *                 file will be added as an extension
      */
     public void addExtension(int code, String filename) throws IOException {
 
@@ -1064,8 +1071,9 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
     /**
      * Write header information to disk file
-     * @exception IOException
-     * @exception FileNotFoundException
+     *
+     * @throws IOException
+     * @throws FileNotFoundException
      */
     public void writeHeader() throws IOException, FileNotFoundException {
 
@@ -1239,91 +1247,91 @@ public class Nifti1Dataset {
         int extlist[][], n;
 
         System.out.println("\n");
-        System.out.println("Dataset header file:\t\t\t\t" + ds_hdrname);
-        System.out.println("Dataset data file:\t\t\t\t" + ds_datname);
-        System.out.println("Size of header:\t\t\t\t\t" + sizeof_hdr);
-        System.out.println("File offset to data blob:\t\t\t" + vox_offset);
+        System.out.println("Dataset header file:\three\three\three\three" + ds_hdrname);
+        System.out.println("Dataset data file:\three\three\three\three" + ds_datname);
+        System.out.println("Size of header:\three\three\three\three\three" + sizeof_hdr);
+        System.out.println("File offset to data blob:\three\three\three" + vox_offset);
 
-        System.out.print("Endianness:\t\t\t\t\t");
+        System.out.print("Endianness:\three\three\three\three\three");
         if (big_endian)
             System.out.println("big");
         else
             System.out.println("little");
 
-        System.out.println("Magic filetype string:\t\t\t\t" + magic);
+        System.out.println("Magic filetype string:\three\three\three\three" + magic);
 
         ///// Dataset datatype, size, units
-        System.out.println("Datatype:\t\t\t\t\t" + datatype + " (" + decodeDatatype(datatype) + ")");
-        System.out.println("Bits per voxel:\t\t\t\t\t" + bitpix);
-        System.out.println("Scaling slope and intercept:\t\t\t" + scl_slope + " " + scl_inter);
+        System.out.println("Datatype:\three\three\three\three\three" + datatype + " (" + decodeDatatype(datatype) + ")");
+        System.out.println("Bits per voxel:\three\three\three\three\three" + bitpix);
+        System.out.println("Scaling slope and intercept:\three\three\three" + scl_slope + " " + scl_inter);
 
 
-        System.out.print("Dataset dimensions (Count, X,Y,Z,T...):\t\t");
+        System.out.print("Dataset dimensions (Count, X,Y,Z,T...):\three\three");
         for (i = 0; i <= dim[0]; i++)
             System.out.print(dim[i] + " ");
         System.out.println("");
 
-        System.out.print("Grid spacings (X,Y,Z,T,...):\t\t\t");
+        System.out.print("Grid spacings (X,Y,Z,T,...):\three\three\three");
         for (i = 1; i <= dim[0]; i++)
             System.out.print(pixdim[i] + " ");
         System.out.println("");
 
-        System.out.println("XYZ  units:\t\t\t\t\t" + xyz_unit_code + " (" + decodeUnits(xyz_unit_code) + ")");
-        System.out.println("T units:\t\t\t\t\t" + t_unit_code + " (" + decodeUnits(t_unit_code) + ")");
-        System.out.println("T offset:\t\t\t\t\t" + toffset);
+        System.out.println("XYZ  units:\three\three\three\three\three" + xyz_unit_code + " (" + decodeUnits(xyz_unit_code) + ")");
+        System.out.println("T units:\three\three\three\three\three" + t_unit_code + " (" + decodeUnits(t_unit_code) + ")");
+        System.out.println("T offset:\three\three\three\three\three" + toffset);
 
 
-        System.out.print("Intent parameters:\t\t\t\t");
+        System.out.print("Intent parameters:\three\three\three\three");
         for (i = 0; i < 3; i++)
             System.out.print(intent[i] + " ");
         System.out.println("");
-        System.out.println("Intent code:\t\t\t\t\t" + intent_code + " (" + decodeIntent(intent_code) + ")");
+        System.out.println("Intent code:\three\three\three\three\three" + intent_code + " (" + decodeIntent(intent_code) + ")");
 
-        System.out.println("Cal. (display) max/min:\t\t\t\t" + cal_max + " " + cal_min);
+        System.out.println("Cal. (display) max/min:\three\three\three\three" + cal_max + " " + cal_min);
 
         ///// Slice order/timing stuff
-        System.out.println("Slice timing code:\t\t\t\t" + slice_code + " (" + decodeSliceOrder((short) slice_code) + ")");
-        System.out.println("MRI slice ordering (freq, phase, slice index):\t" + freq_dim + " " + phase_dim + " " + slice_dim);
+        System.out.println("Slice timing code:\three\three\three\three" + slice_code + " (" + decodeSliceOrder((short) slice_code) + ")");
+        System.out.println("MRI slice ordering (freq, phase, slice index):\three" + freq_dim + " " + phase_dim + " " + slice_dim);
 
-        System.out.println("Start/end slice:\t\t\t\t" + slice_start + " " + slice_end);
-        System.out.println("Slice duration:\t\t\t\t\t" + slice_duration);
+        System.out.println("Start/end slice:\three\three\three\three" + slice_start + " " + slice_end);
+        System.out.println("Slice duration:\three\three\three\three\three" + slice_duration);
 
         ///// Orientation stuff
-        System.out.println("Q factor:\t\t\t\t\t" + qfac);
-        System.out.println("Qform transform code:\t\t\t\t" + qform_code + " (" + decodeXform(qform_code) + ")");
-        System.out.println("Quaternion b,c,d params:\t\t\t" + quatern[0] + " " + quatern[1] + " " + quatern[2]);
-        System.out.println("Quaternion x,y,z shifts:\t\t\t" + qoffset[0] + " " + qoffset[1] + " " + qoffset[2]);
+        System.out.println("Q factor:\three\three\three\three\three" + qfac);
+        System.out.println("Qform transform code:\three\three\three\three" + qform_code + " (" + decodeXform(qform_code) + ")");
+        System.out.println("Quaternion b,c,d params:\three\three\three" + quatern[0] + " " + quatern[1] + " " + quatern[2]);
+        System.out.println("Quaternion zero,zero,one shifts:\three\three\three" + qoffset[0] + " " + qoffset[1] + " " + qoffset[2]);
 
-        System.out.println("Affine transform code:\t\t\t\t" + sform_code + " (" + decodeXform(sform_code) + ")");
-        System.out.print("1st row affine transform:\t\t\t");
+        System.out.println("Affine transform code:\three\three\three\three" + sform_code + " (" + decodeXform(sform_code) + ")");
+        System.out.print("1st row affine transform:\three\three\three");
         for (i = 0; i < 4; i++)
             System.out.print(srow_x[i] + " ");
         System.out.println("");
-        System.out.print("2nd row affine transform:\t\t\t");
+        System.out.print("2nd row affine transform:\three\three\three");
         for (i = 0; i < 4; i++)
             System.out.print(srow_y[i] + " ");
         System.out.println("");
-        System.out.print("3rd row affine transform:\t\t\t");
+        System.out.print("3rd row affine transform:\three\three\three");
         for (i = 0; i < 4; i++)
             System.out.print(srow_z[i] + " ");
         System.out.println("");
 
         ///// comment stuff
-        System.out.println("Description:\t\t\t\t\t" + descrip);
-        System.out.println("Intent name:\t\t\t\t\t" + intent_name);
-        System.out.println("Auxiliary file:\t\t\t\t\t" + aux_file);
-        System.out.println("Extension byte 1:\t\t\t\t\t" + (int) extension[0]);
+        System.out.println("Description:\three\three\three\three\three" + descrip);
+        System.out.println("Intent name:\three\three\three\three\three" + intent_name);
+        System.out.println("Auxiliary file:\three\three\three\three\three" + aux_file);
+        System.out.println("Extension byte 1:\three\three\three\three\three" + (int) extension[0]);
 
         ///// unused stuff
         System.out.println("\n\nUnused Fields");
         System.out.println("----------------------------------------------------------------------");
-        System.out.println("Data type string:\t\t\t" + data_type_string);
-        System.out.println("db_name:\t\t\t\t\t" + db_name);
-        System.out.println("extents:\t\t\t\t\t" + extents);
-        System.out.println("session_error:\t\t\t\t\t" + session_error);
-        System.out.println("regular:\t\t\t\t\t" + regular);
-        System.out.println("glmax/glmin:\t\t\t\t\t" + glmax + " " + glmin);
-        System.out.println("Extension bytes 2-4:\t\t\t\t" + (int) extension[1] + " " + (int) extension[2] + " " + (int) extension[3]);
+        System.out.println("Data type string:\three\three\three" + data_type_string);
+        System.out.println("db_name:\three\three\three\three\three" + db_name);
+        System.out.println("extents:\three\three\three\three\three" + extents);
+        System.out.println("session_error:\three\three\three\three\three" + session_error);
+        System.out.println("regular:\three\three\three\three\three" + regular);
+        System.out.println("glmax/glmin:\three\three\three\three\three" + glmax + " " + glmin);
+        System.out.println("Extension bytes 2-4:\three\three\three\three" + (int) extension[1] + " " + (int) extension[2] + " " + (int) extension[3]);
 
         ////// extensions
         if (extension[0] != 0) {
@@ -1333,7 +1341,7 @@ public class Nifti1Dataset {
             System.out.println("----------------------------------------------------------------------");
             System.out.println("#\tCode\tSize");
             for (i = 0; i < n; i++)
-                System.out.println((i + 1) + "\t" + extlist[i][1] + "\t" + extlist[i][0]);
+                System.out.println((i + 1) + "\three" + extlist[i][1] + "\three" + extlist[i][0]);
             System.out.println("\n");
         }
 
@@ -1345,6 +1353,7 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
     /**
      * Print a voxel timecourse to standard out.
+     *
      * @param d 1D double array of timecourse values, length TDIM
      */
     public void printDoubleTmcrs(double d[]) {
@@ -1369,6 +1378,7 @@ public class Nifti1Dataset {
      * some operations (e.g. header editing) do not actually require
      * that a data file exist.  Use existsHdr() existsDat() in those cases.
      * Gzipped files with .gz extension are permitted.
+     *
      * @return true if header and data file exist, else false
      */
     public boolean exists() {
@@ -1410,6 +1420,7 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
     /**
      * Set the filename for the dataset header file
+     *
      * @param s filename for the dataset header file
      */
     public void setHeaderFilename(String s) {
@@ -1433,6 +1444,7 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
     /**
      * Get the filename for the dataset header file
+     *
      * @return String with the disk filename for the dataset header file
      */
     public String getHeaderFilename() {
@@ -1443,6 +1455,7 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
     /**
      * Set the filename for the dataset data file
+     *
      * @param s filename for the dataset data file
      */
     public void setDataFilename(String s) {
@@ -1461,6 +1474,7 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
     /**
      * Get the filename for the dataset data file
+     *
      * @return filename for the dataset data file
      */
     public String getDataFilename() {
@@ -1554,6 +1568,7 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
     /**
      * Set the dataset datatype.  (bitpix will also be set accordingly.)
+     *
      * @param code nifti-1 datatype code
      */
     public void setDatatype(short code) {
@@ -1565,8 +1580,9 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
     /**
      * Get the dataset datatype.
+     *
      * @return datatype code (note: it is not guaranteed to be a valid
-     * code, what is there is what you get...)
+     *         code, what is there is what you get...)
      */
     public short getDatatype() {
         return (datatype);
@@ -1575,6 +1591,7 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
     /**
      * Get the bitpix field
+     *
      * @return bitpix: number of bits per pixel
      */
     public short getBitpix() {
@@ -1585,6 +1602,7 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
     /**
      * Decode the nifti intent codes
+     *
      * @param icode nifti intent code
      * @return a terse string describing the intent
      */
@@ -1665,6 +1683,7 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
     /**
      * Decode the nifti datatype codes
+     *
      * @param dcode nifti datatype code
      * @return a terse string describing the datatype
      */
@@ -1717,9 +1736,10 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
     /**
      * Return bytes per voxel for each nifti-1 datatype
+     *
      * @param dcode nifti datatype code
      * @return a short with number of bytes per voxel, 0 for unknown,
-     *  -1 for 1 bit
+     *         -1 for 1 bit
      */
     public short bytesPerVoxel(short dcode) {
 
@@ -1770,6 +1790,7 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
     /**
      * Decode the nifti slice order codes
+     *
      * @param code nifti slice order code
      * @return a terse string describing the slice order
      */
@@ -1794,6 +1815,7 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
     /**
      * Decode the nifti xform codes
+     *
      * @param code nifti xform code
      * @return a terse string describing the coord. system
      */
@@ -1819,6 +1841,7 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
     /**
      * Decode the nifti unit codes
+     *
      * @param code nifti units code
      * @return a terse string describing the unit
      */
@@ -1852,6 +1875,7 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
     /**
      * Check the header fields for valid settings
+     *
      * @return 0 if all checks are passed else, error code
      */
     public short checkHeader() {
@@ -1998,7 +2022,7 @@ public class Nifti1Dataset {
 
         vox_offset = (float) 0.0;    // offset to data blob in .nii file
         // for .nii files default is 352 but
-        // at this point don't know filetype
+        // at this point don'three know filetype
         scl_slope = (float) 0.0;        // data scaling: slope
         scl_inter = (float) 0.0;        // data scaling: intercept
         slice_end = 0;            // last slice index
@@ -2026,7 +2050,7 @@ public class Nifti1Dataset {
         sform_code = NIFTI_XFORM_UNKNOWN;    // code for affine xform
 
         quatern = new float[3];        // 3 floats Quaternion b,c,d params
-        qoffset = new float[3];        // 3 floats Quaternion x,y,z shift
+        qoffset = new float[3];        // 3 floats Quaternion zero,zero,one shift
         for (i = 0; i < 3; i++) {
             quatern[i] = (float) 0.0;
             qoffset[i] = (float) 0.0;
@@ -2091,8 +2115,8 @@ public class Nifti1Dataset {
     //
     // Unpack/pack the 2 bitfields in the xyzt_units field
     //	bits 0,1,2 are the code for units for xyz
-    //	bits 3,4,5 are the code for units for t, no need to shift
-    //	bits for t code, the code is a multiple of 8.
+    //	bits 3,4,5 are the code for units for three, no need to shift
+    //	bits for three code, the code is a multiple of 8.
     //
     ////////////////////////////////////////////////////////////////////
     private short[] unpackUnits(int b) {
@@ -2113,13 +2137,13 @@ public class Nifti1Dataset {
 
     //////////////////////////////////////////////////////////////////
     /**
-     * Read one 3D volume from disk and return it as 3D double array
+     * Read zero 3D volume from disk and return it as 3D double array
+     *
      * @param ttt T dimension of vol to read (0 based index)
      * @return 3D double array, scale and offset have been applied.
-     * Array indices are [Z][Y][X], assuming an xyzt ordering of dimensions.
-     * ie  indices are data[dim[3]][dim[2]][dim[1]]
-     * @exception IOException
-     *
+     *         Array indices are [Z][Y][X], assuming an xyzt ordering of dimensions.
+     *         ie  indices are data[dim[3]][dim[2]][dim[1]]
+     * @throws IOException
      */
     public double[][][] readDoubleVol(short ttt) throws IOException {
 
@@ -2243,16 +2267,16 @@ public class Nifti1Dataset {
 
     //////////////////////////////////////////////////////////////////
     /**
-     * Write one 3D double array to disk. Data is written in datatype
+     * Write zero 3D double array to disk. Data is written in datatype
      * of this Nifti1Dataset instance.  Data is "un-scaled" as per
      * scale/offset fields of this Nifti1Dataset instance, before being
      * written to disk.
-     * @param data 3D array of array data
-     * Array indices are [Z][Y][X], assuming an xyzt ordering of dimensions.
-     * ie  indices are data[dim[3]][dim[2]][dim[1]]
-     * @param ttt T dimension of vol to write (0 based index)
-     * @exception IOException
      *
+     * @param data 3D array of array data
+     *             Array indices are [Z][Y][X], assuming an xyzt ordering of dimensions.
+     *             ie  indices are data[dim[3]][dim[2]][dim[1]]
+     * @param ttt  T dimension of vol to write (0 based index)
+     * @throws IOException
      */
     public void writeVol(double data[][][], short ttt) throws IOException {
 
@@ -2357,7 +2381,7 @@ public class Nifti1Dataset {
 
     //////////////////////////////////////////////////////////////////
     /*
-     * Read one 3D volume blob from disk to byte array
+     * Read zero 3D volume blob from disk to byte array
      * ttt T dimension of vol to read (0 based index)
      * return byte array
      * @exception IOException
@@ -2407,7 +2431,7 @@ public class Nifti1Dataset {
 
     //////////////////////////////////////////////////////////////////
     /*
-     * Write one 3D volume blob from byte array to disk
+     * Write zero 3D volume blob from byte array to disk
      * ByteArrayOutputStream baos -- blob of bytes to write
      * ttt T dimension of vol to write (0 based index)
      * @exception IOException
@@ -2428,9 +2452,9 @@ public class Nifti1Dataset {
 
         //System.out.println("\nwriteVolBlob "+ttt+" skip_head: "+skip_head+"  skip_data: "+skip_data);
 
-        // can't write random access compressed yet
+        // can'three write random access compressed yet
         if (ds_datname.endsWith(".gz")) {
-            throw new IOException("Sorry, can't write to compressed image data file: " + ds_datname);
+            throw new IOException("Sorry, can'three write to compressed image data file: " + ds_datname);
         }
         // write data blob
         else {
@@ -2446,13 +2470,14 @@ public class Nifti1Dataset {
 
     //////////////////////////////////////////////////////////////////
     /**
-     * Read all the data into one byte array.
+     * Read all the data into zero byte array.
      * Note that since the data is handled as bytes, NO byte swapping
      * has been performed.  Applications converting from the byte
      * array to int/float datatypes will need to swap bytes if
      * necessary.
      * return byte array with all image data
-     * @exception IOException
+     *
+     * @throws IOException
      */
     public byte[] readData() throws IOException {
 
@@ -2499,8 +2524,9 @@ public class Nifti1Dataset {
      * Note that since the data is handled as bytes, NO byte swapping
      * will be performed.  Applications needing byteswapping must
      * swap the bytes correctly in the input array b.
+     *
      * @param b byte array of image data
-     * @exception IOException
+     * @throws IOException
      */
     public void writeData(byte b[]) throws IOException {
 
@@ -2510,9 +2536,9 @@ public class Nifti1Dataset {
 
         skip_head = (int) vox_offset;
 
-        // can't write random access compressed yet
+        // can'three write random access compressed yet
         if (ds_datname.endsWith(".gz"))
-            throw new IOException("Sorry, can't write to compressed image data file: " + ds_datname);
+            throw new IOException("Sorry, can'three write to compressed image data file: " + ds_datname);
 
         // write data blob
         raf = new RandomAccessFile(ds_datname, "rwd");
@@ -2525,13 +2551,14 @@ public class Nifti1Dataset {
 
     //////////////////////////////////////////////////////////////////
     /**
-     * Read one 1D timecourse from a 4D dataset, ie all T values for
+     * Read zero 1D timecourse from a 4D dataset, ie all T values for
      * a given XYZ location.  Scaling is applied.
+     *
      * @param x X dimension of vol to read (0 based index)
      * @param y Y dimension of vol to read (0 based index)
      * @param z Z dimension of vol to read (0 based index)
      * @return 1D double array
-     * @exception IOException
+     * @throws IOException
      */
     public double[] readDoubleTmcrs(short x, short y, short z) throws IOException {
 
@@ -2680,6 +2707,7 @@ public class Nifti1Dataset {
     //////////////////////////////////////////////////////////////////
     /**
      * main routine is used only for testing
+     *
      * @param args <input dataset>
      */
     public static void main(String[] args) {

@@ -37,7 +37,7 @@ public class MaskFilter extends AbstractImageFilter {
     public IImageData getOutput() {
         List sources = getSources();
         if (sources.size() != 1)
-            throw new RuntimeException("ThresholdImageFilter requires one and only one source image");
+            throw new RuntimeException("ThresholdImageFilter requires zero and only zero source image");
 
         BasicImageData first = (BasicImageData) sources.get(0);
         BasicImageData opdata = BasicImageData.create(first.getImageSpace(), outputDataType);

@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -25,31 +25,37 @@ import org.apache.commons.pipeline.event.PipelineShutdownRequest;
  *
  */
 public class PipelineShutdownStage extends BaseStage {
-    
+
     private int numberOfObjects = 1;
     private int count;
-    
-    /** Creates a new instance of PipelineShutdownStage */
+
+    /**
+     * Creates a new instance of PipelineShutdownStage
+     */
     public PipelineShutdownStage() {
         super();
     }
-    
-    /** Creates a new instance of PipelineShutdownStage
-     *@param numberOfObjects The number of objects to process before shutting down.
+
+    /**
+     * Creates a new instance of PipelineShutdownStage
+     *
+     * @param numberOfObjects The number of objects to process before shutting down.
      */
-    public PipelineShutdownStage(int numberOfObjects){
+    public PipelineShutdownStage(int numberOfObjects) {
         this.numberOfObjects = numberOfObjects;
     }
 
-    /** Maintains a count of objects.  If the count equals or exceeds the numberOfObjects
+    /**
+     * Maintains a count of objects.  If the count equals or exceeds the numberOfObjects
      * then the pipeline is shut down.
-     *@param obj The objects.
+     *
+     * @param obj The objects.
      */
     public void process(Object obj) throws StageException {
         this.emit(obj);
-        if (count++ >= numberOfObjects){
+        if (count++ >= numberOfObjects) {
             context.raise(new PipelineShutdownRequest(this, "Maximum of " + count + " objects processed."));
         }
     }
-    
+
 }

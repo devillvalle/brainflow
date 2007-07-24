@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -17,44 +17,46 @@
 
 package org.apache.commons.pipeline.validation;
 
-import java.util.List;
 import org.apache.commons.pipeline.Pipeline;
 import org.apache.commons.pipeline.Stage;
 import org.apache.commons.pipeline.StageDriverFactory;
 
+import java.util.List;
+
 /**
  * This interface is used as the basis for validation strategies that may be
  * used to check the validity of a pipeline under construction.
- *
- *
  */
 public interface PipelineValidator {
     /**
-     * Implementations of this method should validate the overall structure of 
+     * Implementations of this method should validate the overall structure of
      * the pipeline.
+     *
      * @param pipeline The pipeline to be validated
      * @return The list of validation errors encountered. An empty list is returned if no
-     * errors are found.
+     *         errors are found.
      */
     public List<ValidationFailure> validate(Pipeline pipeline);
-    
+
     /**
-     * Implementations of this method should validate whether or not the specified 
+     * Implementations of this method should validate whether or not the specified
      * stage can be added to the pipeline in its current state.
-     * @param pipeline The pipeline to which the stage is being added
-     * @param stage The added stage
+     *
+     * @param pipeline      The pipeline to which the stage is being added
+     * @param stage         The added stage
      * @param driverFactory The StageDriverFactory used to create a StageDriver for the stage
      * @return The list of validation errors encountered, or an empty list if none were
-     * encountered
+     *         encountered
      */
     public List<ValidationFailure> validateAddStage(Pipeline pipeline, Stage stage, StageDriverFactory driverFactory);
-    
+
     /**
      * Implementations of this method should validate whether or not the specified
      * branch can be added to the specified pipeline with the given key.
-     * @param pipeline The pipeline to which the branch is being added
+     *
+     * @param pipeline  The pipeline to which the branch is being added
      * @param branchKey The key used to identify the new branch
-     * @param branch The new branch pipeline
+     * @param branch    The new branch pipeline
      * @return The list of validation failures, or an empty list if validation passes.
      */
     public List<ValidationFailure> validateAddBranch(Pipeline pipeline, String branchKey, Pipeline branch);

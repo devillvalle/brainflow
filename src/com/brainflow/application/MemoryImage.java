@@ -24,6 +24,10 @@ public class MemoryImage implements ILoadableImage {
         return data.getImageInfo();
     }
 
+    public boolean isLoaded() {
+        return true;
+    }
+
     public String getStem() {
         return "memory_image";
     }

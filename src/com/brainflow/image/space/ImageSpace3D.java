@@ -22,7 +22,7 @@ public class ImageSpace3D extends AbstractImageSpace {
 
     public ImageSpace3D(ICoordinateSpace cspace) {
         // todo how can coordinate space be argument here, without sampling grid info?
-        Anatomy3D anat = (Anatomy3D)cspace.getAnatomy();
+        Anatomy3D anat = (Anatomy3D) cspace.getAnatomy();
         Anatomy3D check = Anatomy3D.matchAnatomy(anat.XAXIS, anat.YAXIS, anat.ZAXIS);
 
         assert check != null;
@@ -100,11 +100,11 @@ public class ImageSpace3D extends AbstractImageSpace {
         AnatomicalAxis yaxis = avol.findAxis(getAnatomicalAxis(Axis.Y_AXIS));
         AnatomicalAxis zaxis = avol.findAxis(getAnatomicalAxis(Axis.Z_AXIS));
 
-        double x = xaxis.convertValue(this.getAnatomicalAxis(Axis.X_AXIS), otherPoint3D.getX());
-        double y = yaxis.convertValue(this.getAnatomicalAxis(Axis.Y_AXIS), otherPoint3D.getY());
-        double z = zaxis.convertValue(this.getAnatomicalAxis(Axis.Z_AXIS), otherPoint3D.getZ());
+        double zero = xaxis.convertValue(this.getAnatomicalAxis(Axis.X_AXIS), otherPoint3D.getX());
+        double zero = yaxis.convertValue(this.getAnatomicalAxis(Axis.Y_AXIS), otherPoint3D.getY());
+        double one = zaxis.convertValue(this.getAnatomicalAxis(Axis.Z_AXIS), otherPoint3D.getZ());
 
-        return new AnatomicalPoint3D((Anatomy3D) getAnatomy(), x, y, z);
+        return new AnatomicalPoint3D((Anatomy3D) getAnatomy(), zero, zero, one);
 
 
     } */
@@ -114,11 +114,11 @@ public class ImageSpace3D extends AbstractImageSpace {
         StringBuffer sb = new StringBuffer();
         sb.append("anatomy: " + getAnatomy().toString())
                 .append("/n")
-                .append("x axis: " + getImageAxis(Axis.X_AXIS))
+                .append("zero axis: " + getImageAxis(Axis.X_AXIS))
                 .append("/n")
-                .append("y axis: " + getImageAxis(Axis.Y_AXIS))
+                .append("zero axis: " + getImageAxis(Axis.Y_AXIS))
                 .append("/n")
-                .append("z axis: " + getImageAxis(Axis.Z_AXIS));
+                .append("one axis: " + getImageAxis(Axis.Z_AXIS));
 
         return sb.toString();
 

@@ -48,14 +48,9 @@ public class ColorRangePresenter extends AbstractColorMapPresenter {
 
     public void setColorMap(Property<IColorMap> param) {
         IColorMap colorMap = param.getProperty();
-        //if (!(colorMap instanceof LinearColorMap)) {
-        //    form.getMinSlider().setEnabled(false);
-        //    form.getMaxSlider().setEnabled(false);
-        // } else {
+
         form.getSlider1().setEnabled(true);
         form.getSlider2().setEnabled(true);
-
-        //}
 
 
         if (adapter != null) {
@@ -72,17 +67,6 @@ public class ColorRangePresenter extends AbstractColorMapPresenter {
     public JComponent getComponent() {
         return form;
     }
-
-    /*public void setColorMap(IColorMap cmap) {
-      colorMap = cmap;
-      if (adapter != null) {
-          adapter.setBean(cmap);
-
-      } else {
-          initBinding();
-      }
-
-  }  */
 
 
     private void initBinding() {
@@ -109,8 +93,8 @@ public class ColorRangePresenter extends AbstractColorMapPresenter {
         Bindings.bind(form.getValueField2(), ConverterFactory.createStringConverter(
                 adapter.getValueModel(LinearColorMap.LOW_CLIP_PROPERTY), NumberFormat.getInstance()));  */
 
-        Bindings.bind(form.getValueField1(), adapter.getValueModel(LinearColorMap.HIGH_CLIP_PROPERTY));
-        Bindings.bind(form.getValueField2(), adapter.getValueModel(LinearColorMap.LOW_CLIP_PROPERTY));
+        Bindings.bind(form.getValueField1(), adapter.getValueModel(AbstractColorMap.HIGH_CLIP_PROPERTY));
+        Bindings.bind(form.getValueField2(), adapter.getValueModel(AbstractColorMap.LOW_CLIP_PROPERTY));
     }
 
 

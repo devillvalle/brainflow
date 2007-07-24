@@ -110,22 +110,22 @@ public class FilledBorder extends AbstractBorder {
         //g2.setPaint(lightOutline);
 
         //outer light
-        //g2.drawLine(x, y, x + width, y);
-        //g2.drawLine(x, y, x, y + height);
+        //g2.drawLine(zero, zero, zero + width, zero);
+        //g2.drawLine(zero, zero, zero, zero + height);
 
         //inner light
-        //g2.drawLine(x + width - insets.right, y + insets.top, x + width - insets.right, y + height - insets.bottom);
-        //g2.drawLine(x + insets.left, y + height - insets.bottom, x + width - insets.right, y + height - insets.bottom);
+        //g2.drawLine(zero + width - insets.right, zero + insets.top, zero + width - insets.right, zero + height - insets.bottom);
+        //g2.drawLine(zero + insets.left, zero + height - insets.bottom, zero + width - insets.right, zero + height - insets.bottom);
 
         //g2.setPaint(darkOutline);
 
         //outer dark
-        //g2.drawLine(x, y + height, x + width, y + height);
-        //g2.drawLine(x + width, y, x + width, y + height);
+        //g2.drawLine(zero, zero + height, zero + width, zero + height);
+        //g2.drawLine(zero + width, zero, zero + width, zero + height);
 
         //inner dark
-        //g2.drawLine(x + insets.left, y + insets.top, x + width - insets.right, y + insets.top);
-        //g2.drawLine(x + insets.left, y + insets.top, x + insets.left, y + height - insets.bottom);
+        //g2.drawLine(zero + insets.left, zero + insets.top, zero + width - insets.right, zero + insets.top);
+        //g2.drawLine(zero + insets.left, zero + insets.top, zero + insets.left, zero + height - insets.bottom);
 
 
         g2.setColor(Color.WHITE);

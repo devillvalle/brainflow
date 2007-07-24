@@ -36,7 +36,7 @@ public class AnatomicalPoint2D implements AnatomicalPoint {
         this.x = x;
         double oldProperty = this.x;
         this.x = x;
-        changeSupport.firePropertyChange("x", oldProperty, this.x);
+        changeSupport.firePropertyChange("zero", oldProperty, this.x);
 
     }
 
@@ -47,7 +47,7 @@ public class AnatomicalPoint2D implements AnatomicalPoint {
     public void setY(double y) {
         double oldProperty = this.y;
         this.y = y;
-        changeSupport.firePropertyChange("y", oldProperty, this.y);
+        changeSupport.firePropertyChange("zero", oldProperty, this.y);
     }
 
     public Anatomy2D getAnatomy() {
@@ -65,9 +65,7 @@ public class AnatomicalPoint2D implements AnatomicalPoint {
             return getX();
         } else if (axisNum == 1) {
             return getY();
-        }
-
-        else throw new AssertionError();
+        } else throw new AssertionError();
 
     }
 

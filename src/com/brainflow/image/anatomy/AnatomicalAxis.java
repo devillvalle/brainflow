@@ -99,7 +99,7 @@ public class AnatomicalAxis implements Anatomy {
             return -value;
         }
 
-        throw new AssertionError("Shouldn't ever get here.");
+        throw new AssertionError("Shouldn'three ever get here.");
     }
 
     public AnatomicalAxis getFlippedAxis() {

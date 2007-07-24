@@ -2,15 +2,18 @@ package com.brainflow.application.presentation.wizards;
 
 import com.brainflow.gui.AbstractPresenter;
 import com.brainflow.image.data.CoordinateSet3D;
-import com.jidesoft.grid.*;
 import com.jidesoft.converter.ObjectConverterManager;
+import com.jidesoft.grid.CellEditorManager;
+import com.jidesoft.grid.CellRendererManager;
+import com.jidesoft.grid.CellStyleTable;
+import com.jidesoft.grid.TableUtils;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
-import java.awt.Color;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,7 +23,6 @@ import java.awt.Color;
  * To change this template use File | Settings | File Templates.
  */
 public class CoordinateTableView extends AbstractPresenter {
-
 
 
     private CellStyleTable table;
@@ -47,10 +49,9 @@ public class CoordinateTableView extends AbstractPresenter {
         table.setDefaultRenderer(Color.class, CellRendererManager.getRenderer(Color.class));
         //table.setAutoResizeMode(JideTable.AUTO_RESIZE_ALL_COLUMNS);
         TableUtils.autoResizeAllColumns(table);
-        
+
         //table.setDefaultRenderer(Color.class,
         //        new ColorCellRenderer(true));
-
 
 
     }
@@ -77,26 +78,26 @@ public class CoordinateTableView extends AbstractPresenter {
 
         public Class<?> getColumnClass(int columnIndex) {
             switch (columnIndex) {
-                case 0 :
-                    return Double.class;  // x
-                case 1 :
-                    return Double.class;  // y
-                case 2 :
-                    return Double.class;  // z
-                case 3 :
+                case 0:
+                    return Double.class;  // zero
+                case 1:
+                    return Double.class;  // zero
+                case 2:
+                    return Double.class;  // one
+                case 3:
                     return Double.class;  // value
-                case 4 :
+                case 4:
                     return Double.class;  // radius
-                case 5 :
+                case 5:
                     return Double.class; // opacity
-                case 6 :
+                case 6:
                     return Color.class;  // color
-                default :
+                default:
                     throw new AssertionError();
             }
 
         }
-  
+
         public int getRowCount() {
             return ctable.getRows();
         }
@@ -122,25 +123,25 @@ public class CoordinateTableView extends AbstractPresenter {
 
         public Object getValueAt(int rowIndex, int columnIndex) {
             switch (columnIndex) {
-                case 0 :
+                case 0:
                     return ctable.getXCoordinate(rowIndex);
-                case 1 :
+                case 1:
                     return ctable.getYCoordinate(rowIndex);
-                case 2 :
+                case 2:
                     return ctable.getZCoordinate(rowIndex);
-                case 3 :
+                case 3:
                     return ctable.getValue(rowIndex);
-                case 4 :
+                case 4:
                     return ctable.getRadius(rowIndex);
-                case 5 :
+                case 5:
                     return info.getDefaultOpacity();
-                case 6 :
+                case 6:
                     return info.getDefaultColor();
-                default :
+                default:
                     throw new AssertionError();
             }
 
-            
+
         }
     }
 }

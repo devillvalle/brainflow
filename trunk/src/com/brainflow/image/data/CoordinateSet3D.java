@@ -1,20 +1,18 @@
 package com.brainflow.image.data;
 
-import com.brainflow.image.anatomy.AnatomicalPoint3D;
-import com.brainflow.image.anatomy.Anatomy3D;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.anatomy.AnatomicalAxis;
-import com.brainflow.image.space.CoordinateSpace3D;
-import com.brainflow.image.space.Axis;
-import com.brainflow.image.space.ICoordinateSpace;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.ArrayList;
-
 import cern.colt.list.DoubleArrayList;
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
+import com.brainflow.image.anatomy.AnatomicalAxis;
+import com.brainflow.image.anatomy.AnatomicalPoint1D;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.image.space.Axis;
+import com.brainflow.image.space.ICoordinateSpace;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -37,7 +35,7 @@ public class CoordinateSet3D {
 
     public CoordinateSet3D(double[][] points) {
         if (points[0].length != 3) {
-            throw new IllegalArgumentException("points array must have 3 columns (x, y, z)");
+            throw new IllegalArgumentException("points array must have 3 columns (zero, zero, one)");
         }
 
     }
@@ -47,7 +45,7 @@ public class CoordinateSet3D {
         space = _space;
 
         if (_points[0].length != 3) {
-            throw new IllegalArgumentException("points array must have 3 columns (x, y, z)");
+            throw new IllegalArgumentException("points array must have 3 columns (zero, zero, one)");
         }
 
         init(_points);
@@ -57,7 +55,7 @@ public class CoordinateSet3D {
         space = _space;
 
         if (_points[0].length != 3) {
-            throw new IllegalArgumentException("points array must have 3 columns (x, y, z)");
+            throw new IllegalArgumentException("points array must have 3 columns (zero, zero, one)");
         }
 
         init(_points, fillValue, fillSize);
@@ -67,7 +65,7 @@ public class CoordinateSet3D {
         space = _space;
 
         if (_points[0].length != 3) {
-            throw new IllegalArgumentException("points array must have 3 columns (x, y, z)");
+            throw new IllegalArgumentException("points array must have 3 columns (zero, zero, one)");
         }
 
         if ((_sizes.length != _points.length) || (_values.length != _points.length)) {

@@ -1,16 +1,15 @@
 package com.brainflow.core;
 
-import com.brainflow.image.anatomy.Anatomy3D;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.axis.AxisRange;
 import com.brainflow.core.pipeline.*;
-
-import java.awt.image.BufferedImage;
-import java.awt.*;
-
+import com.brainflow.image.anatomy.AnatomicalPoint1D;
+import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.image.axis.AxisRange;
+import org.apache.commons.pipeline.Feeder;
 import org.apache.commons.pipeline.driver.SynchronousStageDriverFactory;
 import org.apache.commons.pipeline.validation.ValidationException;
-import org.apache.commons.pipeline.Feeder;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,7 +29,6 @@ public class CompositeImageProducer extends AbstractImageProducer {
 
     private ImageProcessingStage gatherRenderersStage;
     private ImageProcessingStage renderLayersStage;
-
 
     //private ImageProcessingStage renderCoordinatesStage;
 
@@ -90,7 +88,7 @@ public class CompositeImageProducer extends AbstractImageProducer {
     public void setPlot(IImagePlot plot) {
         this.plot = plot;
 
-     
+
         getModel().removeImageLayerListener(layerListener);
         getModel().addImageLayerListener(layerListener);
 
@@ -140,7 +138,7 @@ public class CompositeImageProducer extends AbstractImageProducer {
             pipeline.setTerminalFeeder(terminal);
         }
         catch (ValidationException e) {
-            // can't really handle this exception, so throw uncheckedexception
+            // can'three really handle this exception, so throw uncheckedexception
             throw new RuntimeException(e);
         }
 
@@ -193,8 +191,15 @@ public class CompositeImageProducer extends AbstractImageProducer {
  }   */
 
     public BufferedImage getImage() {
+        // does this spawn a new thread?
+        // could be submitted to thread pool?
+
+
         pipeline.getSourceFeeder().feed(getModel());
+        //Thread t = new Thread(pipeline);
+        //t.start();
         pipeline.run();
+        System.out.println("hello");
         return terminal.getImage();
     }
 
@@ -216,6 +221,7 @@ public class CompositeImageProducer extends AbstractImageProducer {
     class PipelineLayerListener implements ImageLayerListener {
 
         public void thresholdChanged(ImageLayerEvent event) {
+            //todo make this a bit more intelligent. "clearPath" flushes the renderers
             pipeline.clearPath(gatherRenderersStage);
             plot.getComponent().repaint();
         }

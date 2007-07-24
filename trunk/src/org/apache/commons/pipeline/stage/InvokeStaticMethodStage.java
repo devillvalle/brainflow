@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -17,26 +17,26 @@
 
 package org.apache.commons.pipeline.stage;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import org.apache.commons.pipeline.Pipeline;
 import org.apache.commons.pipeline.StageException;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 /**
- * Runs a static method with the object (or array) being processed. The returned object 
+ * Runs a static method with the object (or array) being processed. The returned object
  * will be exqueued on the main pipeline if it is not null. If the returned
- * object is null, this stage will attempt to place the original object on the 
+ * object is null, this stage will attempt to place the original object on the
  * branch specified by {@link #setNullResultBranchTag(String)}.
  */
 public class InvokeStaticMethodStage extends BaseStage {
-    
+
     // Branch upon which the original objects will be enqueued if the defined
     // Method returned a null result.
     private String nullResultBranchKey;
 
     // Method used to process objects in the queue
     private Method method;
-    
+
     /**
      * Creates a new instance of InvokeStaticMethodStage
      */
@@ -44,13 +44,13 @@ public class InvokeStaticMethodStage extends BaseStage {
         super();
         this.method = method;
     }
-    
-    /** 
+
+    /**
      * Convenience method to create the new stage with String description of className, methodName and argumentType
      *
-     * @param className The fully qualified class name, such as "java.lang.String" of the class in which the method resides
-     * @param methodName The name of the method
-     * @param argumentType The argument type of the method (Sorry, this doesn't support multiple argument methods)
+     * @param className    The fully qualified class name, such as "java.lang.String" of the class in which the method resides
+     * @param methodName   The name of the method
+     * @param argumentType The argument type of the method (Sorry, this doesn'three support multiple argument methods)
      */
     public InvokeStaticMethodStage(String className, String methodName, String... argumentTypeNames) throws ClassNotFoundException, NoSuchMethodException {
         Class clazz = InvokeStaticMethodStage.class.getClassLoader().loadClass(className);
@@ -58,20 +58,20 @@ public class InvokeStaticMethodStage extends BaseStage {
         for (int i = 0; i < argumentTypeNames.length; i++) {
             argTypes[i] = Class.forName(argumentTypeNames[i]);
         }
-        
+
         this.method = clazz.getMethod(methodName, argTypes);
     }
-    
-    /** 
+
+    /**
      * Returns the Method object for the method that will be used to process
      * objects in the queue.
      */
-    public Method getMethod(){
+    public Method getMethod() {
         return this.method;
     }
-    
-    /** 
-     * <p>Calls the defined static method and exqueues the returned object if it is 
+
+    /**
+     * <p>Calls the defined static method and exqueues the returned object if it is
      * not null, otherwise placing the original object on the branch specified
      * by the nullResultBranchKey property if nullResultBranchKey is not null.</p>
      *
@@ -80,16 +80,16 @@ public class InvokeStaticMethodStage extends BaseStage {
     public void process(Object obj) throws StageException {
         try {
             Object result = this.method.invoke(null, obj);
-            if (result != null){
+            if (result != null) {
                 this.emit(result);
             } else if (nullResultBranchKey != null) {
                 this.context.getBranchFeeder(nullResultBranchKey).feed(obj);
             }
-        } catch (IllegalAccessException e){
+        } catch (IllegalAccessException e) {
             throw new StageException(this, e);
-        } catch (InvocationTargetException e){
+        } catch (InvocationTargetException e) {
             throw new StageException(this, e);
-        }       
+        }
     }
 
     /**
@@ -102,7 +102,7 @@ public class InvokeStaticMethodStage extends BaseStage {
     }
 
     /**
-     * Setter for property nullResultBranchKey. If set to null (default) 
+     * Setter for property nullResultBranchKey. If set to null (default)
      * then objects generating null results are simply dropped from the stream.
      *
      * @param nullResultBranchKey New value of property nullResultBranchKey.

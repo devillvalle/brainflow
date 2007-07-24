@@ -14,7 +14,9 @@ import org.apache.commons.vfs.util.RandomAccessMode;
 import java.io.*;
 import java.net.URL;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
@@ -258,8 +260,15 @@ public class NiftiInfoReader implements ImageInfoReader {
 
             info.calculateRealDim();
 
-            info.setScaleFactor(nifti.scl_slope);
-            info.setIntercept(nifti.scl_inter);
+            List<Double> sfList = new ArrayList<Double>();
+            sfList.add((double) nifti.scl_slope);
+
+            List<Double> interceptList = new ArrayList<Double>();
+            interceptList.add((double) nifti.scl_inter);
+
+
+            info.setScaleFactors(sfList);
+            info.setIntercepts(interceptList);
             info.setByteOffset((int) nifti.vox_offset);
             info.setOrigin(new Point3D(nifti.qoffset[0], nifti.qoffset[1], nifti.qoffset[2]));
             if (nifti.big_endian) {
@@ -297,10 +306,17 @@ public class NiftiInfoReader implements ImageInfoReader {
             info.setAnatomy(ImageInfo.DEFAULT_ANATOMY);
             /////////////////////////////////////////
 
-            info.calculateRealDim();
+            //info.calculateRealDim();
 
-            info.setScaleFactor(nifti.scl_slope);
-            info.setIntercept(nifti.scl_inter);
+            List<Double> sfList = new ArrayList<Double>();
+            sfList.add((double) nifti.scl_slope);
+
+            List<Double> interceptList = new ArrayList<Double>();
+            interceptList.add((double) nifti.scl_inter);
+
+
+            info.setScaleFactors(sfList);
+            info.setIntercepts(interceptList);
             info.setByteOffset((int) nifti.vox_offset);
             info.setOrigin(new Point3D(nifti.qoffset[0], nifti.qoffset[1], nifti.qoffset[2]));
             if (nifti.big_endian) {

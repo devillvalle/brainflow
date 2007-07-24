@@ -1,18 +1,20 @@
 package com.brainflow.image.io;
 
-import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.Anatomy;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace3D;
-import com.brainflow.utils.DataType;
-import com.brainflow.utils.Dimension3D;
-import com.brainflow.utils.Point3D;
+import com.brainflow.utils.*;
 import org.apache.commons.vfs.FileObject;
 
 import java.nio.ByteOrder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -27,11 +29,9 @@ import java.nio.ByteOrder;
 
 public class ImageInfo implements java.io.Serializable {
 
-    private Dimension3D arrayDim = new Dimension3D<Integer>(0, 0, 0);
+    private IDimension arrayDim = new Dimension3D<Integer>(0, 0, 0);
 
-    private Dimension3D realDim = new Dimension3D<Double>(0.0, 0.0, 0.0);
-
-    private Dimension3D spacing = new Dimension3D<Double>(0.0, 0.0, 0.0);
+    private IDimension spacing = new Dimension3D<Double>(0.0, 0.0, 0.0);
 
     private Dimension3D voxelOffset = new Dimension3D<Integer>(0, 0, 0);
 
@@ -53,22 +53,23 @@ public class ImageInfo implements java.io.Serializable {
 
     private ByteOrder endian = ByteOrder.nativeOrder();
 
-    private double scaleFactor = 1.0;
+    private List<Double> scaleFactors = new ArrayList<Double>(Arrays.asList(new Double(1)));
 
-    private double intercept = 0;
+    private List<Double> intercepts = new ArrayList<Double>(Arrays.asList(new Double(0)));
 
     private FileObject imageFile;
 
     private FileObject headerFile;
 
     public ImageInfo() {
+
     }
 
     public ImageInfo(ImageInfo info) {
         imageFile = info.imageFile;
         headerFile = info.headerFile;
         endian = info.endian;
-        scaleFactor = info.scaleFactor;
+        scaleFactors = info.scaleFactors;
         dataType = info.dataType;
         anatomy = info.anatomy;
         dimensionality = info.dimensionality;
@@ -76,9 +77,9 @@ public class ImageInfo implements java.io.Serializable {
         numImages = info.numImages;
         origin = new Point3D(info.origin);
         voxelOffset = new Dimension3D<Integer>(info.voxelOffset);
-        realDim = new Dimension3D<Double>(info.realDim);
-        spacing = new Dimension3D<Double>(info.spacing);
-        arrayDim = new Dimension3D<Integer>(info.arrayDim);
+
+        spacing = info.spacing;
+        arrayDim = info.arrayDim;
     }
 
 
@@ -94,13 +95,20 @@ public class ImageInfo implements java.io.Serializable {
         setDataType(data.getDataType());
         setDimensionality(space.getNumDimensions());
 
-        setRealDim(new Dimension3D<Double>(space.getImageAxis(Axis.X_AXIS).getRange().getInterval(),
-                space.getImageAxis(Axis.Y_AXIS).getRange().getInterval(),
-                space.getImageAxis(Axis.Z_AXIS).getRange().getInterval()));
-
 
         if (space.getNumDimensions() == 4) {
-            this.setNumImages(space.getDimension(Axis.T_AXIS));
+            setNumImages(space.getDimension(Axis.T_AXIS));
+            double[] sf = new double[space.getDimension(Axis.T_AXIS)];
+            Arrays.fill(sf, 1);
+
+            double[] intercept = new double[space.getDimension(Axis.T_AXIS)];
+            Arrays.fill(intercept, 0);
+
+
+            setScaleFactors(makeNumericList(sf));
+            setIntercepts(makeNumericList(intercept));
+
+
         }
 
 
@@ -113,12 +121,27 @@ public class ImageInfo implements java.io.Serializable {
 
     }
 
+    private List<Double> makeNumericList(double[] vals) {
+        List<Double> lst = new ArrayList<Double>(vals.length);
+        for (int i = 0; i < vals.length; i++) {
+            lst.add(vals[i]);
+        }
+
+        return lst;
+    }
+
 
     public IImageSpace createImageSpace() {
-        ImageAxis xaxis = new ImageAxis(-realDim.x.doubleValue() / 2, realDim.x.doubleValue() / 2, anatomy.XAXIS, (int) arrayDim.x.doubleValue());
-        ImageAxis yaxis = new ImageAxis(-realDim.y.doubleValue() / 2, realDim.y.doubleValue() / 2, anatomy.YAXIS, (int) arrayDim.y.doubleValue());
-        ImageAxis zaxis = new ImageAxis(-realDim.z.doubleValue() / 2, realDim.z.doubleValue() / 2, anatomy.ZAXIS, (int) arrayDim.z.doubleValue());
-        ImageSpace3D space3d = new ImageSpace3D(xaxis, yaxis, zaxis);
+        ImageAxis[] iaxes = new ImageAxis[3];
+        AnatomicalAxis[] aaxes = anatomy.getAnatomicalAxes();
+
+        IDimension realDim = calculateRealDim();
+        for (int i = 0; i < iaxes.length; i++) {
+            iaxes[i] = new ImageAxis(-realDim.getDim(i).doubleValue() / 2, realDim.getDim(i).doubleValue() / 2,
+                    aaxes[i], (int) arrayDim.getDim(i).doubleValue());
+        }
+
+        ImageSpace3D space3d = new ImageSpace3D(iaxes[0], iaxes[1], iaxes[2]);
         return space3d;
     }
 
@@ -134,7 +157,7 @@ public class ImageInfo implements java.io.Serializable {
         return endian;
     }
 
-    public Dimension3D getArrayDim() {
+    public IDimension getArrayDim() {
         return arrayDim;
     }
 
@@ -146,33 +169,32 @@ public class ImageInfo implements java.io.Serializable {
         return byteOffset;
     }
 
-    public void calculateRealDim() {
-        double x = arrayDim.x.intValue() * spacing.x.doubleValue();
-        double y = arrayDim.y.intValue() * spacing.y.doubleValue();
-        double z = arrayDim.z.intValue() * spacing.z.doubleValue();
-
-        realDim = new Dimension3D<Double>(x, y, z);
+    public IDimension calculateRealDim() {
+        Double[] realVals = new Double[arrayDim.numDim()];
+        for (int i = 0; i < realVals.length; i++) {
+            realVals[i] = arrayDim.getDim(i).intValue() * spacing.getDim(i).doubleValue();
+        }
+        return DimensionFactory.create(realVals);
     }
 
-    public Dimension3D getRealDim() {
-        return realDim;
-    }
 
     public Anatomy getAnatomy() {
         return anatomy;
     }
 
-    public double getIntercept() {
-        return intercept;
+    public double getIntercept(int i) {
+        return intercepts.get(i);
     }
 
-    public void setIntercept(double intercept) {
-        this.intercept = intercept;
+    public void setIntercepts(List<Double> interceptList) {
+        if (interceptList.size() != getNumImages()) {
+            throw new IllegalArgumentException("number of intercept values must equal number of total images");
+        }
     }
 
 
-    public void setNumImages(int _numTimePoints) {
-        numImages = _numTimePoints;
+    public void setNumImages(int _numImages) {
+        numImages = _numImages;
     }
 
     public int getNumImages() {
@@ -195,33 +217,37 @@ public class ImageInfo implements java.io.Serializable {
         return dimensionality;
     }
 
-    public double getScaleFactor() {
-        return scaleFactor;
+    public double getScaleFactor(int imageNum) {
+        return scaleFactors.get(imageNum);
     }
 
     public void setAnatomy(Anatomy3D _anatomy) {
         anatomy = _anatomy;
     }
 
-    public void setArrayDim(Dimension3D arrayDim) {
+    public void setArrayDim(IDimension arrayDim) {
         this.arrayDim = arrayDim;
+        calculateRealDim();
     }
 
     public void setDataType(DataType dataType) {
         this.dataType = dataType;
+
     }
 
     public void setByteOffset(int byteOffset) {
         this.byteOffset = byteOffset;
     }
 
-    public void setRealDim(Dimension3D realDim) {
-        this.realDim = realDim;
+
+    public void setScaleFactors(List<Double> scaleFactorList) {
+        if (scaleFactorList.size() != getNumImages()) {
+            throw new IllegalArgumentException("number of intercept values must equal number of total images");
+        }
+
+        scaleFactors = scaleFactorList;
     }
 
-    public void setScaleFactor(double scaleFactor) {
-        this.scaleFactor = scaleFactor;
-    }
 
     public Point3D getOrigin() {
         return origin;
@@ -231,7 +257,7 @@ public class ImageInfo implements java.io.Serializable {
         this.origin = origin;
     }
 
-    public Dimension3D getSpacing() {
+    public IDimension getSpacing() {
         return spacing;
     }
 
@@ -246,7 +272,6 @@ public class ImageInfo implements java.io.Serializable {
     public String toString() {
         return "ImageInfo{" +
                 "arrayDim=" + arrayDim +
-                ", realDim=" + realDim +
                 ", spacing=" + spacing +
                 ", voxelOffset=" + voxelOffset +
                 ", origin=" + origin +
@@ -256,8 +281,8 @@ public class ImageInfo implements java.io.Serializable {
                 ", anatomy=" + anatomy +
                 ", dataType=" + dataType +
                 ", endian=" + endian +
-                ", scaleFactor=" + scaleFactor +
-                ", intercept=" + intercept +
+                ", scaleFactor=" + scaleFactors +
+                ", intercept=" + intercepts +
                 ", imageFile=" + imageFile +
                 ", headerFile=" + headerFile +
                 '}';

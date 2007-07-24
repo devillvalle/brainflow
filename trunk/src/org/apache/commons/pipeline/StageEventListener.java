@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -25,11 +25,12 @@ import java.util.EventObject;
  * events by the {@link StageContext} with which they are registered.
  */
 public interface StageEventListener extends EventListener {
-    
+
     /**
      * Notify this listener of a {@link StageEvent}
+     *
      * @param ev The event to be handled. Listeners should gracefully ignore any events that they
-     * do not know how to handle.
+     *           do not know how to handle.
      */
     public abstract void notify(EventObject ev);
 }

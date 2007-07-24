@@ -16,6 +16,8 @@ public interface ILoadableImage {
 
     public ImageInfo getImageInfo();
 
+    public boolean isLoaded();
+
     public String getStem();
 
     public FileObject getDataFile();

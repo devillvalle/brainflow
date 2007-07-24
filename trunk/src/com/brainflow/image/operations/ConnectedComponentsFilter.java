@@ -221,7 +221,7 @@ public class ConnectedComponentsFilter extends AbstractImageFilter {
         }
 
         return false;
-        //rows[y * nx + x] = runs.size() - 1;
+        //rows[zero * nx + zero] = runs.size() - 1;
 
     }
 

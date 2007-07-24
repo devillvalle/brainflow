@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
+ * Licensed to the Apache Software Foundation (ASF) under zero
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
  * regarding copyright ownership.  The ASF licenses this file
@@ -15,7 +15,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.    
- */ 
+ */
 
 
 package org.apache.commons.pipeline.stage;
@@ -29,39 +29,41 @@ import org.apache.commons.pipeline.util.KeyFactory;
  *
  */
 public class RaiseKeyAvailableEventStage extends BaseStage {
-    
-    /** Creates a new instance of RaiseKeyAvailableEventStage */
+
+    /**
+     * Creates a new instance of RaiseKeyAvailableEventStage
+     */
     public RaiseKeyAvailableEventStage() {
     }
-    
+
     /**
-     * This implementation of process() simply generates a key for the 
+     * This implementation of process() simply generates a key for the
      * processed object and raises a KeyAvailableEvent with the generated
      * key, then emits the processed object unchanged.
      */
     public void process(Object obj) throws StageException {
         this.context.raise(new KeyAvailableEvent(this, keyFactory.generateKey(obj)));
         this.emit(obj);
-    }    
-    
+    }
+
     /**
      * Holds value of property keyFactory.
      */
-     private KeyFactory<Object,Object> keyFactory;
-    
+    private KeyFactory<Object, Object> keyFactory;
+
     /**
      * Returns the KeyFactory used to create keys for the objects processed
      * by this stage.
      */
-    public KeyFactory<Object,Object> getKeyFactory() {
+    public KeyFactory<Object, Object> getKeyFactory() {
         return keyFactory;
-    }    
-    
+    }
+
     /**
      * Sets the KeyFactory used to create keys for the objects processed
      * by this stage.
      */
-    public void setKeyFactory(KeyFactory<Object,Object> keyFactory) {
+    public void setKeyFactory(KeyFactory<Object, Object> keyFactory) {
         this.keyFactory = keyFactory;
-    }    
+    }
 }

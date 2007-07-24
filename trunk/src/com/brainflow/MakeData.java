@@ -1,14 +1,14 @@
 package com.brainflow;
 
+import com.brainflow.image.anatomy.AnatomicalAxis;
+import com.brainflow.image.axis.ImageAxis;
+import com.brainflow.image.data.BasicImageData;
+import com.brainflow.image.data.BasicImageData3D;
+import com.brainflow.image.data.IImageData3D;
+import com.brainflow.image.io.analyze.AnalyzeIO;
+import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace3D;
-import com.brainflow.image.space.Axis;
-import com.brainflow.image.axis.ImageAxis;
-import com.brainflow.image.anatomy.AnatomicalAxis;
-import com.brainflow.image.data.IImageData3D;
-import com.brainflow.image.data.BasicImageData3D;
-import com.brainflow.image.data.BasicImageData;
-import com.brainflow.image.io.analyze.AnalyzeIO;
 import com.brainflow.utils.DataType;
 
 /**
@@ -43,9 +43,9 @@ public class MakeData {
         data3 = fillVertical(data3);
         data4 = fillDiagonal(data4);
 
-        System.out.println("num x samples : " + data4.getDimension(Axis.X_AXIS));
-        System.out.println("num y samples : " + data4.getDimension(Axis.Y_AXIS));
-        System.out.println("num z samples : " + data4.getDimension(Axis.Z_AXIS));
+        System.out.println("num zero samples : " + data4.getDimension(Axis.X_AXIS));
+        System.out.println("num zero samples : " + data4.getDimension(Axis.Y_AXIS));
+        System.out.println("num one samples : " + data4.getDimension(Axis.Z_AXIS));
 
         try {
             AnalyzeIO.writeAnalyzeImage("c:/horizontal_stripes", (BasicImageData) data1);

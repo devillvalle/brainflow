@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
+ * Licensed to the Apache Software Foundation (ASF) under zero
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
  * regarding copyright ownership.  The ASF licenses this file
@@ -15,16 +15,10 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.    
- */ 
+ */
 
 package org.apache.commons.pipeline.stage;
 
-import java.util.EventObject;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
 import org.apache.commons.pipeline.StageContext;
 import org.apache.commons.pipeline.StageEventListener;
 import org.apache.commons.pipeline.StageException;
@@ -32,26 +26,29 @@ import org.apache.commons.pipeline.event.KeyAvailableEvent;
 import org.apache.commons.pipeline.util.KeyFactory;
 import org.apache.commons.pipeline.util.QueueFactory;
 
+import java.util.*;
+
 /**
- *
  * @author kjn
  */
 public class KeyWaitBufferStage extends BaseStage implements StageEventListener {
-    
+
     private Set<Object> receivedKeys = new TreeSet<Object>();
-    private Map<Object,Queue<Object>> buffers = new TreeMap<Object,Queue<Object>>();
-    
-    /** Creates a new instance of KeyWaitBufferStage */
+    private Map<Object, Queue<Object>> buffers = new TreeMap<Object, Queue<Object>>();
+
+    /**
+     * Creates a new instance of KeyWaitBufferStage
+     */
     public KeyWaitBufferStage() {
     }
-    
+
     public void notify(EventObject ev) {
         if (ev instanceof KeyAvailableEvent) {
             KeyAvailableEvent e = (KeyAvailableEvent) ev;
-            synchronized(receivedKeys) {
+            synchronized (receivedKeys) {
                 receivedKeys.add(e.getKey());
             }
-            
+
             //at this point, we know that no more objects will be added to
             //the pending queue for the key, so we can remove and empty it.
             if (buffers.containsKey(e.getKey())) {
@@ -59,15 +56,15 @@ public class KeyWaitBufferStage extends BaseStage implements StageEventListener 
             }
         }
     }
-    
+
     public void init(StageContext context) {
         super.init(context);
         context.registerListener(this);
     }
-    
+
     public void process(Object obj) throws StageException {
         Object key = keyFactory.generateKey(obj);
-        synchronized(receivedKeys) {
+        synchronized (receivedKeys) {
             if (!receivedKeys.contains(key)) {
                 //store the object in a pending queue.
                 if (!buffers.containsKey(key)) buffers.put(key, queueFactory.createQueue());
@@ -75,28 +72,30 @@ public class KeyWaitBufferStage extends BaseStage implements StageEventListener 
                 return;
             }
         }
-        
+
         this.emit(obj);
     }
 
     /**
      * Holds value of property keyFactory.
      */
-    private KeyFactory<Object,? extends Object> keyFactory;
+    private KeyFactory<Object, ? extends Object> keyFactory;
 
     /**
      * Getter for property keyFactory.
+     *
      * @return Value of property keyFactory.
      */
-    public KeyFactory<Object,? extends Object> getKeyFactory() {
+    public KeyFactory<Object, ? extends Object> getKeyFactory() {
         return this.keyFactory;
     }
 
     /**
      * Setter for property keyFactory.
+     *
      * @param keyFactory New value of property keyFactory.
      */
-    public void setKeyFactory(KeyFactory<Object,? extends Object> keyFactory) {
+    public void setKeyFactory(KeyFactory<Object, ? extends Object> keyFactory) {
         this.keyFactory = keyFactory;
     }
 
@@ -107,6 +106,7 @@ public class KeyWaitBufferStage extends BaseStage implements StageEventListener 
 
     /**
      * Getter for property queueFactory.
+     *
      * @return Value of property queueFactory.
      */
     public QueueFactory<Object> getQueueFactory() {
@@ -115,6 +115,7 @@ public class KeyWaitBufferStage extends BaseStage implements StageEventListener 
 
     /**
      * Setter for property queueFactory.
+     *
      * @param queueFactory New value of property queueFactory.
      */
     public void setQueueFactory(QueueFactory<Object> queueFactory) {

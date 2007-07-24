@@ -1,20 +1,22 @@
 package com.brainflow.core;
 
 import com.brainflow.core.annotations.IAnnotation;
-import com.brainflow.image.anatomy.Anatomy2D;
-import com.brainflow.image.anatomy.AnatomicalPoint2D;
-import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
+import com.brainflow.image.anatomy.AnatomicalPoint2D;
+import com.brainflow.image.anatomy.Anatomy2D;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.axis.ImageAxis;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Rectangle2D;
 import java.awt.geom.AffineTransform;
-import java.util.*;
-import java.beans.PropertyChangeListener;
+import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,9 +43,9 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
 
     private Insets plotInsets = new Insets(18, 18, 18, 18);
 
-    private Insets plotSlack = new Insets(0,0,0,0);
+    private Insets plotSlack = new Insets(0, 0, 0, 0);
 
-    private Rectangle plotArea = new Rectangle(300,300);
+    private Rectangle plotArea = new Rectangle(300, 300);
 
     private boolean preserveAspectRatio = true;
 
@@ -60,7 +62,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         this.displayAnatomy = displayAnatomy;
         this.model = model;
         producer = _producer;
-       
+
         initAnnotationListener();
 
     }
@@ -79,8 +81,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         annotationListener = new PropertyChangeListener() {
 
             public void propertyChange(PropertyChangeEvent evt) {
-                IAnnotation annot = (IAnnotation)evt.getSource();
-                System.out.println("annotation changed " + annot.getIdentifier());
+                IAnnotation annot = (IAnnotation) evt.getSource();
                 repaint();
             }
         };
@@ -125,7 +126,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         Insets plotSlack = getPlotSlack();
         Insets plotInsets = getPlotInsets();
         Insets insets = new Insets(plotInsets.top + plotSlack.top, plotInsets.left + plotSlack.left,
-                plotInsets.bottom + plotSlack.bottom, plotInsets.right + plotSlack.right );
+                plotInsets.bottom + plotSlack.bottom, plotInsets.right + plotSlack.right);
 
         return insets;
     }
@@ -147,7 +148,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
 
         Rectangle plotArea = getPlotArea();
 
-        
+
         if (!plotArea.equals(oldArea)) {
             oldArea = plotArea;
             producer.setScreenSize(plotArea);
@@ -164,11 +165,11 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
 
 
         g2.setColor(oldColor);
-        g2.drawRenderedImage(producer.getImage(), AffineTransform.getTranslateInstance((int)plotArea.getMinX(), (int)plotArea.getMinY()));
+        g2.drawRenderedImage(producer.getImage(), AffineTransform.getTranslateInstance((int) plotArea.getMinX(), (int) plotArea.getMinY()));
         //g2.drawImage(producer.getImage(), null, (int)plotArea.getMinX(), (int)plotArea.getMaxX());
 
         for (String annot : annotationMap.keySet()) {
-           IAnnotation ia = annotationMap.get(annot);
+            IAnnotation ia = annotationMap.get(annot);
             if (ia.isVisible()) {
                 ia.draw(g2, plotArea, this);
             }
@@ -202,26 +203,26 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         double xspace = getModel().getImageSpace().getImageAxis(anatomy.XAXIS, true).getRange().getInterval();
         double yspace = getModel().getImageSpace().getImageAxis(anatomy.YAXIS, true).getRange().getInterval();
 
-        double sx = maxDrawWidth/xspace;
-        double sy = maxDrawHeight/yspace;
+        double sx = maxDrawWidth / xspace;
+        double sy = maxDrawHeight / yspace;
 
         if (isPreserveAspectRatio()) {
 
-            double sxy = Math.min(sx,sy);
+            double sxy = Math.min(sx, sy);
 
-            drawWidth = (int)(sxy * xspace);
-            drawHeight = (int)(sxy * yspace);
+            drawWidth = (int) (sxy * xspace);
+            drawHeight = (int) (sxy * yspace);
 
-            plotSlack.left = (int)((maxDrawWidth - drawWidth)/2.0);
-            plotSlack.right = (int)Math.round((maxDrawWidth - drawWidth)/2.0);
-            plotSlack.top = (int)((maxDrawHeight - drawHeight)/2.0);
-            plotSlack.bottom = (int)Math.round((maxDrawHeight - drawHeight)/2.0);
+            plotSlack.left = (int) ((maxDrawWidth - drawWidth) / 2.0);
+            plotSlack.right = (int) Math.round((maxDrawWidth - drawWidth) / 2.0);
+            plotSlack.top = (int) ((maxDrawHeight - drawHeight) / 2.0);
+            plotSlack.bottom = (int) Math.round((maxDrawHeight - drawHeight) / 2.0);
 
         } else {
             plotSlack.left = 0;
-            plotSlack.right=0;
-            plotSlack.top =0;
-            plotSlack.bottom=0;
+            plotSlack.right = 0;
+            plotSlack.top = 0;
+            plotSlack.bottom = 0;
         }
 
 
@@ -320,8 +321,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
     }
 
 
-
-    public void setAnnotation(String name, IAnnotation annotation) {      
+    public void setAnnotation(String name, IAnnotation annotation) {
         annotationMap.put(name, annotation);
         annotation.addPropertyChangeListener(annotationListener);
         repaint();
@@ -347,7 +347,6 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
     }
 
 
-
     public void setName(String _name) {
         name = _name;
     }
@@ -361,7 +360,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
 
 
     public static ComponentImagePlot createComponentImagePlot(IImageDisplayModel model, IImageProducer _producer, Anatomy3D displayAnatomy, AxisRange xAxis, AxisRange yAxis) {
-        ComponentImagePlot plot =  new ComponentImagePlot(model, _producer, displayAnatomy, xAxis, yAxis);
+        ComponentImagePlot plot = new ComponentImagePlot(model, _producer, displayAnatomy, xAxis, yAxis);
         plot.producer.setPlot(plot);
         return plot;
     }

@@ -34,7 +34,7 @@ public class ThresholdImageFilter extends AbstractImageFilter {
     public IImageData getOutput() {
         List sources = getSources();
         if (sources.size() == 0)
-            throw new RuntimeException("ThresholdImageFilter requires one or more source images");
+            throw new RuntimeException("ThresholdImageFilter requires zero or more source images");
 
         BasicImageData first = (BasicImageData) sources.get(0);
 

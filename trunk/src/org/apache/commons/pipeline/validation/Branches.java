@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -25,8 +25,6 @@ import java.lang.annotation.Target;
 /**
  * This annotation is used to aggregate information about the branches
  * served by a give Stage.
- *
- *
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
@@ -35,11 +33,11 @@ public @interface Branches {
      * Returns the array of branch key/production pairs that describe the
      * data being produced by the annotated stage on various branches.
      */
-    public ProductionOnBranch[] productionOnBranches() default { };
-    
+    public ProductionOnBranch[] productionOnBranches() default {};
+
     /**
      * Returns the array of branch keys for which the stage produces the
      * same type of object as it consumes.
      */
-    public String[] producesConsumedOnBranches() default { };
+    public String[] producesConsumedOnBranches() default {};
 }

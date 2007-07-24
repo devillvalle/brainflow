@@ -1,23 +1,20 @@
 package com.brainflow.core;
 
-import com.brainflow.image.space.ImageSpace2D;
-import com.brainflow.image.space.ICoordinateSpace;
-import com.brainflow.image.space.CoordinateSpace2D;
-import com.brainflow.image.space.Axis;
-import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.colormap.IColorMap;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
-import com.brainflow.image.operations.ImageSlicer;
-import com.brainflow.image.data.IImageData3D;
-import com.brainflow.image.data.CoordinateSet3D;
-import com.brainflow.image.axis.CoordinateAxis;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
-import com.brainflow.colormap.IColorMap;
+import com.brainflow.image.axis.CoordinateAxis;
+import com.brainflow.image.data.CoordinateSet3D;
+import com.brainflow.image.space.Axis;
+import com.brainflow.image.space.CoordinateSpace2D;
+import com.brainflow.image.space.ICoordinateSpace;
 
-import java.awt.image.BufferedImage;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.Ellipse2D;
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 
@@ -116,16 +113,15 @@ public class BasicCoordinateSliceRenderer implements SliceRenderer {
         double transx = (minx - frame.getMinX()); //+ (-frameBounds.getMinX());
         double transy = (miny - frame.getMinY()); //+ (-frameBounds.getMinY());
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        AlphaComposite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float)getLayer().getOpacity());
+        AlphaComposite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) getLayer().getOpacity());
         g2.setComposite(composite);
 
 
+        System.out.println("trans zero : " + transx);
+        System.out.println("trans zero : " + transy);
 
-        System.out.println("trans x : " + transx);
-        System.out.println("trans y : " + transy);
-
-        System.out.println("min x : " + minx);
-        System.out.println("min y : " + miny);
+        System.out.println("min zero : " + minx);
+        System.out.println("min zero : " + miny);
 
         System.out.println("frame bounds : " + frame);
 
@@ -141,13 +137,13 @@ public class BasicCoordinateSliceRenderer implements SliceRenderer {
             double x = pt.getValue(displayAnatomy.XAXIS).getX();
             double y = pt.getValue(displayAnatomy.YAXIS).getX();
 
-            System.out.println("anat x : " + x);
-            System.out.println("anat y : " + y);
+            System.out.println("anat zero : " + x);
+            System.out.println("anat zero : " + y);
 
             Color c = map.getColor(value);
             g2.setColor(c);
 
-            Shape shape = new Ellipse2D.Float((int) ((x-minx) - (radius/2.0)), (int) ((y-miny) - (radius/2.0)), (float)radius, (float)radius);
+            Shape shape = new Ellipse2D.Float((int) ((x - minx) - (radius / 2.0)), (int) ((y - miny) - (radius / 2.0)), (float) radius, (float) radius);
             g2.fill(shape);
         }
 

@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -17,28 +17,29 @@
 
 package org.apache.commons.pipeline.driver;
 
+import org.apache.commons.pipeline.*;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.pipeline.*;
 
 /**
  * This interface is used to define how processing for a stage is started,
- * stopped, and run. AbstractStageDriver implementations may run stages in one or
+ * stopped, and run. AbstractStageDriver implementations may run stages in zero or
  * more threads, and use the {@link StageContext} interface to provide communication
  * between the stage, the driver, and the enclosing pipeline.
  */
 public abstract class AbstractStageDriver implements StageDriver {
-    
+
     /**
      * The stage to run.
      */
     protected Stage stage;
-    
+
     /**
      * The context for the stage being run
      */
     protected StageContext context;
-    
+
     /**
      * List of processing failures that have occurred.
      */
@@ -48,11 +49,11 @@ public abstract class AbstractStageDriver implements StageDriver {
      * List of errors that have occurred.
      */
     protected List<Throwable> errors = new ArrayList<Throwable>();
-    
+
     /**
      * Creates a StageDriver for the specified stage.
-     * 
-     * @param stage The stage for which the driver will be created
+     *
+     * @param stage   The stage for which the driver will be created
      * @param context The context in which to run the stage
      */
     public AbstractStageDriver(Stage stage, StageContext context) {
@@ -61,81 +62,90 @@ public abstract class AbstractStageDriver implements StageDriver {
         this.stage = stage;
         this.context = context;
     }
-    
+
     /**
      * Returns the Stage being run by this StageDriver.
-     * 
+     *
      * @return The stage being run by this StageDriver instance
      */
     public Stage getStage() {
         return this.stage;
     }
-    
+
     /**
-     * This method is used to provide a communication channel between the context 
+     * This method is used to provide a communication channel between the context
      * in which the driver is being run and the managed stage.
+     *
      * @return the Feeder used to feed objects to the managed stage for processing.
      */
     public abstract Feeder getFeeder();
-    
+
     /**
      * Returns the current state of stage processing.
+     *
      * @return The current state
      */
     public abstract State getState();
 
     /**
-     * This method is used to start the driver, run the 
+     * This method is used to start the driver, run the
      * {@link Stage#preprocess() preprocess()} method of the attached stage
      * and to then begin processing any objects fed to this driver's Feeder.
      *
-     * @throws org.apache.commons.pipeline.StageException Thrown if there is an error during stage startup. In most cases, such errors
-     * will be handled internally by the driver.
+     * @throws org.apache.commons.pipeline.StageException
+     *          Thrown if there is an error during stage startup. In most cases, such errors
+     *          will be handled internally by the driver.
      */
     public abstract void start() throws StageException;
-    
+
     /**
      * This method waits for the stage(s) queue(s) to empty and any processor thread(s) to exit
      * cleanly and then calls release() to release any resources acquired during processing, if possible.
-     * @throws org.apache.commons.pipeline.StageException Thrown if there is an error during driver shutdown. Ordinarily such 
-     * exceptions will be handled internally.
+     *
+     * @throws org.apache.commons.pipeline.StageException
+     *          Thrown if there is an error during driver shutdown. Ordinarily such
+     *          exceptions will be handled internally.
      */
     public abstract void finish() throws StageException;
 
     /**
      * Returns a list of unrecoverable errors that occurred during stage
      * processing.
+     *
      * @return A list of unrecoverable errors that occurred during stage processing.
      */
     public List<Throwable> getFatalErrors() {
         return this.errors;
     }
-    
+
     /**
      * Store a fatal error.
+     *
      * @param error The error to be stored for later analysis
      */
     protected void recordFatalError(Throwable error) {
         this.errors.add(error);
     }
-    
+
     /**
      * Returns a list of errors that occurred while processing data objects,
      * along with the objects that were being processed when the errors
      * were generated.
+     *
      * @return The list of non-fatal processing errors.
      */
     public List<ProcessingException> getProcessingExceptions() {
         return this.processingExceptions;
     }
-    
+
     /**
      * Store processing failure information for the specified data object.
-     * @param data The data being processed at the time of the error
+     *
+     * @param data  The data being processed at the time of the error
      * @param error The error encountered
      */
     protected void recordProcessingException(Object data, Throwable error) {
-        ProcessingException ex = new ProcessingException(this.stage, error, data, this.getState());  
+        ProcessingException ex = new ProcessingException(this.stage, error, data, this.getState());
         this.processingExceptions.add(ex);
-    }    
+    }
 }

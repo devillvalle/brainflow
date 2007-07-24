@@ -48,7 +48,7 @@
                 mnemonic="A"
                 accel="control A"
                 smicon="/resources/icons/axial_16.png"
-                actionClass="com.brainflow.application.actions.CreateAxialViewAction"
+                actionClass="com.brainflow.application.actions.CreateAxialViewCommand"
                 desc="Creates a new axial image view">
         </action>
         <action id="view-orthogonal"

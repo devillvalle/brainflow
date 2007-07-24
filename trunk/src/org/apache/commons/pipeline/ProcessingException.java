@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -21,32 +21,34 @@ import org.apache.commons.pipeline.StageDriver.State;
 
 /**
  * This exception class is used to store detailed information about
- * a failure in the processing step of a stage including the failing data, 
+ * a failure in the processing step of a stage including the failing data,
  * the driver state at the time of failure, and any exceptions encountered.
  */
 public class ProcessingException extends StageException {
     private final Object data;
     private final State driverState;
-    
+
     /**
      * Creates a new instance of ProcessingException
-     * 
-     * @param data The object which was not able to be processed.
+     *
+     * @param data      The object which was not able to be processed.
      * @param throwable The exception that occurred.
      */
     public ProcessingException(Stage stage, Throwable cause, Object data, State driverState) {
         super(stage, cause);
         this.data = data;
         this.driverState = driverState;
-    }            
-    
-    /** Returns the data
-     *@return The object which was not able to be processed.
+    }
+
+    /**
+     * Returns the data
+     *
+     * @return The object which was not able to be processed.
      */
-    public Object getData(){
+    public Object getData() {
         return this.data;
-    }    
-    
+    }
+
     public State getDriverState() {
         return this.driverState;
     }

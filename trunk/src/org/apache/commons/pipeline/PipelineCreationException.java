@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -21,34 +21,37 @@ package org.apache.commons.pipeline;
  * This is a wrapper exception for use by {@link PipelineFactory}s.
  */
 public class PipelineCreationException extends java.lang.Exception {
-    
+
     /**
      * Creates a new instance of <code>PipelineCreationException</code> without detail message.
      */
     public PipelineCreationException() {
-    }    
-    
+    }
+
     /**
      * Constructs an instance of <code>PipelineCreationException</code> with the specified detail message.
+     *
      * @param msg the detail message.
      */
     public PipelineCreationException(String msg) {
         super(msg);
     }
-    
+
     /**
      * Constructs an instance of <code>PipelineCreationException</code> with the specified detail message.
+     *
      * @param msg the detail message.
      */
     public PipelineCreationException(String msg, Throwable cause) {
         super(msg, cause);
     }
-    
+
     /**
      * Constructs an instance of <code>PipelineCreationException</code> with the specified detail message.
+     *
      * @param msg the detail message.
      */
     public PipelineCreationException(Throwable cause) {
         super(cause);
-    }    
+    }
 }

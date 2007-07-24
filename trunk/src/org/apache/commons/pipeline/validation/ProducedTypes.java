@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -26,15 +26,13 @@ import java.lang.annotation.Target;
  * This annotation is used to describe the objects produced by a {@link Stage}.
  * If a stage produces the same types of objects that it consumes, it should
  * be annotated with the {@link ProducesConsumed} annotation instead.
- *
- *
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ProducedTypes {
     /**
      * The type(s) of object produced by this {@link Stage}. Under ordinary
-     * circumstances, this array should only contain one element.
+     * circumstances, this array should only contain zero element.
      */
-    public Class<?>[] value();      
+    public Class<?>[] value();
 }

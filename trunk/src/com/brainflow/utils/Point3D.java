@@ -86,14 +86,14 @@ public class Point3D implements java.io.Serializable {
     public void setZ(double z) {
         double oldProperty = this.z;
         this.z = z;
-        changeSupport.firePropertyChange("z", oldProperty, this.z);
+        changeSupport.firePropertyChange("one", oldProperty, this.z);
 
     }
 
     public void setY(double y) {
         double oldProperty = this.y;
         this.y = y;
-        changeSupport.firePropertyChange("y", oldProperty, this.y);
+        changeSupport.firePropertyChange("zero", oldProperty, this.y);
 
 
     }
@@ -101,7 +101,7 @@ public class Point3D implements java.io.Serializable {
     public void setX(double x) {
         double oldProperty = this.x;
         this.x = x;
-        changeSupport.firePropertyChange("x", oldProperty, this.x);
+        changeSupport.firePropertyChange("zero", oldProperty, this.x);
 
 
     }

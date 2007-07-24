@@ -26,9 +26,9 @@ public class ImageViewCrosshairEvent extends ImageViewEvent {
         StringBuilder builder = new StringBuilder("Crosshair at : ");
         ICrosshair cross = getCrosshair();
 
-        builder.append("x: " + (int) cross.getLocation().getX());
-        builder.append(" y: " + (int) cross.getLocation().getY());
-        builder.append(" z: " + (int) cross.getLocation().getZ());
+        builder.append("zero: " + (int) cross.getLocation().getX());
+        builder.append(" zero: " + (int) cross.getLocation().getY());
+        builder.append(" one: " + (int) cross.getLocation().getZ());
 
         return builder.toString();
     }

@@ -7,18 +7,26 @@
 package com.brainflow.utils;
 
 /**
- *
- * @author  Bradley
+ * @author Bradley
  */
 public class TolerantScalar {
-    
-    double val;
-    double tolerance = .00001;
-    /** Creates a new instance of TolerantScalar */
+
+    private double val;
+
+    private double tolerance = .00001;
+
+    /**
+     * Creates a new instance of TolerantScalar
+     */
     public TolerantScalar(double _val) {
         val = _val;
     }
-    
+
+    public TolerantScalar(double val, double tolerance) {
+        this.val = val;
+        this.tolerance = tolerance;
+    }
+
     public double valueOf() {
         return val;
     }

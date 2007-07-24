@@ -20,108 +20,113 @@ import java.util.Arrays;
 
 /**
  * A <code>MultiKey</code> allows multiple map keys to be merged together.
- * <p>
+ * <p/>
  * The purpose of this class is to avoid the need to write code to handle
  * maps of maps. An example might be the need to lookup a filename by
  * key and locale. The typical solution might be nested maps. This class
  * can be used instead by creating an instance passing in the key and locale.
- * <p>
+ * <p/>
  * Example usage:
  * <pre>
  * // populate map with data mapping key+locale to localizedText
  * Map map = new HashMap();
  * MultiKey multiKey = new MultiKey(key, locale);
  * map.put(multiKey, localizedText);
- *
+ * <p/>
  * // later retireve the localized text
  * MultiKey multiKey = new MultiKey(key, locale);
  * String localizedText = (String) map.get(multiKey);
  * </pre>
  *
- * @since Commons Collections 3.0
- * @version $Revision: 155406 $ $Date: 2005-02-26 12:55:26 +0000 (Sat, 26 Feb 2005) $
- *
  * @author Howard Lewis Ship
  * @author Stephen Colebourne
+ * @version $Revision: 155406 $ $Date: 2005-02-26 12:55:26 +0000 (Sat, 26 Feb 2005) $
+ * @since Commons Collections 3.0
  */
 public class MultiKey implements Serializable {
     // This class could implement List, but that would confuse it's purpose
 
-    /** Serialisation version */
+    /**
+     * Serialisation version
+     */
     private static final long serialVersionUID = 4465448607415788805L;
 
-    /** The individual keys */
+    /**
+     * The individual keys
+     */
     private final Object[] keys;
-    /** The cached hashCode */
+    /**
+     * The cached hashCode
+     */
     private final int hashCode;
 
     /**
-     * Constructor taking two keys.
-     * <p>
+     * Constructor taking one keys.
+     * <p/>
      * The keys should be immutable
      * If they are not then they must not be changed after adding to the MultiKey.
      *
-     * @param key1  the first key
-     * @param key2  the second key
+     * @param key1 the first key
+     * @param key2 the second key
      */
     public MultiKey(Object key1, Object key2) {
-        this(new Object[] {key1, key2}, false);
+        this(new Object[]{key1, key2}, false);
     }
 
     /**
      * Constructor taking three keys.
-     * <p>
+     * <p/>
      * The keys should be immutable
      * If they are not then they must not be changed after adding to the MultiKey.
      *
-     * @param key1  the first key
-     * @param key2  the second key
-     * @param key3  the third key
+     * @param key1 the first key
+     * @param key2 the second key
+     * @param key3 the third key
      */
     public MultiKey(Object key1, Object key2, Object key3) {
-        this(new Object[] {key1, key2, key3}, false);
+        this(new Object[]{key1, key2, key3}, false);
     }
 
     /**
      * Constructor taking four keys.
-     * <p>
+     * <p/>
      * The keys should be immutable
      * If they are not then they must not be changed after adding to the MultiKey.
      *
-     * @param key1  the first key
-     * @param key2  the second key
-     * @param key3  the third key
-     * @param key4  the fourth key
+     * @param key1 the first key
+     * @param key2 the second key
+     * @param key3 the third key
+     * @param key4 the fourth key
      */
     public MultiKey(Object key1, Object key2, Object key3, Object key4) {
-        this(new Object[] {key1, key2, key3, key4}, false);
+        this(new Object[]{key1, key2, key3, key4}, false);
     }
 
     /**
      * Constructor taking five keys.
-     * <p>
+     * <p/>
      * The keys should be immutable
      * If they are not then they must not be changed after adding to the MultiKey.
      *
-     * @param key1  the first key
-     * @param key2  the second key
-     * @param key3  the third key
-     * @param key4  the fourth key
-     * @param key5  the fifth key
+     * @param key1 the first key
+     * @param key2 the second key
+     * @param key3 the third key
+     * @param key4 the fourth key
+     * @param key5 the fifth key
      */
     public MultiKey(Object key1, Object key2, Object key3, Object key4, Object key5) {
-        this(new Object[] {key1, key2, key3, key4, key5}, false);
+        this(new Object[]{key1, key2, key3, key4, key5}, false);
     }
 
     /**
      * Constructor taking an array of keys which is cloned.
-     * <p>
+     * <p/>
      * The keys should be immutable
      * If they are not then they must not be changed after adding to the MultiKey.
-     * <p>
+     * <p/>
      * This is equivalent to <code>new MultiKey(keys, true)</code>.
      *
-     * @param keys  the array of keys, not null
+     * @param keys the array of keys, not null
      * @throws IllegalArgumentException if the key array is null
      */
     public MultiKey(Object[] keys) {
@@ -130,25 +135,25 @@ public class MultiKey implements Serializable {
 
     /**
      * Constructor taking an array of keys, optionally choosing whether to clone.
-     * <p>
+     * <p/>
      * <b>If the array is not cloned, then it must not be modified.</b>
-     * <p>
+     * <p/>
      * This method is public for performance reasons only, to avoid a clone.
      * The hashcode is calculated once here in this method.
      * Therefore, changing the array passed in would not change the hashcode but
      * would change the equals method, which is a bug.
-     * <p>
+     * <p/>
      * This is the only fully safe usage of this constructor, as the object array
      * is never made available in a variable:
      * <pre>
      * new MultiKey(new Object[] {...}, false);
      * </pre>
-     * <p>
+     * <p/>
      * The keys should be immutable
      * If they are not then they must not be changed after adding to the MultiKey.
      *
-     * @param keys  the array of keys, not null
-     * @param makeClone  true to clone the array, false to assign it
+     * @param keys      the array of keys, not null
+     * @param makeClone true to clone the array, false to assign it
      * @throws IllegalArgumentException if the key array is null
      * @since Commons Collections 3.1
      */
@@ -175,7 +180,7 @@ public class MultiKey implements Serializable {
     //-----------------------------------------------------------------------
     /**
      * Gets a clone of the array of keys.
-     * <p>
+     * <p/>
      * The keys should be immutable
      * If they are not then they must not be changed.
      *
@@ -187,11 +192,11 @@ public class MultiKey implements Serializable {
 
     /**
      * Gets the key at the specified index.
-     * <p>
+     * <p/>
      * The key should be immutable.
      * If it is not then it must not be changed.
      *
-     * @param index  the index to retrieve
+     * @param index the index to retrieve
      * @return the key at the index
      * @throws IndexOutOfBoundsException if the index is invalid
      * @since Commons Collections 3.1
@@ -213,11 +218,11 @@ public class MultiKey implements Serializable {
     //-----------------------------------------------------------------------
     /**
      * Compares this object to another.
-     * <p>
+     * <p/>
      * To be equal, the other object must be a <code>MultiKey</code> with the
      * same number of keys which are also equal.
      *
-     * @param other  the other object to compare to
+     * @param other the other object to compare to
      * @return true if equal
      */
     public boolean equals(Object other) {
@@ -233,7 +238,7 @@ public class MultiKey implements Serializable {
 
     /**
      * Gets the combined hash code that is computed from all the keys.
-     * <p>
+     * <p/>
      * This value is computed once and then cached, so elements should not
      * change their hash codes once created (note that this is the same
      * constraint that would be used if the individual keys elements were

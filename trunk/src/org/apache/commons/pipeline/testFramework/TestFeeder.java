@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -17,9 +17,10 @@
 
 package org.apache.commons.pipeline.testFramework;
 
+import org.apache.commons.pipeline.Feeder;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.pipeline.*;
 
 /**
  * This feeder simply adds the received objects to a list.

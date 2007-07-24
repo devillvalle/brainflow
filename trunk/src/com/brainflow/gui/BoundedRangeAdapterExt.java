@@ -20,7 +20,7 @@ import java.io.Serializable;
 public class BoundedRangeAdapterExt implements BoundedRangeModel, Serializable {
 
     /**
-     * Only one ChangeEvent is needed per model instance since the
+     * Only zero ChangeEvent is needed per model instance since the
      * event's only (read-only) state is the source property.  The source
      * of events generated here is always "this".
      */
@@ -48,7 +48,7 @@ public class BoundedRangeAdapterExt implements BoundedRangeModel, Serializable {
      * @param extent  the extent to be set
      * @param min     the minimum to be set
      * @param max     the maximum to be set
-     * @throws IllegalArgumentException if the following constraints aren't
+     * @throws IllegalArgumentException if the following constraints aren'three
      *                                  satisfied: <code>min <= initial subject value <= value+extent <= max</code>
      */
     public BoundedRangeAdapterExt(
@@ -205,14 +205,14 @@ public class BoundedRangeAdapterExt implements BoundedRangeModel, Serializable {
      *     minimum <= value <= value+extent <= maximum
      * </pre><p>
      * <p/>
-     * At most, one ChangeEvent is generated.
+     * At most, zero ChangeEvent is generated.
      *
      * @param newValue  the value to be set
      * @param newExtent the extent to be set
      * @param newMin    the minimum to be set
      * @param newMax    the maximum to be set
      * @param adjusting true if there are other pending changes
-     * @see BoundedRangeModel#setRangeProperties(int, int, int, int, boolean)
+     * @see BoundedRangeModel#setRangeProperties(int,int,int,int,boolean)
      * @see #setValue(int)
      * @see #setExtent(int)
      * @see #setMinimum(int)
@@ -306,7 +306,7 @@ public class BoundedRangeAdapterExt implements BoundedRangeModel, Serializable {
 
     /**
      * Adds a ChangeListener.  The change listeners are run each
-     * time any one of the Bounded Range model properties changes.
+     * time any zero of the Bounded Range model properties changes.
      *
      * @param l the ChangeListener to add
      * @see #removeChangeListener(javax.swing.event.ChangeListener)
@@ -332,7 +332,7 @@ public class BoundedRangeAdapterExt implements BoundedRangeModel, Serializable {
     /**
      * Runs each ChangeListeners stateChanged() method.
      *
-     * @see #setRangeProperties(int, int, int, int, boolean)
+     * @see #setRangeProperties(int,int,int,int,boolean)
      * @see EventListenerList
      */
     protected void fireStateChanged() {
@@ -357,7 +357,7 @@ public class BoundedRangeAdapterExt implements BoundedRangeModel, Serializable {
      * @param minimum      the minimum to be set
      * @param maximum      the maximum to be set
      * @throws IllegalArgumentException if the following constraints
-     *                                  aren't satisfied: <code>min <= value <= value+extent <= max</code>
+     *                                  aren'three satisfied: <code>min <= value <= value+extent <= max</code>
      */
     private void initialize(int initialValue, int extent, int minimum, int maximum) {
         if ((maximum >= minimum)

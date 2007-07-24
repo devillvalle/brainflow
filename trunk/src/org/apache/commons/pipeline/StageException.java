@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -22,54 +22,59 @@ package org.apache.commons.pipeline;
  */
 public class StageException extends java.lang.Exception {
     //Stage within which the error occurred
-    private Stage source;    
-    
+    private Stage source;
+
     /**
      * Creates a new instance of <code>StageException</code> without detail message.
+     *
      * @param source the stage that was the source of the exception
      */
     public StageException(Stage source) {
         this.source = source;
     }
-    
-    
+
+
     /**
      * Constructs an instance of <code>StageException</code> with the specified detail message.
+     *
      * @param source the stage that was the source of the exception
-     * @param msg the detail message.
+     * @param msg    the detail message.
      */
     public StageException(Stage source, String msg) {
         super(msg);
         this.source = source;
     }
-    
-    
+
+
     /**
      * Constructs an instance of <code>StageException</code> with the specified detail message and cause
+     *
      * @param source the stage where the error occurred
-     * @param msg the detail message.
-     * @param cause Throwable that caused this exception.
+     * @param msg    the detail message.
+     * @param cause  Throwable that caused this exception.
      */
     public StageException(Stage source, Throwable cause) {
         super(cause);
         this.source = source;
-    }    
-    
-    
+    }
+
+
     /**
      * Constructs an instance of <code>StageException</code> with the specified detail message and cause
+     *
      * @param source the stage where the error occurred
-     * @param msg the detail message.
-     * @param cause Throwable that caused this exception.
+     * @param msg    the detail message.
+     * @param cause  Throwable that caused this exception.
      */
     public StageException(Stage source, String msg, Throwable cause) {
         super(msg, cause);
         this.source = source;
-    }    
-    
-    
+    }
+
+
     /**
      * Returns a reference to the Stage object where the exception occurred.
+     *
      * @return a reference to the Stage object where the exception occurred.
      */
     public Stage getSource() {

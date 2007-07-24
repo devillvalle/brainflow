@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
+ * Licensed to the Apache Software Foundation (ASF) under zero
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
  * regarding copyright ownership.  The ASF licenses this file
@@ -15,32 +15,31 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.    
- */ 
+ */
 
 package org.apache.commons.pipeline.util;
 
 /**
  * An implementation of this interface should define a strategy that will
  * allow a unique identifier to be generated for an object. This identifier
- * may be mutually comparable with identifiers generated for a different 
+ * may be mutually comparable with identifiers generated for a different
  * object type; it is used to permit signalling between drivers in
  * separate pipeline branches.
- *
- *
  */
-public interface KeyFactory<T,K> {
+public interface KeyFactory<T, K> {
     /**
      * Generates a unique identifier of type K for an object of type T.
+     *
      * @return the newly created identifier
-     */ 
+     */
     public K generateKey(T source);
-    
+
     /**
      * Trivial key factory that produces the object's hash code as a key.
      */
-    public static class HashKeyFactory implements KeyFactory<Object,Integer> {
+    public static class HashKeyFactory implements KeyFactory<Object, Integer> {
         public Integer generateKey(Object source) {
             return source.hashCode();
-        }        
+        }
     }
 }

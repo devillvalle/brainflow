@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -24,8 +24,6 @@ package org.apache.commons.pipeline.driver;
  * processing, but will simply be logged with a severity of ERROR.
  * If faultTolerance is set to ALL, runtime exceptions will also be
  * logged and otherwise ignored.
- *
- *
  */
 public enum FaultTolerance {
     /**
@@ -33,13 +31,13 @@ public enum FaultTolerance {
      * the {@link org.apache.commons.pipeline.Stage#process(Object)} method will interrupt queue
      * processing and will be logged with a severity of ERROR.
      */
-    NONE, 
+    NONE,
     /**
      * {@link org.apache.commons.pipeline.StageException StageException}s thrown by
      * the {@link org.apache.commons.pipeline.Stage#process(Object)} method will not interrupt queue
      * processing, but will simply be logged with a severity of ERROR.
      */
-    CHECKED, 
+    CHECKED,
     /**
      * If faultTolerance is set to ALL, runtime exceptions will be
      * logged and otherwise ignored.

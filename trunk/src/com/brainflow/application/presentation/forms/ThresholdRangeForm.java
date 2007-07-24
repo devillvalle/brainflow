@@ -1,7 +1,7 @@
 package com.brainflow.application.presentation.forms;
 
-import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 import javax.swing.*;
 import java.text.NumberFormat;
@@ -30,7 +30,6 @@ public class ThresholdRangeForm extends JPanel {
     private JCheckBox inclusiveCheckBox;
 
     private JCheckBox symmetricalCheckBox;
-
 
 
     public ThresholdRangeForm() {
@@ -81,6 +80,8 @@ public class ThresholdRangeForm extends JPanel {
 
     private void buildGUI() {
 
+        //layout = new FormLayout("6dlu, p, 3dlu, max(p;40dlu), p:g, 5dlu, 3dlu", "6dlu, p, 3dlu, p, 8dlu, p, 3dlu, p, 6dlu");
+
         layout = new FormLayout("6dlu, p, 3dlu, max(p;40dlu), p:g, 5dlu, 3dlu",
                 "6dlu, p, 3dlu, p, 8dlu, p, 3dlu, p, 8dlu, p, 6dlu");
         setLayout(layout);
@@ -113,12 +114,12 @@ public class ThresholdRangeForm extends JPanel {
         add(valueField1, cc.xy(4, 2));
         add(valueField2, cc.xy(4, 6));
 
-        inclusiveCheckBox = new JCheckBox("inclusive masking");
+        inclusiveCheckBox = new JCheckBox("inclusive");
 
-        add(inclusiveCheckBox, cc.xy(2, 10));
+        add(inclusiveCheckBox, cc.xyw(2, 10, 3));
 
         symmetricalCheckBox = new JCheckBox("symmetrical");
-        add(symmetricalCheckBox, cc.xy(4, 10));
+        add(symmetricalCheckBox, cc.xy(5, 10));
 
 
     }

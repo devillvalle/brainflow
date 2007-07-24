@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -17,27 +17,25 @@
 
 package org.apache.commons.pipeline.stage;
 
-import org.apache.commons.pipeline.StageException;
-import org.apache.commons.pipeline.stage.BaseStage;
-import java.util.Queue;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.pipeline.StageException;
 
 
 /**
- * A do-nothing implementation of Stage that simply logs the state of processing. 
+ * A do-nothing implementation of Stage that simply logs the state of processing.
  * and each object seen by its {@link #process(Object)} method.
- * Useful for debugging purposes. 
+ * Useful for debugging purposes.
  */
 public class LogStage extends BaseStage {
     private Log log = LogFactory.getLog(LogStage.class);
-    
+
     /**
      * Creates a new LogStage.
      */
     public LogStage() {
     }
-    
+
     /**
      * Logs the point at which preprocessing runs.
      */
@@ -45,7 +43,7 @@ public class LogStage extends BaseStage {
         super.preprocess();
         log.info("Stage " + this.getClass().getName() + " preprocessing.");
     }
-    
+
     /**
      * Logs the current state of an object on the queue and passes the
      * object unchanged to the next stage in the pipeline.
@@ -54,14 +52,14 @@ public class LogStage extends BaseStage {
         log.info("Processing object " + obj);
         this.emit(obj);
     }
-        
+
     /**
      * Logs tht point at which postprocessing runs
      */
     public void postprocess() throws StageException {
         log.info("Stage " + this.getClass().getName() + " postprocessing.");
     }
-    
+
     /**
      * Logs the point at which stage resources are released.
      */
@@ -75,14 +73,14 @@ public class LogStage extends BaseStage {
     public synchronized void setLog(Log log) {
         this.log = log;
     }
-    
+
     /**
      * Sets the logger based upon the log name.
      */
     public synchronized void setLog(String logName) {
         this.log = LogFactory.getLog(logName);
     }
-    
+
     /**
      * Sets the logger based upon the specified class.
      */

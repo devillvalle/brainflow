@@ -4,11 +4,12 @@ import com.brainflow.image.data.IImageData;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.utils.NumberUtils;
 
-
 import javax.swing.*;
-import java.util.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.logging.Logger;
-import java.awt.Color;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,7 +32,7 @@ public class DiscreteColorMap extends AbstractColorMap {
 
     /*public DiscreteColorMap(List<Color> clrs, Double... boundaries) {
      if (clrs.size() != (boundaries.length-1)) {
-         throw new IllegalArgumentException("must provide one less color than number of color boundaries");
+         throw new IllegalArgumentException("must provide zero less color than number of color boundaries");
      }
 
      boundaryArray = new double[boundaries.length];
@@ -69,17 +70,16 @@ public class DiscreteColorMap extends AbstractColorMap {
             throw new IllegalArgumentException("Supplied Color List must have length >= 1");
         }
 
-        intervals = new ArrayList<ColorInterval>(boundaries.size() -1);
+        intervals = new ArrayList<ColorInterval>(boundaries.size() - 1);
         segments = new SegmentArray(boundaries.size());
         segments.setLowerBound(0, boundaries.get(0));
 
-        for (int i=0; i< (boundaries.size()-1); i++) {
-            segments.setUpperBound(i, boundaries.get(i+1));
+        for (int i = 0; i < (boundaries.size() - 1); i++) {
+            segments.setUpperBound(i, boundaries.get(i + 1));
             Color clr = clrs.get(i % clrs.size());
             intervals.add(new ColorInterval(segments.getInterval(i), clr));
         }
 
-   
 
     }
 
@@ -174,7 +174,7 @@ public class DiscreteColorMap extends AbstractColorMap {
         double[] oldbounds = segments.getBoundaries();
         System.arraycopy(oldbounds, 0, nbounds, 0, oldbounds.length);
 
-        for (int i=getMapSize(); i<nsize; i++) {
+        for (int i = getMapSize(); i < nsize; i++) {
             nbounds[i] = oldbounds[oldbounds.length - 1];
         }
 
@@ -210,14 +210,14 @@ public class DiscreteColorMap extends AbstractColorMap {
         if (index < 1) {
             throw new IllegalArgumentException("Cannot change the low boundary for the first bin (e.g. the absolute minimum)");
         }
-        if (index > (segments.getNumIntervals()-1) ) {
+        if (index > (segments.getNumIntervals() - 1)) {
             throw new IllegalArgumentException("index " + index + " is greater than number of intervals " + segments.getNumIntervals());
         }
 
-        setUpperBound(index-1, value);
+        setUpperBound(index - 1, value);
     }
 
-    
+
     public void setUpperBound(int index, double value) {
         double oldValue = segments.getUpperBound(index);
         double maxValue = segments.getMaximum();

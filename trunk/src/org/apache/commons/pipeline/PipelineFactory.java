@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -17,8 +17,6 @@
 
 package org.apache.commons.pipeline;
 
-import java.util.Map;
-
 /**
  * Simple factory interface for creating pipelines. This interface is commonly implemented
  * in different ways to allow creation of a pipeline based upon some external
@@ -27,8 +25,10 @@ import java.util.Map;
 public interface PipelineFactory {
     /**
      * Returns a Pipeline created by the factory.
-     * @throws org.apache.commons.pipeline.PipelineCreationException if there is an error creating the pipeline
+     *
      * @return the newly created pipeline
+     * @throws org.apache.commons.pipeline.PipelineCreationException
+     *          if there is an error creating the pipeline
      */
     public Pipeline createPipeline() throws PipelineCreationException;
 }

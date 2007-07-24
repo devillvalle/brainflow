@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -17,8 +17,9 @@
 
 package org.apache.commons.pipeline.event;
 
+import org.apache.commons.pipeline.Stage;
+
 import java.util.EventObject;
-import org.apache.commons.pipeline.*;
 
 /**
  *
@@ -26,16 +27,18 @@ import org.apache.commons.pipeline.*;
  */
 public class PipelineShutdownRequest extends EventObject {
     private String message;
-    
-    /** Creates a new instance of ObjectProcessedEvent */
+
+    /**
+     * Creates a new instance of ObjectProcessedEvent
+     */
     public PipelineShutdownRequest(Stage source, String message) {
         super(source);
     }
-    
+
     public Stage getSource() {
         return (Stage) super.getSource();
-    }    
-    
+    }
+
     public String getMessage() {
         return this.message;
     }

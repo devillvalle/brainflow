@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -17,25 +17,27 @@
 
 package org.apache.commons.pipeline.validation;
 
-import java.util.Set;
 import org.apache.commons.pipeline.Stage;
 
 /**
  * A collection of utility methods used by the validation system.
- *
  */
 public class ValidationUtils {
-    
-    /** Prevent instantiation */
-    private ValidationUtils() {  }
-    
+
+    /**
+     * Prevent instantiation
+     */
+    private ValidationUtils() {
+    }
+
     /**
      * Tests whether the specified downstream stage can succeed the specified
      * upstream stage.
-     * @return true or false on definitive identification of compatibility or
-     * null if unable to determine compatibility due to missing metadata.
-     * @param upstream the upstream stage
+     *
+     * @param upstream   the upstream stage
      * @param downstream the stage consuming data produced by the upstream stage
+     * @return true or false on definitive identification of compatibility or
+     *         null if unable to determine compatibility due to missing metadata.
      */
     public static final Boolean canSucceed(Stage upstream, Stage downstream) {
         if (upstream.getClass().isAnnotationPresent(ProducedTypes.class) &&
@@ -44,25 +46,26 @@ public class ValidationUtils {
             ConsumedTypes c = downstream.getClass().getAnnotation(ConsumedTypes.class);
             return compatible(p.value(), c.value());
         }
-        
+
         return null;
     }
-    
+
     /**
      * Tests whether the specified downstream stage can succeed the specified
      * upstream stage on a branch pipeline identified by the given branch key.
-     * @return true or false on definitive identification of compatibility or
-     * null if unable to determine compatibility due to missing metadata.
-     * @param upstream the upstream stage
+     *
+     * @param upstream            the upstream stage
      * @param downstreamBranchKey the key identifying the branch receiving data from the upstream stage
-     * @param downstream the stage consuming data produced by the upstream stage
+     * @param downstream          the stage consuming data produced by the upstream stage
+     * @return true or false on definitive identification of compatibility or
+     *         null if unable to determine compatibility due to missing metadata.
      */
     public static final Boolean canSucceedOnBranch(Stage upstream, String downstreamBranchKey, Stage downstream) {
         if (downstream.getClass().isAnnotationPresent(ConsumedTypes.class)) {
             ConsumedTypes c = downstream.getClass().getAnnotation(ConsumedTypes.class);
             if (upstream.getClass().isAnnotationPresent(ProductionOnBranch.class)) {
                 ProductionOnBranch pob = upstream.getClass().getAnnotation(ProductionOnBranch.class);
-                
+
                 if (!downstreamBranchKey.equals(pob.branchKey())) {
                     return false;
                 } else {
@@ -75,25 +78,25 @@ public class ValidationUtils {
                         return compatible(pob.producedTypes(), c.value());
                     }
                 }
-                
+
                 return false;
             }
         }
-        
+
         return null;
     }
-    
+
     /**
      * Check if the specified production is compatible with the specified consumption.
      */
     private static Boolean compatible(Class<?>[] producedTypes, Class<?>[] consumedTypes) {
         for (Class<?> consumed : consumedTypes) {
-            for (Class<?> produced : producedTypes) { //usually just one type
+            for (Class<?> produced : producedTypes) { //usually just zero type
                 if (consumed.isAssignableFrom(produced)) return true;
             }
         }
-        
+
         //none of what is produced can be consumed
         return false;
-    }    
+    }
 }

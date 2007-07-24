@@ -12,9 +12,7 @@ import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.utils.Range;
 import com.brainflow.utils.StaticTimer;
-import com.jgoodies.binding.beans.PropertyAdapter;
 import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
-import com.jidesoft.action.CommandBar;
 import com.jidesoft.action.CommandMenuBar;
 import com.jidesoft.docking.DefaultDockingManager;
 import com.jidesoft.docking.DockContext;
@@ -34,7 +32,10 @@ import com.pietschy.command.group.CommandGroup;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.VFS;
-import org.bushe.swing.action.*;
+import org.bushe.swing.action.ActionList;
+import org.bushe.swing.action.ActionManager;
+import org.bushe.swing.action.ActionUIFactory;
+import org.bushe.swing.action.BasicAction;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 import org.xml.sax.SAXException;
@@ -126,7 +127,7 @@ public class Brainflow {
             public void run() {
                 try {
                     bflow.launch();
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     Logger.getAnonymousLogger().severe("Error Launching Brainflow, exiting");
                     e.printStackTrace();
                     System.exit(-1);
@@ -156,7 +157,7 @@ public class Brainflow {
     }
 
 
-    public void launch() throws Exception {
+    public void launch() throws Throwable {
         final SplashScreen splash = SplashScreen.getSplashScreen();
 
         if (splash == null) {
@@ -218,7 +219,11 @@ public class Brainflow {
 
     private void loadCommands() {
         try {
+
             GuiCommands.load("resources/commands/ImageViewCommands");
+            GuiCommands.load("resources/commands/BrainFlowCommands");
+
+
         } catch (ParseException e) {
             log.severe(e.getMessage());
             throw new RuntimeException(e);
@@ -300,18 +305,14 @@ public class Brainflow {
         brainFrame.getJMenuBar().add(fileMenu);
 
 
-        ActionList viewList = ActionManager.getInstance().getActionList("view-menu");
-        brainFrame.getJMenuBar().add(ActionUIFactory.getInstance(JIDE_FACTORY).createMenu(viewList));
-
         ActionList navList = ActionManager.getInstance().getActionList("navigation-menu");
         brainFrame.getJMenuBar().add(ActionUIFactory.getInstance(JIDE_FACTORY).createMenu(navList));
 
         ActionList annotationList = ActionManager.getInstance().getActionList("annotation-menu");
         brainFrame.getJMenuBar().add(ActionUIFactory.getInstance(JIDE_FACTORY).createMenu(annotationList));
 
-
-        ActionList debugList = ActionManager.getInstance().getActionList("debug-menu");
-        brainFrame.getJMenuBar().add(ActionUIFactory.getInstance(JIDE_FACTORY).createMenu(debugList));
+        //ActionList debugList = ActionManager.getInstance().getActionList("debug-menu");
+        //brainFrame.getJMenuBar().add(ActionUIFactory.getInstance(JIDE_FACTORY).createMenu(debugList));
 
         brainFrame.getJMenuBar().add(DockWindowManager.getInstance().getDockMenu());
 
@@ -357,17 +358,15 @@ public class Brainflow {
 
     private void initializeToolBar() {
 
+        //ActionList globalList = ActionManager.getInstance().getActionList("view-menu");
+        //ActionAttributes attr = new ActionAttributes();
+        //attr.putValue(ActionManager.TOOLBAR_SHOWS_TEXT, true);
 
-        ActionList globalList = ActionManager.getInstance().getActionList("view-menu");
-        ActionAttributes attr = new ActionAttributes();
-        attr.putValue(ActionManager.TOOLBAR_SHOWS_TEXT, true);
-
-
-        CommandBar mainToolbar = ((JideActionUIFactory) ActionUIFactory.getInstance(JIDE_FACTORY)).createCommandBar(globalList);
+        //CommandBar mainToolbar = ((JideActionUIFactory) ActionUIFactory.getInstance(JIDE_FACTORY)).createCommandBar(globalList);
 
         /// hack from jidesoft for synthetica lookandfeel
-        mainToolbar.setPaintBackground(false);
-        mainToolbar.setOpaque(false);
+        //mainToolbar.setPaintBackground(false);
+        //mainToolbar.setOpaque(false);
         //////////////////////////////////////////////////
 
         //JideSplitButton sliderDirection = new JideSplitButton("0  ");
@@ -375,44 +374,74 @@ public class Brainflow {
         //sliderDirection.add(new JRadioButtonMenuItem("X Axis"));
         //sliderDirection.add(new JRadioButtonMenuItem("Y Axis"));
 
-        JLabel sliceLabel = new JLabel("0 ");
+        //JLabel sliceLabel = new JLabel("0 ");
 
-        mainToolbar.addSeparator();
+        //mainToolbar.addSeparator();
 
-        ImageViewSliderPresenter sliderPresenter = new ImageViewSliderPresenter();
-        PropertyAdapter adapter = new PropertyAdapter(sliceLabel, "text");
-        sliderPresenter.setValueLabel(adapter);
-        mainToolbar.add(sliderPresenter.getComponent());
+        //ImageViewSliderPresenter sliderPresenter = new ImageViewSliderPresenter();
+        //PropertyAdapter adapter = new PropertyAdapter(sliceLabel, "text");
+        //sliderPresenter.setValueLabel(adapter);
+        //mainToolbar.add(sliderPresenter.getComponent());
         //mainToolbar.add(sliderDirection);
 
+        //mainToolbar.addSeparator();
+        //Action crossAction = ActionManager.getInstance().getAction("toggle-cross");
 
-        mainToolbar.addSeparator();
-        Action crossAction = ActionManager.getInstance().getAction("toggle-cross");
+        //AbstractButton crossToggle = ((JideActionUIFactory) ActionUIFactory.getInstance(JIDE_FACTORY)).
+        //        createJideButton(crossAction);
+        //mainToolbar.add(crossToggle);
 
-        AbstractButton crossToggle = ((JideActionUIFactory) ActionUIFactory.getInstance(JIDE_FACTORY)).
-                createJideButton(crossAction);
-        mainToolbar.add(crossToggle);
+        //Action axisLabelAction = ActionManager.getInstance().getAction("toggle-axislabel");
 
-        Action axisLabelAction = ActionManager.getInstance().getAction("toggle-axislabel");
+        //AbstractButton axisLabelToggle = ((JideActionUIFactory) ActionUIFactory.getInstance(JIDE_FACTORY)).
+        //        createJideButton(axisLabelAction);
+        //mainToolbar.add(axisLabelToggle);
 
-        AbstractButton axisLabelToggle = ((JideActionUIFactory) ActionUIFactory.getInstance(JIDE_FACTORY)).
-                createJideButton(axisLabelAction);
-        mainToolbar.add(axisLabelToggle);
+        //Action colorbarAction = ActionManager.getInstance().getAction("toggle-colorbar");
+        //AbstractButton colorbarToggle = ((JideActionUIFactory) ActionUIFactory.getInstance(JIDE_FACTORY)).
+        //        createButton(colorbarAction);
 
-        Action colorbarAction = ActionManager.getInstance().getAction("toggle-colorbar");
-        AbstractButton colorbarToggle = ((JideActionUIFactory) ActionUIFactory.getInstance(JIDE_FACTORY)).
-                createButton(colorbarAction);
+        //mainToolbar.add(colorbarToggle);
 
-        mainToolbar.add(colorbarToggle);
+        CommandGroup mainToolbarGroup = new CommandGroup("main-toolbar");
+        mainToolbarGroup.bind(getApplicationFrame());
+
+        OpenImageCommand openImageCommand = new OpenImageCommand();
+        openImageCommand.bind(getApplicationFrame());
+
+
+        CreateAxialViewCommand axialCommand = new CreateAxialViewCommand();
+        axialCommand.bind(getApplicationFrame());
+        axialCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+
+        CreateSagittalViewCommand sagittalCommand = new CreateSagittalViewCommand();
+        sagittalCommand.bind(getApplicationFrame());
+        sagittalCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+        CreateCoronalViewCommand coronalCommand = new CreateCoronalViewCommand();
+        coronalCommand.bind(getApplicationFrame());
+        coronalCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+        IncreaseContrastCommand increaseContrastCommand = new IncreaseContrastCommand();
+        increaseContrastCommand.bind(getApplicationFrame());
+        increaseContrastCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+        DecreaseContrastCommand decreaseContrastCommand = new DecreaseContrastCommand();
+        decreaseContrastCommand.bind(getApplicationFrame());
+        decreaseContrastCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+        JToolBar mainToolbar = mainToolbarGroup.createToolBar();
+        //ActionCommand increaseContrastCommand = new IncreaseContrastCommand();
+        //increaseContrastCommand.bind(brainFrame);
+        //mainToolbar.add(increaseContrastCommand.getActionAdapter());
+
+        //ActionCommand decreaseContrastCommand = new DecreaseContrastCommand();
+        //decreaseContrastCommand.bind(brainFrame);
+        //mainToolbar.add(decreaseContrastCommand.getActionAdapter());
+
 
         brainFrame.getContentPane().add(mainToolbar, BorderLayout.NORTH);
-
-        ActionManager.mapKeystrokeForAction(documentPane, ActionManager.getInstance().getAction("view-random"));
-        ActionManager.mapKeystrokeForAction(documentPane, ActionManager.getInstance().getAction("view-axial"));
-        ActionManager.mapKeystrokeForAction(documentPane, ActionManager.getInstance().getAction("view-coronal"));
-        ActionManager.mapKeystrokeForAction(documentPane, ActionManager.getInstance().getAction("view-sagittal"));
-        ActionManager.mapKeystrokeForAction(documentPane, ActionManager.getInstance().getAction("view-orthogonal"));
-        ActionManager.mapKeystrokeForAction(documentPane, ActionManager.getInstance().getAction("set-smoothing"));
 
 
     }
@@ -425,7 +454,7 @@ public class Brainflow {
 
         ImageCanvas2 canvas = ImageCanvasManager.getInstance().getSelectedCanvas();
         canvas.setRequestFocusEnabled(true);
-        canvas.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+        canvas.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         applicationContext.putValue(ActionContext.SELECTED_CANVAS, canvas);
 
@@ -679,6 +708,15 @@ public class Brainflow {
                 }
             }
         }
+
+    }
+
+    public ImageView getSelectedView() {
+        return ImageCanvasManager.getInstance().getSelectedCanvas().getSelectedView();
+    }
+
+    public ImageCanvas2 getSelectedCanvas() {
+        return ImageCanvasManager.getInstance().getSelectedCanvas();
 
     }
 

@@ -67,10 +67,10 @@ public class ReorientImageFilter extends com.brainflow.image.operations.Abstract
  Point3D holder = new Point3D();
  Point3D holder2 = new Point3D();
  while (iter.hasNext()) {
-     holder.x = iter.getXIndex();
-     holder.y = iter.getYIndex();
-     holder.z = iter.getZIndex();
-     double val = src.getValue((int) holder.x, (int) holder.y, (int) holder.z);
+     holder.zero = iter.getXIndex();
+     holder.zero = iter.getYIndex();
+     holder.one = iter.getZIndex();
+     double val = src.getValue((int) holder.zero, (int) holder.zero, (int) holder.one);
      for (int i = 0; i < swaps.length; i++) {
          swaps[i].swap(holder, holder2);
          holder = holder2;
@@ -79,7 +79,7 @@ public class ReorientImageFilter extends com.brainflow.image.operations.Abstract
      System.out.println(holder);
      System.out.println(val);
      System.out.println(holder2);
-     op.setValue((int) holder2.x, (int) holder2.y, (int) holder2.z, val);
+     op.setValue((int) holder2.zero, (int) holder2.zero, (int) holder2.one, val);
      iter.nextIndex();
  }       */
 

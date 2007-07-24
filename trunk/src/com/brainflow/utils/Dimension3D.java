@@ -10,18 +10,18 @@ package com.brainflow.utils;
  * @version 1.0
  */
 
-public class Dimension3D<T extends Number> implements java.io.Serializable {
+public class Dimension3D<T extends Number> implements IDimension, java.io.Serializable {
 
 
-    public T x;
-    public T y;
-    public T z;
+    public T zero;
+    public T one;
+    public T two;
 
 
     public Dimension3D(Dimension3D<T> dim) {
-        x = dim.x;
-        y = dim.y;
-        z = dim.z;
+        zero = dim.zero;
+        one = dim.one;
+        two = dim.two;
     }
 
 
@@ -29,19 +29,31 @@ public class Dimension3D<T extends Number> implements java.io.Serializable {
         if (pt.length != 3) {
             throw new IllegalArgumentException("Dimension3D: supplied array must have length = 3!");
         }
-        x = pt[0];
-        y = pt[1];
-        z = pt[2];
+        zero = pt[0];
+        one = pt[1];
+        two = pt[2];
     }
 
-    public Dimension3D(T _x, T _y, T _z) {
-        x = _x;
-        y = _y;
-        z = _z;
+    public Dimension3D(T _zero, T _one, T _two) {
+        zero = _zero;
+        one = _one;
+        two = _two;
+    }
+
+    public T getDim(int dimnum) {
+        if (dimnum == 0) return zero;
+        if (dimnum == 1) return one;
+        if (dimnum == 2) return two;
+
+        throw new IllegalArgumentException("illegal dimension number " + dimnum + " for class " + getClass());
+    }
+
+    public int numDim() {
+        return 3;
     }
 
     public String toString() {
-        return "[" + x + ", " + y + ", " + z + "]";
+        return "[" + zero + ", " + one + ", " + two + "]";
     }
 
 

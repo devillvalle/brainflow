@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -17,13 +17,12 @@
 
 package org.apache.commons.pipeline.testFramework;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.EventObject;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.apache.commons.pipeline.*;
+import org.apache.commons.pipeline.Feeder;
+import org.apache.commons.pipeline.Stage;
+import org.apache.commons.pipeline.StageContext;
+import org.apache.commons.pipeline.StageEventListener;
+
+import java.util.*;
 
 
 /**
@@ -32,18 +31,18 @@ import org.apache.commons.pipeline.*;
 public class TestStageContext implements StageContext {
     public List<StageEventListener> listeners = new ArrayList<StageEventListener>();
     public List<EventObject> raisedEvents = new ArrayList<EventObject>();
-    public Map<String, TestFeeder> branchFeeders = new HashMap<String,TestFeeder>();
-    public Map<Stage, Feeder> downstreamFeeders = new HashMap<Stage,Feeder>();
+    public Map<String, TestFeeder> branchFeeders = new HashMap<String, TestFeeder>();
+    public Map<Stage, Feeder> downstreamFeeders = new HashMap<Stage, Feeder>();
     public Map<String, Object> env = new HashMap<String, Object>();
-    
+
     public void registerListener(StageEventListener listener) {
         this.listeners.add(listener);
     }
-    
+
     public void raise(EventObject ev) {
         this.raisedEvents.add(ev);
     }
-    
+
     /**
      * Dynamically adds branch feeders as needed to provide a feeder for
      * the requested branch key.
@@ -57,7 +56,7 @@ public class TestStageContext implements StageContext {
             return feeder;
         }
     }
-    
+
     /**
      * Dynamically adds downstream feeders as needed to provide a downstream
      * feeder for the specified stage.
@@ -71,7 +70,7 @@ public class TestStageContext implements StageContext {
             return feeder;
         }
     }
-    
+
     /**
      * This method is used by the test implementation to set up the feeders
      * for a stage as though they were provided by drivers in a pipeline.
@@ -79,7 +78,7 @@ public class TestStageContext implements StageContext {
     public void registerDownstreamFeeder(Stage stage, Feeder feeder) {
         this.downstreamFeeders.put(stage, feeder);
     }
-    
+
     public Collection<StageEventListener> getRegisteredListeners() {
         return this.listeners;
     }
@@ -87,11 +86,11 @@ public class TestStageContext implements StageContext {
     /**
      * This method allows objects in the global environment
      * to be accessed by the stages running in this context.
-     * 
+     *
      * @return the object corresponding to the specified string key, or null
-     * if no such key exists.
+     *         if no such key exists.
      */
     public Object getEnv(String key) {
         return this.env.get(key);
-    }    
+    }
 }

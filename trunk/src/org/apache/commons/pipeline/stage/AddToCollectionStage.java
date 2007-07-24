@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -17,15 +17,16 @@
 
 package org.apache.commons.pipeline.stage;
 
-import java.util.Collection;
-import java.util.Collections;
 import org.apache.commons.pipeline.validation.ConsumedTypes;
 import org.apache.commons.pipeline.validation.ProducesConsumed;
 
+import java.util.Collection;
+import java.util.Collections;
+
 /**
- * This is a simple stage in the pipeline which will add each processed object 
- * to the specified collection. 
- *
+ * This is a simple stage in the pipeline which will add each processed object
+ * to the specified collection.
+ * <p/>
  * For the purposes of validation, this stage is considered to be able to consume
  * objects of any class although the process() method may throw a ClassCastException
  * if a processed object cannot be added to the collection.
@@ -33,50 +34,51 @@ import org.apache.commons.pipeline.validation.ProducesConsumed;
 @ConsumedTypes(Object.class)
 @ProducesConsumed
 public class AddToCollectionStage<T> extends BaseStage {
-    
+
     /**
      * Holds value of property collection.
      */
     private Collection<T> collection;
 
-    /** 
+    /**
      * Creates a new instance of AddToCollectionStage.  This constructor
      * will synchronized the collection by default.
      */
     public AddToCollectionStage(Collection<T> collection) {
         this(collection, true);
     }
-    
-    /** 
+
+    /**
      * Creates a new instance of AddToCollectionStage.
-     * @param collection The collection in which to add objects to
+     *
+     * @param collection   The collection in which to add objects to
      * @param synchronized A flag value that determines whether or not accesses
-     * to the underlying collection are synchronized.
+     *                     to the underlying collection are synchronized.
      */
     public AddToCollectionStage(Collection<T> collection, boolean synchronize) {
-        if (collection == null){
+        if (collection == null) {
             throw new IllegalArgumentException("Argument 'collection' can not be null.");
         }
-        
+
         this.collection = synchronize ? Collections.synchronizedCollection(collection) : collection;
     }
-    
-    /** 
+
+    /**
      * Adds the object to the underlying collection.
      *
      * @throws ClassCastException if the object is not of a suitable type to be added
-     * to the collection.
+     *                            to the collection.
      */
     public void process(Object obj) throws org.apache.commons.pipeline.StageException {
         this.collection.add((T) obj);
         this.emit(obj);
     }
-    
+
     /**
      * Returns the collection to which elements have been added during
      * processing.
      */
     public Collection<T> getCollection() {
         return this.collection;
-    }    
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -24,22 +24,23 @@ import org.apache.commons.pipeline.StageDriverFactory;
 
 /**
  * Factory for SynchronousStageDriver objects.
- *
- *
  */
 public class SynchronousStageDriverFactory implements StageDriverFactory {
-    
-    /** Creates a new instance of SynchronousStageDriverFactory */
+
+    /**
+     * Creates a new instance of SynchronousStageDriverFactory
+     */
     public SynchronousStageDriverFactory() {
     }
 
     /**
      * Creates a new {@link SynchronousStageDriver} based upon this factory's configuration.
-     * @param stage the stage to be run by the newly created driver
+     *
+     * @param stage   the stage to be run by the newly created driver
      * @param context the context in which the stage will be run
      * @return the newly created and configured driver
      */
     public StageDriver createStageDriver(Stage stage, StageContext context) {
         return new SynchronousStageDriver(stage, context);
-    }    
+    }
 }

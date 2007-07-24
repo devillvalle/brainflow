@@ -38,15 +38,19 @@ public class BasicImageReader implements ImageReader {
     private static final int NUM_CHUNKS = 20;
 
     private ImageInfo info;
+
     private int fileDimensionality = 2;
+
     private DataType datatype;
 
     private IImageSpace imageSpace;
 
-
     private FileObject inputFile;
+
     private ByteOrder byteOrder = java.nio.ByteOrder.BIG_ENDIAN;
+
     public ByteBuffer buffer;
+
     private float sf = 1f;
 
 
@@ -70,7 +74,7 @@ public class BasicImageReader implements ImageReader {
         setFileDimensionality(info.getDimensionality());
         setDataType(info.getDataType());
         setImageSpace(info.createImageSpace());
-        sf = (float) info.getScaleFactor();
+        sf = (float) info.getScaleFactor(0);
         inputFile = info.getImageFile();
 
     }
@@ -105,7 +109,7 @@ public class BasicImageReader implements ImageReader {
     }
 
 
-    public BasicImageData getOutput(ProgressListener listener) throws FileNotFoundException, IOException {
+    public BasicImageData getOutput(ProgressListener listener) throws IOException {
 
         InputStream istream = null;
 

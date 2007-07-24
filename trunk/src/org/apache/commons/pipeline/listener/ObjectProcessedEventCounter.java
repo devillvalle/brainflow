@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+ * Licensed to the Apache Software Foundation (ASF) under zero or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -17,34 +17,33 @@
 
 package org.apache.commons.pipeline.listener;
 
-import java.util.Collections;
-import java.util.EventObject;
-import java.util.HashMap;
-import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pipeline.Stage;
 import org.apache.commons.pipeline.StageEventListener;
 import org.apache.commons.pipeline.event.ObjectProcessedEvent;
 
+import java.util.Collections;
+import java.util.EventObject;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * This listener keeps track of the number of {@link ObjectProcessedEvent}s
  * received from each {@link Stage}
- *
- *
  */
 public class ObjectProcessedEventCounter implements StageEventListener {
     private final Log log = LogFactory.getLog(ObjectProcessedEventCounter.class);
-    
-    private Map<Stage,Integer> counts = Collections.synchronizedMap(new HashMap<Stage, Integer>());
-    
+
+    private Map<Stage, Integer> counts = Collections.synchronizedMap(new HashMap<Stage, Integer>());
+
     public synchronized void notify(EventObject evo) {
         if (evo instanceof ObjectProcessedEvent) {
-        ObjectProcessedEvent ev = (ObjectProcessedEvent) evo;
-        if (!counts.containsKey(ev.getSource())) counts.put(ev.getSource(), 1);
+            ObjectProcessedEvent ev = (ObjectProcessedEvent) evo;
+            if (!counts.containsKey(ev.getSource())) counts.put(ev.getSource(), 1);
+        }
     }
-    }
-    
+
     public Map<Stage, Integer> getCounts() {
         return this.counts;
     }

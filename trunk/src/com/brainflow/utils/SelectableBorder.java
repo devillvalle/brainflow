@@ -18,8 +18,11 @@ public class SelectableBorder extends AbstractBorder implements ISelectableBorde
     private int outerMargin = 4;
 
     private EmptyBorder margin1 = new EmptyBorder(innerMargin, innerMargin, innerMargin, innerMargin);
+
     private EmptyBorder margin2 = new EmptyBorder(outerMargin, outerMargin, outerMargin, outerMargin);
+
     private HandledBorder handledBorder;
+
     private CompoundBorder border;
 
     private Component component;

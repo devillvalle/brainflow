@@ -72,7 +72,7 @@ public class Index3D {
     public void setX(int x) {
         int oldProperty = this.x;
         this.x = x;
-        changeSupport.firePropertyChange("x", oldProperty, this.x);
+        changeSupport.firePropertyChange("zero", oldProperty, this.x);
 
     }
 
@@ -83,7 +83,7 @@ public class Index3D {
     public void setY(int y) {
         int oldProperty = this.y;
         this.y = y;
-        changeSupport.firePropertyChange("y", oldProperty, this.y);
+        changeSupport.firePropertyChange("zero", oldProperty, this.y);
 
     }
 
@@ -94,7 +94,7 @@ public class Index3D {
     public void setZ(int z) {
         int oldProperty = this.z;
         this.z = z;
-        changeSupport.firePropertyChange("z", oldProperty, this.z);
+        changeSupport.firePropertyChange("one", oldProperty, this.z);
 
     }
 
@@ -105,7 +105,7 @@ public class Index3D {
 
 
     public String toString() {
-        return "x = " + x + " y = " + y + " z = " + z;
+        return "zero = " + x + " zero = " + y + " one = " + z;
     }
 
 

@@ -1,5 +1,7 @@
 package com.brainflow.image.io.afni;
 
+import com.brainflow.image.anatomy.AnatomicalAxis;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.utils.*;
 
@@ -115,6 +117,58 @@ public class AFNIImageInfo extends ImageInfo {
         }
     }
 
+
+    private void processDatasetRank(List<Integer> rank) {
+        int dim1 = rank.get(0);
+        if (dim1 != 3) {
+            throw new IllegalArgumentException("AFNI attribute DATASET_RANK[0] must be 3");
+        }
+
+        int dim2 = rank.get(1);
+        setNumImages(dim2);
+    }
+
+    private void processOrientSpecific(List<Integer> codes) {
+        if (codes.size() != 3) {
+            throw new IllegalArgumentException("AFNI attribute ORIENT_SPECIFIC must have three entries");
+        }
+
+        AnatomicalAxis[] axes = new AnatomicalAxis[3];
+        for (int i = 0; i < axes.length; i++) {
+            int code = codes.get(i);
+            switch (code) {
+                case 0:
+                    axes[i] = AnatomicalAxis.RIGHT_LEFT;
+                    break;
+                case 1:
+                    axes[i] = AnatomicalAxis.LEFT_RIGHT;
+                    break;
+                case 2:
+                    axes[i] = AnatomicalAxis.POSTERIOR_ANTERIOR;
+                    break;
+                case 3:
+                    axes[i] = AnatomicalAxis.ANTERIOR_POSTERIOR;
+                    break;
+                case 4:
+                    axes[i] = AnatomicalAxis.INFERIOR_SUPERIOR;
+                    break;
+                case 5:
+                    axes[i] = AnatomicalAxis.SUPERIOR_INFERIOR;
+                    break;
+                default:
+                    throw new IllegalArgumentException("unrecognized code " + code + " for AFNI attribure ORIENT_SPECIFIC");
+            }
+
+        }
+
+        Anatomy3D ret = Anatomy3D.matchAnatomy(axes[0], axes[1], axes[2]);
+        if (ret == null) {
+            throw new IllegalArgumentException("Illegal Axis configuration in AFNI attriute ORIENT_SPECIFIC");
+        } else {
+            setAnatomy(ret);
+        }
+    }
+
     private void processAttribute(AFNIAttributeKey key, AFNIAttribute attribute) {
         AFNIAttribute.IntegerAttribute iattr;
         AFNIAttribute.FloatAttribute fattr;
@@ -145,6 +199,8 @@ public class AFNIImageInfo extends ImageInfo {
             case DATASET_NAME:
                 break;
             case DATASET_RANK:
+                iattr = (AFNIAttribute.IntegerAttribute) attribute;
+                processDatasetRank(iattr.getData());
                 break;
             case DELTA:
                 fattr = (AFNIAttribute.FloatAttribute) attribute;
@@ -163,6 +219,8 @@ public class AFNIImageInfo extends ImageInfo {
             case LABEL_2:
                 break;
             case ORIENT_SPECIFIC:
+                iattr = (AFNIAttribute.IntegerAttribute) attribute;
+                processOrientSpecific(iattr.getData());
                 break;
             case ORIGIN:
                 fattr = (AFNIAttribute.FloatAttribute) attribute;

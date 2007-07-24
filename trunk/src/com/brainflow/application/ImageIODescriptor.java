@@ -147,7 +147,11 @@ public class ImageIODescriptor {
 
     public boolean isHeaderMatch(FileObject fobj) {
         if (fobj.getName().getPath().endsWith(headerExtension)) {
+            System.out.println("file :" + fobj.getName().getPath() + " does match " + headerExtension);
             return true;
+        } else {
+            System.out.println("file :" + fobj.getName().getPath() + " does not match " + headerExtension);
+
         }
 
         // other checks would be appropriate (i.e. is header size = 348?)

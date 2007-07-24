@@ -3,6 +3,7 @@ package com.brainflow.image.io.afni;
 import com.brainflow.application.BrainflowException;
 import com.brainflow.image.io.ImageInfoReader;
 import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
 
 import java.io.*;
 import java.net.URL;
@@ -16,29 +17,44 @@ import java.net.URL;
  */
 public class AFNIInfoReader implements ImageInfoReader {
 
-    private AFNIImageInfo info = new AFNIImageInfo();
 
     public AFNIImageInfo readInfo(URL url) throws BrainflowException {
         try {
-            readHeader(url.openStream());
+            AFNIImageInfo info = readHeader(url.openStream());
+            return info;
         } catch (IOException e) {
             throw new BrainflowException(e);
         }
 
-        return info;
+
     }
 
     public AFNIImageInfo readInfo(FileObject fobj) throws BrainflowException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        try {
+            AFNIImageInfo info = readInfo(fobj.getURL());
+            return info;
+        } catch (FileSystemException e) {
+            throw new BrainflowException(e);
+        }
     }
 
     public AFNIImageInfo readInfo(File f) throws BrainflowException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        try {
+            InputStream istream = new FileInputStream(f);
+            AFNIImageInfo info = readHeader(istream);
+            return info;
+        } catch (IOException e) {
+            throw new BrainflowException(e);
+        }
+
+
     }
 
 
-    private void readHeader(InputStream istream) throws IOException {
+    private AFNIImageInfo readHeader(InputStream istream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(istream));
+
+        AFNIImageInfo info = new AFNIImageInfo();
 
         AFNIAttribute ret = null;
         skipNewLines(reader);
@@ -52,6 +68,7 @@ public class AFNIInfoReader implements ImageInfoReader {
         } while (ret != null);
 
         System.out.println("info : " + info);
+        return info;
 
 
     }
@@ -61,11 +78,9 @@ public class AFNIInfoReader implements ImageInfoReader {
         boolean marked = false;
         while ((str = reader.readLine()).equals("")) {
             reader.mark(500);
-            System.out.println("skipping line: " + str);
             marked = true;
         }
 
-        System.out.println("returning to mark: " + str);
 
         if (marked) {
             reader.reset();

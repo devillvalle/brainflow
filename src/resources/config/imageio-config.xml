@@ -12,6 +12,10 @@
         <Header extension=".nii.gz" reader="com.brainflow.image.io.nifti.NiftiInfoReader"/>
         <Data extension=".nii.gz" reader="com.brainflow.image.io.BasicImageReader"/>
     </ImageFormat>
+    <ImageFormat name="AFNI">
+        <Header extension=".HEAD" reader="com.brainflow.image.io.afni.AFNIInfoReader"/>
+        <Data extension=".BRIK" reader="com.brainflow.image.io.BasicImageReader"/>
+    </ImageFormat>
 
 
 </root>

@@ -12,7 +12,6 @@ import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.utils.Range;
 import com.brainflow.utils.StaticTimer;
-import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
 import com.jidesoft.action.CommandMenuBar;
 import com.jidesoft.docking.DefaultDockingManager;
 import com.jidesoft.docking.DockContext;
@@ -73,7 +72,7 @@ public class Brainflow {
 
     private SavePNGAction savePNGAction;
 
-    private RecentDirectoryMenu directoryMenu = new RecentDirectoryMenu();
+    private RecentPathMenu pathMenu = new RecentPathMenu();
 
     private DocumentPane documentPane = new DocumentPane();
 
@@ -108,9 +107,10 @@ public class Brainflow {
         try {
             //SyntheticaLookAndFeel lf = new SyntheticaStandardLookAndFeel();
 
-            UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
+            //UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
 
-            //UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceMagmaLookAndFeel());
+
+            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceMistSilverLookAndFeel());
             //UIManager.setLookAndFeel(lf);
             //LookAndFeelFactory.installDefaultLookAndFeel();
             LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
@@ -290,8 +290,8 @@ public class Brainflow {
         JideMenu fileMenu = new JideMenu("File");
 
         fileMenu.add(mountFileSystemAction);
-        directoryMenu.getMenu().setName("Mount Recent");
-        fileMenu.add(directoryMenu.getMenu());
+        pathMenu.getMenu().setName("Mount Recent");
+        fileMenu.add(pathMenu.getMenu());
         fileMenu.add(savePNGAction);
 
         Action action = ActionManager.getInstance().getAction("main-save-colorbar");

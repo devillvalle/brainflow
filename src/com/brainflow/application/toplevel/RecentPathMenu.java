@@ -5,6 +5,7 @@ import com.brainflow.application.FileSystemEventListener;
 import com.brainflow.application.actions.MountDirectoryAction;
 
 import javax.swing.*;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,15 +19,16 @@ import java.util.prefs.Preferences;
  * Time: 12:28:34 AM
  * To change this template use File | Settings | File Templates.
  */
-public class RecentDirectoryMenu {
+public class RecentPathMenu {
 
 
     private RollingList recentDirectories = new RollingList(6);
-    private static Preferences userPrefs = Preferences.userNodeForPackage(RecentDirectoryMenu.class);
+
+    private static Preferences userPrefs = Preferences.userNodeForPackage(RecentPathMenu.class);
 
     private JMenu directoryMenu = new JMenu("Recently Mounted");
 
-    public RecentDirectoryMenu() {
+    public RecentPathMenu() {
         DirectoryManager.getInstance().addFileSystemEventListener(new FileSystemEventListener() {
             public void eventOccurred(FileSystemEvent e) {
                 String path = e.getFileObject().getName().getURI();
@@ -97,13 +99,14 @@ public class RecentDirectoryMenu {
 
     }
 
-    public Iterator<String> getRecentlyMounted() {
-        return recentDirectories.iterator();
+    public List<String> getRecentPaths() {
+        return recentDirectories.getItems();
     }
 
     class RollingList {
 
         private List<String> roll = new LinkedList<String>();
+
         private int size;
 
         public RollingList(int _size) {
@@ -112,6 +115,10 @@ public class RecentDirectoryMenu {
 
         public boolean contains(String path) {
             return roll.contains(path);
+        }
+
+        public List<String> getItems() {
+            return Collections.unmodifiableList(roll);
         }
 
         public Iterator<String> iterator() {

@@ -70,7 +70,7 @@ public class MountFileSystemAction extends BasicAction {
 
                 } catch (FileSystemException ex) {
                     log.severe("FileSystemException caught, failed to resolve local file " + files[i]);
-                    //need to catch this somewhere. Need mechanism to catch all runtime exceptionsof this type.
+                    //todo need to catch this somewhere. Need mechanism to catch all runtime exceptionsof this type.
                     throw new RuntimeException(ex);
                 }
 

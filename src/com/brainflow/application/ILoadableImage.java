@@ -5,6 +5,8 @@ import com.brainflow.image.io.ImageInfo;
 import com.brainflow.utils.ProgressListener;
 import org.apache.commons.vfs.FileObject;
 
+import java.awt.image.BufferedImage;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Owner
@@ -25,6 +27,8 @@ public interface ILoadableImage {
     public FileObject getHeaderFile();
 
     public String getFileFormat();
+
+    public BufferedImage getPreview();
 
     public IImageData getData();
 

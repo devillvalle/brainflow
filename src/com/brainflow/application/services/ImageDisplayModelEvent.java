@@ -9,9 +9,9 @@
 
 package com.brainflow.application.services;
 
-import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.application.BrainflowProject;
 import com.brainflow.application.toplevel.BrainflowProjectEvent;
+import com.brainflow.core.IImageDisplayModel;
 import org.bushe.swing.event.AbstractEventServiceEvent;
 
 import javax.swing.event.ListDataEvent;
@@ -22,17 +22,17 @@ import javax.swing.event.ListDataEvent;
 public class ImageDisplayModelEvent extends AbstractEventServiceEvent {
 
     public enum TYPE {
-        MODEL_ADDED,
-        MODEL_REMOVED,
-        MODEL_CHANGED,
-        MODEL_INTERVAL_ADDED,
-        MODEL_INTERVAL_REMOVED
+        LAYER_ADDED,
+        LAYER_REMOVED,
+        LAYER_CHANGED,
+        LAYER_INTERVAL_ADDED,
+        LAYER_INTERVAL_REMOVED
     }
 
     private BrainflowProjectEvent event;
-    
+
     private TYPE type;
-   
+
 
     /**
      * Creates a new instance of ImageDisplayModelEvent

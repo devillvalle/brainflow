@@ -1,6 +1,5 @@
 package com.brainflow.application;
 
-import com.brainflow.image.data.BasicImageData;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.io.ImageInfoReader;
@@ -8,6 +7,7 @@ import com.brainflow.image.io.ImageReader;
 import com.brainflow.utils.ProgressListener;
 import org.apache.commons.vfs.FileObject;
 
+import java.awt.image.BufferedImage;
 import java.lang.ref.SoftReference;
 import java.util.logging.Logger;
 
@@ -31,6 +31,8 @@ public class SoftLoadableImage implements ILoadableImage {
     private FileObject dataFile;
 
     private SoftReference<IImageData> dataRef = new SoftReference<IImageData>(null);
+
+    private BufferedImage previewImage;
 
 
     private ImageInfo imageInfo = null;
@@ -111,6 +113,16 @@ public class SoftLoadableImage implements ILoadableImage {
         return imageInfo;
     }
 
+
+    public BufferedImage getPreview() {
+        if (previewImage == null) {
+
+        }
+
+        return null;
+    }
+
+
     public IImageData load(ProgressListener plistener) throws BrainflowException {
         try {
 
@@ -135,9 +147,10 @@ public class SoftLoadableImage implements ILoadableImage {
             throw new BrainflowException(e);
         }
 
-        return (BasicImageData) dataRef.get();
+        return dataRef.get();
 
     }
+
 
     public IImageData load() throws BrainflowException {
         try {

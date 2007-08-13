@@ -7,19 +7,24 @@ import com.brainflow.application.SoftLoadableImage;
 import com.brainflow.application.toplevel.ImageIOManager;
 import com.brainflow.gui.AbstractPresenter;
 import com.brainflow.gui.FileExplorer;
+import com.brainflow.utils.ResourceLoader;
 import com.jidesoft.tree.AbstractTreeModel;
 import com.jidesoft.tree.DefaultTreeModelWrapper;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSelector;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileType;
+import org.jvnet.substance.SubstanceDefaultTreeCellRenderer;
 
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -45,6 +50,11 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
     private FileExplorer explorer;
 
     private FileSelector selector;
+
+    private ImageIcon folderIcon = new ImageIcon(ResourceLoader.getResource("resources/icons/folder.png"));
+
+    private ImageIcon folderOpenIcon = new ImageIcon(ResourceLoader.getResource("resources/icons/folderOpen.png"));
+
 
     public ImageFileExplorer(FileObject _rootObject) {
 
@@ -81,19 +91,40 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
             }
         });
 
-        explorer.getJTree().setCellRenderer(new DefaultTreeCellRenderer() {
+        explorer.getJTree().setCellRenderer(new SubstanceDefaultTreeCellRenderer() {
+
+
             @Override
             public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
                 JLabel label = (JLabel) super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
 
                 if (value instanceof ImageFileObjectNode) {
                     ImageFileObjectNode node = (ImageFileObjectNode) value;
+                    try {
+                        //System.out.println("node type = " + node.getFileObject().getType());
+                        if (node.getFileObject().getType() == FileType.FOLDER && !expanded) {
+                            label.setIcon(folderIcon);
+                        } else if (node.getFileObject().getType() == FileType.FOLDER && expanded) {
+                            label.setIcon(folderOpenIcon);
+                        } else {
+                            //label.setIcon(leafIcon);
+                        }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+
+                    }
+
+
                     Object userObject = node.getUserObject();
                     if (userObject instanceof ILoadableImage) {
                         ILoadableImage limg = (ILoadableImage) userObject;
                         if (limg.isLoaded() && !selected) {
-                            label.setForeground(Color.BLUE.brighter().brighter().brighter());
+                            label.setForeground(Color.GREEN.darker().darker());
                         }
+
+                        //explorer.getJTree().isExpanded()
+                        // boolean expanded = explorer.getJTree().isExpanded(new TreePath(node.getPath()));
+
 
                     }
 

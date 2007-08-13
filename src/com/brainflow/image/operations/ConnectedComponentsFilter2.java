@@ -104,6 +104,7 @@ public class ConnectedComponentsFilter2 extends AbstractImageFilter {
 
         int[] labels = firstPass(xdim, ydim, zdim, data);
 
+        // dangerous, need to fix
         stack = new IntegerStack(5000);
 
 

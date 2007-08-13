@@ -1,27 +1,23 @@
 package com.brainflow.application.presentation;
 
-import com.brainflow.application.actions.ActionContext;
 import com.brainflow.application.actions.LayerVisibilityAction;
-import com.brainflow.application.services.ImageDisplayModelEvent;
-import com.brainflow.application.toplevel.ImageCanvasManager;
 import com.brainflow.application.dnd.AbstractLayerTransferable;
-import com.brainflow.core.ImageLayer;
-import com.brainflow.core.ImageView;
+import com.brainflow.application.services.ImageDisplayModelEvent;
 import com.brainflow.core.AbstractLayer;
+import com.brainflow.core.ImageView;
 import com.brainflow.display.Visibility;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jidesoft.action.CommandBar;
-import com.jidesoft.swing.JideToggleSplitButton;
-import com.jidesoft.swing.SplitButtonGroup;
 import com.jidesoft.swing.JideSplitButton;
+import com.jidesoft.swing.JideToggleSplitButton;
 import org.bushe.swing.action.ActionUIFactory;
 import org.bushe.swing.action.BasicAction;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 
 import javax.swing.*;
-import java.awt.event.*;
 import java.awt.datatransfer.Transferable;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +33,7 @@ public class CanvasBar extends ImageViewPresenter {
 
     private CommandBar commandBar;
 
-    private SplitButtonGroup buttonGroup = new SplitButtonGroup();
+    //private SplitButtonGroup buttonGroup = new SplitButtonGroup();
 
     private List<AbstractButton> layerButtonList = new ArrayList<AbstractButton>();
 
@@ -57,6 +53,7 @@ public class CanvasBar extends ImageViewPresenter {
 
             public void onEvent(Object evt) {
                 ImageDisplayModelEvent event = (ImageDisplayModelEvent) evt;
+
                 ImageView view = getSelectedView();
                 if (view == null) return;
                 if (view.getModel() == event.getModel()) {
@@ -64,6 +61,7 @@ public class CanvasBar extends ImageViewPresenter {
                 }
             }
         });
+
 
     }
 
@@ -84,7 +82,20 @@ public class CanvasBar extends ImageViewPresenter {
         ImageView view = getSelectedView();
         int idx = view.getSelectedIndex();
 
-        buttonGroup.setSelected(layerButtonList.get(idx).getModel(), true);
+        updateSelection(idx);
+        //buttonGroup.setSelected(layerButtonList.get(idx).getModel(), true);
+
+    }
+
+    private void updateSelection(int selectedIndex) {
+        for (int i = 0; i < layerButtonList.size(); i++) {
+            JideToggleSplitButton button = (JideToggleSplitButton) layerButtonList.get(i);
+            if (i == selectedIndex) {
+                button.setSelected(true);
+            } else {
+                button.setSelected(false);
+            }
+        }
 
     }
 
@@ -126,8 +137,10 @@ public class CanvasBar extends ImageViewPresenter {
 
 
         List<AbstractButton> list = new ArrayList<AbstractButton>();
+
+        //buttonGroup = new SplitButtonGroup();
+
         HashMap map = new HashMap();
-        map.put(ActionContext.SELECTED_IMAGE_VIEW, getSelectedView());
 
         for (int i = 0; i < getSelectedView().getModel().getNumLayers(); i++) {
             AbstractLayer layer = getSelectedView().getModel().getLayer(i);
@@ -147,7 +160,7 @@ public class CanvasBar extends ImageViewPresenter {
             visButton.setText("Visible");
 
             button.add(visButton);
-            buttonGroup.add(button);
+            //buttonGroup.add(button);
             list.add(button);
         }
 
@@ -167,10 +180,8 @@ public class CanvasBar extends ImageViewPresenter {
 
         }
 
-        if (getSelectedView() != null) {
-            int selIdx = getSelectedView().getSelectedIndex();
-            buttonGroup.setSelected(layerButtonList.get(selIdx).getModel(), true);
-        }
+        int selIdx = getSelectedView().getSelectedIndex();
+        updateSelection(selIdx);
 
 
         commandBar.revalidate();
@@ -194,10 +205,21 @@ public class CanvasBar extends ImageViewPresenter {
             JideToggleSplitButton button = (JideToggleSplitButton) e.getSource();
 
             int buttonIndex = layerButtonList.indexOf(button);
-            if (buttonGroup.isSelected(button.getModel())) {
-                ImageView view = getSelectedView();
-                view.setSelectedIndex(buttonIndex);
 
+
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                ImageView view = getSelectedView();
+
+                int selIdx = view.getModel().getSelectedIndex();
+                if (selIdx != buttonIndex) {
+                    view.setSelectedIndex(buttonIndex);
+                    updateSelection(buttonIndex);
+                    System.out.println("button " + buttonIndex + " is selected");
+                }
+
+
+            } else {
+                System.out.println("button " + buttonIndex + " is deselected");
             }
 
 
@@ -238,7 +260,7 @@ public class CanvasBar extends ImageViewPresenter {
                 AbstractLayer layer = view.getModel().getLayer(index);
                 return new AbstractLayerTransferable(layer);
             }
-            
+
             return null;
 
 

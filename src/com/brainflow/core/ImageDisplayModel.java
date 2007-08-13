@@ -1,24 +1,22 @@
 package com.brainflow.core;
 
-import com.brainflow.core.ImageLayerProperties;
 import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.Anatomy3D;
-import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.axis.ImageAxis;
-import com.brainflow.image.axis.CoordinateAxis;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.space.Axis;
+import com.brainflow.image.space.ICoordinateSpace;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace3D;
-import com.brainflow.image.space.ICoordinateSpace;
 import com.jgoodies.binding.list.ArrayListModel;
 import com.jgoodies.binding.list.SelectionInList;
 
 import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -90,8 +88,6 @@ public class ImageDisplayModel implements IImageDisplayModel {
     public String getName() {
         return name;
     }
-
-
 
 
     public void addImageDisplayModelListener(ImageDisplayModelListener listener) {
@@ -183,7 +179,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
                 if (uspace == null) {
                     uspace = new ImageSpace3D(cspace);
                 } else {
-                    uspace = (IImageSpace)uspace.union(cspace);
+                    uspace = (IImageSpace) uspace.union(cspace);
                 }
             }
         } else {
@@ -219,6 +215,31 @@ public class ImageDisplayModel implements IImageDisplayModel {
         return ret;
     }
 
+    public void swapLayers(int index0, int index1) {
+        //todo check for valid indices
+
+        AbstractLayer l1 = (AbstractLayer) imageListModel.get(index0);
+        AbstractLayer l2 = (AbstractLayer) imageListModel.get(index1);
+
+        ArrayListModel newModel = new ArrayListModel();
+        for (int i = 0; i < imageListModel.size(); i++) {
+            if (i == index0) {
+                newModel.add(i, imageListModel.get(index1));
+            } else if (i == index1) {
+                newModel.add(i, imageListModel.get(index0));
+            } else {
+                newModel.add(i, imageListModel.get(i));
+            }
+
+        }
+
+        imageListModel = newModel;
+        imageListModel.addListDataListener(forwarder);
+        layerSelection.setListModel(imageListModel);
+
+        forwarder.fireContentsChanged(new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, index0, index1));
+    }
+
     public void removeLayer(int layer) {
         assert imageListModel.size() > layer && layer >= 0;
         imageListModel.remove(layer);
@@ -238,7 +259,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     public AbstractLayer getLayer(int layer) {
         assert layer >= 0 && layer < imageListModel.size();
-        return (AbstractLayer)imageListModel.get(layer);
+        return (AbstractLayer) imageListModel.get(layer);
     }
 
 

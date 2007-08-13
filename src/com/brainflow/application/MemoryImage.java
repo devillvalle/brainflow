@@ -5,6 +5,8 @@ import com.brainflow.image.io.ImageInfo;
 import com.brainflow.utils.ProgressListener;
 import org.apache.commons.vfs.FileObject;
 
+import java.awt.image.BufferedImage;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Brad Buchsbaum
@@ -30,6 +32,10 @@ public class MemoryImage implements ILoadableImage {
 
     public String getStem() {
         return "memory_image";
+    }
+
+    public BufferedImage getPreview() {
+        throw new UnsupportedOperationException();
     }
 
     public FileObject getDataFile() {

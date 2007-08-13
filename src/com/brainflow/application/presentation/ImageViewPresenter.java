@@ -1,8 +1,12 @@
 package com.brainflow.application.presentation;
 
+import com.brainflow.application.services.ImageDisplayModelEvent;
 import com.brainflow.application.services.ImageViewLayerSelectionEvent;
 import com.brainflow.application.services.ImageViewSelectionEvent;
-import com.brainflow.core.*;
+import com.brainflow.core.AbstractLayer;
+import com.brainflow.core.IImageDisplayModel;
+import com.brainflow.core.ImageDisplayModelListener;
+import com.brainflow.core.ImageView;
 import com.brainflow.gui.AbstractPresenter;
 import com.brainflow.image.space.IImageSpace;
 import org.bushe.swing.event.EventBus;
@@ -25,6 +29,8 @@ public abstract class ImageViewPresenter extends AbstractPresenter implements Im
 
 
     private ImageView selectedView;
+
+    private static Logger log = Logger.getLogger(ImageViewPresenter.class.getName());
 
     public ImageViewPresenter() {
         EventBus.subscribeStrongly(ImageViewSelectionEvent.class, new EventSubscriber() {
@@ -70,7 +76,7 @@ public abstract class ImageViewPresenter extends AbstractPresenter implements Im
 
                         layerSelected(newLayer);
                     } else {
-                        Logger.getLogger(getClass().getCanonicalName()).warning("Selected layer index is negative");
+                        log.warning("Selected layer index is negative");
                     }
 
 
@@ -78,7 +84,38 @@ public abstract class ImageViewPresenter extends AbstractPresenter implements Im
             }
         });
 
-     
+
+        EventBus.subscribeStrongly(ImageDisplayModelEvent.class, new EventSubscriber() {
+
+            public void onEvent(Object evt) {
+                ImageDisplayModelEvent event = (ImageDisplayModelEvent) evt;
+
+                ImageView view = getSelectedView();
+                if (view == null) return;
+
+                if (view.getModel() == event.getModel()) {
+                    layerChangeNotification();
+                    switch (event.getType()) {
+                        case LAYER_ADDED:
+                            layerAdded(event.getListDataEvent());
+                            break;
+                        case LAYER_CHANGED:
+                            layerChanged(event.getListDataEvent());
+                            break;
+                        case LAYER_INTERVAL_ADDED:
+                            layerIntervalAdded(event.getListDataEvent());
+                            break;
+                        case LAYER_INTERVAL_REMOVED:
+                            layerIntervalRemoved(event.getListDataEvent());
+                            break;
+                        case LAYER_REMOVED:
+                            layerRemoved(event.getListDataEvent());
+                            break;
+                    }
+                }
+            }
+        });
+
 
     }
 
@@ -86,11 +123,27 @@ public abstract class ImageViewPresenter extends AbstractPresenter implements Im
 
     public abstract void allViewsDeselected();
 
+    protected void layerChangeNotification() {
+    }
+
     protected void layerSelected(AbstractLayer layer) {
     }
 
+    protected void layerAdded(ListDataEvent event) {
+    }
 
+    protected void layerRemoved(ListDataEvent event) {
+    }
 
+    protected void layerChanged(ListDataEvent event) {
+    }
+
+    protected void layerIntervalAdded(ListDataEvent event) {
+    }
+
+    protected void layerIntervalRemoved(ListDataEvent event) {
+
+    }
 
     public ImageView getSelectedView() {
         return selectedView;
@@ -116,6 +169,6 @@ public abstract class ImageViewPresenter extends AbstractPresenter implements Im
     }
 
     public void contentsChanged(ListDataEvent e) {
-       
+
     }
 }

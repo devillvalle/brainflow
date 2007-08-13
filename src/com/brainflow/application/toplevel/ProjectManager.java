@@ -113,23 +113,23 @@ public class ProjectManager implements EventSubscriber, BrainflowProjectListener
 
 
     public void modelAdded(BrainflowProjectEvent event) {
-        EventBus.publish(new ImageDisplayModelEvent(event, ImageDisplayModelEvent.TYPE.MODEL_ADDED));
+        EventBus.publish(new ImageDisplayModelEvent(event, ImageDisplayModelEvent.TYPE.LAYER_ADDED));
 
     }
 
     public void modelRemoved(BrainflowProjectEvent event) {
-        EventBus.publish(new ImageDisplayModelEvent(event, ImageDisplayModelEvent.TYPE.MODEL_REMOVED));
+        EventBus.publish(new ImageDisplayModelEvent(event, ImageDisplayModelEvent.TYPE.LAYER_REMOVED));
     }
 
     public void intervalAdded(BrainflowProjectEvent e) {
-        EventBus.publish(new ImageDisplayModelEvent(e, ImageDisplayModelEvent.TYPE.MODEL_INTERVAL_ADDED));
+        EventBus.publish(new ImageDisplayModelEvent(e, ImageDisplayModelEvent.TYPE.LAYER_INTERVAL_ADDED));
     }
 
     public void intervalRemoved(BrainflowProjectEvent e) {
-        EventBus.publish(new ImageDisplayModelEvent(e, ImageDisplayModelEvent.TYPE.MODEL_INTERVAL_REMOVED));
+        EventBus.publish(new ImageDisplayModelEvent(e, ImageDisplayModelEvent.TYPE.LAYER_INTERVAL_REMOVED));
     }
 
     public void contentsChanged(BrainflowProjectEvent e) {
-        EventBus.publish(new ImageDisplayModelEvent(e, ImageDisplayModelEvent.TYPE.MODEL_CHANGED));
+        EventBus.publish(new ImageDisplayModelEvent(e, ImageDisplayModelEvent.TYPE.LAYER_CHANGED));
     }
 }

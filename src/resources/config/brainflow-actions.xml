@@ -124,7 +124,7 @@
                 mnemonic="n"
                 accel="control F"
                 smicon="/resources/icons/forward_nav.gif"
-                actionClass="com.brainflow.application.actions.NextSliceAction"
+                actionClass="com.brainflow.application.actions.NextSliceCommand"
                 desc="Go to the next slice in the z-plane">
         </action>
         <action id="navigation-prev"

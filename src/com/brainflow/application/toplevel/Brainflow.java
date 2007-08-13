@@ -28,6 +28,8 @@ import com.pietschy.command.CommandContainer;
 import com.pietschy.command.GuiCommands;
 import com.pietschy.command.configuration.ParseException;
 import com.pietschy.command.group.CommandGroup;
+import com.pietschy.command.toggle.ToggleCommand;
+import com.pietschy.command.toggle.ToggleGroup;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.VFS;
@@ -240,8 +242,6 @@ public class Brainflow {
 
 
         CommandGroup imageViewGroup = new CommandGroup("image-view-menu");
-
-
         imageViewGroup.bind(brainFrame);
 
 
@@ -406,6 +406,10 @@ public class Brainflow {
         CommandGroup mainToolbarGroup = new CommandGroup("main-toolbar");
         mainToolbarGroup.bind(getApplicationFrame());
 
+
+        ToggleGroup interpToggleGroup = new ToggleGroup("toggle-interp-group");
+        interpToggleGroup.bind(getApplicationFrame());
+
         OpenImageCommand openImageCommand = new OpenImageCommand();
         openImageCommand.bind(getApplicationFrame());
 
@@ -439,6 +443,17 @@ public class Brainflow {
         DecreaseContrastCommand decreaseContrastCommand = new DecreaseContrastCommand();
         decreaseContrastCommand.bind(getApplicationFrame());
         decreaseContrastCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+
+        ToggleCommand nearest = new NearestInterpolationToggleCommand();
+        nearest.bind(getApplicationFrame());
+
+        ToggleCommand linear = new LinearInterpolationToggleCommand();
+        linear.bind(getApplicationFrame());
+
+        ToggleCommand cubic = new CubicInterpolationToggleCommand();
+        cubic.bind(getApplicationFrame());
+
 
         JToolBar mainToolbar = mainToolbarGroup.createToolBar();
         //ActionCommand increaseContrastCommand = new IncreaseContrastCommand();

@@ -1,5 +1,7 @@
 package com.brainflow.display;
 
+import java.awt.image.AffineTransformOp;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Brad Buchsbaum
@@ -9,9 +11,19 @@ package com.brainflow.display;
  */
 public enum InterpolationHint {
 
-    NEAREST_NEIGHBOR,
-    LINEAR,
-    CUBIC;
+    NEAREST_NEIGHBOR(AffineTransformOp.TYPE_NEAREST_NEIGHBOR),
+    LINEAR(AffineTransformOp.TYPE_BILINEAR),
+    CUBIC(AffineTransformOp.TYPE_BICUBIC);
 
 
+    private int id;
+
+    InterpolationHint(int _id) {
+        id = _id;
+
+    }
+
+    public int getID() {
+        return id;
+    }
 }

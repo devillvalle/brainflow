@@ -1,6 +1,7 @@
 package com.brainflow.core;
 
 import com.brainflow.core.pipeline.*;
+import com.brainflow.display.InterpolationHint;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
@@ -28,12 +29,15 @@ public class CompositeImageProducer extends AbstractImageProducer {
 
 
     private ImageProcessingStage gatherRenderersStage;
+
     private ImageProcessingStage renderLayersStage;
 
     //private ImageProcessingStage renderCoordinatesStage;
 
     private ImageProcessingStage cropImageStage;
+
     private ImageProcessingStage resizeImageStage;
+
 
     private TerminalFeeder terminal = new TerminalFeeder();
 
@@ -65,6 +69,11 @@ public class CompositeImageProducer extends AbstractImageProducer {
         getModel().addImageLayerListener(layerListener);
         initPipeline();
 
+    }
+
+    public void setScreenInterpolation(InterpolationHint hint) {
+        super.setScreenInterpolation(hint);
+        pipeline.clearPath(resizeImageStage);
     }
 
 
@@ -199,7 +208,7 @@ public class CompositeImageProducer extends AbstractImageProducer {
         //Thread t = new Thread(pipeline);
         //t.start();
         pipeline.run();
-        System.out.println("hello");
+
         return terminal.getImage();
     }
 

@@ -3,40 +3,33 @@ package com.brainflow.core;
 import com.brainflow.application.services.ImageViewCrosshairEvent;
 import com.brainflow.application.services.ImageViewLayerSelectionEvent;
 import com.brainflow.core.annotations.IAnnotation;
-import com.brainflow.display.Crosshair;
-import com.brainflow.display.ICrosshair;
-import com.brainflow.display.Property;
-import com.brainflow.display.Viewport3D;
+import com.brainflow.display.*;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
+import com.brainflow.image.anatomy.AnatomicalPoint2D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.Anatomy3D;
-import com.brainflow.image.anatomy.AnatomicalPoint2D;
 import com.brainflow.image.axis.CoordinateAxis;
 import com.brainflow.image.space.Axis;
-import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ICoordinateSpace;
+import com.brainflow.image.space.IImageSpace;
 import com.jgoodies.binding.list.SelectionInList;
-import com.pietschy.command.ActionCommand;
 import com.pietschy.command.CommandContainer;
 import com.pietschy.command.toggle.ToggleCommand;
 import com.pietschy.command.toggle.ToggleVetoException;
 import org.bushe.swing.event.EventBus;
 
-
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.RenderedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.List;
 import java.util.Iterator;
-import java.util.Set;
-import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -59,6 +52,9 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
 
     private boolean preserveAspect = false;
 
+    private InterpolationHint screenInterpolation = InterpolationHint.NEAREST_NEIGHBOR;
+
+
     private IImageDisplayModel displayModel;
 
     private Property<ICrosshair> crosshair;
@@ -66,8 +62,6 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
     protected Property<Viewport3D> viewport;
 
     private CommandContainer commandContainer;
-
-    private static final Set<String> commandIds = new LinkedHashSet<String>();
 
 
     public ImageView(IImageDisplayModel imodel) {
@@ -115,7 +109,7 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
 
         displayModel.getSelection().addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent e) {
-                if (e.getPropertyName() == SelectionInList.PROPERTYNAME_SELECTION_INDEX) {
+                if (e.getPropertyName().equals(SelectionInList.PROPERTYNAME_SELECTION_INDEX)) {
                     int selectionIndex = (Integer) e.getNewValue();
                     if (selectionIndex >= 0) {
                         EventBus.publish(new ImageViewLayerSelectionEvent(ImageView.this, (Integer) e.getNewValue()));
@@ -151,6 +145,23 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
 
         this.firePropertyChange(ImageView.PRESERVE_ASPECT_PROPERTY, old, isPreserveAspect());
     }
+
+
+    public InterpolationHint getScreenInterpolation() {
+        return screenInterpolation;
+    }
+
+    public void setScreenInterpolation(InterpolationHint screenInterpolation) {
+        this.screenInterpolation = screenInterpolation;
+        Iterator<IImagePlot> iter = getPlots().iterator();
+        while (iter.hasNext()) {
+            IImagePlot plot = iter.next();
+            plot.setScreenInterpolation(screenInterpolation);
+        }
+
+
+    }
+
 
     public IImagePlot getSelectedPlot() {
         return (IImagePlot) getPlotSelection().getSelection();

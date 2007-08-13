@@ -80,6 +80,7 @@ public class SimpleImageView extends ImageView {
         IImageProducer producer = new CompositeImageProducer(imagePlot, getDisplayAnatomy());
         imagePlot.setImageProducer(producer);
         imagePlot.setSlice(getCrosshair().getProperty().getValue(displayAnatomy.ZAXIS));
+        imagePlot.setScreenInterpolation(getScreenInterpolation());
 
 
         ipane = new ImagePane(imagePlot);

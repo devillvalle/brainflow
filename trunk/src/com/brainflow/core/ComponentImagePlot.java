@@ -1,6 +1,7 @@
 package com.brainflow.core;
 
 import com.brainflow.core.annotations.IAnnotation;
+import com.brainflow.display.InterpolationHint;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
 import com.brainflow.image.anatomy.Anatomy2D;
@@ -55,6 +56,8 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
 
     private PropertyChangeListener annotationListener;
 
+    private InterpolationHint screenInterpolation = InterpolationHint.LINEAR;
+
 
     private ComponentImagePlot(IImageDisplayModel model, IImageProducer _producer, Anatomy3D displayAnatomy, AxisRange xAxis, AxisRange yAxis) {
         this.xAxis = xAxis;
@@ -85,6 +88,16 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
                 repaint();
             }
         };
+    }
+
+    public InterpolationHint getScreenInterpolation() {
+        return screenInterpolation;
+    }
+
+    public void setScreenInterpolation(InterpolationHint hint) {
+        screenInterpolation = hint;
+        producer.setScreenInterpolation(hint);
+        repaint();
     }
 
     public boolean isPreserveAspectRatio() {

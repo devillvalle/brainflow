@@ -1,9 +1,10 @@
 package com.brainflow.core;
 
 import com.brainflow.core.annotations.IAnnotation;
+import com.brainflow.display.InterpolationHint;
+import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
 import com.brainflow.image.anatomy.Anatomy3D;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.axis.AxisRange;
 
 import javax.swing.*;
@@ -20,6 +21,10 @@ import java.util.Map;
  */
 public interface IImagePlot {
 
+    public InterpolationHint getScreenInterpolation();
+
+    public void setScreenInterpolation(InterpolationHint hint);
+
     public void setPreserveAspectRatio(boolean b);
 
     public boolean isPreserveAspectRatio();
@@ -35,7 +40,7 @@ public interface IImagePlot {
     public Anatomy3D getDisplayAnatomy();
 
     public IImageDisplayModel getModel();
-  
+
     public void updateAxis(AxisRange range);
 
     public void setXAxisRange(AxisRange drange);
@@ -75,8 +80,6 @@ public interface IImagePlot {
     public void removeAnnotation(String name);
 
     public void clearAnnotations();
-
-
 
 
 }

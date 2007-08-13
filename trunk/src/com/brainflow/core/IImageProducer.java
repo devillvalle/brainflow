@@ -1,11 +1,12 @@
 package com.brainflow.core;
 
-import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.display.InterpolationHint;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
 
-import java.awt.image.BufferedImage;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,8 +22,8 @@ public interface IImageProducer {
     public void setPlot(IImagePlot plot);
 
     public IImagePlot getPlot();
-    
-  
+
+
     public IImageDisplayModel getModel();
 
     public Anatomy3D getDisplayAnatomy();
@@ -32,6 +33,10 @@ public interface IImageProducer {
     public AnatomicalPoint1D getSlice();
 
     public void setScreenSize(Rectangle rect);
+
+    public void setScreenInterpolation(InterpolationHint hint);
+
+    public InterpolationHint getScreenInterpolation();
 
     public void setYAxis(AxisRange yaxis);
 
@@ -46,7 +51,6 @@ public interface IImageProducer {
     public Rectangle getScreenSize();
 
     public BufferedImage getImage();
-   
 
 
 }

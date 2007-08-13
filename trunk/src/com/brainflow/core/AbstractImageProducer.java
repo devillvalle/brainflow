@@ -1,7 +1,8 @@
 package com.brainflow.core;
 
-import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.display.InterpolationHint;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
 
 import java.awt.*;
@@ -15,7 +16,7 @@ import java.awt.*;
  */
 public abstract class AbstractImageProducer implements IImageProducer {
 
-    
+
     private IImageDisplayModel model;
 
     private Anatomy3D displayAnatomy;
@@ -28,6 +29,8 @@ public abstract class AbstractImageProducer implements IImageProducer {
 
     private AxisRange yaxis;
 
+    private InterpolationHint screenInterpolation = InterpolationHint.CUBIC;
+
 
     public void setModel(IImageDisplayModel model) {
         this.model = model;
@@ -37,7 +40,7 @@ public abstract class AbstractImageProducer implements IImageProducer {
         return model;
     }
 
-    public void setDisplayAnatomy(Anatomy3D displayAnatomy)  {
+    public void setDisplayAnatomy(Anatomy3D displayAnatomy) {
         this.displayAnatomy = displayAnatomy;
     }
 
@@ -50,6 +53,13 @@ public abstract class AbstractImageProducer implements IImageProducer {
 
     }
 
+    public InterpolationHint getScreenInterpolation() {
+        return screenInterpolation;
+    }
+
+    public void setScreenInterpolation(InterpolationHint screenInterpolation) {
+        this.screenInterpolation = screenInterpolation;
+    }
 
     public AxisRange getXAxis() {
         return xaxis;

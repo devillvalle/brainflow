@@ -1,13 +1,13 @@
 package com.brainflow.core;
 
-import com.brainflow.image.axis.AxisRange;
-import com.brainflow.image.axis.ImageAxis;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.anatomy.Anatomy3D;
-import com.brainflow.image.space.Axis;
-import com.brainflow.display.ICrosshair;
 import com.brainflow.core.annotations.CrosshairAnnotation;
 import com.brainflow.core.annotations.SelectedPlotAnnotation;
+import com.brainflow.display.ICrosshair;
+import com.brainflow.image.anatomy.AnatomicalPoint1D;
+import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.image.axis.AxisRange;
+import com.brainflow.image.axis.ImageAxis;
+import com.brainflow.image.space.Axis;
 
 import java.awt.*;
 
@@ -61,7 +61,6 @@ public class ExpandedImageView extends AbstractGriddedImageView {
     }
 
 
-
     @Override
     protected IImagePlot makePlot(int index, int row, int column) {
         AxisRange xrange = getModel().getImageAxis(displayAnatomy.XAXIS).getRange();
@@ -87,7 +86,6 @@ public class ExpandedImageView extends AbstractGriddedImageView {
     }
 
 
-
     public SliceController getSliceController() {
         return sliceController;
     }
@@ -109,11 +107,12 @@ public class ExpandedImageView extends AbstractGriddedImageView {
 
         AnatomicalPoint1D slice;
 
-        public SimpleSliceController() { }
+        public SimpleSliceController() {
+        }
 
 
         public AnatomicalPoint1D getSlice() {
-         
+
             return getCrosshair().getProperty().getValue(getDisplayAnatomy().ZAXIS);
         }
 
@@ -157,6 +156,15 @@ public class ExpandedImageView extends AbstractGriddedImageView {
                 cross.setValue(iaxis.valueOf(nsample));
             }
 
+        }
+
+
+        public void pageBack() {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public void pageForward() {
+            //To change body of implemented methods use File | Settings | File Templates.
         }
     }
 

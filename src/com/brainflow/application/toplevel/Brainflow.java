@@ -435,6 +435,14 @@ public class Brainflow {
         previousSliceCommand.bind(getApplicationFrame());
         previousSliceCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
+        PageBackSliceCommand pageBackSliceCommand = new PageBackSliceCommand();
+        pageBackSliceCommand.bind(getApplicationFrame());
+        pageBackSliceCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+        PageForwardSliceCommand pageForwardSliceCommand = new PageForwardSliceCommand();
+        pageForwardSliceCommand.bind(getApplicationFrame());
+        pageForwardSliceCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
 
         IncreaseContrastCommand increaseContrastCommand = new IncreaseContrastCommand();
         increaseContrastCommand.bind(getApplicationFrame());

@@ -2,8 +2,6 @@ package com.brainflow.core;
 
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 
-import java.beans.PropertyChangeSupport;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Brad Buchsbaum
@@ -14,14 +12,17 @@ import java.beans.PropertyChangeSupport;
 public interface SliceController {
 
 
-    
     public AnatomicalPoint1D getSlice();
 
     public void setSlice(AnatomicalPoint1D slice);
 
-    public abstract void nextSlice();
+    public void nextSlice();
 
-    public abstract void previousSlice();
+    public void previousSlice();
 
-    
+    public void pageBack();
+
+    public void pageForward();
+
+
 }

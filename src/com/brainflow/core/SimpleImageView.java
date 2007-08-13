@@ -168,6 +168,8 @@ public class SimpleImageView extends ImageView {
 
     class SimpleSliceController implements SliceController {
 
+        private double pageStep = .12;
+
 
         public AnatomicalPoint1D getSlice() {
             return getCrosshair().getProperty().getValue(getSelectedPlot().getDisplayAnatomy().ZAXIS);
@@ -210,6 +212,58 @@ public class SimpleImageView extends ImageView {
             int sample = iaxis.nearestSample(slice);
             int nsample = sample - 1;
             if (nsample >= 0 && nsample < iaxis.getNumSamples()) {
+                cross.setValue(iaxis.valueOf(nsample));
+            }
+
+        }
+
+        public void pageBack() {
+            AnatomicalPoint1D slice = getSlice();
+            ICrosshair cross = getCrosshair().getProperty();
+
+
+            Axis axis = getViewport().getProperty().getBounds().findAxis(getSelectedPlot().getDisplayAnatomy().ZAXIS);
+            ImageAxis iaxis = getModel().getImageAxis(axis);
+
+            int sample = iaxis.nearestSample(slice);
+            double page = iaxis.getExtent() * pageStep;
+            int jump = (int) (page / iaxis.getSpacing());
+
+            // ensure we move at least one sample
+            jump = Math.max(jump, 1);
+            int nsample = sample - jump;
+
+            if (nsample >= 0 && nsample < iaxis.getNumSamples()) {
+                cross.setValue(iaxis.valueOf(nsample));
+            }
+
+
+        }
+
+        public void pageForward() {
+            AnatomicalPoint1D slice = getSlice();
+            ICrosshair cross = getCrosshair().getProperty();
+
+
+            Axis axis = getViewport().getProperty().getBounds().findAxis(getSelectedPlot().getDisplayAnatomy().ZAXIS);
+            ImageAxis iaxis = getModel().getImageAxis(axis);
+
+            System.out.println("page forward ...");
+            int sample = iaxis.nearestSample(slice);
+            System.out.println("current sample : " + sample);
+            double page = iaxis.getExtent() * pageStep;
+            System.out.println("page extent : " + page);
+            int jump = (int) (page / iaxis.getSpacing());
+            System.out.println("slice jump " + jump);
+
+            // ensure we move at least one sample
+            jump = Math.max(jump, 1);
+            int nsample = sample + jump;
+
+            System.out.println("new slice index : " + nsample);
+
+            if (nsample >= 0 && nsample < iaxis.getNumSamples()) {
+                System.out.println("new slice valie " + iaxis.valueOf(nsample));
                 cross.setValue(iaxis.valueOf(nsample));
             }
 

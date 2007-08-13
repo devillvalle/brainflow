@@ -1,22 +1,17 @@
 package com.brainflow.core;
 
-import com.brainflow.image.anatomy.Anatomy3D;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.axis.AxisRange;
 import com.brainflow.core.annotations.CrosshairAnnotation;
 import com.brainflow.core.annotations.SelectedPlotAnnotation;
 import com.brainflow.core.annotations.SliceAnnotation;
 import com.brainflow.display.ICrosshair;
-import com.jidesoft.swing.JideBoxLayout;
-import com.jgoodies.forms.layout.FormLayout;
+import com.brainflow.image.anatomy.AnatomicalPoint1D;
+import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.image.axis.AxisRange;
 
-import javax.swing.*;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
-import java.util.List;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -62,11 +57,9 @@ public class MontageImageView extends AbstractGriddedImageView {
 
     private void initControlPanel() {
         //controlPanel = new MontageControlPanel();
-       // add(controlPanel, BorderLayout.SOUTH);
+        // add(controlPanel, BorderLayout.SOUTH);
 
     }
-
-    
 
 
     public Anatomy3D getDisplayAnatomy() {
@@ -81,7 +74,7 @@ public class MontageImageView extends AbstractGriddedImageView {
         SelectedPlotAnnotation plotAnnotation = new SelectedPlotAnnotation(this);
 
         SliceAnnotation sliceAnnotation = new SliceAnnotation();
-        
+
         for (IImagePlot plot : getPlots()) {
             setAnnotation(plot, SelectedPlotAnnotation.ID, plotAnnotation);
             setAnnotation(plot, CrosshairAnnotation.ID, crosshairAnnotation);
@@ -252,6 +245,14 @@ public class MontageImageView extends AbstractGriddedImageView {
 
         public void previousSlice() {
             setSlice(new AnatomicalPoint1D(sentinel.getAnatomy(), sentinel.getX() - sliceGap));
+        }
+
+        public void pageBack() {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public void pageForward() {
+            //To change body of implemented methods use File | Settings | File Templates.
         }
     }
 

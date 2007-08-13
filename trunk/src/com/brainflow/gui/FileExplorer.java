@@ -2,14 +2,18 @@ package com.brainflow.gui;
 
 import com.brainflow.utils.ResourceLoader;
 import org.apache.commons.vfs.*;
+import org.jvnet.substance.SubstanceDefaultTreeCellRenderer;
 
 import javax.swing.*;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeExpansionListener;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.filechooser.FileSystemView;
 import javax.swing.tree.*;
+import java.awt.*;
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -23,7 +27,9 @@ import java.util.logging.Logger;
 public class FileExplorer extends AbstractPresenter {
 
 
-    private Logger log = Logger.getLogger(getClass().getName());
+    protected static FileSystemView fsv = FileSystemView.getFileSystemView();
+
+    private static Logger log = Logger.getLogger(FileExplorer.class.getName());
 
     private List<FileObject> rootList = new ArrayList<FileObject>();
 
@@ -31,8 +37,9 @@ public class FileExplorer extends AbstractPresenter {
 
     protected DefaultTreeModel treeModel;
 
-    //private ImageIcon folderIcon = new ImageIcon(ResourceLoader.getResource("resources/icons/folder.png"));
-    //private ImageIcon folderOpenIcon = new ImageIcon(ResourceLoader.getResource("resources/icons/folderOpen.png"));
+    private ImageIcon folderIcon = new ImageIcon(ResourceLoader.getResource("resources/icons/folder.png"));
+
+    private ImageIcon folderOpenIcon = new ImageIcon(ResourceLoader.getResource("resources/icons/folderOpen.png"));
 
     private ImageIcon leafIcon = new ImageIcon(ResourceLoader.getResource("resources/icons/intf_obj.gif"));
 
@@ -61,25 +68,21 @@ public class FileExplorer extends AbstractPresenter {
 
 
     private void init() {
-        DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
-
-        //renderer.setOpenIcon(folderOpenIcon);
-        //renderer.setClosedIcon(folderIcon);
-        renderer.setLeafIcon(leafIcon);
 
 
         DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("File Systems");
         treeModel = new DefaultTreeModel(rootNode);
 
         fileTree = new JTree(treeModel);
-        //fileTree.setRootVisible(false);
+        fileTree.setCellRenderer(new FileTreeCellRenderer());
+
+
         for (FileObject root : rootList) {
-            //rootNode.add(createTreeNode(root));
+
             addFileRoot(root);
         }
 
 
-        fileTree.setCellRenderer(renderer);
         fileTree.setDragEnabled(true);
         fileTree.scrollPathToVisible(new TreePath(rootNode.getPath()));
 
@@ -105,12 +108,13 @@ public class FileExplorer extends AbstractPresenter {
 
     public static void main(String args[]) {
         try {
+            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceModerateLookAndFeel());
             FileExplorer fe = new FileExplorer(VFS.getManager().resolveFile(System.getProperty("user.dir")), null);
             JFrame jf = new JFrame("Tree Demo");
             jf.add(fe.getComponent(), "Center");
             jf.pack();
             jf.setVisible(true);
-        } catch (FileSystemException e) {
+        } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
@@ -121,19 +125,164 @@ public class FileExplorer extends AbstractPresenter {
         return fileTree;
     }
 
+    private static class FileTreeNode implements TreeNode {
+        /**
+         * Node file.
+         */
+        private File file;
+
+        /**
+         * Children of the node file.
+         */
+        private File[] children;
+
+        /**
+         * Parent node.
+         */
+        private TreeNode parent;
+
+        /**
+         * Indication whether this node corresponds to a file system root.
+         */
+        private boolean isFileSystemRoot;
+
+        /**
+         * Creates a new file tree node.
+         *
+         * @param file             Node file
+         * @param isFileSystemRoot Indicates whether the file is a file system root.
+         * @param parent           Parent node.
+         */
+        public FileTreeNode(File file, boolean isFileSystemRoot, TreeNode parent) {
+            this.file = file;
+            this.isFileSystemRoot = isFileSystemRoot;
+            this.parent = parent;
+            this.children = this.file.listFiles();
+            if (this.children == null)
+                this.children = new File[0];
+        }
+
+        /**
+         * Creates a new file tree node.
+         *
+         * @param children Children files.
+         */
+        public FileTreeNode(File[] children) {
+            this.file = null;
+            this.parent = null;
+            this.children = children;
+        }
+
+        /*
+        * (non-Javadoc)
+        *
+        * @see javax.swing.tree.TreeNode#children()
+        */
+        public Enumeration<?> children() {
+            final int elementCount = this.children.length;
+            return new Enumeration<File>() {
+                int count = 0;
+
+                /*
+                * (non-Javadoc)
+                *
+                * @see java.util.Enumeration#hasMoreElements()
+                */
+                public boolean hasMoreElements() {
+                    return this.count < elementCount;
+                }
+
+                /*
+                * (non-Javadoc)
+                *
+                * @see java.util.Enumeration#nextElement()
+                */
+                public File nextElement() {
+                    if (this.count < elementCount) {
+                        return FileTreeNode.this.children[this.count++];
+                    }
+                    throw new NoSuchElementException("Vector Enumeration");
+                }
+            };
+
+        }
+
+        /*
+        * (non-Javadoc)
+        *
+        * @see javax.swing.tree.TreeNode#getAllowsChildren()
+        */
+        public boolean getAllowsChildren() {
+            return true;
+        }
+
+        /*
+        * (non-Javadoc)
+        *
+        * @see javax.swing.tree.TreeNode#getChildAt(int)
+        */
+        public TreeNode getChildAt(int childIndex) {
+            return new FileTreeNode(this.children[childIndex],
+                    this.parent == null, this);
+        }
+
+        /*
+        * (non-Javadoc)
+        *
+        * @see javax.swing.tree.TreeNode#getChildCount()
+        */
+        public int getChildCount() {
+            return this.children.length;
+        }
+
+        /*
+        * (non-Javadoc)
+        *
+        * @see javax.swing.tree.TreeNode#getIndex(javax.swing.tree.TreeNode)
+        */
+        public int getIndex(TreeNode node) {
+            FileTreeNode ftn = (FileTreeNode) node;
+            for (int i = 0; i < this.children.length; i++) {
+                if (ftn.file.equals(this.children[i]))
+                    return i;
+            }
+            return -1;
+        }
+
+        /*
+        * (non-Javadoc)
+        *
+        * @see javax.swing.tree.TreeNode#getParent()
+        */
+        public TreeNode getParent() {
+            return this.parent;
+        }
+
+        /*
+        * (non-Javadoc)
+        *
+        * @see javax.swing.tree.TreeNode#isLeaf()
+        */
+        public boolean isLeaf() {
+            return (this.getChildCount() == 0);
+        }
+    }
+
 
     class FileObjectNode extends DefaultMutableTreeNode {
+
         private boolean areChildrenDefined = false;
 
 
         private boolean leaf;
-        private FileObject fobj;
+
+        private FileObject fileObject;
 
         public FileObjectNode(FileObject _fobj) {
-            fobj = _fobj;
+            fileObject = _fobj;
             try {
 
-                if (fobj.getType() == FileType.FOLDER) {
+                if (fileObject.getType() == FileType.FOLDER) {
                     leaf = false;
                 } else {
                     leaf = true;
@@ -143,6 +292,11 @@ public class FileExplorer extends AbstractPresenter {
             }
 
         }
+
+        public FileObject getFileObject() {
+            return fileObject;
+        }
+
 
         public boolean isLeaf() {
             return leaf;
@@ -160,7 +314,7 @@ public class FileExplorer extends AbstractPresenter {
 
             try {
 
-                FileObject[] children = fobj.findFiles(selector);
+                FileObject[] children = fileObject.findFiles(selector);
 
                 for (int i = 0; i < children.length; i++) {
                     add(new FileObjectNode(children[i]));
@@ -173,14 +327,14 @@ public class FileExplorer extends AbstractPresenter {
         public String toString() {
             if (this == getRoot()) {
                 try {
-                    URI uri = new URI(fobj.getName().getURI());
+                    URI uri = new URI(fileObject.getName().getURI());
 
                     return uri.getHost() + ":" + uri.getPath();
                 } catch (URISyntaxException e) {
-                    return fobj.getName().getURI();
+                    return fileObject.getName().getURI();
                 }
             } else
-                return fobj.getName().getBaseName();
+                return fileObject.getName().getBaseName();
         }
     }
 
@@ -216,4 +370,81 @@ public class FileExplorer extends AbstractPresenter {
         }
     }
 
+
+    private class FileTreeCellRenderer extends SubstanceDefaultTreeCellRenderer {
+        /**
+         * Icon cache to speed the rendering.
+         */
+        private Map<String, Icon> iconCache = new HashMap<String, Icon>();
+
+        /**
+         * Root name cache to speed the rendering.
+         */
+        private Map<FileObject, String> rootNameCache = new HashMap<FileObject, String>();
+
+        /*
+           * (non-Javadoc)
+           *
+           * @see javax.swing.tree.DefaultTreeCellRenderer#getTreeCellRendererComponent(javax.swing.JTree,
+           *      java.lang.Object, boolean, boolean, boolean, int, boolean)
+           */
+        @Override
+        public Component getTreeCellRendererComponent(JTree tree, Object value,
+                                                      boolean sel, boolean expanded, boolean leaf, int row,
+                                                      boolean hasFocus) {
+
+            FileObjectNode ftn;
+
+            if (value instanceof FileObjectNode) {
+                ftn = (FileObjectNode) value;
+            } else {
+                return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+            }
+
+
+            FileObject file = ftn.getFileObject();
+            String filename = "";
+            Icon icon = null;
+
+            try {
+                if (file != null) {
+
+
+                    if (file.equals(file.getFileSystem().getRoot())) {
+                        // long start = System.currentTimeMillis();
+                        filename = this.rootNameCache.get(file);
+                        //if (filename == null) {
+                        //    filename = fsv.getSystemDisplayName(file);
+                        //    this.rootNameCache.put(file, filename);
+                        //}
+                        // long end = System.currentTimeMillis();
+                        // System.out.println(filename + ":" + (end - start));
+                    } else {
+                        filename = file.getName().getBaseName();
+                    }
+
+                    if (FileType.FOLDER == file.getType()) {
+                        icon = folderIcon;
+                    }
+                }
+
+
+                JLabel result = (JLabel) super.getTreeCellRendererComponent(tree,
+                        filename, sel, expanded, leaf, row, hasFocus);
+                if (icon != null) {
+                    result.setIcon(icon);
+
+                }
+
+                return result;
+
+
+            } catch (Exception e) {
+                log.severe(e.getMessage());
+                return null;
+            }
+
+
+        }
+    }
 }

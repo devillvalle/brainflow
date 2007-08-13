@@ -109,7 +109,7 @@ public class BasicImageReader implements ImageReader {
     }
 
 
-    public BasicImageData getOutput(ProgressListener listener) throws IOException {
+    protected BasicImageData getOutput(ProgressListener listener) throws IOException {
 
         InputStream istream = null;
 
@@ -223,7 +223,7 @@ public class BasicImageReader implements ImageReader {
 
 
     // implement progress mechanism
-    public IImageData getOutput() throws FileNotFoundException, IOException {
+    protected IImageData getOutput() throws IOException {
 
         FileChannel inChannel = null;
 
@@ -302,6 +302,8 @@ public class BasicImageReader implements ImageReader {
 
     public IImageData readImage(ImageInfo info) throws BrainflowException {
         setImageInfo(info);
+
+
         IImageData data = null;
 
         try {

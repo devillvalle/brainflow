@@ -1,18 +1,16 @@
 package com.brainflow.application.toplevel;
 
-import com.brainflow.application.toplevel.ImageCanvasManager;
 import com.brainflow.application.actions.SetPreserveAspectCommand;
-import com.brainflow.core.annotations.CrosshairAnnotation;
 import com.brainflow.core.*;
+import com.brainflow.core.annotations.CrosshairAnnotation;
+import com.brainflow.gui.PopupAdapter;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.utils.StringGenerator;
-import com.brainflow.gui.PopupAdapter;
 import com.pietschy.command.ActionCommand;
 import com.pietschy.command.CommandContainer;
 import com.pietschy.command.group.CommandGroup;
 
-import javax.swing.*;
 import java.util.logging.Logger;
 
 /**
@@ -107,12 +105,10 @@ public class ImageViewFactory {
         aspectCommand.bind(view);
 
 
-
-       
         CommandGroup viewGroup = new CommandGroup("image-view-menu");
-        
+
         viewGroup.bind(view);
-        
+
         PopupAdapter adapter = new PopupAdapter(view, viewGroup.createPopupMenu());
 
 

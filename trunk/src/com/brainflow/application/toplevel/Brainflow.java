@@ -110,7 +110,7 @@ public class Brainflow {
             //UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
 
 
-            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceMistSilverLookAndFeel());
+            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceModerateLookAndFeel());
             //UIManager.setLookAndFeel(lf);
             //LookAndFeelFactory.installDefaultLookAndFeel();
             LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
@@ -300,13 +300,13 @@ public class Brainflow {
         BasicAction exit = (BasicAction) ActionManager.getInstance().getAction("main-exit");
         fileMenu.add(exit);
 
+        //brainFrame.getGlassPane().setVisible(true);
 
         brainFrame.setJMenuBar(menuBar);
         brainFrame.getJMenuBar().add(fileMenu);
 
-
-        ActionList navList = ActionManager.getInstance().getActionList("navigation-menu");
-        brainFrame.getJMenuBar().add(ActionUIFactory.getInstance(JIDE_FACTORY).createMenu(navList));
+        //ActionList navList = ActionManager.getInstance().getActionList("navigation-menu");
+        //brainFrame.getJMenuBar().add(ActionUIFactory.getInstance(JIDE_FACTORY).createMenu(navList));
 
         ActionList annotationList = ActionManager.getInstance().getActionList("annotation-menu");
         brainFrame.getJMenuBar().add(ActionUIFactory.getInstance(JIDE_FACTORY).createMenu(annotationList));
@@ -423,6 +423,15 @@ public class Brainflow {
         coronalCommand.bind(getApplicationFrame());
         coronalCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
+        NextSliceCommand nextSliceCommand = new NextSliceCommand();
+        nextSliceCommand.bind(getApplicationFrame());
+        nextSliceCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+        PreviousSliceCommand previousSliceCommand = new PreviousSliceCommand();
+        previousSliceCommand.bind(getApplicationFrame());
+        previousSliceCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+
         IncreaseContrastCommand increaseContrastCommand = new IncreaseContrastCommand();
         increaseContrastCommand.bind(getApplicationFrame());
         increaseContrastCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
@@ -481,7 +490,7 @@ public class Brainflow {
         brainFrame.setVisible(true);
 
 
-        CanvasBar cbar = new CanvasBar();
+        CanvasBar2 cbar = new CanvasBar2();
 
         /// TODO add automatic updating of canvas to Canvas Bar via EventBus
         //cbar.setImageCanvas(canvas);
@@ -644,7 +653,7 @@ public class Brainflow {
             StringBuffer sb = new StringBuffer();
             sb.append("Image " + limg.getDataFile().getName().getBaseName());
             sb.append(" has already been loaded, would you like to reload from disk?");
-            Integer ret = (Integer) JOptionPane.showConfirmDialog(brainFrame, sb.toString(), "Image Already Loaded", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            Integer ret = JOptionPane.showConfirmDialog(brainFrame, sb.toString(), "Image Already Loaded", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             log.info("return value is: " + ret);
 
             if (ret == JOptionPane.YES_OPTION) {

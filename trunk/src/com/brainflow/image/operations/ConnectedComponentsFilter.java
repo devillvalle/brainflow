@@ -121,6 +121,7 @@ public class ConnectedComponentsFilter extends AbstractImageFilter {
             if (area < 0) {
                 throw new RuntimeException("Illegal Area in processAdjacency");
             }
+
             updateRoot(run1, root1);
             runs.get(root1).root = -area;    // preventing an infinite loop
             updateRoot(run2, root1);

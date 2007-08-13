@@ -14,11 +14,11 @@ import com.jgoodies.binding.list.SelectionInList;
 
 import java.awt.*;
 import java.awt.image.RenderedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
 
 
 /**
@@ -100,7 +100,14 @@ public class SimpleImageView extends ImageView {
         });
 
         initAnnotations();
-        
+
+        /*JXLayer<JSlider> layer = new JXLayer<JSlider>(new JSlider(JSlider.HORIZONTAL));
+      DefaultPainter<JSlider> painter = new DefaultPainter<JSlider>();
+      painter.getModel().setAlpha(.2f);
+      layer.setPainter(painter);
+
+      add(layer, BorderLayout.SOUTH);
+      setBackground(Color.BLACK);  */
 
 
     }
@@ -161,7 +168,6 @@ public class SimpleImageView extends ImageView {
     class SimpleSliceController implements SliceController {
 
 
-
         public AnatomicalPoint1D getSlice() {
             return getCrosshair().getProperty().getValue(getSelectedPlot().getDisplayAnatomy().ZAXIS);
         }
@@ -174,7 +180,7 @@ public class SimpleImageView extends ImageView {
                 cross.setZValue(slice.getX());
                 getSelectedPlot().setSlice(slice);
             }
-            
+
         }
 
         public void nextSlice() {

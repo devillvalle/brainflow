@@ -7,7 +7,6 @@ import com.brainflow.gui.ColorIcon;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
-import de.javasoft.plaf.synthetica.SyntheticaStandardLookAndFeel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,11 +31,6 @@ public class PanelBuilderTest {
     public static void main(String[] args) {
 
 
-        try {
-            UIManager.setLookAndFeel(new SyntheticaStandardLookAndFeel());
-        } catch (Exception e) {
-            // Likely PlasticXP is not in the class path; ignore.
-        }
         JFrame frame = new JFrame();
         frame.setTitle("Forms Tutorial :: Custom Rows");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

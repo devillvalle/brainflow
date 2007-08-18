@@ -513,7 +513,7 @@ public class Brainflow {
         brainFrame.setVisible(true);
 
 
-        CanvasBar2 cbar = new CanvasBar2();
+        CanvasBar cbar = new CanvasBar();
 
         /// TODO add automatic updating of canvas to Canvas Bar via EventBus
         //cbar.setImageCanvas(canvas);

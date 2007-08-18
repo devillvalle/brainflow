@@ -1,26 +1,22 @@
 package com.brainflow.application.toplevel;
 
-import com.jidesoft.document.DocumentPane;
-import com.jidesoft.document.DocumentComponent;
-import com.jidesoft.plaf.LookAndFeelFactory;
-import com.jidesoft.docking.DefaultDockingManager;
-import com.brainflow.core.*;
-import com.brainflow.image.io.analyze.AnalyzeIO;
-import com.brainflow.image.data.IImageData;
+import com.brainflow.application.BrainFrame;
 import com.brainflow.application.BrainflowException;
 import com.brainflow.application.MemoryImage;
-import com.brainflow.application.BrainFrame;
-import com.brainflow.core.ImageLayerProperties;
-import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.colormap.ColorTable;
+import com.brainflow.colormap.LinearColorMap;
+import com.brainflow.core.*;
+import com.brainflow.image.data.IImageData;
+import com.brainflow.image.io.analyze.AnalyzeIO;
+import com.jidesoft.docking.DefaultDockingManager;
+import com.jidesoft.document.DocumentComponent;
+import com.jidesoft.document.DocumentPane;
+import com.jidesoft.plaf.LookAndFeelFactory;
 
 import javax.swing.*;
-
-import de.javasoft.plaf.synthetica.SyntheticaLookAndFeel;
-
-import java.util.logging.Logger;
 import java.awt.*;
 import java.net.URL;
+import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -45,7 +41,7 @@ public class BrainTest {
     public void start() {
         ImageView view = createView();
         frame = new BrainFrame();
-       
+
         desktop = new JDesktopPane();
 
         docPane = new DocumentPane();
@@ -65,26 +61,22 @@ public class BrainTest {
         frame.setVisible(true);
 
 
-        
-
         JInternalFrame f1 = new JInternalFrame("frame 1", true, true, false);
         f1.setContentPane(view);
-        f1.setLocation(10,10);
+        f1.setLocation(10, 10);
         f1.setVisible(true);
         f1.setMaximizable(true);
         f1.setIconifiable(true);
-        
+
         f1.pack();
         desktop.add(f1);
 
         //frame.pack();
         frame.setVisible(true);
 
-        
-
-
 
     }
+
     public ImageView createView() {
         try {
             URL url = ClassLoader.getSystemResource("resources/data/icbm452_atlas_probability_gray.hdr");
@@ -93,7 +85,7 @@ public class BrainTest {
             url = ClassLoader.getSystemResource("resources/data/icbm452_atlas_probability_white.hdr");
             IImageData data2 = AnalyzeIO.readAnalyzeImage(url);
 
-            
+
             IImageDisplayModel model = new ImageDisplayModel("model");
             ImageLayer layer = new ImageLayer3D(new MemoryImage(data1),
                     new ImageLayerProperties(new LinearColorMap(data1.getMinValue(), data1.getMaxValue(), ColorTable.GRAYSCALE)));
@@ -117,8 +109,6 @@ public class BrainTest {
         com.jidesoft.utils.Lm.verifyLicense("UIN", "BrainFlow", "S5XiLlHH0VReaWDo84sDmzPxpMJvjP3");
 
         try {
-            SyntheticaLookAndFeel lf = new de.javasoft.plaf.synthetica.SyntheticaSkyMetallicLookAndFeel();
-            UIManager.setLookAndFeel(lf);
 
 
             LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);

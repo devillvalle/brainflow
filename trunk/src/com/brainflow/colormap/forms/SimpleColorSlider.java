@@ -2,8 +2,6 @@ package com.brainflow.colormap.forms;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
-import de.javasoft.plaf.synthetica.SyntheticaLookAndFeel;
-import de.javasoft.plaf.synthetica.SyntheticaStandardLookAndFeel;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -177,9 +175,7 @@ public class SimpleColorSlider extends JPanel implements ChangeListener {
     }
 
     public static void main(String[] args) throws Exception {
-        SyntheticaLookAndFeel lf = new SyntheticaStandardLookAndFeel();
 
-        javax.swing.UIManager.setLookAndFeel(lf);
         JFrame jf = new JFrame();
         jf.add(new SimpleColorSlider());
         jf.pack();

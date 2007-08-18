@@ -2,11 +2,7 @@ package com.brainflow.application.presentation.forms;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
 import com.jidesoft.combobox.ColorComboBox;
-import de.javasoft.plaf.synthetica.SyntheticaLookAndFeel;
-import de.javasoft.plaf.synthetica.SyntheticaStandardLookAndFeel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,7 +29,6 @@ public class CrosshairForm extends JPanel {
     private JSpinner gapSpinner;
 
 
-
     public CrosshairForm() {
         buildGUI();
 
@@ -43,11 +38,10 @@ public class CrosshairForm extends JPanel {
     private void buildGUI() {
 
 
-
         layout = new FormLayout("2dlu, l:p, 20dlu, r:p:g, 3dlu, 2dlu", "6dlu, p, 12dlu, p, 12dlu, p, 12dlu, p, 12dlu, p, 12dlu");
         setLayout(layout);
 
-        
+
         CellConstraints cc = new CellConstraints();
 
         colorChooser = new ColorComboBox();
@@ -59,17 +53,17 @@ public class CrosshairForm extends JPanel {
 
         add(visibleBox, cc.xyw(2, 2, 3));
 
-        add(new JLabel("Line Color:"), cc.xy(2,4));
-        add(colorChooser, cc.xyw(4,4,2));
-             
+        add(new JLabel("Line Color:"), cc.xy(2, 4));
+        add(colorChooser, cc.xyw(4, 4, 2));
+
         add(new JLabel("Line Width:"), cc.xy(2, 6));
         add(lineWidthSpinner, cc.xyw(4, 6, 2));
 
         add(new JLabel("Gap:"), cc.xy(2, 8));
         add(gapSpinner, cc.xyw(4, 8, 2));
 
-        add(new JLabel("Length:"), cc.xy(2,10));
-        add(lineLengthSpinner, cc.xyw(4,10,2));
+        add(new JLabel("Length:"), cc.xy(2, 10));
+        add(lineLengthSpinner, cc.xyw(4, 10, 2));
 
         /*okButton = new JButton("OK");
         cancelButton = new JButton("Cancel");
@@ -80,8 +74,7 @@ public class CrosshairForm extends JPanel {
 
         colorChooser.setSelectedColor(Color.GREEN);
         colorChooser.setColorValueVisible(false);
-        
-       
+
 
     }
 
@@ -107,16 +100,12 @@ public class CrosshairForm extends JPanel {
     }
 
 
-
-
     public JSpinner getLineLengthSpinner() {
         return lineLengthSpinner;
     }
 
     public static void main(String[] args) throws Exception {
-        SyntheticaLookAndFeel lf = new SyntheticaStandardLookAndFeel();
 
-        javax.swing.UIManager.setLookAndFeel(lf);
         JFrame jf = new JFrame();
         jf.add(new CrosshairForm());
         jf.setVisible(true);

@@ -215,11 +215,38 @@ public class ImageDisplayModel implements IImageDisplayModel {
         return ret;
     }
 
+    public void rotateLayers() {
+
+        ArrayListModel newModel = new ArrayListModel();
+        AbstractLayer firstLayer = getLayer(getNumLayers() - 1);
+
+        newModel.add(firstLayer);
+        for (int i = 0; i < imageListModel.size(); i++) {
+            newModel.add(imageListModel.get(i));
+
+
+        }
+
+        imageListModel = newModel;
+        imageListModel.addListDataListener(forwarder);
+        layerSelection.setListModel(imageListModel);
+
+        forwarder.fireContentsChanged(new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, 0, getNumLayers() - 1));
+
+
+    }
+
     public void swapLayers(int index0, int index1) {
         //todo check for valid indices
 
-        AbstractLayer l1 = (AbstractLayer) imageListModel.get(index0);
-        AbstractLayer l2 = (AbstractLayer) imageListModel.get(index1);
+        if (index0 == index1) return;
+        if (index0 > (getNumLayers() - 1)) {
+            throw new IllegalArgumentException("Invalid layer index : " + index0);
+        }
+
+        if (index1 > (getNumLayers() - 1)) {
+            throw new IllegalArgumentException("Invalid layer index : " + index1);
+        }
 
         ArrayListModel newModel = new ArrayListModel();
         for (int i = 0; i < imageListModel.size(); i++) {

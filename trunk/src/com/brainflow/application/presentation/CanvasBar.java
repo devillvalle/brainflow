@@ -1,136 +1,131 @@
 package com.brainflow.application.presentation;
 
-import com.brainflow.application.actions.LayerVisibilityAction;
 import com.brainflow.application.dnd.AbstractLayerTransferable;
-import com.brainflow.application.services.ImageDisplayModelEvent;
 import com.brainflow.core.AbstractLayer;
 import com.brainflow.core.ImageView;
-import com.brainflow.display.Visibility;
-import com.jgoodies.binding.adapter.Bindings;
-import com.jidesoft.action.CommandBar;
-import com.jidesoft.swing.JideSplitButton;
-import com.jidesoft.swing.JideToggleSplitButton;
-import org.bushe.swing.action.ActionUIFactory;
-import org.bushe.swing.action.BasicAction;
-import org.bushe.swing.event.EventBus;
-import org.bushe.swing.event.EventSubscriber;
 
 import javax.swing.*;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Brad
- * Date: Dec 24, 2006
- * Time: 11:28:03 AM
- * To change this template use File | Settings | File Templates.
+ * BrainFlow Project
+ * User: Bradley Buchsbaum
+ * Date: Aug 12, 2007
+ * Time: 7:36:06 AM
  */
 public class CanvasBar extends ImageViewPresenter {
 
-    private CommandBar commandBar;
 
-    //private SplitButtonGroup buttonGroup = new SplitButtonGroup();
+    private JToolBar toggleBar;
+
+    private ButtonGroup buttonGroup = new ButtonGroup();
 
     private List<AbstractButton> layerButtonList = new ArrayList<AbstractButton>();
 
-    private ButtonSelectionListener listener = new ButtonSelectionListener();
+    private ButtonSelectionListener buttonSelectionListener = new ButtonSelectionListener();
 
-    private JideSplitButton emptyButton = new JideSplitButton("Tabula Rasa");
+    private JToggleButton emptyButton = new JToggleButton("Tabula Rasa");
 
     private TransferHandler transferHandler = new CanvasBarTransferHandler();
 
     private MouseAdapter dragListener = new DragListener();
 
+
     public CanvasBar() {
         super();
 
-
-        EventBus.subscribeStrongly(ImageDisplayModelEvent.class, new EventSubscriber() {
-
-            public void onEvent(Object evt) {
-                ImageDisplayModelEvent event = (ImageDisplayModelEvent) evt;
-
-                ImageView view = getSelectedView();
-                if (view == null) return;
-                if (view.getModel() == event.getModel()) {
-                    update();
-                }
-            }
-        });
-
-
-    }
-
-
-    public void allViewsDeselected() {
-        for (AbstractButton button : layerButtonList) {
-            button.setEnabled(false);
-        }
     }
 
     public void viewSelected(ImageView view) {
-        update();
+        repopulate();
     }
 
-    @Override
+    public JComponent getComponent() {
+        if (toggleBar == null) {
+            createToggleBar();
+        }
+
+        return toggleBar;
+
+    }
+
+    public void allViewsDeselected() {
+        toggleBar.removeAll();
+    }
+
+    protected void layerChangeNotification() {
+        repopulate();
+    }
+
     protected void layerSelected(AbstractLayer layer) {
-
         ImageView view = getSelectedView();
-        int idx = view.getSelectedIndex();
+        int selidx = view.getModel().indexOf(layer);
 
-        updateSelection(idx);
-        //buttonGroup.setSelected(layerButtonList.get(idx).getModel(), true);
-
-    }
-
-    private void updateSelection(int selectedIndex) {
-        for (int i = 0; i < layerButtonList.size(); i++) {
-            JideToggleSplitButton button = (JideToggleSplitButton) layerButtonList.get(i);
-            if (i == selectedIndex) {
-                button.setSelected(true);
-            } else {
-                button.setSelected(false);
-            }
+        AbstractButton button = layerButtonList.get(selidx);
+        if (buttonGroup.getSelection() != button.getModel()) {
+            button.setSelected(true);
         }
 
+
     }
 
-    private CommandBar createCanvasBar() {
-        commandBar = new CommandBar();
+    private JToolBar createToggleBar() {
+        toggleBar = new JToolBar();
         //commandBar.setDr
-        commandBar.setTransferHandler(transferHandler);
-        //ImageCanvasManager.getInstance().getSelectedCanvas().setTransferHandler(transferHandler);
+        //toggleBar.setTransferHandler(transferHandler);
+
+        //commandBar.addMouseListener(dragListener);
 
 
-        commandBar.addMouseListener(dragListener);
-
-        //
-        commandBar.setPaintBackground(false);
-        commandBar.setOpaque(false);
-        //
-
-        layerButtonList = buttonList();
-
-        if (layerButtonList.isEmpty()) {
+        if (getSelectedView() == null) {
             emptyButton.setEnabled(false);
-            commandBar.add(emptyButton);
+            toggleBar.add(emptyButton);
+            return toggleBar;
         }
+
+        //layerButtonList = createButtons();
+        repopulate();
+
+
+        return toggleBar;
+
+    }
+
+
+    private void repopulate() {
+        toggleBar.removeAll();
+        buttonGroup = new ButtonGroup();
+
+        layerButtonList = createButtons();
+
 
         for (AbstractButton button : layerButtonList) {
-            commandBar.add(button);
+            toggleBar.add(button);
+            buttonGroup.add(button);
+
+
         }
 
 
-        commandBar.addExpansion();
-        return commandBar;
+        int selIdx = getSelectedView().getSelectedIndex();
+
+        if (selIdx >= 0 && getSelectedView().getModel().getNumLayers() > 0) {
+            JToggleButton button = (JToggleButton) layerButtonList.get(selIdx);
+            buttonGroup.setSelected(button.getModel(), true);
+        }
+
+        toggleBar.revalidate();
+        toggleBar.repaint();
 
     }
 
-    private List<AbstractButton> buttonList() {
+    private List<AbstractButton> createButtons() {
         if (getSelectedView() == null) {
             return new ArrayList<AbstractButton>();
         }
@@ -138,29 +133,16 @@ public class CanvasBar extends ImageViewPresenter {
 
         List<AbstractButton> list = new ArrayList<AbstractButton>();
 
-        //buttonGroup = new SplitButtonGroup();
-
-        HashMap map = new HashMap();
 
         for (int i = 0; i < getSelectedView().getModel().getNumLayers(); i++) {
             AbstractLayer layer = getSelectedView().getModel().getLayer(i);
-            JideToggleSplitButton button = new JideToggleSplitButton("" + (i + 1) + ": " + layer);
+            JToggleButton button = new JToggleButton("" + (i + 1) + ": " + layer);
 
-            button.addItemListener(listener);
+            button.addItemListener(buttonSelectionListener);
             button.addMouseListener(dragListener);
+            button.addMouseMotionListener(dragListener);
             button.setTransferHandler(transferHandler);
 
-
-            BasicAction visAction = new LayerVisibilityAction(layer.getImageLayerProperties());
-
-            visAction.setContext(map);
-
-            AbstractButton visButton = ActionUIFactory.getInstance().createButton(visAction);
-            Bindings.bind((JCheckBox) visButton, layer.getImageLayerProperties().getVisible().getModel(Visibility.VISIBLE_PROPERTY));
-            visButton.setText("Visible");
-
-            button.add(visButton);
-            //buttonGroup.add(button);
             list.add(button);
         }
 
@@ -169,40 +151,11 @@ public class CanvasBar extends ImageViewPresenter {
     }
 
 
-    private void update() {
-        commandBar.removeAll();
-
-        layerButtonList = buttonList();
-
-
-        for (AbstractButton button : layerButtonList) {
-            commandBar.add(button);
-
-        }
-
-        int selIdx = getSelectedView().getSelectedIndex();
-        updateSelection(selIdx);
-
-
-        commandBar.revalidate();
-        commandBar.repaint();
-    }
-
-
-    public JComponent getComponent() {
-        if (commandBar == null) {
-            createCanvasBar();
-        }
-
-        return commandBar;
-    }
-
-
     class ButtonSelectionListener implements ItemListener {
 
         public void itemStateChanged(ItemEvent e) {
 
-            JideToggleSplitButton button = (JideToggleSplitButton) e.getSource();
+            AbstractButton button = (AbstractButton) e.getSource();
 
             int buttonIndex = layerButtonList.indexOf(button);
 
@@ -212,8 +165,7 @@ public class CanvasBar extends ImageViewPresenter {
 
                 int selIdx = view.getModel().getSelectedIndex();
                 if (selIdx != buttonIndex) {
-                    view.setSelectedIndex(buttonIndex);
-                    updateSelection(buttonIndex);
+                    view.getModel().getSelection().setSelectionIndex(buttonIndex);
                     System.out.println("button " + buttonIndex + " is selected");
                 }
 
@@ -226,8 +178,19 @@ public class CanvasBar extends ImageViewPresenter {
         }
     }
 
-
     class CanvasBarTransferHandler extends TransferHandler {
+
+        private DataFlavor flavor;
+
+        public CanvasBarTransferHandler() {
+            try {
+                flavor = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + ";class=com.brainflow.core.AbstractLayer");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+
 
         public void exportAsDrag(JComponent comp, InputEvent e, int action) {
             int index = layerButtonList.indexOf(comp);
@@ -244,8 +207,40 @@ public class CanvasBar extends ImageViewPresenter {
             return true;
         }
 
+        public boolean importData(JComponent comp, Transferable t) {
+            return super.importData(comp, t);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
         public boolean importData(TransferSupport support) {
-            System.out.println("importData");
+            System.out.println("importing data");
+            System.out.println("component is :" + support.getComponent());
+            System.out.println("transferable is: " + support.getTransferable());
+
+
+            try {
+                AbstractLayer layer = (AbstractLayer) support.getTransferable().getTransferData(flavor);
+
+                int dropIndex = layerButtonList.indexOf(support.getComponent());
+                int sourceIndex = getSelectedView().getModel().indexOf(layer);
+
+                if (dropIndex != sourceIndex) {
+                    getSelectedView().getModel().swapLayers(dropIndex, sourceIndex);
+                }
+
+                /*System.out.println("layer is " + layer);
+                System.out.println("dragged component is " + support.getComponent());
+                System.out.println("index of component is : " + layerButtonList.indexOf(support.getComponent()));
+                System.out.println("drop location is " + support.getDropLocation().getDropPoint());
+
+                */
+            } catch (UnsupportedFlavorException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+
+            }
+
+
             return super.importData(support);    //To change body of overridden methods use File | Settings | File Templates.
         }
 
@@ -268,7 +263,10 @@ public class CanvasBar extends ImageViewPresenter {
     }
 
     class DragListener extends MouseAdapter {
-        public void mousePressed(MouseEvent e) {
+
+
+        public void mouseDragged(MouseEvent e) {
+            System.out.println("exporting as drag?");
             JComponent c = (JComponent) e.getSource();
             TransferHandler th = c.getTransferHandler();
             th.exportAsDrag(c, e, TransferHandler.MOVE);
@@ -278,4 +276,5 @@ public class CanvasBar extends ImageViewPresenter {
     }
 
     ;
+
 }

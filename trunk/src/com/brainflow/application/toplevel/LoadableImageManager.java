@@ -59,7 +59,7 @@ public class LoadableImageManager {
         return imageMap.containsKey(limg.getUniqueID());
     }
 
-    public void registerLoadableImage(ILoadableImage limg) {
+    public void register(ILoadableImage limg) {
         int uid = limg.getUniqueID();
         if (imageMap.containsKey(uid)) {
             log.warning("Attempt to load image already in memory: " + limg.getHeaderFile());

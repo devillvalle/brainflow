@@ -1,20 +1,19 @@
 package com.brainflow.core;
 
-import com.brainflow.modes.*;
+import com.brainflow.image.space.IImageSpace;
+import com.brainflow.modes.CrosshairInteractor;
+import com.brainflow.modes.ImageViewInteractor;
+import com.brainflow.modes.MouseWheelInteractor;
+import com.brainflow.modes.PanningInteractor;
 
 import javax.swing.*;
-import javax.swing.event.EventListenerList;
-import javax.swing.event.InternalFrameListener;
 import javax.swing.event.InternalFrameEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.AWTEventListener;
-import java.awt.event.MouseEvent;
+import javax.swing.event.InternalFrameListener;
+import javax.swing.event.ListDataEvent;
 import java.awt.*;
-import java.util.logging.Logger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,7 +35,6 @@ public class ImageCanvas2 extends JComponent implements InternalFrameListener {
     private List<ImageViewInteractor> interactors = new ArrayList<ImageViewInteractor>();
 
 
-
     public ImageCanvas2() {
         super();
         setLayout(new BorderLayout());
@@ -46,7 +44,6 @@ public class ImageCanvas2 extends JComponent implements InternalFrameListener {
         addInteractor(new MouseWheelInteractor());
         addInteractor(new PanningInteractor());
     }
-
 
 
     public ImageCanvasModel getImageCanvasModel() {
@@ -124,7 +121,7 @@ public class ImageCanvas2 extends JComponent implements InternalFrameListener {
     public IImagePlot whichPlot(Point p) {
         Component c = desktopPane.findComponentAt(p);
         Container ct = SwingUtilities.getAncestorOfClass(ImagePane.class, c);
-        if (ct != null & ct instanceof ImageView) {
+        if (ct != null && ct instanceof ImageView) {
             ImageView iview = (ImageView) ct;
             Point relPoint = SwingUtilities.convertPoint(desktopPane, p, iview);
             return iview.whichPlot(relPoint);
@@ -145,16 +142,26 @@ public class ImageCanvas2 extends JComponent implements InternalFrameListener {
     }
 
     public boolean isSelectedView(ImageView view) {
-        if (view == canvasModel.getSelectedView())
-            return true;
-        else
-            return false;
+        return view == canvasModel.getSelectedView();
     }
 
 
+    public List<ImageView> getViews(IImageDisplayModel model) {
+        List<ImageView> views = getViews();
+        List<ImageView> ret = new ArrayList<ImageView>();
+
+        for (ImageView view : views) {
+            if (view.getModel() == model) {
+                ret.add(view);
+            }
+        }
+
+        return ret;
 
 
-    public java.util.List<ImageView> getViews() {
+    }
+
+    public List<ImageView> getViews() {
         return canvasModel.getImageViews();
     }
 
@@ -169,22 +176,49 @@ public class ImageCanvas2 extends JComponent implements InternalFrameListener {
 
 
     public void removeImageView(ImageView view) {
-      
+
         canvasModel.removeImageView(view);
         JInternalFrame[] frames = desktopPane.getAllFrames();
-        for (int i=0; i<frames.length; i++) {
+        for (int i = 0; i < frames.length; i++) {
             if (frames[i].getContentPane() == view) {
                 desktopPane.remove(frames[i]);
             }
         }
 
+        desktopPane.revalidate();
+
 
     }
 
+
     public void addImageView(ImageView view) {
-      
+
         view.setSize(view.getPreferredSize());
         JInternalFrame jframe = new JInternalFrame("view", true, true, true, true);
+
+        view.getModel().addImageDisplayModelListener(new ImageDisplayModelListener() {
+            public void imageSpaceChanged(IImageDisplayModel model, IImageSpace space) {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public void intervalAdded(ListDataEvent e) {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            public void intervalRemoved(ListDataEvent e) {
+                IImageDisplayModel model = (IImageDisplayModel) e.getSource();
+                if (model.getNumLayers() == 0) {
+                    List<ImageView> views = getViews(model);
+                    for (ImageView view : views) {
+                        removeImageView(view);
+                    }
+                }
+            }
+
+            public void contentsChanged(ListDataEvent e) {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+        });
 
         jframe.setContentPane(view);
         jframe.setSize(view.getSize());
@@ -200,13 +234,9 @@ public class ImageCanvas2 extends JComponent implements InternalFrameListener {
     }
 
 
-
     public void moveToFront(ImageView view) {
         /// do nothing for now
     }
-
-
-
 
 
     private void updateSelection(ImageView view) {
@@ -216,8 +246,6 @@ public class ImageCanvas2 extends JComponent implements InternalFrameListener {
 
         }
     }
-
-    
 
 
     public void internalFrameDeactivated(InternalFrameEvent e) {
@@ -242,14 +270,14 @@ public class ImageCanvas2 extends JComponent implements InternalFrameListener {
     }
 
     public void internalFrameDeiconified(InternalFrameEvent e) {
-       
+
     }
 
     public void internalFrameActivated(InternalFrameEvent e) {
-       JInternalFrame frame = e.getInternalFrame();
-       Component c = frame.getContentPane();
+        JInternalFrame frame = e.getInternalFrame();
+        Component c = frame.getContentPane();
         if (c instanceof ImageView) {
-            ImageView sel = (ImageView)c;
+            ImageView sel = (ImageView) c;
             updateSelection(sel);
 
         } else {

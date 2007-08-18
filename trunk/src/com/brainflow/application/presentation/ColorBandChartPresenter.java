@@ -22,8 +22,8 @@ import java.awt.image.IndexColorModel;
  */
 public class ColorBandChartPresenter extends AbstractColorMapPresenter {
 
-    private LinearColorMap colorMap;
-    
+    private IColorMap colorMap;
+
     private JPanel panel;
 
     private ColorBandChart chartRed;
@@ -39,7 +39,7 @@ public class ColorBandChartPresenter extends AbstractColorMapPresenter {
 
     public ColorBandChartPresenter(Property<IColorMap> parameter) {
         super(parameter);
-        colorMap = (LinearColorMap) parameter.getProperty();
+        colorMap = parameter.getProperty();
         buildGUI();
     }
 
@@ -51,8 +51,6 @@ public class ColorBandChartPresenter extends AbstractColorMapPresenter {
     private void buildGUI() {
         panel = new JPanel();
 
-
-        byte[][] vals = ColorTable.extractTable(colorMap);
 
         chartRed = new ColorBandChart(ColorBandChart.ColorBand.RED, colorMap);
         chartRed.getComponent().setPreferredSize(new Dimension(325, 125));
@@ -80,14 +78,6 @@ public class ColorBandChartPresenter extends AbstractColorMapPresenter {
 
     public void setColorMap(Property<IColorMap> colorMapParameter) {
 
-        IColorMap icmap = colorMapParameter.getProperty();
-        if (icmap != null & icmap != colorMap && icmap instanceof LinearColorMap) {
-
-            LinearColorMap colorMap = (LinearColorMap) icmap;
-            byte[][] vals = ColorTable.extractTable(colorMap);
-        }
-
-        //TODO unfinished method
     }
 
 

@@ -168,8 +168,7 @@ public class ImageCanvasManager {
 
     }
 
-
-    public void addImageView(ImageView view) {
+    /*public void addImageView(ImageView view) {
         if (!registeredViews.containsKey(view)) {
             register(view);
             ImageCanvas2 canvas = getSelectedCanvas();
@@ -178,7 +177,7 @@ public class ImageCanvasManager {
             }
 
         }
-    }
+    }*/
 
     public ImageView getSelectedImageView() {
         if (selectedCanvas != null)

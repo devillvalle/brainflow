@@ -1,22 +1,15 @@
 package com.brainflow.colormap;
 
 import com.brainflow.image.data.IImageData;
-import com.brainflow.image.data.RGBAImage;
-import com.brainflow.image.data.IImageData2D;
-import com.brainflow.image.data.UByteImageData2D;
 import com.brainflow.image.iterators.ImageIterator;
-import com.brainflow.image.space.ImageSpace2D;
-import com.brainflow.utils.NumberUtils;
 import com.brainflow.utils.Range;
-import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.Annotations;
 import com.thoughtworks.xstream.io.xml.DomDriver;
-import com.thoughtworks.xstream.XStream;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.IndexColorModel;
-import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.List;
 
@@ -27,7 +20,6 @@ import java.util.List;
  * Time: 12:47:22 PM
  * To change this template use File | Settings | File Templates.
  */
-
 
 
 public class LinearColorMap extends AbstractColorMap {
@@ -58,11 +50,7 @@ public class LinearColorMap extends AbstractColorMap {
         mapRange = getMaximumValue() - getMinimumValue();
 
 
-
-
         fillIntervals(mapSize, icm);
-
-
 
 
     }
@@ -74,15 +62,13 @@ public class LinearColorMap extends AbstractColorMap {
 
         setMinimumValue(min);
         setMaximumValue(max);
-        
+
         highClip = max;
         lowClip = min;
         mapRange = highClip - lowClip;
 
         int mapSize = lcm.getMapSize();
         fillIntervals(mapSize, lcm);
-
-
 
 
     }
@@ -166,10 +152,6 @@ public class LinearColorMap extends AbstractColorMap {
     }
 
 
-
-   
-
-
     public int getMapSize() {
         return intervals.size();
     }
@@ -188,27 +170,24 @@ public class LinearColorMap extends AbstractColorMap {
 
     }
 
-
-
-
     /*public void setUpperAlphaThreshold(double _upperAlphaThreshold) {
-        double oldValue = getUpperAlphaThreshold();
-        double[] range = super.filterHighValue(getLowerAlphaThreshold(), _upperAlphaThreshold);
-        upperAlphaThreshold = range[1];
+       double oldValue = getUpperAlphaThreshold();
+       double[] range = super.filterHighValue(getLowerAlphaThreshold(), _upperAlphaThreshold);
+       upperAlphaThreshold = range[1];
 
 
-        changeSupport.firePropertyChange(AbstractColorMap.UPPER_ALPHA_PROPERTY,
-                oldValue, upperAlphaThreshold);
+       changeSupport.firePropertyChange(AbstractColorMap.UPPER_ALPHA_PROPERTY,
+               oldValue, upperAlphaThreshold);
 
-        if (range[0] != getLowerAlphaThreshold()) {
-            double oldThresh = getLowerAlphaThreshold();
-            lowerAlphaThreshold = range[0];
-            changeSupport.firePropertyChange(AbstractColorMap.LOWER_ALPHA_PROPERTY,
-                    oldThresh, lowerAlphaThreshold);
-        }
+       if (range[0] != getLowerAlphaThreshold()) {
+           double oldThresh = getLowerAlphaThreshold();
+           lowerAlphaThreshold = range[0];
+           changeSupport.firePropertyChange(AbstractColorMap.LOWER_ALPHA_PROPERTY,
+                   oldThresh, lowerAlphaThreshold);
+       }
 
 
-    } */
+   } */
 
     public void setHighClip(double _highClip) {
         double oldValue = getHighClip();
@@ -219,14 +198,14 @@ public class LinearColorMap extends AbstractColorMap {
         highClip = range[1];
 
 
-        changeSupport.firePropertyChange(AbstractColorMap.HIGH_CLIP_PROPERTY,
+        changeSupport.firePropertyChange(IColorMap.HIGH_CLIP_PROPERTY,
                 oldValue, highClip);
 
         if (range[0] != getLowClip()) {
-            
+
             double oldClip = getLowClip();
             lowClip = range[0];
-            changeSupport.firePropertyChange(AbstractColorMap.LOW_CLIP_PROPERTY,
+            changeSupport.firePropertyChange(IColorMap.LOW_CLIP_PROPERTY,
                     oldClip, lowClip);
         }
 
@@ -267,7 +246,7 @@ public class LinearColorMap extends AbstractColorMap {
 
 
         if (range[1] != getHighClip()) {
-            
+
             double oldClip = getHighClip();
             highClip = range[1];
 
@@ -281,12 +260,11 @@ public class LinearColorMap extends AbstractColorMap {
     }
 
 
-
     public ListIterator<ColorInterval> iterator() {
         return intervals.listIterator();
     }
 
-    
+
     public Range getRange() {
         return new Range(getMinimumValue(), getMaximumValue());
     }
@@ -314,7 +292,7 @@ public class LinearColorMap extends AbstractColorMap {
 
             Color clr = intervals.get(bin).getColor();
 
-            rgba[offset++] = (byte)clr.getAlpha();
+            rgba[offset++] = (byte) clr.getAlpha();
             rgba[offset++] = (byte) clr.getBlue();
             rgba[offset++] = (byte) clr.getGreen();
             rgba[offset++] = (byte) clr.getRed();
@@ -354,9 +332,9 @@ public class LinearColorMap extends AbstractColorMap {
     }
 
     public byte[][] getRGBAComponents(IImageData data) {
-       int len = data.getNumElements();
-       byte[][] rgba = new byte[4][len];
-       int lastidx = getMapSize() - 1;
+        int len = data.getNumElements();
+        byte[][] rgba = new byte[4][len];
+        int lastidx = getMapSize() - 1;
 
         ImageIterator iter = data.iterator();
 
@@ -422,14 +400,11 @@ public class LinearColorMap extends AbstractColorMap {
         System.out.println(cmap.getInterval(1));
 
 
-		XStream stream = new XStream(new DomDriver());
-		Annotations.configureAliases(stream, LinearColorMap.class);
+        XStream stream = new XStream(new DomDriver());
+        Annotations.configureAliases(stream, LinearColorMap.class);
 
-		System.out.println(stream.toXML(cmap));
-	}
-
-
-
+        System.out.println(stream.toXML(cmap));
+    }
 
 
 }

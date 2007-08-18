@@ -2,12 +2,14 @@ package com.brainflow.application.presentation;
 
 import com.brainflow.application.presentation.forms.TripleSliderForm;
 import com.brainflow.display.Crosshair;
-import com.brainflow.display.Viewport3D;
 import com.brainflow.display.ICrosshair;
 import com.brainflow.gui.AbstractPresenter;
+import com.brainflow.image.axis.ImageAxis;
+import com.brainflow.image.space.Axis;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
 import com.jgoodies.binding.beans.BeanAdapter;
+import com.jgoodies.binding.value.ValueHolder;
 
 import javax.swing.*;
 
@@ -21,7 +23,7 @@ import javax.swing.*;
 public class WorldCoordinatePresenter extends AbstractPresenter {
 
     private TripleSliderForm form;
-    
+
     private ICrosshair crosshair;
 
     private BeanAdapter crosshairAdapter;
@@ -58,9 +60,10 @@ public class WorldCoordinatePresenter extends AbstractPresenter {
         viewportAdapter = new BeanAdapter(crosshair.getViewport(), true);
 
 
+        ImageAxis xaxis = crosshair.getViewport().getBounds().getImageAxis(Axis.X_AXIS);
         XSliderAdapter = new BoundedRangeAdapter(new PercentageConverter(crosshairAdapter.getValueModel(Crosshair.X_VALUE_PROPERTY),
-                viewportAdapter.getValueModel(Viewport3D.X_AXIS_MIN_PROPERTY),
-                viewportAdapter.getValueModel(Viewport3D.X_AXIS_MAX_PROPERTY), 100), 0, 0, 100);
+                new ValueHolder(xaxis.getRange().getMinimum()),
+                new ValueHolder(xaxis.getRange().getMaximum()), 100), 0, 0, 100);
 
 
         form.getSlider1().setModel(XSliderAdapter);
@@ -68,16 +71,18 @@ public class WorldCoordinatePresenter extends AbstractPresenter {
         form.getSliderLabel2().setText("Y: " + "(" + crosshair.getViewport().getYAxis() + ")");
         form.getSliderLabel3().setText("Z: " + "(" + crosshair.getViewport().getZAxis() + ")");
 
+        ImageAxis yaxis = crosshair.getViewport().getBounds().getImageAxis(Axis.Y_AXIS);
         YSliderAdapter = new BoundedRangeAdapter(new PercentageConverter(crosshairAdapter.getValueModel(Crosshair.Y_VALUE_PROPERTY),
-                viewportAdapter.getValueModel(Viewport3D.Y_AXIS_MIN_PROPERTY),
-                viewportAdapter.getValueModel(Viewport3D.Y_AXIS_MAX_PROPERTY), 100), 0, 0, 100);
+                new ValueHolder(yaxis.getRange().getMinimum()),
+                new ValueHolder(yaxis.getRange().getMaximum()), 100), 0, 0, 100);
 
         form.getSlider2().setModel(YSliderAdapter);
 
-
+        ImageAxis zaxis = crosshair.getViewport().getBounds().getImageAxis(Axis.Z_AXIS);
         ZSliderAdapter = new BoundedRangeAdapter(new PercentageConverter(crosshairAdapter.getValueModel(Crosshair.Z_VALUE_PROPERTY),
-                viewportAdapter.getValueModel(Viewport3D.Z_AXIS_MIN_PROPERTY),
-                viewportAdapter.getValueModel(Viewport3D.Z_AXIS_MAX_PROPERTY), 100), 0, 0, 100);
+                new ValueHolder(zaxis.getRange().getMinimum()),
+                new ValueHolder(zaxis.getRange().getMaximum()), 100), 0, 0, 100);
+
 
         form.getSlider3().setModel(ZSliderAdapter);
 

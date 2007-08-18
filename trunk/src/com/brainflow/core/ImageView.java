@@ -61,6 +61,11 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
 
     protected Property<Viewport3D> viewport;
 
+    private ViewportHandler viewportHandler = new ViewportHandler();
+
+    private CrosshairHandler crosshairHandler = new CrosshairHandler();
+
+
     private CommandContainer commandContainer;
 
 
@@ -88,24 +93,23 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
     }
 
 
-    private void initView() {
+    protected void clearListeners() {
+        viewport.removePropertyChangeListener(viewportHandler);
+        displayModel.removeImageDisplayModelListener(this);
+        //crosshair.removePropertyChangeListener();
+        displayModel.getSelection().removePropertyChangeListener(crosshairHandler);
+
+    }
 
 
-        viewport = new Property<Viewport3D>(new Viewport3D(getModel()));
-        crosshair = new Property<ICrosshair>(new Crosshair(viewport.getProperty()));
+    protected void registerListeners() {
+        viewport.addPropertyChangeListener(new ViewportHandler());
 
         displayModel.addImageDisplayModelListener(this);
 
-        viewport.addPropertyChangeListener(new ViewportHandler());
+        addMouseListener(new PlotSelectionHandler());
 
-        crosshair.addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent e) {
-
-                EventBus.publish(new ImageViewCrosshairEvent(ImageView.this));
-
-            }
-        });
-
+        crosshair.addPropertyChangeListener(crosshairHandler);
 
         displayModel.getSelection().addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent e) {
@@ -119,7 +123,16 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
             }
         });
 
-        addMouseListener(new PlotSelectionHandler());
+
+    }
+
+
+    private void initView() {
+
+
+        viewport = new Property<Viewport3D>(new Viewport3D(getModel()));
+        crosshair = new Property<ICrosshair>(new Crosshair(viewport.getProperty()));
+        registerListeners();
 
 
     }
@@ -179,6 +192,9 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
             displayModel.getSelection().setSelectionIndex(selectedIndex);
     }
 
+    public void setModel(IImageDisplayModel model) {
+        displayModel = model;
+    }
 
     public IImageDisplayModel getModel() {
         return displayModel;
@@ -345,6 +361,16 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
         }
 
     }
+
+
+    class CrosshairHandler implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            EventBus.publish(new ImageViewCrosshairEvent(ImageView.this));
+
+        }
+    }
+
 
     class ViewportHandler implements PropertyChangeListener {
 

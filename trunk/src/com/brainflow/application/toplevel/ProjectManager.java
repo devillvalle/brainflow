@@ -50,7 +50,7 @@ public class ProjectManager implements EventSubscriber, BrainflowProjectListener
         boolean registered = LoadableImageManager.getInstance().isRegistered(limg);
 
         if (!registered) {
-            LoadableImageManager.getInstance().registerLoadableImage(limg);
+            LoadableImageManager.getInstance().register(limg);
         }
 
         //todo give sensible name

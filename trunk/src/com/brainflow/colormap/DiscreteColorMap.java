@@ -319,30 +319,26 @@ public class DiscreteColorMap extends AbstractColorMap {
 
     }   */
 
-    public void setUpperAlphaThreshold(double _upperAlphaThreshold) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public void setLowerAlphaThreshold(double _lowerAlphaThreshold) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public void setAlphaMultiplier(Double amult) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
 
     public void setHighClip(double _highClip) {
+
         ColorInterval ival = intervals.get(intervals.size() - 1);
 
         if (_highClip > ival.getMaximum()) {
             _highClip = ival.getMaximum();
         }
 
-        if (_highClip == ival.getMinimum()) return;
+        if (Double.compare(_highClip, ival.getMinimum()) == 0) return;
 
+        double oldHighClip = getHighClip();
 
+        System.out.println("    setting high clip in discrete color map " + _highClip);
         setUpperBound(intervals.size() - 2, _highClip);
-        changeSupport.firePropertyChange(HIGH_CLIP_PROPERTY, ival.getMinimum(), getHighClip());
+
+        System.out.println("setting upper bound");
+        System.out.println("old high clip : " + ival.getMinimum());
+        System.out.println("new high clip : " + getHighClip());
+        changeSupport.firePropertyChange(HIGH_CLIP_PROPERTY, oldHighClip, getHighClip());
 
     }
 
@@ -354,11 +350,12 @@ public class DiscreteColorMap extends AbstractColorMap {
         }
 
         if (Double.compare(_lowClip, ival.getMaximum()) == 0) return;
+        double oldLowClip = getLowClip();
 
 
         setUpperBound(0, _lowClip);
 
-        changeSupport.firePropertyChange(LOW_CLIP_PROPERTY, ival.getMaximum(), getLowClip());
+        changeSupport.firePropertyChange(LOW_CLIP_PROPERTY, oldLowClip, getLowClip());
 
 
     }

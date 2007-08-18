@@ -9,18 +9,16 @@
 
 package com.brainflow.application.presentation;
 
-import com.brainflow.application.presentation.forms.DoubleSliderForm;
 import com.brainflow.application.presentation.forms.ThresholdRangeForm;
+import com.brainflow.core.AbstractLayer;
+import com.brainflow.core.ImageView;
 import com.brainflow.display.Property;
 import com.brainflow.display.ThresholdRange;
-import com.brainflow.core.ImageView;
-import com.brainflow.core.AbstractLayer;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
 import com.jgoodies.binding.beans.BeanAdapter;
 import com.jgoodies.binding.value.ValueHolder;
 import com.jgoodies.binding.value.ValueModel;
-import com.jidesoft.swing.JideBoxLayout;
 
 import javax.swing.*;
 
@@ -39,9 +37,6 @@ public class ThresholdRangePresenter extends ImageViewPresenter {
     private PercentageConverter highConverter;
 
 
-
-
-
     /**
      * Creates a new instance of ColorRangePanel
      */
@@ -51,14 +46,18 @@ public class ThresholdRangePresenter extends ImageViewPresenter {
         thresholdForm.getSliderLabel2().setText("Low: ");
 
 
-        
         initBinding();
     }
 
 
     public void viewSelected(ImageView view) {
-        thresholdForm.setEnabled(true);
-        initBinding();
+        if (view != null & view.getModel().getNumLayers() > 0) {
+            thresholdForm.setEnabled(true);
+            initBinding();
+        } else {
+            thresholdForm.setEnabled(false);
+
+        }
     }
 
 
@@ -77,7 +76,7 @@ public class ThresholdRangePresenter extends ImageViewPresenter {
 
     private void initBinding() {
         ImageView view = getSelectedView();
-        
+
         if (view == null) return;
 
         int idx = view.getModel().getSelectedIndex();
@@ -101,7 +100,7 @@ public class ThresholdRangePresenter extends ImageViewPresenter {
 
             ValueModel highThresh = adapter.getValueModel(ThresholdRange.MAX_PROPERTY);
             ValueModel lowThresh = adapter.getValueModel(ThresholdRange.MIN_PROPERTY);
-         
+
 
             Bindings.bind(thresholdForm.getValueField1(), highThresh);
             Bindings.bind(thresholdForm.getValueField2(), lowThresh);
@@ -129,7 +128,6 @@ public class ThresholdRangePresenter extends ImageViewPresenter {
 
             ValueModel symValue = adapter.getValueModel(ThresholdRange.SYMMETRICAL_PROPERTY);
             Bindings.bind(thresholdForm.getSymmetricalCheckBox(), symValue);
-
 
 
         }

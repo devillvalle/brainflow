@@ -25,14 +25,14 @@ public class ResizeImageStage extends ImageProcessingStage {
 
 
     public void flush() {
-        System.out.println("flushing resize stage ");
+        //System.out.println("flushing resize stage ");
         resized = null;
     }
 
     public Object filter(Object input) throws StageException {
         BufferedImage cropped = (BufferedImage) input;
         if (cropped != null && resized == null) {
-            System.out.println("resizing image ...");
+            //System.out.println("resizing image ...");
             IImagePlot plot = getPipeline().getPlot();
 
             Rectangle area = plot.getPlotArea();
@@ -43,7 +43,7 @@ public class ResizeImageStage extends ImageProcessingStage {
                     (float) sx, (float) sy, plot.getScreenInterpolation());
 
         } else {
-            System.out.println("returning cached resized image");
+            //System.out.println("returning cached resized image");
         }
 
         return resized;

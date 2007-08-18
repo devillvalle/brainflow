@@ -242,6 +242,18 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     public void removeLayer(int layer) {
         assert imageListModel.size() > layer && layer >= 0;
+        if (layerSelection.getSelectionIndex() == layer) {
+            int selidx = -1;
+            if (layer > 1) {
+                selidx = layer - 1;
+            } else if (layer == 0 && getNumLayers() > 1) {
+                selidx = 1;
+            }
+
+            layerSelection.setSelectionIndex(selidx);
+
+        }
+
         imageListModel.remove(layer);
         computeImageSpace();
 

@@ -74,12 +74,12 @@ public class ColorRangePresenter extends AbstractColorMapPresenter {
 
 
         lowValueAdapter = new BoundedRangeAdapter(new PercentageConverter(adapter.getValueModel(AbstractColorMap.LOW_CLIP_PROPERTY),
-                adapter.getValueModel(AbstractColorMap.MINIMUM_VALUE_PROPERTY),
-                adapter.getValueModel(AbstractColorMap.MAXIMUM_VALUE_PROPERTY), 100), 0, 0, 100);
+                adapter.getValueModel(IColorMap.MINIMUM_VALUE_PROPERTY),
+                adapter.getValueModel(IColorMap.MAXIMUM_VALUE_PROPERTY), 100), 0, 0, 100);
 
         highValueAdapter = new BoundedRangeAdapter(new PercentageConverter(adapter.getValueModel(AbstractColorMap.HIGH_CLIP_PROPERTY),
-                adapter.getValueModel(AbstractColorMap.MINIMUM_VALUE_PROPERTY),
-                adapter.getValueModel(AbstractColorMap.MAXIMUM_VALUE_PROPERTY), 100), 0, 0, 100);
+                adapter.getValueModel(IColorMap.MINIMUM_VALUE_PROPERTY),
+                adapter.getValueModel(IColorMap.MAXIMUM_VALUE_PROPERTY), 100), 0, 0, 100);
 
         form.getSlider1().setModel(highValueAdapter);
         form.getSlider2().setModel(lowValueAdapter);
@@ -93,8 +93,8 @@ public class ColorRangePresenter extends AbstractColorMapPresenter {
         Bindings.bind(form.getValueField2(), ConverterFactory.createStringConverter(
                 adapter.getValueModel(LinearColorMap.LOW_CLIP_PROPERTY), NumberFormat.getInstance()));  */
 
-        Bindings.bind(form.getValueField1(), adapter.getValueModel(AbstractColorMap.HIGH_CLIP_PROPERTY));
-        Bindings.bind(form.getValueField2(), adapter.getValueModel(AbstractColorMap.LOW_CLIP_PROPERTY));
+        Bindings.bind(form.getValueField1(), adapter.getValueModel(IColorMap.HIGH_CLIP_PROPERTY));
+        Bindings.bind(form.getValueField2(), adapter.getValueModel(IColorMap.LOW_CLIP_PROPERTY));
     }
 
 

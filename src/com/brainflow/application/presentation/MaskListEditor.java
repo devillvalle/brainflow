@@ -1,37 +1,30 @@
 package com.brainflow.application.presentation;
 
+import com.brainflow.colormap.RangeCellEditor;
+import com.brainflow.colormap.RangeCellRenderer;
 import com.brainflow.core.*;
-import com.brainflow.utils.IRange;
-import com.brainflow.utils.Range;
+import com.brainflow.display.ThresholdRange;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.analyze.AnalyzeIO;
 import com.brainflow.image.operations.BinaryOperation;
-import com.brainflow.display.ThresholdRange;
-import com.brainflow.colormap.RangeCellEditor;
-import com.brainflow.colormap.RangeCellRenderer;
-
-
-import com.jidesoft.grid.*;
+import com.brainflow.utils.IRange;
+import com.brainflow.utils.Range;
 import com.jidesoft.combobox.ListComboBox;
+import com.jidesoft.grid.*;
 import com.jidesoft.swing.JideSwingUtilities;
 
-import javax.swing.table.AbstractTableModel;
 import javax.swing.*;
-
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
+import javax.swing.table.AbstractTableModel;
 import java.awt.*;
-
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.beans.IndexedPropertyChangeEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.IndexedPropertyChangeEvent;
-
-import de.javasoft.plaf.synthetica.SyntheticaLookAndFeel;
-import de.javasoft.plaf.synthetica.SyntheticaSkyMetallicLookAndFeel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -88,35 +81,34 @@ public class MaskListEditor {
         maskTable.setDefaultRenderer(IRange.class, new RangeCellRenderer());
         maskTable.setDefaultEditor(BinaryOperation.class, new OpCellEditor());
 
-
         /*final JButton addButton = new JButton("Add Row");
-        final JButton removeButton = new JButton("Remove Row");
-        removeButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (tableModel.getRowCount() > 1) {
-                    tableModel.deleteRow();
-                }
+     final JButton removeButton = new JButton("Remove Row");
+     removeButton.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent e) {
+             if (tableModel.getRowCount() > 1) {
+                 tableModel.deleteRow();
+             }
 
-                if (tableModel.getRowCount() == 1) {
-                    removeButton.setEnabled(false);
-                }
-            }
-        });
+             if (tableModel.getRowCount() == 1) {
+                 removeButton.setEnabled(false);
+             }
+         }
+     });
 
-        addButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                tableModel.addRow();
-                if (tableModel.getRowCount() > 1) {
-                    removeButton.setEnabled(true);
+     addButton.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent e) {
+             tableModel.addRow();
+             if (tableModel.getRowCount() > 1) {
+                 removeButton.setEnabled(true);
 
-                }
-            }
-        });
+             }
+         }
+     });
 
-        JPanel panel = new JPanel();
-        panel.add(addButton);
-        panel.add(removeButton);
-        add(panel, BorderLayout.SOUTH);  */
+     JPanel panel = new JPanel();
+     panel.add(addButton);
+     panel.add(removeButton);
+     add(panel, BorderLayout.SOUTH);  */
 
 
         initColumns();
@@ -146,7 +138,7 @@ public class MaskListEditor {
         this.model = model;
         AbstractLayer layer = model.getLayer(model.getSelectedIndex());
         if (layer instanceof ImageLayer) {
-            ImageLayer ilayer = (ImageLayer)layer;
+            ImageLayer ilayer = (ImageLayer) layer;
             maskList = ilayer.getMaskList();
             tableModel.fireTableDataChanged();
         } else {
@@ -170,19 +162,17 @@ public class MaskListEditor {
     public static void main(String[] args) {
         try {
             com.jidesoft.utils.Lm.verifyLicense("UIN", "BrainFlow", "S5XiLlHH0VReaWDo84sDmzPxpMJvjP3");
-            SyntheticaLookAndFeel lf = new SyntheticaSkyMetallicLookAndFeel();
 
-            UIManager.setLookAndFeel(lf);
             URL url = ClassLoader.getSystemResource("resources/data/icbm452_atlas_probability_temporal.hdr");
             IImageData data = AnalyzeIO.readAnalyzeImage(url);
 
 
             IImageDisplayModel model = new ImageDisplayModel("none");
-            model.addLayer(new ImageLayer3D(data, new ImageLayerProperties(new Range(0,256))));
+            model.addLayer(new ImageLayer3D(data, new ImageLayerProperties(new Range(0, 256))));
 
             url = ClassLoader.getSystemResource("resources/data/icbm452_atlas_probability_gray.hdr");
             data = AnalyzeIO.readAnalyzeImage(url);
-            model.addLayer(new ImageLayer3D(data, new ImageLayerProperties(new Range(0,256))));
+            model.addLayer(new ImageLayer3D(data, new ImageLayerProperties(new Range(0, 256))));
 
             ImageMaskList mlist = new ImageMaskList(new ImageLayer3D(data));
             mlist.addMask(new ImageMaskItem(new ImageLayer3D(data), new ThresholdRange(0, 12000), 1));
@@ -273,7 +263,7 @@ public class MaskListEditor {
             switch (columnIndex) {
                 case 0:
                     IMaskItem item = maskList.getMaskItem(rowIndex);
-                    item.setSource((AbstractLayer)aValue);
+                    item.setSource((AbstractLayer) aValue);
                     //maskList.getMaskItem(rowIndex).setSource((IImageData3D) aValue);
                     break;
                 case 1:
@@ -358,13 +348,13 @@ public class MaskListEditor {
 
 
     class OpCellEditor extends ListComboBoxCellEditor implements ItemListener {
-        
+
         public OpCellEditor() {
             super(new DefaultComboBoxModel(new BinaryOperation[]{BinaryOperation.AND, BinaryOperation.OR}));
         }
 
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-           _comboBox.setSelectedItem(maskList.getMaskItem(row).getOperation());
+            _comboBox.setSelectedItem(maskList.getMaskItem(row).getOperation());
             return super.getTableCellEditorComponent(table, value, isSelected, row, column);
         }
 
@@ -379,7 +369,7 @@ public class MaskListEditor {
         public MaskCellEditor() {
             comboBox.setBorder(BorderFactory.createEmptyBorder());
             comboBox.setEditable(false);
-            
+
         }
 
         public Object getCellEditorValue() {
@@ -413,7 +403,7 @@ public class MaskListEditor {
         }
 
         public void itemStateChanged(ItemEvent e) {
-          
+
             comboBox.removeItemListener(this);
             stopCellEditing();
 

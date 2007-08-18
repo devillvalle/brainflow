@@ -45,6 +45,8 @@ public interface IImageDisplayModel {
 
     public void swapLayers(int index0, int index1);
 
+    public void rotateLayers();
+
     public void removeLayer(int layer);
 
     public void removeLayer(AbstractLayer layer);

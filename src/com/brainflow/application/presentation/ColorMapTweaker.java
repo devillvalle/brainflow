@@ -8,8 +8,6 @@ import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.colormap.forms.SimpleColorEditor;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
-import de.javasoft.plaf.synthetica.SyntheticaLookAndFeel;
-import de.javasoft.plaf.synthetica.SyntheticaStandardLookAndFeel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -146,9 +144,7 @@ public class ColorMapTweaker {
     }
 
     public static void main(String[] args) throws Exception {
-        SyntheticaLookAndFeel lf = new SyntheticaStandardLookAndFeel();
 
-        javax.swing.UIManager.setLookAndFeel(lf);
         JFrame jf = new JFrame();
         ColorMapTweaker tweaker = new ColorMapTweaker(new LinearColorMap(0, 255, ColorTable.SPECTRUM));
         jf.add(tweaker.getComponent());

@@ -6,11 +6,7 @@ import com.brainflow.application.actions.RemoveLoadableImageAction;
 import com.brainflow.application.services.LoadableImageStatusEvent;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.LinearColorMap;
-import com.brainflow.core.ImageDisplayModel;
-import com.brainflow.core.ImageLayer;
-import com.brainflow.core.ImageLayer3D;
-import com.brainflow.core.SnapShooter;
-import com.brainflow.core.ImageLayerProperties;
+import com.brainflow.core.*;
 import com.brainflow.gui.AbstractPresenter;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.Anatomy3D;
@@ -138,6 +134,7 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
             case IMAGE_LOADED:
                 break;
             case IMAGE_REGISTERED:
+                System.out.println("image : " + event.getLoadableImage() + " is registered");
                 imageList.add(event.getLoadableImage());
                 imageTableModel.update();
                 break;

@@ -2,12 +2,8 @@ package com.brainflow.application.actions;
 
 import com.brainflow.application.presentation.ColorBandChartPresenter;
 import com.brainflow.colormap.IColorMap;
-import com.brainflow.colormap.LinearColorMap;
-import com.brainflow.colormap.ColorTable;
-import com.brainflow.core.ImageView;
 import com.brainflow.core.ImageCanvas2;
-import com.brainflow.display.Property;
-import com.jidesoft.dialog.JideOptionPane;
+import com.brainflow.core.ImageView;
 import org.bushe.swing.action.BasicAction;
 
 import javax.swing.*;
@@ -60,22 +56,22 @@ public class DesignColorMapAction extends BasicAction {
             IColorMap oldMap = view.getModel().getLayer(layer).
                     getImageLayerProperties().getColorMap().getProperty();
 
-            if (oldMap instanceof LinearColorMap) {
-                LinearColorMap lmap = (LinearColorMap) oldMap;
-                LinearColorMap copyMap = lmap.copy();
+            //if (oldMap instanceof LinearColorMap) {
+            // todo fix me
+            //IColorMap copyMap = oldMap.copy();
 
-                ColorBandChartPresenter presenter = new ColorBandChartPresenter(view.getModel().getLayer(layer).
-                        getImageLayerProperties().getColorMap());
-                int ret = JOptionPane.showOptionDialog(JOptionPane.getFrameForComponent(presenter.getComponent()), presenter.getComponent(), "Design Color Map", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
-                        null, null, null);
+            ColorBandChartPresenter presenter = new ColorBandChartPresenter(view.getModel().getLayer(layer).
+                    getImageLayerProperties().getColorMap());
+            int ret = JOptionPane.showOptionDialog(JOptionPane.getFrameForComponent(presenter.getComponent()), presenter.getComponent(), "Design Color Map", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
+                    null, null, null);
 
-                if (ret != JOptionPane.OK_OPTION) {
-                    view.getModel().getLayer(layer).
-                            getImageLayerProperties().getColorMap().setProperty(copyMap);
-
-                }
+            if (ret != JOptionPane.OK_OPTION) {
+                view.getModel().getLayer(layer).
+                        getImageLayerProperties().getColorMap().setProperty(oldMap);
 
             }
+
+            // }
         }
 
 

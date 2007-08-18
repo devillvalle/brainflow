@@ -1,13 +1,13 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.colormap.*;
+import com.brainflow.core.ImageView;
 import com.brainflow.display.Property;
 import com.brainflow.utils.ResourceLoader;
-import com.brainflow.core.ImageView;
 import com.jgoodies.binding.beans.DelayedPropertyChangeHandler;
 import com.jidesoft.dialog.ButtonPanel;
-import com.jidesoft.swing.JideBoxLayout;
 import com.jidesoft.grid.TableUtils;
+import com.jidesoft.swing.JideBoxLayout;
 import org.bushe.swing.action.BasicAction;
 
 import javax.imageio.ImageIO;
@@ -57,7 +57,7 @@ public class ColorMapTablePresenter extends AbstractColorMapPresenter {
                 IColorMap cmap = colorTable.getModel().setTableSize(n.intValue());
 
                 colorTable.getComponent().getSelectionModel().clearSelection();
-                 ColorMapTablePresenter.this.getColorMapParameter().setProperty(cmap);
+                ColorMapTablePresenter.this.getColorMapParameter().setProperty(cmap);
 
             }
         });
@@ -178,7 +178,6 @@ public class ColorMapTablePresenter extends AbstractColorMapPresenter {
                 }
                 // assuming contiguous
 
-                // assuming contiguous
 
                 int r1 = rows[0];
                 int r2 = rows[rows.length - 1];
@@ -193,6 +192,7 @@ public class ColorMapTablePresenter extends AbstractColorMapPresenter {
                 table.setSelectionModel(model);
 
             } else {
+                //todo this is not professional
                 System.out.println("not a ragged color map");
             }
 
@@ -200,7 +200,7 @@ public class ColorMapTablePresenter extends AbstractColorMapPresenter {
 
 
         public boolean shouldBeEnabled() {
-            
+
             return false;
         }
     }

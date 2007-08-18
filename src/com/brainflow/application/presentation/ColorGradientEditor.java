@@ -29,6 +29,7 @@ import java.util.logging.Logger;
 public class ColorGradientEditor extends JPanel {
 
     public static final String ONE_COLOR_GRADIENT = "ONE_COLOR";
+
     public static final String TWO_COLOR_GRADIENT = "TWO_COLOR";
 
 
@@ -54,8 +55,6 @@ public class ColorGradientEditor extends JPanel {
     private JRadioButton twoColorButton;
 
     private PresentationModel choiceModel;
-
-    private float intensitySlope = 0;
 
     //private ExecutorService threadService = Executors.newSingleThreadExecutor();
 

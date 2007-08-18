@@ -1,9 +1,7 @@
 package com.brainflow.colormap;
 
-import com.brainflow.image.data.IImageData;
-import com.brainflow.image.data.RGBAImage;
 import com.brainflow.image.data.IImageData2D;
-import com.brainflow.utils.IRange;
+import com.brainflow.image.data.RGBAImage;
 
 import java.awt.*;
 import java.beans.PropertyChangeListener;
@@ -18,6 +16,16 @@ import java.util.ListIterator;
  */
 public interface IColorMap {
 
+    public static final String HIGH_CLIP_PROPERTY = "highClip";
+
+    public static final String LOW_CLIP_PROPERTY = "lowClip";
+
+    public static final String MAP_SIZE_PROPERTY = "mapSize";
+
+    public static final String MAXIMUM_VALUE_PROPERTY = "maximumValue";
+
+    public static final String MINIMUM_VALUE_PROPERTY = "minimumValue";
+
     public static final int MAXIMUM_INTERVALS = 1000;
 
     public int getMapSize();
@@ -26,7 +34,13 @@ public interface IColorMap {
 
     public Color getColor(double value);
 
-    
+    public double getHighClip();
+
+    public double getLowClip();
+
+    public void setHighClip(double clip);
+
+    public void setLowClip(double clip);
 
     public double getMaximumValue();
 

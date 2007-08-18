@@ -163,6 +163,10 @@ public class BasicImageSliceRenderer implements SliceRenderer {
         InterpolationMethod interp = dprops.getResampleInterpolation().getProperty();
         ImageSpace2D ispace = (ImageSpace2D) getData().getImageSpace();
 
+        // interval / resolution = image width
+        // 256 / 4 = 64
+        // 256 / 2 = 128
+
         double sx = ispace.getImageAxis(Axis.X_AXIS).getRange().getInterval() / ispace.getDimension(Axis.X_AXIS);
         double sy = ispace.getImageAxis(Axis.Y_AXIS).getRange().getInterval() / ispace.getDimension(Axis.Y_AXIS);
 

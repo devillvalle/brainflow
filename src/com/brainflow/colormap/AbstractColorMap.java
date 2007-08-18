@@ -1,10 +1,9 @@
 package com.brainflow.colormap;
 
-import com.brainflow.image.data.RGBAImage;
 import com.brainflow.image.data.IImageData2D;
+import com.brainflow.image.data.RGBAImage;
 import com.brainflow.image.data.UByteImageData2D;
 import com.brainflow.image.iterators.ImageIterator;
-import com.brainflow.image.space.ImageSpace2D;
 
 import java.awt.*;
 import java.beans.PropertyChangeListener;
@@ -23,16 +22,6 @@ public abstract class AbstractColorMap implements IColorMap {
 
     public static final String COLORS_CHANGED_PROPERTY = "colorsChanged";
 
-    public static final String HIGH_CLIP_PROPERTY = "highClip";
-
-    public static final String LOW_CLIP_PROPERTY = "lowClip";
-
-    public static final String MAP_SIZE_PROPERTY = "mapSize";
-
-    public static final String MAXIMUM_VALUE_PROPERTY = "maximumValue";
-
-    public static final String MINIMUM_VALUE_PROPERTY = "minimumValue";
-
 
     private double minimumValue;
 
@@ -41,7 +30,6 @@ public abstract class AbstractColorMap implements IColorMap {
     protected double lowClip;
 
     protected double highClip;
-
 
 
     protected PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
@@ -65,7 +53,7 @@ public abstract class AbstractColorMap implements IColorMap {
         maximumValue = _max;
     }
 
-     protected void setMinimumValue(double _min) {
+    protected void setMinimumValue(double _min) {
         minimumValue = _min;
     }
 
@@ -100,19 +88,16 @@ public abstract class AbstractColorMap implements IColorMap {
         return new double[]{low, high};
     }
 
-  
 
     public double getHighClip() {
         return highClip;
     }
 
-    public abstract void setHighClip(double _highClip);
 
     public double getLowClip() {
         return lowClip;
     }
 
-    public abstract void setLowClip(double _lowClip);
 
     public abstract ListIterator<ColorInterval> iterator();
 
@@ -161,10 +146,10 @@ public abstract class AbstractColorMap implements IColorMap {
         }
 
         RGBAImage rgbaimage = new RGBAImage(data,
-                new UByteImageData2D((ImageSpace2D) data.getImageSpace(), rgba[0]),
-                new UByteImageData2D((ImageSpace2D) data.getImageSpace(), rgba[1]),
-                new UByteImageData2D((ImageSpace2D) data.getImageSpace(), rgba[2]),
-                new UByteImageData2D((ImageSpace2D) data.getImageSpace(), rgba[3]));
+                new UByteImageData2D(data.getImageSpace(), rgba[0]),
+                new UByteImageData2D(data.getImageSpace(), rgba[1]),
+                new UByteImageData2D(data.getImageSpace(), rgba[2]),
+                new UByteImageData2D(data.getImageSpace(), rgba[3]));
 
         return rgbaimage;
 

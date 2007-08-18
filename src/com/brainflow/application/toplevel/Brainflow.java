@@ -682,8 +682,8 @@ public class Brainflow {
             if (ret == JOptionPane.YES_OPTION) {
                 limg.releaseData();
             }
-
-
+        } else {
+            manager.register(limg);
         }
 
     }
@@ -721,6 +721,7 @@ public class Brainflow {
 
     public void loadAndDisplay(ILoadableImage limg, ImageView view, boolean fadeIn) {
         if (limg != null) {
+
             register(limg);
             IImageData data = null;
             data = limg.getData();

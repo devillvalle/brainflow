@@ -7,7 +7,6 @@ import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
-import com.brainflow.image.space.ICoordinateSpace;
 import com.jgoodies.binding.beans.Model;
 
 import javax.swing.event.ListDataEvent;
@@ -106,7 +105,7 @@ public class Viewport3D extends Model {
     }
 
     public boolean inBounds(AnatomicalAxis axis, double val) {
-        return bounds.getImageAxis(axis,true).getRange().contains(val);       
+        return bounds.getImageAxis(axis, true).getRange().contains(val);
     }
 
     public double getXAxisMin() {
@@ -122,6 +121,7 @@ public class Viewport3D extends Model {
         setZAxisExtent(bounds.getImageAxis(Axis.Z_AXIS).getRange().getInterval());
 
     }
+
 
     public AnatomicalAxis getXAxis() {
         return bounds.getAnatomicalAxis(Axis.X_AXIS);
@@ -189,8 +189,8 @@ public class Viewport3D extends Model {
 
     public void setAxesRange(AnatomicalAxis axis1, double min1, double max1,
                              AnatomicalAxis axis2, double min2, double max2) {
-        setAxisRange(axis1, min1, max1-min1);
-        setAxisRange(axis2, min2, max2-min2);
+        setAxisRange(axis1, min1, max1 - min1);
+        setAxisRange(axis2, min2, max2 - min2);
 
 
     }
@@ -292,8 +292,7 @@ public class Viewport3D extends Model {
             //yAxisMin = bounds.getImageAxis(Axis.Y_AXIS).getRange().getMinimum();
         }
 
-
-        double oldValue = this.YAxisMin;
+        //double oldValue = this.YAxisMin;
         this.YAxisMin = yAxisMin;
         this.YAxisMax = YAxisMin + YAxisExtent;
 

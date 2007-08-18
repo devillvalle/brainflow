@@ -114,8 +114,11 @@ public class CanvasBar2 extends ImageViewPresenter {
 
 
         int selIdx = getSelectedView().getSelectedIndex();
-        JToggleButton button = (JToggleButton) layerButtonList.get(selIdx);
-        buttonGroup.setSelected(button.getModel(), true);
+
+        if (selIdx >= 0 && getSelectedView().getModel().getNumLayers() > 0) {
+            JToggleButton button = (JToggleButton) layerButtonList.get(selIdx);
+            buttonGroup.setSelected(button.getModel(), true);
+        }
 
         toggleBar.revalidate();
         toggleBar.repaint();

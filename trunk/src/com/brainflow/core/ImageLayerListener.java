@@ -9,7 +9,7 @@ package com.brainflow.core;
  */
 public interface ImageLayerListener {
 
-    
+
     public void thresholdChanged(ImageLayerEvent event);
 
     public void colorMapChanged(ImageLayerEvent event);
@@ -20,6 +20,7 @@ public interface ImageLayerListener {
 
     public void visibilityChanged(ImageLayerEvent event);
 
+    public void smoothingChanged(ImageLayerEvent event);
 
 
 }

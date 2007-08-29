@@ -1,8 +1,10 @@
 package com.brainflow.application.presentation;
 
-import com.brainflow.core.*;
+import com.brainflow.core.AbstractLayer;
+import com.brainflow.core.ImageLayerEvent;
+import com.brainflow.core.ImageLayerListener;
+import com.brainflow.core.ImageView;
 import com.brainflow.display.Visibility;
-import com.brainflow.image.space.IImageSpace;
 import com.jgoodies.binding.adapter.ComboBoxAdapter;
 import com.jgoodies.binding.adapter.SingleListSelectionAdapter;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -11,9 +13,9 @@ import com.jidesoft.swing.CheckBoxList;
 import com.jidesoft.swing.CheckBoxListSelectionModel;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  * Created by IntelliJ IDEA.
@@ -182,6 +184,9 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
             setImageView(_view);
         }
 
+        public void smoothingChanged(ImageLayerEvent event) {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
 
         public void thresholdChanged(ImageLayerEvent event) {
             //To change body of implemented methods use File | Settings | File Templates.

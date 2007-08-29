@@ -34,6 +34,8 @@ public class ImageCanvas2 extends JComponent implements InternalFrameListener {
 
     private List<ImageViewInteractor> interactors = new ArrayList<ImageViewInteractor>();
 
+    private DisplayModelListener modelListener = new DisplayModelListener();
+
 
     public ImageCanvas2() {
         super();
@@ -176,7 +178,7 @@ public class ImageCanvas2 extends JComponent implements InternalFrameListener {
 
 
     public void removeImageView(ImageView view) {
-
+        view.getModel().removeImageDisplayModelListener(modelListener);
         canvasModel.removeImageView(view);
         JInternalFrame[] frames = desktopPane.getAllFrames();
         for (int i = 0; i < frames.length; i++) {
@@ -185,7 +187,8 @@ public class ImageCanvas2 extends JComponent implements InternalFrameListener {
             }
         }
 
-        desktopPane.revalidate();
+
+        desktopPane.repaint();
 
 
     }
@@ -196,39 +199,24 @@ public class ImageCanvas2 extends JComponent implements InternalFrameListener {
         view.setSize(view.getPreferredSize());
         JInternalFrame jframe = new JInternalFrame("view", true, true, true, true);
 
-        view.getModel().addImageDisplayModelListener(new ImageDisplayModelListener() {
-            public void imageSpaceChanged(IImageDisplayModel model, IImageSpace space) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
+        view.getModel().addImageDisplayModelListener(modelListener);
 
-            public void intervalAdded(ListDataEvent e) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void intervalRemoved(ListDataEvent e) {
-                IImageDisplayModel model = (IImageDisplayModel) e.getSource();
-                if (model.getNumLayers() == 0) {
-                    List<ImageView> views = getViews(model);
-                    for (ImageView view : views) {
-                        removeImageView(view);
-                    }
-                }
-            }
-
-            public void contentsChanged(ListDataEvent e) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-        });
 
         jframe.setContentPane(view);
         jframe.setSize(view.getSize());
+        Dimension d = desktopPane.getSize();
+        Point p = desktopPane.getLocation();
+        jframe.setLocation((int) (p.x + .25 * d.width), (int) (p.y + .25 * d.height));
+
         jframe.setVisible(true);
         jframe.addInternalFrameListener(this);
+
         //desktopPane.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
 
 
         canvasModel.addImageView(view);
         desktopPane.add(jframe);
+        jframe.moveToFront();
 
 
     }
@@ -249,7 +237,6 @@ public class ImageCanvas2 extends JComponent implements InternalFrameListener {
 
 
     public void internalFrameDeactivated(InternalFrameEvent e) {
-
 
     }
 
@@ -275,6 +262,7 @@ public class ImageCanvas2 extends JComponent implements InternalFrameListener {
 
     public void internalFrameActivated(InternalFrameEvent e) {
         JInternalFrame frame = e.getInternalFrame();
+
         Component c = frame.getContentPane();
         if (c instanceof ImageView) {
             ImageView sel = (ImageView) c;
@@ -284,4 +272,31 @@ public class ImageCanvas2 extends JComponent implements InternalFrameListener {
             updateSelection(null);
         }
     }
+
+
+    class DisplayModelListener implements ImageDisplayModelListener {
+        public void imageSpaceChanged(IImageDisplayModel model, IImageSpace space) {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public void intervalAdded(ListDataEvent e) {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public void intervalRemoved(ListDataEvent e) {
+            IImageDisplayModel model = (IImageDisplayModel) e.getSource();
+            if (model.getNumLayers() == 0) {
+                List<ImageView> views = getViews(model);
+                for (ImageView view : views) {
+                    removeImageView(view);
+                }
+            }
+        }
+
+        public void contentsChanged(ListDataEvent e) {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+    }
+
 }
+

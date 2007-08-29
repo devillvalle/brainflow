@@ -1,13 +1,10 @@
 package com.brainflow.application.services;
 
+import com.brainflow.core.ImageView;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import org.bushe.swing.event.AbstractEventServiceEvent;
 
 import java.awt.event.MouseEvent;
-import java.awt.*;
-
-import com.brainflow.core.ImageView;
-import com.brainflow.image.anatomy.AnatomicalPointOnGrid;
-import com.brainflow.image.anatomy.AnatomicalPoint3D;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,7 +36,6 @@ public class ImageViewMouseEvent extends AbstractEventServiceEvent {
 
     public AnatomicalPoint3D getLocation() {
         return null;
-        //return iview.getLocation((Component)event.getSource(), event.getPoint());
     }
 
 

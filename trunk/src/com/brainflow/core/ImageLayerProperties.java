@@ -3,9 +3,9 @@ package com.brainflow.core;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMap;
-import com.brainflow.utils.Range;
-import com.brainflow.utils.IRange;
 import com.brainflow.display.*;
+import com.brainflow.utils.IRange;
+import com.brainflow.utils.Range;
 import com.jgoodies.binding.list.SelectionInList;
 
 import java.awt.image.IndexColorModel;
@@ -30,13 +30,15 @@ public class ImageLayerProperties implements Serializable {
 
     public static final String COLOR_MAP_PROPERTY = "colorMap";
 
-    public static final String VISIBLE_PROPERTY  = "visible";
+    public static final String VISIBLE_PROPERTY = "visible";
 
-    public static final String IMAGEOP_PROPERTY  = "imageOpList";
+    public static final String IMAGEOP_PROPERTY = "imageOpList";
 
     public static final String OPACITY_PROPERTY = "opacity";
 
-    
+    public static final String SMOOTHING_PROPERTY = "smoothing";
+
+
     private Property<IColorMap> colorMap;
 
     private Property<InterpolationMethod> resampleInterpolation;
@@ -47,12 +49,13 @@ public class ImageLayerProperties implements Serializable {
 
     private Property<Opacity> opacity;
 
+    private Property<SmoothingRadius> smoothing;
+
     private Property<ThresholdRange> threshold;
 
-  
 
     private SelectionInList interpolationMethod;
-    
+
 
     public ImageLayerProperties(IRange _dataRange) {
         IColorMap imap = new LinearColorMap(_dataRange.getMin(), _dataRange.getMax(), ColorTable.GRAYSCALE);
@@ -70,7 +73,6 @@ public class ImageLayerProperties implements Serializable {
     }
 
 
-  
     private void init(IColorMap map) {
 
         colorMap = new Property<IColorMap>(map);
@@ -78,11 +80,11 @@ public class ImageLayerProperties implements Serializable {
         visible = new Property<Visibility>(new Visibility(this, true));
         imageOpList = new Property<ImageOpListProperty>(new ImageOpListProperty());
         opacity = new Property<Opacity>(new Opacity(1f));
+
+        smoothing = new Property<SmoothingRadius>(new SmoothingRadius(0));
         interpolationMethod = new SelectionInList(InterpolationHint.values(), resampleInterpolation.getModel(InterpolationMethod.INTERPOLATION_PROPERTY));
         threshold = new Property<ThresholdRange>(new ThresholdRange(map.getMinimumValue(),
                 map.getMinimumValue(), new Range(map.getMinimumValue(), map.getMaximumValue())));
-
-
 
 
     }
@@ -95,6 +97,9 @@ public class ImageLayerProperties implements Serializable {
         return threshold;
     }
 
+    public Property<SmoothingRadius> getSmoothing() {
+        return smoothing;
+    }
 
     public Property<Visibility> getVisible() {
         return visible;
@@ -120,9 +125,6 @@ public class ImageLayerProperties implements Serializable {
     public Property<ImageOpListProperty> getImageOpList() {
         return imageOpList;
     }
-
-
-
 
 
 }

@@ -12,9 +12,6 @@ package com.brainflow.application.presentation;
 import com.brainflow.gui.AbstractPresenter;
 import com.jidesoft.pane.CollapsiblePane;
 import com.jidesoft.pane.CollapsiblePanes;
-import com.jidesoft.plaf.longhorn.LonghornCollapsiblePaneUI;
-import com.jidesoft.plaf.office2003.Office2003CollapsiblePaneUI;
-import com.jidesoft.plaf.vsnet.VsnetCollapsiblePaneUI;
 
 import javax.swing.*;
 import java.beans.PropertyVetoException;
@@ -33,11 +30,11 @@ public class ColorAdjustmentControl {
 
     private ThresholdRangePresenter thresholdRangePresenter;
 
-    private OpacityPresenter opacityPresenter;
-    
+    private RenderingParamsPresenter renderParamsPresenter;
+
     private ColorBarPresenter colorBarPresenter;
 
-    private InterpolationPresenter interpolationPresenter;
+    //private InterpolationPresenter interpolationPresenter;
 
     /**
      * Creates a new instance of LayerControlPanel
@@ -64,7 +61,7 @@ public class ColorAdjustmentControl {
 
         try {
             cp.setCollapsed(collapsed);
-        } catch(PropertyVetoException e ) {
+        } catch (PropertyVetoException e) {
             // not that important ...
         }
 
@@ -87,13 +84,13 @@ public class ColorAdjustmentControl {
         addCollapsiblePane(colorRangePresenter, "Color Range", false);
 
         thresholdRangePresenter = new ThresholdRangePresenter();
-        addCollapsiblePane(thresholdRangePresenter, "Thresholds", true);
+        addCollapsiblePane(thresholdRangePresenter, "Thresholds", false);
 
-        opacityPresenter = new OpacityPresenter();
-        addCollapsiblePane(opacityPresenter, "Opacity", true);
+        renderParamsPresenter = new RenderingParamsPresenter();
+        addCollapsiblePane(renderParamsPresenter, "Rendering", false);
 
-        interpolationPresenter = new InterpolationPresenter();
-        addCollapsiblePane(interpolationPresenter, "Resample Method", true);
+        //interpolationPresenter = new InterpolationPresenter();
+        //addCollapsiblePane(interpolationPresenter, "Resample Method", true);
 
         cpanes.addExpansion();
 

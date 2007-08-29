@@ -50,6 +50,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 
@@ -111,18 +112,20 @@ public class Brainflow {
 
             //UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
 
-
-            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceModerateLookAndFeel());
+            //UIManager.setLookAndFeel(new SubstanceMistSilverLookAndFeel());
+            //UIManager.setLookAndFeel(new A03LookAndFeel());
             //UIManager.setLookAndFeel(lf);
-            //LookAndFeelFactory.installDefaultLookAndFeel();
-            LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
-            //LookAndFeelFactory.installJideExtension(LookAndFeelFactory.OFFICE2003_STYLE);
+            LookAndFeelFactory.installDefaultLookAndFeel();
+            //LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
+            LookAndFeelFactory.installJideExtension(LookAndFeelFactory.OFFICE2003_STYLE);
         } catch (Exception e) {
             Logger.getAnonymousLogger().severe("Error Loading LookAndFeel, exiting");
             e.printStackTrace();
             System.exit(-1);
 
         }
+
+
         final Brainflow bflow = getInstance();
 
         SwingUtilities.invokeLater(new Runnable() {
@@ -244,6 +247,10 @@ public class Brainflow {
         CommandGroup imageViewGroup = new CommandGroup("image-view-menu");
         imageViewGroup.bind(brainFrame);
 
+
+    }
+
+    private void initializeLogging() {
 
     }
 
@@ -501,6 +508,7 @@ public class Brainflow {
         initLoadableImageTableView();
         initControlPanel();
         initEventBusMonitor();
+        initLogMonitor();
 
 
         brainFrame.getDockingManager().beginLoadLayoutData();
@@ -597,6 +605,24 @@ public class Brainflow {
 
         dframe.getContentPane().add(new JScrollPane(loadView.getComponent()));
         dframe.setPreferredSize(new Dimension(275, 200));
+        brainFrame.getDockingManager().addFrame(dframe);
+
+    }
+
+    private void initLogMonitor() {
+        DockableFrame dframe = DockWindowManager.getInstance().createDockableFrame("Log Monitor",
+                "resources/icons/console_view.gif",
+                DockContext.STATE_AUTOHIDE,
+                DockContext.DOCK_SIDE_SOUTH,
+                1);
+
+
+        LogMonitor monitor = new LogMonitor();
+        monitor.setLevel(Level.FINEST);
+        LogManager.getLogManager().getLogger("").addHandler(monitor);
+        dframe.getContentPane().add(new JScrollPane(monitor.getComponent()));
+
+        dframe.setPreferredSize(new Dimension(800, 200));
         brainFrame.getDockingManager().addFrame(dframe);
 
     }

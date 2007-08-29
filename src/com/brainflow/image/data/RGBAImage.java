@@ -1,8 +1,10 @@
 package com.brainflow.image.data;
 
-import com.brainflow.image.space.ImageSpace2D;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
+import com.brainflow.image.space.ImageSpace2D;
+
+import java.awt.image.BufferedImage;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,9 +28,9 @@ public class RGBAImage {
 
     public RGBAImage(IImageData2D source, UByteImageData2D red, UByteImageData2D green, UByteImageData2D blue, UByteImageData2D alpha) {
         if (!checkSpace(red.getImageSpace(),
-                        green.getImageSpace(),
-                        blue.getImageSpace(),
-                        alpha.getImageSpace())) {
+                green.getImageSpace(),
+                blue.getImageSpace(),
+                alpha.getImageSpace())) {
             throw new IllegalArgumentException("All image bands mut have equivalent image spaces");
         }
 
@@ -45,8 +47,8 @@ public class RGBAImage {
     }
 
     private boolean checkSpace(IImageSpace... spaces) {
-        for (int i=1; i<spaces.length; i++) {
-            if (!spaces[i].equals(spaces[i-1])) {
+        for (int i = 1; i < spaces.length; i++) {
+            if (!spaces[i].equals(spaces[i - 1])) {
                 return false;
             }
         }
@@ -71,19 +73,25 @@ public class RGBAImage {
     }
 
     public final byte getRed(int x, int y) {
-        return red.get(x,y);
+        return red.get(x, y);
     }
 
     public final byte getGreen(int x, int y) {
-        return green.get(x,y);
+        return green.get(x, y);
     }
 
     public final byte getBlue(int x, int y) {
-        return blue.get(x,y);
+        return blue.get(x, y);
     }
 
     public final byte getAlpha(int x, int y) {
-        return alpha.get(x,y);
+        return alpha.get(x, y);
+    }
+
+    public BufferedImage getAsBufferedImage() {
+        return null;
+        //BufferedImage.
+
     }
 
     public UByteImageData2D getRed() {
@@ -111,18 +119,18 @@ public class RGBAImage {
         red = _red;
     }
 
-     public void setGreen(UByteImageData2D _green) {
+    public void setGreen(UByteImageData2D _green) {
         if (!_green.getImageSpace().equals(green.getImageSpace())) {
             throw new IllegalArgumentException("incomaptible image space");
         }
     }
 
-     public void setBlue(UByteImageData2D _blue) {
+    public void setBlue(UByteImageData2D _blue) {
         if (!_blue.getImageSpace().equals(blue.getImageSpace())) {
             throw new IllegalArgumentException("incomaptible image space");
         }
 
-         blue = _blue;
+        blue = _blue;
     }
 
     public void setAlpha(UByteImageData2D _alpha) {
@@ -134,6 +142,4 @@ public class RGBAImage {
     }
 
 
-
-    
 }

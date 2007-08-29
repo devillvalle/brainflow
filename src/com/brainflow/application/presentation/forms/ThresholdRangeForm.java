@@ -116,10 +116,10 @@ public class ThresholdRangeForm extends JPanel {
 
         inclusiveCheckBox = new JCheckBox("inclusive");
 
-        add(inclusiveCheckBox, cc.xyw(2, 10, 3));
+        //add(inclusiveCheckBox, cc.xyw(2, 10, 3));
 
         symmetricalCheckBox = new JCheckBox("symmetrical");
-        add(symmetricalCheckBox, cc.xy(5, 10));
+        //add(symmetricalCheckBox, cc.xy(5, 10));
 
 
     }

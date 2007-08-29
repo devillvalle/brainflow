@@ -235,6 +235,11 @@ public class CompositeImageProducer extends AbstractImageProducer {
             plot.getComponent().repaint();
         }
 
+        public void smoothingChanged(ImageLayerEvent event) {
+            pipeline.clearPath(gatherRenderersStage);
+            plot.getComponent().repaint();
+        }
+
         public void colorMapChanged(ImageLayerEvent event) {
             pipeline.clearPath(gatherRenderersStage);
             plot.getComponent().repaint();

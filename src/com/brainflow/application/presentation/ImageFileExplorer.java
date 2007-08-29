@@ -268,9 +268,10 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
         }
 
         protected List<ImageFileObjectNode> doInBackground() throws Exception {
-            log.info("fetching nodes in background");
+            log.fine("fetching image file nodes in background");
             ImageFileExplorer.this.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             List<ImageFileObjectNode> nodes = parent.fetchChildNodes(this);
+            log.fine("number of nodes " + nodes.size());
             ImageFileExplorer.this.getComponent().setCursor(Cursor.getDefaultCursor());
 
             return nodes;
@@ -449,8 +450,9 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
 
 
             try {
-
+                log.finest("fetching child nodes");
                 FileObject[] children = fileObject.findFiles(selector);
+                log.finest("found " + children.length + " nodes");
                 SoftLoadableImage[] limgs = ImageIOManager.getInstance().findLoadableImages(children);
 
                 // first add folders

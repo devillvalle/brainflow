@@ -158,6 +158,14 @@ public class ImageDisplayModel implements IImageDisplayModel {
             }
         });
 
+        layer.addPropertyChangeListener(ImageLayerProperties.SMOOTHING_PROPERTY, new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                for (ImageLayerListener listener : layerListeners) {
+                    listener.smoothingChanged(new ImageLayerEvent(ImageDisplayModel.this, (AbstractLayer) evt.getSource()));
+                }
+            }
+        });
+
         layer.addPropertyChangeListener(ImageLayerProperties.VISIBLE_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 for (ImageLayerListener listener : layerListeners) {
@@ -216,12 +224,13 @@ public class ImageDisplayModel implements IImageDisplayModel {
     }
 
     public void rotateLayers() {
+        if (getNumLayers() < 2) return;
 
         ArrayListModel newModel = new ArrayListModel();
         AbstractLayer firstLayer = getLayer(getNumLayers() - 1);
 
         newModel.add(firstLayer);
-        for (int i = 0; i < imageListModel.size(); i++) {
+        for (int i = 0; i < imageListModel.size() - 1; i++) {
             newModel.add(imageListModel.get(i));
 
 

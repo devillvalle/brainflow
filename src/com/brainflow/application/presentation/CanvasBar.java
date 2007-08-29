@@ -1,8 +1,10 @@
 package com.brainflow.application.presentation;
 
+import com.brainflow.application.actions.RotateLayersCommand;
 import com.brainflow.application.dnd.AbstractLayerTransferable;
 import com.brainflow.core.AbstractLayer;
 import com.brainflow.core.ImageView;
+import com.pietschy.command.ActionCommand;
 
 import javax.swing.*;
 import java.awt.datatransfer.DataFlavor;
@@ -36,9 +38,12 @@ public class CanvasBar extends ImageViewPresenter {
 
     private MouseAdapter dragListener = new DragListener();
 
+    private ActionCommand rotateCommand = new RotateLayersCommand();
+
 
     public CanvasBar() {
         super();
+
 
     }
 
@@ -100,6 +105,8 @@ public class CanvasBar extends ImageViewPresenter {
 
     private void repopulate() {
         toggleBar.removeAll();
+        toggleBar.add(rotateCommand.createButton());
+
         buttonGroup = new ButtonGroup();
 
         layerButtonList = createButtons();

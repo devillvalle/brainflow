@@ -1,5 +1,6 @@
 package com.brainflow.application.toplevel;
 
+import com.brainflow.gui.AbstractPresenter;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventServiceEvent;
 import org.bushe.swing.event.EventSubscriber;
@@ -12,7 +13,7 @@ import javax.swing.*;
  * Date: Feb 20, 2007
  * Time: 2:38:35 PM
  */
-public class EventBusMonitor implements EventSubscriber {
+public class EventBusMonitor extends AbstractPresenter implements EventSubscriber {
 
     private static final int MAX_LINES = 1000;
 

@@ -1,6 +1,7 @@
 package com.brainflow.image.rendering;
 
 import com.brainflow.utils.ArrayUtils;
+import com.brainflow.utils.NumberUtils;
 
 import java.awt.*;
 import java.awt.color.ColorSpace;
@@ -50,9 +51,69 @@ public class RenderUtils {
 
     } */
 
+    /*public byte[] extractData(byte[][] rgba) {
+      byte data[] = new byte[rgba.length*4];
+
+      for(int i=0;i<rgba.length;i++){
+          int pixel = pixmap[i];
+          byte a = (byte)((pixel >> 24) & 0xff);
+          byte r  = (byte)((pixel >> 16) & 0xff);
+          byte g = (byte)((pixel >>  8) & 0xff);
+          byte b = (byte)((pixel      ) & 0xff);
+
+          if(numbands == 4){
+            data[i*numbands+0] = r;
+            data[i*numbands+1] = g;
+            data[i*numbands+2]= b;
+            data[i*numbands+3] = a;
+          } else {
+            data[i*numbands+0] = r;
+            data[i*numbands+1] = g;
+            data[i*numbands+2]= b;
+          }
+      }
+      return data;
+   } */
+
+
+    public static BufferedImage createInterleavedBufferedImage(byte[][] rgba, int width, int height, boolean isPremultiplied) {
+
+
+        int[] pixels = new int[width * height];
+        for (int i = 0; i < pixels.length; i++) {
+
+            pixels[i] = (NumberUtils.ubyte(rgba[3][i]) << 24) | (NumberUtils.ubyte(rgba[0][i]) << 16) | (NumberUtils.ubyte(rgba[1][i]) << 8) | NumberUtils.ubyte(rgba[2][i]);
+
+
+        }
+
+        DataBuffer buffer = new DataBufferInt(pixels, width * height);
+
+        //DirectColorModel dcm = new DirectColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB),
+        //        32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000, false, DataBuffer.TYPE_INT);
+
+
+        SinglePixelPackedSampleModel sm = new SinglePixelPackedSampleModel(DataBuffer.TYPE_INT, width, height,
+                new int[]{0xff0000, 0xff00, 0xff, 0xff000000});
+
+        WritableRaster raster = Raster.createWritableRaster(sm, buffer, new Point(0, 0));
+
+        BufferedImage bimg = null;
+        if (isPremultiplied) {
+            bimg = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR_PRE);
+        } else {
+            bimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        }
+        bimg.setData(raster);
+
+        return bimg;
+
+    }
+
 
     public static BufferedImage createBufferedImage(byte[][] rgba, int width, int height) {
         ComponentColorModel cm = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_LINEAR_RGB),
+
                 true, false, Transparency.TRANSLUCENT, DataBuffer.TYPE_BYTE);
 
         DataBufferByte buffer = new DataBufferByte(rgba, width * height);
@@ -60,7 +121,34 @@ public class RenderUtils {
 
         WritableRaster raster = Raster.createWritableRaster(sm, buffer, new Point(0, 0));
         BufferedImage bimg = new BufferedImage(cm, raster, false, null);
+
         return bimg;
+    }
+
+    public static void main(String[] args) {
+
+        GraphicsEnvironment local = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice screen = local.getDefaultScreenDevice();
+        GraphicsConfiguration config = screen.getDefaultConfiguration();
+        BufferedImage bimg = config.createCompatibleImage(256, 256, Transparency.TRANSLUCENT);
+        System.out.println(bimg.getColorModel());
+        System.out.println(bimg.getSampleModel());
+        System.out.println("pixel size " + bimg.getColorModel().getPixelSize());
+        System.out.println(bimg.getColorModel().getTransferType());
+        byte a = 127;
+        byte b = 127;
+        byte c = 127;
+        byte d = 127;
+
+        int all = (a << 24) | (b << 16) | (c << 8) | (d);
+        System.out.println("all = " + Integer.toHexString(all));
+
+        System.out.println(Integer.toHexString(all & 0xff000000));
+        System.out.println(Integer.toHexString(all & 0x00ff0000));
+        System.out.println(Integer.toHexString(all & 0x0000ff00));
+        System.out.println(Integer.toHexString(all & 0x000000ff));
+
+
     }
 
     /* public static RenderedImage createRGBAImage(byte[][] rgba, int width, int height) {
@@ -227,6 +315,7 @@ public class RenderUtils {
     }
 
     public static BufferedImage createCompatibleImage(int width, int height) {
+
         GraphicsEnvironment local = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice screen = local.getDefaultScreenDevice();
         GraphicsConfiguration config = screen.getDefaultConfiguration();

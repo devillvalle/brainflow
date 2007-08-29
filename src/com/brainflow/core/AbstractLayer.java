@@ -1,16 +1,13 @@
 package com.brainflow.core;
 
-import com.brainflow.image.space.IImageSpace;
-import com.brainflow.image.space.ICoordinateSpace;
-import com.brainflow.image.anatomy.AnatomicalPoint3D;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.display.ThresholdRange;
-import com.brainflow.colormap.IColorMap;
+import com.brainflow.image.anatomy.AnatomicalPoint1D;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.image.space.ICoordinateSpace;
 
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -122,6 +119,14 @@ public abstract class AbstractLayer {
             }
         });
 
+        properties.getSmoothing().addPropertyChangeListener(new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                support.firePropertyChange(new PropertyChangeEvent(AbstractLayer.this, ImageLayerProperties.SMOOTHING_PROPERTY,
+                        evt.getOldValue(), evt.getNewValue()));
+
+            }
+        });
+
         properties.getThresholdRange().addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 support.firePropertyChange(new PropertyChangeEvent(AbstractLayer.this, ImageLayerProperties.THRESHOLD_PROPERTY,
@@ -142,7 +147,5 @@ public abstract class AbstractLayer {
 
     public abstract String getLabel();
 
-
-    
 
 }

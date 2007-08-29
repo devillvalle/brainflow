@@ -11,6 +11,7 @@ import com.brainflow.image.data.RGBAImage;
 import com.brainflow.image.data.UByteImageData2D;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.image.operations.ImageSlicer;
+import com.brainflow.image.rendering.PixelUtils;
 import com.brainflow.image.rendering.RenderUtils;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
@@ -21,6 +22,9 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.awt.image.ConvolveOp;
+import java.awt.image.Kernel;
+import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,6 +34,8 @@ import java.awt.image.BufferedImage;
  * To change this template use File | Settings | File Templates.
  */
 public class BasicImageSliceRenderer implements SliceRenderer {
+
+    private static Logger log = Logger.getLogger(BasicImageSliceRenderer.class.getName());
 
     private AnatomicalPoint1D slice;
 
@@ -44,6 +50,8 @@ public class BasicImageSliceRenderer implements SliceRenderer {
     private RGBAImage thresholdedRGBAImage;
 
     private BufferedImage rawImage;
+
+    private BufferedImage smoothedImage;
 
     private BufferedImage resampledImage;
 
@@ -98,10 +106,19 @@ public class BasicImageSliceRenderer implements SliceRenderer {
         return rawImage;
     }
 
+    private BufferedImage getSmoothedImage() {
+        if (smoothedImage != null) return smoothedImage;
+        smoothedImage = this.smooth(getRawImage());
+
+        return smoothedImage;
+
+    }
+
     private BufferedImage getResampledImage() {
         if (resampledImage != null) return resampledImage;
 
-        resampledImage = this.resample(getRawImage());
+        resampledImage = this.resample(getSmoothedImage());
+        //resampledImage = this.convolveAlpha(resampledImage);
         return resampledImage;
 
     }
@@ -132,6 +149,8 @@ public class BasicImageSliceRenderer implements SliceRenderer {
             Composite oldComposite = g2.getComposite();
             AlphaComposite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) layer.getOpacity());
             g2.setComposite(composite);
+            g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+            g2.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
             g2.drawRenderedImage(render(), AffineTransform.getTranslateInstance(transx, transy));
             g2.setComposite(oldComposite);
         }
@@ -154,7 +173,25 @@ public class BasicImageSliceRenderer implements SliceRenderer {
         rawImage = null;
         rgbaImage = null;
         thresholdedRGBAImage = null;
+        smoothedImage = null;
         resampledImage = null;
+    }
+
+    private BufferedImage smooth(BufferedImage source) {
+        ImageLayerProperties dprops = layer.getImageLayerProperties();
+
+        double radius = dprops.getSmoothing().getProperty().getRadius();
+        if (radius < .01) return source;
+
+        ImageSpace2D ispace = (ImageSpace2D) getData().getImageSpace();
+        double sx = ispace.getImageAxis(Axis.X_AXIS).getRange().getInterval() / ispace.getDimension(Axis.X_AXIS);
+        double sy = ispace.getImageAxis(Axis.Y_AXIS).getRange().getInterval() / ispace.getDimension(Axis.Y_AXIS);
+
+        Kernel kern = PixelUtils.makeKernel((float) radius, (float) sx, (float) sy);
+
+        ConvolveOp cop = new ConvolveOp(kern);
+        return cop.filter(source, null);
+
     }
 
     private BufferedImage resample(BufferedImage source) {
@@ -163,14 +200,15 @@ public class BasicImageSliceRenderer implements SliceRenderer {
         InterpolationMethod interp = dprops.getResampleInterpolation().getProperty();
         ImageSpace2D ispace = (ImageSpace2D) getData().getImageSpace();
 
-        // interval / resolution = image width
-        // 256 / 4 = 64
-        // 256 / 2 = 128
-
         double sx = ispace.getImageAxis(Axis.X_AXIS).getRange().getInterval() / ispace.getDimension(Axis.X_AXIS);
         double sy = ispace.getImageAxis(Axis.Y_AXIS).getRange().getInterval() / ispace.getDimension(Axis.Y_AXIS);
 
-        //AffineTransform at = AffineTransform.getTranslateInstance(ox,oy);
+        // if (!source.isAlphaPremultiplied()) {
+        log.finest("premultiplying alpha prior to resize");
+        //PremultiplyFilter filter = new PremultiplyFilter();
+        //source = filter.filter(source, null);
+        //  }
+
         AffineTransform at = AffineTransform.getTranslateInstance(0, 0);
         at.scale(sx, sy);
         AffineTransformOp aop = null;
@@ -178,6 +216,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
 
         if (interp.getInterpolation() == InterpolationHint.NEAREST_NEIGHBOR) {
             aop = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+
         } else if (interp.getInterpolation() == InterpolationHint.CUBIC) {
             aop = new AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC);
         } else if (interp.getInterpolation() == InterpolationHint.LINEAR) {
@@ -186,7 +225,17 @@ public class BasicImageSliceRenderer implements SliceRenderer {
             aop = new AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC);
         }
 
-        return aop.filter(source, null);
+
+        BufferedImage ret = aop.filter(source, null);
+
+        //if (ret.isAlphaPremultiplied()) {
+        //log.finest("unpremultiplying alpha prior to resize");
+        //UnpremultiplyFilter ufilter = new UnpremultiplyFilter();
+        //ret = ufilter.filter(ret, null);
+
+        //}
+
+        return ret;
 
 
     }
@@ -203,14 +252,15 @@ public class BasicImageSliceRenderer implements SliceRenderer {
         ball[1] = bg;
         ball[2] = bb;
         ball[3] = ba;
-        BufferedImage bimg = RenderUtils.createBufferedImage(ball, rgba.getWidth(), rgba.getHeight());
+        BufferedImage bimg = RenderUtils.createInterleavedBufferedImage(ball, rgba.getWidth(), rgba.getHeight(), false);
 
         // code snippet is required because of bug in Java ImagingLib.
         // It cannot deal with component sample models... so we convert first.
-        BufferedImage ret = RenderUtils.createCompatibleImage(bimg.getWidth(), bimg.getHeight());
-        Graphics2D g2 = ret.createGraphics();
-        g2.drawRenderedImage(bimg, AffineTransform.getTranslateInstance(0, 0));
-        return ret;
+        //BufferedImage ret = RenderUtils.createCompatibleImage(bimg.getWidth(), bimg.getHeight());
+        //Graphics2D g2 = ret.createGraphics();
+        //g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        //g2.drawRenderedImage(bimg, AffineTransform.getTranslateInstance(0, 0));
+        return bimg;
     }
 
 

@@ -20,7 +20,7 @@ public class RotateLayersCommand extends BrainFlowCommand {
 
         if (view != null && view.getModel().getNumLayers() > 1) {
             IImageDisplayModel model = view.getModel();
-
+            model.rotateLayers();
             //model.swapLayers(model.getNumLayers() -1, );
         }
     }

@@ -1,7 +1,7 @@
 package com.brainflow.application.presentation;
 
-import com.brainflow.application.toplevel.ImageCanvasManager;
 import com.brainflow.application.YokeHandler;
+import com.brainflow.application.toplevel.ImageCanvasManager;
 import com.brainflow.core.IImagePlot;
 import com.brainflow.core.ImageDisplayModel;
 import com.brainflow.core.ImageView;
@@ -22,9 +22,9 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.swing.JideBorderLayout;
 
 import javax.swing.*;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
 import javax.swing.border.BevelBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -116,6 +116,7 @@ public class ImageViewportPresenter extends ImageViewPresenter {
         form.add(new JLabel("Origin: "), cc.xy(2, 6));
 
         JPanel xpan = new JPanel();
+        xpan.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         xpan.setLayout(new BoxLayout(xpan, BoxLayout.X_AXIS));
         xpan.add(new JLabel("X: "));
         xpan.add(xorigin);
@@ -241,10 +242,10 @@ public class ImageViewportPresenter extends ImageViewPresenter {
     private void updateTooltips(ImageView view) {
 
         xfovSlider.setToolTipText(view.getSelectedPlot().getXAxisRange().getAnatomicalAxis().toString() + " : " +
-                 view.getSelectedPlot().getXAxisRange().getInterval());
+                view.getSelectedPlot().getXAxisRange().getInterval());
 
         yfovSlider.setToolTipText(view.getSelectedPlot().getYAxisRange().getAnatomicalAxis().toString() + " : " +
-                 view.getSelectedPlot().getYAxisRange().getInterval());
+                view.getSelectedPlot().getYAxisRange().getInterval());
 
     }
 
@@ -272,7 +273,7 @@ public class ImageViewportPresenter extends ImageViewPresenter {
         boxAnnotation.setHeight(getBoxHeight(view));
 
         boxView.setAnnotation(boxView.getSelectedPlot(), BoxAnnotation.ID, boxAnnotation);
-       
+
         viewPanel.add(boxView);
         boxView.getSelectedPlot().getComponent().addMouseMotionListener(panner);
         boxView.getSelectedPlot().getComponent().addMouseListener((MouseListener) panner);
@@ -325,7 +326,7 @@ public class ImageViewportPresenter extends ImageViewPresenter {
                 new ValueHolder(viewport.getBounds().getImageAxis(plot.getYAxisRange().getAnatomicalAxis(), true).getRange().getInterval()), 100), 0, 0, 100);
         yfovSlider.setModel(yfovAdapter);
 
-        // this line links x and y extent so that changing one changes the other
+        // this line links zero and zero extent so that changing zero changes the other
         //PropertyConnector.connect(xextent, "value", yextent, "value");
 
     }
@@ -437,7 +438,10 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
             if (boxAnnotation.containsPoint(plot, e.getPoint())) {
                 AnatomicalPoint2D next = boxAnnotation.translateFromJava2D(plot, e.getPoint());
-                   Number xold = (Number) xorigin.getValue();
+
+
+                Number xold = (Number) xorigin.getValue();
+
                 Number yold = (Number) yorigin.getValue();
 
 
@@ -450,9 +454,8 @@ public class ImageViewportPresenter extends ImageViewPresenter {
                 }
 
 
-        
-                boxView.setToolTipText("x : " + xorigin.toString());
-                boxView.setToolTipText("y : " + yorigin.toString());
+                boxView.setToolTipText("zero : " + xorigin.toString());
+                boxView.setToolTipText("zero : " + yorigin.toString());
 
 
                 xspinnerModel.setValue(newx);

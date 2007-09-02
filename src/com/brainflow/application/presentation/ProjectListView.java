@@ -1,23 +1,21 @@
 package com.brainflow.application.presentation;
 
-import com.brainflow.core.ImageView;
-import com.brainflow.core.IImageDisplayModel;
-import com.brainflow.core.AbstractLayer;
 import com.brainflow.application.BrainflowProject;
-import com.brainflow.image.space.ICoordinateSpace;
-import com.brainflow.image.space.Axis;
+import com.brainflow.core.AbstractLayer;
+import com.brainflow.core.IImageDisplayModel;
+import com.brainflow.core.ImageView;
 import com.brainflow.image.axis.CoordinateAxis;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.CellConstraints;
+import com.brainflow.image.space.Axis;
+import com.brainflow.image.space.ICoordinateSpace;
 import com.jgoodies.binding.list.ArrayListModel;
-import com.jidesoft.swing.PartialLineBorder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.swing.JideTitledBorder;
 import com.jidesoft.swing.MultilineLabel;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
-import java.awt.*;
+import javax.swing.event.ListSelectionListener;
 import java.text.NumberFormat;
 
 /**
@@ -60,7 +58,7 @@ public class ProjectListView extends ImageViewPresenter {
 
         if (project.size() > 0) {
             selectedModel = project.getModel(0);
-            layerList = new JList(selectedModel.getSelection());
+            layerList = new JList(selectedModel.getLayerSelection());
             modelList.setSelectedIndex(0);
         } else {
             layerList = new JList();
@@ -77,15 +75,15 @@ public class ProjectListView extends ImageViewPresenter {
         layerList.setBorder(border2);
 
 
-        form.add(new JScrollPane(modelList), cc.xyw(2,2, 2));
-        form.add(new JScrollPane(layerList), cc.xyw(5,2, 2));
+        form.add(new JScrollPane(modelList), cc.xyw(2, 2, 2));
+        form.add(new JScrollPane(layerList), cc.xyw(5, 2, 2));
 
         modelList.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
                 int i = modelList.getSelectedIndex();
                 selectedModel = project.getModel(i);
 
-                layerList.setModel(selectedModel.getSelection());
+                layerList.setModel(selectedModel.getLayerSelection());
             }
         });
 
@@ -118,18 +116,17 @@ public class ProjectListView extends ImageViewPresenter {
         form.add(infoLabel, cc.xyw(2, 4, 4));
 
 
-        
     }
 
-    private String  getExtentString(CoordinateAxis axis) {
+    private String getExtentString(CoordinateAxis axis) {
         NumberFormat f = NumberFormat.getNumberInstance();
         f.setMaximumFractionDigits(1);
-        return"[" + f.format(axis.getRange().getMinimum()) + ", " + f.format(axis.getRange().getMaximum()) + "]";
-                                
+        return "[" + f.format(axis.getRange().getMinimum()) + ", " + f.format(axis.getRange().getMaximum()) + "]";
+
     }
 
     public AbstractLayer getSelectedLayer() {
-        return (AbstractLayer)layerList.getSelectedValue();
+        return (AbstractLayer) layerList.getSelectedValue();
     }
 
     public void viewSelected(ImageView view) {

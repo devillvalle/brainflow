@@ -10,6 +10,7 @@ import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.core.*;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.data.IImageData;
+import com.brainflow.utils.IRange;
 import com.brainflow.utils.Range;
 import com.brainflow.utils.StaticTimer;
 import com.jidesoft.action.CommandMenuBar;
@@ -112,12 +113,12 @@ public class Brainflow {
 
             //UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
 
-            //UIManager.setLookAndFeel(new SubstanceMistSilverLookAndFeel());
+            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceSaharaLookAndFeel());
             //UIManager.setLookAndFeel(new A03LookAndFeel());
             //UIManager.setLookAndFeel(lf);
-            LookAndFeelFactory.installDefaultLookAndFeel();
-            //LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
-            LookAndFeelFactory.installJideExtension(LookAndFeelFactory.OFFICE2003_STYLE);
+            //LookAndFeelFactory.installDefaultLookAndFeel();
+            LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
+            //LookAndFeelFactory.installJideExtension(LookAndFeelFactory.OFFICE2003_STYLE);
         } catch (Exception e) {
             Logger.getAnonymousLogger().severe("Error Loading LookAndFeel, exiting");
             e.printStackTrace();
@@ -790,8 +791,9 @@ public class Brainflow {
         //final Timer timer = new javax.swing.Timer(25, fade);
         //timer.setCoalesce(true);
         //fade.setTimer(timer);
-        ImageLayerProperties parms = new ImageLayerProperties(new LinearColorMap(limg.getData().getMinValue(), limg.getData().getMaxValue(),
-                ResourceManager.getInstance().getDefaultColorMap()));
+
+        IRange dataRange = new Range(limg.getData().getMinValue(), limg.getData().getMaxValue());
+        ImageLayerProperties parms = new ImageLayerProperties(ResourceManager.getInstance().getDefaultColorMap(), dataRange);
         ImageLayer3D layer = new ImageLayer3D(limg, parms);
 
 

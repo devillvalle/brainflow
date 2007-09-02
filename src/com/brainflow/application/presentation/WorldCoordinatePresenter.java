@@ -9,7 +9,6 @@ import com.brainflow.image.space.Axis;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
 import com.jgoodies.binding.beans.BeanAdapter;
-import com.jgoodies.binding.value.ValueHolder;
 
 import javax.swing.*;
 
@@ -61,40 +60,35 @@ public class WorldCoordinatePresenter extends AbstractPresenter {
 
 
         ImageAxis xaxis = crosshair.getViewport().getBounds().getImageAxis(Axis.X_AXIS);
-        XSliderAdapter = new BoundedRangeAdapter(new PercentageConverter(crosshairAdapter.getValueModel(Crosshair.X_VALUE_PROPERTY),
-                new ValueHolder(xaxis.getRange().getMinimum()),
-                new ValueHolder(xaxis.getRange().getMaximum()), 100), 0, 0, 100);
+        ImageAxis yaxis = crosshair.getViewport().getBounds().getImageAxis(Axis.Y_AXIS);
+        ImageAxis zaxis = crosshair.getViewport().getBounds().getImageAxis(Axis.Z_AXIS);
+
+
+        XSliderAdapter = BindingUtils.createPercentageBasedRangeModel(crosshairAdapter.getValueModel(Crosshair.X_VALUE_PROPERTY),
+                xaxis.getRange().getMinimum(), xaxis.getRange().getMaximum(), 100);
+
+
+        YSliderAdapter = BindingUtils.createPercentageBasedRangeModel(crosshairAdapter.getValueModel(Crosshair.Y_VALUE_PROPERTY),
+                yaxis.getRange().getMinimum(), yaxis.getRange().getMaximum(), 100);
+
+
+        ZSliderAdapter = BindingUtils.createPercentageBasedRangeModel(crosshairAdapter.getValueModel(Crosshair.Z_VALUE_PROPERTY),
+                zaxis.getRange().getMinimum(), zaxis.getRange().getMaximum(), 100);
 
 
         form.getSlider1().setModel(XSliderAdapter);
+        form.getSlider2().setModel(YSliderAdapter);
+        form.getSlider3().setModel(ZSliderAdapter);
+
         form.getSliderLabel1().setText("X: " + "(" + crosshair.getViewport().getXAxis() + ")");
         form.getSliderLabel2().setText("Y: " + "(" + crosshair.getViewport().getYAxis() + ")");
         form.getSliderLabel3().setText("Z: " + "(" + crosshair.getViewport().getZAxis() + ")");
 
-        ImageAxis yaxis = crosshair.getViewport().getBounds().getImageAxis(Axis.Y_AXIS);
-        YSliderAdapter = new BoundedRangeAdapter(new PercentageConverter(crosshairAdapter.getValueModel(Crosshair.Y_VALUE_PROPERTY),
-                new ValueHolder(yaxis.getRange().getMinimum()),
-                new ValueHolder(yaxis.getRange().getMaximum()), 100), 0, 0, 100);
-
-        form.getSlider2().setModel(YSliderAdapter);
-
-        ImageAxis zaxis = crosshair.getViewport().getBounds().getImageAxis(Axis.Z_AXIS);
-        ZSliderAdapter = new BoundedRangeAdapter(new PercentageConverter(crosshairAdapter.getValueModel(Crosshair.Z_VALUE_PROPERTY),
-                new ValueHolder(zaxis.getRange().getMinimum()),
-                new ValueHolder(zaxis.getRange().getMaximum()), 100), 0, 0, 100);
-
-
-        form.getSlider3().setModel(ZSliderAdapter);
 
         Bindings.bind(form.getValueLabel1(), crosshairAdapter.getValueModel(Crosshair.X_VALUE_PROPERTY));
-
-
         Bindings.bind(form.getValueLabel2(), crosshairAdapter.getValueModel(Crosshair.Y_VALUE_PROPERTY));
-
-
         Bindings.bind(form.getValueLabel3(), crosshairAdapter.getValueModel(Crosshair.Z_VALUE_PROPERTY));
 
-        // Bindings.bind(control.getLowField(), adapter.getValueModel(LinearColorMap.LOWER_ALPHA_PROPERTY));
 
     }
 

@@ -97,7 +97,7 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
         viewport.removePropertyChangeListener(viewportHandler);
         displayModel.removeImageDisplayModelListener(this);
         //crosshair.removePropertyChangeListener();
-        displayModel.getSelection().removePropertyChangeListener(crosshairHandler);
+        displayModel.getLayerSelection().removePropertyChangeListener(crosshairHandler);
 
     }
 
@@ -111,7 +111,7 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
 
         crosshair.addPropertyChangeListener(crosshairHandler);
 
-        displayModel.getSelection().addPropertyChangeListener(new PropertyChangeListener() {
+        displayModel.getLayerSelection().addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent e) {
                 if (e.getPropertyName().equals(SelectionInList.PROPERTYNAME_SELECTION_INDEX)) {
                     int selectionIndex = (Integer) e.getNewValue();
@@ -182,14 +182,14 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
 
 
     public int getSelectedIndex() {
-        return displayModel.getSelection().getSelectionIndex();
+        return displayModel.getLayerSelection().getSelectionIndex();
     }
 
     public void setSelectedIndex(int selectedIndex) {
         assert selectedIndex < getModel().getNumLayers() & selectedIndex >= 0;
 
         if (selectedIndex != displayModel.getSelectedIndex())
-            displayModel.getSelection().setSelectionIndex(selectedIndex);
+            displayModel.getLayerSelection().setSelectionIndex(selectedIndex);
     }
 
     public void setModel(IImageDisplayModel model) {

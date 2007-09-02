@@ -28,11 +28,15 @@ public class ButtonList extends JComponent implements ListDataListener {
 
 
     private ListSelectionModel selectionModel;
+
     private ListModel dataModel;
+
     private ListSelectionListener selectionListener;
 
     private List<AbstractButton> buttons = new ArrayList<AbstractButton>();
+
     private ButtonGroup buttonGroup = new SplitButtonGroup();
+
     private ButtonFactory buttonFactory;
 
 

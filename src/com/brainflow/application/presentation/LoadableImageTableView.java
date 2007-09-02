@@ -5,11 +5,12 @@ import com.brainflow.application.actions.ActionContext;
 import com.brainflow.application.actions.RemoveLoadableImageAction;
 import com.brainflow.application.services.LoadableImageStatusEvent;
 import com.brainflow.colormap.ColorTable;
-import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.core.*;
 import com.brainflow.gui.AbstractPresenter;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.utils.IRange;
+import com.brainflow.utils.Range;
 import com.jidesoft.grid.*;
 import com.jidesoft.swing.NullButton;
 import com.jidesoft.swing.NullJideButton;
@@ -172,9 +173,8 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
         if (icon == null) {
             ImageDisplayModel dmodel = new ImageDisplayModel("" + limg.getUniqueID());
 
-
-            ImageLayerProperties parms = new ImageLayerProperties(new LinearColorMap(limg.getData().getMinValue(), limg.getData().getMaxValue(),
-                    ColorTable.GRAYSCALE));
+            IRange dataRange = new Range(limg.getData().getMinValue(), limg.getData().getMaxValue());
+            ImageLayerProperties parms = new ImageLayerProperties(ColorTable.GRAYSCALE, dataRange);
             ImageLayer layer = new ImageLayer3D(limg, parms);
 
             dmodel.addLayer(layer);

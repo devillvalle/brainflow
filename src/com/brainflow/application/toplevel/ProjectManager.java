@@ -98,13 +98,13 @@ public class ProjectManager implements EventSubscriber, BrainflowProjectListener
 
             if (idx.size() > 0) {
 
-                List<AbstractLayer> removables = new ArrayList<AbstractLayer>();
+                List<ImageLayer> removables = new ArrayList<ImageLayer>();
 
                 for (int i : idx) {
                     removables.add(dmodel.getLayer(i));
                 }
 
-                for (AbstractLayer layer : removables) {
+                for (ImageLayer layer : removables) {
                     dmodel.removeLayer(layer);
                 }
             }

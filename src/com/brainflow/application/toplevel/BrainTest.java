@@ -4,10 +4,10 @@ import com.brainflow.application.BrainFrame;
 import com.brainflow.application.BrainflowException;
 import com.brainflow.application.MemoryImage;
 import com.brainflow.colormap.ColorTable;
-import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.core.*;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.analyze.AnalyzeIO;
+import com.brainflow.utils.Range;
 import com.jidesoft.docking.DefaultDockingManager;
 import com.jidesoft.document.DocumentComponent;
 import com.jidesoft.document.DocumentPane;
@@ -87,12 +87,13 @@ public class BrainTest {
 
 
             IImageDisplayModel model = new ImageDisplayModel("model");
+            Range range = new Range(data1.getMinValue(), data1.getMaxValue());
             ImageLayer layer = new ImageLayer3D(new MemoryImage(data1),
-                    new ImageLayerProperties(new LinearColorMap(data1.getMinValue(), data1.getMaxValue(), ColorTable.GRAYSCALE)));
+                    new ImageLayerProperties(ColorTable.GRAYSCALE, range));
             model.addLayer(layer);
 
             layer = new ImageLayer3D(new MemoryImage(data2),
-                    new ImageLayerProperties(new LinearColorMap(data2.getMinValue(), data2.getMaxValue(), ColorTable.GRAYSCALE)));
+                    new ImageLayerProperties(ColorTable.GRAYSCALE, range));
 
 
             model.addLayer(layer);

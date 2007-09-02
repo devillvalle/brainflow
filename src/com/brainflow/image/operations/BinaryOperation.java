@@ -27,6 +27,10 @@ public abstract class BinaryOperation {
         public final int compute(int left, int right) {
             return left & right;
         }
+
+        public String toString() {
+            return "AND";
+        }
     }
 
     private static class _OR_ extends BinaryOperation {
@@ -38,6 +42,10 @@ public abstract class BinaryOperation {
         public final int compute(int left, int right) {
             return left | right;
         }
+
+        public String toString() {
+            return "OR";
+        }
     }
 
 
@@ -47,6 +55,4 @@ public abstract class BinaryOperation {
     }
 
 
-
-    
 }

@@ -1,13 +1,12 @@
 package com.brainflow.application.actions;
 
-import org.bushe.swing.action.BasicAction;
-import com.brainflow.core.*;
-import com.brainflow.image.data.CoordinateSet3D;
-import com.brainflow.image.space.ICoordinateSpace;
-import com.brainflow.colormap.IColorMap;
-import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.colormap.ColorTable;
-import com.brainflow.application.toplevel.ResourceManager;
+import com.brainflow.core.CoordinateLayer;
+import com.brainflow.core.ImageLayerProperties;
+import com.brainflow.core.ImageView;
+import com.brainflow.image.data.CoordinateSet3D;
+import com.brainflow.utils.Range;
+import org.bushe.swing.action.BasicAction;
 
 import java.awt.event.ActionEvent;
 
@@ -20,9 +19,9 @@ import java.awt.event.ActionEvent;
  */
 public class DoRandomThingAction extends BasicAction {
 
-    double[][] points = new double[][] { { 0, 0, 0 }, { -12, 32, 34 }, {33, 0, -12 }, { 25, 25, 25 }};
-    double[] values = new double[] { 1, 2, 3, 4 };
-    double[] radii = new double[] { 2, 6, 12, 20 };
+    double[][] points = new double[][]{{0, 0, 0}, {-12, 32, 34}, {33, 0, -12}, {25, 25, 25}};
+    double[] values = new double[]{1, 2, 3, 4};
+    double[] radii = new double[]{2, 6, 12, 20};
 
     protected void contextChanged() {
 
@@ -40,9 +39,10 @@ public class DoRandomThingAction extends BasicAction {
 
         if (view != null) {
             CoordinateSet3D cset = new CoordinateSet3D(view.getModel().getImageSpace(), points, values, radii);
-            IColorMap cmap = new LinearColorMap(cset.getMinValue(), cset.getMaxValue(), ColorTable.SPECTRUM);
-            CoordinateLayer layer = new CoordinateLayer(new ImageLayerProperties(cmap), cset);
-            view.getModel().addLayer(layer);
+            Range range = new Range(cset.getMinValue(), cset.getMaxValue());
+
+            CoordinateLayer layer = new CoordinateLayer(new ImageLayerProperties(ColorTable.SPECTRUM, range), cset);
+            // view.getModel().addLayer(layer);
         }
 
     }

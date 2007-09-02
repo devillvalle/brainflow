@@ -49,7 +49,7 @@ public abstract class ImageViewPresenter extends AbstractPresenter implements Im
 
                 // in fact this should not happen.
                 //if ( (selectedView != null) && (selectedView.getModel().getSelectedIndex() < 0) ) {
-                //    selectedView.getModel().getSelection().setSelectionIndex(0);
+                //    selectedView.getModel().getLayerSelection().setSelectionIndex(0);
                 //
                 // }
 

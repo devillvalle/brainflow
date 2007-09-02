@@ -1,5 +1,6 @@
 package com.brainflow.core;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -23,12 +24,13 @@ public interface IMaskList {
 
     public int indexOf(IMaskItem item);
 
+    public Iterator<? extends IMaskItem> iterator();
+
     public int size();
 
     //public void addMask(IMaskItem item);
 
     public IMaskItem dupMask();
 
-    
 
 }

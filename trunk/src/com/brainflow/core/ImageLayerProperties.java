@@ -5,7 +5,6 @@ import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.display.*;
 import com.brainflow.utils.IRange;
-import com.brainflow.utils.Range;
 import com.jgoodies.binding.list.SelectionInList;
 
 import java.awt.image.IndexColorModel;
@@ -59,21 +58,21 @@ public class ImageLayerProperties implements Serializable {
 
     public ImageLayerProperties(IRange _dataRange) {
         IColorMap imap = new LinearColorMap(_dataRange.getMin(), _dataRange.getMax(), ColorTable.GRAYSCALE);
-        init(imap);
+        init(imap, _dataRange);
     }
 
     public ImageLayerProperties(IndexColorModel _icm, IRange _dataRange) {
         IColorMap imap = new LinearColorMap(_dataRange.getMin(), _dataRange.getMax(), _icm);
-        init(imap);
+        init(imap, _dataRange);
 
     }
 
-    public ImageLayerProperties(IColorMap map) {
-        init(map);
-    }
+    //public ImageLayerProperties(IColorMap map) {
+    //    init(map);
+    //}
 
 
-    private void init(IColorMap map) {
+    private void init(IColorMap map, IRange dataRange) {
 
         colorMap = new Property<IColorMap>(map);
         resampleInterpolation = new Property<InterpolationMethod>(new InterpolationMethod(InterpolationHint.CUBIC));
@@ -84,7 +83,7 @@ public class ImageLayerProperties implements Serializable {
         smoothing = new Property<SmoothingRadius>(new SmoothingRadius(0));
         interpolationMethod = new SelectionInList(InterpolationHint.values(), resampleInterpolation.getModel(InterpolationMethod.INTERPOLATION_PROPERTY));
         threshold = new Property<ThresholdRange>(new ThresholdRange(map.getMinimumValue(),
-                map.getMinimumValue(), new Range(map.getMinimumValue(), map.getMaximumValue())));
+                map.getMinimumValue(), dataRange));
 
 
     }

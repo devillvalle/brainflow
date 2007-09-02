@@ -1,18 +1,19 @@
 package com.brainflow.core;
 
-import com.jgoodies.binding.beans.ExtendedPropertyChangeSupport;
-import com.brainflow.image.operations.BinaryOperation;
+import com.brainflow.image.data.IImageData3D;
 import com.brainflow.image.data.IMaskedData3D;
 import com.brainflow.image.data.MaskedData3D;
-import com.brainflow.image.data.IImageData3D;
 import com.brainflow.image.data.MaskedDataNode3D;
+import com.brainflow.image.operations.BinaryOperation;
+import com.jgoodies.binding.beans.ExtendedPropertyChangeSupport;
 
-import javax.swing.event.ListDataListener;
 import javax.swing.event.ListDataEvent;
-import java.util.List;
-import java.util.ArrayList;
-import java.beans.PropertyChangeListener;
+import javax.swing.event.ListDataListener;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -52,7 +53,7 @@ public class ImageMaskList implements IMaskList {
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         support.addPropertyChangeListener(listener);
-        
+
     }
 
     public void removePropertyChangeListener(PropertyChangeListener listener) {
@@ -69,7 +70,7 @@ public class ImageMaskList implements IMaskList {
     }
 
     private int firstItemWithinGroup(int group) {
-        for (int i=0; i<size(); i++) {
+        for (int i = 0; i < size(); i++) {
             if (getMaskItem(i).getGroup() == group) {
                 return i;
             }
@@ -80,9 +81,9 @@ public class ImageMaskList implements IMaskList {
 
 
     private int lastItemWithinGroup(int group) {
-        for (int i=0; i<size(); i++) {
+        for (int i = 0; i < size(); i++) {
             if (getMaskItem(i).getGroup() > group) {
-                return i-1;
+                return i - 1;
             }
         }
 
@@ -97,10 +98,9 @@ public class ImageMaskList implements IMaskList {
         if (item.getGroup() > group) {
             return node;
         } else {
-            return makeGroupNode(itemList, new MaskedDataNode3D(node, new MaskedData3D((IImageData3D)(item.getSource().getData()),
-                    item.getPredicate()), item.getOperation()), current+1, item.getGroup());
+            return makeGroupNode(itemList, new MaskedDataNode3D(node, new MaskedData3D((IImageData3D) (item.getSource().getData()),
+                    item.getPredicate()), item.getOperation()), current + 1, item.getGroup());
         }
-
 
 
     }
@@ -108,14 +108,14 @@ public class ImageMaskList implements IMaskList {
 
     private IMaskedData3D makeTreeNode(List<IMaskedData3D> groupList, IMaskedData3D node, int current) {
 
-        if (current == groupList.size() ) {
+        if (current == groupList.size()) {
             return node;
         } else {
             IMaskItem item = getMaskItem(current);
-            IImageData3D data = (IImageData3D)item.getSource().getData();
+            IImageData3D data = (IImageData3D) item.getSource().getData();
             MaskedDataNode3D newNode = new MaskedDataNode3D(node, new MaskedData3D(data, item.getPredicate()), item.getOperation());
 
-            return makeTreeNode(groupList, newNode, current+1);
+            return makeTreeNode(groupList, newNode, current + 1);
 
 
         }
@@ -126,18 +126,18 @@ public class ImageMaskList implements IMaskList {
     public IMaskedData3D composeMask(boolean lazy) {
         if (this.size() == 1) {
             IMaskItem item = getFirstItem();
-            return new MaskedData3D((IImageData3D)(item.getSource().getData()), item.getPredicate());
+            return new MaskedData3D((IImageData3D) (item.getSource().getData()), item.getPredicate());
         } else {
 
             List<IMaskedData3D> groupList = new ArrayList<IMaskedData3D>();
             int numGroups = getLastItem().getGroup();
             int group = getFirstItem().getGroup();
-            IMaskedData3D startNode = new MaskedData3D((IImageData3D)(getFirstItem().getSource().getData()), getFirstItem().getPredicate());
+            IMaskedData3D startNode = new MaskedData3D((IImageData3D) (getFirstItem().getSource().getData()), getFirstItem().getPredicate());
 
             int itemNum = 0;
             while (group <= numGroups) {
                 itemNum = firstItemWithinGroup(group);
-                groupList.add(makeGroupNode(maskItems,  startNode, itemNum++, group ));
+                groupList.add(makeGroupNode(maskItems, startNode, itemNum++, group));
                 group++;
             }
 
@@ -147,7 +147,6 @@ public class ImageMaskList implements IMaskList {
         }
 
     }
-
 
 
     public List<ImageLayer> getCongruentLayers(IImageDisplayModel model) {
@@ -168,7 +167,7 @@ public class ImageMaskList implements IMaskList {
     public boolean isCongruent(AbstractLayer layer) {
         if (root == null) return false;
         if (layer instanceof ImageLayer) {
-            ImageLayer ilayer = (ImageLayer)layer;
+            ImageLayer ilayer = (ImageLayer) layer;
             if (root.getSource().getData().getImageSpace().sameGeometry(ilayer.getData().getImageSpace())) {
                 return true;
             }
@@ -179,6 +178,10 @@ public class ImageMaskList implements IMaskList {
 
     public int indexOf(IMaskItem item) {
         return maskItems.indexOf(item);
+    }
+
+    public Iterator<ImageMaskItem> iterator() {
+        return maskItems.iterator();
     }
 
     public ImageMaskItem getLastItem() {
@@ -216,7 +219,7 @@ public class ImageMaskList implements IMaskList {
         return maskItems.size();
     }
 
-    
+
     public void fireItemAdded(int index) {
         for (ListDataListener listener : listDataListeners) {
             listener.intervalAdded(new ListDataEvent(this, ListDataEvent.INTERVAL_ADDED, index, index));
@@ -230,7 +233,7 @@ public class ImageMaskList implements IMaskList {
     }
 
     public IMaskItem dupMask() {
-        ImageMaskItem item = new ImageMaskItem(getLastItem().getSource(), 
+        ImageMaskItem item = new ImageMaskItem(getLastItem().getSource(),
                 getLastItem().getPredicate().copy(),
                 getLastItem().getGroup(), BinaryOperation.AND, false);
 
@@ -268,7 +271,7 @@ public class ImageMaskList implements IMaskList {
     class MaskItemChangeListener implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
-            IMaskItem item = (IMaskItem) evt.getSource();
+            ImageMaskItem item = (ImageMaskItem) evt.getSource();
             int index = maskItems.indexOf(item);
             support.fireIndexedPropertyChange(evt.getPropertyName(), index, evt.getOldValue(), evt.getNewValue());
         }

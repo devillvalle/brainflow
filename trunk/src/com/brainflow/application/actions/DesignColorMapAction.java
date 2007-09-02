@@ -3,6 +3,7 @@ package com.brainflow.application.actions;
 import com.brainflow.application.presentation.ColorBandChartPresenter;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.core.ImageCanvas2;
+import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
 import org.bushe.swing.action.BasicAction;
 
@@ -52,22 +53,21 @@ public class DesignColorMapAction extends BasicAction {
         ImageCanvas2 canvas = (ImageCanvas2) getContextValue(ActionContext.SELECTED_CANVAS);
         if (view != null) {
 
-            int layer = view.getModel().getSelectedIndex();
-            IColorMap oldMap = view.getModel().getLayer(layer).
-                    getImageLayerProperties().getColorMap().getProperty();
+            //int layer = view.getModel().getSelectedIndex();
+            ImageLayer layer = view.getModel().getSelectedLayer();
+            IColorMap oldMap = layer.getImageLayerProperties().getColorMap().getProperty();
 
             //if (oldMap instanceof LinearColorMap) {
             // todo fix me
             //IColorMap copyMap = oldMap.copy();
 
-            ColorBandChartPresenter presenter = new ColorBandChartPresenter(view.getModel().getLayer(layer).
+            ColorBandChartPresenter presenter = new ColorBandChartPresenter(layer.
                     getImageLayerProperties().getColorMap());
             int ret = JOptionPane.showOptionDialog(JOptionPane.getFrameForComponent(presenter.getComponent()), presenter.getComponent(), "Design Color Map", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
                     null, null, null);
 
             if (ret != JOptionPane.OK_OPTION) {
-                view.getModel().getLayer(layer).
-                        getImageLayerProperties().getColorMap().setProperty(oldMap);
+                layer.getImageLayerProperties().getColorMap().setProperty(oldMap);
 
             }
 

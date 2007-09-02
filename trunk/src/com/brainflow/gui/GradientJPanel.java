@@ -11,15 +11,19 @@ import java.awt.*;
  * To change this template use File | Settings | File Templates.
  */
 public class GradientJPanel extends JPanel {
+
     private Color colorTwo = Color.BLUE;
+
     private Color colorOne = Color.WHITE;
 
-
     private GradientPaint gp;
+
     private int cachedHeight = 0;
+
     private int cachedWidth = 0;
 
     private float alpha = .5f;
+
     private int gradientOrientation;
 
 
@@ -35,9 +39,8 @@ public class GradientJPanel extends JPanel {
     private GradientPaint makeGradientPaint() {
         if (gradientOrientation == SwingConstants.VERTICAL) {
             gp = new GradientPaint(0, 0, colorOne, 0, getHeight(), colorTwo);
-        }
-        else if (gradientOrientation == SwingConstants.HORIZONTAL) {
-           gp = new GradientPaint(0, 0, colorOne, getWidth(), 0, colorTwo);
+        } else if (gradientOrientation == SwingConstants.HORIZONTAL) {
+            gp = new GradientPaint(0, 0, colorOne, getWidth(), 0, colorTwo);
         }
 
         return gp;

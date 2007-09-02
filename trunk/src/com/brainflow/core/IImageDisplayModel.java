@@ -22,9 +22,12 @@ public interface IImageDisplayModel {
 
     public String getName();
 
-    public SelectionInList getSelection();
+    public SelectionInList getLayerSelection();
+
 
     public int getSelectedIndex();
+
+    public ImageLayer getSelectedLayer();
 
     public void addImageDisplayModelListener(ImageDisplayModelListener listener);
 
@@ -39,9 +42,9 @@ public interface IImageDisplayModel {
 
     public List<Integer> indexOf(IImageData data);
 
-    public int indexOf(AbstractLayer layer);
+    public int indexOf(ImageLayer layer);
 
-    public void addLayer(AbstractLayer layer);
+    public void addLayer(ImageLayer layer);
 
     public void swapLayers(int index0, int index1);
 
@@ -49,11 +52,11 @@ public interface IImageDisplayModel {
 
     public void removeLayer(int layer);
 
-    public void removeLayer(AbstractLayer layer);
+    public void removeLayer(ImageLayer layer);
 
     public ImageLayerProperties getLayerParameters(int layer);
 
-    public AbstractLayer getLayer(int layer);
+    public ImageLayer getLayer(int layer);
 
     public int getNumLayers();
 

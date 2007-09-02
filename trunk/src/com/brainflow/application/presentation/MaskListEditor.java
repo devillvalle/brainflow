@@ -124,7 +124,7 @@ public class MaskListEditor {
     private void initColumns() {
         maskTable.setColumnAutoResizable(true);
         //maskTable.getColumn("Image").setMaxWidth(160);
-        maskTable.getColumn("Oper").setMinWidth(50);
+        //maskTable.getColumn("Op").setMinWidth(50);
         maskTable.getColumn("Oper").setMaxWidth(80);
         maskTable.getColumn("Group").setMaxWidth(55);
     }

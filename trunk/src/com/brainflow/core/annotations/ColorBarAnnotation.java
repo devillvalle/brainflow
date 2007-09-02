@@ -1,10 +1,9 @@
 package com.brainflow.core.annotations;
 
 import com.brainflow.colormap.AbstractColorBar;
+import com.brainflow.core.AbstractLayer;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.IImagePlot;
-import com.brainflow.core.ImageLayer;
-import com.brainflow.core.AbstractLayer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -53,7 +52,7 @@ public class ColorBarAnnotation extends AbstractAnnotation {
     public ColorBarAnnotation(IImageDisplayModel _model) {
         model = _model;
 
-        model.getSelection().getSelectionIndexHolder().addValueChangeListener(new PropertyChangeListener() {
+        model.getLayerSelection().getSelectionIndexHolder().addValueChangeListener(new PropertyChangeListener() {
 
             public void propertyChange(PropertyChangeEvent evt) {
                 Object obj = evt.getNewValue();
@@ -113,7 +112,7 @@ public class ColorBarAnnotation extends AbstractAnnotation {
     public void draw(Graphics2D g2d, Rectangle2D plotArea, IImagePlot plot) {
         if (!isVisible() || model.getNumLayers() == 0) return;
 
-        
+
         AbstractLayer layer = model.getLayer(model.getSelectedIndex());
 
         if (colorBar == null || layer != selectedLayer) {

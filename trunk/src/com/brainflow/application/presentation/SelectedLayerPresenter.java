@@ -1,9 +1,6 @@
 package com.brainflow.application.presentation;
 
-import com.brainflow.core.AbstractLayer;
-import com.brainflow.core.ImageLayerEvent;
-import com.brainflow.core.ImageLayerListener;
-import com.brainflow.core.ImageView;
+import com.brainflow.core.*;
 import com.brainflow.display.Visibility;
 import com.jgoodies.binding.adapter.ComboBoxAdapter;
 import com.jgoodies.binding.adapter.SingleListSelectionAdapter;
@@ -139,12 +136,12 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
         //assert view.getModel().getSelectedIndex() >= 0;
         //layerSelector.clearSelection();
 
-        if (layerSelector.getModel() != view.getModel().getSelection()) {
+        if (layerSelector.getModel() != view.getModel().getLayerSelection()) {
             layerSelector.setSelectionModel(new DefaultListSelectionModel());
-            layerSelector.setModel(view.getModel().getSelection());
+            layerSelector.setModel(view.getModel().getLayerSelection());
             layerSelector.setSelectionModel(
                     new SingleListSelectionAdapter(
-                            view.getModel().getSelection().getSelectionIndexHolder()));
+                            view.getModel().getLayerSelection().getSelectionIndexHolder()));
 
             initVisibilityModel();
         }
@@ -205,7 +202,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
         }
 
         public void visibilityChanged(ImageLayerEvent event) {
-            AbstractLayer layer = event.getAffectedLayer();
+            ImageLayer layer = event.getAffectedLayer();
             if (layer != null) {
                 int i = getSelectedView().getModel().indexOf(layer);
                 boolean vis = layer.isVisible();

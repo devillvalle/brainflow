@@ -3,6 +3,7 @@ package com.brainflow.application.presentation;
 import com.brainflow.application.actions.RotateLayersCommand;
 import com.brainflow.application.dnd.AbstractLayerTransferable;
 import com.brainflow.core.AbstractLayer;
+import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
 import com.pietschy.command.ActionCommand;
 
@@ -68,7 +69,7 @@ public class CanvasBar extends ImageViewPresenter {
         repopulate();
     }
 
-    protected void layerSelected(AbstractLayer layer) {
+    protected void layerSelected(ImageLayer layer) {
         ImageView view = getSelectedView();
         int selidx = view.getModel().indexOf(layer);
 
@@ -172,7 +173,7 @@ public class CanvasBar extends ImageViewPresenter {
 
                 int selIdx = view.getModel().getSelectedIndex();
                 if (selIdx != buttonIndex) {
-                    view.getModel().getSelection().setSelectionIndex(buttonIndex);
+                    view.getModel().getLayerSelection().setSelectionIndex(buttonIndex);
                     System.out.println("button " + buttonIndex + " is selected");
                 }
 
@@ -225,7 +226,7 @@ public class CanvasBar extends ImageViewPresenter {
 
 
             try {
-                AbstractLayer layer = (AbstractLayer) support.getTransferable().getTransferData(flavor);
+                ImageLayer layer = (ImageLayer) support.getTransferable().getTransferData(flavor);
 
                 int dropIndex = layerButtonList.indexOf(support.getComponent());
                 int sourceIndex = getSelectedView().getModel().indexOf(layer);

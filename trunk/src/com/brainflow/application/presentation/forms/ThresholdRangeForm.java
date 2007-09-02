@@ -22,9 +22,12 @@ public class ThresholdRangeForm extends JPanel {
     private JSlider slider2;
 
     private JLabel sliderLabel1;
+
     private JLabel sliderLabel2;
 
+
     private JFormattedTextField valueField1;
+
     private JFormattedTextField valueField2;
 
     private JCheckBox inclusiveCheckBox;

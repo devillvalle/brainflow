@@ -76,13 +76,17 @@ public class ImageDisplayModel implements IImageDisplayModel {
         return null;
     }
 
-    public SelectionInList getSelection() {
+    public SelectionInList getLayerSelection() {
         return layerSelection;
     }
 
 
     public int getSelectedIndex() {
         return layerSelection.getSelectionIndex();
+    }
+
+    public ImageLayer getSelectedLayer() {
+        return (ImageLayer) layerSelection.getSelection();
     }
 
     public String getName() {
@@ -114,7 +118,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
     }
 
 
-    public void addLayer(AbstractLayer layer) {
+    public void addLayer(ImageLayer layer) {
         listenToLayer(layer);
         imageListModel.add(layer);
         if (imageListModel.size() == 1) {
@@ -124,12 +128,12 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     }
 
-    private void listenToLayer(AbstractLayer layer) {
+    private void listenToLayer(ImageLayer layer) {
 
         layer.addPropertyChangeListener(ImageLayerProperties.COLOR_MAP_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 for (ImageLayerListener listener : layerListeners) {
-                    listener.colorMapChanged(new ImageLayerEvent(ImageDisplayModel.this, (AbstractLayer) evt.getSource()));
+                    listener.colorMapChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer) evt.getSource()));
                 }
             }
         });
@@ -137,7 +141,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         layer.addPropertyChangeListener(ImageLayerProperties.OPACITY_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 for (ImageLayerListener listener : layerListeners) {
-                    listener.opacityChanged(new ImageLayerEvent(ImageDisplayModel.this, (AbstractLayer) evt.getSource()));
+                    listener.opacityChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer) evt.getSource()));
                 }
             }
         });
@@ -145,7 +149,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         layer.addPropertyChangeListener(ImageLayerProperties.RESAMPLE_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 for (ImageLayerListener listener : layerListeners) {
-                    listener.interpolationMethodChanged(new ImageLayerEvent(ImageDisplayModel.this, (AbstractLayer) evt.getSource()));
+                    listener.interpolationMethodChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer) evt.getSource()));
                 }
             }
         });
@@ -153,7 +157,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         layer.addPropertyChangeListener(ImageLayerProperties.THRESHOLD_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 for (ImageLayerListener listener : layerListeners) {
-                    listener.thresholdChanged(new ImageLayerEvent(ImageDisplayModel.this, (AbstractLayer) evt.getSource()));
+                    listener.thresholdChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer) evt.getSource()));
                 }
             }
         });
@@ -161,7 +165,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         layer.addPropertyChangeListener(ImageLayerProperties.SMOOTHING_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 for (ImageLayerListener listener : layerListeners) {
-                    listener.smoothingChanged(new ImageLayerEvent(ImageDisplayModel.this, (AbstractLayer) evt.getSource()));
+                    listener.smoothingChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer) evt.getSource()));
                 }
             }
         });
@@ -169,7 +173,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         layer.addPropertyChangeListener(ImageLayerProperties.VISIBLE_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 for (ImageLayerListener listener : layerListeners) {
-                    listener.visibilityChanged(new ImageLayerEvent(ImageDisplayModel.this, (AbstractLayer) evt.getSource()));
+                    listener.visibilityChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer) evt.getSource()));
                 }
             }
         });
@@ -203,7 +207,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
     }
 
 
-    public int indexOf(AbstractLayer layer) {
+    public int indexOf(ImageLayer layer) {
         return imageListModel.indexOf(layer);
 
 
@@ -212,7 +216,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
     public List<Integer> indexOf(IImageData data) {
         List<Integer> ret = new ArrayList<Integer>();
         for (int i = 0; i < imageListModel.size(); i++) {
-            AbstractLayer layer = (AbstractLayer) imageListModel.get(i);
+            ImageLayer layer = (ImageLayer) imageListModel.get(i);
 
             if (layer.getData() == data) {
                 ret.add(i);
@@ -227,7 +231,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         if (getNumLayers() < 2) return;
 
         ArrayListModel newModel = new ArrayListModel();
-        AbstractLayer firstLayer = getLayer(getNumLayers() - 1);
+        ImageLayer firstLayer = getLayer(getNumLayers() - 1);
 
         newModel.add(firstLayer);
         for (int i = 0; i < imageListModel.size() - 1; i++) {
@@ -295,19 +299,19 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     }
 
-    public void removeLayer(AbstractLayer layer) {
+    public void removeLayer(ImageLayer layer) {
         assert imageListModel.contains(layer);
         int idx = imageListModel.indexOf(layer);
         removeLayer(idx);
     }
 
-    public boolean containsLayer(AbstractLayer layer) {
+    public boolean containsLayer(ImageLayer layer) {
         return imageListModel.contains(layer);
     }
 
-    public AbstractLayer getLayer(int layer) {
+    public ImageLayer getLayer(int layer) {
         assert layer >= 0 && layer < imageListModel.size();
-        return (AbstractLayer) imageListModel.get(layer);
+        return (ImageLayer) imageListModel.get(layer);
     }
 
 

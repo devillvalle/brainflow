@@ -1,22 +1,20 @@
 package com.brainflow.core.pipeline;
 
-import com.brainflow.core.*;
-import com.brainflow.image.io.analyze.AnalyzeIO;
-import com.brainflow.image.data.IImageData;
-import com.brainflow.image.anatomy.Anatomy3D;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.anatomy.AnatomicalAxis;
-import com.brainflow.image.axis.AxisRange;
-import com.brainflow.image.space.Axis;
 import com.brainflow.application.BrainflowException;
 import com.brainflow.application.MemoryImage;
-import com.brainflow.core.ImageLayerProperties;
-import com.brainflow.utils.Range;
 import com.brainflow.colormap.ColorTable;
-import com.brainflow.colormap.LinearColorMap;
+import com.brainflow.core.*;
+import com.brainflow.image.anatomy.AnatomicalAxis;
+import com.brainflow.image.anatomy.AnatomicalPoint1D;
+import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.image.axis.AxisRange;
+import com.brainflow.image.data.IImageData;
+import com.brainflow.image.io.analyze.AnalyzeIO;
+import com.brainflow.image.space.Axis;
+import com.brainflow.utils.Range;
+import org.apache.commons.pipeline.StageException;
 import org.apache.commons.pipeline.driver.SynchronousStageDriverFactory;
 import org.apache.commons.pipeline.validation.ValidationException;
-import org.apache.commons.pipeline.StageException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -38,10 +36,10 @@ public class TestPipeline {
 
 
         ImageLayer layer1 = new ImageLayer3D(new MemoryImage(data),
-                new ImageLayerProperties(new LinearColorMap(range.getMin(), range.getMax(), ColorTable.GRAYSCALE)));
+                new ImageLayerProperties(ColorTable.GRAYSCALE, range));
 
         ImageLayer layer2 = new ImageLayer3D(new MemoryImage(data2),
-                new ImageLayerProperties(new LinearColorMap(data2.getMinValue(), data2.getMaxValue(), ColorTable.SPECTRUM)));
+                new ImageLayerProperties(ColorTable.SPECTRUM, range));
 
         layer2.getImageLayerProperties().getOpacity().getProperty().setOpacity(.9f);
         model.addLayer(layer1);
@@ -51,8 +49,6 @@ public class TestPipeline {
         IImagePlot plot = new ComponentImagePlot(model, Anatomy3D.getCanonicalAxial(),
                 new AxisRange(model.getImageAxis(Axis.X_AXIS).getAnatomicalAxis(), -50, 50),
                 new AxisRange(model.getImageAxis(Axis.Y_AXIS).getAnatomicalAxis(), -50, 50));
-        
-
 
 
         pipeline = new ImagePlotPipeline(plot);
@@ -67,7 +63,7 @@ public class TestPipeline {
         pipeline.addStage(new CropImageStage(), new SynchronousStageDriverFactory());
 
         pipeline.addStage(new ResizeImageStage(), new SynchronousStageDriverFactory());
-   
+
 
         StageFerry ferry = new StageFerry(model,
                 new AnatomicalPoint1D(AnatomicalAxis.INFERIOR_SUPERIOR, 0),
@@ -76,7 +72,6 @@ public class TestPipeline {
 
         pipeline.getSourceFeeder().feed(ferry);
         pipeline.run();
-        
 
 
     }

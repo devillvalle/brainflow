@@ -7,7 +7,6 @@ import com.brainflow.utils.Range;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.dialog.ButtonPanel;
-import org.jvnet.substance.skin.SubstanceSaharaLookAndFeel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -146,12 +145,12 @@ public class MaskConfigurationControl extends JPanel {
         }
     }
 
-    public static void main
-            (String[] args) {
+    public static void main(String[] args) {
 
         try {
 
-            UIManager.setLookAndFeel(new SubstanceSaharaLookAndFeel());
+            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceRavenGraphiteLookAndFeel());
+
 
             JFrame frame = new JFrame();
             URL url = ClassLoader.getSystemResource("resources/data/icbm452_atlas_probability_gray.hdr");

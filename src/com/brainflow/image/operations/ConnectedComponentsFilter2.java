@@ -101,10 +101,9 @@ public class ConnectedComponentsFilter2 extends AbstractImageFilter {
         ImageSpace3D space = (ImageSpace3D) data.getImageSpace();
         searchKernel = new LargeSearchKernel3D(space, 1, 1, 1);
 
-
         int[] labels = firstPass(xdim, ydim, zdim, data);
 
-        // dangerous, need to fix
+        //todo dangerous, need to fix
         stack = new IntegerStack(5000);
 
 

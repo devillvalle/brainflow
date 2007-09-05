@@ -13,7 +13,6 @@ import com.brainflow.image.data.IImageData;
 import com.brainflow.utils.IRange;
 import com.brainflow.utils.Range;
 import com.brainflow.utils.StaticTimer;
-import com.jidesoft.action.CommandMenuBar;
 import com.jidesoft.docking.DefaultDockingManager;
 import com.jidesoft.docking.DockContext;
 import com.jidesoft.docking.DockableFrame;
@@ -287,10 +286,11 @@ public class Brainflow {
         log.info("initializing Menu");
 
 
-        CommandMenuBar menuBar = new CommandMenuBar();
+
+        JMenuBar menuBar = new  JMenuBar();
         //
-        menuBar.setOpaque(false);
-        menuBar.setPaintBackground(false);
+        //menuBar.setOpaque(false);
+        //menuBar.setPaintBackground(false);
 
         //
 

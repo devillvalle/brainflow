@@ -31,7 +31,10 @@ public class AbsoluteValueImageFilter extends AbstractImageFilter {
             throw new RuntimeException("AbsoluteValueImageFilter requires zero input operations");
 
         BasicImageData first = (BasicImageData) sources.get(0);
-        if (first == null) return null;
+        if (first == null) {
+            //todo throw exception
+            return null;
+        }
 
         BasicImageData opdata = BasicImageData.create(first.getImageSpace(), outputDataType);
         ImageIterator opiter = opdata.iterator();

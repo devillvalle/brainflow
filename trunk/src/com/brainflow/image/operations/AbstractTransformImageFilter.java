@@ -18,7 +18,9 @@ import java.util.*;
 public abstract class AbstractTransformImageFilter extends AbstractImageFilter {
     
     protected ImageSpace3D outputSpace;
+
     protected ImageSpace3D referenceSpace;
+
     protected InterpolationFunction3D interpolator = new TrilinearInterpolator();
     
     protected Point3D origin = new Point3D();

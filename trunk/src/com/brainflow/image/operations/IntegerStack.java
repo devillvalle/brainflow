@@ -11,6 +11,7 @@ public class IntegerStack {
 
 
     private int[] stack;
+
     private int pushPos = 0;
 
     public IntegerStack(int maxSize) {

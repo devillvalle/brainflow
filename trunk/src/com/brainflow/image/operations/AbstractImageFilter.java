@@ -20,6 +20,7 @@ import java.util.List;
 public abstract class AbstractImageFilter implements ImageFilter {
 
     protected List<IImageData> sources = new LinkedList<IImageData>();
+
     protected DataType outputDataType = null;
 
     /**

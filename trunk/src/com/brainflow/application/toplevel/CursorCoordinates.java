@@ -18,7 +18,9 @@ import java.text.MessageFormat;
 public class CursorCoordinates implements EventSubscriber {
 
     private LabelStatusBarItem xaxisLabel = new LabelStatusBarItem();
+
     private LabelStatusBarItem yaxisLabel = new LabelStatusBarItem();
+
     private LabelStatusBarItem zaxisLabel = new LabelStatusBarItem();
 
 

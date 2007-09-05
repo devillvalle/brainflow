@@ -122,7 +122,7 @@ public class BinaryImageData3D extends BinaryImageData implements IMaskedData3D 
     public double getRealValue(double realx, double realy, double realz, InterpolationFunction3D interp) {
         double x = space.getImageAxis(Axis.X_AXIS).fractionalSample(realx);
         double y = space.getImageAxis(Axis.Y_AXIS).fractionalSample(realy);
-        double z = space.getImageAxis(Axis.Z_AXIS).fractionalSample(realy);
+        double z = space.getImageAxis(Axis.Z_AXIS).fractionalSample(realz);
         return interp.interpolate(x, y, z, this);
     }
 

@@ -19,16 +19,16 @@ package org.apache.commons.pipeline;
 
 /**
  * Simple factory interface for creating pipelines. This interface is commonly implemented
- * in different ways to allow creation of a pipeline based upon some external
+ * in different ways to allow creation of a rendering based upon some external
  * configuration source instead of in code.
  */
 public interface PipelineFactory {
     /**
      * Returns a Pipeline created by the factory.
      *
-     * @return the newly created pipeline
+     * @return the newly created rendering
      * @throws org.apache.commons.pipeline.PipelineCreationException
-     *          if there is an error creating the pipeline
+     *          if there is an error creating the rendering
      */
     public Pipeline createPipeline() throws PipelineCreationException;
 }

@@ -52,7 +52,7 @@ public class ValidationUtils {
 
     /**
      * Tests whether the specified downstream stage can succeed the specified
-     * upstream stage on a branch pipeline identified by the given branch key.
+     * upstream stage on a branch rendering identified by the given branch key.
      *
      * @param upstream            the upstream stage
      * @param downstreamBranchKey the key identifying the branch receiving data from the upstream stage

@@ -1,4 +1,4 @@
-package com.brainflow.core.pipeline;
+package com.brainflow.core.rendering;
 
 import org.apache.commons.pipeline.Pipeline;
 import org.apache.commons.pipeline.Stage;

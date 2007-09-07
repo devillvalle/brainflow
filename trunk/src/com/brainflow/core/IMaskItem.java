@@ -13,9 +13,13 @@ import com.brainflow.display.ThresholdRange;
 public interface IMaskItem {
 
     public static final String SOURCE_IMAGE_PROPERTY = "source";
+
     public static final String THRESHOLD_PREDICATE_PROPERTY = "predicate";
+
     public static final String BINARY_OPERATION_PROPERTY = "operation";
+
     public static final String GROUP_PROPERTY = "group";
+    
     public static final String ACTIVE_PROPERTY = "active";
 
     public BinaryOperation getOperation();

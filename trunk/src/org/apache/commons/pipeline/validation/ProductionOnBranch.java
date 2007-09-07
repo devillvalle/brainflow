@@ -24,13 +24,13 @@ import java.lang.annotation.Target;
 
 /**
  * This annotation is used to describe the production of a {@link Stage}
- * for a specific branch pipeline.
+ * for a specific branch rendering.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ProductionOnBranch {
     /**
-     * The string key for the branch pipeline in question.
+     * The string key for the branch rendering in question.
      */
     public String branchKey();
 

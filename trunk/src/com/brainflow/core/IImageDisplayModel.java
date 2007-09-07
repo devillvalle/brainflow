@@ -24,6 +24,7 @@ public interface IImageDisplayModel {
 
     public SelectionInList getLayerSelection();
 
+    public void setSelectedIndex(int index);
 
     public int getSelectedIndex();
 
@@ -38,7 +39,6 @@ public interface IImageDisplayModel {
     public void removeImageLayerListener(ImageLayerListener listener);
 
     public String getLayerName(int idx);
-
 
     public List<Integer> indexOf(IImageData data);
 

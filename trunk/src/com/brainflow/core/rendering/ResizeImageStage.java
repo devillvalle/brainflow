@@ -1,4 +1,4 @@
-package com.brainflow.core.pipeline;
+package com.brainflow.core.rendering;
 
 import com.brainflow.core.IImagePlot;
 import com.brainflow.display.InterpolationHint;

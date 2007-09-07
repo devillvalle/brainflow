@@ -73,7 +73,7 @@ public class TestStageContext implements StageContext {
 
     /**
      * This method is used by the test implementation to set up the feeders
-     * for a stage as though they were provided by drivers in a pipeline.
+     * for a stage as though they were provided by drivers in a rendering.
      */
     public void registerDownstreamFeeder(Stage stage, Feeder feeder) {
         this.downstreamFeeders.put(stage, feeder);

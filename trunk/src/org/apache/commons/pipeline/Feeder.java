@@ -19,7 +19,7 @@ package org.apache.commons.pipeline;
 
 /**
  * This interface represents a data channel into which objects can be fed.
- * Feeders act as intermediaries between stages in a pipeline and the drivers
+ * Feeders act as intermediaries between stages in a rendering and the drivers
  * for subsequent stages. Each {@link StageDriver} implementation will
  * ordinarily provide a custom Feeder implementation that integrates receiving
  * objects with its internal stage processing workflow.
@@ -27,7 +27,7 @@ package org.apache.commons.pipeline;
 public interface Feeder {
     /**
      * This Feeder implementation provides a standard, no-op sink for objects.
-     * It is useful for situations like the terminus of a pipeline, where
+     * It is useful for situations like the terminus of a rendering, where
      * there is nothing to be done with a generated object.
      */
     public static final Feeder VOID = new Feeder() {

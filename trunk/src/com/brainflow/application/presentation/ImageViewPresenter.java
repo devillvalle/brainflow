@@ -48,7 +48,7 @@ public abstract class ImageViewPresenter extends AbstractPresenter implements Im
                 selectedView.getModel().addImageDisplayModelListener(ImageViewPresenter.this);
 
                 // in fact this should not happen.
-                //if ( (selectedView != null) && (selectedView.getModel().getSelectedIndex() < 0) ) {
+                //if ( (selectedView != null) && (selectedView.getModel().getSelectedLayerIndex() < 0) ) {
                 //    selectedView.getModel().getLayerSelection().setSelectionIndex(0);
                 //
                 // }

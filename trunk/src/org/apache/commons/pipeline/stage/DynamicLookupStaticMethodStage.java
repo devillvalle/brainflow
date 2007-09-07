@@ -29,7 +29,7 @@ import java.lang.reflect.Method;
  * contains the method signature as described by the objects in the array.
  * The object returned from the method call will be exqueued.</p>
  * <p/>
- * <p>The resulting object will be exqueued on the main pipeline if it is not null.  If
+ * <p>The resulting object will be exqueued on the main rendering if it is not null.  If
  * it is null, we will try to place the original object on the branch specified
  * by the nullResultBranchKey property. The default for this value is "nullResult".</p>
  */

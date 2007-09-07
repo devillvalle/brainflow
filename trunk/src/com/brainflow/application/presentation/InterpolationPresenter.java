@@ -71,7 +71,7 @@ public class InterpolationPresenter extends ImageViewPresenter {
     public void viewSelected(ImageView view) {
         interpolationLabel.setEnabled(true);
         choices.setEnabled(true);
-        int idx = view.getSelectedIndex();
+        int idx = view.getSelectedLayerIndex();
 
         if (idx >= 0) {
             SelectionInList sel = view.getModel().

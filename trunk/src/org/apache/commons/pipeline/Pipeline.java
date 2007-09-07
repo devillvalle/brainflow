@@ -29,9 +29,9 @@ import java.util.*;
  * This class represents a processing system consisting of a number of stages
  * and branches. Each stage contains a queue and manages zero or more threads
  * that process data in that stage's queue and allow processed data to be
- * passed along to subsequent stages and onto branches of the pipeline.<P>
+ * passed along to subsequent stages and onto branches of the rendering.<P>
  * <p/>
- * This class allows all stages in the pipeline to be managed collectively
+ * This class allows all stages in the rendering to be managed collectively
  * with methods to start and stop processing for all stages, as well as
  * a simple framework for asynchronous event-based communication between stages.
  */
@@ -43,24 +43,24 @@ public class Pipeline implements Runnable, StageContext {
      */
     public static final String MAIN_BRANCH = "main";
 
-    //The logger used for reporting by this pipeline
+    //The logger used for reporting by this rendering
     private final Log log = LogFactory.getLog(Pipeline.class);
 
-    // List of stages in the pipeline, encapsulated in the drivers
+    // List of stages in the rendering, encapsulated in the drivers
     // that will be used to run them.
     private final LinkedList<StageDriver> drivers;
     private final Map<Stage, StageDriver> driverMap;
 
-    // The list of stages in the pipeline.
+    // The list of stages in the rendering.
     private final LinkedList<Stage> stages;
 
-    // Map of pipeline branches where the keys are branch names.
+    // Map of rendering branches where the keys are branch names.
     private final Map<String, Pipeline> branches;
 
-    // Used to store a reference to the parent pipeline, if this is a branch
+    // Used to store a reference to the parent rendering, if this is a branch
     private Pipeline parent;
 
-    // The list of listeners registered with the pipeline.
+    // The list of listeners registered with the rendering.
     private final List<StageEventListener> listeners;
 
     // Holds value of property validator.
@@ -105,18 +105,18 @@ public class Pipeline implements Runnable, StageContext {
 
     /**
      * Asynchronously notifies each registered listener of an event and propagates
-     * the event to any attached branches and the parent pipeline.
+     * the event to any attached branches and the parent rendering.
      *
      * @param ev The event to be sent to registered listeners
      */
     public void raise(final EventObject ev) {
         new Thread() {
             public void run() {
-                //first, recursively find the root pipeline
+                //first, recursively find the root rendering
                 Pipeline root = Pipeline.this;
                 while (root.parent != null) root = root.parent;
 
-                //notify the listeners from the root pipeline
+                //notify the listeners from the root rendering
                 root.notifyListeners(ev);
             }
         }.start();
@@ -125,7 +125,7 @@ public class Pipeline implements Runnable, StageContext {
     /**
      * Notify all listeners and recursively notify child branches of the
      * specified event. This method does not propagate events to the
-     * parent pipeline.
+     * parent rendering.
      */
     private void notifyListeners(EventObject ev) {
         for (StageEventListener listener : listeners) listener.notify(ev);
@@ -151,19 +151,19 @@ public class Pipeline implements Runnable, StageContext {
                 if (stage == drivers.get(i).getStage()) return drivers.get(i + 1).getFeeder();
             }
 
-            throw new IllegalStateException("Unable to find stage " + stage + " in pipeline.");
+            throw new IllegalStateException("Unable to find stage " + stage + " in rendering.");
         }
     }
 
     /**
-     * Look up and return the source feeder for the specified pipeline branch.
+     * Look up and return the source feeder for the specified rendering branch.
      *
      * @param branch the string identifier of the branch for which a feeder will be returned
      * @return the feeder for the specified branch
      */
     public Feeder getBranchFeeder(String branch) {
         if (!getBranches().containsKey(branch)) {
-            throw new IllegalStateException("Unable to find branch in pipeline: '" + branch + "'");
+            throw new IllegalStateException("Unable to find branch in rendering: '" + branch + "'");
         }
 
         return branches.get(branch).getSourceFeeder();
@@ -190,13 +190,13 @@ public class Pipeline implements Runnable, StageContext {
      * Adds a {@link Stage} object to the end of this Pipeline. If a
      * {@link PipelineValidator} has been set using {@link #setValidator}, it will
      * be used to validate that the appended Stage can consume the output of the
-     * previous stage of the pipeline. It does NOT validate the ability or availability
+     * previous stage of the rendering. It does NOT validate the ability or availability
      * of branches to consume data produced by the appended stage.
      *
-     * @param stage         the stage to be added to the pipeline
+     * @param stage         the stage to be added to the rendering
      * @param driverFactory the factory that will be used to create a {@link StageDriver} that will run the stage
-     * @throws ValidationException if there is a non-null validator set for this pipeline and an error is
-     *                             encountered validating the addition of the stage to the pipeline.
+     * @throws ValidationException if there is a non-null validator set for this rendering and an error is
+     *                             encountered validating the addition of the stage to the rendering.
      */
     public final void addStage(Stage stage, StageDriverFactory driverFactory) throws ValidationException {
         if (stage == null)
@@ -219,9 +219,9 @@ public class Pipeline implements Runnable, StageContext {
 
     /**
      * Returns an unmodifiable list of stages that have been added to this
-     * pipeline.
+     * rendering.
      *
-     * @return A list of the stages that have been added to the pipeline
+     * @return A list of the stages that have been added to the rendering
      */
     public final List<Stage> getStages() {
         return Collections.unmodifiableList(this.stages);
@@ -238,22 +238,22 @@ public class Pipeline implements Runnable, StageContext {
 
     /**
      * Returns an unmodifiable list of stage drivers that have been added
-     * to the pipeline.
+     * to the rendering.
      *
-     * @return the list of drivers for stages in the pipeline
+     * @return the list of drivers for stages in the rendering
      */
     public final List<StageDriver> getStageDrivers() {
         return Collections.unmodifiableList(this.drivers);
     }
 
     /**
-     * Adds a branch to the pipeline.
+     * Adds a branch to the rendering.
      *
      * @param key    the string identifier that will be used to refer to the added branch
-     * @param branch the branch pipeline
+     * @param branch the branch rendering
      * @throws org.apache.commons.pipeline.validation.ValidationException
-     *          if the pipeline has a non-null {@link PipelineValidator} and the branch
-     *          cannot consume the data produced for the branch by stages in the pipeline.
+     *          if the rendering has a non-null {@link PipelineValidator} and the branch
+     *          cannot consume the data produced for the branch by stages in the rendering.
      */
     public void addBranch(String key, Pipeline branch) throws ValidationException {
         if (key == null)
@@ -268,7 +268,7 @@ public class Pipeline implements Runnable, StageContext {
         if (validator != null) {
             List<ValidationFailure> errors = validator.validateAddBranch(this, key, branch);
             if (errors != null && !errors.isEmpty()) {
-                throw new ValidationException("An error occurred adding branch pipeline " + branch, errors);
+                throw new ValidationException("An error occurred adding branch rendering " + branch, errors);
             }
         }
 
@@ -287,10 +287,10 @@ public class Pipeline implements Runnable, StageContext {
 
     /**
      * Simple method that recursively checks whether the specified
-     * pipeline is a branch of this pipeline.
+     * rendering is a branch of this rendering.
      *
      * @param pipeline the candidate branch
-     * @return true if the specified pipeline is a branch of this pipeline, or recursively
+     * @return true if the specified rendering is a branch of this rendering, or recursively
      *         a branch of a branch. Tests are performed using reference equality.
      */
     private boolean hasBranch(Pipeline pipeline) {
@@ -303,9 +303,9 @@ public class Pipeline implements Runnable, StageContext {
     }
 
     /**
-     * Returns a feeder for the first stage if the pipeline is not empty
+     * Returns a feeder for the first stage if the rendering is not empty
      *
-     * @return the feeder to feed the first stage of the pipeline
+     * @return the feeder to feed the first stage of the rendering
      */
     public Feeder getSourceFeeder() {
         if (drivers.isEmpty()) return this.terminalFeeder;
@@ -331,14 +331,14 @@ public class Pipeline implements Runnable, StageContext {
     }
 
     /**
-     * This method iterates over the stages in the pipeline, looking up a
+     * This method iterates over the stages in the rendering, looking up a
      * {@link StageDriver} for each stage and using that driver to start the stage.
      * Startups may occur sequentially or in parallel, depending upon the stage driver
      * used.  If a the stage has not been configured with a {@link StageDriver},
      * we will use the default, non-threaded {@link org.apache.commons.pipeline.driver.SynchronousStageDriver}.
      *
      * @throws org.apache.commons.pipeline.StageException
-     *          Thrown if there is an error during pipeline startup
+     *          Thrown if there is an error during rendering startup
      */
     public void start() throws StageException {
         for (StageDriver driver : this.drivers) driver.start();
@@ -346,7 +346,7 @@ public class Pipeline implements Runnable, StageContext {
     }
 
     /**
-     * This method iterates over the stages in the pipeline, looking up a {@link StageDriver}
+     * This method iterates over the stages in the rendering, looking up a {@link StageDriver}
      * for each stage and using that driver to request that the stage finish
      * execution. The {@link StageDriver#finish()}
      * method will block until the stage's queue is exhausted, so this method
@@ -367,7 +367,7 @@ public class Pipeline implements Runnable, StageContext {
     }
 
     /**
-     * Runs the pipeline from start to finish.
+     * Runs the rendering from start to finish.
      */
     public void run() {
         try {
@@ -379,29 +379,29 @@ public class Pipeline implements Runnable, StageContext {
     }
 
     /**
-     * Returns the validator being used to validate the pipeline structure,
+     * Returns the validator being used to validate the rendering structure,
      * or null if no validation is being performed..
      *
-     * @return Validator used to validate pipeline structure.
+     * @return Validator used to validate rendering structure.
      */
     public PipelineValidator getValidator() {
         return this.validator;
     }
 
     /**
-     * Sets the validator used to validate the pipeline as it is contstructed.
+     * Sets the validator used to validate the rendering as it is contstructed.
      * Setting the validator to null disables validation
      *
-     * @param validator Validator used to validate pipeline structure.
+     * @param validator Validator used to validate rendering structure.
      */
     public void setValidator(PipelineValidator validator) {
         this.validator = validator;
     }
 
     /**
-     * Returns the parent of this pipeline, if it is a branch
+     * Returns the parent of this rendering, if it is a branch
      *
-     * @return parent Pipeline, or null if this is the main pipeline
+     * @return parent Pipeline, or null if this is the main rendering
      */
     public Pipeline getParent() {
         return parent;

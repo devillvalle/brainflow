@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
 
 /**
  * Runs a static method with the object (or array) being processed. The returned object
- * will be exqueued on the main pipeline if it is not null. If the returned
+ * will be exqueued on the main rendering if it is not null. If the returned
  * object is null, this stage will attempt to place the original object on the
  * branch specified by {@link #setNullResultBranchTag(String)}.
  */

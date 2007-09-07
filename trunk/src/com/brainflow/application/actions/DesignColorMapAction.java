@@ -53,7 +53,7 @@ public class DesignColorMapAction extends BasicAction {
         ImageCanvas2 canvas = (ImageCanvas2) getContextValue(ActionContext.SELECTED_CANVAS);
         if (view != null) {
 
-            //int layer = view.getModel().getSelectedIndex();
+            //int layer = view.getModel().getSelectedLayerIndex();
             ImageLayer layer = view.getModel().getSelectedLayer();
             IColorMap oldMap = layer.getImageLayerProperties().getColorMap().getProperty();
 

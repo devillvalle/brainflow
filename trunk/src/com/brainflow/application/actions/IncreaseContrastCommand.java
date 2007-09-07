@@ -25,7 +25,7 @@ public class IncreaseContrastCommand extends BrainFlowCommand {
 
         ImageView view = getSelectedView();
         if (view != null) {
-            int idx = view.getSelectedIndex();
+            int idx = view.getSelectedLayerIndex();
             AbstractLayer layer = view.getModel().getLayer(idx);
             incrementContrast(layer);
 

@@ -917,7 +917,7 @@ public class Brainflow {
         }
 
         public void viewSelected(ImageView view) {
-            int i = view.getSelectedIndex();
+            int i = view.getSelectedLayerIndex();
             if (i >= 0) {
                 anatomyLabel.setText("Layer: " + view.getModel().getLayerName(i));
                 anatomyLabel.setEnabled(true);

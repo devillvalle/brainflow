@@ -1,6 +1,6 @@
 package com.brainflow.core;
 
-import com.brainflow.core.pipeline.*;
+import com.brainflow.core.rendering.*;
 import com.brainflow.display.InterpolationHint;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.Anatomy3D;
@@ -205,7 +205,7 @@ public class CompositeImageProducer extends AbstractImageProducer {
 
 
         pipeline.getSourceFeeder().feed(getModel());
-        //Thread t = new Thread(pipeline);
+        //Thread t = new Thread(rendering);
         //t.start();
         pipeline.run();
 

@@ -25,12 +25,12 @@ package org.apache.commons.pipeline;
 public interface Stage {
 
     /**
-     * <p>Initialization takes place when the stage is added to a pipeline.
+     * <p>Initialization takes place when the stage is added to a rendering.
      * Implementations of this method should perform any necessary setup that
      * is required for the driver to be able to correctly run the stage.</p>
      * <p><strong>NOTE:</strong> Since this method is run when the stage is
-     * added to the pipeline, certain information (such as the downstream
-     * feeder for the stage) may not yet be available until the pipeline is
+     * added to the rendering, certain information (such as the downstream
+     * feeder for the stage) may not yet be available until the rendering is
      * fully constructoed.</p>
      *
      * @param context the {@link StageContext} within which the stage sill be run

@@ -12,8 +12,10 @@ import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.image.space.Axis;
 import com.jgoodies.binding.list.SelectionInList;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.RenderedImage;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ import java.util.logging.Logger;
  */
 public class SimpleImageView extends ImageView {
 
-    private ImagePane ipane;
+    //private ImagePane ipane;
 
     private final static Logger log = Logger.getLogger(SimpleImageView.class.getName());
 
@@ -83,10 +85,10 @@ public class SimpleImageView extends ImageView {
         imagePlot.setScreenInterpolation(getScreenInterpolation());
 
 
-        ipane = new ImagePane(imagePlot);
+        //ipane = new ImagePane(imagePlot);
 
         setLayout(new BorderLayout());
-        add(ipane, BorderLayout.CENTER);
+        add(imagePlot.getComponent(), BorderLayout.CENTER);
         getPlotSelection().setSelection(imagePlot);
 
 
@@ -101,14 +103,6 @@ public class SimpleImageView extends ImageView {
         });
 
         initAnnotations();
-
-        /*JXLayer<JSlider> layer = new JXLayer<JSlider>(new JSlider(JSlider.HORIZONTAL));
-      DefaultPainter<JSlider> painter = new DefaultPainter<JSlider>();
-      painter.getModel().setAlpha(.2f);
-      layer.setPainter(painter);
-
-      add(layer, BorderLayout.SOUTH);
-      setBackground(Color.BLACK);  */
 
 
     }
@@ -128,7 +122,10 @@ public class SimpleImageView extends ImageView {
     }
 
     public RenderedImage captureImage() {
-        return ipane.captureImage();
+        BufferedImage img = new BufferedImage(imagePlot.getComponent().getWidth(), imagePlot.getComponent().getHeight(), BufferedImage.TYPE_INT_ARGB);
+        imagePlot.getComponent().paint(img.createGraphics());
+        return img;
+
     }
 
 
@@ -148,7 +145,10 @@ public class SimpleImageView extends ImageView {
 
 
     public IImagePlot whichPlot(Point p) {
-        if (ipane.pointInPlot(this, p)) {
+         Point point = SwingUtilities.convertPoint(this, p, imagePlot.getComponent());
+
+        boolean inplot = !((point.x < 0) || (point.y < 0) || (point.x > getWidth()) || (point.y > getHeight()));
+        if (inplot) {
             return imagePlot;
         } else {
             return null;
@@ -157,7 +157,7 @@ public class SimpleImageView extends ImageView {
 
 
     public Dimension getPreferredSize() {
-        return ipane.getPreferredSize();
+        return imagePlot.getComponent().getPreferredSize();
     }
 
 
@@ -248,22 +248,19 @@ public class SimpleImageView extends ImageView {
             Axis axis = getViewport().getProperty().getBounds().findAxis(getSelectedPlot().getDisplayAnatomy().ZAXIS);
             ImageAxis iaxis = getModel().getImageAxis(axis);
 
-            System.out.println("page forward ...");
+
             int sample = iaxis.nearestSample(slice);
-            System.out.println("current sample : " + sample);
+
             double page = iaxis.getExtent() * pageStep;
-            System.out.println("page extent : " + page);
+
             int jump = (int) (page / iaxis.getSpacing());
-            System.out.println("slice jump " + jump);
 
             // ensure we move at least one sample
             jump = Math.max(jump, 1);
             int nsample = sample + jump;
 
-            System.out.println("new slice index : " + nsample);
 
             if (nsample >= 0 && nsample < iaxis.getNumSamples()) {
-                System.out.println("new slice valie " + iaxis.valueOf(nsample));
                 cross.setValue(iaxis.valueOf(nsample));
             }
 

@@ -25,14 +25,14 @@ import java.util.List;
 
 /**
  * This interface is used as the basis for validation strategies that may be
- * used to check the validity of a pipeline under construction.
+ * used to check the validity of a rendering under construction.
  */
 public interface PipelineValidator {
     /**
      * Implementations of this method should validate the overall structure of
-     * the pipeline.
+     * the rendering.
      *
-     * @param pipeline The pipeline to be validated
+     * @param pipeline The rendering to be validated
      * @return The list of validation errors encountered. An empty list is returned if no
      *         errors are found.
      */
@@ -40,9 +40,9 @@ public interface PipelineValidator {
 
     /**
      * Implementations of this method should validate whether or not the specified
-     * stage can be added to the pipeline in its current state.
+     * stage can be added to the rendering in its current state.
      *
-     * @param pipeline      The pipeline to which the stage is being added
+     * @param pipeline      The rendering to which the stage is being added
      * @param stage         The added stage
      * @param driverFactory The StageDriverFactory used to create a StageDriver for the stage
      * @return The list of validation errors encountered, or an empty list if none were
@@ -52,11 +52,11 @@ public interface PipelineValidator {
 
     /**
      * Implementations of this method should validate whether or not the specified
-     * branch can be added to the specified pipeline with the given key.
+     * branch can be added to the specified rendering with the given key.
      *
-     * @param pipeline  The pipeline to which the branch is being added
+     * @param pipeline  The rendering to which the branch is being added
      * @param branchKey The key used to identify the new branch
-     * @param branch    The new branch pipeline
+     * @param branch    The new branch rendering
      * @return The list of validation failures, or an empty list if validation passes.
      */
     public List<ValidationFailure> validateAddBranch(Pipeline pipeline, String branchKey, Pipeline branch);

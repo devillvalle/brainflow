@@ -46,7 +46,7 @@ public class LogStage extends BaseStage {
 
     /**
      * Logs the current state of an object on the queue and passes the
-     * object unchanged to the next stage in the pipeline.
+     * object unchanged to the next stage in the rendering.
      */
     public void process(Object obj) throws StageException {
         log.info("Processing object " + obj);

@@ -1,10 +1,8 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.core.*;
-import com.brainflow.display.Visibility;
 import com.jidesoft.grid.*;
 import com.jidesoft.swing.JideSwingUtilities;
-import com.jidesoft.swing.CheckBoxListSelectionModel;
 import com.jidesoft.swing.JideBoxLayout;
 
 import javax.swing.*;
@@ -110,7 +108,7 @@ public class MaskListPresenter extends ImageViewPresenter {
                 if (model == hierTable.getSelectionModel()) {
                     for (int i = f1; i <= f2; i++) {
                         if (model.isSelectedIndex(i)) {
-                            view.setSelectedIndex(i);
+                            view.setSelectedLayerIndex(i);
 
                         }
                     }

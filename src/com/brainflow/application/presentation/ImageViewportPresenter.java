@@ -332,10 +332,10 @@ public class ImageViewportPresenter extends ImageViewPresenter {
     }
 
     private void connectBox(ValueModel xval, ValueModel yval, ValueModel width, ValueModel height) {
-        PropertyAdapter xminAdapter = new PropertyAdapter(boxAnnotation, BoxAnnotation.XMIN_PROPERTY);
-        PropertyAdapter yminAdapter = new PropertyAdapter(boxAnnotation, BoxAnnotation.YMIN_PROPERTY);
-        PropertyAdapter widthAdapter = new PropertyAdapter(boxAnnotation, BoxAnnotation.WIDTH_PROPERTY);
-        PropertyAdapter heightAdapter = new PropertyAdapter(boxAnnotation, BoxAnnotation.HEIGHT_PROPERTY);
+        PropertyAdapter<BoxAnnotation> xminAdapter = new PropertyAdapter<BoxAnnotation>(boxAnnotation, BoxAnnotation.XMIN_PROPERTY);
+        PropertyAdapter<BoxAnnotation> yminAdapter = new PropertyAdapter<BoxAnnotation>(boxAnnotation, BoxAnnotation.YMIN_PROPERTY);
+        PropertyAdapter<BoxAnnotation> widthAdapter = new PropertyAdapter<BoxAnnotation>(boxAnnotation, BoxAnnotation.WIDTH_PROPERTY);
+        PropertyAdapter<BoxAnnotation> heightAdapter = new PropertyAdapter<BoxAnnotation>(boxAnnotation, BoxAnnotation.HEIGHT_PROPERTY);
 
         if (xoriginConnector != null) {
             xoriginConnector.release();
@@ -344,10 +344,10 @@ public class ImageViewportPresenter extends ImageViewPresenter {
             heightConnector.release();
         }
 
-        xoriginConnector = new PropertyConnector(xval, "value", xminAdapter, "value");
-        yoriginConnector = new PropertyConnector(yval, "value", yminAdapter, "value");
-        widthConnector = new PropertyConnector(width, "value", widthAdapter, "value");
-        heightConnector = new PropertyConnector(height, "value", heightAdapter, "value");
+        xoriginConnector = PropertyConnector.connect(xval, "value", xminAdapter, "value");
+        yoriginConnector = PropertyConnector.connect(yval, "value", yminAdapter, "value");
+        widthConnector = PropertyConnector.connect(width, "value", widthAdapter, "value");
+        heightConnector = PropertyConnector.connect(height, "value", heightAdapter, "value");
 
         xoriginConnector.updateProperty2();
         yoriginConnector.updateProperty2();
@@ -441,12 +441,12 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
 
                 Number xold = (Number) xorigin.getValue();
-
                 Number yold = (Number) yorigin.getValue();
 
 
                 double newx = xold.doubleValue() + (next.getX() - lastPoint.getX());
                 double newy = yold.doubleValue() + (next.getY() - lastPoint.getY());
+
                 if (newx < plot.getXAxisRange().getMinimum()) {
                     newx = plot.getXAxisRange().getMinimum();
                 } else if (newy < plot.getYAxisRange().getMinimum()) {

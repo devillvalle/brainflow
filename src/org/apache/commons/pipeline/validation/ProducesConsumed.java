@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * This marker annotation indicates that the {@link Stage} produces the same type
  * of object that is consumed (or any subtype thereof). This is used to allow
  * correct resolution of stage compatibility between different parts of a
- * pipeline when there are intervening generic pass-through stages such
+ * rendering when there are intervening generic pass-through stages such
  * as loggers, which can consume any type of object and produce the
  * same object unchanged.
  * <p/>

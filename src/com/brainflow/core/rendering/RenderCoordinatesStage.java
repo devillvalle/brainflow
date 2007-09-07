@@ -1,4 +1,4 @@
-package com.brainflow.core.pipeline;
+package com.brainflow.core.rendering;
 
 import org.apache.commons.pipeline.StageException;
 
@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 import com.brainflow.core.CoordinateLayer;
-import com.brainflow.core.ImageLayer;
 import com.brainflow.core.AbstractLayer;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 

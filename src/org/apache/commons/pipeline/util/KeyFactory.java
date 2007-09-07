@@ -24,7 +24,7 @@ package org.apache.commons.pipeline.util;
  * allow a unique identifier to be generated for an object. This identifier
  * may be mutually comparable with identifiers generated for a different
  * object type; it is used to permit signalling between drivers in
- * separate pipeline branches.
+ * separate rendering branches.
  */
 public interface KeyFactory<T, K> {
     /**

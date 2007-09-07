@@ -1,4 +1,4 @@
-package com.brainflow.core.pipeline;
+package com.brainflow.core.rendering;
 
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.operations.ImageSlicer;

@@ -24,7 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
- * This is a simple stage in the pipeline which will add each processed object
+ * This is a simple stage in the rendering which will add each processed object
  * to the specified collection.
  * <p/>
  * For the purposes of validation, this stage is considered to be able to consume

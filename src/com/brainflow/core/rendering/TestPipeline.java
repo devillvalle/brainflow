@@ -1,4 +1,4 @@
-package com.brainflow.core.pipeline;
+package com.brainflow.core.rendering;
 
 import com.brainflow.application.BrainflowException;
 import com.brainflow.application.MemoryImage;

@@ -21,7 +21,7 @@ package org.apache.commons.pipeline;
 
 /**
  * <p>This interface represents a factory that is used by a {@link Pipeline} to create
- * a driver for a {@link Stage} when that stage is added to the pipeline. The factory
+ * a driver for a {@link Stage} when that stage is added to the rendering. The factory
  * pattern is used here to ensure that each stage is run by a unique driver
  * instance.</p>
  * <p/>

@@ -53,7 +53,7 @@ public class RenderingParamsPresenter extends ImageViewPresenter {
         initBinding();
         form.getInterpolationLabel().setEnabled(true);
         form.getInterpolationChoices().setEnabled(true);
-        int idx = view.getSelectedIndex();
+        int idx = view.getSelectedLayerIndex();
 
         if (idx >= 0) {
             SelectionInList sel = view.getModel().

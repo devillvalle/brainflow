@@ -133,7 +133,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
         }
 
-        //assert view.getModel().getSelectedIndex() >= 0;
+        //assert view.getModel().getSelectedLayerIndex() >= 0;
         //layerSelector.clearSelection();
 
         if (layerSelector.getModel() != view.getModel().getLayerSelection()) {

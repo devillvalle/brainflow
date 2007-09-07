@@ -4,10 +4,7 @@ import com.brainflow.application.services.ImageViewCrosshairEvent;
 import com.brainflow.application.services.ImageViewLayerSelectionEvent;
 import com.brainflow.core.annotations.IAnnotation;
 import com.brainflow.display.*;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.anatomy.AnatomicalPoint2D;
-import com.brainflow.image.anatomy.AnatomicalPoint3D;
-import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.image.anatomy.*;
 import com.brainflow.image.axis.CoordinateAxis;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.ICoordinateSpace;
@@ -54,6 +51,7 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
 
     private InterpolationHint screenInterpolation = InterpolationHint.NEAREST_NEIGHBOR;
 
+    private SelectionInList<IImagePlot> plotSelection;
 
     private IImageDisplayModel displayModel;
 
@@ -137,7 +135,9 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
 
     }
 
-    public abstract SelectionInList getPlotSelection();
+    public SelectionInList<IImagePlot> getPlotSelection() {
+        return plotSelection;
+    }
 
     public abstract SliceController getSliceController();
 
@@ -181,15 +181,12 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
     }
 
 
-    public int getSelectedIndex() {
+    public int getSelectedLayerIndex() {
         return displayModel.getLayerSelection().getSelectionIndex();
     }
 
-    public void setSelectedIndex(int selectedIndex) {
-        assert selectedIndex < getModel().getNumLayers() & selectedIndex >= 0;
-
-        if (selectedIndex != displayModel.getSelectedIndex())
-            displayModel.getLayerSelection().setSelectionIndex(selectedIndex);
+    public void setSelectedLayerIndex(int selectedIndex) {
+        displayModel.setSelectedIndex(selectedIndex);
     }
 
     public void setModel(IImageDisplayModel model) {
@@ -219,17 +216,7 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
 
     public AnatomicalPoint3D getCentroid() {
         ICoordinateSpace compositeSpace = displayModel.getImageSpace();
-        CoordinateAxis a1 = compositeSpace.getImageAxis(Axis.X_AXIS);
-        CoordinateAxis a2 = compositeSpace.getImageAxis(Axis.Y_AXIS);
-        CoordinateAxis a3 = compositeSpace.getImageAxis(Axis.Z_AXIS);
-
-        AnatomicalPoint1D x = a1.getRange().getCenter();
-        AnatomicalPoint1D y = a2.getRange().getCenter();
-        AnatomicalPoint1D z = a3.getRange().getCenter();
-
-        return new AnatomicalPoint3D((Anatomy3D) compositeSpace.getAnatomy(), x.getX(), y.getX(), z.getX());
-
-
+        return (AnatomicalPoint3D)compositeSpace.getCentroid();       
     }
 
     public void clearAnnotations() {
@@ -320,7 +307,6 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
     public abstract IImagePlot whichPlot(Point p);
 
     public abstract List<IImagePlot> getPlots();
-
 
     public abstract RenderedImage captureImage();
 

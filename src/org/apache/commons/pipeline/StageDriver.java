@@ -24,7 +24,7 @@ import java.util.List;
  * stopped, and run. StageDriver implementations may run stages in zero or
  * more threads, and use the {@link StageContext} interface to provide
  * communication between the stage and the context it is run, usually
- * a pipeline.
+ * a rendering.
  */
 public interface StageDriver {
     /**

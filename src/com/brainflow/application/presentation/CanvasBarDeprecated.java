@@ -80,7 +80,7 @@ public class CanvasBarDeprecated extends ImageViewPresenter {
     protected void layerSelected(AbstractLayer layer) {
 
         ImageView view = getSelectedView();
-        int idx = view.getSelectedIndex();
+        int idx = view.getSelectedLayerIndex();
 
         updateSelection(idx);
         //buttonGroup.setSelected(layerButtonList.get(idx).getModel(), true);
@@ -180,7 +180,7 @@ public class CanvasBarDeprecated extends ImageViewPresenter {
 
         }
 
-        int selIdx = getSelectedView().getSelectedIndex();
+        int selIdx = getSelectedView().getSelectedLayerIndex();
         updateSelection(selIdx);
 
 
@@ -212,7 +212,7 @@ public class CanvasBarDeprecated extends ImageViewPresenter {
 
                 int selIdx = view.getModel().getSelectedIndex();
                 if (selIdx != buttonIndex) {
-                    view.setSelectedIndex(buttonIndex);
+                    view.setSelectedLayerIndex(buttonIndex);
                     updateSelection(buttonIndex);
                     System.out.println("button " + buttonIndex + " is selected");
                 }

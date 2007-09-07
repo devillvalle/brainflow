@@ -47,7 +47,7 @@ public class PipelineShutdownStage extends BaseStage {
 
     /**
      * Maintains a count of objects.  If the count equals or exceeds the numberOfObjects
-     * then the pipeline is shut down.
+     * then the rendering is shut down.
      *
      * @param obj The objects.
      */

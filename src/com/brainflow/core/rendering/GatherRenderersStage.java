@@ -1,10 +1,5 @@
-package com.brainflow.core.pipeline;
+package com.brainflow.core.rendering;
 
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.operations.ImageSlicer;
-import com.brainflow.image.data.IImageData2D;
-import com.brainflow.image.data.IImageData3D;
-import com.brainflow.image.data.IImageData;
 import com.brainflow.core.*;
 
 import org.apache.commons.pipeline.StageException;

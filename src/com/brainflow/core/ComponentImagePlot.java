@@ -281,6 +281,13 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         }
     }
 
+    public double getXExtent() {
+        return xAxis.getInterval();
+    }
+
+    public double getYExtent() {
+        return yAxis.getInterval();
+    }
 
     public void setXAxisRange(AxisRange xrange) {
         xAxis = xrange;

@@ -3,9 +3,7 @@ package com.brainflow.image.space;
 import com.brainflow.image.axis.CoordinateAxis;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.axis.ImageAxis;
-import com.brainflow.image.anatomy.Anatomy;
-import com.brainflow.image.anatomy.Anatomy3D;
-import com.brainflow.image.anatomy.Anatomy2D;
+import com.brainflow.image.anatomy.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -54,6 +52,15 @@ public class CoordinateSpace2D extends AbstractCoordinateSpace {
 
     }
 
+    public AnatomicalPoint getCentroid() {
+        CoordinateAxis a1 = getImageAxis(Axis.X_AXIS);
+        CoordinateAxis a2 = getImageAxis(Axis.Y_AXIS);
+
+        AnatomicalPoint1D x = a1.getRange().getCenter();
+        AnatomicalPoint1D y = a2.getRange().getCenter();
+
+        return new AnatomicalPoint2D((Anatomy2D) getAnatomy(), x.getX(), y.getX());
+    }
 
     protected CoordinateAxis[] getAxes() {
         return axes;

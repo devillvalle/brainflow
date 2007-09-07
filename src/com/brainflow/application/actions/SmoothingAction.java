@@ -1,6 +1,5 @@
 package com.brainflow.application.actions;
 
-import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.AbstractLayer;
 import com.brainflow.display.SmoothingOp;
@@ -26,7 +25,7 @@ public class SmoothingAction extends BasicAction {
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
 
         if (view != null) {
-            int idx = view.getSelectedIndex();
+            int idx = view.getSelectedLayerIndex();
             AbstractLayer layer = view.getModel().getLayer(idx);
 
 

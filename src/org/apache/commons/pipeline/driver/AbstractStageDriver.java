@@ -26,7 +26,7 @@ import java.util.List;
  * This interface is used to define how processing for a stage is started,
  * stopped, and run. AbstractStageDriver implementations may run stages in zero or
  * more threads, and use the {@link StageContext} interface to provide communication
- * between the stage, the driver, and the enclosing pipeline.
+ * between the stage, the driver, and the enclosing rendering.
  */
 public abstract class AbstractStageDriver implements StageDriver {
 

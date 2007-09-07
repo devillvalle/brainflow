@@ -80,6 +80,15 @@ public class ImageDisplayModel implements IImageDisplayModel {
         return layerSelection;
     }
 
+    public void setSelectedIndex(int index) {
+        if (index < 0 || index >= getNumLayers() ) {
+            throw new IllegalArgumentException("index out of bounds");
+        }
+
+        if (getSelectedIndex() != index) {
+            layerSelection.setSelectionIndex(index);
+        }
+    }
 
     public int getSelectedIndex() {
         return layerSelection.getSelectionIndex();

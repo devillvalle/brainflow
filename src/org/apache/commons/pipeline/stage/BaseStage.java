@@ -42,7 +42,7 @@ public abstract class BaseStage implements Stage {
     protected StageContext context;
 
     /**
-     * Feeder for the next downstream stage in the pipeline. This value
+     * Feeder for the next downstream stage in the rendering. This value
      * is lazily initialized by the process() method.
      */
     private Feeder downstreamFeeder;
@@ -71,7 +71,7 @@ public abstract class BaseStage implements Stage {
      * is to feed the specified object to the downstream feeder.
      * This method should be overridden to provide processing capability for the stage.
      *
-     * @param obj Object to be passed to downstream pipeline.
+     * @param obj Object to be passed to downstream rendering.
      * @throws StageException an Exception thrown by an overriding implementation should
      *                        be wrapped in a {@link StageException}
      */

@@ -1,15 +1,12 @@
-package com.brainflow.core.pipeline;
+package com.brainflow.core.rendering;
 
 import org.apache.commons.pipeline.StageException;
 import com.brainflow.core.IImagePlot;
-import com.brainflow.core.ImageLayer2D;
-import com.brainflow.image.data.IImageData2D;
 
 import java.awt.image.BufferedImage;
 
 import java.awt.geom.Rectangle2D;
 import java.util.logging.Logger;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.

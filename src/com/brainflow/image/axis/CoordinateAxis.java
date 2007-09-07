@@ -1,8 +1,9 @@
 package com.brainflow.image.axis;
 
 import com.brainflow.image.anatomy.AnatomicalAxis;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalDirection;
+import com.brainflow.image.anatomy.AnatomicalPoint1D;
+import com.brainflow.image.space.Axis;
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,6 +41,10 @@ public class CoordinateAxis {
 
     public AnatomicalAxis getAnatomicalAxis() {
         return axis;
+    }
+
+    public AnatomicalPoint1D getCenter() {
+        return range.getCenter();              
     }
 
     public AxisRange getRange() {

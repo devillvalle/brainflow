@@ -33,7 +33,7 @@ public class ValidationFailure {
          */
         STAGE_CONNECT,
         /**
-         * Indicates that a branch could not consume the output (type mismatch) of pipeline
+         * Indicates that a branch could not consume the output (type mismatch) of rendering
          * stages feeding the branch.
          */
         BRANCH_CONNECT,

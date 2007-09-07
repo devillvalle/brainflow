@@ -1,4 +1,4 @@
-package com.brainflow.core.pipeline;
+package com.brainflow.core.rendering;
 
 import com.brainflow.core.SliceRenderer;
 import com.brainflow.image.rendering.RenderUtils;

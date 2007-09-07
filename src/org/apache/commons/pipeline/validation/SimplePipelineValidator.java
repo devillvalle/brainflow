@@ -41,11 +41,11 @@ public class SimplePipelineValidator implements PipelineValidator {
     }
 
     /**
-     * This method validates the entire structure of the pipeline, ensuring that
+     * This method validates the entire structure of the rendering, ensuring that
      * the data produced by each stage can be consumed by the subsequent
      * stage and/or relevant branch pipelines.
      *
-     * @param pipeline The pipeline to be validated
+     * @param pipeline The rendering to be validated
      * @return The list of validation errors encountered.
      */
     public List<ValidationFailure> validate(Pipeline pipeline) {
@@ -83,10 +83,10 @@ public class SimplePipelineValidator implements PipelineValidator {
             //only update the previous stage reference if the stage has non-null
             //and non-pass-through production
             if (stage.getClass().isAnnotationPresent(ProducedTypes.class)) {
-                //stop if the stage produces nothing, and raise an error if not at the end of the pipeline
+                //stop if the stage produces nothing, and raise an error if not at the end of the rendering
                 if (stage.getClass().getAnnotation(ProducedTypes.class).value().length == 0) {
                     if (iter.hasNext()) errors.add(new ValidationFailure(ValidationFailure.Type.STAGE_CONNECT,
-                            "Stage with no production is not at terminus of pipeline.", stage, iter.next()));
+                            "Stage with no production is not at terminus of rendering.", stage, iter.next()));
                     break;
                 }
 
@@ -114,7 +114,7 @@ public class SimplePipelineValidator implements PipelineValidator {
                     "Branch not found for production key " + branchKey, upstreamStage, null));
         } else if (branch.getStages().isEmpty()) {
             errors.add(new ValidationFailure(ValidationFailure.Type.BRANCH_CONNECT,
-                    "Branch pipeline for key " + branchKey + " has no stages.", upstreamStage, null));
+                    "Branch rendering for key " + branchKey + " has no stages.", upstreamStage, null));
         } else if (!ValidationUtils.canSucceed(upstreamStage, branch.getStages().get(0))) {
             errors.add(new ValidationFailure(ValidationFailure.Type.BRANCH_CONNECT,
                     "Branch " + branchKey + " cannot consume data produced by stage.", upstreamStage, branch.getStages().get(0)));
@@ -124,9 +124,9 @@ public class SimplePipelineValidator implements PipelineValidator {
     }
 
     /**
-     * Validate whether or not a stage can be added to the pipeline.
+     * Validate whether or not a stage can be added to the rendering.
      *
-     * @param pipeline      The pipeline to which the stage is being added
+     * @param pipeline      The rendering to which the stage is being added
      * @param stage         The stage to be added
      * @param driverFactory the StageDriverFactory used to create a driver for the stage
      * @return The list of validation errors encountered, or an empty list if the add
@@ -138,14 +138,14 @@ public class SimplePipelineValidator implements PipelineValidator {
         //establish list of errors to be returned, initially empty
         List<ValidationFailure> errors = new ArrayList<ValidationFailure>();
 
-        //search backwards along pipeline for known production
+        //search backwards along rendering for known production
         Stage previous = null;
         for (int i = pipeline.getStages().size() - 1; i >= 0; i--) {
             Stage test = pipeline.getStages().get(i);
             if (test.getClass().isAnnotationPresent(ProducedTypes.class)) {
                 if (test.getClass().getAnnotation(ProducedTypes.class).value().length == 0) {
                     errors.add(new ValidationFailure(ValidationFailure.Type.STAGE_CONNECT,
-                            "Attempt to add stage to pipeline with no production at terminus.", test, stage));
+                            "Attempt to add stage to rendering with no production at terminus.", test, stage));
                 } else {
                     previous = test;
                 }
@@ -168,15 +168,15 @@ public class SimplePipelineValidator implements PipelineValidator {
     }
 
     /**
-     * Validate whether or not the specified branch pipeline can be added
+     * Validate whether or not the specified branch rendering can be added
      * with the specified key.
      *
-     * @param pipeline  The pipeline to which the branch is being added
+     * @param pipeline  The rendering to which the branch is being added
      * @param branchKey The identifier for the newly added branch
-     * @param branch    The branch pipeline being added
+     * @param branch    The branch rendering being added
      * @return The list of validation errors, or an empty list if no errors were found.
      */
     public List<ValidationFailure> validateAddBranch(Pipeline pipeline, String branchKey, Pipeline branch) {
-        return Collections.emptyList(); //all default validation rules exist in pipeline
+        return Collections.emptyList(); //all default validation rules exist in rendering
     }
 }

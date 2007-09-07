@@ -61,6 +61,10 @@ public interface IImagePlot {
 
     public Rectangle getPlotArea();
 
+    public double getXExtent();
+
+    public double getYExtent();
+
     public AxisRange getXAxisRange();
 
     public AxisRange getYAxisRange();

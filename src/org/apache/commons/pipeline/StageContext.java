@@ -22,7 +22,7 @@ import java.util.EventObject;
 
 /**
  * This interface represents the context in which a stage is run. Ordinarily,
- * the context will be provided by the pipeline in which the stage is embedded;
+ * the context will be provided by the rendering in which the stage is embedded;
  * however, this interface is also useful for creating isolated test environments
  * in which a stage can be run.
  */
@@ -53,7 +53,7 @@ public interface StageContext {
     public void raise(EventObject ev);
 
     /**
-     * Return the source feeder for the specified pipeline branch.
+     * Return the source feeder for the specified rendering branch.
      *
      * @param branch the string identifer of the branch for which a feeder will be retrieved
      * @return the {@link Feeder} for the first stage of the specified branch

@@ -71,6 +71,8 @@ public interface IImagePlot {
 
     public JComponent getComponent();
 
+    public Dimension getPreferredSize();
+
     public IImageProducer getImageProducer();
 
     public void setImageProducer(IImageProducer producer);

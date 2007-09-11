@@ -83,7 +83,7 @@ public class YokeHandler {
             ICrosshair cross = (ICrosshair) evt.getSource();
             ImageView view = target.get();
             if (view != null) {
-                view.getCrosshair().getProperty().setLocation(cross.getLocation());
+                view.getCrosshair().setLocation(cross.getLocation());
             } else {
                 log.fine("Target view of YokeHandler has been garbage collected");
             }

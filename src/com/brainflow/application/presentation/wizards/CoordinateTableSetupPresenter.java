@@ -65,7 +65,7 @@ public class CoordinateTableSetupPresenter extends AbstractPresenter {
         form.getTableSizeSpinner().setModel(spinnerModel);
 
         ValueModel defaultColor = adapter.getValueModel(CoordinateTableSetupInfo.DEFAULT_COLOR_PROPERTY);
-        PropertyConnector connector = new PropertyConnector(defaultColor, "value", form.getColorChooser(), "selectedColor");
+        PropertyConnector connector = PropertyConnector.connect(defaultColor, "value", form.getColorChooser(), "selectedColor");
         connector.updateProperty2();
         
 

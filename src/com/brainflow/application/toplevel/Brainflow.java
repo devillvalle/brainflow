@@ -81,7 +81,6 @@ public class Brainflow {
 
     private ImageFileExplorer loadingDock = null;
 
-
     private StatusBar statusBar = new StatusBar();
 
     private CursorCoordinates cursorCoordinates = new CursorCoordinates();
@@ -435,6 +434,24 @@ public class Brainflow {
         coronalCommand.bind(getApplicationFrame());
         coronalCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
+
+        CreateVerticalOrthogonalCommand vertCommand = new CreateVerticalOrthogonalCommand();
+        vertCommand.bind(getApplicationFrame());
+        vertCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+        CreateHorizontalOrthogonalCommand horizCommand = new CreateHorizontalOrthogonalCommand();
+        horizCommand.bind(getApplicationFrame());
+        horizCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+        CreateTriangularOrthogonalCommand triCommand = new CreateTriangularOrthogonalCommand();
+        triCommand.bind(getApplicationFrame());
+        triCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+
+        CommandGroup orthoGroup = new CommandGroup("ortho-view-group");
+        orthoGroup.bind(getApplicationFrame());
+
+
         NextSliceCommand nextSliceCommand = new NextSliceCommand();
         nextSliceCommand.bind(getApplicationFrame());
         nextSliceCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
@@ -463,6 +480,7 @@ public class Brainflow {
 
         ToggleCommand nearest = new NearestInterpolationToggleCommand();
         nearest.bind(getApplicationFrame());
+        decreaseContrastCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         ToggleCommand linear = new LinearInterpolationToggleCommand();
         linear.bind(getApplicationFrame());

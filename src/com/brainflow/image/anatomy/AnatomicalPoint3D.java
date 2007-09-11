@@ -44,6 +44,16 @@ public class AnatomicalPoint3D implements AnatomicalPoint {
         changeSupport.addPropertyChangeListener(listener);
     }
 
+    public static AnatomicalPoint3D convertPoint(AnatomicalPoint3D from, Anatomy3D to) {
+        AnatomicalPoint1D a1 = from.getValue(to.XAXIS);
+        AnatomicalPoint1D a2 = from.getValue(to.YAXIS);
+        AnatomicalPoint1D a3 = from.getValue(to.ZAXIS);
+
+        return new AnatomicalPoint3D(to, a1.getX(), a2.getX(), a3.getX());
+    }
+
+
+
 
     public AnatomicalPoint1D getValue(AnatomicalAxis axis) {
         if (axis.sameAxis(anatomy.XAXIS)) {
@@ -55,9 +65,20 @@ public class AnatomicalPoint3D implements AnatomicalPoint {
         } else {
             throw new AssertionError();
         }
-
-
     }
+
+     public void setValue(AnatomicalPoint1D val) {
+        if (val.getAnatomy().sameAxis(anatomy.XAXIS)) {
+            x = anatomy.XAXIS.convertValue(val.getAnatomy(), val.getX());
+        } else if (val.getAnatomy().sameAxis(anatomy.YAXIS)) {
+            y = anatomy.YAXIS.convertValue(val.getAnatomy(), val.getX());
+        } else if (val.getAnatomy().sameAxis(anatomy.ZAXIS)) {
+            z = anatomy.ZAXIS.convertValue(val.getAnatomy(), val.getX());   
+        } else {
+            throw new AssertionError();
+        }
+
+     }
 
 
     public double getX() {
@@ -136,10 +157,22 @@ public class AnatomicalPoint3D implements AnatomicalPoint {
         return result;
     }
 
+    public AnatomicalPoint3D clone()  {
+        return new AnatomicalPoint3D(anatomy, x,y,z);
+    }
+
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(anatomy.XAXIS).append("-").append(anatomy.YAXIS).append("-").append(anatomy.ZAXIS);
         sb.append("X: ").append(getX()).append(" Y: ").append(getY()).append(" Z: ").append(getZ());
         return sb.toString();
+    }
+
+    public static void main(String[] args) {
+        AnatomicalPoint3D a = new AnatomicalPoint3D(Anatomy3D.AXIAL_LAI, 12, 50, 12);
+        AnatomicalPoint3D b = new AnatomicalPoint3D(Anatomy3D.AXIAL_LPI, 12, 50, 12);
+
+        System.out.println(AnatomicalPoint3D.convertPoint(a,b.getAnatomy()));
+
     }
 }

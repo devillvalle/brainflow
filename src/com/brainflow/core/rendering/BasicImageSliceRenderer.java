@@ -1,4 +1,4 @@
-package com.brainflow.core;
+package com.brainflow.core.rendering;
 
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.display.InterpolationHint;
@@ -16,6 +16,9 @@ import com.brainflow.image.rendering.RenderUtils;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace2D;
+import com.brainflow.core.SliceRenderer;
+import com.brainflow.core.ImageLayer;
+import com.brainflow.core.ImageLayerProperties;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -180,7 +183,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
     private BufferedImage smooth(BufferedImage source) {
         ImageLayerProperties dprops = layer.getImageLayerProperties();
 
-        double radius = dprops.getSmoothing().getProperty().getRadius();
+        double radius = dprops.getSmoothing().getRadius();
         if (radius < .01) return source;
 
         ImageSpace2D ispace = (ImageSpace2D) getData().getImageSpace();
@@ -197,7 +200,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
     private BufferedImage resample(BufferedImage source) {
 
         ImageLayerProperties dprops = layer.getImageLayerProperties();
-        InterpolationMethod interp = dprops.getResampleInterpolation().getProperty();
+        InterpolationMethod interp = dprops.getResampleInterpolation();
         ImageSpace2D ispace = (ImageSpace2D) getData().getImageSpace();
 
         double sx = ispace.getImageAxis(Axis.X_AXIS).getRange().getInterval() / ispace.getDimension(Axis.X_AXIS);

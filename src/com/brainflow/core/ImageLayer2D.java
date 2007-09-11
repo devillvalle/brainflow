@@ -30,11 +30,11 @@ public class ImageLayer2D  {
     }
 
     public boolean isVisible() {
-        return properties.getVisible().getProperty().isVisible();
+        return properties.getVisible().isVisible();
     }
 
     public double getOpacity() {
-        return properties.getOpacity().getProperty().getOpacity();
+        return properties.getOpacity().getOpacity();
     }
 
 

@@ -5,7 +5,9 @@ import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.display.*;
 import com.brainflow.utils.IRange;
+import com.jgoodies.binding.beans.PropertyAdapter;
 import com.jgoodies.binding.list.SelectionInList;
+import com.jgoodies.binding.value.ValueHolder;
 
 import java.awt.image.IndexColorModel;
 import java.io.Serializable;
@@ -40,18 +42,15 @@ public class ImageLayerProperties implements Serializable {
 
     private Property<IColorMap> colorMap;
 
-    private Property<InterpolationMethod> resampleInterpolation;
+    private InterpolationMethod resampleInterpolation;
 
-    private Property<Visibility> visible;
+    private Visibility visible;
 
-    private Property<ImageOpListProperty> imageOpList;
+    private Opacity opacity;
 
-    private Property<Opacity> opacity;
+    private SmoothingRadius smoothing;
 
-    private Property<SmoothingRadius> smoothing;
-
-    private Property<ThresholdRange> threshold;
-
+    private ThresholdRange threshold;
 
     private SelectionInList interpolationMethod;
 
@@ -75,32 +74,30 @@ public class ImageLayerProperties implements Serializable {
     private void init(IColorMap map, IRange dataRange) {
 
         colorMap = new Property<IColorMap>(map);
-        resampleInterpolation = new Property<InterpolationMethod>(new InterpolationMethod(InterpolationHint.CUBIC));
-        visible = new Property<Visibility>(new Visibility(this, true));
-        imageOpList = new Property<ImageOpListProperty>(new ImageOpListProperty());
-        opacity = new Property<Opacity>(new Opacity(1f));
 
-        smoothing = new Property<SmoothingRadius>(new SmoothingRadius(0));
-        interpolationMethod = new SelectionInList(InterpolationHint.values(), resampleInterpolation.getModel(InterpolationMethod.INTERPOLATION_PROPERTY));
-        threshold = new Property<ThresholdRange>(new ThresholdRange(map.getMinimumValue(),
-                map.getMinimumValue(), dataRange));
+        resampleInterpolation = new InterpolationMethod(InterpolationHint.CUBIC);
 
+        visible = new Visibility(this, true);
 
-    }
+        opacity = new Opacity(1f);
 
-    public void addImageOp(String filterName, ImageOp op) {
-        imageOpList.getProperty().addImageOp(filterName, op);
-    }
+        smoothing = new SmoothingRadius(0);
 
-    public Property<ThresholdRange> getThresholdRange() {
+        interpolationMethod = new SelectionInList<InterpolationHint>(InterpolationHint.values(), new PropertyAdapter<InterpolationMethod>(resampleInterpolation, InterpolationMethod.INTERPOLATION_PROPERTY));
+
+        threshold = new ThresholdRange(map.getMinimumValue(), map.getMinimumValue(), dataRange);
+
+   }
+
+    public ThresholdRange getThresholdRange() {
         return threshold;
     }
 
-    public Property<SmoothingRadius> getSmoothing() {
+    public SmoothingRadius getSmoothing() {
         return smoothing;
     }
 
-    public Property<Visibility> getVisible() {
+    public Visibility getVisible() {
         return visible;
     }
 
@@ -109,7 +106,7 @@ public class ImageLayerProperties implements Serializable {
     }
 
 
-    public Property<Opacity> getOpacity() {
+    public Opacity getOpacity() {
         return opacity;
     }
 
@@ -117,13 +114,10 @@ public class ImageLayerProperties implements Serializable {
         return colorMap;
     }
 
-    public Property<InterpolationMethod> getResampleInterpolation() {
+    public InterpolationMethod getResampleInterpolation() {
         return resampleInterpolation;
     }
 
-    public Property<ImageOpListProperty> getImageOpList() {
-        return imageOpList;
-    }
 
 
 }

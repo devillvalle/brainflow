@@ -49,7 +49,7 @@ public class ExpandedImageView extends AbstractGriddedImageView {
 
     private void initLocal() {
 
-        CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(getCrosshair().getProperty());
+        CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(getCrosshair());
 
         SelectedPlotAnnotation plotAnnotation = new SelectedPlotAnnotation(this);
         for (IImagePlot plot : getPlots()) {
@@ -113,11 +113,11 @@ public class ExpandedImageView extends AbstractGriddedImageView {
 
         public AnatomicalPoint1D getSlice() {
 
-            return getCrosshair().getProperty().getValue(getDisplayAnatomy().ZAXIS);
+            return getCrosshair().getValue(getDisplayAnatomy().ZAXIS);
         }
 
         public void setSlice(AnatomicalPoint1D slice) {
-            ICrosshair cross = getCrosshair().getProperty();
+            ICrosshair cross = getCrosshair();
             AnatomicalPoint1D zslice = getSlice();
             if (!zslice.equals(slice)) {
 
@@ -129,10 +129,10 @@ public class ExpandedImageView extends AbstractGriddedImageView {
 
         public void nextSlice() {
             AnatomicalPoint1D slice = getSlice();
-            ICrosshair cross = getCrosshair().getProperty();
+            ICrosshair cross = getCrosshair();
 
 
-            Axis axis = getViewport().getProperty().getBounds().findAxis(getSelectedPlot().getDisplayAnatomy().ZAXIS);
+            Axis axis = getViewport().getBounds().findAxis(getSelectedPlot().getDisplayAnatomy().ZAXIS);
             ImageAxis iaxis = getModel().getImageAxis(axis);
 
             int sample = iaxis.nearestSample(slice);
@@ -144,10 +144,10 @@ public class ExpandedImageView extends AbstractGriddedImageView {
 
         public void previousSlice() {
             AnatomicalPoint1D slice = getSlice();
-            ICrosshair cross = getCrosshair().getProperty();
+            ICrosshair cross = getCrosshair();
 
 
-            Axis axis = getViewport().getProperty().getBounds().findAxis(getSelectedPlot().getDisplayAnatomy().ZAXIS);
+            Axis axis = getViewport().getBounds().findAxis(getSelectedPlot().getDisplayAnatomy().ZAXIS);
             ImageAxis iaxis = getModel().getImageAxis(axis);
 
             int sample = iaxis.nearestSample(slice);

@@ -22,12 +22,13 @@ public class SetPreserveAspectCommand extends ToggleCommand {
         super(SetPreserveAspectCommand.COMMAND_ID);
         this.view = view;
         setSelected(view.isPreserveAspect());
+
+        
     }
 
     protected void handleSelection(boolean b) throws ToggleVetoException {
         if (view.isPreserveAspect() != b)
             view.setPreserveAspect(b);
-
     }
 
 

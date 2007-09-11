@@ -2,11 +2,9 @@ package com.brainflow.core;
 
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.space.IImageSpace;
-import com.brainflow.image.space.CoordinateSpace3D;
-import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.image.space.ICoordinateSpace;
 import com.brainflow.image.data.CoordinateSet3D;
+import com.brainflow.core.rendering.BasicCoordinateSliceRenderer;
 
 /**
  * Created by IntelliJ IDEA.

@@ -5,15 +5,11 @@ import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.data.MaskedData3D;
-import com.brainflow.image.data.IImageData;
 import com.brainflow.image.interpolation.NearestNeighborInterpolator;
 import com.brainflow.colormap.DiscreteColorMap;
-import com.brainflow.colormap.ColorTable;
-import com.brainflow.colormap.IColorMap;
-import com.brainflow.colormap.LinearColorMap;
+import com.brainflow.core.rendering.BasicImageSliceRenderer;
 
 
-import java.awt.image.IndexColorModel;
 import java.awt.*;
 import java.util.ArrayList;
 

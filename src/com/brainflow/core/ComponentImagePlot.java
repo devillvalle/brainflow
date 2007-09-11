@@ -243,6 +243,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
                 insets.left + plotInsets.left + plotSlack.left, insets.top + plotInsets.top + plotSlack.top, drawWidth, drawHeight
         );
 
+        
         return plotArea;
     }
 
@@ -378,6 +379,9 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         }
     }
 
+    public Dimension getPreferredSize() {
+        return new Dimension((int)getXExtent(), (int)getYExtent());
+    }
 
     public static ComponentImagePlot createComponentImagePlot(IImageDisplayModel model, IImageProducer _producer, Anatomy3D displayAnatomy, AxisRange xAxis, AxisRange yAxis) {
         ComponentImagePlot plot = new ComponentImagePlot(model, _producer, displayAnatomy, xAxis, yAxis);

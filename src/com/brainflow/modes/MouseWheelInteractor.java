@@ -36,7 +36,7 @@ public class MouseWheelInteractor extends ImageViewInteractor {
     private void scrollUp(Point p) {
         ImageView view = getView();
         Anatomy3D anatomy = view.getSelectedPlot().getDisplayAnatomy();
-        Viewport3D viewport = view.getViewport().getProperty();
+        Viewport3D viewport = view.getViewport();
         AxisRange xrange = viewport.getRange(anatomy.XAXIS);
         AxisRange yrange = viewport.getRange(anatomy.YAXIS);
 
@@ -68,7 +68,7 @@ public class MouseWheelInteractor extends ImageViewInteractor {
     private void scrollDown(Point p) {
         ImageView view = getView();
         Anatomy3D anatomy = view.getSelectedPlot().getDisplayAnatomy();
-        Viewport3D viewport = view.getViewport().getProperty();
+        Viewport3D viewport = view.getViewport();
         AxisRange xrange = viewport.getRange(anatomy.XAXIS);
         AxisRange yrange = viewport.getRange(anatomy.YAXIS);
 

@@ -74,7 +74,7 @@ public class LinearColorBarEditor extends JPanel implements ChangeListener, Item
         binSpinner = new JSpinner(spinnerModel);
         ValueModel mapSizeModel = presentation.getModel(LinearColorMap.MAP_SIZE_PROPERTY);
         binSpinner.setToolTipText("Number of discrete bins in color map");
-        final PropertyConnector connector = new PropertyConnector(mapSizeModel, "value", binSpinner, "value");
+        final PropertyConnector connector = PropertyConnector.connect(mapSizeModel, "value", binSpinner, "value");
         connector.updateProperty1();
 
 
@@ -163,7 +163,7 @@ public class LinearColorBarEditor extends JPanel implements ChangeListener, Item
         ColorInterval interval = colorMap.getInterval(value);
         sliderField.setValue(interval.getMinimum());
 
-        if (!slider.getValueIsAdjusting()) {
+        /*if (!slider.getValueIsAdjusting()) {
             JidePopup popup = new JidePopup();
             ColorIntervalEditor editor = new ColorIntervalEditor(interval);
             popup.setMovable(true);
@@ -176,7 +176,7 @@ public class LinearColorBarEditor extends JPanel implements ChangeListener, Item
             trigger.triggerCommit();
             System.out.println("trigger = " + trigger.getValue());
 
-        }
+        } */
 
 
     }

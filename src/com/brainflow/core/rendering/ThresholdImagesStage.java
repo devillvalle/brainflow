@@ -54,7 +54,7 @@ public class ThresholdImagesStage extends ImageProcessingStage {
     }
 
     private RGBAImage threshold(AbstractLayer layer, RGBAImage rgba) {
-        ThresholdRange trange = layer.getImageLayerProperties().getThresholdRange().getProperty();
+        ThresholdRange trange = layer.getImageLayerProperties().getThresholdRange();
 
 
         if (Double.compare(trange.getMin(), trange.getMax()) != 0) {

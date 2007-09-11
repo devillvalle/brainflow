@@ -62,12 +62,14 @@ public class LinearColorMap extends AbstractColorMap {
 
         setMinimumValue(min);
         setMaximumValue(max);
-
-        highClip = max;
-        lowClip = min;
-        mapRange = highClip - lowClip;
-
         int mapSize = lcm.getMapSize();
+        binSize = (getMaximumValue() - getMinimumValue()) / (mapSize - 1);
+
+        highClip = max - binSize;
+        lowClip = min + binSize;
+        mapRange = getMaximumValue() - getMinimumValue();
+
+        
         fillIntervals(mapSize, lcm);
 
 
@@ -113,6 +115,42 @@ public class LinearColorMap extends AbstractColorMap {
 
         int penultimate = colors.length - 2;
         Color cp = lcm.getInterval(penultimate).getColor();
+        colors[penultimate] = new ColorInterval(new OpenClosedInterval(curmin, highClip),
+                new Color(cp.getRed(), cp.getGreen(),
+                        cp.getBlue(), cp.getAlpha()));
+
+        intervals = new ArrayList<ColorInterval>(Arrays.asList(colors));
+
+    }
+
+
+    private void updateIntervals() {
+        int mapSize = getMapSize();
+        ColorInterval[] colors = new ColorInterval[mapSize];
+        binSize = (getHighClip() - getLowClip()) / (mapSize - 1);
+        colors = new ColorInterval[mapSize];
+
+        Color c0 = getInterval(0).getColor();
+        colors[0] = new ColorInterval(new OpenClosedInterval(getMinimumValue(), lowClip),
+                new Color(c0.getRed(), c0.getGreen(),
+                        c0.getBlue(), c0.getAlpha()));
+
+        Color cn = getInterval(getMapSize() - 1).getColor();
+        colors[mapSize - 1] = new ColorInterval(new OpenInterval(highClip, getMaximumValue()),
+                new Color(cn.getRed(), cn.getGreen(),
+                        cn.getBlue(), cn.getAlpha()));
+
+        double curmin = getLowClip();
+        for (int i = 1; i < colors.length - 2; i++) {
+            Color ci = getInterval(i).getColor();
+            colors[i] = new ColorInterval(new OpenClosedInterval(curmin, curmin + binSize),
+                    new Color(ci.getRed(), ci.getGreen(),
+                            ci.getBlue(), ci.getAlpha()));
+            curmin = curmin + binSize;
+        }
+
+        int penultimate = colors.length - 2;
+        Color cp = getInterval(penultimate).getColor();
         colors[penultimate] = new ColorInterval(new OpenClosedInterval(curmin, highClip),
                 new Color(cp.getRed(), cp.getGreen(),
                         cp.getBlue(), cp.getAlpha()));
@@ -197,7 +235,7 @@ public class LinearColorMap extends AbstractColorMap {
 
         highClip = range[1];
 
-
+        updateIntervals();
         changeSupport.firePropertyChange(IColorMap.HIGH_CLIP_PROPERTY,
                 oldValue, highClip);
 
@@ -205,6 +243,7 @@ public class LinearColorMap extends AbstractColorMap {
 
             double oldClip = getLowClip();
             lowClip = range[0];
+            updateIntervals();
             changeSupport.firePropertyChange(IColorMap.LOW_CLIP_PROPERTY,
                     oldClip, lowClip);
         }
@@ -240,7 +279,7 @@ public class LinearColorMap extends AbstractColorMap {
 
         lowClip = range[0];
 
-
+        updateIntervals();
         changeSupport.firePropertyChange(AbstractColorMap.LOW_CLIP_PROPERTY,
                 oldValue, lowClip);
 
@@ -249,7 +288,7 @@ public class LinearColorMap extends AbstractColorMap {
 
             double oldClip = getHighClip();
             highClip = range[1];
-
+            updateIntervals();
             changeSupport.firePropertyChange(AbstractColorMap.HIGH_CLIP_PROPERTY,
                     oldClip, highClip);
         }

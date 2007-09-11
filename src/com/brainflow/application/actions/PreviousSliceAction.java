@@ -24,7 +24,7 @@ public class PreviousSliceAction extends BasicAction {
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
 
         if (view != null) {
-            ICrosshair cross = view.getCrosshair().getProperty();
+            ICrosshair cross = view.getCrosshair();
             Anatomy3D displayAnatomy = view.getSelectedPlot().getDisplayAnatomy();
             Axis axis = cross.getViewport().getBounds().findAxis(displayAnatomy.ZAXIS);
             ImageAxis iaxis = view.getModel().getImageAxis(axis);

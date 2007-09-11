@@ -82,7 +82,7 @@ public class ThresholdRangePresenter extends ImageViewPresenter {
         int idx = view.getModel().getSelectedIndex();
         AbstractLayer layer = view.getModel().getLayer(idx);
 
-        Property<ThresholdRange> threshold = layer.getImageLayerProperties().getThresholdRange();
+       ThresholdRange threshold = layer.getImageLayerProperties().getThresholdRange();
 
 
         if (adapter != null) {
@@ -91,12 +91,12 @@ public class ThresholdRangePresenter extends ImageViewPresenter {
             lowConverter.setMax(new ValueHolder(layer.getMaxValue()));
             highConverter.setMin(new ValueHolder(layer.getMinValue()));
             highConverter.setMax(new ValueHolder(layer.getMaxValue()));
-            adapter.setBean(threshold.getProperty());
+            adapter.setBean(threshold);
 
 
         } else {
 
-            adapter = new BeanAdapter(threshold.getProperty(), true);
+            adapter = new BeanAdapter(threshold, true);
 
             ValueModel highThresh = adapter.getValueModel(ThresholdRange.MAX_PROPERTY);
             ValueModel lowThresh = adapter.getValueModel(ThresholdRange.MIN_PROPERTY);

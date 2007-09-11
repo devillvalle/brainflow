@@ -21,6 +21,9 @@ public class InterpolationMethod extends Model {
 
     private InterpolationHint interpolation = InterpolationHint.CUBIC;
 
+    public static InterpolationHint[] getInterpolationHints() {
+        return InterpolationHint.values();
+    }
 
     public InterpolationHint getInterpolation() {
         return interpolation;

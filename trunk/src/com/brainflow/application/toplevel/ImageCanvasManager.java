@@ -82,7 +82,7 @@ public class ImageCanvasManager {
     }
 
 
-    public String register(ImageView view) {
+    /*public String register(ImageView view) {
         if (registeredViews.containsKey(view)) {
             log.warning("view " + view + " is already registered, no action taken");
             return view.getId();
@@ -97,7 +97,7 @@ public class ImageCanvasManager {
 
 
         return ids[registeredViews.size() - 1];
-    }
+    }*/
 
 
     public void addImageCanvas(ImageCanvas2 _canvas) {

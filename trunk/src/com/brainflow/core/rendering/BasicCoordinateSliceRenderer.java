@@ -1,4 +1,4 @@
-package com.brainflow.core;
+package com.brainflow.core.rendering;
 
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
@@ -10,6 +10,8 @@ import com.brainflow.image.data.CoordinateSet3D;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.CoordinateSpace2D;
 import com.brainflow.image.space.ICoordinateSpace;
+import com.brainflow.core.SliceRenderer;
+import com.brainflow.core.CoordinateLayer;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;

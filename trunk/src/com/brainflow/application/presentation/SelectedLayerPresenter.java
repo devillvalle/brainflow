@@ -86,7 +86,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
                 for (int i = f1; i <= f2; i++) {
                     AbstractLayer layer = view.getModel().getLayer(i);
-                    Visibility vis = layer.getImageLayerProperties().getVisible().getProperty();
+                    Visibility vis = layer.getImageLayerProperties().getVisible();
 
                     if (model.isSelectedIndex(i)) {
 
@@ -159,7 +159,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
         int index = e.getIndex0();
         ImageView view = getSelectedView();
         AbstractLayer layer = view.getModel().getLayer(index);
-        boolean vis = layer.getImageLayerProperties().getVisible().getProperty().isVisible();
+        boolean vis = layer.getImageLayerProperties().getVisible().isVisible();
         if (vis) {
             layerSelector.getCheckBoxListSelectionModel().addSelectionInterval(index, index);
         } else {

@@ -32,7 +32,7 @@ public class MontageImageView extends AbstractGriddedImageView {
         super(imodel);
         this.displayAnatomy = displayAnatomy;
 
-        sliceController = new MontageSliceController(getCrosshair().getProperty().getValue(displayAnatomy.ZAXIS));
+        sliceController = new MontageSliceController(getCrosshair().getValue(displayAnatomy.ZAXIS));
         getCrosshair().addPropertyChangeListener(new CrosshairHandler());
 
         layoutGrid();
@@ -46,7 +46,7 @@ public class MontageImageView extends AbstractGriddedImageView {
         super(imodel, nrows, ncols);
         this.displayAnatomy = displayAnatomy;
 
-        sliceController = new MontageSliceController(getCrosshair().getProperty().getValue(displayAnatomy.ZAXIS), sliceGap);
+        sliceController = new MontageSliceController(getCrosshair().getValue(displayAnatomy.ZAXIS), sliceGap);
         sliceController.sliceGap = sliceGap;
         getCrosshair().addPropertyChangeListener(new CrosshairHandler());
 
@@ -69,7 +69,7 @@ public class MontageImageView extends AbstractGriddedImageView {
 
     private void initLocal() {
 
-        CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(getCrosshair().getProperty());
+        CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(getCrosshair());
 
         SelectedPlotAnnotation plotAnnotation = new SelectedPlotAnnotation(this);
 
@@ -228,7 +228,7 @@ public class MontageImageView extends AbstractGriddedImageView {
 
         public void setSlice(AnatomicalPoint1D slice) {
 
-            AxisRange range = getViewport().getProperty().getRange(getDisplayAnatomy().ZAXIS);
+            AxisRange range = getViewport().getRange(getDisplayAnatomy().ZAXIS);
             if (slice.getAnatomy() != range.getAnatomicalAxis()) {
                 throw new IllegalArgumentException("illegal axis for slice argument : " + slice.getAnatomy() +
                         " -- axis should be : " + range.getAnatomicalAxis());

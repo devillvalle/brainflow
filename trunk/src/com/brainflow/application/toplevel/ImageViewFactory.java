@@ -3,6 +3,8 @@ package com.brainflow.application.toplevel;
 import com.brainflow.application.actions.SetPreserveAspectCommand;
 import com.brainflow.core.*;
 import com.brainflow.core.annotations.CrosshairAnnotation;
+import com.brainflow.core.annotations.SelectedPlotAnnotation;
+import com.brainflow.core.annotations.SliceAnnotation;
 import com.brainflow.gui.PopupAdapter;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
@@ -39,6 +41,13 @@ public class ImageViewFactory {
         return ImageViewFactory.createPlot(displayModel, Anatomy3D.getCanonicalSagittal());
     }
 
+    public static void addDefaultAnnotations(ImageView view) {
+        CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(view.getCrosshair());
+        view.setAnnotation(CrosshairAnnotation.ID, crosshairAnnotation);
+        view.setAnnotation(SelectedPlotAnnotation.ID, new SelectedPlotAnnotation(view));
+        view.setAnnotation(SliceAnnotation.ID, new SliceAnnotation());
+    }
+
 
     public static IImagePlot createPlot(IImageDisplayModel displayModel, Anatomy3D displayAnatomy) {
 
@@ -50,67 +59,53 @@ public class ImageViewFactory {
 
     }
 
-    public static ImageView createYokedAxialView(ImageView source) {
-        SimpleImageView view = new SimpleImageView(source, Anatomy3D.getCanonicalAxial());
 
-        String id = ImageCanvasManager.getInstance().register(view);
+    public static ImageView createOrthogonalView(ImageView source, OrthoPlotLayout.ORIENTATION orientation) {
+        ImageView view = new ImageView(source.getModel());
+        view.setPlotLayout(new OrthoPlotLayout(view,  orientation));
+        addDefaultAnnotations(view);
         ImageCanvasManager.getInstance().yoke(source, view);
-        view.setId(id);
 
-        view.setName("[" + view.getId() + "] " + view.getModel().getName());
+        return view;
 
+    }
+
+    public static ImageView createYokedAxialView(ImageView source) {
+        ImageView view = new ImageView(source.getModel(), Brainflow.getInstance().getCommandContainer());
+        view.setPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalAxial()));
+        addDefaultAnnotations(view);
 
         return view;
     }
 
     public static ImageView createYokedCoronalView(ImageView source) {
-        SimpleImageView view = new SimpleImageView(source, Anatomy3D.getCanonicalCoronal());
-
-        String id = ImageCanvasManager.getInstance().register(view);
+        ImageView view = new ImageView(source.getModel(), Brainflow.getInstance().getCommandContainer());
+        view.setPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalCoronal()));
         ImageCanvasManager.getInstance().yoke(source, view);
-        view.setId(id);
-
-        view.setName("[" + view.getId() + "] " + view.getModel().getName());
-
-
         return view;
     }
 
 
     public static ImageView createYokedSagittalView(ImageView source) {
-        SimpleImageView view = new SimpleImageView(source, Anatomy3D.getCanonicalSagittal());
-
-        String id = ImageCanvasManager.getInstance().register(view);
+        ImageView view = new ImageView(source.getModel(), Brainflow.getInstance().getCommandContainer());
+        view.setPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalSagittal()));
         ImageCanvasManager.getInstance().yoke(source, view);
-        view.setId(id);
-
-        view.setName("[" + view.getId() + "] " + view.getModel().getName());
-
-
         return view;
+
     }
 
 
     public static ImageView createAxialView(IImageDisplayModel displayModel) {
-        SimpleImageView view = new SimpleImageView(displayModel, Anatomy3D.getCanonicalAxial());
-        String id = ImageCanvasManager.getInstance().register(view);
-        view.setId(id);
+        ImageView view = new ImageView(displayModel, Brainflow.getInstance().getCommandContainer());
+        view.setPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalAxial()));
+        addDefaultAnnotations(view);
 
-
-        CommandContainer viewContainer = new CommandContainer();
-        viewContainer.setParentCommandContainer(Brainflow.getInstance().getCommandContainer());
-        viewContainer.bind(view);
-
-        ActionCommand aspectCommand = new SetPreserveAspectCommand(view);
+        /*ActionCommand aspectCommand = new SetPreserveAspectCommand(view);
         aspectCommand.bind(view);
-
-
         CommandGroup viewGroup = new CommandGroup("image-view-menu");
-
         viewGroup.bind(view);
-
         PopupAdapter adapter = new PopupAdapter(view, viewGroup.createPopupMenu());
-
+        */
 
         return view;
     }
@@ -118,32 +113,19 @@ public class ImageViewFactory {
 
     public static ImageView createExpandedView(IImageDisplayModel displayModel) {
         ExpandedImageView view = new ExpandedImageView(displayModel, Anatomy3D.getCanonicalAxial());
-        String id = ImageCanvasManager.getInstance().register(view);
-        view.setId(id);
-        view.setName("[" + view.getId() + "] " + view.getModel().getName());
-
 
         return view;
     }
 
     public static ImageView createMontageView(IImageDisplayModel displayModel, int nrows, int ncols, double sliceGap) {
         MontageImageView view = new MontageImageView(displayModel, Anatomy3D.getCanonicalAxial(), nrows, ncols, sliceGap);
-        String id = ImageCanvasManager.getInstance().register(view);
-        view.setId(id);
-        view.setName("[" + view.getId() + "] " + view.getModel().getName());
-
 
         return view;
     }
 
     public static ImageView createOrthogonalView(IImageDisplayModel displayModel) {
         SimpleOrthogonalImageView view = new SimpleOrthogonalImageView(displayModel);
-        String id = ImageCanvasManager.getInstance().register(view);
-        view.setId(id);
-
-        view.setName("[" + view.getId() + "] " + view.getModel().getName());
-
-        //ITitledBorder tborder = border;
+      //ITitledBorder tborder = border;
         //tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
 
 
@@ -152,10 +134,6 @@ public class ImageViewFactory {
 
     public static ImageView createCoronalView(IImageDisplayModel displayModel) {
         SimpleImageView view = new SimpleImageView(displayModel, Anatomy3D.getCanonicalCoronal());
-        String id = ImageCanvasManager.getInstance().register(view);
-        view.setId(id);
-
-        view.setName("[" + view.getId() + "] " + view.getModel().getName());
 
         //ITitledBorder tborder = border;
         //tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
@@ -198,13 +176,7 @@ public class ImageViewFactory {
 
     public static ImageView createSagittalView(IImageDisplayModel displayModel) {
         SimpleImageView view = new SimpleImageView(displayModel, Anatomy3D.getCanonicalSagittal());
-        String id = ImageCanvasManager.getInstance().register(view);
-
-        view.setId(id);
-
-        view.setName("[" + view.getId() + "] " + view.getModel().getName());
-
-        //ITitledBorder tborder = border;
+       //ITitledBorder tborder = border;
         //tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
 
 
@@ -223,7 +195,7 @@ public class ImageViewFactory {
 
         public String getString() {
             if (view != null) {
-                return "[" + view.getId() + "] " + view.getModel().getName();
+                return "[" + view.toString() + "] " + view.getModel().getName();
             }
 
             return null;

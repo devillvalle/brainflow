@@ -8,8 +8,6 @@ import com.brainflow.display.ICrosshair;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
-import com.brainflow.image.axis.ImageAxis;
-import com.brainflow.image.space.Axis;
 import com.jgoodies.binding.list.SelectionInList;
 
 import javax.swing.*;
@@ -32,7 +30,7 @@ import java.util.logging.Logger;
  */
 public class SimpleImageView extends ImageView {
 
-    //private ImagePane ipane;
+
 
     private final static Logger log = Logger.getLogger(SimpleImageView.class.getName());
 
@@ -40,7 +38,7 @@ public class SimpleImageView extends ImageView {
 
     private Anatomy3D displayAnatomy = Anatomy3D.getCanonicalAxial();
 
-    private SliceController sliceController = new SimpleSliceController();
+    private SliceController sliceController = new SimpleSliceController(this);
 
     public SimpleImageView(ImageView source, Anatomy3D _displayAnatomy) {
         super(source.getModel());
@@ -81,7 +79,7 @@ public class SimpleImageView extends ImageView {
 
         IImageProducer producer = new CompositeImageProducer(imagePlot, getDisplayAnatomy());
         imagePlot.setImageProducer(producer);
-        imagePlot.setSlice(getCrosshair().getProperty().getValue(displayAnatomy.ZAXIS));
+        imagePlot.setSlice(getCrosshair().getValue(displayAnatomy.ZAXIS));
         imagePlot.setScreenInterpolation(getScreenInterpolation());
 
 
@@ -109,7 +107,7 @@ public class SimpleImageView extends ImageView {
 
 
     private void initAnnotations() {
-        CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(getCrosshair().getProperty());
+        CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(getCrosshair());
         setAnnotation(imagePlot, CrosshairAnnotation.ID, crosshairAnnotation);
         setAnnotation(imagePlot, SelectedPlotAnnotation.ID, new SelectedPlotAnnotation(this));
         setAnnotation(imagePlot, SelectedPlotAnnotation.ID, new SliceAnnotation());
@@ -161,111 +159,6 @@ public class SimpleImageView extends ImageView {
     }
 
 
-    public String toString() {
-        return "SimpleImageView -- " + this.getId() + getName();
-    }
-
-
-    class SimpleSliceController implements SliceController {
-
-        private double pageStep = .12;
-
-
-        public AnatomicalPoint1D getSlice() {
-            return getCrosshair().getProperty().getValue(getSelectedPlot().getDisplayAnatomy().ZAXIS);
-        }
-
-        public void setSlice(AnatomicalPoint1D slice) {
-            ICrosshair cross = getCrosshair().getProperty();
-            AnatomicalPoint1D zslice = getSlice();
-            if (!zslice.equals(slice)) {
-
-                cross.setZValue(slice.getX());
-                getSelectedPlot().setSlice(slice);
-            }
-
-        }
-
-        public void nextSlice() {
-            AnatomicalPoint1D slice = getSlice();
-            ICrosshair cross = getCrosshair().getProperty();
-
-
-            Axis axis = getViewport().getProperty().getBounds().findAxis(getSelectedPlot().getDisplayAnatomy().ZAXIS);
-            ImageAxis iaxis = getModel().getImageAxis(axis);
-
-            int sample = iaxis.nearestSample(slice);
-            int nsample = sample + 1;
-            if (nsample >= 0 && nsample < iaxis.getNumSamples()) {
-                cross.setValue(iaxis.valueOf(nsample));
-            }
-        }
-
-        public void previousSlice() {
-            AnatomicalPoint1D slice = getSlice();
-            ICrosshair cross = getCrosshair().getProperty();
-
-
-            Axis axis = getViewport().getProperty().getBounds().findAxis(getSelectedPlot().getDisplayAnatomy().ZAXIS);
-            ImageAxis iaxis = getModel().getImageAxis(axis);
-
-            int sample = iaxis.nearestSample(slice);
-            int nsample = sample - 1;
-            if (nsample >= 0 && nsample < iaxis.getNumSamples()) {
-                cross.setValue(iaxis.valueOf(nsample));
-            }
-
-        }
-
-        public void pageBack() {
-            AnatomicalPoint1D slice = getSlice();
-            ICrosshair cross = getCrosshair().getProperty();
-
-
-            Axis axis = getViewport().getProperty().getBounds().findAxis(getSelectedPlot().getDisplayAnatomy().ZAXIS);
-            ImageAxis iaxis = getModel().getImageAxis(axis);
-
-            int sample = iaxis.nearestSample(slice);
-            double page = iaxis.getExtent() * pageStep;
-            int jump = (int) (page / iaxis.getSpacing());
-
-            // ensure we move at least one sample
-            jump = Math.max(jump, 1);
-            int nsample = sample - jump;
-
-            if (nsample >= 0 && nsample < iaxis.getNumSamples()) {
-                cross.setValue(iaxis.valueOf(nsample));
-            }
-
-
-        }
-
-        public void pageForward() {
-            AnatomicalPoint1D slice = getSlice();
-            ICrosshair cross = getCrosshair().getProperty();
-
-
-            Axis axis = getViewport().getProperty().getBounds().findAxis(getSelectedPlot().getDisplayAnatomy().ZAXIS);
-            ImageAxis iaxis = getModel().getImageAxis(axis);
-
-
-            int sample = iaxis.nearestSample(slice);
-
-            double page = iaxis.getExtent() * pageStep;
-
-            int jump = (int) (page / iaxis.getSpacing());
-
-            // ensure we move at least one sample
-            jump = Math.max(jump, 1);
-            int nsample = sample + jump;
-
-
-            if (nsample >= 0 && nsample < iaxis.getNumSamples()) {
-                cross.setValue(iaxis.valueOf(nsample));
-            }
-
-        }
-    }
-
+    
 
 }

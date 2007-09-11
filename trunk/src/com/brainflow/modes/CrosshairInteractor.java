@@ -1,13 +1,13 @@
 package com.brainflow.modes;
 
-import com.brainflow.core.ImageCanvas2;
 import com.brainflow.core.ImageView;
-import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.display.ICrosshair;
 import com.brainflow.display.Viewport3D;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
 
 import javax.swing.*;
-import java.awt.event.MouseEvent;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,12 +36,17 @@ public class CrosshairInteractor extends ImageViewInteractor {
             return;
         }
 
+        ICrosshair crosshair = iview.getCrosshair();
+        AnatomicalPoint3D ap = iview.getAnatomicalLocation(event.getComponent(), event.getPoint());
+        ap = AnatomicalPoint3D.convertPoint(ap,crosshair.getAnatomy() );
 
-        AnatomicalPoint3D pt = iview.getAnatomicalLocation(event.getComponent(), event.getPoint());
-        Viewport3D viewport = iview.getViewport().getProperty();
 
-        if (pt != null && viewport.inBounds(pt)) {
-            iview.getCrosshair().getProperty().setLocation(pt);
+        Viewport3D viewport = iview.getViewport();
+
+        if (ap != null && viewport.inBounds(ap)) {
+            iview.getCrosshair().setLocation(ap);
+        } else {
+            System.out.println("point is out of viewport bounds " + ap);
         }
 
     }
@@ -49,9 +54,14 @@ public class CrosshairInteractor extends ImageViewInteractor {
     private void moveCrosshair(Point p, Component source) {
         ImageView iview = getView();
 
+        ICrosshair crosshair = iview.getCrosshair();
         AnatomicalPoint3D ap = iview.getAnatomicalLocation(source, p);
-        if (ap != null && iview.getViewport().getProperty().inBounds(ap)) {
-            iview.getCrosshair().getProperty().setLocation(ap);
+        ap= AnatomicalPoint3D.convertPoint(ap,crosshair.getAnatomy() );
+
+        if (ap != null && iview.getViewport().inBounds(ap)) {
+            iview.getCrosshair().setLocation(ap);
+        } else {
+            System.out.println("point is out of viewport bounds " + ap);
         }
 
     }

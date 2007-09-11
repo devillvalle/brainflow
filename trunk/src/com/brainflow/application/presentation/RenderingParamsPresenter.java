@@ -87,12 +87,12 @@ public class RenderingParamsPresenter extends ImageViewPresenter {
 
         int idx = view.getModel().getSelectedIndex();
         AbstractLayer layer = view.getModel().getLayer(idx);
-        Property<Opacity> opacity = layer.getImageLayerProperties().getOpacity();
-        Property<SmoothingRadius> radius = layer.getImageLayerProperties().getSmoothing();
+        Opacity opacity = layer.getImageLayerProperties().getOpacity();
+        SmoothingRadius radius = layer.getImageLayerProperties().getSmoothing();
 
         if (opacityAdapter == null) {
 
-            opacityAdapter = new BeanAdapter(opacity.getProperty(), true);
+            opacityAdapter = new BeanAdapter(opacity, true);
 
             BoundedRangeAdapter opacitySliderAdapter = new BoundedRangeAdapter(
                     new PercentageConverter(opacityAdapter.getValueModel(Opacity.OPACITY_PROPERTY),
@@ -107,7 +107,7 @@ public class RenderingParamsPresenter extends ImageViewPresenter {
                             NumberFormat.getInstance()));
 
 
-            smoothingAdapter = new BeanAdapter(radius.getProperty(), true);
+            smoothingAdapter = new BeanAdapter(radius, true);
             BoundedRangeAdapter smoothingSliderAdapter = new BoundedRangeAdapter(smoothingAdapter.getValueModel(SmoothingRadius.RADIUS_PROPERTY), 0, 0, 15);
             form.getSmoothingSlider().setModel(smoothingSliderAdapter);
 
@@ -117,8 +117,8 @@ public class RenderingParamsPresenter extends ImageViewPresenter {
 
 
         } else {
-            opacityAdapter.setBean(opacity.getProperty());
-            smoothingAdapter.setBean(radius.getProperty());
+            opacityAdapter.setBean(opacity);
+            smoothingAdapter.setBean(radius);
         }
     }
 

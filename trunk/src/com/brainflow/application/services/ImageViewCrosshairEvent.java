@@ -19,7 +19,7 @@ public class ImageViewCrosshairEvent extends ImageViewEvent {
     }
 
     public ICrosshair getCrosshair() {
-        return getImageView().getCrosshair().getProperty();
+        return getImageView().getCrosshair();
     }
 
     public String toString() {

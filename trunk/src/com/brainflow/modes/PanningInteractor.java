@@ -46,7 +46,7 @@ public class PanningInteractor extends ImageViewInteractor {
             double dy = curpos.getY() - lastpos.getY();
 
             Anatomy3D anatomy = view.getSelectedPlot().getDisplayAnatomy();
-            Viewport3D viewport = view.getViewport().getProperty();
+            Viewport3D viewport = view.getViewport();
             viewport.setAxisMin(anatomy.XAXIS, viewport.getXAxisMin() + dx);
             viewport.setAxisMin(anatomy.YAXIS, viewport.getYAxisMin() + dy);
 

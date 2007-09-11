@@ -1,9 +1,6 @@
 package com.brainflow.display;
 
-import com.brainflow.image.anatomy.AnatomicalAxis;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.anatomy.AnatomicalPoint3D;
-import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.image.anatomy.*;
 import com.jgoodies.binding.beans.Model;
 
 /**
@@ -81,6 +78,8 @@ public class Crosshair extends Model implements ICrosshair {
     }
 
     public void setLocation(AnatomicalPoint3D ap) {
+        assert ap.getAnatomy() == location.getAnatomy() : "mismatching anatomy, point:  " + ap.getAnatomy() + " does not match crosshair :" + location.getAnatomy();
+        
         if (!ap.equals(location)) {
             double x = ap.getValue(location.getAnatomy().XAXIS).getX();
             double y = ap.getValue(location.getAnatomy().YAXIS).getX();
@@ -99,12 +98,12 @@ public class Crosshair extends Model implements ICrosshair {
     }
 
     private void setLocation(double x, double y, double z) {
-
+        AnatomicalPoint oldpoint = location.clone();
         location.setX(x);
         location.setY(y);
         location.setZ(z);
-        //todo something better than null?
-        this.firePropertyChange(LOCATION_PROPERTY, null, location);
+        
+        this.firePropertyChange(LOCATION_PROPERTY, oldpoint, location);
     }
 
     public void setXValue(double x) {
@@ -132,15 +131,8 @@ public class Crosshair extends Model implements ICrosshair {
     }
 
     public void setValue(AnatomicalPoint1D val) {
-        if (val.getAnatomy() == location.getAnatomy().XAXIS) {
-            setXValue(val.getX());
-        } else if (val.getAnatomy() == location.getAnatomy().YAXIS) {
-            setYValue(val.getX());
-        } else if (val.getAnatomy() == location.getAnatomy().ZAXIS) {
-            setZValue(val.getX());
-        } else {
-            throw new IllegalArgumentException("illegal axis for current cross hair: " + val.getAnatomy());
-        }
+        location.setValue(val);
+
 
     }
 

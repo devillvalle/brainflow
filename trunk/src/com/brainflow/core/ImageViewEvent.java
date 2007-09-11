@@ -24,11 +24,11 @@ public class ImageViewEvent extends EventObject {
     }
 
     public ICrosshair getCrosshair() {
-        return view.getCrosshair().getProperty();
+        return view.getCrosshair();
     }
 
     public Viewport3D getViewport() {
-        return view.getViewport().getProperty();
+        return view.getViewport();
     }
 
     public ImageView getView() {

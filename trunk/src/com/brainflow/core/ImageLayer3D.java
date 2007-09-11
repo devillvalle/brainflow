@@ -2,6 +2,7 @@ package com.brainflow.core;
 
 import com.brainflow.application.ILoadableImage;
 import com.brainflow.core.ImageLayerProperties;
+import com.brainflow.core.rendering.BasicImageSliceRenderer;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.space.Axis;

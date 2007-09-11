@@ -5,10 +5,11 @@ import com.brainflow.application.toplevel.ImageCanvasManager;
 import com.brainflow.core.IImagePlot;
 import com.brainflow.core.ImageDisplayModel;
 import com.brainflow.core.ImageView;
-import com.brainflow.core.SimpleImageView;
+import com.brainflow.core.SimplePlotLayout;
 import com.brainflow.core.annotations.BoxAnnotation;
 import com.brainflow.display.Viewport3D;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
 import com.jgoodies.binding.adapter.SpinnerAdapterFactory;
@@ -77,7 +78,7 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
     private FormLayout layout;
 
-    private SimpleImageView boxView;
+    private ImageView boxView;
 
     private BoxAnnotation boxAnnotation = new BoxAnnotation();
 
@@ -130,8 +131,8 @@ public class ImageViewportPresenter extends ImageViewPresenter {
         form.add(ypan, cc.xy(4, 8));
 
         viewPanel = new JPanel();
-        boxView = new SimpleImageView(new ImageDisplayModel("NULL"));
-
+        boxView = new ImageView(new ImageDisplayModel("NULL"));
+        boxView.setPlotLayout(new SimplePlotLayout(boxView, Anatomy3D.getCanonicalAxial()));
         boxView.clearAnnotations();
         boxView.getSelectedPlot().setPlotInsets(new Insets(2, 2, 2, 2));
         boxAnnotation.setVisible(false);
@@ -191,21 +192,21 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
     private double getBoxWidth(ImageView view) {
         IImagePlot plot = view.getSelectedPlot();
-        Viewport3D viewport = view.getViewport().getProperty();
+        Viewport3D viewport = view.getViewport();
         return viewport.getRange(plot.getXAxisRange().getAnatomicalAxis()).getInterval();
 
     }
 
     private double getBoxMinX(ImageView view) {
         IImagePlot plot = view.getSelectedPlot();
-        Viewport3D viewport = view.getViewport().getProperty();
+        Viewport3D viewport = view.getViewport();
         return viewport.getRange(plot.getXAxisRange().getAnatomicalAxis()).getMinimum();
 
     }
 
     private double getBoxMinY(ImageView view) {
         IImagePlot plot = view.getSelectedPlot();
-        Viewport3D viewport = view.getViewport().getProperty();
+        Viewport3D viewport = view.getViewport();
         return viewport.getRange(plot.getYAxisRange().getAnatomicalAxis()).getMinimum();
 
     }
@@ -213,7 +214,7 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
     private double getBoxHeight(ImageView view) {
         IImagePlot plot = view.getSelectedPlot();
-        Viewport3D viewport = view.getViewport().getProperty();
+        Viewport3D viewport = view.getViewport();
         return viewport.getRange(plot.getYAxisRange().getAnatomicalAxis()).getInterval();
 
 
@@ -258,7 +259,10 @@ public class ImageViewportPresenter extends ImageViewPresenter {
         xorigin.setToolTipText("origin: " + view.getSelectedPlot().getXAxisRange().getAnatomicalAxis().min.toString());
         yorigin.setToolTipText("origin: " + view.getSelectedPlot().getYAxisRange().getAnatomicalAxis().min.toString());
 
-        boxView = new SimpleImageView(view.getModel(), view.getSelectedPlot().getDisplayAnatomy());
+        boxView = new ImageView(view.getModel());
+        boxView.setPlotLayout(new SimplePlotLayout(boxView, view.getSelectedPlot().getDisplayAnatomy()));
+
+
 
         boxView.clearAnnotations();
         boxView.getSelectedPlot().setPlotInsets(new Insets(2, 2, 2, 2));
@@ -303,9 +307,9 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
     private void intializeAdapters() {
         ImageView view = getSelectedView();
-        Viewport3D viewport = view.getViewport().getProperty();
+        Viewport3D viewport = view.getViewport();
         IImagePlot plot = view.getSelectedPlot();
-
+        
         if (viewportAdapter == null) {
             viewportAdapter = new BeanAdapter(viewport, true);
         } else {
@@ -364,7 +368,7 @@ public class ImageViewportPresenter extends ImageViewPresenter {
         Bindings.bind(plotSelector, view.getPlotSelection());
 
 
-        Viewport3D viewport = view.getViewport().getProperty();
+        Viewport3D viewport = view.getViewport();
         IImagePlot plot = view.getSelectedPlot();
 
 

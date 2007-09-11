@@ -65,15 +65,15 @@ public abstract class AbstractLayer {
 
 
     public boolean isVisible() {
-        return properties.getVisible().getProperty().isVisible();
+        return properties.getVisible().isVisible();
     }
 
     public double getOpacity() {
-        return properties.getOpacity().getProperty().getOpacity();
+        return properties.getOpacity().getOpacity();
     }
 
     public ThresholdRange getThreshold() {
-        return properties.getThresholdRange().getProperty();
+        return properties.getThresholdRange();
     }
 
     public abstract Object getData();
@@ -87,13 +87,6 @@ public abstract class AbstractLayer {
             }
         });
 
-        properties.getImageOpList().addPropertyChangeListener(new PropertyChangeListener() {
-
-            public void propertyChange(PropertyChangeEvent evt) {
-                support.firePropertyChange(new PropertyChangeEvent(AbstractLayer.this, ImageLayerProperties.IMAGEOP_PROPERTY,
-                        evt.getOldValue(), evt.getNewValue()));
-            }
-        });
 
 
         properties.getResampleInterpolation().addPropertyChangeListener(new PropertyChangeListener() {

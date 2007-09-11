@@ -4,9 +4,10 @@ import com.brainflow.application.services.ImageViewCrosshairEvent;
 import com.brainflow.application.services.ImageViewLayerSelectionEvent;
 import com.brainflow.core.annotations.IAnnotation;
 import com.brainflow.display.*;
-import com.brainflow.image.anatomy.*;
-import com.brainflow.image.axis.CoordinateAxis;
-import com.brainflow.image.space.Axis;
+import com.brainflow.image.anatomy.AnatomicalPoint1D;
+import com.brainflow.image.anatomy.AnatomicalPoint2D;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.space.ICoordinateSpace;
 import com.brainflow.image.space.IImageSpace;
 import com.jgoodies.binding.list.SelectionInList;
@@ -22,11 +23,13 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.logging.Logger;
 
 /**
@@ -38,30 +41,33 @@ import java.util.logging.Logger;
  */
 
 
-public abstract class ImageView extends JComponent implements ListDataListener, ImageDisplayModelListener {
+public class ImageView extends JComponent implements ListDataListener, ImageDisplayModelListener {
 
 
     public static final String PRESERVE_ASPECT_PROPERTY = "preserveAspect";
 
-    private static final Logger log = Logger.getLogger(ImageView.class.getName());
-
-    private String id = "";
+    private InterpolationHint screenInterpolation = InterpolationHint.NEAREST_NEIGHBOR;
 
     private boolean preserveAspect = false;
 
-    private InterpolationHint screenInterpolation = InterpolationHint.NEAREST_NEIGHBOR;
+    private static final Logger log = Logger.getLogger(ImageView.class.getName());
+
+    private ImagePlotLayout plotLayout = new SimplePlotLayout(this, Anatomy3D.getCanonicalAxial());
+
+    private SliceController sliceController;
 
     private SelectionInList<IImagePlot> plotSelection;
 
     private IImageDisplayModel displayModel;
 
-    private Property<ICrosshair> crosshair;
+    private ICrosshair crosshair;
 
-    protected Property<Viewport3D> viewport;
+    protected Viewport3D viewport;
 
     private ViewportHandler viewportHandler = new ViewportHandler();
 
     private CrosshairHandler crosshairHandler = new CrosshairHandler();
+
 
 
     private CommandContainer commandContainer;
@@ -70,17 +76,19 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
     public ImageView(IImageDisplayModel imodel) {
         super();
         displayModel = imodel;
-        initView();
         commandContainer = new CommandContainer();
 
+        initView();
+
     }
+
 
     public ImageView(IImageDisplayModel imodel, CommandContainer parentContainer) {
         super();
         displayModel = imodel;
-        initView();
-
         commandContainer = new CommandContainer(parentContainer);
+
+        initView();
 
 
     }
@@ -90,6 +98,37 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
 
     }
 
+    public ImagePlotLayout getPlotLayout() {
+        return plotLayout;
+    }
+
+    public void setPlotLayout(ImagePlotLayout plotLayout) {
+        this.plotLayout = plotLayout;
+        List<IImagePlot> plots = plotLayout.layoutPlots();
+
+        assert plots.size() > 0 : "assertion failure, plot layout returned empty plot list";
+
+        IImagePlot selPlot = null;
+
+        if ( (plotSelection != null) && (plotSelection.getSelection() != null) ) {
+            selPlot = plotSelection.getSelection();
+        } else {
+            selPlot = plots.get(0);
+        }
+
+        if (plotSelection == null) {
+            plotSelection = new SelectionInList<IImagePlot>();
+
+        } else {
+            plotSelection.setList(plots);
+        }
+
+       
+        plotSelection.setSelection(selPlot);
+        sliceController = plotLayout.createSliceController();
+
+        revalidate();
+    }
 
     protected void clearListeners() {
         viewport.removePropertyChangeListener(viewportHandler);
@@ -122,15 +161,18 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
         });
 
 
+   
+
     }
 
 
     private void initView() {
 
-
-        viewport = new Property<Viewport3D>(new Viewport3D(getModel()));
-        crosshair = new Property<ICrosshair>(new Crosshair(viewport.getProperty()));
+        viewport = new  Viewport3D(getModel());
+        crosshair = new Crosshair(viewport);
         registerListeners();
+        setPlotLayout(plotLayout);
+
 
 
     }
@@ -139,7 +181,9 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
         return plotSelection;
     }
 
-    public abstract SliceController getSliceController();
+    public SliceController getSliceController() {
+        return sliceController;
+    }
 
 
     public boolean isPreserveAspect() {
@@ -177,7 +221,7 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
 
 
     public IImagePlot getSelectedPlot() {
-        return (IImagePlot) getPlotSelection().getSelection();
+        return getPlotSelection().getSelection();
     }
 
 
@@ -197,26 +241,19 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
         return displayModel;
     }
 
-    public String getId() {
-        return id;
-    }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Property<ICrosshair> getCrosshair() {
+    public ICrosshair getCrosshair() {
         return crosshair;
     }
 
-    public Property<Viewport3D> getViewport() {
+    public Viewport3D getViewport() {
         return viewport;
     }
 
 
     public AnatomicalPoint3D getCentroid() {
         ICoordinateSpace compositeSpace = displayModel.getImageSpace();
-        return (AnatomicalPoint3D)compositeSpace.getCentroid();       
+        return (AnatomicalPoint3D) compositeSpace.getCentroid();
     }
 
     public void clearAnnotations() {
@@ -243,8 +280,15 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
 
     }
 
+    public void setAnnotation(String name, IAnnotation annotation) {
+        Iterator<IImagePlot> iter = plotLayout.iterator();
+        while (iter.hasNext()) {
+            setAnnotation(iter.next(), name, annotation);
+        }
+    }
+
     public void setAnnotation(IImagePlot plot, String name, IAnnotation annotation) {
-        if (!getPlots().contains(plot)) {
+         if (!plotLayout.containsPlot(plot)) {
             throw new IllegalArgumentException("View does not contain plot : " + plot);
         }
 
@@ -254,11 +298,11 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
     }
 
     public Point getCrosshairLocation(IImagePlot plot) {
-        if (!getPlots().contains(plot)) {
+        if (!plotLayout.containsPlot(plot)) {
             throw new IllegalArgumentException("View does not contain plot : " + plot);
         }
 
-        ICrosshair cross = getCrosshair().getProperty();
+        ICrosshair cross = getCrosshair();
 
         AnatomicalPoint1D xpt = cross.getValue(plot.getDisplayAnatomy().XAXIS);
         AnatomicalPoint1D ypt = cross.getValue(plot.getDisplayAnatomy().YAXIS);
@@ -297,18 +341,32 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
                         plot.getYAxisRange().getAnatomicalAxis(),
                         plot.getDisplayAnatomy().ZAXIS),
                 apoint.getX(), apoint.getY(),
-                getCrosshair().getProperty().getValue(displayAnatomy.ZAXIS).getX());
+                getCrosshair().getValue(displayAnatomy.ZAXIS).getX());
 
 
         return ap3d;
     }
 
 
-    public abstract IImagePlot whichPlot(Point p);
+    public IImagePlot whichPlot(Point p) {
+        return plotLayout.whichPlot(p);
+    }
 
-    public abstract List<IImagePlot> getPlots();
+    public List<IImagePlot> getPlots() {
+        return plotLayout.getPlots();
+    }
 
-    public abstract RenderedImage captureImage();
+    public ListIterator<IImagePlot> plotIterator() {
+        return plotLayout.iterator();
+    }
+
+    public RenderedImage captureImage() {
+        BufferedImage img = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+        paint(img.createGraphics());
+        return img;
+
+
+    }
 
 
     public void intervalAdded(ListDataEvent e) {
@@ -338,7 +396,7 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
     }
 
     public void imageSpaceChanged(IImageDisplayModel model, IImageSpace space) {
-        Viewport3D viewport = getViewport().getProperty();
+        Viewport3D viewport = getViewport();
         List<IImagePlot> plots = getPlots();
         for (IImagePlot plot : plots) {
             plot.setXAxisRange(viewport.getRange(plot.getDisplayAnatomy().XAXIS));
@@ -348,10 +406,21 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
 
     }
 
+    @Override
+    public Dimension getPreferredSize() {
+        return plotLayout.getPreferredSize();
+    }
+
 
     class CrosshairHandler implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
+            ICrosshair cross = (ICrosshair) evt.getSource();
+            AnatomicalPoint1D slice = cross.getLocation().getValue(ImageView.this.getSelectedPlot().getDisplayAnatomy().ZAXIS);
+            sliceController.setSlice(slice);
+            System.out.println("setting slice to " + slice);
+            //getSelectedPlot().setSlice(slice);
+
             EventBus.publish(new ImageViewCrosshairEvent(ImageView.this));
 
         }
@@ -363,8 +432,8 @@ public abstract class ImageView extends JComponent implements ListDataListener, 
         public void propertyChange(PropertyChangeEvent evt) {
             List<IImagePlot> plots = ImageView.this.getPlots();
             for (IImagePlot plot : plots) {
-                plot.setXAxisRange(viewport.getProperty().getRange(plot.getDisplayAnatomy().XAXIS));
-                plot.setYAxisRange(viewport.getProperty().getRange(plot.getDisplayAnatomy().YAXIS));
+                plot.setXAxisRange(viewport.getRange(plot.getDisplayAnatomy().XAXIS));
+                plot.setYAxisRange(viewport.getRange(plot.getDisplayAnatomy().YAXIS));
 
             }
 

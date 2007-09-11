@@ -30,10 +30,8 @@ public class LinearColorBar extends AbstractColorBar {
         double cRange = model.getMaximumValue() - model.getMinimumValue();
 
 
-        frac[0] = 0;
-        frac[model.getMapSize() - 1] = 1f;
 
-        for (int i = 1; i < model.getMapSize() - 1; i++) {
+        for (int i = 0; i < model.getMapSize(); i++) {
 
             ColorInterval ci = model.getInterval(i);
             double max = ci.getMaximum();
@@ -44,6 +42,10 @@ public class LinearColorBar extends AbstractColorBar {
 
 
         }
+
+        System.out.println("high clip : " + model.getHighClip());
+        System.out.println("last value = " + frac[model.getMapSize()-1]);
+        System.out.println("second to last value = " + frac[model.getMapSize()-2]);
 
         return frac;
 

@@ -59,7 +59,7 @@ public class ResampleImagesStage extends ImageProcessingStage {
     private BufferedImage resample(ImageLayer2D layer, BufferedImage source) {
 
         ImageLayerProperties dprops = layer.getImageLayerProperties();
-        InterpolationMethod interp = dprops.getResampleInterpolation().getProperty();
+        InterpolationMethod interp = dprops.getResampleInterpolation();
         ImageSpace2D ispace = (ImageSpace2D) layer.getImageData().getImageSpace();
 
         double sx = ispace.getImageAxis(Axis.X_AXIS).getRange().getInterval() / ispace.getDimension(Axis.X_AXIS);

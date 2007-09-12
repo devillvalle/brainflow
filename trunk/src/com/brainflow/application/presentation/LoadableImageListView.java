@@ -1,6 +1,6 @@
 package com.brainflow.application.presentation;
 
-import com.brainflow.application.ILoadableImage;
+import com.brainflow.application.IImageDataSource;
 import com.brainflow.application.actions.ActionContext;
 import com.brainflow.application.presentation.forms.LoadableImageCell2;
 import com.brainflow.application.toplevel.LoadableImageManager;
@@ -38,7 +38,7 @@ public class LoadableImageListView extends JList {
 
     private LoadableImageManager manager;
 
-    /*private Map<ILoadableImage, ImageIcon> imap = new HashMap<ILoadableImage, ImageIcon>();
+    /*private Map<IImageDataSource, ImageIcon> imap = new HashMap<IImageDataSource, ImageIcon>();
 
     public static final int ICON_WIDTH = 40;
     public static final int ICON_HEIGHT = 40;
@@ -68,7 +68,7 @@ public class LoadableImageListView extends JList {
 
             public void valueChanged(ListSelectionEvent e) {
 
-                ILoadableImage limg = (ILoadableImage) LoadableImageListView.this.getSelectedValue();
+                IImageDataSource limg = (IImageDataSource) LoadableImageListView.this.getSelectedValue();
                 context.put(ActionContext.SELECTED_LOADABLE_IMAGE, limg);
             }
         });
@@ -124,7 +124,7 @@ public class LoadableImageListView extends JList {
     class LoadableImageCellRenderer implements ListCellRenderer {
 
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            ILoadableImage limg = (ILoadableImage) value;
+            IImageDataSource limg = (IImageDataSource) value;
 
             //ImageIcon icon = imap.get(limg);
 

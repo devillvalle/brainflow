@@ -14,7 +14,7 @@ import java.awt.image.BufferedImage;
  * Time: 2:49:10 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface ILoadableImage {
+public interface IImageDataSource {
 
     public ImageInfo getImageInfo();
 

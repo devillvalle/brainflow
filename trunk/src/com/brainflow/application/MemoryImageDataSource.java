@@ -14,11 +14,12 @@ import java.awt.image.BufferedImage;
  * Time: 2:04:22 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MemoryImage implements ILoadableImage {
+public class MemoryImageDataSource implements  IImageDataSource {
+
 
     private IImageData data;
 
-    public MemoryImage(IImageData _data) {
+    public MemoryImageDataSource(IImageData _data) {
         data = _data;
     }
 
@@ -31,7 +32,7 @@ public class MemoryImage implements ILoadableImage {
     }
 
     public String getStem() {
-        return "memory_image";
+        return "IMAGE_DATA" + hashCode();
     }
 
     public BufferedImage getPreview() {
@@ -47,7 +48,7 @@ public class MemoryImage implements ILoadableImage {
     }
 
     public String getFileFormat() {
-        throw new UnsupportedOperationException("MemoryImage does not have a file format");
+        return "MEMORY";
     }
 
     public IImageData getData() {

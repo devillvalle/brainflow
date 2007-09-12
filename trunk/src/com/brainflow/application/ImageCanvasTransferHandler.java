@@ -1,7 +1,6 @@
 package com.brainflow.application;
 
 import com.brainflow.application.toplevel.Brainflow;
-import com.brainflow.core.ImageCanvas;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.ImageCanvas2;
 
@@ -38,7 +37,7 @@ public class ImageCanvasTransferHandler extends TransferHandler {
     public ImageCanvasTransferHandler() {
         try {
             loadableImageFlavor = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType +
-                    ";class=com.brainflow.application.ILoadableImage");
+                    ";class=com.brainflow.application.IImageDataSource");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -56,10 +55,10 @@ public class ImageCanvasTransferHandler extends TransferHandler {
 
     public boolean importData(TransferSupport support) {
         try {
-            ILoadableImage[] limg = null;
+            IImageDataSource[] limg = null;
             if (canImport(support)) {
                 try {
-                    limg = (ILoadableImage[]) support.getTransferable().getTransferData(loadableImageFlavor);
+                    limg = (IImageDataSource[]) support.getTransferable().getTransferData(loadableImageFlavor);
                 } catch (UnsupportedFlavorException e) {
                     e.printStackTrace();
                     return false;
@@ -129,19 +128,19 @@ public class ImageCanvasTransferHandler extends TransferHandler {
             JTree tree = (JTree) c;
             TreePath path = tree.getSelectionPath();
             Object[] obj = path.getPath();
-            List<SoftLoadableImage> list = new ArrayList<SoftLoadableImage>();
+            List<SoftImageDataSource> list = new ArrayList<SoftImageDataSource>();
             for (int i = 0; i < obj.length; i++) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) obj[i];
                 if (node.isLeaf()) {
                     Object userObject = node.getUserObject();
-                    if (userObject instanceof SoftLoadableImage) {
-                        list.add((SoftLoadableImage) userObject);
+                    if (userObject instanceof SoftImageDataSource) {
+                        list.add((SoftImageDataSource) userObject);
 
                     }
                 }
             }
 
-            ILoadableImage[] ret = new ILoadableImage[list.size()];
+            IImageDataSource[] ret = new IImageDataSource[list.size()];
             list.toArray(ret);
 
 

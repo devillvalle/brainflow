@@ -9,12 +9,11 @@
 
 package com.brainflow.core;
 
-import com.brainflow.application.ILoadableImage;
-import com.brainflow.core.ImageLayerProperties;
-import com.brainflow.image.data.IImageData;
-import com.brainflow.image.data.IImageData3D;
-import com.brainflow.image.space.IImageSpace;
+import com.brainflow.application.IImageDataSource;
+import com.brainflow.application.IImageDataSource;
 import com.brainflow.colormap.ColorTable;
+import com.brainflow.image.data.IImageData;
+import com.brainflow.image.space.IImageSpace;
 import com.brainflow.utils.Range;
 
 
@@ -26,32 +25,28 @@ import com.brainflow.utils.Range;
 public abstract class ImageLayer extends AbstractLayer {
 
 
+    private IImageDataSource dataSource;
+
     private IImageData data;
 
-
-
-    public ImageLayer(IImageData data) {
-        super(new ImageLayerProperties(ColorTable.GRAYSCALE, new Range(data.getMinValue(), data.getMaxValue())));
-        this.data = data;
+    public ImageLayer(IImageDataSource dataSource) {
+        super(new ImageLayerProperties(ColorTable.GRAYSCALE, new Range(dataSource.getData().getMinValue(), dataSource.getData().getMaxValue())));
+        this.dataSource = dataSource;
+        data = dataSource.getData();
         initMaskList();
     }
 
-    public ImageLayer(ILoadableImage _limg, ImageLayerProperties _properties) {
+    public ImageLayer(IImageDataSource dataSource, ImageLayerProperties _properties) {
         super(_properties);
-        data = _limg.getData();
+        this.dataSource = dataSource;
+        data = dataSource.getData();
         initMaskList();
     }
 
-    public ImageLayer(IImageData data, ImageLayerProperties _properties) {
-        super(_properties);
-        this.data = data;
-        initMaskList();
-    }
+
 
     private void initMaskList() {
-
         setMaskList(new ImageMaskList(this));
-
     }
 
     public ImageMaskList getMaskList() {
@@ -60,6 +55,10 @@ public abstract class ImageLayer extends AbstractLayer {
 
     public IImageData getData() {
         return data;
+    }
+
+    public IImageDataSource getDataSource() {
+        return dataSource;
     }
     
     public String getLabel() {

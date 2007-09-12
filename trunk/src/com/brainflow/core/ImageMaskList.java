@@ -98,7 +98,7 @@ public class ImageMaskList implements IMaskList {
         if (item.getGroup() > group) {
             return node;
         } else {
-            return makeGroupNode(itemList, new MaskedDataNode3D(node, new MaskedData3D((IImageData3D) (item.getSource().getData()),
+            return makeGroupNode(itemList, new MaskedDataNode3D(node, new MaskedData3D((IImageData3D) (item.getSource().getDataSource()),
                     item.getPredicate()), item.getOperation()), current + 1, item.getGroup());
         }
 
@@ -112,7 +112,7 @@ public class ImageMaskList implements IMaskList {
             return node;
         } else {
             IMaskItem item = getMaskItem(current);
-            IImageData3D data = (IImageData3D) item.getSource().getData();
+            IImageData3D data = (IImageData3D) item.getSource().getDataSource();
             MaskedDataNode3D newNode = new MaskedDataNode3D(node, new MaskedData3D(data, item.getPredicate()), item.getOperation());
 
             return makeTreeNode(groupList, newNode, current + 1);
@@ -126,13 +126,13 @@ public class ImageMaskList implements IMaskList {
     public IMaskedData3D composeMask(boolean lazy) {
         if (this.size() == 1) {
             IMaskItem item = getFirstItem();
-            return new MaskedData3D((IImageData3D) (item.getSource().getData()), item.getPredicate());
+            return new MaskedData3D((IImageData3D) (item.getSource().getDataSource()), item.getPredicate());
         } else {
 
             List<IMaskedData3D> groupList = new ArrayList<IMaskedData3D>();
             int numGroups = getLastItem().getGroup();
             int group = getFirstItem().getGroup();
-            IMaskedData3D startNode = new MaskedData3D((IImageData3D) (getFirstItem().getSource().getData()), getFirstItem().getPredicate());
+            IMaskedData3D startNode = new MaskedData3D((IImageData3D) (getFirstItem().getSource().getDataSource()), getFirstItem().getPredicate());
 
             int itemNum = 0;
             while (group <= numGroups) {

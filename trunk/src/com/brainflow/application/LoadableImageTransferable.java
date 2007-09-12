@@ -15,16 +15,16 @@ import java.io.IOException;
 public class LoadableImageTransferable implements Transferable {
 
     private String localObject = DataFlavor.javaJVMLocalObjectMimeType +
-                                    ";class=com.brainflow.application.ILoadableImage";
+                                    ";class=com.brainflow.application.IImageDataSource";
 
 
     private DataFlavor loadableImageFlavor = null;
 
     private DataFlavor[] flavors = new DataFlavor[1];
 
-    private ILoadableImage[] limg;
+    private IImageDataSource[] limg;
 
-    public LoadableImageTransferable(ILoadableImage[] _limg) {
+    public LoadableImageTransferable(IImageDataSource[] _limg) {
         try {
             DataFlavor flavor = new DataFlavor(localObject);
             flavors[0] = flavor;

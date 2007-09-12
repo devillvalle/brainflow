@@ -1,7 +1,7 @@
 package com.brainflow.core.rendering;
 
 import com.brainflow.application.BrainflowException;
-import com.brainflow.application.MemoryImage;
+import com.brainflow.application.MemoryImageDataSource;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.core.*;
 import com.brainflow.image.anatomy.AnatomicalAxis;
@@ -35,10 +35,10 @@ public class TestPipeline {
         Range range = new Range(data.getMinValue(), data.getMaxValue());
 
 
-        ImageLayer layer1 = new ImageLayer3D(new MemoryImage(data),
+        ImageLayer layer1 = new ImageLayer3D(new MemoryImageDataSource(data),
                 new ImageLayerProperties(ColorTable.GRAYSCALE, range));
 
-        ImageLayer layer2 = new ImageLayer3D(new MemoryImage(data2),
+        ImageLayer layer2 = new ImageLayer3D(new MemoryImageDataSource(data2),
                 new ImageLayerProperties(ColorTable.SPECTRUM, range));
 
         layer2.getImageLayerProperties().getOpacity().setOpacity(.9f);

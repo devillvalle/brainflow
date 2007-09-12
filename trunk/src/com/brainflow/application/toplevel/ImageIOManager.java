@@ -2,8 +2,9 @@ package com.brainflow.application.toplevel;
 
 
 import com.brainflow.application.BrainflowException;
+import com.brainflow.application.IImageDataSource;
 import com.brainflow.application.ImageIODescriptor;
-import com.brainflow.application.SoftLoadableImage;
+import com.brainflow.application.SoftImageDataSource;
 import org.apache.commons.vfs.FileObject;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -54,21 +55,21 @@ public class ImageIOManager {
             if (desc.isDataMatch(fobj)) return desc;
         }
 
-        throw new BrainflowException("Colud not find ImageIODescriptor for supplied File " + fobj);
+        throw new BrainflowException("Could not find ImageIODescriptor for supplied File " + fobj);
 
     }
 
-    public SoftLoadableImage[] findLoadableImages(FileObject[] fobjs) {
+    public IImageDataSource[] findLoadableImages(FileObject[] fobjs) {
         assert descriptorList.size() > 0 : "ImageIODescriptors not available";
-        List<SoftLoadableImage> limglist = new ArrayList<SoftLoadableImage>();
+        List<IImageDataSource> limglist = new ArrayList<IImageDataSource>();
 
         for (Iterator<ImageIODescriptor> iter = descriptorList.iterator(); iter.hasNext();) {
             ImageIODescriptor desc = iter.next();
-            SoftLoadableImage[] limg = desc.findLoadableImages(fobjs);
+            IImageDataSource[] limg = desc.findLoadableImages(fobjs);
             Collections.addAll(limglist, limg);
         }
 
-        SoftLoadableImage[] ret = new SoftLoadableImage[limglist.size()];
+        IImageDataSource[] ret = new IImageDataSource[limglist.size()];
         limglist.toArray(ret);
 
         return ret;

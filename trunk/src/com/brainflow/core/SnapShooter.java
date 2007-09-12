@@ -1,7 +1,7 @@
 package com.brainflow.core;
 
-import com.brainflow.application.ILoadableImage;
-import com.brainflow.application.MemoryImage;
+import com.brainflow.application.IImageDataSource;
+import com.brainflow.application.MemoryImageDataSource;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.LinearColorMap;
 import com.brainflow.colormap.DiscreteColorMap;
@@ -127,12 +127,12 @@ public class SnapShooter {
         try {
 
             ImageDisplayModel dset = new ImageDisplayModel("snapper");
-            ILoadableImage il1 = new MemoryImage(AnalyzeIO.readAnalyzeImage("c:/DTI/slopes/ch2"));
-            ILoadableImage il2 = new MemoryImage(AnalyzeIO.readAnalyzeImage("c:/DTI/slopes/tAgeXDiag"));
-            ILoadableImage il3 = new MemoryImage(AnalyzeIO.readAnalyzeImage("c:/DTI/slopes/tAge.Schiz"));
-            ILoadableImage il4 = new MemoryImage(AnalyzeIO.readAnalyzeImage("c:/DTI/slopes/tAge.Norm"));
-            ILoadableImage il5 = new MemoryImage(AnalyzeIO.readAnalyzeImage("c:/DTI/slopes/bAge.Schiz"));
-            ILoadableImage il6 = new MemoryImage(AnalyzeIO.readAnalyzeImage("c:/DTI/slopes/bAge.Norm"));
+            IImageDataSource il1 = new MemoryImageDataSource(AnalyzeIO.readAnalyzeImage("c:/DTI/slopes/ch2"));
+            IImageDataSource il2 = new com.brainflow.application.MemoryImageDataSource(AnalyzeIO.readAnalyzeImage("c:/DTI/slopes/tAgeXDiag"));
+            IImageDataSource il3 = new MemoryImageDataSource(AnalyzeIO.readAnalyzeImage("c:/DTI/slopes/tAge.Schiz"));
+            IImageDataSource il4 = new MemoryImageDataSource(AnalyzeIO.readAnalyzeImage("c:/DTI/slopes/tAge.Norm"));
+            IImageDataSource il5 = new MemoryImageDataSource(AnalyzeIO.readAnalyzeImage("c:/DTI/slopes/bAge.Schiz"));
+            IImageDataSource il6 = new MemoryImageDataSource(AnalyzeIO.readAnalyzeImage("c:/DTI/slopes/bAge.Norm"));
 
 
             LinearColorMap lmap = new LinearColorMap(0, 221, ColorTable.GRAYSCALE);
@@ -149,8 +149,8 @@ public class SnapShooter {
    try {
 
        ImageDisplayModel dset = new ImageDisplayModel("snapper");
-       ILoadableImage il1 = new MemoryImage(AnalyzeIO.readAnalyzeImage("/r/d5/despo/buchs/MSSM_TEMPLATE"));
-       ILoadableImage il2 = new MemoryImage(AnalyzeIO.readAnalyzeImage("/r/d5/despo/buchs/TDiagnosis_G75.midbrain.Covar"));
+       IImageDataSource il1 = new MemoryImage(AnalyzeIO.readAnalyzeImage("/r/d5/despo/buchs/MSSM_TEMPLATE"));
+       IImageDataSource il2 = new MemoryImage(AnalyzeIO.readAnalyzeImage("/r/d5/despo/buchs/TDiagnosis_G75.midbrain.Covar"));
 
        LinearColorMap lmap = new LinearColorMap(0, 221, ColorTable.GRAYSCALE);
        RaggedColorMap ragged = new RaggedColorMap();

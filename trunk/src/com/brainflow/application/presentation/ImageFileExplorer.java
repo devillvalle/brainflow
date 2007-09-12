@@ -1,9 +1,9 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.application.CompositeFileSelector;
-import com.brainflow.application.ILoadableImage;
+import com.brainflow.application.IImageDataSource;
 import com.brainflow.application.LoadableImageProvider;
-import com.brainflow.application.SoftLoadableImage;
+import com.brainflow.application.SoftImageDataSource;
 import com.brainflow.application.toplevel.ImageIOManager;
 import com.brainflow.gui.AbstractPresenter;
 import com.brainflow.gui.FileExplorer;
@@ -116,8 +116,8 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
 
 
                     Object userObject = node.getUserObject();
-                    if (userObject instanceof ILoadableImage) {
-                        ILoadableImage limg = (ILoadableImage) userObject;
+                    if (userObject instanceof IImageDataSource) {
+                        IImageDataSource limg = (IImageDataSource) userObject;
                         if (limg.isLoaded() && !selected) {
                             label.setForeground(Color.GREEN.darker().darker());
                         }
@@ -186,10 +186,10 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
         explorer.getJTree().setTransferHandler(handler);
     }
 
-    public SoftLoadableImage[] requestLoadableImages() {
+    public SoftImageDataSource[] requestLoadableImages() {
         TreePath[] paths = explorer.getJTree().getSelectionPaths();
-        if (paths == null) return new SoftLoadableImage[0];
-        List<ILoadableImage> list = new ArrayList<ILoadableImage>();
+        if (paths == null) return new SoftImageDataSource[0];
+        List<IImageDataSource> list = new ArrayList<IImageDataSource>();
         for (int p = 0; p < paths.length; p++) {
             Object[] obj = paths[p].getPath();
 
@@ -197,15 +197,15 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) obj[i];
                 if (node.isLeaf()) {
                     Object userObject = node.getUserObject();
-                    if (userObject instanceof ILoadableImage) {
-                        list.add((ILoadableImage) userObject);
+                    if (userObject instanceof IImageDataSource) {
+                        list.add((IImageDataSource) userObject);
 
                     }
                 }
             }
         }
 
-        SoftLoadableImage[] ret = new SoftLoadableImage[list.size()];
+        SoftImageDataSource[] ret = new SoftImageDataSource[list.size()];
         list.toArray(ret);
         return ret;
     }
@@ -364,7 +364,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
             try {
 
                 FileObject[] children = fileObject.findFiles(selector);
-                SoftLoadableImage[] limgs = ImageIOManager.getInstance().findLoadableImages(children);
+                SoftImageDataSource[] limgs = ImageIOManager.getInstance().findLoadableImages(children);
 
                 // first add folders
                 for (int i = 0; i < children.length; i++) {
@@ -453,7 +453,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
                 log.finest("fetching child nodes");
                 FileObject[] children = fileObject.findFiles(selector);
                 log.finest("found " + children.length + " nodes");
-                SoftLoadableImage[] limgs = ImageIOManager.getInstance().findLoadableImages(children);
+                SoftImageDataSource[] limgs = ImageIOManager.getInstance().findLoadableImages(children);
 
                 // first add folders
                 for (int i = 0; i < children.length; i++) {

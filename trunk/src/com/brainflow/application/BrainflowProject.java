@@ -1,16 +1,13 @@
 package com.brainflow.application;
 
+import com.brainflow.application.toplevel.BrainflowProjectEvent;
+import com.brainflow.application.toplevel.BrainflowProjectListener;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.ImageDisplayModelListener;
-import com.brainflow.application.toplevel.BrainflowProjectListener;
-import com.brainflow.application.toplevel.BrainflowProjectEvent;
 import com.brainflow.image.space.IImageSpace;
 
 import javax.swing.event.ListDataEvent;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Collections;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -59,7 +56,7 @@ public class BrainflowProject {
         return modelList.iterator();
     }
 
-    public List<IImageDisplayModel> getModelList() {       
+    public List<IImageDisplayModel> getModelList() {
         return Collections.unmodifiableList(modelList);
     }
 
@@ -116,7 +113,7 @@ public class BrainflowProject {
     }
 
     private void fireModelRemoved(BrainflowProjectEvent event) {
-         for (BrainflowProjectListener l : listenerList) {
+        for (BrainflowProjectListener l : listenerList) {
             l.modelAdded(event);
 
         }
@@ -126,7 +123,7 @@ public class BrainflowProject {
 
     private void fireIntervalAdded(ListDataEvent e) {
         for (BrainflowProjectListener l : listenerList) {
-           l.intervalAdded(new BrainflowProjectEvent(this, (IImageDisplayModel)e.getSource(), e));
+            l.intervalAdded(new BrainflowProjectEvent(this, (IImageDisplayModel) e.getSource(), e));
 
         }
 
@@ -134,7 +131,7 @@ public class BrainflowProject {
 
     private void fireContentsChanged(ListDataEvent e) {
         for (BrainflowProjectListener l : listenerList) {
-            l.contentsChanged(new BrainflowProjectEvent(this, (IImageDisplayModel)e.getSource(), e));
+            l.contentsChanged(new BrainflowProjectEvent(this, (IImageDisplayModel) e.getSource(), e));
 
 
         }
@@ -143,7 +140,7 @@ public class BrainflowProject {
 
     private void fireIntervalRemoved(ListDataEvent e) {
         for (BrainflowProjectListener l : listenerList) {
-            l.intervalRemoved(new BrainflowProjectEvent(this, (IImageDisplayModel)e.getSource(), e));
+            l.intervalRemoved(new BrainflowProjectEvent(this, (IImageDisplayModel) e.getSource(), e));
 
         }
 

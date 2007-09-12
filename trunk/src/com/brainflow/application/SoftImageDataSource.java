@@ -20,9 +20,9 @@ import java.util.logging.Logger;
  */
 
 
-public class SoftLoadableImage implements ILoadableImage {
+public class SoftImageDataSource implements IImageDataSource {
 
-    final static Logger log = Logger.getLogger(SoftLoadableImage.class.getCanonicalName());
+    final static Logger log = Logger.getLogger(SoftImageDataSource.class.getCanonicalName());
 
     private ImageIODescriptor descriptor;
 
@@ -37,14 +37,14 @@ public class SoftLoadableImage implements ILoadableImage {
 
     private ImageInfo imageInfo = null;
 
-    public SoftLoadableImage(ImageIODescriptor _descriptor, FileObject _header, FileObject _data) {
+    public SoftImageDataSource(ImageIODescriptor _descriptor, FileObject _header, FileObject _data) {
         descriptor = _descriptor;
         //assert descriptor.getHeaderName(_data) == _header.getName().getBaseName();
         dataFile = _data;
         header = _header;
     }
 
-    public SoftLoadableImage(ImageIODescriptor _descriptor, FileObject _header) {
+    public SoftImageDataSource(ImageIODescriptor _descriptor, FileObject _header) {
         descriptor = _descriptor;
         header = _header;
 
@@ -190,6 +190,7 @@ public class SoftLoadableImage implements ILoadableImage {
             data.setIdentifier(getUniqueID());
             data.setImageLabel(getStem());
             dataRef = new SoftReference(data);
+
         } catch (IllegalAccessException e) {
             log.warning("Error caught in BasicImageData.load()");
             throw new BrainflowException(e);
@@ -215,7 +216,7 @@ public class SoftLoadableImage implements ILoadableImage {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SoftLoadableImage that = (SoftLoadableImage) o;
+        SoftImageDataSource that = (SoftImageDataSource) o;
 
         if (!dataFile.getName().getPath().equals(that.dataFile.getName().getPath())) return false;
         if (!header.getName().getPath().equals(that.header.getName().getPath())) return false;

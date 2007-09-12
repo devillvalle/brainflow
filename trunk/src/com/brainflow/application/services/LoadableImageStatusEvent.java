@@ -1,6 +1,6 @@
 package com.brainflow.application.services;
 
-import com.brainflow.application.ILoadableImage;
+import com.brainflow.application.IImageDataSource;
 import org.bushe.swing.event.AbstractEventServiceEvent;
 
 /**
@@ -20,9 +20,9 @@ public class LoadableImageStatusEvent extends AbstractEventServiceEvent {
 
     private EventID id;
 
-    private ILoadableImage sourceImage;
+    private IImageDataSource sourceImage;
 
-    public LoadableImageStatusEvent(ILoadableImage source, EventID _id) {
+    public LoadableImageStatusEvent(IImageDataSource source, EventID _id) {
         super(source);
         sourceImage = source;
         id = _id;
@@ -32,7 +32,7 @@ public class LoadableImageStatusEvent extends AbstractEventServiceEvent {
         return id;
     }
 
-    public ILoadableImage getLoadableImage() {
+    public IImageDataSource getLoadableImage() {
         return sourceImage;
     }
 

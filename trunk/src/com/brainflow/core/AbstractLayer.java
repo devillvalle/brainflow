@@ -76,7 +76,7 @@ public abstract class AbstractLayer {
         return properties.getThresholdRange();
     }
 
-    public abstract Object getData();
+    public abstract Object getDataSource();
 
     private void init() {
         properties.getColorMap().addPropertyChangeListener(new PropertyChangeListener() {

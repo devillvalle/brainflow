@@ -1,8 +1,8 @@
 package com.brainflow.image.operations;
 
 import com.brainflow.application.BrainflowException;
-import com.brainflow.application.ILoadableImage;
-import com.brainflow.application.MemoryImage;
+import com.brainflow.application.IImageDataSource;
+import com.brainflow.application.MemoryImageDataSource;
 import com.brainflow.image.data.BasicImageData3D;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.data.IImageData3D;
@@ -272,7 +272,7 @@ public class ConnectedComponentsFilter extends AbstractImageFilter {
     public static void main(String[] args) {
         try {
 
-            ILoadableImage img = new MemoryImage(AnalyzeIO.readAnalyzeImage("C:/DTI/slopes/bAge.Norm.hdr"));
+            IImageDataSource img = new MemoryImageDataSource(AnalyzeIO.readAnalyzeImage("C:/DTI/slopes/bAge.Norm.hdr"));
             IImageData3D data = (IImageData3D) img.getData();
 
             ConnectedComponentsFilter filter = null;

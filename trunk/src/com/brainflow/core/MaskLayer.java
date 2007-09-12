@@ -1,14 +1,14 @@
 package com.brainflow.core;
 
-import com.brainflow.image.anatomy.AnatomicalPoint3D;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.space.IImageSpace;
-import com.brainflow.image.space.Axis;
-import com.brainflow.image.data.MaskedData3D;
-import com.brainflow.image.interpolation.NearestNeighborInterpolator;
+import com.brainflow.application.MemoryImageDataSource;
 import com.brainflow.colormap.DiscreteColorMap;
 import com.brainflow.core.rendering.BasicImageSliceRenderer;
-
+import com.brainflow.image.anatomy.AnatomicalPoint1D;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.image.data.MaskedData3D;
+import com.brainflow.image.interpolation.NearestNeighborInterpolator;
+import com.brainflow.image.space.Axis;
+import com.brainflow.image.space.IImageSpace;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class MaskLayer extends ImageLayer3D {
 
 
     public MaskLayer(MaskedData3D _mask, ImageLayerProperties _properties) {
-        super(_mask, _properties);
+        super(new MemoryImageDataSource(_mask), _properties);
         mask = _mask;
 
         java.util.List<Color> clrs = new ArrayList<Color>();

@@ -1,6 +1,6 @@
 package com.brainflow.application.presentation;
 
-import com.brainflow.application.ILoadableImage;
+import com.brainflow.application.IImageDataSource;
 import com.brainflow.application.actions.ActionContext;
 import com.brainflow.application.actions.RemoveLoadableImageAction;
 import com.brainflow.application.services.LoadableImageStatusEvent;
@@ -59,9 +59,9 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
 
     private HierarchicalTable table;
     private ImageTableModel imageTableModel;
-    private Map<ILoadableImage, ImageIcon> imap = new HashMap<ILoadableImage, ImageIcon>();
+    private Map<IImageDataSource, ImageIcon> imap = new HashMap<IImageDataSource, ImageIcon>();
 
-    private List<ILoadableImage> imageList = new ArrayList<ILoadableImage>();
+    private List<com.brainflow.application.IImageDataSource> imageList = new ArrayList<IImageDataSource>();
 
     private BasicAction removeAction = new RemoveLoadableImageAction();
 
@@ -103,8 +103,8 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
 
         table.setComponentFactory(new HierarchicalTableComponentFactory() {
             public Component createChildComponent(HierarchicalTable table, Object value, int row) {
-                if (value instanceof ILoadableImage) {
-                    return new ImageInfoPanel((ILoadableImage) value);
+                if (value instanceof IImageDataSource) {
+                    return new ImageInfoPanel((IImageDataSource) value);
                 }
                 return null;
             }
@@ -167,7 +167,7 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
 
     }
 
-    private ImageIcon getSnapshot(ILoadableImage limg, int width, int height) {
+    private ImageIcon getSnapshot(IImageDataSource limg, int width, int height) {
         ImageIcon icon = imap.get(limg);
 
         if (icon == null) {
@@ -204,9 +204,9 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
 
 
     class ImageInfoPanel extends JPanel {
-        ILoadableImage limg;
+        IImageDataSource limg;
 
-        public ImageInfoPanel(ILoadableImage _limg) {
+        public ImageInfoPanel(IImageDataSource _limg) {
             limg = _limg;
             setLayout(new BorderLayout());
             setBorder(BorderFactory.createEmptyBorder(2, 2, 3, 2));
@@ -288,8 +288,8 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
 
     class LoadableImageCellRenderer extends DefaultTableCellRenderer {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            if (value instanceof ILoadableImage) {
-                ILoadableImage limg = (ILoadableImage) value;
+            if (value instanceof IImageDataSource) {
+                IImageDataSource limg = (IImageDataSource) value;
                 JLabel label = (JLabel) super.getTableCellRendererComponent(table, limg.getStem(), isSelected, hasFocus, row, column);
                 //label.setIcon(getSnapshot(limg, SMALL_ICON_WIDTH, SMALL_ICON_HEIGHT));
                 return label;
@@ -299,7 +299,7 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
         }
     }
 
-    private long getImageSize(ILoadableImage limg) {
+    private long getImageSize(IImageDataSource limg) {
 
         try {
             return limg.getDataFile().getContent().getSize();
@@ -334,7 +334,7 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
         }
 
         public Object getValueAt(int rowIndex, int columnIndex) {
-            ILoadableImage limg = imageList.get(rowIndex);
+            IImageDataSource limg = imageList.get(rowIndex);
 
             switch (columnIndex) {
                 case 0:

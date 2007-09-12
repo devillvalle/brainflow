@@ -2,7 +2,7 @@ package com.brainflow.application.toplevel;
 
 import com.brainflow.application.BrainFrame;
 import com.brainflow.application.BrainflowException;
-import com.brainflow.application.MemoryImage;
+import com.brainflow.application.MemoryImageDataSource;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.core.*;
 import com.brainflow.image.data.IImageData;
@@ -88,11 +88,11 @@ public class BrainTest {
 
             IImageDisplayModel model = new ImageDisplayModel("model");
             Range range = new Range(data1.getMinValue(), data1.getMaxValue());
-            ImageLayer layer = new ImageLayer3D(new MemoryImage(data1),
+            ImageLayer layer = new ImageLayer3D(new MemoryImageDataSource(data1),
                     new ImageLayerProperties(ColorTable.GRAYSCALE, range));
             model.addLayer(layer);
 
-            layer = new ImageLayer3D(new MemoryImage(data2),
+            layer = new ImageLayer3D(new MemoryImageDataSource(data2),
                     new ImageLayerProperties(ColorTable.GRAYSCALE, range));
 
 

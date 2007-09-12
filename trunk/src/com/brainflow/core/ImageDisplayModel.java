@@ -227,7 +227,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         for (int i = 0; i < imageListModel.size(); i++) {
             ImageLayer layer = (ImageLayer) imageListModel.get(i);
 
-            if (layer.getData() == data) {
+            if (layer.getDataSource() == data) {
                 ret.add(i);
 
             }
@@ -357,7 +357,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
     }
 
     /* (non-Javadoc)
-    * @see com.brainflow.core.IImageDisplayModel#setLayer(int, com.brainflow.application.SoftLoadableImage, com.brainflow.display.props.DisplayProperties)
+    * @see com.brainflow.core.IImageDisplayModel#setLayer(int, com.brainflow.application.SoftImageDataSource, com.brainflow.display.props.DisplayProperties)
     */
     //public void setLayer(int index, ImageLayer layer) {
     //    assert index >= 0 && index < size();

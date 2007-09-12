@@ -57,9 +57,9 @@ public class ImageIODescriptor {
     }
 
 
-    public SoftLoadableImage[] findLoadableImages(FileObject[] fobjs) {
+    public IImageDataSource[] findLoadableImages(FileObject[] fobjs) {
 
-        List<SoftLoadableImage> limglist = new ArrayList<SoftLoadableImage>();
+        List<IImageDataSource> limglist = new ArrayList<IImageDataSource>();
 
         for (int i = 0; i < fobjs.length; i++) {
             if (isHeaderMatch(fobjs[i])) {
@@ -69,7 +69,7 @@ public class ImageIODescriptor {
 
                     if (dobj != null && dobj.exists()) {
 
-                        limglist.add(new SoftLoadableImage(this, fobjs[i], dobj));
+                        limglist.add(new SoftImageDataSource(this, fobjs[i], dobj));
                     }
 
                 } catch (FileSystemException e) {
@@ -80,7 +80,7 @@ public class ImageIODescriptor {
             }
         }
 
-        SoftLoadableImage[] ret = new SoftLoadableImage[limglist.size()];
+        SoftImageDataSource[] ret = new SoftImageDataSource[limglist.size()];
         limglist.toArray(ret);
         return ret;
 
@@ -104,9 +104,15 @@ public class ImageIODescriptor {
 
     }
 
-    public SoftLoadableImage createLoadableImage(FileObject header, FileObject data) {
-        assert isHeaderMatch(header) && isDataMatch(data);
-        SoftLoadableImage limg = new SoftLoadableImage(this, header, data);
+    public IImageDataSource createLoadableImage(FileObject header, FileObject data) {
+        if (!isHeaderMatch(header) ) {
+            throw new IllegalArgumentException("header " + header.getName().getBaseName() + " does not have correct suffix for format : " + this.getFormatName());
+        }
+        if (!isDataMatch(data) ) {
+            throw new IllegalArgumentException("data " + data.getName().getBaseName() + " does not have correct suffix for format : " + this.getFormatName());
+        }
+
+        IImageDataSource limg = new SoftImageDataSource(this, header, data);
         return limg;
     }
 
@@ -147,15 +153,12 @@ public class ImageIODescriptor {
 
     public boolean isHeaderMatch(FileObject fobj) {
         if (fobj.getName().getPath().endsWith(headerExtension)) {
-            System.out.println("file :" + fobj.getName().getPath() + " does match " + headerExtension);
+            //System.out.println("file :" + fobj.getName().getPath() + " does match " + headerExtension);
             return true;
         } else {
-            System.out.println("file :" + fobj.getName().getPath() + " does not match " + headerExtension);
+            return false;
 
         }
-
-        // other checks would be appropriate (i.e. is header size = 348?)
-        return false;
     }
 
     public String getStem(String fname) {

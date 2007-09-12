@@ -9,5 +9,5 @@ package com.brainflow.application;
  */
 public interface LoadableImageReceiver {
 
-    public boolean canAccept(ILoadableImage[] img);
+    public boolean canAccept(IImageDataSource[] img);
 }

@@ -9,5 +9,5 @@ package com.brainflow.application;
  */
 public interface LoadableImageProvider {
 
-    public ILoadableImage[] requestLoadableImages();
+    public IImageDataSource[] requestLoadableImages();
 }

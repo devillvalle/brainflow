@@ -40,7 +40,7 @@ public class RenderCoordinatesStage extends ImageProcessingStage {
     }
 
     private void renderUnto(CoordinateLayer layer, BufferedImage image) {
-        List<AnatomicalPoint3D> pts = layer.getData().pointsWithinPlane(getSlice());
+        List<AnatomicalPoint3D> pts = layer.getDataSource().pointsWithinPlane(getSlice());
         for (int i=0; i<pts.size(); i++) {
             System.out.println("point within plance: " + pts.get(i));
         }

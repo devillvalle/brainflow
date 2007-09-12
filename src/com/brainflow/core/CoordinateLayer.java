@@ -26,7 +26,7 @@ public class CoordinateLayer extends AbstractLayer {
         return 0;
     }
 
-    public CoordinateSet3D getData() {
+    public CoordinateSet3D getDataSource() {
         return coordinates;
     }
 

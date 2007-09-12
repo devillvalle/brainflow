@@ -5,8 +5,8 @@ import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.image.io.analyze.AnalyzeIO;
-import com.brainflow.application.ILoadableImage;
-import com.brainflow.application.MemoryImage;
+import com.brainflow.application.IImageDataSource;
+import com.brainflow.application.MemoryImageDataSource;
 import com.brainflow.application.BrainflowException;
 import com.brainflow.display.ThresholdRange;
 
@@ -276,7 +276,7 @@ public class ConnectedComponentsFilter3 extends AbstractImageFilter {
 
     public static void main(String[] args) {
         try {
-            ILoadableImage img = new MemoryImage(AnalyzeIO.readNiftiImage("F:/data/anyback/tRepeat-stat.nii"));
+            IImageDataSource img = new MemoryImageDataSource(AnalyzeIO.readNiftiImage("F:/data/anyback/tRepeat-stat.nii"));
             IImageData3D data = (IImageData3D) img.getData();
 
             MaskedData3D mask = new MaskedData3D(data, new ThresholdRange(-1000, 1));

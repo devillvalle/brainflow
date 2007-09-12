@@ -65,7 +65,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
         this.slice = slice;
         this.layer = layer;
 
-        slicer = new ImageSlicer((IImageData3D) layer.getData());
+        slicer = new ImageSlicer((IImageData3D) layer.getDataSource());
     }
 
     public ImageSpace2D getImageSpace() {

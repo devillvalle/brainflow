@@ -89,7 +89,7 @@ public class BasicCoordinateSliceRenderer implements SliceRenderer {
     }
 
     public BufferedImage render() {
-        CoordinateSet3D set = layer.getData();
+        CoordinateSet3D set = layer.getDataSource();
         List<AnatomicalPoint3D> pts = set.pointsWithinPlane(getSlice());
 
         for (AnatomicalPoint3D pt : pts) {
@@ -100,7 +100,7 @@ public class BasicCoordinateSliceRenderer implements SliceRenderer {
     }
 
     public void renderUnto(Rectangle2D frame, Graphics2D g2) {
-        CoordinateSet3D set = layer.getData();
+        CoordinateSet3D set = layer.getDataSource();
         List<Integer> indices = set.indicesWithinPlane(getSlice());
 
         if (indices.size() == 0) {

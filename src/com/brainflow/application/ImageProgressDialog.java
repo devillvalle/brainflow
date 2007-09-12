@@ -26,7 +26,7 @@ public class ImageProgressDialog extends SwingWorker<IImageData, Integer> implem
 
     private String message = "";
 
-    private ILoadableImage loadable;
+    private IImageDataSource loadable;
 
     private JProgressBar progressBar;
 
@@ -42,18 +42,18 @@ public class ImageProgressDialog extends SwingWorker<IImageData, Integer> implem
         buildGUI();
     }
 
-    public ImageProgressDialog(ILoadableImage _loadable, Component _parent) {
+    public ImageProgressDialog(IImageDataSource _loadable, Component _parent) {
         loadable = _loadable;
         parent = _parent;
         buildGUI();
     }
 
 
-    public ILoadableImage getLoadable() {
+    public IImageDataSource getLoadable() {
         return loadable;
     }
 
-    public void setLoadable(ILoadableImage loadable) {
+    public void setLoadable(IImageDataSource loadable) {
         this.loadable = loadable;
     }
 

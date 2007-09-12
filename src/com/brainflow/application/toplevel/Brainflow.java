@@ -713,7 +713,7 @@ public class Brainflow {
     }
 
 
-    private void register(ILoadableImage limg) {
+    private void register(IImageDataSource limg) {
         LoadableImageManager manager = LoadableImageManager.getInstance();
         boolean alreadyRegistered = manager.isRegistered(limg);
 
@@ -733,7 +733,7 @@ public class Brainflow {
 
     }
 
-    public void loadAndDisplay(final ILoadableImage limg) {
+    public void loadAndDisplay(final IImageDataSource limg) {
 
         if (limg != null) {
             register(limg);
@@ -764,7 +764,7 @@ public class Brainflow {
 
     }
 
-    public void loadAndDisplay(ILoadableImage limg, ImageView view, boolean fadeIn) {
+    public void loadAndDisplay(IImageDataSource limg, ImageView view, boolean fadeIn) {
         if (limg != null) {
 
             register(limg);
@@ -799,7 +799,7 @@ public class Brainflow {
     }
 
 
-    private void addLayerWithFadeIn(ILoadableImage limg, ImageView view) {
+    private void addLayerWithFadeIn(IImageDataSource limg, ImageView view) {
         IImageDisplayModel dset = view.getModel();
 
         //final LinearColorMap cmap = (LinearColorMap) params.getColorMap().getProperty();
@@ -821,8 +821,8 @@ public class Brainflow {
     }
 
 
-    public SoftLoadableImage[] getSelectedLoadableImages() {
-        SoftLoadableImage[] limg = loadingDock.requestLoadableImages();
+    public SoftImageDataSource[] getSelectedLoadableImages() {
+        SoftImageDataSource[] limg = loadingDock.requestLoadableImages();
         return limg;
 
     }

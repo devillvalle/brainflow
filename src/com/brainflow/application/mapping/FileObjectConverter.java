@@ -25,6 +25,7 @@ public class FileObjectConverter implements Converter {
             writer.setValue(fobj.getName().getBaseName());
             writer.addAttribute("uri", fobj.getName().getURI());
             writer.addAttribute("type", fobj.getType().getName());
+            
         } catch (FileSystemException e) {
             throw new RuntimeException("error during xml serialization", e);
         }

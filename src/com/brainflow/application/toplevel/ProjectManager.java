@@ -1,7 +1,7 @@
 package com.brainflow.application.toplevel;
 
 import com.brainflow.application.BrainflowProject;
-import com.brainflow.application.ILoadableImage;
+import com.brainflow.application.IImageDataSource;
 import com.brainflow.application.services.ImageDisplayModelEvent;
 import com.brainflow.application.services.LoadableImageStatusEvent;
 import com.brainflow.colormap.LinearColorMap;
@@ -45,7 +45,7 @@ public class ProjectManager implements EventSubscriber, BrainflowProjectListener
     }
 
 
-    public IImageDisplayModel addToActiveProject(ILoadableImage limg) {
+    public IImageDisplayModel addToActiveProject(IImageDataSource limg) {
 
         boolean registered = LoadableImageManager.getInstance().isRegistered(limg);
 
@@ -90,7 +90,7 @@ public class ProjectManager implements EventSubscriber, BrainflowProjectListener
         }
     }
 
-    protected void clearLoadableImage(ILoadableImage limg) {
+    protected void clearLoadableImage(IImageDataSource limg) {
         Iterator<IImageDisplayModel> iter = activeProject.iterator();
         while (iter.hasNext()) {
             IImageDisplayModel dmodel = iter.next();

@@ -1,16 +1,21 @@
 package com.brainflow.application.mapping;
 
-import com.brainflow.application.ILoadableImage;
+import com.brainflow.application.IImageDataSource;
 import com.brainflow.application.ImageIODescriptor;
-import com.brainflow.application.SoftLoadableImage;
+import com.brainflow.application.SoftImageDataSource;
 import com.brainflow.application.toplevel.ImageIOManager;
+import com.brainflow.core.ImageLayer;
+import com.brainflow.core.ImageLayer3D;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.DataHolder;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.VFS;
 import org.apache.commons.vfs.provider.local.LocalFile;
 
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,28 +29,49 @@ import java.io.FileOutputStream;
 public class TestXStream {
 
 
-    SoftLoadableImage limg;
+    IImageDataSource limg1;
+    IImageDataSource limg2;
 
     public TestXStream() {
         try {
             ImageIOManager.getInstance().initialize();
 
 
-            FileObject fobj1 = VFS.getManager().resolveFile("/home/surge/FAgeXDiag.hdr");
-            FileObject fobj2 = VFS.getManager().resolveFile("/home/surge/FAgeXDiag.img");
+            FileObject fobj1 = VFS.getManager().resolveFile("c:/javacode/googlecode/brainflow/src/resources/data/icbm452_atlas_probability_white.hdr");
+            FileObject fobj2 = VFS.getManager().resolveFile("c:/javacode/googlecode/brainflow/src/resources/data/icbm452_atlas_probability_gray.hdr");
 
-            ImageIODescriptor descriptor = ImageIOManager.getInstance().getDescriptor(fobj1);
-            limg = descriptor.createLoadableImage(fobj1, fobj2);
-            System.out.println(limg.getDataFile().getName());
+            ImageIODescriptor descriptor1 = ImageIOManager.getInstance().getDescriptor(fobj1);
+            ImageIODescriptor descriptor2 = ImageIOManager.getInstance().getDescriptor(fobj2);
+            limg1 = descriptor1.createLoadableImage(fobj1, VFS.getManager().resolveFile("c:/javacode/googlecode/brainflow/src/resources/data/icbm452_atlas_probability_white.img"));
+            limg2 = descriptor2.createLoadableImage(fobj2, VFS.getManager().resolveFile("c:/javacode/googlecode/brainflow/src/resources/data/icbm452_atlas_probability_gray.img"));
+
+
+            System.out.println(limg1.getDataFile().getName());
+            System.out.println(limg2.getDataFile().getName());
             XStream xstream = new XStream(new DomDriver());
-            xstream.alias("brain-data", ILoadableImage.class);
-            xstream.alias("brain-data", SoftLoadableImage.class);
+            xstream.alias("image-data", IImageDataSource.class);
+            xstream.alias("image-data", SoftImageDataSource.class);
             xstream.alias("file-reference", FileObject.class);
             xstream.alias("file-reference", LocalFile.class);
-            xstream.registerConverter(new ILoadableImageConverter());
+            xstream.alias("image-layer", ImageLayer.class);
+            xstream.registerConverter(new IImageDataSourceConverter());
             xstream.registerConverter(new FileObjectConverter());
+            xstream.registerConverter(new ImageLayerConverter());
+            xstream.setMode(XStream.ID_REFERENCES);
 
-            xstream.toXML(limg, new FileOutputStream("/home/surge/fobj.xml"));
+            
+            DataHolder holder = xstream.newDataHolder();
+            holder.put("dataIndex", 1);
+
+            List<ImageLayer> sources = new ArrayList<ImageLayer>();
+
+            ImageLayer layer1 = new ImageLayer3D(limg1);
+            ImageLayer layer2 = new ImageLayer3D(limg1);
+
+            sources.add(layer1);
+            sources.add(layer2);
+
+            xstream.toXML(sources, new FileOutputStream("c:/fobj.xml"));
 
         } catch (Exception e) {
             e.printStackTrace();

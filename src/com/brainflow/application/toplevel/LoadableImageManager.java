@@ -6,7 +6,7 @@
 
 package com.brainflow.application.toplevel;
 
-import com.brainflow.application.ILoadableImage;
+import com.brainflow.application.IImageDataSource;
 import com.brainflow.application.services.LoadableImageStatusEvent;
 import org.bushe.swing.event.EventBus;
 
@@ -24,7 +24,7 @@ public class LoadableImageManager {
      * Creates a new instance of LoadableImageManager
      */
 
-    private LinkedHashMap<Integer, ILoadableImage> imageMap = new LinkedHashMap<Integer, ILoadableImage>();
+    private LinkedHashMap<Integer, IImageDataSource> imageMap = new LinkedHashMap<Integer, IImageDataSource>();
 
     private Logger log = Logger.getLogger(LoadableImageManager.class.getName());
 
@@ -39,7 +39,7 @@ public class LoadableImageManager {
     }
 
 
-    public boolean requestRemoval(ILoadableImage limg) {
+    public boolean requestRemoval(IImageDataSource limg) {
         assert imageMap.containsKey(limg.getUniqueID());
         if (limg == null) {
             return false;
@@ -55,15 +55,15 @@ public class LoadableImageManager {
 
     }
 
-    public boolean isRegistered(ILoadableImage limg) {
+    public boolean isRegistered(IImageDataSource limg) {
         return imageMap.containsKey(limg.getUniqueID());
     }
 
-    public void register(ILoadableImage limg) {
+    public void register(IImageDataSource limg) {
         int uid = limg.getUniqueID();
         if (imageMap.containsKey(uid)) {
             log.warning("Attempt to load image already in memory: " + limg.getHeaderFile());
-            throw new IllegalArgumentException("ILoadableImage " + limg.getStem() + " with uinique ID " + uid + " is already registered.");
+            throw new IllegalArgumentException("IImageDataSource " + limg.getStem() + " with uinique ID " + uid + " is already registered.");
         }
 
         imageMap.put(uid, limg);
@@ -76,7 +76,7 @@ public class LoadableImageManager {
         return imageMap.size();
     }
 
-    public ILoadableImage lookup(int uid) {
+    public IImageDataSource lookup(int uid) {
         return imageMap.get(uid);
     }
 

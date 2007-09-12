@@ -1,5 +1,6 @@
 package com.brainflow.application.presentation.forms;
 
+import com.brainflow.application.MemoryImageDataSource;
 import com.brainflow.core.*;
 import com.brainflow.display.ThresholdRange;
 import com.brainflow.image.anatomy.Anatomy3D;
@@ -30,7 +31,7 @@ public class MaskPanel extends JPanel {
 
     public MaskPanel(ImageMaskItem item) {
 
-        IImageData3D data = (IImageData3D) item.getSource().getData();
+        IImageData3D data = (IImageData3D) item.getSource().getDataSource();
         mask = new MaskedData3D(data, item.getPredicate());
         model = new ImageDisplayModel("mask model");
 
@@ -54,7 +55,7 @@ public class MaskPanel extends JPanel {
             URL url = ClassLoader.getSystemResource("resources/data/icbm452_atlas_probability_gray.hdr");
             IImageData data = AnalyzeIO.readAnalyzeImage(url);
 
-            ImageLayer ilayer = new ImageLayer3D(data, new ImageLayerProperties(new Range(0, 256)));
+            ImageLayer ilayer = new ImageLayer3D(new MemoryImageDataSource(data), new ImageLayerProperties(new Range(0, 256)));
 
             ThresholdRange trange = new ThresholdRange(1500, 25000);
             ImageMaskItem item = new ImageMaskItem(ilayer, trange, 0);

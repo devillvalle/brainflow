@@ -36,7 +36,7 @@ public class ImageViewTransferHandler extends TransferHandler {
     public ImageViewTransferHandler() {
         try {
             loadableImageFlavor = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType +
-                    ";class=com.brainflow.application.ILoadableImage");
+                    ";class=com.brainflow.application.IImageDataSource");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -52,10 +52,10 @@ public class ImageViewTransferHandler extends TransferHandler {
     }
 
     public boolean importData(TransferSupport support) {
-        ILoadableImage[] limg = null;
+        IImageDataSource[] limg = null;
         if (canImport(support)) {
             try {
-                limg = (ILoadableImage[]) support.getTransferable().getTransferData(loadableImageFlavor);
+                limg = (IImageDataSource[]) support.getTransferable().getTransferData(loadableImageFlavor);
             } catch (UnsupportedFlavorException e) {
                 e.printStackTrace();
                 return false;
@@ -106,19 +106,19 @@ public class ImageViewTransferHandler extends TransferHandler {
             JTree tree = (JTree) c;
             TreePath path = tree.getSelectionPath();
             Object[] obj = path.getPath();
-            List<ILoadableImage> list = new ArrayList<ILoadableImage>();
+            List<IImageDataSource> list = new ArrayList<IImageDataSource>();
             for (int i = 0; i < obj.length; i++) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) obj[i];
                 if (node.isLeaf()) {
                     Object userObject = node.getUserObject();
-                    if (userObject instanceof ILoadableImage) {
-                        list.add((ILoadableImage) userObject);
+                    if (userObject instanceof IImageDataSource) {
+                        list.add((IImageDataSource) userObject);
 
                     }
                 }
             }
 
-            ILoadableImage[] ret = new ILoadableImage[list.size()];
+            IImageDataSource[] ret = new IImageDataSource[list.size()];
             list.toArray(ret);
 
 

@@ -5,8 +5,11 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs.VFS;
+import org.apache.commons.vfs.provider.AbstractFileObject;
+import test.Testable;
 
 
 /**
@@ -18,29 +21,44 @@ import org.apache.commons.vfs.FileSystemException;
  */
 public class FileObjectConverter implements Converter {
 
-
+    //@Testable
     public void marshal(Object object, HierarchicalStreamWriter writer, MarshallingContext context) {
         try {
-            FileObject fobj = (FileObject) object;
-            writer.setValue(fobj.getName().getBaseName());
+            AbstractFileObject fobj = (AbstractFileObject) object;
             writer.addAttribute("uri", fobj.getName().getURI());
             writer.addAttribute("type", fobj.getType().getName());
+            writer.setValue(fobj.getName().getBaseName());
+
             
         } catch (FileSystemException e) {
             throw new RuntimeException("error during xml serialization", e);
         }
     }
 
-    public Object unmarshal(HierarchicalStreamReader hierarchicalStreamReader, UnmarshallingContext unmarshallingContext) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    //@Testable
+    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+        String baseName = reader.getValue();
+
+        String uri = reader.getAttribute("uri");
+        String id = reader.getAttribute("id");
+
+        Object ret = context.get(id);
+        FileSystemManager fsManager = VFS.getManager();
+        
+
+        return baseName;
+
     }
 
     public boolean canConvert(Class aClass) {
-        if (FileObject.class.isAssignableFrom(aClass)) {
+        if (AbstractFileObject.class.isAssignableFrom(aClass)) {
+            System.out.println("super class of " + aClass + " is " + aClass.getSuperclass());
             return true;
+            
         }
-
         return false;
 
     }
+
+
 }

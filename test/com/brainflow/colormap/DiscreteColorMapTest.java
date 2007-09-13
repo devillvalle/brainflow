@@ -1,7 +1,7 @@
 package com.brainflow.colormap;
 
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.awt.*;
 import java.util.Iterator;
@@ -20,7 +20,7 @@ public class DiscreteColorMapTest {
     LinearColorMap lmap;
     DiscreteColorMap dmap;
 
-    @BeforeTest()
+    @BeforeClass
     public void setUp() {
         lmap = new LinearColorMap(0, 255, ColorTable.SPECTRUM);
         dmap = new DiscreteColorMap(lmap);
@@ -36,7 +36,7 @@ public class DiscreteColorMapTest {
 
     }
 
-    @Test
+
     public void testGetInterval() {
         assert lmap.getInterval(0).equals(dmap.getInterval(0));
         assert lmap.getInterval(255).equals(dmap.getInterval(255));

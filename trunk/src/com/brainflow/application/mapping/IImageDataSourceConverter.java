@@ -15,6 +15,8 @@ import com.brainflow.application.IImageDataSource;
  * To change this template use File | Settings | File Templates.
  */
 public class IImageDataSourceConverter implements Converter {
+
+
     public void marshal(Object object, HierarchicalStreamWriter writer, MarshallingContext context) {
         Integer dataIndex = (Integer)context.get("dataIndex");
         if (dataIndex != null) {
@@ -34,6 +36,8 @@ public class IImageDataSourceConverter implements Converter {
         writer.startNode("header");
         context.convertAnother(dataSource.getHeaderFile());
         writer.endNode();
+
+        
 
         writer.startNode("data");
         context.convertAnother(dataSource.getDataFile());

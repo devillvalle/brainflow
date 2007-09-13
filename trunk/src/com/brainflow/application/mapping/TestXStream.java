@@ -73,6 +73,9 @@ public class TestXStream {
 
             xstream.toXML(sources, new FileOutputStream("c:/fobj.xml"));
 
+            
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }

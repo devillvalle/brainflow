@@ -17,13 +17,11 @@ import com.brainflow.application.toplevel.ImageCanvasManager;
 import com.brainflow.application.toplevel.ResourceManager;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
-import com.brainflow.colormap.LinearColorMap;
-import com.brainflow.colormap.ConstantColorMap;
+import com.brainflow.colormap.LinearColorMapDeprecated;
 import com.brainflow.core.ImageView;
 import com.brainflow.display.Property;
 import com.jidesoft.swing.JideSplitButton;
 import com.jidesoft.swing.JideBoxLayout;
-import com.jidesoft.dialog.JideOptionPane;
 import org.bushe.swing.action.BasicAction;
 
 import javax.swing.*;
@@ -50,7 +48,7 @@ public class ColorBarPresenter extends AbstractColorMapPresenter {
 
 
     public ColorBarPresenter() {
-        colorMap = new LinearColorMap(0, 255, ColorTable.GRAYSCALE);
+        colorMap = new LinearColorMapDeprecated(0, 255, ColorTable.GRAYSCALE);
         init();
 
 

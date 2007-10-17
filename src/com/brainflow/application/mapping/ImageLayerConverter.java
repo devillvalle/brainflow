@@ -2,6 +2,7 @@ package com.brainflow.application.mapping;
 
 import com.brainflow.application.IImageDataSource;
 import com.brainflow.core.ImageLayer;
+import com.brainflow.core.ImageLayer3D;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -35,8 +36,17 @@ public class ImageLayerConverter implements Converter {
     }
 
     @Testable
-    public Object unmarshal(HierarchicalStreamReader hierarchicalStreamReader, UnmarshallingContext unmarshallingContext) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+        reader.moveDown();
+        IImageDataSource dataSource = (IImageDataSource)context.convertAnother(new Object(), IImageDataSource.class);
+        reader.moveUp();
+
+        ImageLayer layer = new ImageLayer3D(dataSource);
+        return layer;
+
+
+        
+
     }
 
     @Testable

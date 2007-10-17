@@ -62,7 +62,8 @@ public class ImageMaskList implements IMaskList {
 
 
     public void addListDataListener(ListDataListener listener) {
-        listDataListeners.add(listener);
+        if (!listDataListeners.contains(listener))
+            listDataListeners.add(listener);
     }
 
     public void removeListDataListener(ListDataListener listener) {
@@ -98,7 +99,7 @@ public class ImageMaskList implements IMaskList {
         if (item.getGroup() > group) {
             return node;
         } else {
-            return makeGroupNode(itemList, new MaskedDataNode3D(node, new MaskedData3D((IImageData3D) (item.getSource().getDataSource()),
+            return makeGroupNode(itemList, new MaskedDataNode3D(node, new MaskedData3D((IImageData3D) (item.getSource().getData()),
                     item.getPredicate()), item.getOperation()), current + 1, item.getGroup());
         }
 
@@ -126,13 +127,14 @@ public class ImageMaskList implements IMaskList {
     public IMaskedData3D composeMask(boolean lazy) {
         if (this.size() == 1) {
             IMaskItem item = getFirstItem();
-            return new MaskedData3D((IImageData3D) (item.getSource().getDataSource()), item.getPredicate());
+            //item.getSource().
+            return new MaskedData3D((IImageData3D) (item.getSource().getData()), item.getPredicate());
         } else {
 
             List<IMaskedData3D> groupList = new ArrayList<IMaskedData3D>();
             int numGroups = getLastItem().getGroup();
             int group = getFirstItem().getGroup();
-            IMaskedData3D startNode = new MaskedData3D((IImageData3D) (getFirstItem().getSource().getDataSource()), getFirstItem().getPredicate());
+            IMaskedData3D startNode = new MaskedData3D((IImageData3D) (getFirstItem().getSource().getData()), getFirstItem().getPredicate());
 
             int itemNum = 0;
             while (group <= numGroups) {

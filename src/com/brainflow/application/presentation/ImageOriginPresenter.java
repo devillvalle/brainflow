@@ -81,7 +81,7 @@ public class ImageOriginPresenter extends AbstractPresenter {
         Bindings.bind(form.getValueLabel2(), viewportAdapter.getValueModel(Viewport3D.Y_AXIS_MIN_PROPERTY));
         Bindings.bind(form.getValueLabel3(), viewportAdapter.getValueModel(Viewport3D.Z_AXIS_MIN_PROPERTY));
 
-        // Bindings.bind(control.getLowField(), adapter.getValueModel(LinearColorMap.LOWER_ALPHA_PROPERTY));
+        // Bindings.bind(control.getLowField(), adapter.getValueModel(LinearColorMapDeprecated.LOWER_ALPHA_PROPERTY));
 
 
     }

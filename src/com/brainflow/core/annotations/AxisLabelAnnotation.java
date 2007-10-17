@@ -45,8 +45,8 @@ public class AxisLabelAnnotation extends AbstractAnnotation {
         FontMetrics fmetric = g2d.getFontMetrics(font);
 
 
-        String xlabel = xaxis.getMinDirection().toString() + " to " + xaxis.getMaxDirection();
-        String ylabel = yaxis.getMinDirection().toString() + " to " + yaxis.getMaxDirection();
+        String xlabel = xaxis.getMinDirection().toString().subSequence(0,1) + "  to  " + xaxis.getMaxDirection().toString().subSequence(0,1);
+        String ylabel = yaxis.getMinDirection().toString().subSequence(0,1) + "  to  " + yaxis.getMaxDirection().toString().subSequence(0,1);
 
         Rectangle2D xbounds = fmetric.getStringBounds(xlabel, g2d);
         Rectangle2D ybounds = fmetric.getStringBounds(ylabel, g2d);

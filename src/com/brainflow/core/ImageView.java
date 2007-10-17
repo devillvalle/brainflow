@@ -3,7 +3,10 @@ package com.brainflow.core;
 import com.brainflow.application.services.ImageViewCrosshairEvent;
 import com.brainflow.application.services.ImageViewLayerSelectionEvent;
 import com.brainflow.core.annotations.IAnnotation;
-import com.brainflow.display.*;
+import com.brainflow.display.Crosshair;
+import com.brainflow.display.ICrosshair;
+import com.brainflow.display.InterpolationType;
+import com.brainflow.display.Viewport3D;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
@@ -14,6 +17,9 @@ import com.jgoodies.binding.list.SelectionInList;
 import com.pietschy.command.CommandContainer;
 import com.pietschy.command.toggle.ToggleCommand;
 import com.pietschy.command.toggle.ToggleVetoException;
+import net.java.dev.properties.Property;
+import net.java.dev.properties.container.BeanContainer;
+import net.java.dev.properties.container.ObservableProperty;
 import org.bushe.swing.event.EventBus;
 
 import javax.swing.*;
@@ -43,14 +49,27 @@ import java.util.logging.Logger;
 
 public class ImageView extends JComponent implements ListDataListener, ImageDisplayModelListener {
 
+    private static final Logger log = Logger.getLogger(ImageView.class.getName());
 
     public static final String PRESERVE_ASPECT_PROPERTY = "preserveAspect";
 
-    private InterpolationHint screenInterpolation = InterpolationHint.NEAREST_NEIGHBOR;
+    public final Property<IImageDisplayModel> displayModel = new ObservableProperty<IImageDisplayModel>();
 
-    private boolean preserveAspect = false;
+    public final Property<Boolean> preserveAspect = new ObservableProperty<Boolean>(false) {
+        public void set(Boolean aBoolean) {
+            super.set(aBoolean);
+            Iterator<IImagePlot> iter = getPlots().iterator();
+            while (iter.hasNext()) {
+                IImagePlot plot = iter.next();
+                plot.setPreserveAspectRatio(aBoolean);
+            }
 
-    private static final Logger log = Logger.getLogger(ImageView.class.getName());
+        }
+    };
+
+    private ICrosshair crosshair;
+
+    private InterpolationType screenInterpolation = InterpolationType.NEAREST_NEIGHBOR;
 
     private ImagePlotLayout plotLayout = new SimplePlotLayout(this, Anatomy3D.getCanonicalAxial());
 
@@ -58,9 +77,8 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
     private SelectionInList<IImagePlot> plotSelection;
 
-    private IImageDisplayModel displayModel;
 
-    private ICrosshair crosshair;
+
 
     protected Viewport3D viewport;
 
@@ -68,14 +86,17 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
     private CrosshairHandler crosshairHandler = new CrosshairHandler();
 
+    private PlotSelectionHandler plotSelectionHandler = new PlotSelectionHandler();
 
+    private ImageLayerSelectionListener layerSelectionListener = new ImageLayerSelectionListener();
 
     private CommandContainer commandContainer;
 
 
     public ImageView(IImageDisplayModel imodel) {
         super();
-        displayModel = imodel;
+        BeanContainer.bind(this);
+        displayModel.set(imodel);
         commandContainer = new CommandContainer();
 
         initView();
@@ -85,7 +106,8 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
     public ImageView(IImageDisplayModel imodel, CommandContainer parentContainer) {
         super();
-        displayModel = imodel;
+        BeanContainer.bind(this);
+        displayModel.set(imodel);
         commandContainer = new CommandContainer(parentContainer);
 
         initView();
@@ -110,7 +132,7 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
         IImagePlot selPlot = null;
 
-        if ( (plotSelection != null) && (plotSelection.getSelection() != null) ) {
+        if ((plotSelection != null) && (plotSelection.getSelection() != null)) {
             selPlot = plotSelection.getSelection();
         } else {
             selPlot = plots.get(0);
@@ -123,7 +145,7 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
             plotSelection.setList(plots);
         }
 
-       
+
         plotSelection.setSelection(selPlot);
         sliceController = plotLayout.createSliceController();
 
@@ -132,47 +154,43 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
     protected void clearListeners() {
         viewport.removePropertyChangeListener(viewportHandler);
-        displayModel.removeImageDisplayModelListener(this);
-        //crosshair.removePropertyChangeListener();
-        displayModel.getLayerSelection().removePropertyChangeListener(crosshairHandler);
-
+        displayModel.get().removeImageDisplayModelListener(this);
+        crosshair.removePropertyChangeListener(crosshairHandler);
+        displayModel.get().getLayerSelection().removePropertyChangeListener(layerSelectionListener);
+        removeMouseListener(plotSelectionHandler);
     }
 
 
     protected void registerListeners() {
         viewport.addPropertyChangeListener(new ViewportHandler());
 
-        displayModel.addImageDisplayModelListener(this);
+        displayModel.get().addImageDisplayModelListener(this);
 
-        addMouseListener(new PlotSelectionHandler());
+        addMouseListener(plotSelectionHandler);
 
         crosshair.addPropertyChangeListener(crosshairHandler);
 
-        displayModel.getLayerSelection().addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent e) {
-                if (e.getPropertyName().equals(SelectionInList.PROPERTYNAME_SELECTION_INDEX)) {
-                    int selectionIndex = (Integer) e.getNewValue();
-                    if (selectionIndex >= 0) {
-                        EventBus.publish(new ImageViewLayerSelectionEvent(ImageView.this, (Integer) e.getNewValue()));
-                    }
-                }
+        displayModel.get().getLayerSelection().addPropertyChangeListener(layerSelectionListener);
 
-            }
-        });
-
-
-   
 
     }
 
+    private void updateView() {
+        clearListeners();
+        plotLayout.setView(this);
+        setPlotLayout(plotLayout);
+
+        initView();
+
+
+    }
 
     private void initView() {
 
-        viewport = new  Viewport3D(getModel());
+        viewport = new Viewport3D(getModel());
         crosshair = new Crosshair(viewport);
         registerListeners();
         setPlotLayout(plotLayout);
-
 
 
     }
@@ -187,28 +205,23 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
 
     public boolean isPreserveAspect() {
-        return preserveAspect;
+        return preserveAspect.get();
     }
 
     public void setPreserveAspect(boolean preserveAspect) {
         boolean old = preserveAspect;
-        this.preserveAspect = preserveAspect;
-        Iterator<IImagePlot> iter = getPlots().iterator();
-        while (iter.hasNext()) {
-            IImagePlot plot = iter.next();
-            plot.setPreserveAspectRatio(preserveAspect);
-        }
+        this.preserveAspect.set(preserveAspect);
 
 
-        this.firePropertyChange(ImageView.PRESERVE_ASPECT_PROPERTY, old, isPreserveAspect());
+        firePropertyChange(ImageView.PRESERVE_ASPECT_PROPERTY, old, isPreserveAspect());
     }
 
 
-    public InterpolationHint getScreenInterpolation() {
+    public InterpolationType getScreenInterpolation() {
         return screenInterpolation;
     }
 
-    public void setScreenInterpolation(InterpolationHint screenInterpolation) {
+    public void setScreenInterpolation(InterpolationType screenInterpolation) {
         this.screenInterpolation = screenInterpolation;
         Iterator<IImagePlot> iter = getPlots().iterator();
         while (iter.hasNext()) {
@@ -226,19 +239,20 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
 
     public int getSelectedLayerIndex() {
-        return displayModel.getLayerSelection().getSelectionIndex();
+        return displayModel.get().getLayerSelection().getSelectionIndex();
     }
 
     public void setSelectedLayerIndex(int selectedIndex) {
-        displayModel.setSelectedIndex(selectedIndex);
+        displayModel.get().setSelectedIndex(selectedIndex);
     }
 
     public void setModel(IImageDisplayModel model) {
-        displayModel = model;
+        displayModel.set(model);
+        updateView();
     }
 
     public IImageDisplayModel getModel() {
-        return displayModel;
+        return displayModel.get();
     }
 
 
@@ -252,7 +266,7 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
 
     public AnatomicalPoint3D getCentroid() {
-        ICoordinateSpace compositeSpace = displayModel.getImageSpace();
+        ICoordinateSpace compositeSpace = displayModel.get().getImageSpace();
         return (AnatomicalPoint3D) compositeSpace.getCentroid();
     }
 
@@ -288,7 +302,7 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
     }
 
     public void setAnnotation(IImagePlot plot, String name, IAnnotation annotation) {
-         if (!plotLayout.containsPlot(plot)) {
+        if (!plotLayout.containsPlot(plot)) {
             throw new IllegalArgumentException("View does not contain plot : " + plot);
         }
 
@@ -412,6 +426,20 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
     }
 
 
+    class ImageLayerSelectionListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (evt.getPropertyName().equals(SelectionInList.PROPERTYNAME_SELECTION_INDEX)) {
+                int selectionIndex = (Integer) evt.getNewValue();
+                if (selectionIndex >= 0) {
+                    EventBus.publish(new ImageViewLayerSelectionEvent(ImageView.this, (Integer) evt.getNewValue()));
+                }
+            }
+
+        }
+    }
+
+
     class CrosshairHandler implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
@@ -419,7 +447,9 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
             AnatomicalPoint1D slice = cross.getLocation().getValue(ImageView.this.getSelectedPlot().getDisplayAnatomy().ZAXIS);
             sliceController.setSlice(slice);
             System.out.println("setting slice to " + slice);
-            //getSelectedPlot().setSlice(slice);
+
+            //todo could be gratuitious because repaint called in sliceController ...
+            getSelectedPlot().getComponent().repaint();
 
             EventBus.publish(new ImageViewCrosshairEvent(ImageView.this));
 

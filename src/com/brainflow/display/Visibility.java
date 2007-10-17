@@ -1,7 +1,10 @@
 package com.brainflow.display;
 
-import com.jgoodies.binding.beans.Model;
 import com.brainflow.core.ImageLayerProperties;
+import com.jgoodies.binding.beans.Model;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 /**
  * Created by IntelliJ IDEA.
@@ -10,10 +13,15 @@ import com.brainflow.core.ImageLayerProperties;
  * Time: 1:39:40 PM
  * To change this template use File | Settings | File Templates.
  */
+
+@XStreamAlias("visible")
 public class Visibility extends Model {
 
+    @XStreamAsAttribute()
+    @XStreamAlias("value")
     private boolean visible = true;
-    
+
+    @XStreamOmitField
     private ImageLayerProperties layer;
 
     public static final String VISIBLE_PROPERTY = "visible";
@@ -40,4 +48,18 @@ public class Visibility extends Model {
         firePropertyChange(VISIBLE_PROPERTY, old, this.visible);
     }
 
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Visibility that = (Visibility) o;
+
+        if (visible != that.visible) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        return (visible ? 1 : 0);
+    }
 }

@@ -163,7 +163,7 @@
             mnemonic="l"
             accel="control L"
             smicon="/resources/icons/att_class_obj.gif"
-            actionClass="com.brainflow.application.actions.ToggleAxisLabelAction"
+            actionClass="com.brainflow.application.actions.ToggleAxisLabelCommand"
             desc="Toggle axis label visibility on/off">
     </action>
     <action id="toggle-colorbar"

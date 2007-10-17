@@ -36,11 +36,13 @@ class SimpleSliceController implements SliceController {
     public void setSlice(AnatomicalPoint1D slice) {
         ICrosshair cross = imageView.getCrosshair();
         AnatomicalPoint1D crossSlice = getSlice();
+      
         if (!slice.equals(crossSlice)) {
             cross.setValue(slice);
-            imageView.getSelectedPlot().setSlice(slice);
+           
         }
 
+        imageView.getSelectedPlot().setSlice(slice);
 
     }
 

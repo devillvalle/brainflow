@@ -37,6 +37,8 @@ public class SoftImageDataSource implements IImageDataSource {
 
     private ImageInfo imageInfo = null;
 
+
+
     public SoftImageDataSource(ImageIODescriptor _descriptor, FileObject _header, FileObject _data) {
         descriptor = _descriptor;
         //assert descriptor.getHeaderName(_data) == _header.getName().getBaseName();
@@ -126,8 +128,8 @@ public class SoftImageDataSource implements IImageDataSource {
     public IImageData load(ProgressListener plistener) throws BrainflowException {
         try {
 
-            ImageInfoReader reader = (ImageInfoReader) descriptor.getHeaderReader().newInstance();
-            imageInfo = reader.readInfo(getHeaderFile());
+
+            imageInfo = getImageInfo();
 
             if (imageInfo.getImageFile() == null) {
                 imageInfo.setImageFile(getDataFile());
@@ -154,8 +156,8 @@ public class SoftImageDataSource implements IImageDataSource {
 
     public IImageData load() throws BrainflowException {
         try {
-            ImageInfoReader reader = (ImageInfoReader) descriptor.getHeaderReader().newInstance();
-            imageInfo = reader.readInfo(getHeaderFile());
+
+            imageInfo = getImageInfo();
             if (imageInfo.getImageFile() == null) {
                 imageInfo.setImageFile(getDataFile());
             }

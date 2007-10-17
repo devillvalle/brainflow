@@ -2,10 +2,8 @@ package com.brainflow.colormap;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Rectangle2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.RoundRectangle2D;
-import java.awt.geom.Area;
 import java.util.ListIterator;
 
 /**
@@ -17,7 +15,7 @@ import java.util.ListIterator;
  */
 public class ThermoColorMap extends JComponent {
 
-    private IColorMap model = new LinearColorMap(0, 255, ColorTable.SPECTRUM);
+    private IColorMap model = new LinearColorMapDeprecated(0, 255, ColorTable.SPECTRUM);
 
 
     private int thermoWidth = 50;

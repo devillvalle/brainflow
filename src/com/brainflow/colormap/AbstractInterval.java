@@ -15,7 +15,7 @@ public abstract class AbstractInterval implements Interval {
     protected double max;
 
     public AbstractInterval(double _min, double _max) {
-        assert _max >= _min : "Interval() : max must be greater than or equal to min";
+        assert Double.compare(_min, _max) <= 0 : "Interval() : max: " + max + " must be greater than or equal to min: " + min;
         max = _max;
         min = _min;
     }

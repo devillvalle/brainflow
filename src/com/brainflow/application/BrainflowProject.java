@@ -22,25 +22,59 @@ public class BrainflowProject {
 
     private List<IImageDisplayModel> modelList = new ArrayList<IImageDisplayModel>();
 
+    private Set<IImageDataSource> dataSources = new LinkedHashSet<IImageDataSource>();
+
     private ModelListDataListener listener = new ModelListDataListener();
 
     private List<BrainflowProjectListener> listenerList = new ArrayList<BrainflowProjectListener>();
 
     private String name = "untitled";
 
+    public void addDataSource(IImageDataSource dataSource) {
+        dataSources.add(dataSource);
+    }
+
+    public void removeDataSource(IImageDataSource dataSource) {
+        dataSources.remove(dataSource);
+    }
+
     public void addModel(IImageDisplayModel model) {
         if (!modelList.contains(model)) {
             modelList.add(model);
             model.addImageDisplayModelListener(listener);
+            addSources(model);
             fireModelAdded(new BrainflowProjectEvent(this, model, null));
+
         } else {
             log.warning("BrainflowProject already contains model supplied as argument, not adding.");
         }
     }
 
+    private void addSources(IImageDisplayModel model) {
+        synchronized (model) {
+            int nlayers = model.getNumLayers();
+
+            for (int i = 0; i < nlayers; i++) {
+                dataSources.add(model.getLayer(i).getDataSource());
+            }
+        }
+    }
+
+    public void removeSources(IImageDisplayModel model) {
+        synchronized (model) {
+            int nlayers = model.getNumLayers();
+
+            for (int i = 0; i < nlayers; i++) {
+                dataSources.remove(model.getLayer(i).getDataSource());
+            }
+        }
+
+    }
+
     public void removeModel(IImageDisplayModel model) {
         if (modelList.contains(model)) {
             modelList.remove(model);
+            removeSources(model);
             fireModelRemoved(new BrainflowProjectEvent(this, model, null));
         } else {
             log.warning("BrainflowProject does not contain model supplied as argument, cannot remove");

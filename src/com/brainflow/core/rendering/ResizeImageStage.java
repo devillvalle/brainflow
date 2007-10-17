@@ -1,7 +1,7 @@
 package com.brainflow.core.rendering;
 
 import com.brainflow.core.IImagePlot;
-import com.brainflow.display.InterpolationHint;
+import com.brainflow.display.InterpolationType;
 import org.apache.commons.pipeline.StageException;
 
 import java.awt.*;
@@ -51,11 +51,11 @@ public class ResizeImageStage extends ImageProcessingStage {
     }
 
 
-    private BufferedImage scale(BufferedImage bimg, float ox, float oy, float sx, float sy, InterpolationHint hint) {
+    private BufferedImage scale(BufferedImage bimg, float ox, float oy, float sx, float sy, InterpolationType type) {
 
         AffineTransform at = AffineTransform.getTranslateInstance(ox, oy);
         at.scale(sx, sy);
-        AffineTransformOp aop = new AffineTransformOp(at, hint.getID());
+        AffineTransformOp aop = new AffineTransformOp(at, type.getID());
         return aop.filter(bimg, null);
     }
 }

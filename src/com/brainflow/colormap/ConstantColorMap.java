@@ -34,13 +34,6 @@ public class ConstantColorMap extends AbstractColorMap {
 
     }
 
-    public void setLowClip(double _lowClip) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public void setHighClip(double _highClip) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
 
     public ListIterator<ColorInterval> iterator() {
        java.util.List<ColorInterval> clist = new ArrayList<ColorInterval>();
@@ -59,5 +52,9 @@ public class ConstantColorMap extends AbstractColorMap {
     public Color getColor(double value) {
         // todo check if value is in bounds?
         return interval.getColor();
+    }
+
+    public IColorMap newClipRange(double lowClip, double highClip) {
+        return this;
     }
 }

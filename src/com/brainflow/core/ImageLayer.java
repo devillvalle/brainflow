@@ -27,19 +27,35 @@ public abstract class ImageLayer extends AbstractLayer {
 
     private IImageDataSource dataSource;
 
-    private IImageData data;
+    //private IImageData data;
 
     public ImageLayer(IImageDataSource dataSource) {
-        super(new ImageLayerProperties(ColorTable.GRAYSCALE, new Range(dataSource.getData().getMinValue(), dataSource.getData().getMaxValue())));
+        super(new ImageLayerProperties(ColorTable.GRAYSCALE, new Range(0, 255)));
         this.dataSource = dataSource;
-        data = dataSource.getData();
+
+        if (dataSource.isLoaded()) {
+            getImageLayerProperties().getClipRange().setLowClip(getData().getMinValue());
+            getImageLayerProperties().getClipRange().setHighClip(getData().getMaxValue());
+
+        }
+        //data = dataSource.getData();
         initMaskList();
     }
 
     public ImageLayer(IImageDataSource dataSource, ImageLayerProperties _properties) {
         super(_properties);
         this.dataSource = dataSource;
-        data = dataSource.getData();
+
+        try { if (dataSource.isLoaded()) {
+            getImageLayerProperties().getClipRange().setLowClip(getData().getMinValue());
+            getImageLayerProperties().getClipRange().setHighClip(getData().getMaxValue());
+
+        }
+        } catch(NullPointerException e) {
+
+            e.printStackTrace();
+        }
+        //data = dataSource.getData();
         initMaskList();
     }
 
@@ -53,8 +69,9 @@ public abstract class ImageLayer extends AbstractLayer {
         return (ImageMaskList)(super.getMaskList());
     }
 
+
     public IImageData getData() {
-        return data;
+        return dataSource.getData();
     }
 
     public IImageDataSource getDataSource() {
@@ -62,25 +79,38 @@ public abstract class ImageLayer extends AbstractLayer {
     }
     
     public String getLabel() {
-        return data.getImageLabel();
+        return dataSource.getStem();
     }
 
     public IImageSpace getCoordinateSpace() {
-        return data.getImageSpace();
+        return dataSource.getData().getImageSpace();
     }
 
     public double getMaxValue() {
-        return data.getMaxValue();
+        return dataSource.getData().getMaxValue();
     }
 
     public double getMinValue() {
-        return data.getMinValue();
+        return dataSource.getData().getMinValue();
     }
 
 
     public String toString() {
-        return data.getImageLabel();
+        return dataSource.getStem();
     }
 
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        ImageLayer that = (ImageLayer) o;
+
+        if (!dataSource.equals(that.dataSource)) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        return dataSource.hashCode();
+    }
 }

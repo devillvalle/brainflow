@@ -1,7 +1,7 @@
 package com.brainflow.application.actions;
 
 import com.brainflow.application.IImageDataSource;
-import com.brainflow.application.toplevel.LoadableImageManager;
+import com.brainflow.application.toplevel.DataSourceManager;
 import org.bushe.swing.action.BasicAction;
 
 import java.awt.event.ActionEvent;
@@ -19,7 +19,7 @@ public class UnloadImageAction extends BasicAction {
     protected void execute(ActionEvent actionEvent) throws Exception {
         IImageDataSource limg = (IImageDataSource) getContextValue(ActionContext.SELECTED_LOADABLE_IMAGE);
         if (limg != null) {
-            LoadableImageManager.getInstance().requestRemoval(limg);
+            DataSourceManager.getInstance().requestRemoval(limg);
         }
 
     }

@@ -15,7 +15,7 @@ import java.awt.image.Kernel;
  * Time: 5:18:14 PM
  * To change this template use File | Settings | File Templates.
  */
-public class SmoothingOp implements ImageOp {
+public class SmoothingOp {
 
     public static final String OP_NAME = "smoothing_op";
 

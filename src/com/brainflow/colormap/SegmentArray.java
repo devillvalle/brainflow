@@ -67,6 +67,29 @@ public class SegmentArray {
         boundaries[_numIntervals] = max;
     }
 
+    public SegmentArray(int _numIntervals, double highClip, double lowClip, double _min, double _max) {
+        double min = _min;
+        double max = _max;
+
+        intervals = new ArrayList<Interval>(_numIntervals);
+        boundaries = new double[_numIntervals + 1];
+
+        boundaries[0] = min;
+
+
+        double bucketSize = (highClip - lowClip) / (_numIntervals - 3);
+        double cur = min + bucketSize;
+
+        for (int i = 1; i < (_numIntervals - 2); i++) {
+            boundaries[i] = cur;
+            cur = cur + bucketSize;
+            IndexedInterval ival = new IndexedInterval(i, boundaries);
+            intervals.add(ival);
+        }
+
+        boundaries[_numIntervals] = max;
+    }
+
     public double[] getBoundaries() {
         return boundaries.clone();
     }

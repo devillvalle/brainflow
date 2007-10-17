@@ -1,7 +1,7 @@
 package com.brainflow.core;
 
 import com.brainflow.core.annotations.IAnnotation;
-import com.brainflow.display.InterpolationHint;
+import com.brainflow.display.InterpolationType;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
 import com.brainflow.image.anatomy.Anatomy3D;
@@ -21,9 +21,9 @@ import java.util.Map;
  */
 public interface IImagePlot {
 
-    public InterpolationHint getScreenInterpolation();
+    public InterpolationType getScreenInterpolation();
 
-    public void setScreenInterpolation(InterpolationHint hint);
+    public void setScreenInterpolation(InterpolationType type);
 
     public void setPreserveAspectRatio(boolean b);
 

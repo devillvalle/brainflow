@@ -23,10 +23,10 @@ public class DiscreteColorMap extends AbstractColorMap {
     private static final Logger log = Logger.getLogger(DiscreteColorMap.class.getName());
 
 
-    private SegmentArray segments;
+    private final SegmentArray segments;
 
 
-    private List<ColorInterval> intervals;
+    private final List<ColorInterval> intervals;
 
     // need to abstract notion of boundary and interval.
 
@@ -99,6 +99,8 @@ public class DiscreteColorMap extends AbstractColorMap {
             intervals.add(new ColorInterval(segments.getInterval(i), ci.getColor()));
         }
     }
+
+
 
 
     public double getMaximumValue() {
@@ -184,7 +186,7 @@ public class DiscreteColorMap extends AbstractColorMap {
     }
 
 
-    public void setInterval(int index, double min, double max, Color clr) {
+    public void replaceInterval(int index, double min, double max, Color clr) {
         ColorInterval ival = getInterval(index);
         min = Math.max(min, getMinimumValue());
         max = Math.min(max, getMaximumValue());
@@ -206,7 +208,7 @@ public class DiscreteColorMap extends AbstractColorMap {
         changeSupport.firePropertyChange(COLORS_CHANGED_PROPERTY, null, this);
     }
 
-    public void setLowerBound(int index, double value) {
+    private void setLowerBound(int index, double value) {
         if (index < 1) {
             throw new IllegalArgumentException("Cannot change the low boundary for the first bin (e.g. the absolute minimum)");
         }
@@ -218,7 +220,7 @@ public class DiscreteColorMap extends AbstractColorMap {
     }
 
 
-    public void setUpperBound(int index, double value) {
+    private void setUpperBound(int index, double value) {
         double oldValue = segments.getUpperBound(index);
         double maxValue = segments.getMaximum();
         double minValue = segments.getMinimum();
@@ -332,12 +334,10 @@ public class DiscreteColorMap extends AbstractColorMap {
 
         double oldHighClip = getHighClip();
 
-        System.out.println("    setting high clip in discrete color map " + _highClip);
+
         setUpperBound(intervals.size() - 2, _highClip);
 
-        System.out.println("setting upper bound");
-        System.out.println("old high clip : " + ival.getMinimum());
-        System.out.println("new high clip : " + getHighClip());
+
         changeSupport.firePropertyChange(HIGH_CLIP_PROPERTY, oldHighClip, getHighClip());
 
     }
@@ -356,7 +356,11 @@ public class DiscreteColorMap extends AbstractColorMap {
         setUpperBound(0, _lowClip);
 
         changeSupport.firePropertyChange(LOW_CLIP_PROPERTY, oldLowClip, getLowClip());
+    }
 
+    public DiscreteColorMap newClipRange(double lowClip, double highClip) {
+        return new DiscreteColorMap(new SegmentArray(segments.getNumIntervals(), lowClip, highClip,
+                segments.getMinimum(), segments.getMaximum()), intervals);
 
     }
 
@@ -422,7 +426,7 @@ public class DiscreteColorMap extends AbstractColorMap {
 
 
     public static void main(String[] args) {
-        LinearColorMap cmap = new LinearColorMap(0, 255, ColorTable.SPECTRUM);
+        LinearColorMapDeprecated cmap = new LinearColorMapDeprecated(0, 255, ColorTable.SPECTRUM);
         DiscreteColorMap tmp = new DiscreteColorMap(cmap);
         tmp.setUpperBound(34, 125);
 

@@ -453,7 +453,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
                 log.finest("fetching child nodes");
                 FileObject[] children = fileObject.findFiles(selector);
                 log.finest("found " + children.length + " nodes");
-                SoftImageDataSource[] limgs = ImageIOManager.getInstance().findLoadableImages(children);
+                IImageDataSource[] limgs = ImageIOManager.getInstance().findLoadableImages(children);
 
                 // first add folders
                 for (int i = 0; i < children.length; i++) {

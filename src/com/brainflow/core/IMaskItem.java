@@ -26,9 +26,9 @@ public interface IMaskItem {
 
     public void setOperation(BinaryOperation operation);
 
-    public AbstractLayer getSource();
+    public ImageLayer getSource();
 
-    public void setSource(AbstractLayer source);
+    public void setSource(ImageLayer source);
 
     public ThresholdRange getPredicate();
 

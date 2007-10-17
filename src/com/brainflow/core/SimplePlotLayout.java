@@ -43,6 +43,7 @@ public class SimplePlotLayout extends ImagePlotLayout {
        plots = createPlots();
 
        getView().setLayout(new BorderLayout());
+       getView().removeAll();
        getView().add(plots.get(0).getComponent(), BorderLayout.CENTER);
 
        return plots;

@@ -16,7 +16,6 @@ public interface BrainflowProjectListener  {
 
     public void modelRemoved(BrainflowProjectEvent event);
 
-
     public void intervalAdded(BrainflowProjectEvent event);
 
     public void contentsChanged(BrainflowProjectEvent event);

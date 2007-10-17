@@ -1,6 +1,6 @@
 package com.brainflow.core;
 
-import com.brainflow.display.InterpolationHint;
+import com.brainflow.display.InterpolationType;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
@@ -34,9 +34,9 @@ public interface IImageProducer {
 
     public void setScreenSize(Rectangle rect);
 
-    public void setScreenInterpolation(InterpolationHint hint);
+    public void setScreenInterpolation(InterpolationType type);
 
-    public InterpolationHint getScreenInterpolation();
+    public InterpolationType getScreenInterpolation();
 
     public void setYAxis(AxisRange yaxis);
 

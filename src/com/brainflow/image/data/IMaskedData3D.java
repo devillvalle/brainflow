@@ -17,8 +17,6 @@ public interface IMaskedData3D extends IImageData3D {
 
     public int isTrue(int index);
 
-    
-    
-
+   // public MaskPredicate getPredicate();
 
 }

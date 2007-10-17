@@ -1,5 +1,5 @@
 /*
- * LoadableImageManager.java
+ * DataSourceManager.java
  *
  * Created on May 29, 2003, 9:09 AM
  */
@@ -7,7 +7,11 @@
 package com.brainflow.application.toplevel;
 
 import com.brainflow.application.IImageDataSource;
+import com.brainflow.application.ImageProgressDialog;
+import com.brainflow.application.ImageViewTransferHandler;
 import com.brainflow.application.services.LoadableImageStatusEvent;
+import com.brainflow.core.IImageDisplayModel;
+import com.brainflow.core.ImageView;
 import org.bushe.swing.event.EventBus;
 
 import javax.swing.event.EventListenerList;
@@ -18,24 +22,23 @@ import java.util.logging.Logger;
 /**
  * @author Bradley
  */
-public class LoadableImageManager {
+public class DataSourceManager {
 
     /**
-     * Creates a new instance of LoadableImageManager
+     * Creates a new instance of DataSourceManager
      */
 
     private LinkedHashMap<Integer, IImageDataSource> imageMap = new LinkedHashMap<Integer, IImageDataSource>();
 
-    private Logger log = Logger.getLogger(LoadableImageManager.class.getName());
+    private Logger log = Logger.getLogger(DataSourceManager.class.getName());
 
-    private EventListenerList listeners = new EventListenerList();
 
-    protected LoadableImageManager() {
+    protected DataSourceManager() {
         // Exists only to thwart instantiation.
     }
 
-    public static LoadableImageManager getInstance() {
-        return (LoadableImageManager) SingletonRegistry.REGISTRY.getInstance("com.brainflow.application.toplevel.LoadableImageManager");
+    public static DataSourceManager getInstance() {
+        return (DataSourceManager) SingletonRegistry.REGISTRY.getInstance("com.brainflow.application.toplevel.DataSourceManager");
     }
 
 
@@ -78,6 +81,24 @@ public class LoadableImageManager {
 
     public IImageDataSource lookup(int uid) {
         return imageMap.get(uid);
+    }
+
+    public ImageProgressDialog createProgressDialog(final IImageDataSource dataSource) {
+        ImageProgressDialog id = new ImageProgressDialog(dataSource, ImageCanvasManager.getInstance().getSelectedCanvas()) {
+
+            protected void done() {
+                IImageDisplayModel displayModel = ProjectManager.getInstance().addToActiveProject(dataSource);
+
+                ImageView iview = ImageViewFactory.createAxialView(displayModel);
+                iview.setTransferHandler(new ImageViewTransferHandler());
+                ImageCanvasManager.getInstance().getSelectedCanvas().addImageView(iview);
+                getDialog().setVisible(false);
+
+
+            }
+        };
+
+        return id;
     }
 
 

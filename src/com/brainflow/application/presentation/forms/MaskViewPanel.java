@@ -3,7 +3,6 @@ package com.brainflow.application.presentation.forms;
 import com.brainflow.application.MemoryImageDataSource;
 import com.brainflow.core.*;
 import com.brainflow.display.ThresholdRange;
-import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.data.IImageData3D;
 import com.brainflow.image.data.MaskedData3D;
@@ -21,7 +20,7 @@ import java.net.URL;
  * Time: 11:20:10 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MaskPanel extends JPanel {
+public class MaskViewPanel extends JPanel {
 
     private IImageDisplayModel model;
 
@@ -29,18 +28,19 @@ public class MaskPanel extends JPanel {
 
     private MaskedData3D mask;
 
-    public MaskPanel(ImageMaskItem item) {
+    public MaskViewPanel(ImageMaskItem item) {
 
-        IImageData3D data = (IImageData3D) item.getSource().getDataSource();
+        IImageData3D data = (IImageData3D) item.getSource().getData();
         mask = new MaskedData3D(data, item.getPredicate());
         model = new ImageDisplayModel("mask model");
 
 
-        MaskLayer layer = new MaskLayer(mask, new ImageLayerProperties(new Range(0, 256)));
+      //  MaskLayer layer = new MaskLayer(mask, new ImageLayerProperties(new Range(0, 256)));
 
-        model.addLayer(layer);
+      //  model.addLayer(layer);
 
-        view = new SimpleImageView(model, Anatomy3D.getCanonicalAxial());
+        view = new ImageView(model);
+        
         add(view);
     }
 
@@ -59,7 +59,7 @@ public class MaskPanel extends JPanel {
 
             ThresholdRange trange = new ThresholdRange(1500, 25000);
             ImageMaskItem item = new ImageMaskItem(ilayer, trange, 0);
-            MaskPanel mpanel = new MaskPanel(item);
+            MaskViewPanel mpanel = new MaskViewPanel(item);
 
 
             System.out.println("cardinality: " + mpanel.getMask().cardinality());

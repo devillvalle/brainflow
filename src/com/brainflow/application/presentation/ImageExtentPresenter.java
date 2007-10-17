@@ -85,7 +85,7 @@ public class ImageExtentPresenter extends AbstractPresenter {
 
         Bindings.bind(form.getValueLabel3(), viewportAdapter.getValueModel(Viewport3D.Z_AXIS_EXTENT_PROPERTY));
 
-        // Bindings.bind(control.getLowField(), adapter.getValueModel(LinearColorMap.LOWER_ALPHA_PROPERTY));
+        // Bindings.bind(control.getLowField(), adapter.getValueModel(LinearColorMapDeprecated.LOWER_ALPHA_PROPERTY));
 
 
     }

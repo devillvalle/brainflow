@@ -1,7 +1,7 @@
 package com.brainflow.application.actions;
 
 import com.brainflow.colormap.IColorMap;
-import com.brainflow.colormap.LinearColorMap;
+import com.brainflow.colormap.LinearColorMapDeprecated;
 import com.brainflow.core.ImageView;
 import org.bushe.swing.action.BasicAction;
 
@@ -34,9 +34,9 @@ public class SelectColorMapAction extends BasicAction {
             IColorMap map = view.getModel().getLayer(layer).
                     getImageLayerProperties().getColorMap().getProperty();
 
-            LinearColorMap lmap = new LinearColorMap(map.getMinimumValue(), map.getMaximumValue(), icm);
-            if (map instanceof LinearColorMap) {
-                LinearColorMap lmap2 = (LinearColorMap) map;
+            LinearColorMapDeprecated lmap = new LinearColorMapDeprecated(map.getMinimumValue(), map.getMaximumValue(), icm);
+            if (map instanceof LinearColorMapDeprecated) {
+                LinearColorMapDeprecated lmap2 = (LinearColorMapDeprecated) map;
 
                 lmap.setHighClip(lmap2.getHighClip());
                 lmap.setLowClip(lmap2.getLowClip());

@@ -2,7 +2,7 @@ package com.brainflow.application.presentation.forms;
 
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.LinearColorBar;
-import com.brainflow.colormap.LinearColorMap;
+import com.brainflow.colormap.LinearColorMapDeprecated;
 import com.brainflow.gui.ColorIcon;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -22,7 +22,7 @@ import java.awt.event.ActionListener;
  */
 public class PanelBuilderTest {
 
-    private LinearColorMap cmap = new LinearColorMap(0, 255, ColorTable.SPECTRUM);
+    private LinearColorMapDeprecated cmap = new LinearColorMapDeprecated(0, 255, ColorTable.SPECTRUM);
 
 
     public PanelBuilderTest() {
@@ -35,7 +35,7 @@ public class PanelBuilderTest {
         frame.setTitle("Forms Tutorial :: Custom Rows");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        LinearColorBar cbar = new LinearColorBar(new LinearColorMap(0, 255, ColorTable.SPECTRUM), SwingConstants.VERTICAL);
+        LinearColorBar cbar = new LinearColorBar(new LinearColorMapDeprecated(0, 255, ColorTable.SPECTRUM), SwingConstants.VERTICAL);
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());

@@ -43,9 +43,9 @@ public class LinearColorBar extends AbstractColorBar {
 
         }
 
-        System.out.println("high clip : " + model.getHighClip());
-        System.out.println("last value = " + frac[model.getMapSize()-1]);
-        System.out.println("second to last value = " + frac[model.getMapSize()-2]);
+        //System.out.println("high clip : " + model.getHighClip());
+        ///System.out.println("last value = " + frac[model.getMapSize()-1]);
+        //System.out.println("second to last value = " + frac[model.getMapSize()-2]);
 
         return frac;
 
@@ -168,7 +168,7 @@ public class LinearColorBar extends AbstractColorBar {
 
 
     public static void main(String[] args) {
-        LinearColorMap cmap = new LinearColorMap(-100, 100, ColorTable.SPECTRUM);
+        LinearColorMapDeprecated cmap = new LinearColorMapDeprecated(-100, 100, ColorTable.SPECTRUM);
         JFrame frame = new JFrame();
         LinearColorBar cbar = new LinearColorBar(cmap, SwingConstants.HORIZONTAL);
 

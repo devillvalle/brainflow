@@ -1,4 +1,4 @@
-package com.brainflow.display;
+package com.brainflow.utils;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;

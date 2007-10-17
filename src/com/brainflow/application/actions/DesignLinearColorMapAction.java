@@ -2,7 +2,7 @@ package com.brainflow.application.actions;
 
 import com.brainflow.application.presentation.ColorBandChartPresenter;
 import com.brainflow.colormap.IColorMap;
-import com.brainflow.colormap.LinearColorMap;
+import com.brainflow.colormap.LinearColorMapDeprecated;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.ImageView;
 import com.jidesoft.dialog.JideOptionPane;
@@ -32,7 +32,7 @@ public class DesignLinearColorMapAction extends BasicAction {
 
             Container parent = view.getParent();
 
-            if (colorMap instanceof LinearColorMap) {
+            if (colorMap instanceof LinearColorMapDeprecated) {
                 JDialog dialog = new JDialog(JOptionPane.getFrameForComponent(parent));
                 ColorBandChartPresenter presenter = new ColorBandChartPresenter(displayModel.getLayerParameters(idx).getColorMap());
                 dialog.add(presenter.getComponent());

@@ -49,6 +49,7 @@ public class TestXStream {
             System.out.println(limg1.getDataFile().getName());
             System.out.println(limg2.getDataFile().getName());
             XStream xstream = new XStream(new DomDriver());
+            xstream.setMarshallingStrategy(new com.thoughtworks.xstream.core.TreeMarshallingStrategy());
             xstream.alias("image-data", IImageDataSource.class);
             xstream.alias("image-data", SoftImageDataSource.class);
             xstream.alias("file-reference", FileObject.class);
@@ -57,7 +58,7 @@ public class TestXStream {
             xstream.registerConverter(new IImageDataSourceConverter());
             xstream.registerConverter(new FileObjectConverter());
             xstream.registerConverter(new ImageLayerConverter());
-            xstream.setMode(XStream.ID_REFERENCES);
+           // xstream.setMode(XStream.ID_REFERENCES);
 
             
             DataHolder holder = xstream.newDataHolder();
@@ -71,8 +72,8 @@ public class TestXStream {
             sources.add(layer1);
             sources.add(layer2);
 
-            xstream.toXML(sources, new FileOutputStream("c:/fobj.xml"));
-
+            String xmlString = xstream.toXML(limg1);
+            xstream.fromXML(xmlString);
             
 
 

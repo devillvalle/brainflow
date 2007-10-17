@@ -1,10 +1,10 @@
 package com.brainflow.application.actions;
 
-import com.brainflow.colormap.AbstractColorMap;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.core.AbstractLayer;
 import com.brainflow.core.ImageLayerProperties;
 import com.brainflow.core.ImageView;
+import com.brainflow.display.ClipRange;
 
 /**
  * BrainFlow Project
@@ -36,26 +36,22 @@ public class IncreaseContrastCommand extends BrainFlowCommand {
 
     private void incrementContrast(AbstractLayer layer) {
         ImageLayerProperties props = layer.getImageLayerProperties();
-        IColorMap colorMap = props.getColorMap().getProperty();
-        if (colorMap instanceof AbstractColorMap) {
-            AbstractColorMap absmap = (AbstractColorMap) colorMap;
-            double highClip = absmap.getHighClip();
-            double lowClip = absmap.getLowClip();
+        ClipRange clip = props.getClipRange();
 
-            double distance = highClip - lowClip;
-            double increment = (percMultiplier * distance) / 2;
+        double highClip = clip.getHighClip();
+        double lowClip = clip.getLowClip();
 
-            double newHighClip = highClip - increment;
-            double newLowClip = lowClip + increment;
+        double distance = highClip - lowClip;
+        double increment = (percMultiplier * distance) / 2;
 
-            if (newLowClip >= newHighClip) {
-                newLowClip = newHighClip - .001;
-            }
+        double newHighClip = highClip - increment;
+        double newLowClip = lowClip + increment;
 
-            absmap.setHighClip(newHighClip);
-            absmap.setLowClip(newLowClip);
-
+        if (newLowClip >= newHighClip) {
+            newLowClip = newHighClip - .001;
         }
+
+        clip.setClipRange(newLowClip, newHighClip);
 
 
     }

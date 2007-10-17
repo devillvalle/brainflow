@@ -9,7 +9,9 @@ import java.awt.image.AffineTransformOp;
  * Time: 10:20:46 PM
  * To change this template use File | Settings | File Templates.
  */
-public enum InterpolationHint {
+
+
+public enum InterpolationType {
 
     NEAREST_NEIGHBOR(AffineTransformOp.TYPE_NEAREST_NEIGHBOR),
     LINEAR(AffineTransformOp.TYPE_BILINEAR),
@@ -18,7 +20,7 @@ public enum InterpolationHint {
 
     private int id;
 
-    InterpolationHint(int _id) {
+    InterpolationType(int _id) {
         id = _id;
 
     }

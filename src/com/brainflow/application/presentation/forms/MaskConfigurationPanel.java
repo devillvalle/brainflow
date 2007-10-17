@@ -11,7 +11,9 @@ import com.jgoodies.binding.adapter.BasicComponentFactory;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
 import com.jgoodies.binding.beans.BeanAdapter;
+import com.jgoodies.binding.beans.PropertyAdapter;
 import com.jgoodies.binding.list.SelectionInList;
+import com.jgoodies.binding.value.ValueHolder;
 import com.jgoodies.binding.value.ValueModel;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -33,8 +35,6 @@ public class MaskConfigurationPanel extends JPanel {
 
     private IMaskItem item;
 
-    private FormLayout layout;
-
     private JComboBox sourceSelection;
 
     private JComboBox operationSelection;
@@ -53,9 +53,12 @@ public class MaskConfigurationPanel extends JPanel {
 
     private BeanAdapter thresholdAdapter;
 
+    private ValueModel selectedIndex = new ValueHolder(new Integer(0));
+
     public MaskConfigurationPanel(IImageDisplayModel _model, IMaskItem _item) {
         model = _model;
         item = _item;
+
         buildGUI();
 
         initBinding();
@@ -94,30 +97,54 @@ public class MaskConfigurationPanel extends JPanel {
 
         CellConstraints cc = new CellConstraints();
 
-        layout = new FormLayout("8dlu, p, 4dlu, l:max(25dlu;p):g, 1dlu, 8dlu", "12dlu, p, 10dlu, p, 10dlu, p, 22dlu, p, 10dlu, p, 10dlu, p, 12dlu, p, 12dlu");
+        FormLayout layout = new FormLayout("8dlu, p, 4dlu, l:max(25dlu;p):g, 1dlu, 8dlu", "12dlu, p, 10dlu, p, 10dlu, p, 10dlu, p, 22dlu, p, 10dlu, p, 10dlu, p, 12dlu, p, 12dlu");
         layout.addGroupedColumn(4);
 
         setLayout(layout);
 
         JLabel sourceLabel = new JLabel("Source Image: ");
-        sourceSelection = BasicComponentFactory.createComboBox(model.getLayerSelection());
+
+        int index = model.getSelectedIndex();
+
+        selectedIndex.setValue(index);
+        SelectionInList<ImageLayer> sourceList = new SelectionInList<ImageLayer>(model.getLayerSelection().getListModel(), selectedIndex);
+
+        sourceSelection = BasicComponentFactory.createComboBox(sourceList);
+        sourceSelection.setSelectedIndex(index);
         add(sourceLabel, cc.xy(2, 2));
         add(sourceSelection, cc.xyw(4, 2, 2));
 
         JLabel operationLabel = new JLabel("Operation: ");
-        SelectionInList opList = new SelectionInList(new BinaryOperation[]{BinaryOperation.AND, BinaryOperation.OR});
+        SelectionInList<BinaryOperation> opList = new SelectionInList<BinaryOperation>(new BinaryOperation[]{BinaryOperation.AND, BinaryOperation.OR});
         operationSelection = BasicComponentFactory.createComboBox(opList);
         operationSelection.setSelectedItem(item.getOperation());
 
         add(operationLabel, cc.xy(2, 4));
         add(operationSelection, cc.xyw(4, 4, 2));
 
+
+        int gnum = item.getGroup();
+        IMaskList maskList =  model.getSelectedLayer().getMaskList();
         JLabel groupLabel = new JLabel("Group: ");
-        SelectionInList groupList = new SelectionInList(new Integer[]{item.getGroup()});
+
+        SelectionInList<Integer> groupList = null;
+        int row =  maskList.indexOf(item);
+        if (item == maskList.getLastItem() && row == 0) {
+           groupList = new SelectionInList<Integer>(new Integer[]{item.getGroup()});
+        } else if (item == maskList.getLastItem() && (row > 0) && (gnum == maskList.getMaskItem(row - 1).getGroup())) {
+           groupList = new SelectionInList<Integer>(new Integer[]{gnum, gnum + 1});
+        } else {
+            groupList = new SelectionInList<Integer>(new Integer[]{item.getGroup()});
+        }
+
         groupSelection = BasicComponentFactory.createComboBox(groupList);
         groupSelection.setSelectedItem(item.getGroup());
+
+
         add(groupLabel, cc.xy(2, 6));
         add(groupSelection, cc.xyw(4, 6, 2));
+
+
 
         JLabel highSliderLabel = new JLabel("High Thresh: ");
         add(highSliderLabel, cc.xy(2, 8));
@@ -130,7 +157,7 @@ public class MaskConfigurationPanel extends JPanel {
         lowSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
         add(lowSlider, cc.xyw(4, 10, 2));
 
-        FormLayout textLayout = new FormLayout("6dlu, p:g, 20dlu, p:g, 6dlu", "max(25dlu;p)");
+        FormLayout textLayout = new FormLayout("6dlu, max(56dlu;p):g, 20dlu, max(56dlu;p):g, 6dlu", "max(25dlu;p)");
         JPanel textPanel = new JPanel();
 
         NumberFormat format = NumberFormat.getInstance();
@@ -150,9 +177,11 @@ public class MaskConfigurationPanel extends JPanel {
         //add(new JLabel("Range: "), cc.xy(2,12));
         add(textPanel, cc.xyw(4, 12, 2));
 
-        //PropertyAdapter adapter = new PropertyAdapter(item, IMaskItem.ACTIVE_PROPERTY);
-        //enabledCheckBox = BasicComponentFactory.createCheckBox(adapter, "Mask Active ");
-        //add(enabledCheckBox, cc.xyw(2, 12, 5));
+        PropertyAdapter<IMaskItem> adapter = new PropertyAdapter<IMaskItem>(item, IMaskItem.ACTIVE_PROPERTY);
+
+        enabledCheckBox = BasicComponentFactory.createCheckBox(adapter, "Enabled");
+        add(enabledCheckBox, cc.xyw(2,14,2));
+
 
 
     }

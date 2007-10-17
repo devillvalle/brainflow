@@ -1,5 +1,6 @@
 package com.brainflow.core;
 
+import javax.swing.event.ListDataListener;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,6 +29,9 @@ public interface IMaskList {
 
     public int size();
 
+    public void addListDataListener(ListDataListener listener);
+    
+    public void removeListDataListener(ListDataListener listener);
     //public void addMask(IMaskItem item);
 
     public IMaskItem dupMask();

@@ -49,11 +49,11 @@ public class ImageProgressDialog extends SwingWorker<IImageData, Integer> implem
     }
 
 
-    public IImageDataSource getLoadable() {
+    public IImageDataSource getDataSource() {
         return loadable;
     }
 
-    public void setLoadable(IImageDataSource loadable) {
+    public void setDataSource(IImageDataSource loadable) {
         this.loadable = loadable;
     }
 
@@ -67,7 +67,7 @@ public class ImageProgressDialog extends SwingWorker<IImageData, Integer> implem
         panel.add(Box.createVerticalStrut(3));
         panel.add(progressBar);
         panel.add(Box.createVerticalStrut(3));
-        panel.add(new JLabel("Scanning C:\\Program Files\\...\\win.ini ..."));
+        //panel.add(new JLabel("Scanning C:\\Program Files\\...\\win.ini ..."));
         JideOptionPane optionPane = new JideOptionPane(panel, JOptionPane.INFORMATION_MESSAGE, 0, null, new Object[]{
                 new JButton("Cancel")});
 
@@ -93,7 +93,6 @@ public class ImageProgressDialog extends SwingWorker<IImageData, Integer> implem
         for (Integer i : chunks) {
             double perc = ((double) i) / getMax();
             int prog = (int) (perc * 100f);
-            System.out.println("processing " + prog);
             progressBar.setValue(prog);
 
         }
@@ -101,7 +100,6 @@ public class ImageProgressDialog extends SwingWorker<IImageData, Integer> implem
 
     protected void done() {
 
-        //dialog.setVisible(false);
     }
 
     protected IImageData doInBackground() throws Exception {
@@ -135,8 +133,7 @@ public class ImageProgressDialog extends SwingWorker<IImageData, Integer> implem
 
     public void setString(String _message) {
         message = _message;
-        System.out.println(" " + message);
-
+  
     }
 
     public void setIndeterminate(boolean b) {

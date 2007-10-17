@@ -29,6 +29,8 @@ import java.util.List;
 
 public class ImageInfo implements java.io.Serializable {
 
+    public static Anatomy3D DEFAULT_ANATOMY = Anatomy3D.AXIAL_LPI;
+
     private IDimension arrayDim = new Dimension3D<Integer>(0, 0, 0);
 
     private IDimension spacing = new Dimension3D<Double>(0.0, 0.0, 0.0);
@@ -45,7 +47,7 @@ public class ImageInfo implements java.io.Serializable {
 
     // SPM Default anatomy is LPI (Neurological)
 
-    public static Anatomy3D DEFAULT_ANATOMY = Anatomy3D.AXIAL_LPI;
+
 
     private Anatomy3D anatomy = Anatomy3D.AXIAL_LPI;
 
@@ -121,6 +123,7 @@ public class ImageInfo implements java.io.Serializable {
 
     }
 
+
     private List<Double> makeNumericList(double[] vals) {
         List<Double> lst = new ArrayList<Double>(vals.length);
         for (int i = 0; i < vals.length; i++) {
@@ -181,6 +184,8 @@ public class ImageInfo implements java.io.Serializable {
     public Anatomy getAnatomy() {
         return anatomy;
     }
+
+    
 
     public double getIntercept(int i) {
         return intercepts.get(i);

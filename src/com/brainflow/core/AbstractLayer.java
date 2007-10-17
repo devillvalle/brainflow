@@ -1,5 +1,6 @@
 package com.brainflow.core;
 
+import com.brainflow.display.ClipRange;
 import com.brainflow.display.ThresholdRange;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
@@ -17,7 +18,7 @@ import java.beans.PropertyChangeSupport;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class AbstractLayer {
-
+    
     private PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     // instantiate to a NullMaskList or something to that effect.
@@ -76,9 +77,15 @@ public abstract class AbstractLayer {
         return properties.getThresholdRange();
     }
 
+    public ClipRange getClipRange() {
+        return properties.getClipRange();
+    }
+
     public abstract Object getDataSource();
 
     private void init() {
+        // todo move to ImageLayerProperties class (or rethink entirely?)
+        // this whole thing is obscene, avert your eyes
         properties.getColorMap().addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
 
@@ -89,7 +96,7 @@ public abstract class AbstractLayer {
 
 
 
-        properties.getResampleInterpolation().addPropertyChangeListener(new PropertyChangeListener() {
+        properties.getInterpolation().addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 support.firePropertyChange(new PropertyChangeEvent(AbstractLayer.this, ImageLayerProperties.RESAMPLE_PROPERTY,
                         evt.getOldValue(), evt.getNewValue()));
@@ -112,7 +119,7 @@ public abstract class AbstractLayer {
             }
         });
 
-        properties.getSmoothing().addPropertyChangeListener(new PropertyChangeListener() {
+        properties.getSmoothingRadius().addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 support.firePropertyChange(new PropertyChangeEvent(AbstractLayer.this, ImageLayerProperties.SMOOTHING_PROPERTY,
                         evt.getOldValue(), evt.getNewValue()));
@@ -122,7 +129,16 @@ public abstract class AbstractLayer {
 
         properties.getThresholdRange().addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
+                System.out.println("threshold changed and my name is: " + AbstractLayer.this.getClass());
                 support.firePropertyChange(new PropertyChangeEvent(AbstractLayer.this, ImageLayerProperties.THRESHOLD_PROPERTY,
+                        evt.getOldValue(), evt.getNewValue()));
+
+            }
+        });
+
+         properties.getClipRange().addPropertyChangeListener(new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                support.firePropertyChange(new PropertyChangeEvent(AbstractLayer.this, ImageLayerProperties.CLIP_RANGE_PROPERTY,
                         evt.getOldValue(), evt.getNewValue()));
 
             }

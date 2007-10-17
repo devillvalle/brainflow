@@ -28,8 +28,13 @@ public abstract class ImagePlotLayout {
         this.view = view;
     }
 
-    protected ImageView getView() {
+    public ImageView getView() {
         return view;
+    }
+
+    public void setView(ImageView view) {
+        this.view = view;
+        plots.clear();
     }
 
     protected IImagePlot createBasicPlot(Anatomy3D displayAnatomy) {

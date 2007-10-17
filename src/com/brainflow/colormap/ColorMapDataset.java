@@ -107,7 +107,7 @@ public class ColorMapDataset extends AbstractIntervalXYDataset {
 
     public static void main(String[] args) {
 
-        LinearColorMap cmap = new LinearColorMap(0, 300, ColorTable.SPECTRUM);
+        LinearColorMapDeprecated cmap = new LinearColorMapDeprecated(0, 300, ColorTable.SPECTRUM);
 
         ColorMapDataset adapter = new ColorMapDataset(cmap);
         JFreeChart chart = ChartFactory.createXYBarChart("title", "zero axis", false, "zero axis", adapter, PlotOrientation.VERTICAL

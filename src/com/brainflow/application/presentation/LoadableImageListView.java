@@ -3,7 +3,7 @@ package com.brainflow.application.presentation;
 import com.brainflow.application.IImageDataSource;
 import com.brainflow.application.actions.ActionContext;
 import com.brainflow.application.presentation.forms.LoadableImageCell2;
-import com.brainflow.application.toplevel.LoadableImageManager;
+import com.brainflow.application.toplevel.DataSourceManager;
 import com.brainflow.image.space.Axis;
 import com.jidesoft.swing.StyleRange;
 import com.jidesoft.swing.StyledLabel;
@@ -36,7 +36,7 @@ public class LoadableImageListView extends JList {
     private LoadableImageCell2 cellPrototype;
     private DefaultListModel listModel = new DefaultListModel();
 
-    private LoadableImageManager manager;
+    private DataSourceManager manager;
 
     /*private Map<IImageDataSource, ImageIcon> imap = new HashMap<IImageDataSource, ImageIcon>();
 
@@ -57,7 +57,7 @@ public class LoadableImageListView extends JList {
         listSelectionBackground = uid.getColor("List.selectionBackground");
     }
 
-    public LoadableImageListView(LoadableImageManager _manager) {
+    public LoadableImageListView(DataSourceManager _manager) {
         manager = _manager;
 
         buildPrototypeCell();
@@ -131,7 +131,7 @@ public class LoadableImageListView extends JList {
             /*if (icon == null) {
                 ImageDisplayModel dmodel = new ImageDisplayModel("" + limg.getUniqueID());
 
-                ImageLayerProperties parms = new ImageLayerProperties(new LinearColorMap(limg.getData().getMinValue(), limg.getData().getMaxValue(), ColorTable.GRAYSCALE));
+                ImageLayerProperties parms = new ImageLayerProperties(new LinearColorMapDeprecated(limg.getData().getMinValue(), limg.getData().getMaxValue(), ColorTable.GRAYSCALE));
                 ImageLayer layer = new ImageLayer3D(limg, parms);
 
                 dmodel.addLayer(layer);

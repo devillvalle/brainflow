@@ -32,6 +32,8 @@ public class ImageIOManager {
 
     private static java.util.List<ImageIODescriptor> descriptorList = new java.util.ArrayList<ImageIODescriptor>();
 
+    private boolean initialized = false;
+
     protected ImageIOManager() {
         // Exists only to thwart instantiation.
     }
@@ -78,6 +80,7 @@ public class ImageIOManager {
 
 
     public void initialize() throws BrainflowException, IOException {
+        if (initialized) return;
         InputStream istream = getClass().getClassLoader().getResourceAsStream("resources/config/imageio-config.xml");
         try {
 
@@ -97,7 +100,7 @@ public class ImageIOManager {
             }
 
             descriptorList = Collections.unmodifiableList(descriptorList);
-
+            initialized = true;
 
         } catch (JDOMException e) {
             e.printStackTrace();

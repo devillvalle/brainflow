@@ -4,7 +4,7 @@ import com.brainflow.application.presentation.forms.DoubleSliderForm;
 import com.brainflow.colormap.AbstractColorMap;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
-import com.brainflow.colormap.LinearColorMap;
+import com.brainflow.colormap.LinearColorMapDeprecated;
 import com.brainflow.display.Property;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
@@ -18,16 +18,19 @@ import javax.swing.*;
 public class ColorRangePresenter extends AbstractColorMapPresenter {
 
     private IColorMap colorMap;
+
     private BeanAdapter adapter;
+    
     private DoubleSliderForm form;
 
     private BoundedRangeAdapter lowValueAdapter;
+
     private BoundedRangeAdapter highValueAdapter;
 
     /**
      * Creates a new instance of ColorRangePanel
      */
-    public ColorRangePresenter(LinearColorMap cmap) {
+    public ColorRangePresenter(LinearColorMapDeprecated cmap) {
         colorMap = cmap;
         form = new DoubleSliderForm();
 
@@ -39,7 +42,7 @@ public class ColorRangePresenter extends AbstractColorMapPresenter {
     }
 
     public ColorRangePresenter() {
-        colorMap = new LinearColorMap(0, 255, ColorTable.GRAYSCALE);
+        colorMap = new LinearColorMapDeprecated(0, 255, ColorTable.GRAYSCALE);
         form = new DoubleSliderForm();
         initBinding();
 
@@ -88,10 +91,10 @@ public class ColorRangePresenter extends AbstractColorMapPresenter {
         form.getSliderLabel2().setText("Low: ");
 
         /*Bindings.bind(form.getValueField1(), ConverterFactory.createStringConverter(
-                adapter.getValueModel(LinearColorMap.HIGH_CLIP_PROPERTY), NumberFormat.getInstance()));
+                adapter.getValueModel(LinearColorMapDeprecated.HIGH_CLIP_PROPERTY), NumberFormat.getInstance()));
 
         Bindings.bind(form.getValueField2(), ConverterFactory.createStringConverter(
-                adapter.getValueModel(LinearColorMap.LOW_CLIP_PROPERTY), NumberFormat.getInstance()));  */
+                adapter.getValueModel(LinearColorMapDeprecated.LOW_CLIP_PROPERTY), NumberFormat.getInstance()));  */
 
         Bindings.bind(form.getValueField1(), adapter.getValueModel(IColorMap.HIGH_CLIP_PROPERTY));
         Bindings.bind(form.getValueField2(), adapter.getValueModel(IColorMap.LOW_CLIP_PROPERTY));

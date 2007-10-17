@@ -120,7 +120,7 @@ public class ColorMapTableModel extends AbstractTableModel {
                 return;
             }
 
-            colorMap.setInterval(row, range.getMin(), range.getMax(), interval.getColor());
+            colorMap.replaceInterval(row, range.getMin(), range.getMax(), interval.getColor());
             fireTableCellUpdated(row, 0);
 
             //

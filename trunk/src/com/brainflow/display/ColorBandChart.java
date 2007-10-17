@@ -11,7 +11,7 @@ package com.brainflow.display;
 
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
-import com.brainflow.colormap.LinearColorMap;
+import com.brainflow.colormap.LinearColorMapDeprecated;
 import com.brainflow.jfreechart.DynamicSplineXYDataset;
 import com.brainflow.jfreechart.DynamicXYDataset;
 import com.brainflow.utils.ArrayUtils;
@@ -474,7 +474,7 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
         byte[] rvals = new byte[256];
         ColorTable.SPECTRUM.getReds(rvals);
 
-        LinearColorMap lmap = new LinearColorMap(0, 1000, ColorTable.SPECTRUM);
+        LinearColorMapDeprecated lmap = new LinearColorMapDeprecated(0, 1000, ColorTable.SPECTRUM);
         ColorBandChart chart1 = new ColorBandChart(ColorBand.RED, lmap);
         ColorBandChart chart2 = new ColorBandChart(ColorBand.GREEN, lmap);
         ColorBandChart chart3 = new ColorBandChart(ColorBand.BLUE, lmap);

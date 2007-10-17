@@ -12,7 +12,7 @@ package com.brainflow.application.presentation;
 import com.brainflow.application.presentation.forms.RangeSliderControl;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.LinearColorBar;
-import com.brainflow.colormap.LinearColorMap;
+import com.brainflow.colormap.LinearColorMapDeprecated;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
 import com.jgoodies.binding.beans.BeanAdapter;
@@ -27,7 +27,7 @@ import java.awt.*;
  */
 public class ColorRangePanel extends JPanel {
 
-    private LinearColorMap colorMap;
+    private LinearColorMapDeprecated colorMap;
     private BeanAdapter adapter;
     private RangeSliderControl control;
 
@@ -37,7 +37,7 @@ public class ColorRangePanel extends JPanel {
     /**
      * Creates a new instance of ColorRangePanel
      */
-    public ColorRangePanel(LinearColorMap cmap) {
+    public ColorRangePanel(LinearColorMapDeprecated cmap) {
 
 
         setLayout(new BorderLayout());
@@ -57,7 +57,7 @@ public class ColorRangePanel extends JPanel {
 
         setLayout(new BorderLayout());
 
-        colorMap = new LinearColorMap(0, 255, ColorTable.GRAYSCALE);
+        colorMap = new LinearColorMapDeprecated(0, 255, ColorTable.GRAYSCALE);
 
         control = new RangeSliderControl();
         add(control, BorderLayout.CENTER);
@@ -68,7 +68,7 @@ public class ColorRangePanel extends JPanel {
     }
 
 
-    public void setColorMap(LinearColorMap cmap) {
+    public void setColorMap(LinearColorMapDeprecated cmap) {
         colorMap = cmap;
         adapter.setBean(colorMap);
     }
@@ -78,25 +78,25 @@ public class ColorRangePanel extends JPanel {
         adapter = new BeanAdapter(colorMap, true);
 
 
-        lowSliderAdapter = new BoundedRangeAdapter(new PercentageConverter(adapter.getValueModel(LinearColorMap.LOW_CLIP_PROPERTY),
-                adapter.getValueModel(LinearColorMap.MINIMUM_VALUE_PROPERTY),
-                adapter.getValueModel(LinearColorMap.MAXIMUM_VALUE_PROPERTY), 100), 0, 0, 100);
+        lowSliderAdapter = new BoundedRangeAdapter(new PercentageConverter(adapter.getValueModel(LinearColorMapDeprecated.LOW_CLIP_PROPERTY),
+                adapter.getValueModel(LinearColorMapDeprecated.MINIMUM_VALUE_PROPERTY),
+                adapter.getValueModel(LinearColorMapDeprecated.MAXIMUM_VALUE_PROPERTY), 100), 0, 0, 100);
 
-        highSliderAdapter = new BoundedRangeAdapter(new PercentageConverter(adapter.getValueModel(LinearColorMap.HIGH_CLIP_PROPERTY),
-                adapter.getValueModel(LinearColorMap.MINIMUM_VALUE_PROPERTY),
-                adapter.getValueModel(LinearColorMap.MAXIMUM_VALUE_PROPERTY), 100), 0, 0, 100);
+        highSliderAdapter = new BoundedRangeAdapter(new PercentageConverter(adapter.getValueModel(LinearColorMapDeprecated.HIGH_CLIP_PROPERTY),
+                adapter.getValueModel(LinearColorMapDeprecated.MINIMUM_VALUE_PROPERTY),
+                adapter.getValueModel(LinearColorMapDeprecated.MAXIMUM_VALUE_PROPERTY), 100), 0, 0, 100);
 
         control.getLowSlider().setModel(lowSliderAdapter);
         control.getHighSlider().setModel(highSliderAdapter);
 
-        Bindings.bind(control.getHighField(), adapter.getValueModel(LinearColorMap.HIGH_CLIP_PROPERTY));
-        Bindings.bind(control.getLowField(), adapter.getValueModel(LinearColorMap.LOW_CLIP_PROPERTY));
+        Bindings.bind(control.getHighField(), adapter.getValueModel(LinearColorMapDeprecated.HIGH_CLIP_PROPERTY));
+        Bindings.bind(control.getLowField(), adapter.getValueModel(LinearColorMapDeprecated.LOW_CLIP_PROPERTY));
 
     }
 
 
     public static void main(String[] args) {
-        LinearColorMap cmap = new LinearColorMap(0, 300, ColorTable.SPECTRUM);
+        LinearColorMapDeprecated cmap = new LinearColorMapDeprecated(0, 300, ColorTable.SPECTRUM);
         ColorRangePanel panel = new ColorRangePanel(cmap);
         LinearColorBar cbar = new LinearColorBar(cmap, SwingConstants.HORIZONTAL);
         cbar.setOrientation(SwingUtilities.HORIZONTAL);

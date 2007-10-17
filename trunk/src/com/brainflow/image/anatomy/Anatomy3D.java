@@ -1,5 +1,7 @@
 package com.brainflow.image.anatomy;
 
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -98,6 +100,10 @@ public class Anatomy3D implements Anatomy {
     public static Anatomy3D getCanonicalAxial() {
         return AXIAL_LAI;
 
+    }
+
+    public static List<Anatomy3D> getInstanceList() {
+        return Arrays.asList(instances);
     }
 
 

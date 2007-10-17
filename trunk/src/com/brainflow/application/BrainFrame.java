@@ -28,12 +28,7 @@ public class BrainFrame extends DefaultDockableHolder {
 
     }
 
-    private void initLookAndFeel() {
-
-
-    }
-
-
+   
     public static void main(String[] args) {
         //com.incors.plaf.alloy.AlloyLookAndFeel.setProperty("alloy.licenseCode", "v#ej_technologies#uwbjzx#e6pck8");
         //com.incors.plaf.alloy.AlloyLookAndFeel.setProperty("alloy.isLookAndFeelFrameDecoration", "true");

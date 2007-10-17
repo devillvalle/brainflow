@@ -1,6 +1,7 @@
 package com.brainflow.display;
 
-import com.jgoodies.binding.beans.Model;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
 /**
  * BrainFlow Project
@@ -8,29 +9,40 @@ import com.jgoodies.binding.beans.Model;
  * Date: Aug 28, 2007
  * Time: 9:29:51 PM
  */
-public class SmoothingRadius extends Model {
 
-    public static final String RADIUS_PROPERTY = "radius";
+@XStreamAlias("smoothing-radius")
+public class SmoothingRadius extends LayerProperty {
 
+    public static final String RADIUS_PROPERTY = "smoothingRadius";
 
-    private int radius = 0;
+    @XStreamAlias("value")
+    @XStreamAsAttribute
+    private int smoothingRadius = 0;
 
 
     public SmoothingRadius() {
     }
 
     public SmoothingRadius(int radius) {
-        this.radius = radius;
+        this.smoothingRadius = radius;
     }
 
-    public int getRadius() {
-        return radius;
+    public String getName() {
+        return "smoothingRadius";
     }
 
-    public void setRadius(int radius) {
-        double old = getRadius();
-        this.radius = radius;
+    public Object getValue() {
+        return smoothingRadius;
+    }
 
-        firePropertyChange(RADIUS_PROPERTY, old, getRadius());
+    public int getSmoothingRadius() {
+        return smoothingRadius;
+    }
+
+    public void setSmoothingRadius(int smoothingRadius) {
+        double old = getSmoothingRadius();
+        this.smoothingRadius = smoothingRadius;
+
+        firePropertyChange(RADIUS_PROPERTY, old, getSmoothingRadius());
     }
 }

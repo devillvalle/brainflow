@@ -1,10 +1,10 @@
 package com.brainflow.display;
 
-import com.jgoodies.binding.beans.Model;
 import com.brainflow.image.data.MaskPredicate;
+import com.brainflow.utils.ExclusiveRange;
 import com.brainflow.utils.IRange;
 import com.brainflow.utils.Range;
-import com.brainflow.utils.ExclusiveRange;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,7 +13,9 @@ import com.brainflow.utils.ExclusiveRange;
  * Time: 8:36:04 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ThresholdRange extends Model implements MaskPredicate, IRange {
+
+
+public class ThresholdRange extends LayerProperty implements MaskPredicate, IRange {
 
 
     public static final String SYMMETRICAL_PROPERTY = "symmetrical";
@@ -30,7 +32,7 @@ public class ThresholdRange extends Model implements MaskPredicate, IRange {
 
     private IRange thresholdRange = new ExclusiveRange(0, 0);
 
-    // make a bound property with min and max
+    // todo make a bound property with min and max
     private IRange globalRange = new Range(Double.MIN_VALUE, Double.MAX_VALUE);
 
 
@@ -66,6 +68,13 @@ public class ThresholdRange extends Model implements MaskPredicate, IRange {
         this.symmetrical = symmetrical;
     }
 
+    public String getName() {
+        return "thresholdRange";
+    }
+
+    public Object getValue() {
+        return thresholdRange;
+    }
 
     public ThresholdRange copy() {
         ThresholdRange trange = new ThresholdRange(thresholdRange.getMin(), thresholdRange.getMax(),
@@ -138,6 +147,7 @@ public class ThresholdRange extends Model implements MaskPredicate, IRange {
 
     }
 
+
     protected double[] filterLowValue(double low, double high) {
 
         if (low > high) {
@@ -169,8 +179,7 @@ public class ThresholdRange extends Model implements MaskPredicate, IRange {
         double old = getMin();
 
         double[] rvals = filterLowValue(min, getMax());
-        thresholdRange.setMin(rvals[0]);
-        firePropertyChange(ThresholdRange.MIN_PROPERTY, old, getMin());
+
 
         if (rvals[1] != getMax()) {
             double oldThresh = getMax();
@@ -179,6 +188,8 @@ public class ThresholdRange extends Model implements MaskPredicate, IRange {
                     oldThresh, getMax());
         }
 
+        thresholdRange.setMin(rvals[0]);
+        firePropertyChange(ThresholdRange.MIN_PROPERTY, old, getMin());
 
     }
 
@@ -191,8 +202,6 @@ public class ThresholdRange extends Model implements MaskPredicate, IRange {
         double old = getMax();
 
         double[] rvals = filterHighValue(getMin(), max);
-        thresholdRange.setMax(rvals[1]);
-        firePropertyChange(ThresholdRange.MAX_PROPERTY, old, getMax());
 
 
         if (rvals[0] != getMin()) {
@@ -201,6 +210,10 @@ public class ThresholdRange extends Model implements MaskPredicate, IRange {
             firePropertyChange(ThresholdRange.MIN_PROPERTY,
                     oldThresh, getMin());
         }
+
+
+        thresholdRange.setMax(rvals[1]);
+        firePropertyChange(ThresholdRange.MAX_PROPERTY, old, getMax());
 
 
     }

@@ -4,7 +4,7 @@ import com.brainflow.application.presentation.forms.DoubleSliderForm;
 import com.brainflow.colormap.AbstractColorBar;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
-import com.brainflow.colormap.LinearColorMap;
+import com.brainflow.colormap.LinearColorMapDeprecated;
 import com.brainflow.colormap.forms.SimpleColorEditor;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -146,7 +146,7 @@ public class ColorMapTweaker {
     public static void main(String[] args) throws Exception {
 
         JFrame jf = new JFrame();
-        ColorMapTweaker tweaker = new ColorMapTweaker(new LinearColorMap(0, 255, ColorTable.SPECTRUM));
+        ColorMapTweaker tweaker = new ColorMapTweaker(new LinearColorMapDeprecated(0, 255, ColorTable.SPECTRUM));
         jf.add(tweaker.getComponent());
         jf.pack();
         jf.setVisible(true);

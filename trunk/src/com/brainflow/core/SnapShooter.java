@@ -3,7 +3,7 @@ package com.brainflow.core;
 import com.brainflow.application.IImageDataSource;
 import com.brainflow.application.MemoryImageDataSource;
 import com.brainflow.colormap.ColorTable;
-import com.brainflow.colormap.LinearColorMap;
+import com.brainflow.colormap.LinearColorMapDeprecated;
 import com.brainflow.colormap.DiscreteColorMap;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
@@ -135,7 +135,7 @@ public class SnapShooter {
             IImageDataSource il6 = new MemoryImageDataSource(AnalyzeIO.readAnalyzeImage("c:/DTI/slopes/bAge.Norm"));
 
 
-            LinearColorMap lmap = new LinearColorMap(0, 221, ColorTable.GRAYSCALE);
+            LinearColorMapDeprecated lmap = new LinearColorMapDeprecated(0, 221, ColorTable.GRAYSCALE);
             DiscreteColorMap ragged = new DiscreteColorMap(lmap);
 
 
@@ -152,7 +152,7 @@ public class SnapShooter {
        IImageDataSource il1 = new MemoryImage(AnalyzeIO.readAnalyzeImage("/r/d5/despo/buchs/MSSM_TEMPLATE"));
        IImageDataSource il2 = new MemoryImage(AnalyzeIO.readAnalyzeImage("/r/d5/despo/buchs/TDiagnosis_G75.midbrain.Covar"));
 
-       LinearColorMap lmap = new LinearColorMap(0, 221, ColorTable.GRAYSCALE);
+       LinearColorMapDeprecated lmap = new LinearColorMapDeprecated(0, 221, ColorTable.GRAYSCALE);
        RaggedColorMap ragged = new RaggedColorMap();
        ragged.extendHigher(1.65, new Color(0, 0, 0, 0));
        ragged.extendHigher(2.6, new Color(102, 255, 0, 150));

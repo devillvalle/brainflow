@@ -21,6 +21,8 @@ public class BrainflowProjectEvent extends EventObject {
 
     private ListDataEvent event;
 
+
+
     public BrainflowProjectEvent(BrainflowProject _project, IImageDisplayModel _model, ListDataEvent _event) {
         super(_project);
 

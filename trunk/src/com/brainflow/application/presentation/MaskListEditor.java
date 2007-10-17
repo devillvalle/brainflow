@@ -263,7 +263,7 @@ public class MaskListEditor {
             switch (columnIndex) {
                 case 0:
                     IMaskItem item = maskList.getMaskItem(rowIndex);
-                    item.setSource((AbstractLayer) aValue);
+                    item.setSource((ImageLayer)aValue);
                     //maskList.getMaskItem(rowIndex).setSource((IImageData3D) aValue);
                     break;
                 case 1:

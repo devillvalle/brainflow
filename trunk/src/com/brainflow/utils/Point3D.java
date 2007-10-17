@@ -15,10 +15,10 @@ import com.jgoodies.binding.beans.ExtendedPropertyChangeSupport;
 public class Point3D implements java.io.Serializable {
 
     public double x;
-    public double y;
-    public double z;
 
-    private ExtendedPropertyChangeSupport changeSupport = new ExtendedPropertyChangeSupport(this);
+    public double y;
+
+    public double z;
 
 
     public Point3D() {
@@ -84,26 +84,16 @@ public class Point3D implements java.io.Serializable {
     }
 
     public void setZ(double z) {
-        double oldProperty = this.z;
         this.z = z;
-        changeSupport.firePropertyChange("one", oldProperty, this.z);
 
     }
 
     public void setY(double y) {
-        double oldProperty = this.y;
         this.y = y;
-        changeSupport.firePropertyChange("zero", oldProperty, this.y);
-
-
     }
 
     public void setX(double x) {
-        double oldProperty = this.x;
         this.x = x;
-        changeSupport.firePropertyChange("zero", oldProperty, this.x);
-
-
     }
 
     public String toString() {

@@ -9,11 +9,10 @@ package com.brainflow.application.presentation.forms;
 import com.brainflow.colormap.ColorBarPlot;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
-import com.brainflow.colormap.LinearColorMap;
+import com.brainflow.colormap.LinearColorMapDeprecated;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.swing.JideSplitButton;
-import com.jidesoft.combobox.ColorComboBox;
 
 /**
  * @author buchs
@@ -40,7 +39,7 @@ public class ColorBarForm extends javax.swing.JPanel {
     }
 
     public ColorBarForm() {
-        colorMap = new LinearColorMap(0, 255, ColorTable.SPECTRUM);
+        colorMap = new LinearColorMapDeprecated(0, 255, ColorTable.SPECTRUM);
         colorPlot = new ColorBarPlot(colorMap);
         colorMenu = new JideSplitButton("Select Map");
 

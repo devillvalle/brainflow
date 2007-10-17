@@ -56,6 +56,7 @@ public class ImageCanvasTransferHandler extends TransferHandler {
     public boolean importData(TransferSupport support) {
         try {
             IImageDataSource[] limg = null;
+
             if (canImport(support)) {
                 try {
                     limg = (IImageDataSource[]) support.getTransferable().getTransferData(loadableImageFlavor);
@@ -82,7 +83,7 @@ public class ImageCanvasTransferHandler extends TransferHandler {
 
                 }
                 if (view != null) {
-                    Brainflow.getInstance().loadAndDisplay(limg[0], view, true);
+                    Brainflow.getInstance().loadAndDisplay(limg[0], view);
                 }
                 else {
                     Brainflow.getInstance().loadAndDisplay(limg[0]);
@@ -128,12 +129,12 @@ public class ImageCanvasTransferHandler extends TransferHandler {
             JTree tree = (JTree) c;
             TreePath path = tree.getSelectionPath();
             Object[] obj = path.getPath();
-            List<SoftImageDataSource> list = new ArrayList<SoftImageDataSource>();
+            List<IImageDataSource> list = new ArrayList<IImageDataSource>();
             for (int i = 0; i < obj.length; i++) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) obj[i];
                 if (node.isLeaf()) {
                     Object userObject = node.getUserObject();
-                    if (userObject instanceof SoftImageDataSource) {
+                    if (userObject instanceof IImageDataSource) {
                         list.add((SoftImageDataSource) userObject);
 
                     }

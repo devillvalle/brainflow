@@ -105,6 +105,8 @@ public class ImageIODescriptor {
     }
 
     public IImageDataSource createLoadableImage(FileObject header, FileObject data) {
+
+
         if (!isHeaderMatch(header) ) {
             throw new IllegalArgumentException("header " + header.getName().getBaseName() + " does not have correct suffix for format : " + this.getFormatName());
         }
@@ -116,12 +118,42 @@ public class ImageIODescriptor {
         return limg;
     }
 
+    public IImageDataSource createLoadableImage(FileObject header) {
+
+
+        if (!isHeaderMatch(header) ) {
+            throw new IllegalArgumentException("header " + header.getName().getBaseName() + " does not have correct suffix for format : " + this.getFormatName());
+        }
+
+        FileObject data = null;
+
+        try {
+            String dataURI = getDataURI(header);
+            data = VFS.getManager().resolveFile(dataURI);
+        } catch(FileSystemException e) {
+            throw new IllegalArgumentException("Cannot locate matching data file for header " + header);
+        }
+
+
+        IImageDataSource limg = new SoftImageDataSource(this, header, data);
+        return limg;
+    }
+
 
     public String getDataName(FileObject headerFile) {
         assert isHeaderMatch(headerFile);
         String stem = getStem(headerFile.getName().getBaseName());
         String dataName = stem + dataExtension;
         return dataName;
+    }
+
+    protected String getDataURI(FileObject headerFile) {
+        assert isHeaderMatch(headerFile);
+        String stem = getStem(headerFile.getName().getURI());
+        String dataName = stem + dataExtension;
+        return dataName;
+
+
     }
 
     public String getHeaderName(FileObject dataFile) {

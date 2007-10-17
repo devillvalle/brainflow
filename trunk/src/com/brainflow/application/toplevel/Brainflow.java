@@ -6,13 +6,16 @@ import com.brainflow.application.presentation.*;
 import com.brainflow.application.services.ImageViewCursorEvent;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
-import com.brainflow.colormap.LinearColorMap;
+import com.brainflow.colormap.LinearColorMapDeprecated;
 import com.brainflow.core.*;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.image.anatomy.Anatomy;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.data.IImageData;
-import com.brainflow.utils.IRange;
 import com.brainflow.utils.Range;
 import com.brainflow.utils.StaticTimer;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.docking.DefaultDockingManager;
 import com.jidesoft.docking.DockContext;
 import com.jidesoft.docking.DockableFrame;
@@ -39,6 +42,7 @@ import org.bushe.swing.action.ActionUIFactory;
 import org.bushe.swing.action.BasicAction;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
+import org.jvnet.substance.skin.SubstanceCremeLookAndFeel;
 import org.xml.sax.SAXException;
 
 import javax.swing.*;
@@ -111,7 +115,8 @@ public class Brainflow {
 
             //UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
 
-            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceSaharaLookAndFeel());
+            UIManager.setLookAndFeel(new SubstanceCremeLookAndFeel());
+
             //UIManager.setLookAndFeel(new A03LookAndFeel());
             //UIManager.setLookAndFeel(lf);
             //LookAndFeelFactory.installDefaultLookAndFeel();
@@ -182,41 +187,24 @@ public class Brainflow {
         StaticTimer.start();
         loadCommands();
         bindContainer();
-        StaticTimer.end("loading and binding took: ");
 
-        StaticTimer.start();
+
         initImageIO();
-        StaticTimer.end("init image io took: ");
 
-
-        StaticTimer.start();
         initializeActions();
-        StaticTimer.end("init actions took: ");
 
-        StaticTimer.start();
         intializeKeyActions();
-        StaticTimer.end("init key actions took: ");
 
-        StaticTimer.start();
         initializeMenu();
-        StaticTimer.end("init menu took: ");
 
-        StaticTimer.start();
         initializeStatusBar();
-        StaticTimer.end("init status took: ");
 
-        StaticTimer.start();
         initializeToolBar();
-        StaticTimer.end("init toolbar took: ");
 
-        StaticTimer.start();
         initializeWorkspace();
-        StaticTimer.end("init workspace took: ");
 
-        StaticTimer.start();
         initializeResources();
-        StaticTimer.end("init resources took: ");
-
+    
 
     }
 
@@ -285,8 +273,7 @@ public class Brainflow {
         log.info("initializing Menu");
 
 
-
-        JMenuBar menuBar = new  JMenuBar();
+        JMenuBar menuBar = new JMenuBar();
         //
         //menuBar.setOpaque(false);
         //menuBar.setPaintBackground(false);
@@ -355,9 +342,9 @@ public class Brainflow {
         statusBar.add(new ValueStatusItem(), JideBoxLayout.FIX);
 
         statusBar.add(new LabelStatusBarItem(), JideBoxLayout.VARY);
-        statusBar.add(new com.jidesoft.status.ProgressStatusBarItem(), JideBoxLayout.FIX);
+        //statusBar.add(new com.jidesoft.status.ProgressStatusBarItem(), JideBoxLayout.FIX);
 
-        statusBar.add(new com.jidesoft.status.MemoryStatusBarItem());
+        //statusBar.add(new com.jidesoft.status.MemoryStatusBarItem());
         brainFrame.getContentPane().add(statusBar, "South");
 
 
@@ -487,6 +474,9 @@ public class Brainflow {
 
         ToggleCommand cubic = new CubicInterpolationToggleCommand();
         cubic.bind(getApplicationFrame());
+
+        ToggleCommand toggleAxisLabelCommand = new ToggleAxisLabelCommand();
+        toggleAxisLabelCommand.bind(getApplicationFrame());
 
 
         JToolBar mainToolbar = mainToolbarGroup.createToolBar();
@@ -714,7 +704,7 @@ public class Brainflow {
 
 
     private void register(IImageDataSource limg) {
-        LoadableImageManager manager = LoadableImageManager.getInstance();
+        DataSourceManager manager = DataSourceManager.getInstance();
         boolean alreadyRegistered = manager.isRegistered(limg);
 
         if (alreadyRegistered) {
@@ -733,26 +723,41 @@ public class Brainflow {
 
     }
 
-    public void loadAndDisplay(final IImageDataSource limg) {
-
-        if (limg != null) {
-            register(limg);
+    private IImageDataSource specialHandling(IImageDataSource dataSource) {
 
 
-            ImageProgressDialog id = new ImageProgressDialog(limg, ImageCanvasManager.getInstance().getSelectedCanvas()) {
+        if (dataSource.getFileFormat().equals("Analyze7.5")) {
+            JPanel panel = new JPanel();
+            JLabel messageLabel = new JLabel("Please select correct image orientation from menu: ");
+            java.util.List<Anatomy3D> choices = Anatomy3D.getInstanceList();
+            JComboBox choiceBox = new JComboBox(choices.toArray());
+            Anatomy anatomy = (Anatomy)dataSource.getImageInfo().getAnatomy();
+            choiceBox.setSelectedItem(anatomy);
+            FormLayout layout = new FormLayout("4dlu, l:p, p:g, 4dlu", "6dlu, p, 10dlu, p, 6dlu");
+            CellConstraints cc = new CellConstraints();
+            panel.setLayout(layout);
+            panel.add(messageLabel, cc.xyw(2,2,2));
+            panel.add(choiceBox, cc.xyw(2,4,2));
 
-                protected void done() {
-                    IImageDisplayModel displayModel = ProjectManager.getInstance().addToActiveProject(limg);
+            JOptionPane.showMessageDialog(brainFrame, panel, "Analyze 7.5 image format ...", JOptionPane.WARNING_MESSAGE);
+            Anatomy selectedAnatomy = (Anatomy)choiceBox.getSelectedItem();
+            if (selectedAnatomy != anatomy) {
+                dataSource.getImageInfo().setAnatomy((Anatomy3D)selectedAnatomy);
+                dataSource.releaseData();
+            }
+        }
 
-                    ImageView iview = ImageViewFactory.createAxialView(displayModel);
-                    iview.setTransferHandler(new ImageViewTransferHandler());
-                    ImageCanvasManager.getInstance().getSelectedCanvas().addImageView(iview);
-                    getDialog().setVisible(false);
+        return dataSource;
 
+    }
 
-                }
-            };
+    public void loadAndDisplay(final IImageDataSource dataSource) {
 
+        if (dataSource != null) {
+            final IImageDataSource checkedDataSource = specialHandling(dataSource);
+            register(dataSource);
+
+            ImageProgressDialog id = DataSourceManager.getInstance().createProgressDialog(checkedDataSource);
 
             JDialog dialog = id.getDialog();
             dialog.setVisible(true);
@@ -764,30 +769,30 @@ public class Brainflow {
 
     }
 
-    public void loadAndDisplay(IImageDataSource limg, ImageView view, boolean fadeIn) {
+    public void loadAndDisplay(IImageDataSource limg, ImageView view) {
         if (limg != null) {
 
             register(limg);
             IImageData data = null;
             data = limg.getData();
             if (data != null) {
-                if (fadeIn) {
-                    addLayerWithFadeIn(limg, view);
-                } else {
-                    IImageDisplayModel dset = view.getModel();
 
-                    //todo data range should be a property of ImageLayerProperties, not IColorMap
-                    ImageLayerProperties params = new ImageLayerProperties(new Range(data.getMinValue(), data.getMaxValue()));
-                    params.getColorMap().setProperty(new LinearColorMap(data.getMinValue(), data.getMaxValue(), ResourceManager.getInstance().getDefaultColorMap()));
+                IImageDisplayModel dset = view.getModel();
 
-                    ImageLayer layer = new ImageLayer3D(limg, params);
+                //todo data range should be a property of ImageLayerProperties, not IColorMap
+                ImageLayerProperties params = new ImageLayerProperties(new Range(data.getMinValue(), data.getMaxValue()));
 
-                    dset.addLayer(layer);
-                }
+                //todo check data caches min and max values
+                params.getColorMap().setProperty(new LinearColorMapDeprecated(data.getMinValue(), data.getMaxValue(), ResourceManager.getInstance().getDefaultColorMap()));
+
+                ImageLayer layer = new ImageLayer3D(limg, params);
+
+                dset.addLayer(layer);
+
             }
         }
-
     }
+
 
     public ImageView getSelectedView() {
         return ImageCanvasManager.getInstance().getSelectedCanvas().getSelectedView();
@@ -795,28 +800,6 @@ public class Brainflow {
 
     public ImageCanvas2 getSelectedCanvas() {
         return ImageCanvasManager.getInstance().getSelectedCanvas();
-
-    }
-
-
-    private void addLayerWithFadeIn(IImageDataSource limg, ImageView view) {
-        IImageDisplayModel dset = view.getModel();
-
-        //final LinearColorMap cmap = (LinearColorMap) params.getColorMap().getProperty();
-        //cmap.setAlphaMultiplier(0.0);
-
-        //FadeAction fade = new FadeAction(cmap);
-        //final Timer timer = new javax.swing.Timer(25, fade);
-        //timer.setCoalesce(true);
-        //fade.setTimer(timer);
-
-        IRange dataRange = new Range(limg.getData().getMinValue(), limg.getData().getMaxValue());
-        ImageLayerProperties parms = new ImageLayerProperties(ResourceManager.getInstance().getDefaultColorMap(), dataRange);
-        ImageLayer3D layer = new ImageLayer3D(limg, parms);
-
-
-        dset.addLayer(layer);
-        //timer.start();
 
     }
 

@@ -22,7 +22,7 @@ import java.util.List;
  */
 
 
-public class LinearColorMap extends AbstractColorMap {
+public class LinearColorMapDeprecated extends AbstractColorMap {
 
 
     private double binSize;
@@ -32,12 +32,14 @@ public class LinearColorMap extends AbstractColorMap {
     private List<ColorInterval> intervals;
 
 
-    public LinearColorMap() {
+
+
+    public LinearColorMapDeprecated() {
         this(0, 255, ColorTable.GRAYSCALE);
     }
 
-    public LinearColorMap(double min, double max, IndexColorModel icm) {
-        assert max >= min : "max must exceed min in LinearColorMap";
+    public LinearColorMapDeprecated(double min, double max, IndexColorModel icm) {
+        assert max >= min : "max must exceed min in LinearColorMapDeprecated";
 
 
         setMinimumValue(min);
@@ -56,8 +58,8 @@ public class LinearColorMap extends AbstractColorMap {
     }
 
 
-    public LinearColorMap(double min, double max, LinearColorMap lcm) {
-        assert max >= min : "max must exceed min in LinearColorMap";
+    public LinearColorMapDeprecated(double min, double max, LinearColorMapDeprecated lcm) {
+        assert max >= min : "max must exceed min in LinearColorMapDeprecated";
 
 
         setMinimumValue(min);
@@ -76,8 +78,8 @@ public class LinearColorMap extends AbstractColorMap {
     }
 
 
-    public LinearColorMap copy() {
-        LinearColorMap cmap = new LinearColorMap(this.getMinimumValue(), this.getMaximumValue(), this);
+    public LinearColorMapDeprecated copy() {
+        LinearColorMapDeprecated cmap = new LinearColorMapDeprecated(this.getMinimumValue(), this.getMaximumValue(), this);
 
 
         cmap.setHighClip(getHighClip());
@@ -88,7 +90,7 @@ public class LinearColorMap extends AbstractColorMap {
 
     }
 
-    private void fillIntervals(int mapSize, LinearColorMap lcm) {
+    private void fillIntervals(int mapSize, LinearColorMapDeprecated lcm) {
         //todo grotesque code duplicatation
         ColorInterval[] colors = new ColorInterval[mapSize];
         binSize = (getHighClip() - getLowClip()) / (mapSize - 1);
@@ -236,8 +238,7 @@ public class LinearColorMap extends AbstractColorMap {
         highClip = range[1];
 
         updateIntervals();
-        changeSupport.firePropertyChange(IColorMap.HIGH_CLIP_PROPERTY,
-                oldValue, highClip);
+
 
         if (range[0] != getLowClip()) {
 
@@ -247,6 +248,9 @@ public class LinearColorMap extends AbstractColorMap {
             changeSupport.firePropertyChange(IColorMap.LOW_CLIP_PROPERTY,
                     oldClip, lowClip);
         }
+
+        changeSupport.firePropertyChange(IColorMap.HIGH_CLIP_PROPERTY,
+                oldValue, highClip);
 
         mapRange = getHighClip() - getLowClip();
 
@@ -280,8 +284,6 @@ public class LinearColorMap extends AbstractColorMap {
         lowClip = range[0];
 
         updateIntervals();
-        changeSupport.firePropertyChange(AbstractColorMap.LOW_CLIP_PROPERTY,
-                oldValue, lowClip);
 
 
         if (range[1] != getHighClip()) {
@@ -292,6 +294,10 @@ public class LinearColorMap extends AbstractColorMap {
             changeSupport.firePropertyChange(AbstractColorMap.HIGH_CLIP_PROPERTY,
                     oldClip, highClip);
         }
+
+        
+        changeSupport.firePropertyChange(AbstractColorMap.LOW_CLIP_PROPERTY,
+                        oldValue, lowClip);
 
         mapRange = getHighClip() - getLowClip();
 
@@ -306,6 +312,10 @@ public class LinearColorMap extends AbstractColorMap {
 
     public Range getRange() {
         return new Range(getMinimumValue(), getMaximumValue());
+    }
+
+    public IColorMap newClipRange(double lowClip, double highClip) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     private byte[] getThresholdedInterleavedRGBAComponents(IImageData data) {
@@ -434,13 +444,13 @@ public class LinearColorMap extends AbstractColorMap {
     }
 
     public static void main(String[] args) {
-        LinearColorMap cmap = new LinearColorMap(0, 32555, ColorTable.GRAYSCALE);
+        LinearColorMapDeprecated cmap = new LinearColorMapDeprecated(0, 32555, ColorTable.GRAYSCALE);
         System.out.println(cmap.getInterval(0));
         System.out.println(cmap.getInterval(1));
 
 
         XStream stream = new XStream(new DomDriver());
-        Annotations.configureAliases(stream, LinearColorMap.class);
+        Annotations.configureAliases(stream, LinearColorMapDeprecated.class);
 
         System.out.println(stream.toXML(cmap));
     }

@@ -201,6 +201,10 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
             //To change body of implemented methods use File | Settings | File Templates.
         }
 
+        public void clipRangeChanged(ImageLayerEvent event) {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+
         public void visibilityChanged(ImageLayerEvent event) {
             ImageLayer layer = event.getAffectedLayer();
             if (layer != null) {

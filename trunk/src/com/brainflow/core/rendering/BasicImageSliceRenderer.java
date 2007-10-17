@@ -1,7 +1,7 @@
 package com.brainflow.core.rendering;
 
 import com.brainflow.colormap.IColorMap;
-import com.brainflow.display.InterpolationHint;
+import com.brainflow.display.InterpolationType;
 import com.brainflow.display.InterpolationMethod;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.Anatomy3D;
@@ -65,7 +65,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
         this.slice = slice;
         this.layer = layer;
 
-        slicer = new ImageSlicer((IImageData3D) layer.getDataSource());
+        slicer = new ImageSlicer((IImageData3D) layer.getData());
     }
 
     public ImageSpace2D getImageSpace() {
@@ -183,7 +183,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
     private BufferedImage smooth(BufferedImage source) {
         ImageLayerProperties dprops = layer.getImageLayerProperties();
 
-        double radius = dprops.getSmoothing().getRadius();
+        double radius = dprops.getSmoothingRadius().getSmoothingRadius();
         if (radius < .01) return source;
 
         ImageSpace2D ispace = (ImageSpace2D) getData().getImageSpace();
@@ -200,7 +200,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
     private BufferedImage resample(BufferedImage source) {
 
         ImageLayerProperties dprops = layer.getImageLayerProperties();
-        InterpolationMethod interp = dprops.getResampleInterpolation();
+        InterpolationMethod interp = dprops.getInterpolation();
         ImageSpace2D ispace = (ImageSpace2D) getData().getImageSpace();
 
         double sx = ispace.getImageAxis(Axis.X_AXIS).getRange().getInterval() / ispace.getDimension(Axis.X_AXIS);
@@ -217,12 +217,12 @@ public class BasicImageSliceRenderer implements SliceRenderer {
         AffineTransformOp aop = null;
 
 
-        if (interp.getInterpolation() == InterpolationHint.NEAREST_NEIGHBOR) {
+        if (interp.getInterpolation() == InterpolationType.NEAREST_NEIGHBOR) {
             aop = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
 
-        } else if (interp.getInterpolation() == InterpolationHint.CUBIC) {
+        } else if (interp.getInterpolation() == InterpolationType.CUBIC) {
             aop = new AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC);
-        } else if (interp.getInterpolation() == InterpolationHint.LINEAR) {
+        } else if (interp.getInterpolation() == InterpolationType.LINEAR) {
             aop = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
         } else {
             aop = new AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC);
@@ -267,7 +267,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
     }
 
 
-    private RGBAImage thresholdRGBA(RGBAImage rgba) {
+    protected RGBAImage thresholdRGBA(RGBAImage rgba) {
 
         ImageSlicer slicer = new ImageSlicer(layer.getMaskList().composeMask(true));
         IImageData2D maskData = slicer.getSlice(getDisplayAnatomy(), getSlice());

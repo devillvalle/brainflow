@@ -57,7 +57,7 @@ public class DesignColorMapAction extends BasicAction {
             ImageLayer layer = view.getModel().getSelectedLayer();
             IColorMap oldMap = layer.getImageLayerProperties().getColorMap().getProperty();
 
-            //if (oldMap instanceof LinearColorMap) {
+            //if (oldMap instanceof LinearColorMapDeprecated) {
             // todo fix me
             //IColorMap copyMap = oldMap.copy();
 

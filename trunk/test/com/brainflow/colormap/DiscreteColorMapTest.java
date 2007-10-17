@@ -17,12 +17,12 @@ import java.util.Iterator;
 public class DiscreteColorMapTest {
 
 
-    LinearColorMap lmap;
+    LinearColorMapDeprecated lmap;
     DiscreteColorMap dmap;
 
     @BeforeClass
     public void setUp() {
-        lmap = new LinearColorMap(0, 255, ColorTable.SPECTRUM);
+        lmap = new LinearColorMapDeprecated(0, 255, ColorTable.SPECTRUM);
         dmap = new DiscreteColorMap(lmap);
 
         Iterator<ColorInterval> iter1 = lmap.iterator();

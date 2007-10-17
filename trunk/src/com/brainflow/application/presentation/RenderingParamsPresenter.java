@@ -13,7 +13,6 @@ import com.brainflow.application.presentation.forms.RenderingParamsForm;
 import com.brainflow.core.AbstractLayer;
 import com.brainflow.core.ImageView;
 import com.brainflow.display.Opacity;
-import com.brainflow.display.Property;
 import com.brainflow.display.SmoothingRadius;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
@@ -88,7 +87,7 @@ public class RenderingParamsPresenter extends ImageViewPresenter {
         int idx = view.getModel().getSelectedIndex();
         AbstractLayer layer = view.getModel().getLayer(idx);
         Opacity opacity = layer.getImageLayerProperties().getOpacity();
-        SmoothingRadius radius = layer.getImageLayerProperties().getSmoothing();
+        SmoothingRadius radius = layer.getImageLayerProperties().getSmoothingRadius();
 
         if (opacityAdapter == null) {
 

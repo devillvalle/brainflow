@@ -3,7 +3,7 @@ package com.brainflow.application.presentation;
 import com.brainflow.colormap.ColorBarPlot;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
-import com.brainflow.colormap.LinearColorMap;
+import com.brainflow.colormap.LinearColorMapDeprecated;
 import com.brainflow.display.ColorBandChart;
 import com.brainflow.display.Property;
 
@@ -91,7 +91,7 @@ public class ColorBandChartPresenter extends AbstractColorMapPresenter {
             byte[] alpha = chartAlpha.getBandData();
 
             IndexColorModel icm = new IndexColorModel(8, 256, reds, greens, blues, alpha);
-            colorMap = new LinearColorMap(colorMap.getMinimumValue(), colorMap.getMaximumValue(), icm);
+            colorMap = new LinearColorMapDeprecated(colorMap.getMinimumValue(), colorMap.getMaximumValue(), icm);
             ColorBandChartPresenter.this.getColorMapParameter().setProperty(colorMap);
 
         }
@@ -101,7 +101,7 @@ public class ColorBandChartPresenter extends AbstractColorMapPresenter {
         JFrame jf = new JFrame();
 
 
-        jf.add(new ColorBandChartPresenter(new Property<IColorMap>(new LinearColorMap(0, 300, ColorTable.SPECTRUM))).getComponent());
+        jf.add(new ColorBandChartPresenter(new Property<IColorMap>(new LinearColorMapDeprecated(0, 300, ColorTable.SPECTRUM))).getComponent());
         jf.pack();
         jf.setVisible(true);
 

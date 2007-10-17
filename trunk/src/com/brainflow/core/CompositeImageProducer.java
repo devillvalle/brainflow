@@ -1,7 +1,7 @@
 package com.brainflow.core;
 
 import com.brainflow.core.rendering.*;
-import com.brainflow.display.InterpolationHint;
+import com.brainflow.display.InterpolationType;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
@@ -71,8 +71,8 @@ public class CompositeImageProducer extends AbstractImageProducer {
 
     }
 
-    public void setScreenInterpolation(InterpolationHint hint) {
-        super.setScreenInterpolation(hint);
+    public void setScreenInterpolation(InterpolationType type) {
+        super.setScreenInterpolation(type);
         pipeline.clearPath(resizeImageStage);
     }
 
@@ -258,6 +258,12 @@ public class CompositeImageProducer extends AbstractImageProducer {
         public void visibilityChanged(ImageLayerEvent event) {
             pipeline.clearPath(gatherRenderersStage);
             plot.getComponent().repaint();
+        }
+
+        public void clipRangeChanged(ImageLayerEvent event) {
+            pipeline.clearPath(gatherRenderersStage);
+            plot.getComponent().repaint();
+
         }
     }
 

@@ -8,7 +8,6 @@ import com.jgoodies.binding.value.ValueModel;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.plaf.LookAndFeelFactory;
-import com.jidesoft.popup.JidePopup;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -30,7 +29,7 @@ import java.util.logging.Logger;
  */
 public class LinearColorBarEditor extends JPanel implements ChangeListener, ItemListener {
 
-    private LinearColorMap colorMap;
+    private LinearColorMapDeprecated colorMap;
     private FormLayout layout;
 
     private AbstractColorBar colorBar;
@@ -52,14 +51,14 @@ public class LinearColorBarEditor extends JPanel implements ChangeListener, Item
 
     JFormattedTextField jtf;
 
-    public LinearColorBarEditor(LinearColorMap _colorMap) {
+    public LinearColorBarEditor(LinearColorMapDeprecated _colorMap) {
         colorMap = _colorMap;
         colorBar = colorMap.createColorBar();
         colorBar.setBorder(BorderFactory.createLineBorder(Color.black));
         PresentationModel presentation = new PresentationModel(colorMap, trigger);
 
 
-        ValueModel highClipModel = presentation.getBufferedModel(LinearColorMap.HIGH_CLIP_PROPERTY);
+        ValueModel highClipModel = presentation.getBufferedModel(LinearColorMapDeprecated.HIGH_CLIP_PROPERTY);
 
 
         NumberFormat format = DecimalFormat.getNumberInstance();
@@ -72,7 +71,7 @@ public class LinearColorBarEditor extends JPanel implements ChangeListener, Item
 
         SpinnerNumberModel spinnerModel = new SpinnerNumberModel(colorMap.getMapSize(), 1, 1000, 1);
         binSpinner = new JSpinner(spinnerModel);
-        ValueModel mapSizeModel = presentation.getModel(LinearColorMap.MAP_SIZE_PROPERTY);
+        ValueModel mapSizeModel = presentation.getModel(LinearColorMapDeprecated.MAP_SIZE_PROPERTY);
         binSpinner.setToolTipText("Number of discrete bins in color map");
         final PropertyConnector connector = PropertyConnector.connect(mapSizeModel, "value", binSpinner, "value");
         connector.updateProperty1();
@@ -144,7 +143,7 @@ public class LinearColorBarEditor extends JPanel implements ChangeListener, Item
         }
 
 
-        LinearColorMap cmap = new LinearColorMap(-100, 100, ColorTable.SPECTRUM);
+        LinearColorMapDeprecated cmap = new LinearColorMapDeprecated(-100, 100, ColorTable.SPECTRUM);
         JFrame frame = new JFrame();
         LinearColorBarEditor editor = new LinearColorBarEditor(cmap);
 

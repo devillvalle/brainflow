@@ -706,7 +706,7 @@ public class Nifti1Dataset {
 /**
  * Read extension data from nii (1 file) dataset
  *
- * @param ecs is an InputStream open and pointing to begining of
+ * @param dis is an InputStream open and pointing to begining of
  *            extensions array
  * @throws IOException
  */

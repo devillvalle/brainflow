@@ -4,16 +4,25 @@ import com.brainflow.core.*;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.analyze.AnalyzeIO;
 import com.brainflow.utils.Range;
+import com.jgoodies.binding.adapter.BasicComponentFactory;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.dialog.ButtonPanel;
+import com.jidesoft.swing.JideTabbedPane;
+import org.jvnet.substance.SubstanceLookAndFeel;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * BrainFlow Project
@@ -21,9 +30,9 @@ import java.util.Iterator;
  * Date: Sep 1, 2007
  * Time: 9:23:01 AM
  */
-public class MaskConfigurationControl extends JPanel {
+public class MaskConfigurationControl extends JPanel implements ImageViewClient {
 
-    private IImageDisplayModel model;
+    private ImageViewClientSupport modelSupport;
 
     private JTabbedPane maskTabbedPanel;
 
@@ -31,19 +40,78 @@ public class MaskConfigurationControl extends JPanel {
 
     private JButton removeMaskButton = new JButton("Remove Mask");
 
-    private ImageView viewPanel;
+    private MaskLayerPanel maskViewPanel;
+
+    private MaskListListener maskListener = null;
 
 
-    public MaskConfigurationControl(IImageDisplayModel _model) {
-        model = _model;
+
+ //   "#7FC97F" "#BEAED4" "#FDC086" "#FFFF99" "#386CB0" "#F0027F" "#BF5B17"
+ //  [8] "#666666"
+
+
+    private static final List<Color> MASK_FILL_COLORS = Arrays.asList(new Color(0x7FC97F), new Color(0xBEAED4), new Color(0xFDC086),
+                                                      new Color(0xFFFF99), new Color(0x386CB0), new Color(0xF0027F),
+                                                      new Color(0xBF5B17), new Color(0x666666));
+
+
+
+    public MaskConfigurationControl(ImageView view) {
+        modelSupport = new ImageViewClientSupport(view, this);
+
         buildGUI();
+
+        maskListener = new MaskListListener();
+        modelSupport.getModel().getSelectedLayer().getMaskList().addListDataListener(maskListener);
+        //init();
+
+    }
+
+    private void buildGUI() {
+
+        maskTabbedPanel = new JTabbedPane();
+
+        JPanel topPanel = new SelectionPanel();
+        //topPanel.setBorder(new JideTitledBorder(new PartialEtchedBorder(PartialEtchedBorder.LOWERED, PartialSide.NORTH), "Top Panel"));
+
+        JPanel leftPanel = new JPanel();
+        leftPanel.setLayout(new BorderLayout());
+        leftPanel.add(topPanel, BorderLayout.NORTH);
+        leftPanel.add(maskTabbedPanel, BorderLayout.CENTER);
+
+
+        leftPanel.add(buildButtonPanel(), BorderLayout.SOUTH);
+
+
+        populateMaskConfigurationPanel();
+
+        setLayout(new BorderLayout());
+        add(leftPanel, BorderLayout.WEST);
+        add(buildMaskLayerPanel(), BorderLayout.CENTER);
+
+        setMinimumSize(new Dimension(800, 300));
+
+        maskTabbedPanel.getModel().addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                IMaskItem item = getSelectedMaskItem();
+                maskViewPanel.setMaskItem(item);
+            }
+        });
+    }
+
+
+    private ButtonPanel buildButtonPanel() {
+
+        ButtonPanel buttonPanel = new ButtonPanel();
+        buttonPanel.addButton(addMaskButton);
+        buttonPanel.addButton(removeMaskButton);
+
+
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
+        buttonPanel.setAlignment(SwingConstants.LEFT);
 
         addMaskButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
-                int i = maskTabbedPanel.getSelectedIndex();
-                System.out.println("selected index is : " + i);
-
                 MaskConfigurationPanel panel = (MaskConfigurationPanel) maskTabbedPanel.getSelectedComponent();
                 if (panel != null) {
                     IMaskItem item = panel.getMaskItem();
@@ -59,65 +127,89 @@ public class MaskConfigurationControl extends JPanel {
             }
         });
 
-        //init();
+        return buttonPanel;
+
+    }
+
+    private void populateMaskConfigurationPanel() {
+        ImageLayer layer = getModel().getSelectedLayer();
+        final IMaskList maskList = layer.getMaskList();
+        Iterator<? extends IMaskItem> iter = maskList.iterator();
+
+        maskTabbedPanel.removeAll();
+
+        int i = 0;
+        while (iter.hasNext()) {
+            MaskConfigurationPanel panel = new MaskConfigurationPanel(getModel(), iter.next());
+            addMaskTab(panel, i);
+            i++;
+        }
 
 
     }
 
 
-    private void buildGUI() {
+    private IMaskItem getSelectedMaskItem() {
+        MaskConfigurationPanel panel = (MaskConfigurationPanel) maskTabbedPanel.getSelectedComponent();
+        return panel.getMaskItem();
+
+    }
+
+    private IImageDisplayModel getModel() {
+        return modelSupport.getModel();
+    }
 
 
-        JPanel topPanel = new SelectionPanel();
-        //topPanel.setBorder(new JideTitledBorder(new PartialEtchedBorder(PartialEtchedBorder.LOWERED, PartialSide.NORTH), "Top Panel"));
+    private void addMaskTab(MaskConfigurationPanel panel, int i) {
+        maskTabbedPanel.addTab("Mask " + (i + 1), /*ColorTable.createImageIcon(MASK_FILL_COLORS[i], 20,14),*/ panel);
+        maskTabbedPanel.setBackgroundAt(i, MASK_FILL_COLORS.get(i));
+    }
 
-        JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new BorderLayout());
-        leftPanel.add(topPanel, BorderLayout.NORTH);
+    private MaskLayerPanel buildMaskLayerPanel() {
+        IImageDisplayModel viewModel = new ImageDisplayModel("mask view");
+        ImageLayer layer = modelSupport.getSelectedLayer();
+        viewModel.addLayer(layer);
+        maskViewPanel = new MaskLayerPanel(getSelectedMaskItem());
+
+        return maskViewPanel;
+
+    }
 
 
-        ImageLayer layer = model.getLayer(model.getSelectedIndex());
-        IMaskList maskList = layer.getMaskList();
-        Iterator<? extends IMaskItem> iter = maskList.iterator();
+    public void layerContentsChanged(ListDataEvent event) {
+        populateMaskConfigurationPanel();
+    }
 
-        maskTabbedPanel = new JTabbedPane();
+    public void selectedLayerChanged(ImageLayer layer) {
 
-        int i = 0;
+        maskViewPanel.setMaskItem(layer.getMaskList().getMaskItem(0));
+        populateMaskConfigurationPanel();
+    }
 
-        while (iter.hasNext()) {
-            JPanel panel = new MaskConfigurationPanel(model, iter.next());
-            maskTabbedPanel.add("Mask " + (i + 1), panel);
-            i++;
+    public void modelChanged(IImageDisplayModel model) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 
+    class MaskListListener implements ListDataListener {
+
+
+        public void contentsChanged(ListDataEvent e) {
+            System.out.println("mask list content changed");
         }
 
+        public void intervalAdded(ListDataEvent e) {
+            System.out.println("mask interval added");
+            int i = e.getIndex0();
+            IMaskList maskList = (IMaskList) e.getSource();
 
-        leftPanel.add(maskTabbedPanel, BorderLayout.CENTER);
+            IMaskItem item = maskList.getMaskItem(i);
+            MaskConfigurationPanel panel = new MaskConfigurationPanel(getModel(), item);
+            addMaskTab(panel, i);
+        }
 
-        ButtonPanel buttonPanel = new ButtonPanel();
-        buttonPanel.addButton(addMaskButton);
-        buttonPanel.addButton(removeMaskButton);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
-        buttonPanel.setAlignment(SwingConstants.LEFT);
-        leftPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-        IImageDisplayModel viewModel = new ImageDisplayModel("mask view");
-        viewModel.addLayer(layer);
-
-
-        viewPanel = new SimpleImageView(viewModel);
-        viewPanel.clearAnnotations();
-        viewPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-        setLayout(new BorderLayout());
-        add(leftPanel, BorderLayout.WEST);
-
-
-        JTabbedPane viewTab = new JTabbedPane();
-        viewTab.addTab("View 1", viewPanel);
-        add(viewTab, BorderLayout.CENTER);
-
-        this.setMinimumSize(new Dimension(800, 300));
-
+        public void intervalRemoved(ListDataEvent e) {
+            System.out.println("mask list interval removed");
+        }
 
     }
 
@@ -134,12 +226,13 @@ public class MaskConfigurationControl extends JPanel {
             layout = new FormLayout("8dlu, p, 8dlu, l:max(25dlu;p):g, 1dlu, 8dlu", "8dlu, p, 8dlu, p, 8dlu, p, 8dlu");
             CellConstraints cc = new CellConstraints();
 
-
-            selectedLayerList = new JList(model.getLayerSelection().getListModel());
-            setLayout(layout);
+            selectedLayerList = BasicComponentFactory.createList(modelSupport.getModel().getLayerSelection());
+             setLayout(layout);
 
             add(new JLabel("Selected Layer: "), cc.xy(2, 2));
             add(new JScrollPane(selectedLayerList), cc.xyw(2, 4, 3));
+
+
 
 
         }
@@ -149,8 +242,8 @@ public class MaskConfigurationControl extends JPanel {
 
         try {
 
-            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceRavenGraphiteLookAndFeel());
 
+            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceSaharaLookAndFeel());
 
             JFrame frame = new JFrame();
             URL url = ClassLoader.getSystemResource("resources/data/icbm452_atlas_probability_gray.hdr");
@@ -167,7 +260,7 @@ public class MaskConfigurationControl extends JPanel {
             model.addLayer(ilayer);
             model.addLayer(ilayer2);
 
-            MaskConfigurationControl mpanel = new MaskConfigurationControl(model);
+            MaskConfigurationControl mpanel = new MaskConfigurationControl(new ImageView(model));
             frame.add(mpanel, BorderLayout.CENTER);
             frame.pack();
             frame.setVisible(true);

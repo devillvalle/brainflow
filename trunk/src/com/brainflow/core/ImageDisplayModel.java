@@ -187,6 +187,14 @@ public class ImageDisplayModel implements IImageDisplayModel {
             }
         });
 
+        layer.addPropertyChangeListener(ImageLayerProperties.CLIP_RANGE_PROPERTY, new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                for (ImageLayerListener listener : layerListeners) {
+                    listener.clipRangeChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer) evt.getSource()));
+                }
+            }
+        });
+
 
     }
 

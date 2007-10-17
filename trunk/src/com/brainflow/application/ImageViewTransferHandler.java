@@ -70,7 +70,7 @@ public class ImageViewTransferHandler extends TransferHandler {
 
         if (c instanceof ImageView) {
             ImageView iview = (ImageView) c;
-            Brainflow.getInstance().loadAndDisplay(limg[0], iview, true);
+            Brainflow.getInstance().loadAndDisplay(limg[0], iview);
         }
 
 

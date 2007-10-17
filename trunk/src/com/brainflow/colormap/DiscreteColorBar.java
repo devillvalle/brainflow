@@ -120,7 +120,7 @@ public class DiscreteColorBar extends AbstractColorBar {
     }
 
     public static void main(String[] args) {
-        DiscreteColorMap cmap = new DiscreteColorMap(new LinearColorMap(0, 255, ColorTable.SPECTRUM));
+        DiscreteColorMap cmap = new DiscreteColorMap(new LinearColorMapDeprecated(0, 255, ColorTable.SPECTRUM));
 
 
         AbstractColorBar jp = cmap.createColorBar();

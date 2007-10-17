@@ -1,4 +1,4 @@
-package com.brainflow.display;
+package com.brainflow.core;
 
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.core.IImageDisplayModel;

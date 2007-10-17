@@ -13,7 +13,7 @@ import com.jgoodies.binding.beans.Model;
  */
 public class MaskItem extends Model implements IMaskItem {
 
-    private AbstractLayer source;
+    private ImageLayer source;
 
     private ThresholdRange predicate;
 
@@ -24,21 +24,21 @@ public class MaskItem extends Model implements IMaskItem {
     private BinaryOperation operation;
 
 
-    public MaskItem(AbstractLayer source, ThresholdRange predicate, int group) {
+    public MaskItem(ImageLayer source, ThresholdRange predicate, int group) {
         this.source = source;
         this.predicate = predicate;
         this.group = group;
         operation = BinaryOperation.AND;
     }
 
-    public MaskItem(AbstractLayer source, ThresholdRange predicate, int group, BinaryOperation operation) {
+    public MaskItem(ImageLayer source, ThresholdRange predicate, int group, BinaryOperation operation) {
         this.source = source;
         this.predicate = predicate;
         this.group = group;
         this.operation = operation;
     }
 
-    public MaskItem(AbstractLayer source, ThresholdRange predicate, int group, BinaryOperation operation, boolean active) {
+    public MaskItem(ImageLayer source, ThresholdRange predicate, int group, BinaryOperation operation, boolean active) {
         this.source = source;
         this.predicate = predicate;
         this.group = group;
@@ -57,11 +57,11 @@ public class MaskItem extends Model implements IMaskItem {
         firePropertyChange(IMaskItem.BINARY_OPERATION_PROPERTY, old, getOperation());
     }
 
-    public AbstractLayer getSource() {
+    public ImageLayer getSource() {
         return source;
     }
 
-    public void setSource(AbstractLayer source) {
+    public void setSource(ImageLayer source) {
         AbstractLayer old = getSource();
         this.source = source;
         firePropertyChange(IMaskItem.SOURCE_IMAGE_PROPERTY, old, getSource());
@@ -76,6 +76,7 @@ public class MaskItem extends Model implements IMaskItem {
 
         ThresholdRange old = getPredicate();
         this.predicate = predicate;
+        // todo listen to threshold predicate and fire event?
         firePropertyChange(IMaskItem.THRESHOLD_PREDICATE_PROPERTY, old, getPredicate());
     }
 

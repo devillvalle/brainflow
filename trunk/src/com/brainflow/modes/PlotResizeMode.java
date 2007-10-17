@@ -1,10 +1,7 @@
 package com.brainflow.modes;
 
-import com.brainflow.core.ImageCanvas;
-import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.ImageCanvas2;
-import com.brainflow.display.InterpolationHint;
 
 import javax.swing.*;
 import java.awt.*;

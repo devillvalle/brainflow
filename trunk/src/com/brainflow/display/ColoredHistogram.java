@@ -3,7 +3,7 @@ package com.brainflow.display;
 import com.brainflow.application.BrainflowException;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
-import com.brainflow.colormap.LinearColorMap;
+import com.brainflow.colormap.LinearColorMapDeprecated;
 import com.brainflow.image.Histogram;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.analyze.AnalyzeIO;
@@ -258,7 +258,7 @@ public class ColoredHistogram extends JPanel implements MouseListener, MouseMoti
     }
 
     public void setIndexColorModel(IndexColorModel icm) {
-        colorModel = new LinearColorMap(colorModel.getMaximumValue(), colorModel.getMaximumValue(), icm);
+        colorModel = new LinearColorMapDeprecated(colorModel.getMaximumValue(), colorModel.getMaximumValue(), icm);
         chartPanel.repaint();
     }
 
@@ -278,7 +278,7 @@ public class ColoredHistogram extends JPanel implements MouseListener, MouseMoti
             IImageData data = AnalyzeIO.readAnalyzeImage("C:/DTI/slopes/bAge.Norm");
             Histogram hist = new Histogram(data, 100);
             ColoredHistogram chist = new ColoredHistogram(hist);
-            chist.setColorModel(new LinearColorMap(0, 255, ColorTable.SPECTRUM));
+            chist.setColorModel(new LinearColorMapDeprecated(0, 255, ColorTable.SPECTRUM));
             JFrame frame = new JFrame();
             frame.getContentPane().add(chist);
             frame.pack();

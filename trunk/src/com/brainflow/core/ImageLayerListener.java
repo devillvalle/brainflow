@@ -22,5 +22,7 @@ public interface ImageLayerListener {
 
     public void smoothingChanged(ImageLayerEvent event);
 
+    public void clipRangeChanged(ImageLayerEvent event);
+
 
 }

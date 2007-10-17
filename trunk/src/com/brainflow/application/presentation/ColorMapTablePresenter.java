@@ -41,7 +41,7 @@ public class ColorMapTablePresenter extends AbstractColorMapPresenter {
 
 
     public ColorMapTablePresenter() {
-        colorTable = new ColorMapTable(new LinearColorMap(0, 255, ColorTable.SPECTRUM));
+        colorTable = new ColorMapTable(new LinearColorMapDeprecated(0, 255, ColorTable.SPECTRUM));
         JScrollPane scrollPane = new JScrollPane(colorTable.getComponent());
 
 

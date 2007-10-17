@@ -38,9 +38,11 @@ public interface IColorMap {
 
     public double getLowClip();
 
-    public void setHighClip(double clip);
+    public IColorMap newClipRange(double lowClip, double highClip);
 
-    public void setLowClip(double clip);
+    //public void setHighClip(double clip);
+
+    //public void setLowClip(double clip);
 
     public double getMaximumValue();
 

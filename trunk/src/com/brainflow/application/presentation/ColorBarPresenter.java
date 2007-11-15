@@ -13,7 +13,7 @@ import com.brainflow.application.actions.ActionContext;
 import com.brainflow.application.actions.DesignColorMapAction;
 import com.brainflow.application.actions.SelectColorMapAction;
 import com.brainflow.application.presentation.forms.ColorBarForm;
-import com.brainflow.application.toplevel.ImageCanvasManager;
+import com.brainflow.application.toplevel.BrainCanvasManager;
 import com.brainflow.application.toplevel.ResourceManager;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * @author buchs
  */
-public class ColorBarPresenter extends AbstractColorMapPresenter {
+public class ColorBarPresenter extends ImageViewPresenter {
 
     private ColorBarForm form;
 
@@ -75,8 +75,11 @@ public class ColorBarPresenter extends AbstractColorMapPresenter {
         colorMenu.add(new GradientColorAction("Solid Color ..."));
     }
 
+    public void allViewsDeselected() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public void viewSelected(ImageView view) {
-        super.viewSelected(view);
         Iterator<Action> iter = actions.iterator();
         while (iter.hasNext()) {
             BasicAction action = (BasicAction) iter.next();
@@ -100,9 +103,9 @@ public class ColorBarPresenter extends AbstractColorMapPresenter {
         actions = new ArrayList<Action>();
         Iterator<String> iter = maps.keySet().iterator();
         Map map = new HashMap();
-        map.put(ActionContext.SELECTED_IMAGE_VIEW, ImageCanvasManager.getInstance().
+        map.put(ActionContext.SELECTED_IMAGE_VIEW, BrainCanvasManager.getInstance().
                 getSelectedCanvas().getSelectedView());
-        map.put(ActionContext.SELECTED_CANVAS, ImageCanvasManager.getInstance().
+        map.put(ActionContext.SELECTED_CANVAS, BrainCanvasManager.getInstance().
                 getSelectedCanvas());
 
         while (iter.hasNext()) {
@@ -168,7 +171,7 @@ public class ColorBarPresenter extends AbstractColorMapPresenter {
             int layer = view.getModel().getSelectedIndex();
 
             IColorMap oldMap = view.getModel().getLayer(layer).
-                                    getImageLayerProperties().getColorMap().getProperty();
+                                    getImageLayerProperties().getColorMap();
 
             ColorGradientEditor chooser = new ColorGradientEditor(oldMap.getMinimumValue(), oldMap.getMaximumValue());
 
@@ -199,7 +202,7 @@ public class ColorBarPresenter extends AbstractColorMapPresenter {
                 IColorMap newMap = chooser.getColorMap();
                
                 view.getModel().getLayer(layer).
-                        getImageLayerProperties().getColorMap().setProperty(newMap);
+                        getImageLayerProperties().colorMap.set(newMap);
             }
 
 

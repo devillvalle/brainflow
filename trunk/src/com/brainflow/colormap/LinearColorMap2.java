@@ -31,9 +31,10 @@ public final class LinearColorMap2 extends AbstractColorMap {
     public LinearColorMap2(double min, double max, IndexColorModel icm) {
         assert max >= min : "max must exceed min in LinearColorMapDeprecated";
 
+        initColors(icm);
         init(min, max, icm.getMapSize());
         initSegments();
-        initColors(icm);
+
 
     }
 
@@ -41,9 +42,11 @@ public final class LinearColorMap2 extends AbstractColorMap {
     public LinearColorMap2(double min, double max, LinearColorMap2 lcm) {
         assert max >= min : "max must exceed min in LinearColorMapDeprecated";
 
-        init(min, max, lcm.getMapSize());
-        initSegments();
         colors = lcm.colors;
+        init(min, max, lcm.getMapSize());
+
+        initSegments();
+
       
     }
 
@@ -57,9 +60,10 @@ public final class LinearColorMap2 extends AbstractColorMap {
         this.highClip = highClip;
         
         init(min, max, lowClip, highClip, lcm.getMapSize());
+        colors = lcm.colors;
         initSegments();
 
-        colors = lcm.colors;
+
         //fillIntervals(mapSize, lcm);
 
     }

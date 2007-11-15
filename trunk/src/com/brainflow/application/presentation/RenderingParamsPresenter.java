@@ -9,9 +9,12 @@
 
 package com.brainflow.application.presentation;
 
+import com.brainflow.application.presentation.binding.Bindable;
+import com.brainflow.application.presentation.binding.PercentageConverterProperty;
 import com.brainflow.application.presentation.forms.RenderingParamsForm;
 import com.brainflow.core.AbstractLayer;
 import com.brainflow.core.ImageView;
+import com.brainflow.core.ImageLayer;
 import com.brainflow.display.Opacity;
 import com.brainflow.display.SmoothingRadius;
 import com.jgoodies.binding.adapter.Bindings;
@@ -24,11 +27,13 @@ import com.jgoodies.binding.value.ValueHolder;
 import javax.swing.*;
 import java.text.NumberFormat;
 
+import net.java.dev.properties.binding.swing.adapters.SwingBind;
+
 
 /**
  * @author buchs
  */
-public class RenderingParamsPresenter extends ImageViewPresenter {
+public class RenderingParamsPresenter extends ImageViewPresenter implements Bindable {
 
 
     private RenderingParamsForm form;
@@ -42,25 +47,27 @@ public class RenderingParamsPresenter extends ImageViewPresenter {
      */
     public RenderingParamsPresenter() {
         form = new RenderingParamsForm();
-        initBinding();
+        if (getSelectedView() != null) {
+            bind();
+        }
 
 
     }
 
 
     public void viewSelected(ImageView view) {
-        initBinding();
+        bind();
         form.getInterpolationLabel().setEnabled(true);
         form.getInterpolationChoices().setEnabled(true);
         int idx = view.getSelectedLayerIndex();
 
-        if (idx >= 0) {
-            SelectionInList sel = view.getModel().
-                    getLayer(idx).getImageLayerProperties().getInterpolationMethod();
-
-
-            Bindings.bind(form.getInterpolationChoices(), sel);
-        }
+        //if (idx >= 0) {
+        //    SelectionInList sel = view.getModel().
+        //            getLayer(idx).getImageLayerProperties().getInterpolationMethod();
+        //
+        //
+        //    Bindings.bind(form.getInterpolationChoices(), sel);
+        //}
     }
 
     public void allViewsDeselected() {
@@ -71,22 +78,32 @@ public class RenderingParamsPresenter extends ImageViewPresenter {
 
 
     protected void layerSelected(AbstractLayer layer) {
-        initBinding();
-        SelectionInList sel = layer.getImageLayerProperties().getInterpolationMethod();
-        Bindings.bind(form.getInterpolationChoices(), sel);
+        bind();
+        //SelectionInList sel = layer.getImageLayerProperties().getInterpolationMethod();
+        //Bindings.bind(form.getInterpolationChoices(), sel);
     }
 
     public JComponent getComponent() {
         return form;
     }
 
-    private void initBinding() {
+    public void bind() {
+        ImageLayer layer = getSelectedView().getModel().getSelectedLayer();
+        SwingBind.get().bind(new PercentageConverterProperty(layer.getImageLayerProperties().opacity, 0, 1, 100), form.getOpacitySlider());
+
+    }
+
+    public void unbind() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    /*private void initBinding() {
         ImageView view = getSelectedView();
         if (view == null) return;
 
         int idx = view.getModel().getSelectedIndex();
         AbstractLayer layer = view.getModel().getLayer(idx);
-        Opacity opacity = layer.getImageLayerProperties().getOpacity();
+        float opacity = layer.getImageLayerProperties().getOpacity();
         SmoothingRadius radius = layer.getImageLayerProperties().getSmoothingRadius();
 
         if (opacityAdapter == null) {
@@ -119,7 +136,7 @@ public class RenderingParamsPresenter extends ImageViewPresenter {
             opacityAdapter.setBean(opacity);
             smoothingAdapter.setBean(radius);
         }
-    }
+    } */
 
 
 }

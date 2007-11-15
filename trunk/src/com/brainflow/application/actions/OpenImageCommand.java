@@ -1,5 +1,8 @@
 package com.brainflow.application.actions;
 
+import com.brainflow.application.IImageDataSource;
+import com.brainflow.application.toplevel.DataSourceManager;
+import com.brainflow.application.toplevel.ImageIOManager;
 import com.pietschy.command.file.AbstractFileOpenCommand;
 
 import javax.swing.filechooser.FileFilter;
@@ -13,7 +16,7 @@ import java.io.File;
  */
 public class OpenImageCommand extends AbstractFileOpenCommand {
 
-    public OpenImageCommand(String s) {
+    public OpenImageCommand() {
         super("open-image");
     }
 
@@ -22,6 +25,10 @@ public class OpenImageCommand extends AbstractFileOpenCommand {
     }
 
     protected void performOpen(File[] files) {
-        // stub
+        IImageDataSource[] dsource = ImageIOManager.getInstance().findLoadableImages(files);
+        for (int i=0; i<dsource.length; i++) {
+            DataSourceManager.getInstance().register(dsource[i]);
+        }
+
     }
 }

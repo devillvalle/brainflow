@@ -28,7 +28,9 @@ public class IndexCoordinatePresenter extends AbstractPresenter {
     private BeanAdapter viewportAdapter;
 
     private BoundedRangeAdapter ISliderAdapter;
+
     private BoundedRangeAdapter JSliderAdapter;
+    
     private BoundedRangeAdapter KSliderAdapter;
 
     public IndexCoordinatePresenter(ICrosshair _crosshair) {

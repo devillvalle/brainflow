@@ -49,7 +49,7 @@ public class ColorizeImagesStage extends ImageProcessingStage {
     }
 
     private RGBAImage createRGBAImage(ImageLayer2D layer) {
-        IColorMap cmap = layer.getImageLayerProperties().getColorMap().getProperty();
+        IColorMap cmap = layer.getImageLayerProperties().getColorMap();
         return cmap.getRGBAImage(layer.getImageData());
     }
 

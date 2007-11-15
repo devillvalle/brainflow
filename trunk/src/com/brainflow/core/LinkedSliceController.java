@@ -24,9 +24,13 @@ public class LinkedSliceController extends SimpleSliceController {
 
         IImagePlot selPlot = getView().getSelectedPlot();
         ICrosshair cross = getView().getCrosshair();
-        AnatomicalPoint1D zslice = getSlice(selPlot);
+        AnatomicalPoint1D crossSlice = getSlice(selPlot);
 
-        cross.setValue(slice);
+         if (!slice.equals(crossSlice)) {
+            cross.setValue(slice);
+
+        }
+
         selPlot.setSlice(slice);
         
         assert slice.getAnatomy() == selPlot.getDisplayAnatomy().ZAXIS;
@@ -35,8 +39,8 @@ public class LinkedSliceController extends SimpleSliceController {
         while (iter.hasNext()) {
              IImagePlot plot = iter.next();
              if (plot == selPlot) continue;
-             zslice = getView().getCrosshair().getValue(plot.getDisplayAnatomy().ZAXIS);
-             plot.setSlice(zslice);           
+             crossSlice = getView().getCrosshair().getValue(plot.getDisplayAnatomy().ZAXIS);
+             plot.setSlice(crossSlice);           
         }
 
     }

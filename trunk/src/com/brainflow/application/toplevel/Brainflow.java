@@ -6,7 +6,7 @@ import com.brainflow.application.presentation.*;
 import com.brainflow.application.services.ImageViewCursorEvent;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
-import com.brainflow.colormap.LinearColorMapDeprecated;
+import com.brainflow.colormap.LinearColorMap2;
 import com.brainflow.core.*;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.Anatomy;
@@ -77,7 +77,7 @@ public class Brainflow {
 
     private MountFileSystemAction mountFileSystemAction;
 
-    private SavePNGAction savePNGAction;
+
 
     private RecentPathMenu pathMenu = new RecentPathMenu();
 
@@ -178,7 +178,7 @@ public class Brainflow {
 
         brainFrame = new BrainFrame();
 
-        ImageCanvasManager.getInstance().createCanvas();
+        BrainCanvasManager.getInstance().createCanvas();
 
         JideActionUIFactory jideFactory = new JideActionUIFactory(ActionManager.getInstance());
 
@@ -259,7 +259,7 @@ public class Brainflow {
         log.info("initializing Actions");
 
         mountFileSystemAction = new MountFileSystemAction();
-        savePNGAction = new SavePNGAction(brainFrame);
+
 
     }
 
@@ -286,8 +286,7 @@ public class Brainflow {
         fileMenu.add(mountFileSystemAction);
         pathMenu.getMenu().setName("Mount Recent");
         fileMenu.add(pathMenu.getMenu());
-        fileMenu.add(savePNGAction);
-
+      
         Action action = ActionManager.getInstance().getAction("main-save-colorbar");
         fileMenu.add(action);
 
@@ -407,6 +406,8 @@ public class Brainflow {
         OpenImageCommand openImageCommand = new OpenImageCommand();
         openImageCommand.bind(getApplicationFrame());
 
+        SnapshotCommand snapshotCommand = new SnapshotCommand();
+        snapshotCommand.bind(getApplicationFrame());
 
         CreateAxialViewCommand axialCommand = new CreateAxialViewCommand();
         axialCommand.bind(getApplicationFrame());
@@ -500,7 +501,7 @@ public class Brainflow {
         brainFrame.getDockingManager().getWorkspace().setLayout(new BorderLayout());
         brainFrame.getDockingManager().getWorkspace().add(documentPane, "Center");
 
-        ImageCanvas2 canvas = ImageCanvasManager.getInstance().getSelectedCanvas();
+        BrainCanvas canvas = BrainCanvasManager.getInstance().getSelectedCanvas();
         canvas.setRequestFocusEnabled(true);
         canvas.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
@@ -549,7 +550,7 @@ public class Brainflow {
             ImageCanvasTransferHandler handler = new ImageCanvasTransferHandler();
             loadingDock.setDragEnabled(true);
             loadingDock.setTransferHandler(handler);
-            ImageCanvasManager.getInstance().getSelectedCanvas().setTransferHandler(handler);
+            BrainCanvasManager.getInstance().getSelectedCanvas().setTransferHandler(handler);
 
             DirectoryManager.getInstance().addFileSystemEventListener(new FileSystemEventListener() {
                 public void eventOccurred(FileSystemEvent event) {
@@ -783,7 +784,7 @@ public class Brainflow {
                 ImageLayerProperties params = new ImageLayerProperties(new Range(data.getMinValue(), data.getMaxValue()));
 
                 //todo check data caches min and max values
-                params.getColorMap().setProperty(new LinearColorMapDeprecated(data.getMinValue(), data.getMaxValue(), ResourceManager.getInstance().getDefaultColorMap()));
+                params.colorMap.set(new LinearColorMap2(data.getMinValue(), data.getMaxValue(), ResourceManager.getInstance().getDefaultColorMap()));
 
                 ImageLayer layer = new ImageLayer3D(limg, params);
 
@@ -795,11 +796,11 @@ public class Brainflow {
 
 
     public ImageView getSelectedView() {
-        return ImageCanvasManager.getInstance().getSelectedCanvas().getSelectedView();
+        return BrainCanvasManager.getInstance().getSelectedCanvas().getSelectedView();
     }
 
-    public ImageCanvas2 getSelectedCanvas() {
-        return ImageCanvasManager.getInstance().getSelectedCanvas();
+    public BrainCanvas getSelectedCanvas() {
+        return BrainCanvasManager.getInstance().getSelectedCanvas();
 
     }
 
@@ -821,11 +822,11 @@ public class Brainflow {
                     ColorTable.createImageIcon(icm, 40, 12), icm);
 
 
-            ImageCanvas2 canvas = ImageCanvasManager.getInstance().
+            BrainCanvas canvas = BrainCanvasManager.getInstance().
                     getSelectedCanvas();
 
             Map map = new HashMap();
-            map.put(ActionContext.SELECTED_IMAGE_VIEW, ImageCanvasManager.getInstance().
+            map.put(ActionContext.SELECTED_IMAGE_VIEW, BrainCanvasManager.getInstance().
                     getSelectedCanvas().getSelectedView());
             action.setContext(map);
             popup.add(action);
@@ -869,12 +870,11 @@ public class Brainflow {
 
 
             AnatomicalPoint3D gpoint = event.getLocation();
-            AbstractLayer layer = view.getModel().getLayer(view.getModel().getSelectedIndex());
+            AbstractLayer layer = view.getSelectedLayer();
             double value = layer.getValue(gpoint);
 
 
-            IColorMap cmap = layer.getImageLayerProperties().getColorMap().getProperty();
-
+            IColorMap cmap = layer.getImageLayerProperties().getColorMap();
             Color c = null;
             try {
                 c = cmap.getColor(value);

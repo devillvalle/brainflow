@@ -13,6 +13,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +27,7 @@ import java.util.List;
  */
 public class SnapshotForm extends JPanel {
 
-    private BufferedImage snapShot;
+    private RenderedImage snapShot;
 
     private JTextField fileNameField;
 
@@ -49,7 +51,7 @@ public class SnapshotForm extends JPanel {
 
     private String formatSelection = ".png";
 
-    public SnapshotForm(BufferedImage snapShot) {
+    public SnapshotForm(RenderedImage snapShot) {
         this.snapShot = snapShot;
         String userDir = System.getProperty("user.home");
         recentDirectories.add(userDir);
@@ -67,8 +69,9 @@ public class SnapshotForm extends JPanel {
         CellConstraints cc = new CellConstraints();
         setLayout(layout);
 
+        WritableRaster raster = WritableRaster.createWritableRaster(snapShot.getSampleModel(), snapShot.getData().getDataBuffer(), new Point(0,0));
 
-        ImageIcon icon = new ImageIcon(snapShot);
+        ImageIcon icon = new ImageIcon(new BufferedImage(snapShot.getColorModel(), raster, false, null));
         snapShotLabel = new JLabel(icon);
         //snapShotLabel.setBackground(Color.LIGHT_GRAY.darker());
         //snapShotLabel.setForeground(Color.LIGHT_GRAY.darker());
@@ -207,7 +210,7 @@ public class SnapshotForm extends JPanel {
     }
 
 
-    public BufferedImage getSnapShot() {
+    public RenderedImage getSnapShot() {
         return snapShot;
     }
 
@@ -243,7 +246,7 @@ public class SnapshotForm extends JPanel {
         try {
 
             UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
-            BufferedImage bimg = ImageIO.read(new File("c:/lddmm/lddmm-coronal-slice-neg-5-shot1.png"));
+            BufferedImage bimg = ImageIO.read(ClassLoader.getSystemResource("resources/data/axial_slice.png"));
             SnapshotForm form = new SnapshotForm(bimg);
 
 

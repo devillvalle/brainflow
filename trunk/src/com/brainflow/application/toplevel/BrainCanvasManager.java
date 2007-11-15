@@ -1,5 +1,5 @@
 /*
- * ImageCanvasManager.java
+ * BrainCanvasManager.java
  *
  * Created on April 30, 2003, 10:45 AM
  */
@@ -9,11 +9,14 @@ package com.brainflow.application.toplevel;
 import com.brainflow.application.YokeHandler;
 import com.brainflow.application.services.ImageViewCursorEvent;
 import com.brainflow.application.services.ImageViewSelectionEvent;
+import com.brainflow.core.BrainCanvas;
+import com.brainflow.core.BrainCanvasModel;
 import com.brainflow.core.IImageDisplayModel;
-import com.brainflow.core.ImageCanvas2;
-import com.brainflow.core.ImageCanvasModel;
 import com.brainflow.core.ImageView;
 import com.brainflow.modes.ImageViewInteractor;
+import net.java.dev.properties.container.BeanContainer;
+import net.java.dev.properties.events.PropertyListener;
+import net.java.dev.properties.BaseProperty;
 import org.bushe.swing.action.ActionManager;
 import org.bushe.swing.action.ActionUIFactory;
 import org.bushe.swing.event.EventBus;
@@ -22,7 +25,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.*;
@@ -32,13 +34,13 @@ import java.util.logging.Logger;
 /**
  * @author Bradley
  */
-public class ImageCanvasManager {
+public class BrainCanvasManager {
 
-    private static final Logger log = Logger.getLogger(ImageCanvasManager.class.getName());
+    private static final Logger log = Logger.getLogger(BrainCanvasManager.class.getName());
 
-    private List<ImageCanvas2> canvasList = new ArrayList<ImageCanvas2>();
+    private List<BrainCanvas> canvasList = new ArrayList<BrainCanvas>();
 
-    private ImageCanvas2 selectedCanvas = null;
+    private BrainCanvas selectedCanvas = null;
 
     public static final String SELECTED_CANVAS_PROPERTY = "selectedCanvas";
 
@@ -46,7 +48,7 @@ public class ImageCanvasManager {
 
     private ContextMenuHandler contextMenuHandler;
 
-    private CanvasPropertyChangeListener canvasListener;
+    private CanvasSelectionListener canvasListener;
 
     private ImageViewMouseMotionListener cursorListener;
 
@@ -55,26 +57,27 @@ public class ImageCanvasManager {
 
     private WeakHashMap<ImageView, IImageDisplayModel> registeredViews = new WeakHashMap<ImageView, IImageDisplayModel>();
 
-    private static final String[] ids = {"A", "B", "C", "D", "E", "F", "G", "H", "I",
-            "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+    
 
-
-    protected ImageCanvasManager() {
+    protected BrainCanvasManager() {
         // Exists only to thwart instantiation.
         //EventBus.subscribe(ImageViewCrosshairEvent.class, this);
     }
 
 
-    public static ImageCanvasManager getInstance() {
-        return (ImageCanvasManager) SingletonRegistry.REGISTRY.getInstance("com.brainflow.application.toplevel.ImageCanvasManager");
+    public static BrainCanvasManager getInstance() {
+        return (BrainCanvasManager) SingletonRegistry.REGISTRY.getInstance("com.brainflow.application.toplevel.BrainCanvasManager");
     }
 
-    private void listenToCanvas(ImageCanvas2 canvas) {
-        if (canvasListener == null) canvasListener = new CanvasPropertyChangeListener();
+    private void listenToCanvas(BrainCanvas canvas) {
+        if (canvasListener == null) canvasListener = new CanvasSelectionListener();
         if (contextMenuHandler == null) contextMenuHandler = new ContextMenuHandler();
         if (cursorListener == null) cursorListener = new ImageViewMouseMotionListener();
 
-        canvas.getImageCanvasModel().addPropertyChangeListener(canvasListener);
+        //canvas.getImageCanvasModel().addPropertyChangeListener(canvasListener);
+        //canvas.getImageCanvasModel().listSelection.
+
+        BeanContainer.get().addListener(canvas.getImageCanvasModel().listSelection, canvasListener);
 
         canvas.addMouseListener(contextMenuHandler);
         canvas.addInteractor(cursorListener);
@@ -100,7 +103,7 @@ public class ImageCanvasManager {
     }*/
 
 
-    public void addImageCanvas(ImageCanvas2 _canvas) {
+    public void addImageCanvas(BrainCanvas _canvas) {
         canvasList.add(_canvas);
         if (selectedCanvas == null)
             selectedCanvas = _canvas;
@@ -123,47 +126,47 @@ public class ImageCanvasManager {
         support.removePropertyChangeListener(listener);
     }
 
-    public ImageCanvas2 getSelectedCanvas() {
+    public BrainCanvas getSelectedCanvas() {
         return selectedCanvas;
     }
 
-    public void setSelectedCanvas(ImageCanvas2 canvas) {
+    public void setSelectedCanvas(BrainCanvas canvas) {
         if (canvasList.contains(canvas)) {
-            ImageCanvas2 oldCanvas = this.selectedCanvas;
+            BrainCanvas oldCanvas = this.selectedCanvas;
             selectedCanvas = canvas;
             support.firePropertyChange(SELECTED_CANVAS_PROPERTY, oldCanvas, selectedCanvas);
         } else {
-            throw new RuntimeException("ImageCanvas " + canvas + " is not currently managed my ImageCanvasManager.");
+            throw new RuntimeException("ImageCanvas " + canvas + " is not currently managed my BrainCanvasManager.");
         }
     }
 
 
-    public ImageCanvas2[] getImageCanvases() {
-        ImageCanvas2[] canvi = new ImageCanvas2[canvasList.size()];
+    public BrainCanvas[] getImageCanvases() {
+        BrainCanvas[] canvi = new BrainCanvas[canvasList.size()];
         canvasList.toArray(canvi);
         return canvi;
     }
 
-    public ImageCanvas2 createCanvas() {
-        ImageCanvas2 canvas = new ImageCanvas2();
+    public BrainCanvas createCanvas() {
+        BrainCanvas canvas = new BrainCanvas();
         addImageCanvas(canvas);
         return canvas;
     }
 
-    public ImageCanvas2 getImageCanvas(int idx) {
+    public BrainCanvas getImageCanvas(int idx) {
         if (canvasList.size() > idx && idx >= 0)
-            return (ImageCanvas2) canvasList.get(idx);
+            return (BrainCanvas) canvasList.get(idx);
         else {
             throw new IllegalArgumentException("No canvas exists at index" + idx);
         }
     }
 
-    public void removeImageCanvas(ImageCanvas2 canvas) {
+    public void removeImageCanvas(BrainCanvas canvas) {
         if (canvasList.contains(canvas)) {
             canvasList.remove(canvas);
 
-
-            canvas.removePropertyChangeListener(canvasListener);
+            BeanContainer.get().removeListener(canvas.getImageCanvasModel().listSelection, canvasListener);
+            
         }
 
     }
@@ -171,7 +174,7 @@ public class ImageCanvasManager {
     /*public void addImageView(ImageView view) {
         if (!registeredViews.containsKey(view)) {
             register(view);
-            ImageCanvas2 canvas = getSelectedCanvas();
+            BrainCanvas canvas = getSelectedCanvas();
             if (canvas != null) {
                 canvas.add(view);
             }
@@ -188,6 +191,21 @@ public class ImageCanvasManager {
 
     }
 
+    public Set<ImageView> getYokedViews(ImageView view) {
+        YokeHandler handler = yokeHandlers.get(view);
+
+        Set<ImageView> ret;
+        if (handler == null) {
+            ret = new HashSet<ImageView>();
+        } else {
+            ret = handler.getSources();
+        }
+
+        return ret;
+
+    }
+
+    
     public void unyoke(ImageView target1, ImageView target2) {
         YokeHandler handler = yokeHandlers.get(target1);
         if (handler != null) {
@@ -225,17 +243,15 @@ public class ImageCanvasManager {
     }
 
 
-    class CanvasPropertyChangeListener implements PropertyChangeListener {
+    class CanvasSelectionListener implements PropertyListener {
 
-        public void propertyChange(PropertyChangeEvent e) {
+        public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+            BrainCanvasModel model = (BrainCanvasModel)prop.getParent();
+            EventBus.publish(new ImageViewSelectionEvent(model.getSelectedView()));
 
-            if (e.getPropertyName() == ImageCanvasModel.SELECTED_VIEW_PROPERTY) {
 
-                ImageView selectedView = (ImageView) e.getNewValue();
-                EventBus.publish(new ImageViewSelectionEvent(selectedView));
-
-            }
         }
+
 
     }
 

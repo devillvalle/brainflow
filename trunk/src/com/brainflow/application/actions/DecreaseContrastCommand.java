@@ -3,7 +3,7 @@ package com.brainflow.application.actions;
 import com.brainflow.core.AbstractLayer;
 import com.brainflow.core.ImageLayerProperties;
 import com.brainflow.core.ImageView;
-import com.brainflow.display.ClipRange;
+import com.brainflow.core.ClipRange;
 
 /**
  * BrainFlow Project

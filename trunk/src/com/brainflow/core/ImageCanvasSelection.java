@@ -25,7 +25,7 @@ import java.awt.geom.Point2D;
 public class ImageCanvasSelection implements MouseListener, MouseMotionListener {
 
 
-    private ImageCanvas2 canvas;
+    private BrainCanvas canvas;
     private ImageCanvasMode canvasMode;
 
     private ImageView preSelectedView;
@@ -56,7 +56,7 @@ public class ImageCanvasSelection implements MouseListener, MouseMotionListener 
     private CURSOR_STATE cursorState = CURSOR_STATE.ELSEWHERE;
 
 
-    public ImageCanvasSelection(ImageCanvas2 canvas) {
+    public ImageCanvasSelection(BrainCanvas canvas) {
         this.canvas = canvas;
 
         //resizeMode = new PlotResizeMode(canvas);
@@ -65,11 +65,11 @@ public class ImageCanvasSelection implements MouseListener, MouseMotionListener 
 
     }
 
-    public void setCanvas(ImageCanvas2 canvas) {
+    public void setCanvas(BrainCanvas canvas) {
         this.canvas = canvas;
     }
 
-    public ImageCanvas2 getCanvas() {
+    public BrainCanvas getCanvas() {
         return canvas;
     }
 

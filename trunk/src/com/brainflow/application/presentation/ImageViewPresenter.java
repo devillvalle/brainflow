@@ -3,10 +3,7 @@ package com.brainflow.application.presentation;
 import com.brainflow.application.services.ImageDisplayModelEvent;
 import com.brainflow.application.services.ImageViewLayerSelectionEvent;
 import com.brainflow.application.services.ImageViewSelectionEvent;
-import com.brainflow.core.AbstractLayer;
-import com.brainflow.core.IImageDisplayModel;
-import com.brainflow.core.ImageDisplayModelListener;
-import com.brainflow.core.ImageView;
+import com.brainflow.core.*;
 import com.brainflow.gui.AbstractPresenter;
 import com.brainflow.image.space.IImageSpace;
 import org.bushe.swing.event.EventBus;
@@ -33,28 +30,27 @@ public abstract class ImageViewPresenter extends AbstractPresenter implements Im
     private static Logger log = Logger.getLogger(ImageViewPresenter.class.getName());
 
     public ImageViewPresenter() {
+        subscribeListeners();
+    }
+
+
+    private void subscribeListeners() {
         EventBus.subscribeStrongly(ImageViewSelectionEvent.class, new EventSubscriber() {
 
             public void onEvent(Object evt) {
                 ImageViewSelectionEvent event = (ImageViewSelectionEvent) evt;
 
-                //if (selectedView == event.getSelectedImageView()) return;
-
+                // remove listeners from old selected view
                 if (selectedView != null) {
                     selectedView.getModel().removeImageDisplayModelListener(ImageViewPresenter.this);
                 }
 
+
                 selectedView = event.getSelectedImageView();
                 selectedView.getModel().addImageDisplayModelListener(ImageViewPresenter.this);
 
-                // in fact this should not happen.
-                //if ( (selectedView != null) && (selectedView.getModel().getSelectedLayerIndex() < 0) ) {
-                //    selectedView.getModel().getLayerSelection().setSelectionIndex(0);
-                //
-                // }
 
                 if (selectedView != null) {
-
                     viewSelected(selectedView);
 
                 } else {
@@ -68,18 +64,11 @@ public abstract class ImageViewPresenter extends AbstractPresenter implements Im
             public void onEvent(Object evt) {
                 EventServiceEvent ese = (EventServiceEvent) evt;
                 if (ese.getSource() == selectedView) {
-                    int idx = selectedView.getModel().getSelectedIndex();
+                    ImageLayer layer = selectedView.getSelectedLayer();
 
-                    if (idx >= 0) {
-                        AbstractLayer newLayer = selectedView.getModel().getLayer(idx);
-                        assert newLayer != null;
-
-                        layerSelected(newLayer);
-                    } else {
-                        log.warning("Selected layer index is negative");
+                    if (layer != null) {
+                        layerSelected(layer);
                     }
-
-
                 }
             }
         });
@@ -91,6 +80,7 @@ public abstract class ImageViewPresenter extends AbstractPresenter implements Im
                 ImageDisplayModelEvent event = (ImageDisplayModelEvent) evt;
 
                 ImageView view = getSelectedView();
+
                 if (view == null) return;
 
                 if (view.getModel() == event.getModel()) {
@@ -149,10 +139,9 @@ public abstract class ImageViewPresenter extends AbstractPresenter implements Im
         return selectedView;
     }
 
-    public AbstractLayer getSelectedLayer() {
+    public ImageLayer getSelectedLayer() {
         if (selectedView == null) return null;
-        int idx = selectedView.getModel().getSelectedIndex();
-        return selectedView.getModel().getLayer(idx);
+        return selectedView.getSelectedLayer();
 
     }
 

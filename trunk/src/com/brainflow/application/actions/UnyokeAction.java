@@ -2,14 +2,12 @@ package com.brainflow.application.actions;
 
 import org.bushe.swing.action.BasicAction;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
 import com.brainflow.core.ImageView;
-import com.brainflow.core.ImageCanvas;
-import com.brainflow.core.ImageCanvas2;
-import com.brainflow.application.toplevel.ImageCanvasManager;
+import com.brainflow.core.BrainCanvas;
+import com.brainflow.application.toplevel.BrainCanvasManager;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,12 +28,12 @@ public class UnyokeAction extends BasicAction {
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
 
         if (view != null) {
-            ImageCanvas2 canvas = ImageCanvasManager.getInstance().getSelectedCanvas();
+            BrainCanvas canvas = BrainCanvasManager.getInstance().getSelectedCanvas();
             List<ImageView> views = canvas.getViews();
 
             for (ImageView v : views) {
                 if (v != view) {
-                    ImageCanvasManager.getInstance().unyoke(view, v);
+                    BrainCanvasManager.getInstance().unyoke(view, v);
                 }
             }
         }

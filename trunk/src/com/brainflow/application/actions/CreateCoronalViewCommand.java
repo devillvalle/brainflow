@@ -1,7 +1,7 @@
 package com.brainflow.application.actions;
 
 import com.brainflow.application.toplevel.ImageViewFactory;
-import com.brainflow.core.ImageCanvas2;
+import com.brainflow.core.BrainCanvas;
 import com.brainflow.core.ImageView;
 
 /**
@@ -24,7 +24,7 @@ public class CreateCoronalViewCommand extends BrainFlowCommand {
 
             ImageView sview = ImageViewFactory.createYokedCoronalView(view);
 
-            ImageCanvas2 canvas = getSelectedCanvas();
+            BrainCanvas canvas = getSelectedCanvas();
 
             if (canvas != null) {
                 canvas.addImageView(sview);

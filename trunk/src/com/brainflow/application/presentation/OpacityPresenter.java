@@ -9,46 +9,53 @@
 
 package com.brainflow.application.presentation;
 
+import com.brainflow.application.presentation.binding.Bindable;
+import com.brainflow.application.presentation.binding.PercentageConverterProperty;
 import com.brainflow.application.presentation.forms.OpacityForm;
-import com.brainflow.display.Property;
-import com.brainflow.display.Opacity;
+import com.brainflow.core.AbstractLayer;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.ImageLayer;
-import com.brainflow.core.AbstractLayer;
+import com.brainflow.core.ClipRange;
+import com.brainflow.display.Opacity;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
+import com.jgoodies.binding.beans.BeanAdapter;
 import com.jgoodies.binding.value.ConverterFactory;
 import com.jgoodies.binding.value.ValueHolder;
-import com.jgoodies.binding.beans.BeanAdapter;
 
 import javax.swing.*;
 import java.text.NumberFormat;
+
+import net.java.dev.properties.binding.swing.adapters.SwingBind;
 
 
 /**
  * @author buchs
  */
-public class OpacityPresenter extends ImageViewPresenter {
+public class OpacityPresenter extends ImageViewPresenter implements Bindable {
 
 
     private OpacityForm form;
 
     private BeanAdapter adapter;
 
-   
+
     /**
      * Creates a new instance of OpacityPresenter
      */
     public OpacityPresenter() {
         form = new OpacityForm();
-        initBinding();
+
+        if (getSelectedView() != null) {
+            bind();
+        }
 
 
     }
 
 
     public void viewSelected(ImageView view) {
-        initBinding();
+        bind();
         form.setEnabled(true);
     }
 
@@ -58,14 +65,24 @@ public class OpacityPresenter extends ImageViewPresenter {
 
 
     protected void layerSelected(AbstractLayer layer) {
-        initBinding();
+        bind();
     }
 
     public JComponent getComponent() {
         return form;
     }
 
-    private void initBinding() {
+    public void bind() {
+        ImageLayer layer = getSelectedView().getModel().getSelectedLayer();
+        SwingBind.get().bind(new PercentageConverterProperty(layer.getImageLayerProperties().opacity, 0, 1, 100), form.getOpacitySlider());
+
+    }
+
+    public void unbind() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    /*private void initBinding() {
         ImageView view = getSelectedView();
         if (view == null) return;
 
@@ -91,7 +108,7 @@ public class OpacityPresenter extends ImageViewPresenter {
         } else {
             adapter.setBean(opacity);
         }
-    }
+    }   */
 
 
 }

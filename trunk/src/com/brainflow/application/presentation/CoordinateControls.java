@@ -26,7 +26,8 @@ public class CoordinateControls {
     private IndexCoordinatePresenter indexCoordinatePresenter;
     
     private ImageViewportPresenter imageViewportPresenter;
-    //private ImageExtentPresenter imageExtentPresenter;
+
+    private LinkedViewsPresenter linkedViewsPresenter;
 
     public CoordinateControls() {
         EventBus.subscribeStrongly(ImageViewEvent.class, new EventSubscriber() {
@@ -55,8 +56,9 @@ public class CoordinateControls {
     private void init() {
         cpanes = new CollapsiblePanes();
 
-
+        linkedViewsPresenter = new LinkedViewsPresenter();
         if (activeView != null) {
+
             worldCoordinatePresenter = new WorldCoordinatePresenter(activeView.getCrosshair());
             indexCoordinatePresenter = new IndexCoordinatePresenter(activeView.getCrosshair());
             imageViewportPresenter = new ImageViewportPresenter();
@@ -70,6 +72,13 @@ public class CoordinateControls {
         }
 
         CollapsiblePane p1 = new CollapsiblePane();
+        p1.setContentPane(linkedViewsPresenter.getComponent());
+        p1.setTitle("Linked Views");
+        p1.setEmphasized(true);
+        p1.setOpaque(false);
+        cpanes.add(p1);
+
+        p1 = new CollapsiblePane();
         p1.setContentPane(worldCoordinatePresenter.getComponent());
         p1.setTitle("Crosshair (World)");
         p1.setEmphasized(true);

@@ -34,7 +34,7 @@ public class CreateOrthogonalViewAction extends BasicAction {
             IImageDisplayModel displayModel = view.getModel();
             ImageView sview = ImageViewFactory.createOrthogonalView(displayModel);
             //ImageView sview = ImageViewFactory.createMontageView(displayModel);
-            ImageCanvas2 canvas = (ImageCanvas2) getContextValue(ActionContext.SELECTED_CANVAS);
+            BrainCanvas canvas = (BrainCanvas) getContextValue(ActionContext.SELECTED_CANVAS);
 
             if (canvas != null) {
                 canvas.addImageView(sview);

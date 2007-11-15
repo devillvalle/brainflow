@@ -60,6 +60,7 @@ class SimpleSliceController implements SliceController {
 
         int sample = iaxis.nearestSample(slice);
         int nsample = sample + 1;
+        System.out.println("advancing slice " + nsample);
         if (nsample >= 0 && nsample < iaxis.getNumSamples()) {
             cross.setValue(iaxis.valueOf(nsample));
         }

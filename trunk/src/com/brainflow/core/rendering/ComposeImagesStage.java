@@ -42,9 +42,9 @@ public class ComposeImagesStage extends ImageProcessingStage {
             if (resImages.size() == 0) {
                 composite = null;
             } else if (resImages.size() == 1) {
-                if (getModel().getLayer(0).isVisible() && getModel().getLayer(0).getOpacity() >= 1) {
+                if (getModel().getLayer(0).isVisible() && getModel().getLayer(0).getImageLayerProperties().opacity.get().doubleValue() >= 1) {
                     composite = resImages.get(0);
-                } else if (getModel().getLayer(0).isVisible() && getModel().getLayer(0).getOpacity() < 1) {
+                } else if (getModel().getLayer(0).isVisible() && getModel().getLayer(0).getImageLayerProperties().opacity.get().doubleValue() < 1) {
                     composite = compose(layers, resImages);
                 }
             } else {

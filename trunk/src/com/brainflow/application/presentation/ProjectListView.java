@@ -3,6 +3,7 @@ package com.brainflow.application.presentation;
 import com.brainflow.application.BrainflowProject;
 import com.brainflow.core.AbstractLayer;
 import com.brainflow.core.IImageDisplayModel;
+import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
 import com.brainflow.image.axis.CoordinateAxis;
 import com.brainflow.image.space.Axis;
@@ -125,8 +126,8 @@ public class ProjectListView extends ImageViewPresenter {
 
     }
 
-    public AbstractLayer getSelectedLayer() {
-        return (AbstractLayer) layerList.getSelectedValue();
+    public ImageLayer getSelectedLayer() {
+        return (ImageLayer) layerList.getSelectedValue();
     }
 
     public void viewSelected(ImageView view) {

@@ -4,19 +4,22 @@ package com.brainflow.application.toplevel;
 import com.brainflow.application.BrainflowException;
 import com.brainflow.application.IImageDataSource;
 import com.brainflow.application.ImageIODescriptor;
-import com.brainflow.application.SoftImageDataSource;
 import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.VFS;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -58,6 +61,22 @@ public class ImageIOManager {
         }
 
         throw new BrainflowException("Could not find ImageIODescriptor for supplied File " + fobj);
+
+    }
+
+    public IImageDataSource[] findLoadableImages(File[] files) {
+        assert descriptorList.size() > 0 : "ImageIODescriptors not available";
+        FileObject[] fobjs = new FileObject[files.length];
+        try {for (int i=0; i<fobjs.length; i++) {
+            fobjs[i] = VFS.getManager().resolveFile(files[i].getAbsolutePath());
+
+        }
+        } catch(FileSystemException e) {
+            log.log(Level.SEVERE, e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+
+        return findLoadableImages(fobjs);
 
     }
 

@@ -1,18 +1,16 @@
 package com.brainflow.application;
 
+import com.brainflow.core.ImageDisplayModel;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.SimpleImageView;
-import com.brainflow.core.ImageDisplayModel;
 import com.brainflow.display.ICrosshair;
-import com.brainflow.image.anatomy.AnatomicalPoint3D;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.lang.ref.WeakReference;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.logging.Logger;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
 
 
 /**
@@ -46,7 +44,16 @@ public class YokeHandler {
     }
 
     public void clearSources() {
+        for (ImageView view : sources.keySet()) {
+            view.getCrosshair().removePropertyChangeListener(crossHandler);            
+        }
         sources.clear();
+
+    }
+
+    public Set<ImageView> getSources() {
+        return sources.keySet();
+
     }
 
     public void removeSource(ImageView view) {
@@ -62,6 +69,7 @@ public class YokeHandler {
         if (sources.containsKey(view)) {
             log.warning("YokeHandler already contains view argument : " + view);
         } else {
+            log.fine("yoking view " + view + " to " + target.get());
             sources.put(view, System.currentTimeMillis());
             view.getCrosshair().addPropertyChangeListener(crossHandler);
         }

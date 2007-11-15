@@ -90,7 +90,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
     private RGBAImage getRGBAImage() {
         if (rgbaImage != null) return rgbaImage;
 
-        IColorMap cmap = layer.getImageLayerProperties().getColorMap().getProperty();
+        IColorMap cmap = layer.getImageLayerProperties().colorMap.get();
         rgbaImage = cmap.getRGBAImage(getData());
         return rgbaImage;
     }
@@ -150,7 +150,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
 
 
             Composite oldComposite = g2.getComposite();
-            AlphaComposite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) layer.getOpacity());
+            AlphaComposite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) layer.getImageLayerProperties().opacity.get().doubleValue());
             g2.setComposite(composite);
             g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
             g2.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);

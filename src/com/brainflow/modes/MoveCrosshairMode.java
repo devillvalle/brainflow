@@ -1,8 +1,7 @@
 package com.brainflow.modes;
 
-import com.brainflow.core.ImageCanvas;
 import com.brainflow.core.ImageView;
-import com.brainflow.core.ImageCanvas2;
+import com.brainflow.core.BrainCanvas;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 
 import javax.swing.*;
@@ -23,7 +22,7 @@ public class MoveCrosshairMode extends ImageCanvasMode {
     private boolean dragging = false;
 
 
-    public MoveCrosshairMode(ImageCanvas2 canvas) {
+    public MoveCrosshairMode(BrainCanvas canvas) {
         super.setImageCanvas(canvas);
     }
 

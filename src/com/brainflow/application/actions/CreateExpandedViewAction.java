@@ -28,7 +28,7 @@ public class CreateExpandedViewAction extends BasicAction {
 
     protected void execute(ActionEvent actionEvent) throws Exception {
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
-        ImageCanvas2 canvas = (ImageCanvas2) getContextValue(ActionContext.SELECTED_CANVAS);
+        BrainCanvas canvas = (BrainCanvas) getContextValue(ActionContext.SELECTED_CANVAS);
 
         if ( (view != null) && (canvas != null) ) {
 

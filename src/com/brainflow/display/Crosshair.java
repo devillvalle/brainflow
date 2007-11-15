@@ -103,7 +103,7 @@ public class Crosshair extends Model implements ICrosshair {
         location.setY(y);
         location.setZ(z);
         
-        this.firePropertyChange(LOCATION_PROPERTY, oldpoint, location);
+        firePropertyChange(LOCATION_PROPERTY, oldpoint, location);
     }
 
     public void setXValue(double x) {
@@ -131,9 +131,9 @@ public class Crosshair extends Model implements ICrosshair {
     }
 
     public void setValue(AnatomicalPoint1D val) {
+        AnatomicalPoint1D oldpoint = location.getValue(val.getAnatomy());
         location.setValue(val);
-
-
+        firePropertyChange(LOCATION_PROPERTY, oldpoint, location);
     }
 
 

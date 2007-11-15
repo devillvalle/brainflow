@@ -41,7 +41,7 @@ public class TestPipeline {
         ImageLayer layer2 = new ImageLayer3D(new MemoryImageDataSource(data2),
                 new ImageLayerProperties(ColorTable.SPECTRUM, range));
 
-        layer2.getImageLayerProperties().getOpacity().setOpacity(.9f);
+        layer2.getImageLayerProperties().opacity.set(.9);
         model.addLayer(layer1);
         model.addLayer(layer2);
 

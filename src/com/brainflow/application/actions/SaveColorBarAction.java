@@ -27,7 +27,7 @@ public class SaveColorBarAction extends BasicAction {
 
         if (view != null) {
             int idx = view.getModel().getSelectedIndex();
-            IColorMap cmap = view.getModel().getLayerParameters(idx).getColorMap().getProperty();
+            IColorMap cmap = view.getModel().getLayerParameters(idx).getColorMap();
             AbstractColorBar cbar = cmap.createColorBar();
 
             cbar.setOrientation(SwingUtilities.HORIZONTAL);

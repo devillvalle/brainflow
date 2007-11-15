@@ -1,17 +1,12 @@
 package com.brainflow.application.toplevel;
 
-import com.brainflow.application.actions.SetPreserveAspectCommand;
 import com.brainflow.core.*;
 import com.brainflow.core.annotations.CrosshairAnnotation;
 import com.brainflow.core.annotations.SelectedPlotAnnotation;
 import com.brainflow.core.annotations.SliceAnnotation;
-import com.brainflow.gui.PopupAdapter;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.utils.StringGenerator;
-import com.pietschy.command.ActionCommand;
-import com.pietschy.command.CommandContainer;
-import com.pietschy.command.group.CommandGroup;
 
 import java.util.logging.Logger;
 
@@ -64,7 +59,7 @@ public class ImageViewFactory {
         ImageView view = new ImageView(source.getModel());
         view.setPlotLayout(new OrthoPlotLayout(view,  orientation));
         addDefaultAnnotations(view);
-        ImageCanvasManager.getInstance().yoke(source, view);
+        BrainCanvasManager.getInstance().yoke(source, view);
 
         return view;
 
@@ -73,6 +68,7 @@ public class ImageViewFactory {
     public static ImageView createYokedAxialView(ImageView source) {
         ImageView view = new ImageView(source.getModel(), Brainflow.getInstance().getCommandContainer());
         view.setPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalAxial()));
+        BrainCanvasManager.getInstance().yoke(source, view);
         addDefaultAnnotations(view);
 
         return view;
@@ -81,7 +77,7 @@ public class ImageViewFactory {
     public static ImageView createYokedCoronalView(ImageView source) {
         ImageView view = new ImageView(source.getModel(), Brainflow.getInstance().getCommandContainer());
         view.setPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalCoronal()));
-        ImageCanvasManager.getInstance().yoke(source, view);
+        BrainCanvasManager.getInstance().yoke(source, view);
         return view;
     }
 
@@ -89,7 +85,7 @@ public class ImageViewFactory {
     public static ImageView createYokedSagittalView(ImageView source) {
         ImageView view = new ImageView(source.getModel(), Brainflow.getInstance().getCommandContainer());
         view.setPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalSagittal()));
-        ImageCanvasManager.getInstance().yoke(source, view);
+        BrainCanvasManager.getInstance().yoke(source, view);
         return view;
 
     }

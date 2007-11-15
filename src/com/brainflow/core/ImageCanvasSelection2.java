@@ -1,16 +1,12 @@
 package com.brainflow.core;
 
 import com.brainflow.modes.*;
-import com.brainflow.utils.IResizeableBorder;
-import com.brainflow.utils.ISelectableBorder;
 
-import javax.swing.*;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyEvent;
 import java.awt.*;
-import java.awt.geom.Point2D;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,14 +20,14 @@ import java.awt.geom.Point2D;
 public class ImageCanvasSelection2 implements MouseListener, MouseMotionListener {
 
 
-    private ImageCanvas2 canvas;
+    private BrainCanvas canvas;
     private ImageCanvasMode canvasMode;
 
 
     private MoveCrosshairMode crosshairMode;
 
 
-    public ImageCanvasSelection2(ImageCanvas2 canvas) {
+    public ImageCanvasSelection2(BrainCanvas canvas) {
         this.canvas = canvas;
 
         //resizeMode = new PlotResizeMode(canvas);
@@ -41,11 +37,11 @@ public class ImageCanvasSelection2 implements MouseListener, MouseMotionListener
 
     }
 
-    public void setCanvas(ImageCanvas2 canvas) {
+    public void setCanvas(BrainCanvas canvas) {
         this.canvas = canvas;
     }
 
-    public ImageCanvas2 getCanvas() {
+    public BrainCanvas getCanvas() {
         return canvas;
     }
 

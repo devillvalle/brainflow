@@ -1,7 +1,7 @@
 package com.brainflow.modes;
 
 import com.brainflow.core.ImageView;
-import com.brainflow.core.ImageCanvas2;
+import com.brainflow.core.BrainCanvas;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,7 +42,7 @@ public class PlotResizeMode extends ImageCanvasMode implements MouseListener, Mo
     private boolean interested = true;
 
 
-    public PlotResizeMode(ImageCanvas2 _canvas) {
+    public PlotResizeMode(BrainCanvas _canvas) {
         super.setImageCanvas(_canvas);
     }
 

@@ -4,7 +4,7 @@ import com.brainflow.application.BrainflowProject;
 import com.brainflow.application.IImageDataSource;
 import com.brainflow.application.services.ImageDisplayModelEvent;
 import com.brainflow.application.services.LoadableImageStatusEvent;
-import com.brainflow.colormap.LinearColorMapDeprecated;
+import com.brainflow.colormap.LinearColorMap2;
 import com.brainflow.core.*;
 import com.brainflow.utils.Range;
 import org.bushe.swing.event.EventBus;
@@ -62,7 +62,7 @@ public class ProjectManager implements EventSubscriber, BrainflowProjectListener
                 new Range(limg.getData().getMinValue(),
                         limg.getData().getMaxValue()));
 
-        params.getColorMap().setProperty(new LinearColorMapDeprecated(limg.getData().getMinValue(),
+        params.colorMap.set(new LinearColorMap2(limg.getData().getMinValue(),
                 limg.getData().getMaxValue(),
                 ResourceManager.getInstance().getDefaultColorMap()));
 

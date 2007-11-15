@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.awt.image.RenderedImage;
 
 /**
  * BrainFlow Project
@@ -22,10 +22,15 @@ public class SnapshotDialog extends JDialog {
 
     private SnapshotForm form;
 
-    private BufferedImage snapshot;
+    private RenderedImage snapshot;
 
+    public SnapshotDialog(Frame owner, boolean modal, RenderedImage snapshot) {
+        super(owner, modal);
+        this.snapshot = snapshot;
+        buildGUI();
+    }
 
-    public SnapshotDialog(BufferedImage snapshot) {
+    public SnapshotDialog(RenderedImage snapshot) {
         this.snapshot = snapshot;
         buildGUI();
     }
@@ -47,10 +52,10 @@ public class SnapshotDialog extends JDialog {
         try {
 
             UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
-            BufferedImage bimg = ImageIO.read(new File("c:/lddmm/lddmm-coronal-slice-neg-5-shot1.png"));
+             BufferedImage bimg = ImageIO.read(ClassLoader.getSystemResource("resources/data/axial_slice.png"));
             SnapshotDialog form = new SnapshotDialog(bimg);
 
-            JFrame frame = new JFrame();
+            
             form.setVisible(true);
             form.pack();
         } catch (Exception e) {

@@ -1,8 +1,7 @@
 package com.brainflow.modes;
 
-import com.brainflow.core.ImageCanvas;
 import com.brainflow.core.ImageView;
-import com.brainflow.core.ImageCanvas2;
+import com.brainflow.core.BrainCanvas;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -20,7 +19,7 @@ import java.awt.event.MouseEvent;
 public class PlotSelectorMode extends ImageCanvasMode {
 
 
-    public PlotSelectorMode(ImageCanvas2 _canvas) {
+    public PlotSelectorMode(BrainCanvas _canvas) {
         super.setImageCanvas(_canvas);
     }
 

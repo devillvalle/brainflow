@@ -1,5 +1,6 @@
 package com.brainflow.core;
 
+import com.brainflow.colormap.IColorMap;
 import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.ImageAxis;
@@ -10,6 +11,9 @@ import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace3D;
 import com.jgoodies.binding.list.ArrayListModel;
 import com.jgoodies.binding.list.SelectionInList;
+import net.java.dev.properties.BaseProperty;
+import net.java.dev.properties.container.BeanContainer;
+import net.java.dev.properties.events.PropertyListener;
 
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
@@ -81,7 +85,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
     }
 
     public void setSelectedIndex(int index) {
-        if (index < 0 || index >= getNumLayers() ) {
+        if (index < 0 || index >= getNumLayers()) {
             throw new IllegalArgumentException("index out of bounds");
         }
 
@@ -137,7 +141,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     }
 
-    private void listenToLayer(ImageLayer layer) {
+    private void listenToLayer(final ImageLayer layer) {
 
         layer.addPropertyChangeListener(ImageLayerProperties.COLOR_MAP_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
@@ -147,13 +151,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
             }
         });
 
-        layer.addPropertyChangeListener(ImageLayerProperties.OPACITY_PROPERTY, new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                for (ImageLayerListener listener : layerListeners) {
-                    listener.opacityChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer) evt.getSource()));
-                }
-            }
-        });
+
 
         layer.addPropertyChangeListener(ImageLayerProperties.RESAMPLE_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
@@ -187,13 +185,46 @@ public class ImageDisplayModel implements IImageDisplayModel {
             }
         });
 
-        layer.addPropertyChangeListener(ImageLayerProperties.CLIP_RANGE_PROPERTY, new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
+         BeanContainer.get().addListener(layer.getImageLayerProperties().opacity, new PropertyListener() {
+            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
                 for (ImageLayerListener listener : layerListeners) {
-                    listener.clipRangeChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer) evt.getSource()));
+                    listener.opacityChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
                 }
             }
         });
+
+        BeanContainer.get().addListener(layer.getImageLayerProperties().clipRange.get().lowClip, new PropertyListener() {
+            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+                Number lowClip = (Number) newValue;
+                Number highClip = layer.getImageLayerProperties().clipRange.get().getHighClip();
+                for (ImageLayerListener listener : layerListeners) {
+                    IColorMap newMap = layer.getImageLayerProperties().getColorMap().newClipRange(lowClip.doubleValue(), highClip.doubleValue());
+                    layer.getImageLayerProperties().colorMap.set(newMap);
+
+                    // may not be necessary if because of  call above ...
+                    listener.clipRangeChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
+                }
+
+            }
+        });
+
+        BeanContainer.get().addListener(layer.getImageLayerProperties().clipRange.get().highClip, new PropertyListener() {
+            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+                Number highClip = (Number) newValue;
+                Number lowClip = layer.getImageLayerProperties().clipRange.get().getLowClip();
+                for (ImageLayerListener listener : layerListeners) {
+
+                    IColorMap newMap = layer.getImageLayerProperties().getColorMap().newClipRange(lowClip.doubleValue(), highClip.doubleValue());
+                    layer.getImageLayerProperties().colorMap.set(newMap);
+
+                    // may not be necessary if because of  call above ...
+                    listener.clipRangeChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
+
+                }
+            }
+        });
+
+
 
 
     }

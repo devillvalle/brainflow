@@ -1,6 +1,6 @@
 package com.brainflow.application.presentation;
 
-import com.brainflow.core.ImageCanvasModel;
+import com.brainflow.core.BrainCanvasModel;
 import com.brainflow.core.ImageView;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.Anatomy3D;
@@ -33,7 +33,7 @@ public class CoordinateSelector extends JComponent {
     private JSpinner zSpinner = new JSpinner();
 
 
-    private ImageCanvasModel canvasModel;
+    private BrainCanvasModel canvasModel;
     private ImageView selectedView;
 
 
@@ -44,7 +44,7 @@ public class CoordinateSelector extends JComponent {
     private BeanAdapter crosshairVoxelBean = new BeanAdapter(crosshairVoxel, true);
 
 
-    public CoordinateSelector(ImageCanvasModel _canvasModel) {
+    public CoordinateSelector(BrainCanvasModel _canvasModel) {
         canvasModel = _canvasModel;
         selectedView = _canvasModel.getSelectedView();
 

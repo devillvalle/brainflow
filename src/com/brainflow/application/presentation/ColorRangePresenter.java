@@ -1,21 +1,28 @@
 package com.brainflow.application.presentation;
 
+import com.brainflow.application.presentation.binding.Bindable;
+import com.brainflow.application.presentation.binding.PercentageConverterProperty;
 import com.brainflow.application.presentation.forms.DoubleSliderForm;
 import com.brainflow.colormap.AbstractColorMap;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMapDeprecated;
+import com.brainflow.core.ClipRange;
+import com.brainflow.core.ImageLayer;
+import com.brainflow.core.ImageView;
+import com.brainflow.core.AbstractLayer;
 import com.brainflow.display.Property;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
 import com.jgoodies.binding.beans.BeanAdapter;
+import net.java.dev.properties.binding.swing.adapters.SwingBind;
 
 import javax.swing.*;
 
 /**
  * @author buchs
  */
-public class ColorRangePresenter extends AbstractColorMapPresenter {
+public class ColorRangePresenter extends ImageViewPresenter implements Bindable {
 
     private IColorMap colorMap;
 
@@ -30,45 +37,56 @@ public class ColorRangePresenter extends AbstractColorMapPresenter {
     /**
      * Creates a new instance of ColorRangePanel
      */
-    public ColorRangePresenter(LinearColorMapDeprecated cmap) {
-        colorMap = cmap;
-        form = new DoubleSliderForm();
-
-        if (colorMap != null) {
-            initBinding();
-        }
-
-
-    }
-
     public ColorRangePresenter() {
-        colorMap = new LinearColorMapDeprecated(0, 255, ColorTable.GRAYSCALE);
+
         form = new DoubleSliderForm();
-        initBinding();
+        initGUI();
+
+        if (getSelectedView() != null) {
+            bind();
+        }
+
+
 
 
     }
 
-    public void setColorMap(Property<IColorMap> param) {
-        IColorMap colorMap = param.getProperty();
-
-        form.getSlider1().setEnabled(true);
-        form.getSlider2().setEnabled(true);
 
 
-        if (adapter != null) {
-            adapter.setBean(colorMap);
-
-        } else {
-
-            initBinding();
-        }
-
-
+    
+    private void initGUI() {
+        form.getSliderLabel1().setText("High: ");
+        form.getSliderLabel2().setText("Low: ");
     }
 
     public JComponent getComponent() {
         return form;
+    }
+
+    public void allViewsDeselected() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void viewSelected(ImageView view) {
+        bind();
+    }
+
+    protected void layerSelected(AbstractLayer layer) {
+        bind();
+    }
+
+    public void unbind() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void bind() {
+        ImageLayer layer = getSelectedView().getModel().getSelectedLayer();
+        ClipRange clip = layer.getImageLayerProperties().getClipRange();
+
+        
+        SwingBind.get().bind(new PercentageConverterProperty(clip.highClip, clip.minValue.get(), clip.maxValue.get(), 100), form.getSlider1());
+        SwingBind.get().bind(new PercentageConverterProperty(clip.lowClip, clip.minValue.get(), clip.maxValue.get(), 100), form.getSlider2());
+        
     }
 
 
@@ -87,8 +105,7 @@ public class ColorRangePresenter extends AbstractColorMapPresenter {
         form.getSlider1().setModel(highValueAdapter);
         form.getSlider2().setModel(lowValueAdapter);
 
-        form.getSliderLabel1().setText("High: ");
-        form.getSliderLabel2().setText("Low: ");
+
 
         /*Bindings.bind(form.getValueField1(), ConverterFactory.createStringConverter(
                 adapter.getValueModel(LinearColorMapDeprecated.HIGH_CLIP_PROPERTY), NumberFormat.getInstance()));

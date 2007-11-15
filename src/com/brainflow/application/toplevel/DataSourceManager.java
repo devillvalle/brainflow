@@ -14,7 +14,6 @@ import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.ImageView;
 import org.bushe.swing.event.EventBus;
 
-import javax.swing.event.EventListenerList;
 import java.util.LinkedHashMap;
 import java.util.logging.Logger;
 
@@ -84,14 +83,14 @@ public class DataSourceManager {
     }
 
     public ImageProgressDialog createProgressDialog(final IImageDataSource dataSource) {
-        ImageProgressDialog id = new ImageProgressDialog(dataSource, ImageCanvasManager.getInstance().getSelectedCanvas()) {
+        ImageProgressDialog id = new ImageProgressDialog(dataSource, BrainCanvasManager.getInstance().getSelectedCanvas()) {
 
             protected void done() {
                 IImageDisplayModel displayModel = ProjectManager.getInstance().addToActiveProject(dataSource);
 
                 ImageView iview = ImageViewFactory.createAxialView(displayModel);
                 iview.setTransferHandler(new ImageViewTransferHandler());
-                ImageCanvasManager.getInstance().getSelectedCanvas().addImageView(iview);
+                BrainCanvasManager.getInstance().getSelectedCanvas().addImageView(iview);
                 getDialog().setVisible(false);
 
 

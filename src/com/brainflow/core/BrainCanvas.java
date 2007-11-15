@@ -22,22 +22,21 @@ import java.util.logging.Logger;
  * Time: 11:35:22 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ImageCanvas2 extends JComponent implements InternalFrameListener {
+public class BrainCanvas extends JComponent implements InternalFrameListener {
 
+    private static final Logger log = Logger.getLogger(BrainCanvas.class.getName());
 
-    private ImageCanvasModel canvasModel = new ImageCanvasModel();
+    private BrainCanvasModel canvasModel = new BrainCanvasModel();
 
 
     private JDesktopPane desktopPane = new JDesktopPane();
-
-    private Logger log = Logger.getLogger(ImageCanvas2.class.getName());
 
     private List<ImageViewInteractor> interactors = new ArrayList<ImageViewInteractor>();
 
     private DisplayModelListener modelListener = new DisplayModelListener();
 
 
-    public ImageCanvas2() {
+    public BrainCanvas() {
         super();
         setLayout(new BorderLayout());
 
@@ -48,7 +47,7 @@ public class ImageCanvas2 extends JComponent implements InternalFrameListener {
     }
 
 
-    public ImageCanvasModel getImageCanvasModel() {
+    public BrainCanvasModel getImageCanvasModel() {
         return canvasModel;
     }
 
@@ -176,6 +175,18 @@ public class ImageCanvas2 extends JComponent implements InternalFrameListener {
         return canvasModel.getSelectedView();
     }
 
+    private void renameViews() {
+        JInternalFrame[] frames = desktopPane.getAllFrames();
+        for (JInternalFrame frame : frames) {
+            if (frame.getContentPane() instanceof ImageView) {
+                ImageView view = (ImageView)frame.getContentPane();
+                putTitle(frame, view);
+            }
+
+        }
+
+    }
+
 
     public void removeImageView(ImageView view) {
         view.getModel().removeImageDisplayModelListener(modelListener);
@@ -187,9 +198,16 @@ public class ImageCanvas2 extends JComponent implements InternalFrameListener {
             }
         }
 
-
+        renameViews();
         desktopPane.repaint();
 
+
+    }
+
+    private void putTitle(JInternalFrame frame, ImageView view) {
+
+        view.identifier.set("View [" + (canvasModel.indexOf(view) + 1) + "]");
+        frame.setTitle(view.identifier.get());
 
     }
 
@@ -215,6 +233,10 @@ public class ImageCanvas2 extends JComponent implements InternalFrameListener {
 
 
         canvasModel.addImageView(view);
+        putTitle(jframe, view);
+
+        
+
         desktopPane.add(jframe);
         jframe.moveToFront();
 
@@ -250,7 +272,12 @@ public class ImageCanvas2 extends JComponent implements InternalFrameListener {
 
     public void internalFrameClosed(InternalFrameEvent e) {
 
+       if (e.getInternalFrame().getContentPane() instanceof ImageView) {
+           ImageView view = (ImageView)e.getInternalFrame().getContentPane();
+           removeImageView(view);
+       }
     }
+
 
     public void internalFrameIconified(InternalFrameEvent e) {
 

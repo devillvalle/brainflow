@@ -4,7 +4,7 @@ import org.bushe.swing.action.BasicAction;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.application.toplevel.ImageViewFactory;
-import com.brainflow.core.ImageCanvas2;
+import com.brainflow.core.BrainCanvas;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.ImageAxis;
 import com.jgoodies.forms.layout.FormLayout;
@@ -42,7 +42,7 @@ public class CreateMontageViewAction extends BasicAction {
             //ImageView sview = ImageViewFactory.createOrthogonalView(displayModel);
 
             InputPanel ip = new InputPanel(view);
-            ImageCanvas2 canvas = (ImageCanvas2) getContextValue(ActionContext.SELECTED_CANVAS);
+            BrainCanvas canvas = (BrainCanvas) getContextValue(ActionContext.SELECTED_CANVAS);
 
             JOptionPane.showMessageDialog(canvas, ip);
             ImageView sview = ImageViewFactory.createMontageView(displayModel, ip.getRows(), ip.getColumns(), ip.getSliceGap());

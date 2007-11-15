@@ -46,7 +46,7 @@ public class MaskLayer extends ImageLayer {
         DiscreteColorMap dmap = new DiscreteColorMap(clrs, bounds);
 
         //properties = new ImageLayerProperties(new Range(0,1), item.getPredicate());
-        properties.getColorMap().setProperty(dmap);
+        properties.colorMap.set(dmap);
 
 
     }
@@ -58,7 +58,7 @@ public class MaskLayer extends ImageLayer {
         BinaryColorMap bmap = new BinaryColorMap(maskColor);
 
         //properties = new ImageLayerProperties(new Range(0,1), item.getPredicate());
-        properties.getColorMap().setProperty(bmap);
+        properties.colorMap.set(bmap);
 
 
     }

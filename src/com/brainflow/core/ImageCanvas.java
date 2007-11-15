@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 public class ImageCanvas extends JComponent implements MouseListener, MouseMotionListener {
 
 
-    private ImageCanvasModel canvasModel = new ImageCanvasModel();
+    private BrainCanvasModel canvasModel = new BrainCanvasModel();
 
     private ImageCanvasSelection canvasSelection;
 
@@ -127,7 +127,7 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
 
     }
 
-    public ImageCanvasModel getImageCanvasModel() {
+    public BrainCanvasModel getImageCanvasModel() {
         return canvasModel;
     }
 

@@ -218,7 +218,7 @@ public class ButtonList extends JComponent implements ListDataListener {
         JFrame jf1 = new JFrame("hello");
         JToolBar toolbar = new JToolBar();
 
-        //final ImageCanvasModel canvasModel = new ImageCanvasModel();
+        //final BrainCanvasModel canvasModel = new BrainCanvasModel();
         //canvasModel.addImageView(new SimpleImageView(new ImageDisplayModel("View 1")));
         //canvasModel.addImageView(new SimpleImageView(new ImageDisplayModel("View 2")));
         //canvasModel.addImageView(new SimpleImageView(new ImageDisplayModel("View 3")));

@@ -1,10 +1,9 @@
 package com.brainflow.application.actions;
 
-import com.brainflow.colormap.IColorMap;
 import com.brainflow.core.AbstractLayer;
 import com.brainflow.core.ImageLayerProperties;
 import com.brainflow.core.ImageView;
-import com.brainflow.display.ClipRange;
+import com.brainflow.core.ClipRange;
 
 /**
  * BrainFlow Project
@@ -22,11 +21,9 @@ public class IncreaseContrastCommand extends BrainFlowCommand {
     }
 
     protected void handleExecute() {
-
         ImageView view = getSelectedView();
         if (view != null) {
-            int idx = view.getSelectedLayerIndex();
-            AbstractLayer layer = view.getModel().getLayer(idx);
+            AbstractLayer layer = view.getSelectedLayer();
             incrementContrast(layer);
 
         }

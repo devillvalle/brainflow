@@ -1,10 +1,10 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.colormap.*;
+import com.brainflow.core.IImageDisplayModel;
+import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
-import com.brainflow.display.Property;
 import com.brainflow.utils.ResourceLoader;
-import com.jgoodies.binding.beans.DelayedPropertyChangeHandler;
 import com.jidesoft.dialog.ButtonPanel;
 import com.jidesoft.grid.TableUtils;
 import com.jidesoft.swing.JideBoxLayout;
@@ -17,7 +17,6 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -30,7 +29,7 @@ import java.util.Arrays;
  */
 
 
-public class ColorMapTablePresenter extends AbstractColorMapPresenter {
+public class ColorMapTablePresenter extends ImageViewPresenter {
 
 
     private ColorMapTable colorTable;
@@ -57,7 +56,10 @@ public class ColorMapTablePresenter extends AbstractColorMapPresenter {
                 IColorMap cmap = colorTable.getModel().setTableSize(n.intValue());
 
                 colorTable.getComponent().getSelectionModel().clearSelection();
-                ColorMapTablePresenter.this.getColorMapParameter().setProperty(cmap);
+
+                IImageDisplayModel model = getSelectedView().getModel();
+                model.getSelectedLayer().getImageLayerProperties().colorMap.set(cmap);
+
 
             }
         });
@@ -92,7 +94,8 @@ public class ColorMapTablePresenter extends AbstractColorMapPresenter {
 
                 if (view != null) {
                     // !!! ?? color map already may be set and therefore property change event never fired?
-                    ColorMapTablePresenter.this.getColorMapParameter().setProperty(colorTable.getEditedColorMap());
+                    ImageLayer layer = getSelectedView().getModel().getSelectedLayer();
+                    layer.getImageLayerProperties().colorMap.set(colorTable.getEditedColorMap());
                 }
             }
         });
@@ -113,16 +116,19 @@ public class ColorMapTablePresenter extends AbstractColorMapPresenter {
         return toolBar;
     }
 
+    private IColorMap getColorMap() {
+        if (getSelectedView() != null) {
+            return getSelectedView().getSelectedLayer().getImageLayerProperties().getColorMap();
+        }
+        return null;
+    }
+
     private void initSegmentSpinner() {
-        Property<IColorMap> param = getColorMapParameter();
 
-
-        if (param != null) {
+        IColorMap cmap = getColorMap();
+        if (cmap != null) {
             segmentSpinner.setEnabled(true);
-            IColorMap cmap = param.getProperty();
             segmentSpinner.setModel(new SpinnerNumberModel(cmap.getMapSize(), 1, 256, 1));
-
-
         } else {
             segmentSpinner.setEnabled(false);
         }
@@ -130,18 +136,20 @@ public class ColorMapTablePresenter extends AbstractColorMapPresenter {
 
     }
 
+    public void allViewsDeselected() {
 
-    public void setColorMap(Property<IColorMap> param) {
+    }
+
+    public void viewSelected(ImageView view) {
+        IColorMap cmap = getSelectedView().getModel().getSelectedLayer().getImageLayerProperties().getColorMap();
+        setColorMap(cmap);
+
+    }
+
+    public void setColorMap(IColorMap cmap) {
 
         initSegmentSpinner();
-        colorTable.setColorMap(param.getProperty());
-
-        param.addPropertyChangeListener(new DelayedPropertyChangeHandler(5000) {
-            public void delayedPropertyChange(PropertyChangeEvent evt) {
-                colorTable.setColorMap(ColorMapTablePresenter.this.getColorMapParameter().getProperty());
-
-            }
-        });
+        colorTable.setColorMap(cmap);
 
 
     }

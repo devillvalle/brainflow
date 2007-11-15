@@ -6,12 +6,10 @@
 
 package com.brainflow.modes;
 import com.brainflow.graphics.*;
-import com.brainflow.core.ImageCanvas;
-import com.brainflow.core.ImageCanvas2;
+import com.brainflow.core.BrainCanvas;
 
 import java.awt.event.*;
-import java.awt.*;
-import java.util.*;
+
 /**
  *
  * @author  Bradley
@@ -24,7 +22,7 @@ public class RubberbandMode extends com.brainflow.modes.ImageCanvasMode implemen
     public RubberbandMode() {
     }
     
-    public RubberbandMode(ImageCanvas2 _canvas) {
+    public RubberbandMode(BrainCanvas _canvas) {
         super.setImageCanvas(_canvas);
         rubberband = new Rubberband(canvas);
         rubberband.setActive(true);

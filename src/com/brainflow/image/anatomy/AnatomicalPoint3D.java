@@ -1,5 +1,7 @@
 package com.brainflow.image.anatomy;
 
+import com.sun.istack.internal.NotNull;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
@@ -44,6 +46,7 @@ public class AnatomicalPoint3D implements AnatomicalPoint {
         changeSupport.addPropertyChangeListener(listener);
     }
 
+    @NotNull
     public static AnatomicalPoint3D convertPoint(AnatomicalPoint3D from, Anatomy3D to) {
         AnatomicalPoint1D a1 = from.getValue(to.XAXIS);
         AnatomicalPoint1D a2 = from.getValue(to.YAXIS);

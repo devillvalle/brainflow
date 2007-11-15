@@ -73,7 +73,7 @@ public class TripleSliderForm extends JPanel {
     }
 
     private void buildGUI() {
-        layout = new FormLayout("6dlu, l:min(75dlu;p):g, 3dlu, 5dlu, l:max(p;30dlu), 3dlu, 3dlu", "4dlu, p, 3dlu, p, 6dlu, p, 3dlu, p, 6dlu, p, 3dlu, p, 12dlu");
+        layout = new FormLayout("6dlu, l:min(75dlu;p):g, 3dlu, 5dlu, l:max(p;30dlu), 3dlu, 3dlu", "5dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 5dlu");
         setLayout(layout);
 
         slider1 = new JSlider();

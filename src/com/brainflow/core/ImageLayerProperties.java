@@ -9,6 +9,9 @@ import com.jgoodies.binding.beans.PropertyAdapter;
 import com.jgoodies.binding.list.SelectionInList;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
+import net.java.dev.properties.Property;
+import net.java.dev.properties.container.BeanContainer;
+import net.java.dev.properties.container.ObservableProperty;
 
 import java.awt.image.IndexColorModel;
 import java.io.Serializable;
@@ -43,15 +46,14 @@ public class ImageLayerProperties implements Serializable {
 
     public static final String CLIP_RANGE_PROPERTY = "clipRange";
 
-    @XStreamOmitField
-    private Property<IColorMap> colorMap;
+    public final ObservableProperty<IColorMap> colorMap = ObservableProperty.create();
 
     @XStreamAlias("interpolation")
     private InterpolationMethod interpolation;
 
     private Visibility visible;
 
-    private Opacity opacity;
+    public final Property<Double> opacity = ObservableProperty.create(1.0);
 
     @XStreamAlias("smoothing-radius")
     private SmoothingRadius smoothingRadius;
@@ -59,19 +61,21 @@ public class ImageLayerProperties implements Serializable {
 
     private ThresholdRange threshold;
 
-    @XStreamAlias("clip-range")
-    private ClipRange clipRange;
+
+    public final ObservableProperty<ClipRange> clipRange = ObservableProperty.create(new ClipRange(0,0,0,0));
 
     @XStreamOmitField
     private SelectionInList interpolationMethod;
 
 
     public ImageLayerProperties(IRange _dataRange) {
+        BeanContainer.bind(this);
         IColorMap imap = new LinearColorMapDeprecated(_dataRange.getMin(), _dataRange.getMax(), ColorTable.GRAYSCALE);
         init(imap, _dataRange);
     }
 
     public ImageLayerProperties(IRange _dataRange, ThresholdRange _thresholdRange) {
+        BeanContainer.bind(this);
         IColorMap imap = new LinearColorMapDeprecated(_dataRange.getMin(), _dataRange.getMax(), ColorTable.GRAYSCALE);
         init(imap, _dataRange);
 
@@ -80,6 +84,7 @@ public class ImageLayerProperties implements Serializable {
     }
 
     public ImageLayerProperties(IndexColorModel _icm, IRange _dataRange) {
+        BeanContainer.bind(this);
         IColorMap imap = new LinearColorMapDeprecated(_dataRange.getMin(), _dataRange.getMax(), _icm);
         init(imap, _dataRange);
     }
@@ -91,13 +96,11 @@ public class ImageLayerProperties implements Serializable {
 
     private void init(IColorMap map, IRange dataRange) {
 
-        colorMap = new Property<IColorMap>(map);
+        colorMap.set(map);
 
         interpolation = new InterpolationMethod(InterpolationType.CUBIC);
 
         visible = new Visibility(this, true);
-
-        opacity = new Opacity(1f);
 
         smoothingRadius = new SmoothingRadius(0);
 
@@ -105,7 +108,12 @@ public class ImageLayerProperties implements Serializable {
 
         threshold = new ThresholdRange(map.getMinimumValue(), map.getMinimumValue(), dataRange);
 
-        clipRange = new ClipRange(map.getLowClip(), map.getHighClip());
+        clipRange.get().maxValue.set(dataRange.getMax());
+        clipRange.get().minValue.set(dataRange.getMin());
+
+        clipRange.get().lowClip.set(map.getLowClip());
+        clipRange.get().highClip.set(map.getHighClip());
+
 
    }
 
@@ -122,7 +130,7 @@ public class ImageLayerProperties implements Serializable {
     }
 
     public ClipRange getClipRange() {
-        return clipRange;
+        return clipRange.get();
     }
 
     public SelectionInList getInterpolationMethod() {
@@ -130,12 +138,12 @@ public class ImageLayerProperties implements Serializable {
     }
 
 
-    public Opacity getOpacity() {
-        return opacity;
+    public float getOpacity() {
+        return opacity.get().floatValue();
     }
 
-    public Property<IColorMap> getColorMap() {
-        return colorMap;
+    public IColorMap getColorMap() {
+        return colorMap.get();
     }
 
     public InterpolationMethod getInterpolation() {

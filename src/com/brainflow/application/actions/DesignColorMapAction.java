@@ -2,7 +2,7 @@ package com.brainflow.application.actions;
 
 import com.brainflow.application.presentation.ColorBandChartPresenter;
 import com.brainflow.colormap.IColorMap;
-import com.brainflow.core.ImageCanvas2;
+import com.brainflow.core.BrainCanvas;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
 import org.bushe.swing.action.BasicAction;
@@ -50,12 +50,12 @@ public class DesignColorMapAction extends BasicAction {
     protected void execute(ActionEvent actionEvent) throws Exception {
 
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
-        ImageCanvas2 canvas = (ImageCanvas2) getContextValue(ActionContext.SELECTED_CANVAS);
+        BrainCanvas canvas = (BrainCanvas) getContextValue(ActionContext.SELECTED_CANVAS);
         if (view != null) {
 
             //int layer = view.getModel().getSelectedLayerIndex();
             ImageLayer layer = view.getModel().getSelectedLayer();
-            IColorMap oldMap = layer.getImageLayerProperties().getColorMap().getProperty();
+            IColorMap oldMap = layer.getImageLayerProperties().getColorMap();
 
             //if (oldMap instanceof LinearColorMapDeprecated) {
             // todo fix me
@@ -67,7 +67,7 @@ public class DesignColorMapAction extends BasicAction {
                     null, null, null);
 
             if (ret != JOptionPane.OK_OPTION) {
-                layer.getImageLayerProperties().getColorMap().setProperty(oldMap);
+                layer.getImageLayerProperties().colorMap.set(oldMap);
 
             }
 

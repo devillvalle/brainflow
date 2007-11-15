@@ -1,7 +1,7 @@
 package com.brainflow.application.actions;
 
 import com.brainflow.application.toplevel.Brainflow;
-import com.brainflow.core.ImageCanvas2;
+import com.brainflow.core.BrainCanvas;
 import com.brainflow.core.ImageView;
 import com.pietschy.command.ActionCommand;
 
@@ -29,7 +29,7 @@ public abstract class BrainFlowCommand extends ActionCommand {
 
     }
 
-    public ImageCanvas2 getSelectedCanvas() {
+    public BrainCanvas getSelectedCanvas() {
         return Brainflow.getInstance().getSelectedCanvas();
 
     }

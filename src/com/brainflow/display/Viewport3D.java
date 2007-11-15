@@ -21,7 +21,7 @@ import java.beans.PropertyChangeEvent;
  */
 public class Viewport3D extends Model {
 
-
+    
     public static final String X_AXIS_MIN_PROPERTY = "XAxisMin";
     public static final String Y_AXIS_MIN_PROPERTY = "YAxisMin";
     public static final String Z_AXIS_MIN_PROPERTY = "ZAxisMin";

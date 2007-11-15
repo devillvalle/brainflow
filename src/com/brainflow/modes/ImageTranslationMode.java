@@ -1,8 +1,7 @@
 package com.brainflow.modes;
 
-import com.brainflow.core.ImageCanvas;
 import com.brainflow.core.ImageView;
-import com.brainflow.core.ImageCanvas2;
+import com.brainflow.core.BrainCanvas;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -27,7 +26,7 @@ public class ImageTranslationMode extends ImageCanvasMode implements MouseListen
     boolean dragging = false;
 
 
-    public ImageTranslationMode(ImageCanvas2 _canvas) {
+    public ImageTranslationMode(BrainCanvas _canvas) {
         super.setImageCanvas(_canvas);
 
     }

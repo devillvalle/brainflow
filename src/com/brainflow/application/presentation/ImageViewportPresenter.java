@@ -1,7 +1,7 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.application.YokeHandler;
-import com.brainflow.application.toplevel.ImageCanvasManager;
+import com.brainflow.application.toplevel.BrainCanvasManager;
 import com.brainflow.core.IImagePlot;
 import com.brainflow.core.ImageDisplayModel;
 import com.brainflow.core.ImageView;
@@ -93,7 +93,7 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
     private void buildGUI() {
         form = new JPanel();
-        layout = new FormLayout("8dlu, p:g, 6dlu, p:g, 8dlu", "8dlu, p, 6dlu, p, 6dlu, p, 6dlu, p, 6dlu, max(150dlu;p):g, 1dlu, 3dlu, p, 6dlu");
+        layout = new FormLayout("8dlu, p:g, 6dlu, p:g, 8dlu", "8dlu, p, 6dlu, p, 6dlu, p, 6dlu, p, 6dlu, min(125dlu;p):g, 1dlu, 3dlu, p, 6dlu");
         form.setLayout(layout);
         layout.addGroupedColumn(2);
         layout.addGroupedColumn(4);
@@ -114,7 +114,7 @@ public class ImageViewportPresenter extends ImageViewPresenter {
         yorigin.setModel(yspinnerModel);
         //yorigin.setEditor(yspinnerModel);
 
-        form.add(new JLabel("Origin: "), cc.xy(2, 6));
+        //form.add(new JLabel("Origin: "), cc.xy(2, 6));
 
         JPanel xpan = new JPanel();
         xpan.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -132,6 +132,7 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
         viewPanel = new JPanel();
         boxView = new ImageView(new ImageDisplayModel("NULL"));
+        boxView.pixelsPerUnit.set(.7);
         boxView.setPlotLayout(new SimplePlotLayout(boxView, Anatomy3D.getCanonicalAxial()));
         boxView.clearAnnotations();
         boxView.getSelectedPlot().setPlotInsets(new Insets(2, 2, 2, 2));
@@ -164,7 +165,7 @@ public class ImageViewportPresenter extends ImageViewPresenter {
         viewPanel.add(xfovSlider, BorderLayout.SOUTH);
         viewPanel.add(yfovSlider, BorderLayout.WEST);
 
-        form.add(viewPanel, cc.xywh(1, 10, 4, 2));
+        form.add(viewPanel, cc.xywh(1, 10, 4, 1));
 
         //form.add(fovSlider, cc.xywh(2,13,3,1));
 
@@ -286,13 +287,15 @@ public class ImageViewportPresenter extends ImageViewPresenter {
             yokeHandler = new YokeHandler(boxView);
             yokeHandler.addSource(view);
         } else {
+            System.out.println("clearing yoked sources");
             yokeHandler.clearSources();
             yokeHandler.setTarget(boxView);
             yokeHandler.addSource(view);
+            System.out.println("num yoked " + yokeHandler.getSources().size());
         }
 
         /// what about unyoking old views?
-        ImageCanvasManager.getInstance().yoke(view, boxView);
+        //BrainCanvasManager.getInstance().yoke(view, boxView);
 
     }
 

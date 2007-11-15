@@ -1,6 +1,6 @@
 package com.brainflow.core;
 
-import com.brainflow.display.ClipRange;
+import com.brainflow.core.ClipRange;
 import com.brainflow.display.ThresholdRange;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
@@ -70,7 +70,7 @@ public abstract class AbstractLayer {
     }
 
     public double getOpacity() {
-        return properties.getOpacity().getOpacity();
+        return properties.opacity.get();
     }
 
     public ThresholdRange getThreshold() {
@@ -111,13 +111,13 @@ public abstract class AbstractLayer {
             }
         });
 
-        properties.getOpacity().addPropertyChangeListener(new PropertyChangeListener() {
+        /*properties.getOpacity().addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 support.firePropertyChange(new PropertyChangeEvent(AbstractLayer.this, ImageLayerProperties.OPACITY_PROPERTY,
                         evt.getOldValue(), evt.getNewValue()));
 
             }
-        });
+        });*/
 
         properties.getSmoothingRadius().addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
@@ -136,13 +136,13 @@ public abstract class AbstractLayer {
             }
         });
 
-         properties.getClipRange().addPropertyChangeListener(new PropertyChangeListener() {
+         /*properties.getClipRange().addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 support.firePropertyChange(new PropertyChangeEvent(AbstractLayer.this, ImageLayerProperties.CLIP_RANGE_PROPERTY,
                         evt.getOldValue(), evt.getNewValue()));
 
             }
-        });
+        });*/
 
 
     }

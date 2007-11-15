@@ -115,7 +115,7 @@ public class BasicCoordinateSliceRenderer implements SliceRenderer {
         double transx = (minx - frame.getMinX()); //+ (-frameBounds.getMinX());
         double transy = (miny - frame.getMinY()); //+ (-frameBounds.getMinY());
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        AlphaComposite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) getLayer().getOpacity());
+        AlphaComposite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) getLayer().getImageLayerProperties().opacity.get().doubleValue());
         g2.setComposite(composite);
 
 
@@ -129,7 +129,7 @@ public class BasicCoordinateSliceRenderer implements SliceRenderer {
 
         System.out.println("clip : " + g2.getClip());
 
-        IColorMap map = getLayer().getImageLayerProperties().getColorMap().getProperty();
+        IColorMap map = getLayer().getImageLayerProperties().colorMap.get();
         for (int i : indices) {
             AnatomicalPoint3D pt = set.getAnatomicalPoint(i);
             double value = set.getValue(i);

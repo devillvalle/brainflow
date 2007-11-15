@@ -53,7 +53,7 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
     public static final String PRESERVE_ASPECT_PROPERTY = "preserveAspect";
 
-    public final Property<IImageDisplayModel> displayModel = new ObservableProperty<IImageDisplayModel>();
+    public final Property<IImageDisplayModel> displayModel = ObservableProperty.create();
 
     public final Property<Boolean> preserveAspect = new ObservableProperty<Boolean>(false) {
         public void set(Boolean aBoolean) {
@@ -67,6 +67,10 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
         }
     };
 
+    public final Property<String> identifier = ObservableProperty.create("view");
+
+    public final Property<Double> pixelsPerUnit = ObservableProperty.create(1.5);
+
     private ICrosshair crosshair;
 
     private InterpolationType screenInterpolation = InterpolationType.NEAREST_NEIGHBOR;
@@ -76,9 +80,6 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
     private SliceController sliceController;
 
     private SelectionInList<IImagePlot> plotSelection;
-
-
-
 
     protected Viewport3D viewport;
 
@@ -237,7 +238,10 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
         return getPlotSelection().getSelection();
     }
 
-
+    public ImageLayer getSelectedLayer() {
+        return displayModel.get().getSelectedLayer();
+    }
+    
     public int getSelectedLayerIndex() {
         return displayModel.get().getLayerSelection().getSelectionIndex();
     }
@@ -422,9 +426,15 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
     @Override
     public Dimension getPreferredSize() {
-        return plotLayout.getPreferredSize();
+        Dimension d =  plotLayout.getPreferredSize();
+
+        d.setSize(d.getWidth()*pixelsPerUnit.get().doubleValue(), d.getHeight() * pixelsPerUnit.get().doubleValue());
+        return d;
     }
 
+    public String toString() {
+        return identifier.get();
+    }
 
     class ImageLayerSelectionListener implements PropertyChangeListener {
 
@@ -445,16 +455,18 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
         public void propertyChange(PropertyChangeEvent evt) {
             ICrosshair cross = (ICrosshair) evt.getSource();
             AnatomicalPoint1D slice = cross.getLocation().getValue(ImageView.this.getSelectedPlot().getDisplayAnatomy().ZAXIS);
+            System.out.println("crosshair changed to " + slice);
             sliceController.setSlice(slice);
-            System.out.println("setting slice to " + slice);
+            
 
-            //todo could be gratuitious because repaint called in sliceController ...
+            //todo could be gratuitous because repaint called in sliceController ...
             getSelectedPlot().getComponent().repaint();
 
             EventBus.publish(new ImageViewCrosshairEvent(ImageView.this));
 
         }
     }
+
 
 
     class ViewportHandler implements PropertyChangeListener {

@@ -1,11 +1,11 @@
 package com.brainflow.application.presentation;
 
-import com.brainflow.colormap.ColorBarPlot;
-import com.brainflow.colormap.ColorTable;
-import com.brainflow.colormap.IColorMap;
-import com.brainflow.colormap.LinearColorMapDeprecated;
+import com.brainflow.colormap.*;
+import com.brainflow.core.ImageLayer;
+import com.brainflow.core.ImageView;
 import com.brainflow.display.ColorBandChart;
 import com.brainflow.display.Property;
+import net.java.dev.properties.BaseProperty;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -20,7 +20,7 @@ import java.awt.image.IndexColorModel;
  * Time: 12:54:53 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ColorBandChartPresenter extends AbstractColorMapPresenter {
+public class ColorBandChartPresenter extends ImageViewPresenter {
 
     private IColorMap colorMap;
 
@@ -37,9 +37,8 @@ public class ColorBandChartPresenter extends AbstractColorMapPresenter {
 
     private ChangeHandler changeHandler = new ChangeHandler();
 
-    public ColorBandChartPresenter(Property<IColorMap> parameter) {
-        super(parameter);
-        colorMap = parameter.getProperty();
+    public ColorBandChartPresenter(IColorMap parameter) {
+        colorMap = parameter;
         buildGUI();
     }
 
@@ -76,6 +75,16 @@ public class ColorBandChartPresenter extends AbstractColorMapPresenter {
         panel.add(chartAlpha.getComponent());
     }
 
+   
+
+    public void allViewsDeselected() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void viewSelected(ImageView view) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public void setColorMap(Property<IColorMap> colorMapParameter) {
 
     }
@@ -91,8 +100,9 @@ public class ColorBandChartPresenter extends AbstractColorMapPresenter {
             byte[] alpha = chartAlpha.getBandData();
 
             IndexColorModel icm = new IndexColorModel(8, 256, reds, greens, blues, alpha);
-            colorMap = new LinearColorMapDeprecated(colorMap.getMinimumValue(), colorMap.getMaximumValue(), icm);
-            ColorBandChartPresenter.this.getColorMapParameter().setProperty(colorMap);
+            colorMap = new LinearColorMap2(colorMap.getMinimumValue(), colorMap.getMaximumValue(), icm);
+            ImageLayer layer = getSelectedView().getModel().getSelectedLayer();
+            layer.getImageLayerProperties().colorMap.set(colorMap);
 
         }
     }
@@ -101,7 +111,7 @@ public class ColorBandChartPresenter extends AbstractColorMapPresenter {
         JFrame jf = new JFrame();
 
 
-        jf.add(new ColorBandChartPresenter(new Property<IColorMap>(new LinearColorMapDeprecated(0, 300, ColorTable.SPECTRUM))).getComponent());
+        jf.add(new ColorBandChartPresenter(new LinearColorMapDeprecated(0, 300, ColorTable.SPECTRUM)).getComponent());
         jf.pack();
         jf.setVisible(true);
 

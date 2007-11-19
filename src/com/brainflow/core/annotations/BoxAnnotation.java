@@ -2,6 +2,8 @@ package com.brainflow.core.annotations;
 
 import com.brainflow.core.IImagePlot;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
+import net.java.dev.properties.Property;
+import net.java.dev.properties.container.ObservableProperty;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -24,35 +26,46 @@ public class BoxAnnotation extends AbstractAnnotation {
     public static final String FILLPAINT_PROPERTY = "fillPaint";
     public static final String LINEPAINT_PROPERTY = "linePaint";
 
-    private Rectangle2D rect = new Rectangle2D.Double();
+    public final Property<Double> xmin = ObservableProperty.create();
+
+    public final Property<Double> ymin = ObservableProperty.create();
+
+    public final Property<Double> width = ObservableProperty.create();
+
+    public final Property<Double> height = ObservableProperty.create();
+
+    public final Property<Paint> fillPaint = ObservableProperty.create((Paint)new Color(0, 255, 0, 87));
+
+    public final Property<Paint> linePaint = ObservableProperty.create((Paint)Color.GREEN.brighter());
 
 
-    private Paint fillPaint = new Color(0, 255, 0, 87);
-
-    private Paint linePaint = Color.GREEN.brighter();
 
 
     public BoxAnnotation() {
     }
 
-    public BoxAnnotation(Rectangle2D rect, Paint fillPaint, Paint linePaint) {
-        this.rect = rect;
-        this.fillPaint = fillPaint;
-        this.linePaint = linePaint;
+    public BoxAnnotation(Rectangle2D rect, Paint _fillPaint, Paint _linePaint) {
+        xmin.set(rect.getMinX());
+        ymin.set(rect.getMinY());
+        fillPaint.set(_fillPaint);
+        linePaint.set(_linePaint);
     }
 
     public IAnnotation safeCopy() {
-        return new BoxAnnotation((Rectangle2D)rect.clone(), fillPaint, linePaint);
+        return new BoxAnnotation(new Rectangle2D.Double(xmin.get(), ymin.get(), width.get(), height.get()), fillPaint.get(), linePaint.get());
     }
 
 
     public boolean containsPoint(IImagePlot plot, Point plotPoint) {
         AnatomicalPoint2D pt = plot.translateScreenToAnat(plotPoint);
-        if (rect.contains(pt.getX(), pt.getY())) {
-            return true;
-        } else {
-            return false;
-        }
+
+        if (pt.getX() < xmin.get()) return false;
+        if (pt.getY() < ymin.get()) return false;
+        if (pt.getX() > (xmin.get() + width.get()) ) return false;
+        if (pt.getY() > (ymin.get() + height.get()) ) return false;
+
+        return true;
+
     }
 
     public AnatomicalPoint2D translateFromJava2D(IImagePlot plot, Point plotPoint) {
@@ -95,84 +108,71 @@ public class BoxAnnotation extends AbstractAnnotation {
 
 
         Paint oldPaint = g2d.getPaint();
-        g2d.setPaint(linePaint);
+        g2d.setPaint(linePaint.get());
         g2d.drawRect((int) screenX, (int) screenY, (int) screenWidth, (int) screenHeight);
-        g2d.setPaint(fillPaint);
+        g2d.setPaint(fillPaint.get());
         g2d.fillRect((int) (screenX + 1), (int) (screenY + 1), (int) (screenWidth - 1), (int) (screenHeight - 1));
 
         g2d.setPaint(oldPaint);
 
+
+
     }
 
     public String getIdentifier() {
-        return "box";
+        return ID;
     }
 
 
     public double getXmin() {
-        return rect.getX();
+        return xmin.get();
     }
 
-    public void setXmin(double xmin) {
-
-        double old = getXmin();
-        rect.setRect(xmin, rect.getY(), rect.getWidth(), rect.getHeight());
-        support.firePropertyChange(BoxAnnotation.XMIN_PROPERTY, old, getXmin());
+    public void setXmin(double _xmin) {
+       xmin.set(_xmin);
     }
 
     public double getYmin() {
-        return rect.getY();
+        return ymin.get();
     }
 
-    public void setYmin(double ymin) {
-
-        double old = getYmin();
-
-        rect.setRect(getXmin(), ymin, getWidth(), getHeight());
-        support.firePropertyChange(BoxAnnotation.YMIN_PROPERTY, old, getYmin());
+    public void setYmin(double _ymin) {
+        ymin.set(_ymin);
     }
 
     public double getWidth() {
-        return rect.getWidth();
+        return width.get();
     }
 
-    public void setWidth(double width) {
-
-        double old = getWidth();
-        rect.setRect(getXmin(), getYmin(), width, rect.getHeight());
-        support.firePropertyChange(BoxAnnotation.WIDTH_PROPERTY, old, getWidth());
+    public void setWidth(double _width) {
+        width.set(_width);
     }
 
     public double getHeight() {
-        return rect.getHeight();
+       return height.get();
     }
 
-    public void setHeight(double height) {
-        
-        double old = getHeight();
-        rect.setRect(getXmin(), getYmin(), rect.getWidth(), height);
-        support.firePropertyChange(BoxAnnotation.HEIGHT_PROPERTY, old, getHeight());
+    public void setHeight(double _height) {
+        height.set(_height);
+
     }
 
 
     public Paint getFillPaint() {
-        return fillPaint;
+        return fillPaint.get();
     }
 
-    public void setFillPaint(Paint fillPaint) {
-        Paint old = fillPaint;
-        this.fillPaint = fillPaint;
-        support.firePropertyChange(BoxAnnotation.FILLPAINT_PROPERTY, old, fillPaint);
+    public void setFillPaint(Paint _fillPaint) {
+        fillPaint.set(_fillPaint);
+
     }
 
     public Paint getLinePaint() {
-        return linePaint;
+        return linePaint.get();
     }
 
-    public void setLinePaint(Paint linePaint) {
-        Paint old = linePaint;
-        this.linePaint = linePaint;
-        support.firePropertyChange(BoxAnnotation.LINEPAINT_PROPERTY, old, linePaint);
+    public void setLinePaint(Paint _linePaint) {
+        linePaint.set(_linePaint);
 
     }
 }

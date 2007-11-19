@@ -119,7 +119,7 @@ public class ImageAxis extends CoordinateAxis {
         return getSamples()[idx];
     }
 
-    public double valueOf(AnatomicalPoint1D sample) {
+    public final double valueOf(AnatomicalPoint1D sample) {
         assert sample.getAnatomy().sameAxis(getAnatomicalAxis());
 
         if (sample.getAnatomy() == getAnatomicalAxis().getFlippedAxis()) {
@@ -131,7 +131,7 @@ public class ImageAxis extends CoordinateAxis {
     }
 
 
-    public AnatomicalPoint1D valueOf(int sample) {
+    public final AnatomicalPoint1D valueOf(int sample) {
         double relpos = sample * spacing + spacing / 2f;
         return new AnatomicalPoint1D(getAnatomicalAxis(), relpos + getRange().getMinimum());
     }

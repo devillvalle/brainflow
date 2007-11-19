@@ -1,6 +1,6 @@
 package com.brainflow.application.toplevel;
 
-import com.brainflow.application.services.ImageViewCursorEvent;
+import com.brainflow.application.services.ImageViewMousePointerEvent;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.jidesoft.status.LabelStatusBarItem;
 import org.bushe.swing.event.EventBus;
@@ -27,7 +27,7 @@ public class CursorCoordinates implements EventSubscriber {
     private MessageFormat format = new MessageFormat("{0}: {1, number, ##0.0}");
 
     public CursorCoordinates() {
-        EventBus.subscribeExactly(ImageViewCursorEvent.class, this);
+        EventBus.subscribeExactly(ImageViewMousePointerEvent.class, this);
         xaxisLabel.setText("0.0");
         yaxisLabel.setText("0.0");
         zaxisLabel.setText("0.0");
@@ -50,7 +50,7 @@ public class CursorCoordinates implements EventSubscriber {
     }
 
     public void onEvent(Object evt) {
-        ImageViewCursorEvent event = (ImageViewCursorEvent) evt;
+        ImageViewMousePointerEvent event = (ImageViewMousePointerEvent) evt;
         AnatomicalPoint3D gpoint = event.getLocation();
         if (gpoint != null) {
             xaxisLabel.setText(format.format(new Object[]{

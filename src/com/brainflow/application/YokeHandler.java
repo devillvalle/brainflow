@@ -2,14 +2,13 @@ package com.brainflow.application;
 
 import com.brainflow.core.ImageDisplayModel;
 import com.brainflow.core.ImageView;
-import com.brainflow.core.SimpleImageView;
-import com.brainflow.display.ICrosshair;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import net.java.dev.properties.BaseProperty;
+import net.java.dev.properties.container.BeanContainer;
+import net.java.dev.properties.events.PropertyListener;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.lang.ref.WeakReference;
+import java.util.HashMap;
 import java.util.Set;
-import java.util.WeakHashMap;
 import java.util.logging.Logger;
 
 
@@ -24,28 +23,33 @@ public class YokeHandler {
 
     private static final Logger log = Logger.getLogger(YokeHandler.class.getName());
 
-    private WeakReference<ImageView> target;
+    private ImageView target;
 
-    private WeakHashMap<ImageView, Long> sources = new WeakHashMap<ImageView, Long>();
+    private HashMap<ImageView, Long> sources = new HashMap<ImageView, Long>();
 
-    private CrosshairListener crossHandler = new CrosshairListener();
-
+    private PropertyListener crossHandler = new CrosshairListener();
 
     public YokeHandler(ImageView _target) {
-        target = new WeakReference<ImageView>(_target);
+        target = _target;
+    }
+
+    public YokeHandler(ImageView _target, PropertyListener crossHandler) {
+        target = _target;
+        this.crossHandler = crossHandler;
     }
 
     public void setTarget(ImageView _target) {
-        target = new WeakReference<ImageView>(_target);
+        target = _target;
     }
 
-    public WeakReference<ImageView> getTarget() {
+    public ImageView getTarget() {
         return target;
     }
 
     public void clearSources() {
         for (ImageView view : sources.keySet()) {
-            view.getCrosshair().removePropertyChangeListener(crossHandler);            
+            BeanContainer.get().removeListener(view.cursorPos, crossHandler);
+
         }
         sources.clear();
 
@@ -57,51 +61,62 @@ public class YokeHandler {
     }
 
     public void removeSource(ImageView view) {
-        sources.remove(view);
-      
-        view.getCrosshair().removePropertyChangeListener(crossHandler);
+        if (sources.containsKey(view)) {
+            sources.remove(view);
+            BeanContainer.get().removeListener(view.cursorPos, crossHandler);
+        } else {
+            log.warning("Failed removal request: YokeHandler does not contain the view " + view);
+        }
+
     }
 
     public void addSource(ImageView view) {
-        if (view == target.get()) {
+        if (view == target) {
             throw new IllegalArgumentException("Source cannot be same ImageView as target!");
         }
         if (sources.containsKey(view)) {
             log.warning("YokeHandler already contains view argument : " + view);
         } else {
-            log.fine("yoking view " + view + " to " + target.get());
+            log.fine("yoking view " + view + " to " + target);
             sources.put(view, System.currentTimeMillis());
-            view.getCrosshair().addPropertyChangeListener(crossHandler);
+            BeanContainer.get().addListener(view.cursorPos, crossHandler);
         }
     }
 
-    public boolean isStale() {
-        return target.get() == null;
-    }
 
     public boolean containsSource(ImageView view) {
         return sources.containsKey((view));
     }
 
+    public void setTargetLocation(AnatomicalPoint3D point) {
+        target.cursorPos.set(point);
 
-    class CrosshairListener implements PropertyChangeListener {
+    }
 
-        public void propertyChange(PropertyChangeEvent evt) {
+    public AnatomicalPoint3D getTargetLocation() {
+        return target.getCursorPos();
+    }
 
-            ICrosshair cross = (ICrosshair) evt.getSource();
-            ImageView view = target.get();
-            if (view != null) {
-                view.getCrosshair().setLocation(cross.getLocation());
-            } else {
-                log.fine("Target view of YokeHandler has been garbage collected");
+
+    class CrosshairListener implements PropertyListener {
+
+        public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+            AnatomicalPoint3D ap = (AnatomicalPoint3D)newValue;
+
+            if (!ap.equals(getTargetLocation())) {
+                log.info("forwarding cursor change to view : " + target);
+                setTargetLocation(ap);              
             }
+
         }
+
+
     }
 
     public static void main(String[] args) {
-        SimpleImageView target = new SimpleImageView(new ImageDisplayModel("1"));
-        SimpleImageView s1 = new SimpleImageView(new ImageDisplayModel("s1"));
-        SimpleImageView s2 = new SimpleImageView(new ImageDisplayModel("s2"));
+        ImageView target = new ImageView(new ImageDisplayModel("1"));
+        ImageView s1 = new ImageView(new ImageDisplayModel("s1"));
+        ImageView s2 = new ImageView(new ImageDisplayModel("s2"));
 
         YokeHandler handler = new YokeHandler(target);
         handler.addSource(s1);

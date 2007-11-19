@@ -47,6 +47,14 @@ public class CoordinateAxis {
         return range.getCenter();              
     }
 
+    public double getMinimum() {
+        return range.getMinimum();
+    }
+
+    public double getMaximum() {
+        return range.getMaximum();
+    }
+
     public AxisRange getRange() {
         return range;
     }

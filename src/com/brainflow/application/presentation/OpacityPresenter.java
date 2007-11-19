@@ -10,21 +10,14 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.application.presentation.binding.Bindable;
-import com.brainflow.application.presentation.binding.PercentageConverterProperty;
+import com.brainflow.application.presentation.binding.PercentageRangeConverter;
 import com.brainflow.application.presentation.forms.OpacityForm;
 import com.brainflow.core.AbstractLayer;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.ImageLayer;
-import com.brainflow.core.ClipRange;
-import com.brainflow.display.Opacity;
-import com.jgoodies.binding.adapter.Bindings;
-import com.jgoodies.binding.adapter.BoundedRangeAdapter;
 import com.jgoodies.binding.beans.BeanAdapter;
-import com.jgoodies.binding.value.ConverterFactory;
-import com.jgoodies.binding.value.ValueHolder;
 
 import javax.swing.*;
-import java.text.NumberFormat;
 
 import net.java.dev.properties.binding.swing.adapters.SwingBind;
 
@@ -74,7 +67,7 @@ public class OpacityPresenter extends ImageViewPresenter implements Bindable {
 
     public void bind() {
         ImageLayer layer = getSelectedView().getModel().getSelectedLayer();
-        SwingBind.get().bind(new PercentageConverterProperty(layer.getImageLayerProperties().opacity, 0, 1, 100), form.getOpacitySlider());
+        SwingBind.get().bind(new PercentageRangeConverter(layer.getImageLayerProperties().opacity, 0, 1, 100), form.getOpacitySlider());
 
     }
 

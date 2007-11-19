@@ -2,7 +2,7 @@ package com.brainflow.application.actions;
 
 import com.brainflow.core.IImagePlot;
 import com.brainflow.core.ImageView;
-import com.brainflow.display.ICrosshair;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.jidesoft.popup.JidePopup;
 import org.bushe.swing.action.BasicAction;
 
@@ -53,7 +53,7 @@ public class CollectInfoAction extends BasicAction {
         sb.append("Range " + iplot.getYAxisRange().getMinimum() + " to " + iplot.getYAxisRange().getMaximum() + "\n");
 
 
-        ICrosshair cross = view.getCrosshair();
+        AnatomicalPoint3D cross = view.getCursorPos();
         sb.append("Crosshair: " + "\n");
         sb.append("zero loc " + cross.getValue(iplot.getXAxisRange().getAnatomicalAxis()) + "\n");
         sb.append("zero loc " + cross.getValue(iplot.getYAxisRange().getAnatomicalAxis()) + "\n");

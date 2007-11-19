@@ -7,9 +7,13 @@ import net.java.dev.properties.container.BeanContainer;
 import net.java.dev.properties.container.ObservableIndexed;
 import net.java.dev.properties.container.ObservableProperty;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+
+import com.brainflow.application.YokeHandler;
+import com.brainflow.display.ICrosshair;
 
 /**
  * Created by IntelliJ IDEA.
@@ -25,14 +29,19 @@ public class BrainCanvasModel {
     private static final Logger log = Logger.getLogger(BrainCanvasModel.class.getCanonicalName());
 
 
-    public final Property<Integer> listSelection = ObservableProperty.create(-1);
+    public final Property<Integer> listSelection = new ObservableProperty<Integer>(-1) {
+        public void set(Integer integer) {
+            if (integer.intValue() >= imageViewList.size()) {
+                throw new IllegalArgumentException("selection index exceeds size of list");
+            }
+            super.set(integer);
+        }
+    };
     
     public final IndexedProperty<ImageView> imageViewList = ObservableIndexed.create();
 
+    private Map<ImageView, YokeHandler> viewLinkMap = new HashMap<ImageView, YokeHandler>();
 
-    //private ArrayListModel imageViewListModel = new ArrayListModel();
-
-    //private SelectionInList imageViewSelection = new SelectionInList((ListModel) imageViewListModel);
 
 
     public BrainCanvasModel() {
@@ -81,13 +90,97 @@ public class BrainCanvasModel {
 
     public void addImageView(ImageView view) {
         imageViewList.add(view);
-        
+        if (listSelection.get() == -1) {
+            listSelection.set(0);
+        }
+    }
+
+    public void removeImageView(ImageView view) {       
+        imageViewList.remove(view);
+        if (listSelection.get() == (getNumViews())) {
+            listSelection.set(listSelection.get()-1);
+        }
+
+        cutLinks(view);
 
     }
 
-    public void removeImageView(ImageView view) {
-        imageViewList.remove(view);
+    private void cutLinks(ImageView view) {
+        Set<ImageView> viewSet = viewLinkMap.keySet();
+        Iterator<ImageView> iter = viewSet.iterator();
 
+        while (iter.hasNext()) {
+            ImageView cur = iter.next();
+            if (viewLinkMap.get(cur).containsSource(view))
+                viewLinkMap.get(cur).removeSource(view);
+        }
+
+        viewLinkMap.remove(view);
+    }
+
+    public Set<ImageView> getYokedViews(ImageView view) {
+        YokeHandler handler = viewLinkMap.get(view);
+
+        Set<ImageView> ret;
+        if (handler == null) {
+            ret = new HashSet<ImageView>();
+        } else {
+            ret = handler.getSources();
+        }
+
+        return ret;
+
+    }
+
+    public void unyoke(ImageView target1, ImageView target2) {
+        YokeHandler handler = viewLinkMap.get(target1);
+        if (handler != null) {
+            handler.removeSource(target2);
+        }
+
+        handler = viewLinkMap.get(target2);
+        if (handler != null) {
+            handler.removeSource(target1);
+        }
+
+    }
+
+
+    public void yoke(ImageView target1, ImageView target2) {
+        if (!imageViewList.get().contains(target1) || !imageViewList.get().contains(target2) ) {
+            throw new IllegalArgumentException("both arguments must be contained in BrainCanvasModel");
+        }
+
+
+
+        YokeHandler handler = viewLinkMap.get(target1);
+        if (handler == null) {
+            handler = new YokeHandler(target1);
+            viewLinkMap.put(target1, handler);
+        }
+
+        handler.addSource(target2);
+
+        handler = viewLinkMap.get(target2);
+        if (handler == null) {
+            handler = new YokeHandler(target2);
+            viewLinkMap.put(target2, handler);
+        }
+
+        handler.addSource(target1);
+
+
+    }
+
+    class CrosshairListener implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+
+            ICrosshair cross = (ICrosshair) evt.getSource();
+            //(ImageView)evt.getSource();
+
+
+        }
     }
 
 

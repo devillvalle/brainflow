@@ -1,17 +1,14 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.application.presentation.binding.Bindable;
-import com.brainflow.application.presentation.binding.PercentageConverterProperty;
+import com.brainflow.application.presentation.binding.PercentageRangeConverter;
 import com.brainflow.application.presentation.forms.DoubleSliderForm;
 import com.brainflow.colormap.AbstractColorMap;
-import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
-import com.brainflow.colormap.LinearColorMapDeprecated;
 import com.brainflow.core.ClipRange;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.AbstractLayer;
-import com.brainflow.display.Property;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
 import com.jgoodies.binding.beans.BeanAdapter;
@@ -84,8 +81,8 @@ public class ColorRangePresenter extends ImageViewPresenter implements Bindable 
         ClipRange clip = layer.getImageLayerProperties().getClipRange();
 
         
-        SwingBind.get().bind(new PercentageConverterProperty(clip.highClip, clip.minValue.get(), clip.maxValue.get(), 100), form.getSlider1());
-        SwingBind.get().bind(new PercentageConverterProperty(clip.lowClip, clip.minValue.get(), clip.maxValue.get(), 100), form.getSlider2());
+        SwingBind.get().bind(new PercentageRangeConverter(clip.highClip, clip.minValue.get(), clip.maxValue.get(), 100), form.getSlider1());
+        SwingBind.get().bind(new PercentageRangeConverter(clip.lowClip, clip.minValue.get(), clip.maxValue.get(), 100), form.getSlider2());
         
     }
 

@@ -3,7 +3,7 @@ package com.brainflow.application.toplevel;
 import com.brainflow.application.*;
 import com.brainflow.application.actions.*;
 import com.brainflow.application.presentation.*;
-import com.brainflow.application.services.ImageViewCursorEvent;
+import com.brainflow.application.services.ImageViewMousePointerEvent;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMap2;
@@ -115,7 +115,8 @@ public class Brainflow {
 
             //UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
 
-            UIManager.setLookAndFeel(new SubstanceCremeLookAndFeel());
+            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceSaharaLookAndFeel());
+            //UIManager.setLookAndFeel(new org.jdesktop.swingx.plaf.nimbus.NimbusLookAndFeel());
 
             //UIManager.setLookAndFeel(new A03LookAndFeel());
             //UIManager.setLookAndFeel(lf);
@@ -843,16 +844,16 @@ public class Brainflow {
         private NumberFormat format = NumberFormat.getNumberInstance();
 
         public ValueStatusItem() {
-            EventBus.subscribeExactly(ImageViewCursorEvent.class, this);
+            EventBus.subscribeExactly(ImageViewMousePointerEvent.class, this);
             setIcon(ColorTable.createImageIcon(Color.GRAY, 40, 15));
             setText("Value :");
         }
 
         public void onEvent(Object evt) {
 
-            ImageViewCursorEvent event = (ImageViewCursorEvent) evt;
+            ImageViewMousePointerEvent event = (ImageViewMousePointerEvent) evt;
 
-            //todo only publish events when cursor is over valid view
+            //todo only publish events when cursorPos is over valid view
             ImageView view = event.getImageView();
 
             if (view == null) {

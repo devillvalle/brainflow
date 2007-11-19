@@ -62,9 +62,9 @@ public class SimpleOrthogonalImageView extends ImageView {
         IImagePlot plot = ipane.getImagePlot();
         Rectangle plotArea = plot.getPlotArea();
 
-        ICrosshair cross = getCrosshair();
-        AnatomicalPoint1D xpt = cross.getValue(plot.getDisplayAnatomy().XAXIS);
-        AnatomicalPoint1D ypt = cross.getValue(plot.getDisplayAnatomy().YAXIS);
+        AnatomicalPoint3D cursor = getCursorPos();
+        AnatomicalPoint1D xpt = cursor.getValue(plot.getDisplayAnatomy().XAXIS);
+        AnatomicalPoint1D ypt = cursor.getValue(plot.getDisplayAnatomy().YAXIS);
 
         double percentX = (xpt.getX() - plot.getXAxisRange().getBeginning().getX()) / plot.getXAxisRange().getInterval();
         double percentY = (ypt.getX() - plot.getYAxisRange().getBeginning().getX()) / plot.getYAxisRange().getInterval();
@@ -140,7 +140,7 @@ public class SimpleOrthogonalImageView extends ImageView {
                         plot.getYAxisRange().getAnatomicalAxis(),
                         plot.getDisplayAnatomy().ZAXIS),
                 apoint.getX(), apoint.getY(),
-                getCrosshair().getValue(displayAnatomy.ZAXIS).getX());
+                getCursorPos().getValue(displayAnatomy.ZAXIS).getX());
 
 
         return ap3d;

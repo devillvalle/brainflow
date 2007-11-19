@@ -1,14 +1,18 @@
 package com.brainflow.application.presentation;
 
+import com.brainflow.application.presentation.binding.DoubleToStringConverter;
+import com.brainflow.application.presentation.binding.PercentageRangeConverter;
 import com.brainflow.application.presentation.forms.TripleSliderForm;
+import com.brainflow.core.ImageView;
 import com.brainflow.display.Crosshair;
 import com.brainflow.display.ICrosshair;
-import com.brainflow.gui.AbstractPresenter;
 import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.image.space.Axis;
+import com.brainflow.image.space.IImageSpace;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
 import com.jgoodies.binding.beans.BeanAdapter;
+import net.java.dev.properties.binding.swing.adapters.SwingBind;
 
 import javax.swing.*;
 
@@ -19,7 +23,7 @@ import javax.swing.*;
  * Time: 2:02:56 PM
  * To change this template use File | Settings | File Templates.
  */
-public class WorldCoordinatePresenter extends AbstractPresenter {
+public class WorldCoordinatePresenter extends ImageViewPresenter {
 
     private TripleSliderForm form;
 
@@ -35,23 +39,41 @@ public class WorldCoordinatePresenter extends AbstractPresenter {
 
     private BoundedRangeAdapter ZSliderAdapter;
 
-    public WorldCoordinatePresenter(ICrosshair _crosshair) {
-        form = new TripleSliderForm();
-        crosshair = _crosshair;
-
-        if (crosshair != null)
-            initBinding();
+    public WorldCoordinatePresenter() {
+        buildGUI();
+        
+        if (getSelectedView() != null)
+            bind();
 
     }
 
-    public void setCrosshair(ICrosshair _crosshair) {
-        crosshair = _crosshair;
-        if (crosshairAdapter != null) {
-            crosshairAdapter.setBean(crosshair);
-            viewportAdapter.setBean(crosshair.getViewport());
-        } else {
-            initBinding();
-        }
+
+
+    private void buildGUI() {
+         form = new TripleSliderForm();
+
+    }
+
+    private void bind() {
+        ImageView view = getSelectedView();
+        IImageSpace ispace = view.getModel().getImageSpace();
+
+        ImageAxis xaxis = ispace.getImageAxis(Axis.X_AXIS);
+        ImageAxis yaxis = ispace.getImageAxis(Axis.Y_AXIS);
+        ImageAxis zaxis = ispace.getImageAxis(Axis.Z_AXIS);
+
+        // bind cursorPos values to JSliders using double --> integer converter wrapper
+        SwingBind.get().bind(new PercentageRangeConverter(view.cursorX, xaxis.getMinimum(), xaxis.getMaximum(), 100), form.getSlider1());
+        SwingBind.get().bind(new PercentageRangeConverter(view.cursorY, yaxis.getMinimum(), yaxis.getMaximum(), 100), form.getSlider2());
+        SwingBind.get().bind(new PercentageRangeConverter(view.cursorZ, zaxis.getMinimum(), zaxis.getMaximum(), 100), form.getSlider3());
+
+        SwingBind.get().bind(new DoubleToStringConverter(view.cursorX), form.getValueLabel1());
+        SwingBind.get().bind(new DoubleToStringConverter(view.cursorY), form.getValueLabel2());
+        SwingBind.get().bind(new DoubleToStringConverter(view.cursorZ), form.getValueLabel3());
+
+        form.getSliderLabel1().setText("X: " + "(" + xaxis.getAnatomicalAxis() + ")");
+        form.getSliderLabel2().setText("Y: " + "(" + yaxis.getAnatomicalAxis() + ")");
+        form.getSliderLabel3().setText("Z: " + "(" + zaxis.getAnatomicalAxis() + ")");
     }
 
     private void initBinding() {
@@ -94,5 +116,13 @@ public class WorldCoordinatePresenter extends AbstractPresenter {
 
     public JComponent getComponent() {
         return form;
+    }
+
+    public void viewSelected(ImageView view) {
+       bind();
+    }
+
+    public void allViewsDeselected() {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

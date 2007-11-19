@@ -79,7 +79,7 @@ public class SimpleImageView extends ImageView {
 
         IImageProducer producer = new CompositeImageProducer(imagePlot, getDisplayAnatomy());
         imagePlot.setImageProducer(producer);
-        imagePlot.setSlice(getCrosshair().getValue(displayAnatomy.ZAXIS));
+        imagePlot.setSlice(getCursorPos().getValue(displayAnatomy.ZAXIS));
         imagePlot.setScreenInterpolation(getScreenInterpolation());
 
 
@@ -90,7 +90,7 @@ public class SimpleImageView extends ImageView {
         getPlotSelection().setSelection(imagePlot);
 
 
-        getCrosshair().addPropertyChangeListener(new PropertyChangeListener() {
+        getCursorPos().addPropertyChangeListener(new PropertyChangeListener() {
 
             public void propertyChange(PropertyChangeEvent evt) {
                 ICrosshair cross = (ICrosshair) evt.getSource();
@@ -107,7 +107,7 @@ public class SimpleImageView extends ImageView {
 
 
     private void initAnnotations() {
-        CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(getCrosshair());
+        CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(cursorPos);
         setAnnotation(imagePlot, CrosshairAnnotation.ID, crosshairAnnotation);
         setAnnotation(imagePlot, SelectedPlotAnnotation.ID, new SelectedPlotAnnotation(this));
         setAnnotation(imagePlot, SelectedPlotAnnotation.ID, new SliceAnnotation());

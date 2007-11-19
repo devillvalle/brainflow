@@ -48,7 +48,7 @@ public class MoveCrosshairMode extends ImageCanvasMode {
 
             AnatomicalPoint3D ap = iview.getAnatomicalLocation(source, p);
             if (iview.getViewport().inBounds(ap)) {
-                iview.getCrosshair().setLocation(ap);
+                iview.cursorPos.set(ap);
             }
 
         }

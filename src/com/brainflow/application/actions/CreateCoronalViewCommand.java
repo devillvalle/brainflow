@@ -22,12 +22,13 @@ public class CreateCoronalViewCommand extends BrainFlowCommand {
 
         if (view != null) {
 
-            ImageView sview = ImageViewFactory.createYokedCoronalView(view);
+            ImageView sview = ImageViewFactory.createCoronalView(view);
 
             BrainCanvas canvas = getSelectedCanvas();
 
             if (canvas != null) {
                 canvas.addImageView(sview);
+                canvas.getImageCanvasModel().yoke(sview, view);
             }
         }
 

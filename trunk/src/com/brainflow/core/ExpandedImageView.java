@@ -4,6 +4,7 @@ import com.brainflow.core.annotations.CrosshairAnnotation;
 import com.brainflow.core.annotations.SelectedPlotAnnotation;
 import com.brainflow.display.ICrosshair;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.axis.ImageAxis;
@@ -49,7 +50,7 @@ public class ExpandedImageView extends AbstractGriddedImageView {
 
     private void initLocal() {
 
-        CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(getCrosshair());
+        CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(cursorPos);
 
         SelectedPlotAnnotation plotAnnotation = new SelectedPlotAnnotation(this);
         for (IImagePlot plot : getPlots()) {
@@ -113,15 +114,16 @@ public class ExpandedImageView extends AbstractGriddedImageView {
 
         public AnatomicalPoint1D getSlice() {
 
-            return getCrosshair().getValue(getDisplayAnatomy().ZAXIS);
+            return getCursorPos().getValue(getDisplayAnatomy().ZAXIS);
         }
 
         public void setSlice(AnatomicalPoint1D slice) {
-            ICrosshair cross = getCrosshair();
+            AnatomicalPoint3D cursor = getCursorPos();
             AnatomicalPoint1D zslice = getSlice();
             if (!zslice.equals(slice)) {
 
-                cross.setZValue(slice.getX());
+                cursor.setZ(slice.getX());
+                cursorPos.set(cursor);
                 getSelectedPlot().setSlice(slice);
             }
 
@@ -129,8 +131,8 @@ public class ExpandedImageView extends AbstractGriddedImageView {
 
         public void nextSlice() {
             AnatomicalPoint1D slice = getSlice();
-            ICrosshair cross = getCrosshair();
 
+            AnatomicalPoint3D cursor = getCursorPos();
 
             Axis axis = getViewport().getBounds().findAxis(getSelectedPlot().getDisplayAnatomy().ZAXIS);
             ImageAxis iaxis = getModel().getImageAxis(axis);
@@ -138,14 +140,15 @@ public class ExpandedImageView extends AbstractGriddedImageView {
             int sample = iaxis.nearestSample(slice);
             int nsample = sample + 1;
             if (nsample >= 0 && nsample < iaxis.getNumSamples()) {
-                cross.setValue(iaxis.valueOf(nsample));
+                cursor.setValue(iaxis.valueOf(nsample));
+                cursorPos.set(cursor);
             }
         }
 
         public void previousSlice() {
             AnatomicalPoint1D slice = getSlice();
-            ICrosshair cross = getCrosshair();
 
+            AnatomicalPoint3D cursor = getCursorPos();
 
             Axis axis = getViewport().getBounds().findAxis(getSelectedPlot().getDisplayAnatomy().ZAXIS);
             ImageAxis iaxis = getModel().getImageAxis(axis);
@@ -153,7 +156,8 @@ public class ExpandedImageView extends AbstractGriddedImageView {
             int sample = iaxis.nearestSample(slice);
             int nsample = sample - 1;
             if (nsample >= 0 && nsample < iaxis.getNumSamples()) {
-                cross.setValue(iaxis.valueOf(nsample));
+                cursor.setValue(iaxis.valueOf(nsample));
+                cursorPos.set(cursor);
             }
 
         }

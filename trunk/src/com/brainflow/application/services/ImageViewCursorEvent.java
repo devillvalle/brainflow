@@ -1,51 +1,43 @@
 package com.brainflow.application.services;
 
 import com.brainflow.core.ImageView;
-import com.brainflow.image.anatomy.AnatomicalPoint;
+import com.brainflow.display.ICrosshair;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
-
-import java.awt.*;
-import java.awt.event.MouseEvent;
 
 /**
  * Created by IntelliJ IDEA.
- * User: Brad Buchsbaum
- * Date: Jun 23, 2006
- * Time: 12:40:38 AM
+ * User: buchs
+ * Date: Aug 17, 2006
+ * Time: 6:18:00 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ImageViewCursorEvent extends ImageViewMouseEvent {
+public class ImageViewCursorEvent extends ImageViewEvent {
+    /**
+     * Creates a new instance of ImageViewEvent
+     */
 
-    private AnatomicalPoint3D ap;
 
-    public ImageViewCursorEvent(ImageView view, MouseEvent _event) {
-        super(view, _event);
+    private AnatomicalPoint3D cpos;
 
+    public ImageViewCursorEvent(ImageView view) {
+        super(view);
+        cpos = view.getCursorPos();
     }
 
-    public AnatomicalPoint3D getLocation() {
-        if (getImageView() == null) {
-            return null;
-        }
-
-        if (ap == null) {
-            MouseEvent event = getEvent();
-            ap = getImageView().getAnatomicalLocation((Component) event.getSource(), event.getPoint());
-        }
-
-        return ap;
-
+    public AnatomicalPoint3D getCursor() {
+        return cpos;
     }
 
     public String toString() {
-        StringBuilder builder = new StringBuilder("Cursor at : ");
-        AnatomicalPoint tmp = getLocation();
-        if (tmp == null) return "cursor : --";
+        StringBuilder builder = new StringBuilder("Crosshair at : ");
 
-        builder.append("zero: " + (int) getLocation().getX());
-        builder.append(" zero: " + (int) getLocation().getY());
-        builder.append(" one: " + (int) getLocation().getZ());
+
+        builder.append("zero: " + (int) cpos.getX());
+        builder.append(" zero: " + (int) cpos.getY());
+        builder.append(" one: " + (int) cpos.getZ());
 
         return builder.toString();
     }
+
+
 }

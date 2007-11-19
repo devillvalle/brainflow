@@ -3,6 +3,8 @@ package com.brainflow.core.annotations;
 import com.brainflow.core.IImagePlot;
 import com.brainflow.display.ICrosshair;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import net.java.dev.properties.Property;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
@@ -42,10 +44,10 @@ public class CrosshairAnnotation extends AbstractAnnotation {
     private Point location;
 
 
-    private ICrosshair crosshair;
+    private Property<AnatomicalPoint3D> crosshair;
 
 
-    public CrosshairAnnotation(ICrosshair _crosshair) {
+    public CrosshairAnnotation(Property<AnatomicalPoint3D> _crosshair) {
         crosshair = _crosshair;
         linePaint = DEFAULT_LINE_PAINT;
         lineLength = DEFAULT_LINE_LENGTH.doubleValue();
@@ -84,11 +86,10 @@ public class CrosshairAnnotation extends AbstractAnnotation {
     public void draw(Graphics2D g2d, Rectangle2D plotArea, IImagePlot plot) {
         if (!isVisible()) return;
 
-        ICrosshair cross = crosshair;
 
         // potential bug because may not match plot axes????
-        AnatomicalPoint1D xpt = cross.getValue(plot.getXAxisRange().getAnatomicalAxis());
-        AnatomicalPoint1D ypt = cross.getValue(plot.getYAxisRange().getAnatomicalAxis());
+        AnatomicalPoint1D xpt = crosshair.get().getValue(plot.getXAxisRange().getAnatomicalAxis());
+        AnatomicalPoint1D ypt = crosshair.get().getValue(plot.getYAxisRange().getAnatomicalAxis());
 
 
         double percentX = (xpt.getX() - plot.getXAxisRange().getBeginning().getX()) / plot.getXAxisRange().getInterval();

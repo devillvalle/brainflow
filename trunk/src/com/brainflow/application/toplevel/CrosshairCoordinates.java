@@ -1,7 +1,7 @@
 package com.brainflow.application.toplevel;
 
-import com.brainflow.application.services.ImageViewCrosshairEvent;
-import com.brainflow.display.ICrosshair;
+import com.brainflow.application.services.ImageViewCursorEvent;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.jidesoft.status.LabelStatusBarItem;
 import org.bushe.swing.event.EventBus;
@@ -26,7 +26,7 @@ public class CrosshairCoordinates extends LabelStatusBarItem implements EventSub
     private MessageFormat format = new MessageFormat("{0}: {1, number, ##0.0}");
 
     public CrosshairCoordinates() {
-        EventBus.subscribeExactly(ImageViewCrosshairEvent.class, this);
+        EventBus.subscribeExactly(ImageViewCursorEvent.class, this);
         xaxisLabel.setText("0.0");
         yaxisLabel.setText("0.0");
         zaxisLabel.setText("0.0");
@@ -50,26 +50,26 @@ public class CrosshairCoordinates extends LabelStatusBarItem implements EventSub
 
 
     public void onEvent(Object evt) {
-        ImageViewCrosshairEvent event = (ImageViewCrosshairEvent) evt;
-        ICrosshair cross = event.getCrosshair();
+        ImageViewCursorEvent event = (ImageViewCursorEvent) evt;
+        AnatomicalPoint3D cursor = event.getCursor();
 
-        if (cross != null) {
+        if (cursor != null) {
 
-            Anatomy3D anatomy = cross.getAnatomy();
+            Anatomy3D anatomy = cursor.getAnatomy();
 
             xaxisLabel.setText(format.format(new Object[]{
                     anatomy.XAXIS.toString().substring(0, 1),
-                    cross.getValue(anatomy.XAXIS).getX()}
+                    cursor.getValue(anatomy.XAXIS).getX()}
             ));
 
             yaxisLabel.setText(format.format(new Object[]{
                     anatomy.YAXIS.toString().substring(0, 1),
-                    cross.getValue(anatomy.YAXIS).getX()}
+                    cursor.getValue(anatomy.YAXIS).getX()}
             ));
 
             zaxisLabel.setText(format.format(new Object[]{
                     anatomy.ZAXIS.toString().substring(0, 1),
-                    cross.getValue(anatomy.ZAXIS).getX()}
+                    cursor.getValue(anatomy.ZAXIS).getX()}
             ));
 
 

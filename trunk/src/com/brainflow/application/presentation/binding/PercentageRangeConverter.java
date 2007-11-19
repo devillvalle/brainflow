@@ -12,7 +12,7 @@ import net.java.dev.properties.container.ObservableWrapper;
  * Time: 9:56:01 AM
  * To change this template use File | Settings | File Templates.
  */
-public class PercentageConverterProperty extends ObservableWrapper.ReadWrite<Integer> {
+public class PercentageRangeConverter extends ObservableWrapper.ReadWrite<Integer> {
 
     private double min;
 
@@ -20,7 +20,7 @@ public class PercentageConverterProperty extends ObservableWrapper.ReadWrite<Int
 
     private int numUnits;
 
-    public PercentageConverterProperty(BaseProperty<Double> property, double min, double max, int numUnits) {
+    public PercentageRangeConverter(BaseProperty<Double> property, double min, double max, int numUnits) {
         super(property);
         this.min = min;
         this.max = max;
@@ -41,10 +41,12 @@ public class PercentageConverterProperty extends ObservableWrapper.ReadWrite<Int
 
     @Override
     public void set(Integer o) {
+        System.out.println("integer to convert " + o);
         double val = o.intValue();
         double newval = (val / numUnits) * (max - min) + min;
         WProperty<Double> wprop = (WProperty<Double>) getProperty();
         wprop.set(new Double(newval));
+        System.out.println("converted to  " + newval);
 
 
     }

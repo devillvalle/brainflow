@@ -32,8 +32,8 @@ public class MontageImageView extends AbstractGriddedImageView {
         super(imodel);
         this.displayAnatomy = displayAnatomy;
 
-        sliceController = new MontageSliceController(getCrosshair().getValue(displayAnatomy.ZAXIS));
-        getCrosshair().addPropertyChangeListener(new CrosshairHandler());
+        sliceController = new MontageSliceController(getCursorPos().getValue(displayAnatomy.ZAXIS));
+        getCursorPos().addPropertyChangeListener(new CrosshairHandler());
 
         layoutGrid();
         initLocal();
@@ -46,9 +46,9 @@ public class MontageImageView extends AbstractGriddedImageView {
         super(imodel, nrows, ncols);
         this.displayAnatomy = displayAnatomy;
 
-        sliceController = new MontageSliceController(getCrosshair().getValue(displayAnatomy.ZAXIS), sliceGap);
+        sliceController = new MontageSliceController(getCursorPos().getValue(displayAnatomy.ZAXIS), sliceGap);
         sliceController.sliceGap = sliceGap;
-        getCrosshair().addPropertyChangeListener(new CrosshairHandler());
+        getCursorPos().addPropertyChangeListener(new CrosshairHandler());
 
         layoutGrid();
         initLocal();
@@ -69,7 +69,7 @@ public class MontageImageView extends AbstractGriddedImageView {
 
     private void initLocal() {
 
-        CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(getCrosshair());
+        CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(cursorPos);
 
         SelectedPlotAnnotation plotAnnotation = new SelectedPlotAnnotation(this);
 

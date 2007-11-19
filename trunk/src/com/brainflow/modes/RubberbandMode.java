@@ -57,7 +57,7 @@ public class RubberbandMode extends com.brainflow.modes.ImageCanvasMode implemen
     public void mouseDragged(MouseEvent e) {
     }
     
-    /** Invoked when the mouse cursor has been moved onto a component
+    /** Invoked when the mouse cursorPos has been moved onto a component
      * but no buttons have been pushed.
      *
      */

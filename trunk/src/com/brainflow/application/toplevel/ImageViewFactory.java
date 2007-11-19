@@ -37,7 +37,7 @@ public class ImageViewFactory {
     }
 
     public static void addDefaultAnnotations(ImageView view) {
-        CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(view.getCrosshair());
+        CrosshairAnnotation crosshairAnnotation = new CrosshairAnnotation(view.cursorPos);
         view.setAnnotation(CrosshairAnnotation.ID, crosshairAnnotation);
         view.setAnnotation(SelectedPlotAnnotation.ID, new SelectedPlotAnnotation(view));
         view.setAnnotation(SliceAnnotation.ID, new SliceAnnotation());
@@ -59,7 +59,7 @@ public class ImageViewFactory {
         ImageView view = new ImageView(source.getModel());
         view.setPlotLayout(new OrthoPlotLayout(view,  orientation));
         addDefaultAnnotations(view);
-        BrainCanvasManager.getInstance().yoke(source, view);
+        //BrainCanvasManager.getInstance().yoke(source, view);
 
         return view;
 
@@ -68,7 +68,7 @@ public class ImageViewFactory {
     public static ImageView createYokedAxialView(ImageView source) {
         ImageView view = new ImageView(source.getModel(), Brainflow.getInstance().getCommandContainer());
         view.setPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalAxial()));
-        BrainCanvasManager.getInstance().yoke(source, view);
+
         addDefaultAnnotations(view);
 
         return view;
@@ -137,36 +137,30 @@ public class ImageViewFactory {
         return view;
     }
 
-    public static ImageView createSagittalView(ImageView view) {
-        ImageView newView = createSagittalView(view.getModel());
-        CrosshairAnnotation annotation = (CrosshairAnnotation) view.getAnnotation(newView.getSelectedPlot(), CrosshairAnnotation.ID);
-        if (annotation != null) {
-            newView.setAnnotation(newView.getSelectedPlot(), CrosshairAnnotation.ID, annotation);
-        }
-
-        return newView;
+    public static ImageView createSagittalView(ImageView source) {
+        ImageView view = new ImageView(source.getModel(), Brainflow.getInstance().getCommandContainer());
+        view.setPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalSagittal()));
+        addDefaultAnnotations(view);
+        return view;
 
     }
 
-    public static ImageView createCoronalView(ImageView view) {
-        ImageView newView = createCoronalView(view.getModel());
-        CrosshairAnnotation annotation = (CrosshairAnnotation) view.getAnnotation(view.getSelectedPlot(), CrosshairAnnotation.ID);
-        if (annotation != null) {
-            newView.setAnnotation(newView.getSelectedPlot(), CrosshairAnnotation.ID, annotation);
-        }
+    public static ImageView createCoronalView(ImageView source) {
+        ImageView view = new ImageView(source.getModel(), Brainflow.getInstance().getCommandContainer());
+        view.setPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalCoronal()));
+        addDefaultAnnotations(view);
+        return view;
 
-        return newView;
 
     }
 
-    public static ImageView createAxialView(ImageView view) {
-        ImageView newView = createAxialView(view.getModel());
-        CrosshairAnnotation annotation = (CrosshairAnnotation) view.getAnnotation(view.getSelectedPlot(), CrosshairAnnotation.ID);
-        if (annotation != null) {
-            newView.setAnnotation(newView.getSelectedPlot(), CrosshairAnnotation.ID, annotation);
-        }
+    public static ImageView createAxialView(ImageView source) {
+        ImageView view = new ImageView(source.getModel(), Brainflow.getInstance().getCommandContainer());
+        view.setPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalAxial()));
 
-        return newView;
+        addDefaultAnnotations(view);
+        return view;
+
 
     }
 

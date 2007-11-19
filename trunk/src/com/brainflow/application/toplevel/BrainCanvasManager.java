@@ -7,7 +7,7 @@
 package com.brainflow.application.toplevel;
 
 import com.brainflow.application.YokeHandler;
-import com.brainflow.application.services.ImageViewCursorEvent;
+import com.brainflow.application.services.ImageViewMousePointerEvent;
 import com.brainflow.application.services.ImageViewSelectionEvent;
 import com.brainflow.core.BrainCanvas;
 import com.brainflow.core.BrainCanvasModel;
@@ -61,7 +61,7 @@ public class BrainCanvasManager {
 
     protected BrainCanvasManager() {
         // Exists only to thwart instantiation.
-        //EventBus.subscribe(ImageViewCrosshairEvent.class, this);
+        //EventBus.subscribe(ImageViewCursorEvent.class, this);
     }
 
 
@@ -192,53 +192,18 @@ public class BrainCanvasManager {
     }
 
     public Set<ImageView> getYokedViews(ImageView view) {
-        YokeHandler handler = yokeHandlers.get(view);
-
-        Set<ImageView> ret;
-        if (handler == null) {
-            ret = new HashSet<ImageView>();
-        } else {
-            ret = handler.getSources();
-        }
-
-        return ret;
-
+        return getSelectedCanvas().getImageCanvasModel().getYokedViews(view);
     }
 
     
     public void unyoke(ImageView target1, ImageView target2) {
-        YokeHandler handler = yokeHandlers.get(target1);
-        if (handler != null) {
-            handler.removeSource(target2);
-        }
-
-        handler = yokeHandlers.get(target2);
-        if (handler != null) {
-            handler.removeSource(target1);
-        }
+        getSelectedCanvas().getImageCanvasModel().unyoke(target1, target2);
 
     }
 
 
     public void yoke(ImageView target1, ImageView target2) {
-
-        log.info("Yoking : " + target1 + " to " + target2);
-        YokeHandler handler = yokeHandlers.get(target1);
-        if (handler == null) {
-            handler = new YokeHandler(target1);
-            yokeHandlers.put(target1, handler);
-        }
-
-        handler.addSource(target2);
-
-        handler = yokeHandlers.get(target2);
-        if (handler == null) {
-            handler = new YokeHandler(target2);
-            yokeHandlers.put(target2, handler);
-        }
-
-        handler.addSource(target1);
-
+        getSelectedCanvas().getImageCanvasModel().yoke(target1, target2);
 
     }
 
@@ -285,7 +250,7 @@ public class BrainCanvasManager {
                 return;
             }
 
-            EventBus.publish(new ImageViewCursorEvent(iview, e));
+            EventBus.publish(new ImageViewMousePointerEvent(iview, e));
 
         }
     }

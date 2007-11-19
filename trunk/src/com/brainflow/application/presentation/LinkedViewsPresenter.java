@@ -3,6 +3,8 @@ package com.brainflow.application.presentation;
 import com.brainflow.application.toplevel.BrainCanvasManager;
 import com.brainflow.core.BrainCanvas;
 import com.brainflow.core.ImageView;
+import com.brainflow.core.AbstractLayer;
+import com.brainflow.display.Visibility;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.swing.CheckBoxList;
@@ -11,6 +13,8 @@ import net.java.dev.properties.binding.swing.adapters.SwingBind;
 
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Iterator;
@@ -62,15 +66,13 @@ public class LinkedViewsPresenter extends BrainCanvasPresenter {
         linkedViewList = new CheckBoxList();
 
         form.add(viewBox, cc.xyw(2, 2, 2));
-        form.add(new JScrollPane(linkedViewList), cc.xyw(2,4,2));
+        form.add(new JScrollPane(linkedViewList), cc.xyw(2, 4, 2));
 
-        viewBox.addItemListener(new ItemListener() {
+        /*viewBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
-                ImageView view = (ImageView) e.getItem();
-                Set<ImageView> viewSet = BrainCanvasManager.getInstance().getYokedViews(view);
                 updateLinkedViewList();
             }
-        });
+        });  */
 
     }
 
@@ -94,10 +96,31 @@ public class LinkedViewsPresenter extends BrainCanvasPresenter {
             }
         }
 
-        //model.setModel(lmodel);
 
         linkedViewList.setCheckBoxListSelectionModel(cmodel);
         linkedViewList.setModel(lmodel);
+
+        cmodel.addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                int f1 = e.getFirstIndex();
+                int f2 = e.getLastIndex();
+                CheckBoxListSelectionModel model = (CheckBoxListSelectionModel) e.getSource();
+                ImageView view = getSelectedView();
+
+                for (int i = f1; i <= f2; i++) {
+
+                    if (model.isSelectedIndex(i)) {
+                        BrainCanvasManager.getInstance().yoke(view, (ImageView) model.getModel().getElementAt(i));
+
+                    } else {
+                        BrainCanvasManager.getInstance().unyoke(view, (ImageView) model.getModel().getElementAt(i));
+
+                    }
+                }
+
+            }
+
+        });
     }
 
     protected void layerChangeNotification() {

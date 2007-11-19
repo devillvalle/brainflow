@@ -22,7 +22,7 @@ public class TestSlider extends JPanel {
     public TestSlider() {
         BeanContainer.bind(this);
         JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
-        SwingBind.get().bind(new PercentageConverterProperty(dvalue, 0, 1, 100), slider);
+        SwingBind.get().bind(new PercentageRangeConverter(dvalue, 0, 1, 100), slider);
         add(slider);
 
 

@@ -22,12 +22,13 @@ public class CreateSagittalViewCommand extends BrainFlowCommand {
 
         if (view != null) {
 
-            ImageView sview = ImageViewFactory.createYokedSagittalView(view);
+            ImageView sview = ImageViewFactory.createSagittalView(view);
 
             BrainCanvas canvas = getSelectedCanvas();
 
             if (canvas != null) {
                 canvas.addImageView(sview);
+                canvas.getImageCanvasModel().yoke(sview, view);
             }
         }
 

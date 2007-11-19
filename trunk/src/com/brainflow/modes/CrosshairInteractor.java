@@ -36,15 +36,15 @@ public class CrosshairInteractor extends ImageViewInteractor {
             return;
         }
 
-        ICrosshair crosshair = iview.getCrosshair();
+        AnatomicalPoint3D cursorPos = iview.getCursorPos();
         AnatomicalPoint3D ap = iview.getAnatomicalLocation(event.getComponent(), event.getPoint());
-        ap = AnatomicalPoint3D.convertPoint(ap,crosshair.getAnatomy() );
+        ap = AnatomicalPoint3D.convertPoint(ap,cursorPos.getAnatomy() );
 
 
         Viewport3D viewport = iview.getViewport();
 
         if (ap != null && viewport.inBounds(ap)) {
-            iview.getCrosshair().setLocation(ap);
+            iview.cursorPos.set(ap);
         } else {
             System.out.println("point is out of viewport bounds " + ap);
         }
@@ -54,16 +54,20 @@ public class CrosshairInteractor extends ImageViewInteractor {
     private void moveCrosshair(Point p, Component source) {
         ImageView iview = getView();
 
-        ICrosshair crosshair = iview.getCrosshair();
-        AnatomicalPoint3D ap = iview.getAnatomicalLocation(source, p);
-        ap= AnatomicalPoint3D.convertPoint(ap,crosshair.getAnatomy() );
-
-        if (ap != null && iview.getViewport().inBounds(ap)) {
-            iview.getCrosshair().setLocation(ap);
-        } else {
-            System.out.println("point is out of viewport bounds " + ap);
+        if (!iview.pointInPlot(source, p)) {
+            return;
         }
 
+        AnatomicalPoint3D cursorPos = iview.getCursorPos();
+
+
+
+        AnatomicalPoint3D ap = iview.getAnatomicalLocation(source, p);
+        ap = AnatomicalPoint3D.convertPoint(ap,cursorPos.getAnatomy() );
+
+        if (ap != null && iview.getViewport().inBounds(ap)) {
+            iview.cursorPos.set(ap);
+        }
     }
 
 

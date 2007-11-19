@@ -22,12 +22,13 @@ public class CreateAxialViewCommand extends BrainFlowCommand {
 
         if (view != null) {
 
-            ImageView sview = ImageViewFactory.createYokedAxialView(view);
+            ImageView sview = ImageViewFactory.createAxialView(view);
 
             BrainCanvas canvas = getSelectedCanvas();
 
             if (canvas != null) {
                 canvas.addImageView(sview);
+                canvas.getImageCanvasModel().yoke(sview, view);
             }
         }
 

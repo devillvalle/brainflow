@@ -1,7 +1,6 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.application.YokeHandler;
-import com.brainflow.application.toplevel.BrainCanvasManager;
 import com.brainflow.core.IImagePlot;
 import com.brainflow.core.ImageDisplayModel;
 import com.brainflow.core.ImageView;
@@ -10,7 +9,6 @@ import com.brainflow.core.annotations.BoxAnnotation;
 import com.brainflow.display.Viewport3D;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
 import com.brainflow.image.anatomy.Anatomy3D;
-import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
 import com.jgoodies.binding.adapter.SpinnerAdapterFactory;
 import com.jgoodies.binding.beans.BeanAdapter;
@@ -21,6 +19,10 @@ import com.jgoodies.binding.value.ValueModel;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.swing.JideBorderLayout;
+import net.java.dev.properties.binding.swing.adapters.SwingBind;
+import net.java.dev.properties.container.BeanContainer;
+import net.java.dev.properties.events.PropertyListener;
+import net.java.dev.properties.BaseProperty;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -223,22 +225,22 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
     private double getXLowerBound(ImageView view) {
         IImagePlot plot = view.getSelectedPlot();
-        return view.getModel().getImageSpace().getImageAxis(plot.getXAxisRange().getAnatomicalAxis(), true).getRange().getMinimum();
+        return view.getImageAxis(plot.getXAxisRange().getAnatomicalAxis()).getMinimum();
     }
 
     private double getYLowerBound(ImageView view) {
         IImagePlot plot = view.getSelectedPlot();
-        return view.getModel().getImageSpace().getImageAxis(plot.getYAxisRange().getAnatomicalAxis(), true).getRange().getMinimum();
+        return view.getImageAxis(plot.getYAxisRange().getAnatomicalAxis()).getMinimum();
     }
 
     private double getXUpperBound(ImageView view) {
         IImagePlot plot = view.getSelectedPlot();
-        return view.getModel().getImageSpace().getImageAxis(plot.getXAxisRange().getAnatomicalAxis(), true).getRange().getMaximum();
+        return view.getImageAxis(plot.getXAxisRange().getAnatomicalAxis()).getMaximum();
     }
 
     private double getYUpperBound(ImageView view) {
         IImagePlot plot = view.getSelectedPlot();
-        return view.getModel().getImageSpace().getImageAxis(plot.getYAxisRange().getAnatomicalAxis(), true).getRange().getMaximum();
+        return view.getImageAxis(plot.getYAxisRange().getAnatomicalAxis()).getMaximum();
     }
 
     private void updateTooltips(ImageView view) {
@@ -252,6 +254,13 @@ public class ImageViewportPresenter extends ImageViewPresenter {
     }
 
     private void updateView(ImageView view) {
+
+        BeanContainer.get().addListener(view.plotSelection, new PropertyListener() {
+            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+                plotSelector.repaint();
+            }
+        });
+
         viewPanel.remove(boxView);
 
         updateTooltips(view);
@@ -261,6 +270,7 @@ public class ImageViewportPresenter extends ImageViewPresenter {
         yorigin.setToolTipText("origin: " + view.getSelectedPlot().getYAxisRange().getAnatomicalAxis().min.toString());
 
         boxView = new ImageView(view.getModel());
+        boxView.identifier.set("Viewport Editor");
         boxView.setPlotLayout(new SimplePlotLayout(boxView, view.getSelectedPlot().getDisplayAnatomy()));
 
 
@@ -287,17 +297,19 @@ public class ImageViewportPresenter extends ImageViewPresenter {
             yokeHandler = new YokeHandler(boxView);
             yokeHandler.addSource(view);
         } else {
-            System.out.println("clearing yoked sources");
+
             yokeHandler.clearSources();
             yokeHandler.setTarget(boxView);
             yokeHandler.addSource(view);
-            System.out.println("num yoked " + yokeHandler.getSources().size());
+
         }
 
         /// what about unyoking old views?
         //BrainCanvasManager.getInstance().yoke(view, boxView);
 
     }
+
+
 
     public void viewSelected(ImageView view) {
 
@@ -368,7 +380,10 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
         ImageView view = getSelectedView();
 
-        Bindings.bind(plotSelector, view.getPlotSelection());
+
+        SwingBind.get().bindContent(view.plotList, plotSelector);
+        SwingBind.get().bindIndex(view.plotSelection, plotSelector);
+        //Bindings.bind(plotSelector, view.getPlotSelection());
 
 
         Viewport3D viewport = view.getViewport();

@@ -1,7 +1,7 @@
 package com.brainflow.core;
 
-import com.brainflow.display.ICrosshair;
 import com.brainflow.display.Viewport3D;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
 
 import java.util.EventObject;
 
@@ -23,8 +23,8 @@ public class ImageViewEvent extends EventObject {
         
     }
 
-    public ICrosshair getCrosshair() {
-        return view.getCrosshair();
+    public AnatomicalPoint3D getCrosshair() {
+        return view.getCursorPos();
     }
 
     public Viewport3D getViewport() {

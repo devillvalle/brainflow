@@ -18,35 +18,19 @@ import javax.swing.*;
  */
 public class CoordinateControls {
 
-    private ImageView activeView;
+
     private CollapsiblePanes cpanes;
 
     private WorldCoordinatePresenter worldCoordinatePresenter;
 
     private IndexCoordinatePresenter indexCoordinatePresenter;
-    
+
     private ImageViewportPresenter imageViewportPresenter;
 
     private LinkedViewsPresenter linkedViewsPresenter;
 
     public CoordinateControls() {
-        EventBus.subscribeStrongly(ImageViewEvent.class, new EventSubscriber() {
-            public void onEvent(Object e) {
-                ImageViewEvent event = (ImageViewEvent) e;
-                activeView = event.getImageView();
-                if (activeView != null) {
-                    worldCoordinatePresenter.setCrosshair(activeView.getCrosshair());
-                    indexCoordinatePresenter.setCrosshair(activeView.getCrosshair());
-                    //imageViewportPresenter.setViewport(activeView.getViewport());
-                    //imageExtentPresenter.setViewport(activeView.getViewport());
-
-                } 
-            }
-        });
-
         init();
-
-
     }
 
     public JComponent getComponent() {
@@ -57,19 +41,10 @@ public class CoordinateControls {
         cpanes = new CollapsiblePanes();
 
         linkedViewsPresenter = new LinkedViewsPresenter();
-        if (activeView != null) {
-
-            worldCoordinatePresenter = new WorldCoordinatePresenter(activeView.getCrosshair());
-            indexCoordinatePresenter = new IndexCoordinatePresenter(activeView.getCrosshair());
-            imageViewportPresenter = new ImageViewportPresenter();
-            //imageExtentPresenter = new ImageExtentPresenter(activeView.getViewport());
-
-        } else {
-            worldCoordinatePresenter = new WorldCoordinatePresenter(null);
-            indexCoordinatePresenter = new IndexCoordinatePresenter(null);
-            imageViewportPresenter = new ImageViewportPresenter();
-            //imageExtentPresenter = new ImageExtentPresenter(null);
-        }
+        worldCoordinatePresenter = new WorldCoordinatePresenter();
+        indexCoordinatePresenter = new IndexCoordinatePresenter();
+        imageViewportPresenter = new ImageViewportPresenter();
+        //imageExtentPresenter = new ImageExtentPresenter(activeView.getViewport());
 
         CollapsiblePane p1 = new CollapsiblePane();
         p1.setContentPane(linkedViewsPresenter.getComponent());

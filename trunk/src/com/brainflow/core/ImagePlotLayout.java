@@ -48,7 +48,7 @@ public abstract class ImagePlotLayout {
         plot.setImageProducer(producer);
 
 
-        plot.setSlice(getView().getCrosshair().getValue(displayAnatomy.ZAXIS));
+        plot.setSlice(getView().getCursorPos().getValue(displayAnatomy.ZAXIS));
         plot.setScreenInterpolation(getView().getScreenInterpolation());
         return plot;
 

@@ -1,28 +1,24 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.application.YokeHandler;
-import com.brainflow.core.IImagePlot;
-import com.brainflow.core.ImageDisplayModel;
-import com.brainflow.core.ImageView;
-import com.brainflow.core.SimplePlotLayout;
+import com.brainflow.application.presentation.binding.PropertyConnector;
+import com.brainflow.core.*;
 import com.brainflow.core.annotations.BoxAnnotation;
-import com.brainflow.display.Viewport3D;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
 import com.jgoodies.binding.adapter.SpinnerAdapterFactory;
 import com.jgoodies.binding.beans.BeanAdapter;
 import com.jgoodies.binding.beans.PropertyAdapter;
-import com.jgoodies.binding.beans.PropertyConnector;
 import com.jgoodies.binding.value.ValueHolder;
 import com.jgoodies.binding.value.ValueModel;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.swing.JideBorderLayout;
+import net.java.dev.properties.BaseProperty;
 import net.java.dev.properties.binding.swing.adapters.SwingBind;
 import net.java.dev.properties.container.BeanContainer;
 import net.java.dev.properties.events.PropertyListener;
-import net.java.dev.properties.BaseProperty;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -350,28 +346,24 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
     }
 
-    private void connectBox(ValueModel xval, ValueModel yval, ValueModel width, ValueModel height) {
-        PropertyAdapter<BoxAnnotation> xminAdapter = new PropertyAdapter<BoxAnnotation>(boxAnnotation, BoxAnnotation.XMIN_PROPERTY);
-        PropertyAdapter<BoxAnnotation> yminAdapter = new PropertyAdapter<BoxAnnotation>(boxAnnotation, BoxAnnotation.YMIN_PROPERTY);
-        PropertyAdapter<BoxAnnotation> widthAdapter = new PropertyAdapter<BoxAnnotation>(boxAnnotation, BoxAnnotation.WIDTH_PROPERTY);
-        PropertyAdapter<BoxAnnotation> heightAdapter = new PropertyAdapter<BoxAnnotation>(boxAnnotation, BoxAnnotation.HEIGHT_PROPERTY);
+    private void connectBox(Viewport3D viewport, IImagePlot plot) {
 
         if (xoriginConnector != null) {
-            xoriginConnector.release();
-            yoriginConnector.release();
-            widthConnector.release();
-            heightConnector.release();
+            xoriginConnector.disconnect();
+            yoriginConnector.disconnect();
+            widthConnector.disconnect();
+            heightConnector.disconnect();
         }
 
-        xoriginConnector = PropertyConnector.connect(xval, "value", xminAdapter, "value");
-        yoriginConnector = PropertyConnector.connect(yval, "value", yminAdapter, "value");
-        widthConnector = PropertyConnector.connect(width, "value", widthAdapter, "value");
-        heightConnector = PropertyConnector.connect(height, "value", heightAdapter, "value");
+        xoriginConnector = new PropertyConnector<Double>(viewport.getMinProperty(plot.getXAxisRange().getAnatomicalAxis()), boxAnnotation.xmin);
+        yoriginConnector = new PropertyConnector<Double>(viewport.getMinProperty(plot.getYAxisRange().getAnatomicalAxis()), boxAnnotation.ymin);
+        widthConnector = new PropertyConnector<Double>(viewport.getExtentProperty(plot.getXAxisRange().getAnatomicalAxis()), boxAnnotation.width);
+        heightConnector = new PropertyConnector<Double>(viewport.getExtentProperty(plot.getYAxisRange().getAnatomicalAxis()), boxAnnotation.height);
 
-        xoriginConnector.updateProperty2();
-        yoriginConnector.updateProperty2();
-        widthConnector.updateProperty2();
-        heightConnector.updateProperty2();
+        xoriginConnector.updateProperty();
+        yoriginConnector.updateProperty();
+        widthConnector.updateProperty();
+        heightConnector.updateProperty();
 
     }
 
@@ -383,22 +375,15 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
         SwingBind.get().bindContent(view.plotList, plotSelector);
         SwingBind.get().bindIndex(view.plotSelection, plotSelector);
-        //Bindings.bind(plotSelector, view.getPlotSelection());
 
-
-        Viewport3D viewport = view.getViewport();
-        IImagePlot plot = view.getSelectedPlot();
-
+        connectBox(view.getViewport(), view.getSelectedPlot());
 
         intializeAdapters();
 
 
-        ValueModel xval = viewportAdapter.getValueModel(viewport.getMinPropertyName(plot.getXAxisRange().getAnatomicalAxis()));
-        ValueModel yval = viewportAdapter.getValueModel(viewport.getMinPropertyName(plot.getYAxisRange().getAnatomicalAxis()));
-        ValueModel wval = viewportAdapter.getValueModel(viewport.getExtentPropertyName(plot.getXAxisRange().getAnatomicalAxis()));
-        ValueModel hval = viewportAdapter.getValueModel(viewport.getExtentPropertyName(plot.getYAxisRange().getAnatomicalAxis()));
 
-        connectBox(xval, yval, wval, hval);
+
+
 
 
         xspinnerModel = new SpinnerNumberModel((Number) xval.getValue(), getXLowerBound(view), getXUpperBound(view), 1);

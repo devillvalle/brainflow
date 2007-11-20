@@ -32,8 +32,7 @@ public class TestPConnector {
 
         System.out.println("p1 : " + tp.p1.get());
         System.out.println("p2 : " + tp.p2.get());
-
-
-
     }
+
+    
 }

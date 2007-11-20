@@ -19,6 +19,11 @@ public class PropertyConnector<T> {
 
     private Property<T> prop2;
 
+    private PListener listener1;
+
+    private PListener listener2;
+
+
     public PropertyConnector(Property<T> p1, Property<T> p2) {
         prop1 = p1;
         prop2 = p2;
@@ -28,28 +33,49 @@ public class PropertyConnector<T> {
     }
 
     private void initListeners() {
-        BeanContainer.get().addListener(prop1, new PropertyListener() {
-            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {              
-                RProperty<T> rprop = (RProperty<T>) prop;
+        listener1 = new PListener(prop1);
+        listener2 = new PListener(prop2);
+        BeanContainer.get().addListener(prop2, listener1);
+        BeanContainer.get().addListener(prop1, listener2);
 
-                if (!rprop.get().equals(prop2.get())) {
-                    prop2.set(rprop.get());
-                }
+    }
+
+    public void updateProperty() {
+        prop2.set(prop1.get());
+    }
+
+    public void updateProperty2() {
+        prop1.set(prop2.get());
+    }
+
+    public void reconnect() {
+        BeanContainer.get().removeListener(prop2, listener1);
+        BeanContainer.get().removeListener(prop1, listener2);
+        initListeners();
+    }
+
+    public void disconnect() {
+        BeanContainer.get().removeListener(prop2, listener1);
+        BeanContainer.get().removeListener(prop1, listener2);
+
+    }
+
+
+    class PListener implements PropertyListener {
+        Property<T> p;
+
+        PListener(Property<T> _p) {
+            p = _p;
+
+        }
+
+        public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+            RProperty<T> rprop = (RProperty<T>) prop;
+
+            if (!rprop.get().equals(p.get())) {
+                p.set(rprop.get());
             }
-        });
-
-         BeanContainer.get().addListener(prop2, new PropertyListener() {
-            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
-                RProperty<T> rprop = (RProperty<T>) prop;
-
-                if (!rprop.get().equals(prop1.get())) {
-                    prop1.set(rprop.get());
-                }
-            }
-        });
-
-
-
+        }
     }
 
 

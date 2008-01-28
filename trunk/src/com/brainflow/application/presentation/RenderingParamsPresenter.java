@@ -30,9 +30,7 @@ public class RenderingParamsPresenter extends ImageViewPresenter implements Bind
 
     private RenderingParamsForm form;
 
-    private BeanAdapter opacityAdapter;
 
-    private BeanAdapter smoothingAdapter;
 
     /**
      * Creates a new instance of OpacityPresenter
@@ -82,53 +80,16 @@ public class RenderingParamsPresenter extends ImageViewPresenter implements Bind
     public void bind() {
         ImageLayer layer = getSelectedView().getModel().getSelectedLayer();
         SwingBind.get().bind(new PercentageRangeConverter(layer.getImageLayerProperties().opacity, 0, 1, 100), form.getOpacitySlider());
-
+        SwingBind.get().bind(new PercentageRangeConverter(layer.getImageLayerProperties().smoothingRadius, 0, 15, 100), form.getSmoothingSlider());
+        SwingBind.get().bindContent(layer.getImageLayerProperties().interpolationSet, form.getInterpolationChoices());
+        SwingBind.get().bindIndex(layer.getImageLayerProperties().interpolationSelection, form.getInterpolationChoices());
     }
 
     public void unbind() {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    /*private void initBinding() {
-        ImageView view = getSelectedView();
-        if (view == null) return;
-
-        int idx = view.getModel().getSelectedIndex();
-        AbstractLayer layer = view.getModel().getLayer(idx);
-        float opacity = layer.getImageLayerProperties().getOpacity();
-        SmoothingRadius radius = layer.getImageLayerProperties().getSmoothingRadius();
-
-        if (opacityAdapter == null) {
-
-            opacityAdapter = new BeanAdapter(opacity, true);
-
-            BoundedRangeAdapter opacitySliderAdapter = new BoundedRangeAdapter(
-                    new PercentageConverter(opacityAdapter.getValueModel(Opacity.OPACITY_PROPERTY),
-                            new ValueHolder(0),
-                            new ValueHolder(1), 100), 0, 0, 100);
-
-
-            form.getOpacitySlider().setModel(opacitySliderAdapter);
-
-            Bindings.bind(form.getOpacityValueLabel(),
-                    ConverterFactory.createStringConverter(opacityAdapter.getValueModel(Opacity.OPACITY_PROPERTY),
-                            NumberFormat.getInstance()));
-
-
-            smoothingAdapter = new BeanAdapter(radius, true);
-            BoundedRangeAdapter smoothingSliderAdapter = new BoundedRangeAdapter(smoothingAdapter.getValueModel(SmoothingRadius.RADIUS_PROPERTY), 0, 0, 15);
-            form.getSmoothingSlider().setModel(smoothingSliderAdapter);
-
-            Bindings.bind(form.getSmoothingValueLabel(),
-                    ConverterFactory.createStringConverter(smoothingAdapter.getValueModel(SmoothingRadius.RADIUS_PROPERTY),
-                            NumberFormat.getInstance()));
-
-
-        } else {
-            opacityAdapter.setBean(opacity);
-            smoothingAdapter.setBean(radius);
-        }
-    } */
+    
 
 
 }

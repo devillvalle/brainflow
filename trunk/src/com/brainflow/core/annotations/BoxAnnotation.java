@@ -4,6 +4,7 @@ import com.brainflow.core.IImagePlot;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
 import net.java.dev.properties.Property;
 import net.java.dev.properties.container.ObservableProperty;
+import net.java.dev.properties.container.BeanContainer;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -26,13 +27,13 @@ public class BoxAnnotation extends AbstractAnnotation {
     public static final String FILLPAINT_PROPERTY = "fillPaint";
     public static final String LINEPAINT_PROPERTY = "linePaint";
 
-    public final Property<Double> xmin = ObservableProperty.create();
+    public final Property<Double> xmin = ObservableProperty.create(0.0);
 
-    public final Property<Double> ymin = ObservableProperty.create();
+    public final Property<Double> ymin = ObservableProperty.create(0.0);
 
-    public final Property<Double> width = ObservableProperty.create();
+    public final Property<Double> width = ObservableProperty.create(0.0);
 
-    public final Property<Double> height = ObservableProperty.create();
+    public final Property<Double> height = ObservableProperty.create(0.0);
 
     public final Property<Paint> fillPaint = ObservableProperty.create((Paint)new Color(0, 255, 0, 87));
 
@@ -42,9 +43,11 @@ public class BoxAnnotation extends AbstractAnnotation {
 
 
     public BoxAnnotation() {
+        BeanContainer.bind(this);
     }
 
     public BoxAnnotation(Rectangle2D rect, Paint _fillPaint, Paint _linePaint) {
+        BeanContainer.bind(this);
         xmin.set(rect.getMinX());
         ymin.set(rect.getMinY());
         fillPaint.set(_fillPaint);

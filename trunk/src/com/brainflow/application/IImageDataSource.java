@@ -6,6 +6,7 @@ import com.brainflow.utils.ProgressListener;
 import org.apache.commons.vfs.FileObject;
 
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,9 +17,16 @@ import java.awt.image.BufferedImage;
  */
 public interface IImageDataSource {
 
-    public ImageInfo getImageInfo();
+    // todo a single file can give rise to an array of ImageInfos which leads to an array of DataSources.
+    // read header in descriptor?
+    // this yields dimensionality
+    
 
+    public int getImageIndex();
+    
     public boolean isLoaded();
+
+    public ImageIODescriptor getDescriptor();
 
     public String getStem();
 
@@ -27,6 +35,8 @@ public interface IImageDataSource {
     public FileObject getHeaderFile();
 
     public String getFileFormat();
+
+    public ImageInfo readImageInfo();
 
     public BufferedImage getPreview();
 

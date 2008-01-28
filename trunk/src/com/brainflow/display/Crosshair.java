@@ -1,6 +1,7 @@
 package com.brainflow.display;
 
 import com.brainflow.image.anatomy.*;
+import com.brainflow.core.Viewport3D;
 import com.jgoodies.binding.beans.Model;
 
 /**

@@ -691,11 +691,7 @@ public class Brainflow {
         } catch (BrainflowException e) {
             log.severe("Could not initialize IO facilities, aborting");
             throw new RuntimeException(e);
-        } catch (IOException e) {
-            log.severe("Could not initialize IO facilities, aborting");
-            throw new RuntimeException(e);
-        }
-
+        } 
     }
 
     private void initializeResources() {
@@ -733,7 +729,7 @@ public class Brainflow {
             JLabel messageLabel = new JLabel("Please select correct image orientation from menu: ");
             java.util.List<Anatomy3D> choices = Anatomy3D.getInstanceList();
             JComboBox choiceBox = new JComboBox(choices.toArray());
-            Anatomy anatomy = (Anatomy)dataSource.getImageInfo().getAnatomy();
+            Anatomy anatomy = (Anatomy)dataSource.readImageInfo().getAnatomy();
             choiceBox.setSelectedItem(anatomy);
             FormLayout layout = new FormLayout("4dlu, l:p, p:g, 4dlu", "6dlu, p, 10dlu, p, 6dlu");
             CellConstraints cc = new CellConstraints();
@@ -744,7 +740,7 @@ public class Brainflow {
             JOptionPane.showMessageDialog(brainFrame, panel, "Analyze 7.5 image format ...", JOptionPane.WARNING_MESSAGE);
             Anatomy selectedAnatomy = (Anatomy)choiceBox.getSelectedItem();
             if (selectedAnatomy != anatomy) {
-                dataSource.getImageInfo().setAnatomy((Anatomy3D)selectedAnatomy);
+                dataSource.readImageInfo().setAnatomy((Anatomy3D)selectedAnatomy);
                 dataSource.releaseData();
             }
         }
@@ -806,8 +802,8 @@ public class Brainflow {
     }
 
 
-    public SoftImageDataSource[] getSelectedLoadableImages() {
-        SoftImageDataSource[] limg = loadingDock.requestLoadableImages();
+    public IImageDataSource[] getSelectedLoadableImages() {
+        IImageDataSource[] limg = loadingDock.requestLoadableImages();
         return limg;
 
     }

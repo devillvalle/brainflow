@@ -10,8 +10,11 @@ import com.jgoodies.binding.list.SelectionInList;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import net.java.dev.properties.Property;
+import net.java.dev.properties.IndexedProperty;
 import net.java.dev.properties.container.BeanContainer;
 import net.java.dev.properties.container.ObservableProperty;
+import net.java.dev.properties.container.ObservableIndexed;
+import net.java.dev.properties.container.ObservableWrapper;
 
 import java.awt.image.IndexColorModel;
 import java.io.Serializable;
@@ -48,21 +51,40 @@ public class ImageLayerProperties implements Serializable {
 
     public final ObservableProperty<IColorMap> colorMap = ObservableProperty.create();
 
-    @XStreamAlias("interpolation")
-    private InterpolationMethod interpolation;
+    //@XStreamAlias("interpolation")
+    //private InterpolationMethod interpolation;
 
-    private Visibility visible;
+    public final IndexedProperty<InterpolationType> interpolationSet = new ObservableIndexed<InterpolationType>(
+            InterpolationType.NEAREST_NEIGHBOR, InterpolationType.LINEAR, InterpolationType.CUBIC);
+
+
+    public final Property<InterpolationType> interpolationType = ObservableProperty.create(InterpolationType.NEAREST_NEIGHBOR);
+
+    public final Property<Integer> interpolationSelection = new ObservableWrapper.ReadWrite<Integer>(interpolationType) {
+        public Integer get() {
+            return interpolationSet.get().indexOf(interpolationType.get());
+        }
+
+        public void set(Integer integer) {       
+            InterpolationType itype = interpolationSet.get(integer);
+            if (itype != null) {
+                interpolationType.set(itype);
+            } else {
+                throw new IllegalArgumentException("Illegal index " + integer + " for interpolation type");
+            }
+        }
+    };
+
+    public final Property<Boolean> visible = ObservableProperty.create(true);
 
     public final Property<Double> opacity = ObservableProperty.create(1.0);
 
-    @XStreamAlias("smoothing-radius")
-    private SmoothingRadius smoothingRadius;
-
+    public final Property<Double> smoothingRadius = ObservableProperty.create(0.0);
 
     private ThresholdRange threshold;
 
 
-    public final ObservableProperty<ClipRange> clipRange = ObservableProperty.create(new ClipRange(0,0,0,0));
+    public final ObservableProperty<ClipRange> clipRange = ObservableProperty.create(new ClipRange(0, 0, 0, 0));
 
     @XStreamOmitField
     private SelectionInList interpolationMethod;
@@ -98,13 +120,6 @@ public class ImageLayerProperties implements Serializable {
 
         colorMap.set(map);
 
-        interpolation = new InterpolationMethod(InterpolationType.CUBIC);
-
-        visible = new Visibility(this, true);
-
-        smoothingRadius = new SmoothingRadius(0);
-
-        interpolationMethod = new SelectionInList<InterpolationType>(InterpolationType.values(), new PropertyAdapter<InterpolationMethod>(interpolation, InterpolationMethod.INTERPOLATION_PROPERTY));
 
         threshold = new ThresholdRange(map.getMinimumValue(), map.getMinimumValue(), dataRange);
 
@@ -115,18 +130,18 @@ public class ImageLayerProperties implements Serializable {
         clipRange.get().highClip.set(map.getHighClip());
 
 
-   }
+    }
 
     public ThresholdRange getThresholdRange() {
         return threshold;
     }
 
-    public SmoothingRadius getSmoothingRadius() {
-        return smoothingRadius;
+    public double getSmoothingRadius() {
+        return smoothingRadius.get();
     }
 
-    public Visibility getVisible() {
-        return visible;
+    public boolean isVisible() {
+        return visible.get();
     }
 
     public ClipRange getClipRange() {
@@ -146,10 +161,9 @@ public class ImageLayerProperties implements Serializable {
         return colorMap.get();
     }
 
-    public InterpolationMethod getInterpolation() {
-        return interpolation;
+    public InterpolationType getInterpolation() {
+        return interpolationType.get();
     }
-
 
 
 }

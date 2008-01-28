@@ -4,6 +4,7 @@ import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.core.Viewport3D;
 
 import java.beans.PropertyChangeListener;
 

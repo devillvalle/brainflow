@@ -3,6 +3,7 @@ package com.brainflow.image.io.nifti;
 import com.brainflow.application.BrainflowException;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.io.ImageInfoReader;
+import com.brainflow.image.io.analyze.AnalyzeInfoReader;
 import com.brainflow.utils.DataType;
 import com.brainflow.utils.Dimension3D;
 import com.brainflow.utils.Point3D;
@@ -27,6 +28,8 @@ import java.util.zip.GZIPInputStream;
  * Time: 3:41:00 PM
  * To change this template use File | Settings | File Templates.
  */
+
+
 public class NiftiInfoReader implements ImageInfoReader {
 
     private static final Logger log = Logger.getLogger(NiftiInfoReader.class.getName());
@@ -102,15 +105,37 @@ public class NiftiInfoReader implements ImageInfoReader {
 
     }
 
-    public ImageInfo readInfo(File f) throws BrainflowException {
-        ImageInfo ret = null;
+    public List<NiftiImageInfo> readInfo(InputStream istream) throws BrainflowException {
+        List<NiftiImageInfo> ret = null;
+        // todo check to see if valid nifti file extension
+        try {
+            ret = readHeader("", istream);
 
+        } catch (Exception e) {
+            //log.warning("Exception caught in AnalyzeInfoReader.readInfo ");
+            throw new BrainflowException(e);
+        }
+
+
+        return ret;
+
+
+    }
+
+    @Override
+    public List<NiftiImageInfo> readInfo(File f) throws BrainflowException {
+        List<NiftiImageInfo> ret = null;
+        // todo check to see if valid nifti file extension
         try {
 
             String headerName = NiftiInfoReader.getHeaderName(f.getName());
             ret = readHeader(headerName, getInputStream(f));
-            // todo check to see if valid nifti file extension
-            ret.setImageFile(resolveFileObject(NiftiInfoReader.getImageName(f.getAbsolutePath())));
+            FileObject dataFile = VFS.getManager().resolveFile(f.getParentFile(), NiftiInfoReader.getImageName(f.getName()));
+            for (ImageInfo ii : ret) {
+                ii.setDataFile(dataFile);
+            }
+
+
         } catch (Exception e) {
             //log.warning("Exception caught in AnalyzeInfoReader.readInfo ");
             throw new BrainflowException(e);
@@ -130,8 +155,8 @@ public class NiftiInfoReader implements ImageInfoReader {
                     throw new FileNotFoundException("Error finding gzipped file : " + f);
                 }
 
-                log.info("resolved gzipped file : " + children[0]);
-                log.info("file content type : " + children[0].getFileSystem());
+                log.fine("resolved gzipped file : " + children[0]);
+                log.fine("file content type : " + children[0].getFileSystem());
                 return children[0];
             } else {
                 return VFS.getManager().resolveFile(f);
@@ -146,14 +171,18 @@ public class NiftiInfoReader implements ImageInfoReader {
         return resolveFileObject(f.getAbsolutePath());
     }
 
-    public ImageInfo readInfo(FileObject fobj) throws BrainflowException {
-        ImageInfo ret = null;
+    public List<NiftiImageInfo> readInfo(FileObject fobj) throws BrainflowException {
+        List<NiftiImageInfo> ret = null;
 
         try {
 
             String headerName = NiftiInfoReader.getHeaderName(fobj.getName().getBaseName());
             ret = readHeader(headerName, getInputStream(fobj));
-            ret.setImageFile(resolveFileObject(fobj.getName().getURI()));
+            FileObject dataFile = VFS.getManager().resolveFile(fobj.getParent(), NiftiInfoReader.getImageName(fobj.getName().getBaseName()));
+            for (ImageInfo ii : ret) {
+                ii.setDataFile(dataFile);
+            }
+
 
         } catch (Exception e) {
             throw new BrainflowException(e);
@@ -164,13 +193,6 @@ public class NiftiInfoReader implements ImageInfoReader {
 
     }
 
-    public ImageInfo readInfo(URL url) throws BrainflowException {
-        try {
-            return readHeader(url.toString(), url.openStream());
-        } catch (IOException e) {
-            throw new BrainflowException("Error reading image url", e);
-        }
-    }
 
     private void fillPixDim(float[] pixdim, NiftiImageInfo info) {
         info.qfac = (int) pixdim[0];
@@ -238,102 +260,73 @@ public class NiftiInfoReader implements ImageInfoReader {
 
     }
 
-
-    private NiftiImageInfo readHeader(String name, InputStream stream) throws IOException, BrainflowException {
+    private NiftiImageInfo fillInfo(Nifti1Dataset nifti) throws BrainflowException {
         NiftiImageInfo info = new NiftiImageInfo();
+        short[] dim = nifti.dim;
 
-        try {
-            Nifti1Dataset nifti = new Nifti1Dataset(name);
-            nifti.readHeader(stream);
-            short[] dim = nifti.dim;
+        Arrays.toString(dim);
+        fillImageDim(dim, info);
+        fillDataType(nifti.datatype, info);
+        float[] pixdim = nifti.pixdim;
+        fillPixDim(pixdim, info);
+        System.out.println(Arrays.toString(pixdim));
 
-            Arrays.toString(dim);
-            fillImageDim(dim, info);
-            fillDataType(nifti.datatype, info);
-            float[] pixdim = nifti.pixdim;
-            fillPixDim(pixdim, info);
-            System.out.println(Arrays.toString(pixdim));
+        // difficulty. requires qform support //////////
+        info.setAnatomy(ImageInfo.DEFAULT_ANATOMY);
+        /////////////////////////////////////////
 
-            // difficulty. requires qform support //////////
-            info.setAnatomy(ImageInfo.DEFAULT_ANATOMY);
-            /////////////////////////////////////////
-
-            info.calculateRealDim();
-
-            List<Double> sfList = new ArrayList<Double>();
-            sfList.add((double) nifti.scl_slope);
-
-            List<Double> interceptList = new ArrayList<Double>();
-            interceptList.add((double) nifti.scl_inter);
+        info.calculateRealDim();
 
 
-            info.setScaleFactors(sfList);
-            info.setIntercepts(interceptList);
-            info.setByteOffset((int) nifti.vox_offset);
-            info.setOrigin(new Point3D(nifti.qoffset[0], nifti.qoffset[1], nifti.qoffset[2]));
-            if (nifti.big_endian) {
-                info.setEndian(ByteOrder.BIG_ENDIAN);
-            } else {
-                info.setEndian(ByteOrder.LITTLE_ENDIAN);
-            }
-
-
-            return info;
-
-
-        } catch (IOException e) {
-            throw e;
+        info.setScaleFactor(nifti.scl_slope);
+        info.setIntercept(nifti.scl_inter);
+        info.setByteOffset((int) nifti.vox_offset);
+        info.setOrigin(new Point3D(nifti.qoffset[0], nifti.qoffset[1], nifti.qoffset[2]));
+        if (nifti.big_endian) {
+            info.setEndian(ByteOrder.BIG_ENDIAN);
+        } else {
+            info.setEndian(ByteOrder.LITTLE_ENDIAN);
         }
 
+
+        return info;
 
     }
 
 
-    private NiftiImageInfo readHeader(String name) throws IOException, BrainflowException {
-        NiftiImageInfo info = new NiftiImageInfo();
+    private List<NiftiImageInfo> readHeader(String name, InputStream stream) throws IOException, BrainflowException {
+        NiftiImageInfo info;
 
         try {
             Nifti1Dataset nifti = new Nifti1Dataset(name);
-            nifti.readHeader();
-            short[] dim = nifti.dim;
-            fillImageDim(dim, info);
-            fillDataType(nifti.datatype, info);
-            float[] pixdim = nifti.pixdim;
-            fillPixDim(pixdim, info);
-            System.out.println(Arrays.toString(pixdim));
-
-            // difficulty. requires qform support //////////
-            info.setAnatomy(ImageInfo.DEFAULT_ANATOMY);
-            /////////////////////////////////////////
-
-            //info.calculateRealDim();
-
-            List<Double> sfList = new ArrayList<Double>();
-            sfList.add((double) nifti.scl_slope);
-
-            List<Double> interceptList = new ArrayList<Double>();
-            interceptList.add((double) nifti.scl_inter);
-
-
-            info.setScaleFactors(sfList);
-            info.setIntercepts(interceptList);
-            info.setByteOffset((int) nifti.vox_offset);
-            info.setOrigin(new Point3D(nifti.qoffset[0], nifti.qoffset[1], nifti.qoffset[2]));
-            if (nifti.big_endian) {
-                info.setEndian(ByteOrder.BIG_ENDIAN);
-            } else {
-                info.setEndian(ByteOrder.LITTLE_ENDIAN);
-            }
-
-
-            return info;
-
-
+            nifti.readHeader(stream);
+            info = fillInfo(nifti);
         } catch (IOException e) {
+            throw e;
+        } catch (BrainflowException e) {
             throw e;
         }
 
 
+        return Arrays.asList(info);
+
+    }
+
+
+    private List<NiftiImageInfo> readHeader(String name) throws IOException, BrainflowException {
+        NiftiImageInfo info;
+
+        try {
+            Nifti1Dataset nifti = new Nifti1Dataset(name);
+            nifti.readHeader();
+            info = fillInfo(nifti);
+        } catch (IOException e) {
+            throw e;
+        } catch (BrainflowException e) {
+            throw e;
+        }
+
+        return Arrays.asList(info);
     }
 
 

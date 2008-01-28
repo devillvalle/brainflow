@@ -2,6 +2,7 @@ package com.brainflow.application.presentation;
 
 import com.brainflow.application.presentation.binding.Bindable;
 import com.brainflow.application.presentation.binding.PercentageRangeConverter;
+import com.brainflow.application.presentation.binding.DoubleToStringConverter;
 import com.brainflow.application.presentation.forms.DoubleSliderForm;
 import com.brainflow.colormap.AbstractColorMap;
 import com.brainflow.colormap.IColorMap;
@@ -21,15 +22,10 @@ import javax.swing.*;
  */
 public class ColorRangePresenter extends ImageViewPresenter implements Bindable {
 
-    private IColorMap colorMap;
-
-    private BeanAdapter adapter;
+  
     
     private DoubleSliderForm form;
 
-    private BoundedRangeAdapter lowValueAdapter;
-
-    private BoundedRangeAdapter highValueAdapter;
 
     /**
      * Creates a new instance of ColorRangePanel
@@ -42,9 +38,6 @@ public class ColorRangePresenter extends ImageViewPresenter implements Bindable 
         if (getSelectedView() != null) {
             bind();
         }
-
-
-
 
     }
 
@@ -83,36 +76,11 @@ public class ColorRangePresenter extends ImageViewPresenter implements Bindable 
         
         SwingBind.get().bind(new PercentageRangeConverter(clip.highClip, clip.minValue.get(), clip.maxValue.get(), 100), form.getSlider1());
         SwingBind.get().bind(new PercentageRangeConverter(clip.lowClip, clip.minValue.get(), clip.maxValue.get(), 100), form.getSlider2());
+        SwingBind.get().bind(new DoubleToStringConverter(clip.highClip), form.getValueField1());
+        SwingBind.get().bind(new DoubleToStringConverter(clip.lowClip), form.getValueField2());
         
     }
 
-
-    private void initBinding() {
-        adapter = new BeanAdapter(colorMap, true);
-
-
-        lowValueAdapter = new BoundedRangeAdapter(new PercentageConverter(adapter.getValueModel(AbstractColorMap.LOW_CLIP_PROPERTY),
-                adapter.getValueModel(IColorMap.MINIMUM_VALUE_PROPERTY),
-                adapter.getValueModel(IColorMap.MAXIMUM_VALUE_PROPERTY), 100), 0, 0, 100);
-
-        highValueAdapter = new BoundedRangeAdapter(new PercentageConverter(adapter.getValueModel(AbstractColorMap.HIGH_CLIP_PROPERTY),
-                adapter.getValueModel(IColorMap.MINIMUM_VALUE_PROPERTY),
-                adapter.getValueModel(IColorMap.MAXIMUM_VALUE_PROPERTY), 100), 0, 0, 100);
-
-        form.getSlider1().setModel(highValueAdapter);
-        form.getSlider2().setModel(lowValueAdapter);
-
-
-
-        /*Bindings.bind(form.getValueField1(), ConverterFactory.createStringConverter(
-                adapter.getValueModel(LinearColorMapDeprecated.HIGH_CLIP_PROPERTY), NumberFormat.getInstance()));
-
-        Bindings.bind(form.getValueField2(), ConverterFactory.createStringConverter(
-                adapter.getValueModel(LinearColorMapDeprecated.LOW_CLIP_PROPERTY), NumberFormat.getInstance()));  */
-
-        Bindings.bind(form.getValueField1(), adapter.getValueModel(IColorMap.HIGH_CLIP_PROPERTY));
-        Bindings.bind(form.getValueField2(), adapter.getValueModel(IColorMap.LOW_CLIP_PROPERTY));
-    }
 
 
     public static void main(String[] args) {

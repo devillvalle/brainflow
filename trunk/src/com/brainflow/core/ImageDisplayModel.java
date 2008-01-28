@@ -9,6 +9,7 @@ import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.ICoordinateSpace;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace3D;
+import com.brainflow.utils.WeakEventListenerList;
 import com.jgoodies.binding.list.ArrayListModel;
 import com.jgoodies.binding.list.SelectionInList;
 import net.java.dev.properties.BaseProperty;
@@ -18,6 +19,7 @@ import net.java.dev.properties.events.PropertyListener;
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+import javax.swing.event.EventListenerList;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -42,7 +44,8 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     private SelectionInList layerSelection = new SelectionInList((ListModel) imageListModel);
 
-    private List<ImageLayerListener> layerListeners = new ArrayList<ImageLayerListener>();
+
+    private EventListenerList eventListeners = new WeakEventListenerList();
 
     private List<ListDataListener> listenerList = new ArrayList<ListDataListener>();
 
@@ -108,7 +111,11 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
 
     public void addImageDisplayModelListener(ImageDisplayModelListener listener) {
-        listenerList.add(listener);
+        if (!listenerList.contains(listener)) {
+            listenerList.add(listener);
+        } else {
+            log.warning("addImageDisplayModelListener: supplied instance has already been added to listener list");
+        }
     }
 
     public void removeImageDisplayModelListener(ImageDisplayModelListener listener) {
@@ -116,11 +123,13 @@ public class ImageDisplayModel implements IImageDisplayModel {
     }
 
     public void addImageLayerListener(ImageLayerListener listener) {
-        layerListeners.add(listener);
+        eventListeners.add(ImageLayerListener.class, listener);
+
+
     }
 
     public void removeImageLayerListener(ImageLayerListener listener) {
-        layerListeners.remove(listener);
+        eventListeners.remove(ImageLayerListener.class, listener);
     }
 
 
@@ -145,17 +154,18 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
         layer.addPropertyChangeListener(ImageLayerProperties.COLOR_MAP_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                for (ImageLayerListener listener : layerListeners) {
+                ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
+                for (ImageLayerListener listener : listeners) {
                     listener.colorMapChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer) evt.getSource()));
                 }
             }
         });
 
 
-
         layer.addPropertyChangeListener(ImageLayerProperties.RESAMPLE_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                for (ImageLayerListener listener : layerListeners) {
+                ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
+                for (ImageLayerListener listener : listeners) {
                     listener.interpolationMethodChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer) evt.getSource()));
                 }
             }
@@ -163,32 +173,48 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
         layer.addPropertyChangeListener(ImageLayerProperties.THRESHOLD_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                for (ImageLayerListener listener : layerListeners) {
+                ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
+                for (ImageLayerListener listener : listeners) {
                     listener.thresholdChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer) evt.getSource()));
                 }
             }
         });
 
-        layer.addPropertyChangeListener(ImageLayerProperties.SMOOTHING_PROPERTY, new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                for (ImageLayerListener listener : layerListeners) {
-                    listener.smoothingChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer) evt.getSource()));
-                }
-            }
-        });
-
-        layer.addPropertyChangeListener(ImageLayerProperties.VISIBLE_PROPERTY, new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                for (ImageLayerListener listener : layerListeners) {
-                    listener.visibilityChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer) evt.getSource()));
-                }
-            }
-        });
-
-         BeanContainer.get().addListener(layer.getImageLayerProperties().opacity, new PropertyListener() {
+        BeanContainer.get().addListener(layer.getImageLayerProperties().interpolationType, new PropertyListener() {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
-                for (ImageLayerListener listener : layerListeners) {
+                ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
+                for (ImageLayerListener listener : listeners) {
+
+                    System.out.println("interpolation method changed to " + newValue);
+                    System.out.println("layer listener : " + listener);
+                    listener.interpolationMethodChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
+                }
+            }
+        });
+  
+        BeanContainer.get().addListener(layer.getImageLayerProperties().visible, new PropertyListener() {
+            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+                ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
+                for (ImageLayerListener listener : listeners) {
+                    listener.visibilityChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
+                }
+            }
+        });
+
+        BeanContainer.get().addListener(layer.getImageLayerProperties().opacity, new PropertyListener() {
+            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+                ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
+                for (ImageLayerListener listener : listeners) {
                     listener.opacityChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
+                }
+            }
+        });
+
+        BeanContainer.get().addListener(layer.getImageLayerProperties().smoothingRadius, new PropertyListener() {
+            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+                ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
+                for (ImageLayerListener listener : listeners) {
+                    listener.smoothingChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
                 }
             }
         });
@@ -197,7 +223,8 @@ public class ImageDisplayModel implements IImageDisplayModel {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
                 Number lowClip = (Number) newValue;
                 Number highClip = layer.getImageLayerProperties().clipRange.get().getHighClip();
-                for (ImageLayerListener listener : layerListeners) {
+                ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
+                for (ImageLayerListener listener : listeners) {
                     IColorMap newMap = layer.getImageLayerProperties().getColorMap().newClipRange(lowClip.doubleValue(), highClip.doubleValue());
                     layer.getImageLayerProperties().colorMap.set(newMap);
 
@@ -212,7 +239,8 @@ public class ImageDisplayModel implements IImageDisplayModel {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
                 Number highClip = (Number) newValue;
                 Number lowClip = layer.getImageLayerProperties().clipRange.get().getLowClip();
-                for (ImageLayerListener listener : layerListeners) {
+                ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
+                for (ImageLayerListener listener : listeners) {
 
                     IColorMap newMap = layer.getImageLayerProperties().getColorMap().newClipRange(lowClip.doubleValue(), highClip.doubleValue());
                     layer.getImageLayerProperties().colorMap.set(newMap);
@@ -223,8 +251,6 @@ public class ImageDisplayModel implements IImageDisplayModel {
                 }
             }
         });
-
-
 
 
     }

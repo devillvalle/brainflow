@@ -12,4 +12,6 @@ public interface IDimension<T extends Number> {
     public int numDim();
 
     public T getDim(int dimnum);
+
+    public int product();
 }

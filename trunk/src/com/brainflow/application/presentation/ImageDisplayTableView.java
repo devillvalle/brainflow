@@ -211,7 +211,7 @@ public class ImageDisplayTableView extends ImageViewPresenter {
             if (columnIndex == 2) {
                 ImageView view = ImageDisplayTableView.this.getSelectedView();
                 AbstractLayer layer = view.getModel().getLayer(rowIndex);
-                layer.getImageLayerProperties().getVisible().setVisible((Boolean) aValue);
+                layer.getImageLayerProperties().visible.set((Boolean) aValue);
 
             }
         }
@@ -227,7 +227,7 @@ public class ImageDisplayTableView extends ImageViewPresenter {
                     return "visible";
                 case 2:
                     return view.getModel().getLayer(rowIndex).
-                            getImageLayerProperties().getVisible().isVisible();
+                            getImageLayerProperties().isVisible();
 
             }
 

@@ -66,9 +66,7 @@ public class ImageViewportPresenter extends ImageViewPresenter {
     private PropertyConnector heightConnector;
 
 
-    private JSpinner xorigin;
 
-    private JSpinner yorigin;
 
     private JSlider xfovSlider;
 
@@ -91,42 +89,42 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
     private void buildGUI() {
         form = new JPanel();
-        layout = new FormLayout("8dlu, p:g, 6dlu, p:g, 8dlu", "8dlu, p, 6dlu, p, 6dlu, p, 6dlu, p, 6dlu, min(125dlu;p):g, 1dlu, 3dlu, p, 6dlu");
+        //layout = new FormLayout("8dlu, p:g, 6dlu, p:g, 8dlu", "8dlu, p, 6dlu, p, 6dlu, p, 6dlu, p, 6dlu, min(125dlu;p):g, 1dlu, 3dlu, p, 6dlu");
+        layout = new FormLayout("3dlu, p:g, 3dlu", "8dlu, min(155dlu;p):g, 3dlu");
         form.setLayout(layout);
-        layout.addGroupedColumn(2);
-        layout.addGroupedColumn(4);
+        
         CellConstraints cc = new CellConstraints();
 
-        choiceLabel = new JLabel("Selected Plot: ");
-        form.add(choiceLabel, cc.xy(2, 2));
-        form.add(plotSelector, cc.xywh(2, 4, 3, 1));
+        //choiceLabel = new JLabel("Selected Plot: ");
+        //form.add(choiceLabel, cc.xy(2, 2));
+        //form.add(plotSelector, cc.xywh(2, 4, 3, 1));
 
-        xspinnerModel = new SpinnerNumberModel(0, 0, 100, 1);
-        yspinnerModel = new SpinnerNumberModel(0, 0, 100, 1);
+        //xspinnerModel = new SpinnerNumberModel(0, 0, 100, 1);
+        //yspinnerModel = new SpinnerNumberModel(0, 0, 100, 1);
 
-        xorigin = new JSpinner();
-        xorigin.setModel(xspinnerModel);
+        //xorigin = new JSpinner();
+        //xorigin.setModel(xspinnerModel);
         //xorigin.setEditor(new JSpinner.NumberEditor(xorigin, "###.#");
 
-        yorigin = new JSpinner();
-        yorigin.setModel(yspinnerModel);
+        //yorigin = new JSpinner();
+        //yorigin.setModel(yspinnerModel);
         //yorigin.setEditor(yspinnerModel);
 
         //form.add(new JLabel("Origin: "), cc.xy(2, 6));
 
-        JPanel xpan = new JPanel();
-        xpan.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        xpan.setLayout(new BoxLayout(xpan, BoxLayout.X_AXIS));
-        xpan.add(new JLabel("X: "));
-        xpan.add(xorigin);
+        //JPanel xpan = new JPanel();
+        //xpan.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        //xpan.setLayout(new BoxLayout(xpan, BoxLayout.X_AXIS));
+        //xpan.add(new JLabel("X: "));
+        //xpan.add(xorigin);
 
-        JPanel ypan = new JPanel();
-        ypan.setLayout(new BoxLayout(ypan, BoxLayout.X_AXIS));
-        ypan.add(new JLabel("Y: "));
-        ypan.add(yorigin);
+        //JPanel ypan = new JPanel();
+        //ypan.setLayout(new BoxLayout(ypan, BoxLayout.X_AXIS));
+        //ypan.add(new JLabel("Y: "));
+        //ypan.add(yorigin);
 
-        form.add(xpan, cc.xy(2, 8));
-        form.add(ypan, cc.xy(4, 8));
+        //form.add(xpan, cc.xy(2, 2));
+        //form.add(ypan, cc.xy(4, 2));
 
         viewPanel = new JPanel();
         boxView = new ImageView(new ImageDisplayModel("NULL"));
@@ -163,7 +161,7 @@ public class ImageViewportPresenter extends ImageViewPresenter {
         viewPanel.add(xfovSlider, BorderLayout.SOUTH);
         viewPanel.add(yfovSlider, BorderLayout.WEST);
 
-        form.add(viewPanel, cc.xywh(1, 10, 4, 1));
+        form.add(viewPanel, cc.xy(2, 2));
 
         //form.add(fovSlider, cc.xywh(2,13,3,1));
 
@@ -219,25 +217,6 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
     }
 
-    private double getXLowerBound(ImageView view) {
-        IImagePlot plot = view.getSelectedPlot();
-        return view.getImageAxis(plot.getXAxisRange().getAnatomicalAxis()).getMinimum();
-    }
-
-    private double getYLowerBound(ImageView view) {
-        IImagePlot plot = view.getSelectedPlot();
-        return view.getImageAxis(plot.getYAxisRange().getAnatomicalAxis()).getMinimum();
-    }
-
-    private double getXUpperBound(ImageView view) {
-        IImagePlot plot = view.getSelectedPlot();
-        return view.getImageAxis(plot.getXAxisRange().getAnatomicalAxis()).getMaximum();
-    }
-
-    private double getYUpperBound(ImageView view) {
-        IImagePlot plot = view.getSelectedPlot();
-        return view.getImageAxis(plot.getYAxisRange().getAnatomicalAxis()).getMaximum();
-    }
 
     private void updateTooltips(ImageView view) {
 
@@ -262,18 +241,14 @@ public class ImageViewportPresenter extends ImageViewPresenter {
         updateTooltips(view);
 
 
-        xorigin.setToolTipText("origin: " + view.getSelectedPlot().getXAxisRange().getAnatomicalAxis().min.toString());
-        yorigin.setToolTipText("origin: " + view.getSelectedPlot().getYAxisRange().getAnatomicalAxis().min.toString());
 
-        boxView = new ImageView(view.getModel());
-        boxView.identifier.set("Viewport Editor");
-        boxView.setPlotLayout(new SimplePlotLayout(boxView, view.getSelectedPlot().getDisplayAnatomy()));
-
-
-
-        boxView.clearAnnotations();
-        boxView.getSelectedPlot().setPlotInsets(new Insets(2, 2, 2, 2));
-        boxAnnotation.setVisible(true);
+        //if (boxView == null) {
+            boxView = new ImageView(view.getModel());
+            boxView.identifier.set("Viewport Editor");
+            boxView.setPlotLayout(new SimplePlotLayout(boxView, view.getSelectedPlot().getDisplayAnatomy()));
+            boxView.clearAnnotations();
+            boxView.getSelectedPlot().setPlotInsets(new Insets(2, 2, 2, 2));
+            boxAnnotation.setVisible(true);
 
         // initialize box with correct origin for current plot viewport
         boxAnnotation.setXmin(getBoxMinX(view));
@@ -327,19 +302,19 @@ public class ImageViewportPresenter extends ImageViewPresenter {
             viewportAdapter.setBean(viewport);
         }
 
-        ValueModel xextent = viewportAdapter.getValueModel(viewport.getExtentPropertyName(plot.getXAxisRange().getAnatomicalAxis()));
-        ValueModel yextent = viewportAdapter.getValueModel(viewport.getExtentPropertyName(plot.getYAxisRange().getAnatomicalAxis()));
+        //ValueModel xextent = viewportAdapter.getValueModel(viewport.getExtentProperty(plot.getXAxisRange().getAnatomicalAxis()));
+        //ValueModel yextent = viewportAdapter.getValueModel(viewport.getExtentProperty(plot.getYAxisRange().getAnatomicalAxis()));
 
 
-        xfovAdapter = new BoundedRangeAdapter(new PercentageConverter(xextent,
-                new ValueHolder(10),
-                new ValueHolder(viewport.getBounds().getImageAxis(plot.getXAxisRange().getAnatomicalAxis(), true).getRange().getInterval()), 100), 0, 0, 100);
-        xfovSlider.setModel(xfovAdapter);
+        //xfovAdapter = new BoundedRangeAdapter(new PercentageConverter(xextent,
+        //        new ValueHolder(10),
+        //        new ValueHolder(viewport.getBounds().getImageAxis(plot.getXAxisRange().getAnatomicalAxis(), true).getRange().getInterval()), 100), 0, 0, 100);
+        //xfovSlider.setModel(xfovAdapter);
 
-        yfovAdapter = new BoundedRangeAdapter(new PercentageConverter(yextent,
-                new ValueHolder(10),
-                new ValueHolder(viewport.getBounds().getImageAxis(plot.getYAxisRange().getAnatomicalAxis(), true).getRange().getInterval()), 100), 0, 0, 100);
-        yfovSlider.setModel(yfovAdapter);
+        //yfovAdapter = new BoundedRangeAdapter(new PercentageConverter(yextent,
+        //        new ValueHolder(10),
+        //        new ValueHolder(viewport.getBounds().getImageAxis(plot.getYAxisRange().getAnatomicalAxis(), true).getRange().getInterval()), 100), 0, 0, 100);
+        //yfovSlider.setModel(yfovAdapter);
 
         // this line links zero and zero extent so that changing zero changes the other
         //PropertyConnector.connect(xextent, "value", yextent, "value");
@@ -386,25 +361,22 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
 
 
-        xspinnerModel = new SpinnerNumberModel((Number) xval.getValue(), getXLowerBound(view), getXUpperBound(view), 1);
-        yspinnerModel = new SpinnerNumberModel((Number) yval.getValue(), getYLowerBound(view), getYUpperBound(view), 1);
-
-        xorigin.setModel(xspinnerModel);
-        yorigin.setModel(yspinnerModel);
+        //xspinnerModel = new SpinnerNumberModel((Number) xval.getValue(), getXLowerBound(view), getXUpperBound(view), 1);
+        //yspinnerModel = new SpinnerNumberModel((Number) yval.getValue(), getYLowerBound(view), getYUpperBound(view), 1);
 
 
-        SpinnerAdapterFactory.connect(xspinnerModel, xval, xval.getValue());
-        SpinnerAdapterFactory.connect(yspinnerModel, yval, yval.getValue());
+        //SpinnerAdapterFactory.connect(xspinnerModel, xval, xval.getValue());
+        //SpinnerAdapterFactory.connect(yspinnerModel, yval, yval.getValue());
 
 
     }
 
     private void setEnabled(boolean b) {
         form.setEnabled(b);
-        xorigin.setEnabled(b);
-        yorigin.setEnabled(b);
-        xfovSlider.setEnabled(b);
-        yfovSlider.setEnabled(b);
+        //xorigin.setEnabled(b);
+        //yorigin.setEnabled(b);
+        //xfovSlider.setEnabled(b);
+        //yfovSlider.setEnabled(b);
 
 
     }
@@ -447,8 +419,8 @@ public class ImageViewportPresenter extends ImageViewPresenter {
                 AnatomicalPoint2D next = boxAnnotation.translateFromJava2D(plot, e.getPoint());
 
 
-                Number xold = (Number) xorigin.getValue();
-                Number yold = (Number) yorigin.getValue();
+                Number xold = boxAnnotation.getXmin();
+                Number yold = boxAnnotation.getYmin();
 
 
                 double newx = xold.doubleValue() + (next.getX() - lastPoint.getX());
@@ -461,12 +433,8 @@ public class ImageViewportPresenter extends ImageViewPresenter {
                 }
 
 
-                boxView.setToolTipText("zero : " + xorigin.toString());
-                boxView.setToolTipText("zero : " + yorigin.toString());
 
 
-                xspinnerModel.setValue(newx);
-                yspinnerModel.setValue(newy);
                 lastPoint = next;
             }
         }

@@ -3,7 +3,6 @@ package com.brainflow.core;
 import com.brainflow.application.services.ImageViewLayerSelectionEvent;
 import com.brainflow.core.annotations.IAnnotation;
 import com.brainflow.display.InterpolationType;
-import com.brainflow.display.Viewport3D;
 import com.brainflow.image.anatomy.*;
 import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.image.space.Axis;

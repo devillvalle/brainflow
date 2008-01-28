@@ -4,7 +4,9 @@ import com.brainflow.application.BrainflowException;
 import org.apache.commons.vfs.FileObject;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 
 /**
  * <p>Title: </p>
@@ -18,10 +20,12 @@ import java.net.URL;
 
 public interface ImageInfoReader {
 
-    public ImageInfo readInfo(File f) throws BrainflowException;
+    public List<? extends ImageInfo> readInfo(File f) throws BrainflowException;
 
-    public ImageInfo readInfo(FileObject fobj) throws BrainflowException;
+    public List<? extends ImageInfo> readInfo(FileObject fobj) throws BrainflowException;
 
-    public ImageInfo readInfo(URL url) throws BrainflowException;
+    public List<? extends ImageInfo> readInfo(InputStream stream) throws BrainflowException;
+
+
 
 }

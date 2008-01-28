@@ -69,13 +69,13 @@ public class BasicImageReader implements ImageReader {
         info = _info;
 
         setByteOrder(info.getEndian());
-        setByteOffset(info.getByteOffset());
+        setByteOffset(info.getDataOffset());
 
         setFileDimensionality(info.getDimensionality());
         setDataType(info.getDataType());
         setImageSpace(info.createImageSpace());
-        sf = (float) info.getScaleFactor(0);
-        inputFile = info.getImageFile();
+        sf = (float) info.getScaleFactor();
+        inputFile = info.getDataFile();
 
     }
 
@@ -130,7 +130,7 @@ public class BasicImageReader implements ImageReader {
             istream.read(new byte[getByteOffset()]);
 
             //rac = inputFile.getContent().getRandomAccessContent(RandomAccessMode.READ);
-            //rac.seek(getByteOffset());
+            //rac.seek(getDataOffset());
 
 
             listener.setString("Allocating memory ...");
@@ -194,13 +194,13 @@ public class BasicImageReader implements ImageReader {
             if (fileDimensionality == 2) {
                 BasicImageData dat = new BasicImageData2D(imageSpace, data);
                 //todo bloody hack
-                dat.setImageLabel(info.getImageFile().getName().getBaseName());
+                dat.setImageLabel(info.getDataFile().getName().getBaseName());
                 listener.finished();
                 return dat;
             } else if (fileDimensionality == 3) {
                 //todo bloody hack
                 BasicImageData dat = new BasicImageData3D(imageSpace, data);
-                dat.setImageLabel(info.getImageFile().getName().getBaseName());
+                dat.setImageLabel(info.getDataFile().getName().getBaseName());
                 listener.finished();
                 return dat;
             } else
@@ -277,11 +277,11 @@ public class BasicImageReader implements ImageReader {
 
             if (fileDimensionality == 2) {
                 BasicImageData2D data2d = new BasicImageData2D(imageSpace, dataArray);
-                data2d.setImageLabel(info.getImageFile().getName().getBaseName());
+                data2d.setImageLabel(info.getDataFile().getName().getBaseName());
                 return data2d;
             } else if (fileDimensionality == 3) {
                 BasicImageData3D data3d = new BasicImageData3D(imageSpace, dataArray);
-                data3d.setImageLabel(info.getImageFile().getName().getBaseName());
+                data3d.setImageLabel(info.getDataFile().getName().getBaseName());
                 return data3d;
             } else {
                 throw new RuntimeException("BasicImageReader.getOutput(): Dimensionality of: " + fileDimensionality + " not supported!");
@@ -309,7 +309,7 @@ public class BasicImageReader implements ImageReader {
         try {
             data = getOutput();
         } catch (FileNotFoundException e) {
-            log.warning("failed trying to find file " + info.getImageFile());
+            log.warning("failed trying to find file " + info.getDataFile());
             throw new BrainflowException("BasicImageData.readImage: File Not Found Error", e);
         } catch (IOException e) {
             throw new BrainflowException("BasicImageData.readImage: File Reading Error", e);

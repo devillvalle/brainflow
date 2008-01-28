@@ -43,17 +43,7 @@ public class CompositeImageProducer extends AbstractImageProducer {
 
 
     public CompositeImageProducer(IImagePlot plot, Anatomy3D displayAnatomy) {
-        this.plot = plot;
-
-
-        setDisplayAnatomy(displayAnatomy);
-
-        initPipeline();
-
-        setSlice(getModel().getImageAxis(displayAnatomy.ZAXIS).getRange().getCenter());
-        layerListener = new PipelineLayerListener();
-        getModel().addImageLayerListener(layerListener);
-
+        this(plot, displayAnatomy,plot.getModel().getImageAxis(displayAnatomy.ZAXIS).getRange().getCenter());
 
     }
 
@@ -65,9 +55,13 @@ public class CompositeImageProducer extends AbstractImageProducer {
         initPipeline();
 
         setSlice(slice);
+        System.out.println("creating new layer listener " + layerListener);
         layerListener = new PipelineLayerListener();
+        System.out.println("adding layer listener " + layerListener);
         getModel().addImageLayerListener(layerListener);
         initPipeline();
+
+
 
     }
 
@@ -95,10 +89,8 @@ public class CompositeImageProducer extends AbstractImageProducer {
     }
 
     public void setPlot(IImagePlot plot) {
-        this.plot = plot;
-
-
         getModel().removeImageLayerListener(layerListener);
+        this.plot = plot;
         getModel().addImageLayerListener(layerListener);
 
         initPipeline();
@@ -106,7 +98,6 @@ public class CompositeImageProducer extends AbstractImageProducer {
 
     @Override
     public void setXAxis(AxisRange xaxis) {
-        System.out.println("new axis  " + xaxis);
         super.setXAxis(xaxis);
         pipeline.clearPath(cropImageStage);
     }
@@ -226,6 +217,11 @@ public class CompositeImageProducer extends AbstractImageProducer {
         }
     }
 
+    protected void finalize() throws Throwable {
+        System.out.println("garbage collecting " + this);
+        getModel().removeImageLayerListener(layerListener);
+
+    }
 
     class PipelineLayerListener implements ImageLayerListener {
 
@@ -264,6 +260,10 @@ public class CompositeImageProducer extends AbstractImageProducer {
             pipeline.clearPath(gatherRenderersStage);
             plot.getComponent().repaint();
 
+        }
+
+        public String toString() {
+           return "PipelineLayerListener for plot : " + plot.hashCode() + " with model " + plot.getModel();
         }
     }
 

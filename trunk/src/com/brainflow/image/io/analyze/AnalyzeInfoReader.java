@@ -26,6 +26,7 @@ import java.net.URL;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 
@@ -34,9 +35,10 @@ import java.util.logging.Logger;
  */
 public class AnalyzeInfoReader implements ImageInfoReader {
 
-    boolean verbose = false;
+    private boolean verbose = false;
 
     private static final int HEADER_SIZE = 348;
+
     private static final int SWAPPED_HEADER_SIZE = 1543569408;
 
 
@@ -73,18 +75,21 @@ public class AnalyzeInfoReader implements ImageInfoReader {
     }
 
 
-    public ImageInfo readInfo(File f) throws BrainflowException {
-        ImageInfo ret = null;
+    public List<ImageInfo> readInfo(File f) throws BrainflowException {
+        List<ImageInfo> ret = null;
 
         String headerName = AnalyzeInfoReader.getHeaderName(f.getAbsolutePath());
         f = new File(headerName);
 
         try {
             FileImageInputStream istream = new FileImageInputStream(f);
-
             ret = readHeader(istream);
+            FileObject dataFile = VFS.getManager().resolveFile(f.getParentFile(), AnalyzeInfoReader.getImageName(f.getName()));
+            for (ImageInfo ii : ret) {
+                ii.setDataFile(dataFile);
+            }
 
-            ret.setImageFile(VFS.getManager().resolveFile(f.getParentFile(), AnalyzeInfoReader.getImageName(f.getName())));
+
         } catch (Exception e) {
             log.warning("Exception caught in AnalyzeInfoReader.readInfo ");
             throw new BrainflowException(e);
@@ -95,14 +100,31 @@ public class AnalyzeInfoReader implements ImageInfoReader {
 
     }
 
-    public ImageInfo readInfo(FileObject fobj) throws BrainflowException {
-        ImageInfo ret = null;
+    public List<? extends ImageInfo> readInfo(InputStream istream) throws BrainflowException {
+        List<ImageInfo> ret = null;
+
+        try {
+            MemoryCacheImageInputStream mis = new MemoryCacheImageInputStream(istream);
+            ret  = readHeader(mis);
+        } catch (Exception e) {
+            throw new BrainflowException(e);
+        }
+
+        return ret;
+
+    }
+
+    public List<? extends ImageInfo> readInfo(FileObject fobj) throws BrainflowException {
+        List<ImageInfo> ret = null;
 
         try {
             InputStream istream = fobj.getContent().getInputStream();
             MemoryCacheImageInputStream mis = new MemoryCacheImageInputStream(istream);
-            ret = readHeader(mis);
-            ret.setImageFile(VFS.getManager().resolveFile(fobj.getParent(), AnalyzeInfoReader.getImageName(fobj.getName().getBaseName())));
+            ret  = readHeader(mis);
+            FileObject dataFile = VFS.getManager().resolveFile(fobj.getParent(), AnalyzeInfoReader.getImageName(fobj.getName().getBaseName()));
+            for (ImageInfo ii : ret) {
+                ii.setDataFile(dataFile);
+            }
 
         } catch (Exception e) {
             throw new BrainflowException(e);
@@ -111,15 +133,9 @@ public class AnalyzeInfoReader implements ImageInfoReader {
         return ret;
     }
 
-    public ImageInfo readInfo(URL url) throws BrainflowException {
-        try {
-            return readHeader(new MemoryCacheImageInputStream(url.openStream()));
-        } catch (IOException e) {
-            throw new BrainflowException("Error reading image url", e);
-        }
-    }
+  
 
-    private ImageInfo readHeader(ImageInputStream istream) throws BrainflowException {
+    private List<ImageInfo> readHeader(ImageInputStream istream) throws BrainflowException {
         ImageInfo info = new ImageInfo();
 
         readBeginning(istream);
@@ -210,7 +226,6 @@ public class AnalyzeInfoReader implements ImageInfoReader {
 
 
             vox_offset = istream.readFloat();
-
             spmScale = istream.readFloat();
 
             // need to rethink this
@@ -219,13 +234,9 @@ public class AnalyzeInfoReader implements ImageInfoReader {
             }
             /////////////////////////////////////
 
-            List<Double> sfList = new ArrayList<Double>();
-            sfList.add((double) spmScale);
-            info.setScaleFactors(sfList);
 
-            List<Double> interList = new ArrayList<Double>();
-            interList.add((double) 0);
-            info.setIntercepts(interList);
+            info.setScaleFactor(spmScale);
+            info.setIntercept(0);
 
             funused2 = istream.readFloat();
             funused3 = istream.readFloat();
@@ -268,7 +279,7 @@ public class AnalyzeInfoReader implements ImageInfoReader {
         }
 
 
-        return info;
+        return Arrays.asList(info);
 
     }
 
@@ -293,8 +304,8 @@ public class AnalyzeInfoReader implements ImageInfoReader {
     public static void main(String[] args) {
         AnalyzeInfoReader reader = new AnalyzeInfoReader();
         try {
-            ImageInfo info = reader.readInfo(new File(args[0]));
-            System.out.println(info);
+            List<ImageInfo> info = reader.readInfo(new File(args[0]));
+            System.out.println(info.get(0));
             java.util.Date d = new java.util.Date();
             System.out.println(new ToStringGenerator().generateToString(d));
         } catch (Exception e) {

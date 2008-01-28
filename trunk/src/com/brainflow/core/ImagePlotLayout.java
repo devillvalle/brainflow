@@ -38,6 +38,8 @@ public abstract class ImagePlotLayout {
     }
 
     protected IImagePlot createBasicPlot(Anatomy3D displayAnatomy) {
+        System.out.println("creating new plot within plot layout ...");
+        
         AxisRange xrange = getView().getModel().getImageAxis(displayAnatomy.XAXIS).getRange();
         AxisRange yrange = getView().getModel().getImageAxis(displayAnatomy.YAXIS).getRange();
 

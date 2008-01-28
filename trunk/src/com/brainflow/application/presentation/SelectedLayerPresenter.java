@@ -86,14 +86,12 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
                 for (int i = f1; i <= f2; i++) {
                     AbstractLayer layer = view.getModel().getLayer(i);
-                    Visibility vis = layer.getImageLayerProperties().getVisible();
 
                     if (model.isSelectedIndex(i)) {
-
-                        vis.setVisible(true);
+                        layer.getImageLayerProperties().visible.set(true);
                     } else {
+                        layer.getImageLayerProperties().visible.set(false);
 
-                        vis.setVisible(false);
                     }
                 }
 
@@ -159,7 +157,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
         int index = e.getIndex0();
         ImageView view = getSelectedView();
         AbstractLayer layer = view.getModel().getLayer(index);
-        boolean vis = layer.getImageLayerProperties().getVisible().isVisible();
+        boolean vis = layer.isVisible();
         if (vis) {
             layerSelector.getCheckBoxListSelectionModel().addSelectionInterval(index, index);
         } else {
@@ -173,7 +171,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
     }
 
 
-    class VisibilitySelection implements ImageLayerListener {
+    class VisibilitySelection extends ImageLayerListenerImpl {
 
         ImageView view;
 
@@ -181,28 +179,13 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
             setImageView(_view);
         }
 
-        public void smoothingChanged(ImageLayerEvent event) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
+        public void setImageView(ImageView _view) {
+            if (view != null)
+                view.getModel().removeImageLayerListener(this);
+            view = _view;
+            view.getModel().addImageLayerListener(this);
 
-        public void thresholdChanged(ImageLayerEvent event) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
 
-        public void colorMapChanged(ImageLayerEvent event) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
-
-        public void opacityChanged(ImageLayerEvent event) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
-
-        public void interpolationMethodChanged(ImageLayerEvent event) {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
-
-        public void clipRangeChanged(ImageLayerEvent event) {
-            //To change body of implemented methods use File | Settings | File Templates.
         }
 
         public void visibilityChanged(ImageLayerEvent event) {
@@ -218,16 +201,6 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
                 }
 
             }
-
-        }
-
-
-        public void setImageView(ImageView _view) {
-            if (view != null)
-                view.getModel().removeImageLayerListener(this);
-            view = _view;
-            view.getModel().addImageLayerListener(this);
-
 
         }
 

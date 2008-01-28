@@ -10,6 +10,7 @@ import net.java.dev.properties.Property;
 import net.java.dev.properties.events.PropertyListener;
 import net.java.dev.properties.container.ObservableProperty;
 import net.java.dev.properties.container.ObservableDelegate;
+import net.java.dev.properties.container.BeanContainer;
 
 import javax.swing.event.ListDataEvent;
 import java.beans.PropertyChangeEvent;
@@ -44,42 +45,42 @@ public class Viewport3D extends Model {
     
     private IImageSpace bounds;
 
-    public final Property<Double> XAxisMin = new ObservableProperty<Double>(){
+    public final Property<Double> XAxisMin = new ObservableProperty<Double>(0.0){
         public void set(Double aDouble) {
             super.set(aDouble);
             XAxisMax.set(get() + XAxisExtent.get());
         }
     };
 
-    public final Property<Double> YAxisMin = new ObservableProperty<Double>(){
+    public final Property<Double> YAxisMin = new ObservableProperty<Double>(0.0){
         public void set(Double aDouble) {
             super.set(aDouble);
             YAxisMax.set(get() + YAxisExtent.get());
         }
     };
 
-    public final Property<Double> ZAxisMin = new ObservableProperty<Double>(){
+    public final Property<Double> ZAxisMin = new ObservableProperty<Double>(0.0){
         public void set(Double aDouble) {
             super.set(aDouble);
             ZAxisMax.set(get() + ZAxisExtent.get());
         }
     };
 
-    public final Property<Double> XAxisExtent = new ObservableProperty<Double>(){
+    public final Property<Double> XAxisExtent = new ObservableProperty<Double>(0.0){
             public void set(Double aDouble) {
                 super.set(aDouble);
                 XAxisMax.set(get() + XAxisMin.get());
             }
         };
 
-        public final Property<Double> YAxisExtent = new ObservableProperty<Double>(){
+        public final Property<Double> YAxisExtent = new ObservableProperty<Double>(0.0){
             public void set(Double aDouble) {
                 super.set(aDouble);
                 YAxisMax.set(get() + YAxisMin.get());
             }
         };
 
-        public final Property<Double> ZAxisExtent = new ObservableProperty<Double>(){
+        public final Property<Double> ZAxisExtent = new ObservableProperty<Double>(0.0){
             public void set(Double aDouble) {
                 super.set(aDouble);
                 ZAxisMax.set(get() + ZAxisMin.get());
@@ -89,15 +90,14 @@ public class Viewport3D extends Model {
 
 
 
-    private final Property<Double> XAxisMax = ObservableProperty.create();
-    private final Property<Double> YAxisMax = ObservableProperty.create();
-    private final Property<Double> ZAxisMax = ObservableProperty.create();
-
-  
+    private final Property<Double> XAxisMax = ObservableProperty.create(0.0);
+    private final Property<Double> YAxisMax = ObservableProperty.create(0.0);
+    private final Property<Double> ZAxisMax = ObservableProperty.create(0.0);
 
 
 
     public Viewport3D(IImageDisplayModel _displayModel) {
+        BeanContainer.bind(this);
         displayModel = _displayModel;
         bounds = _displayModel.getImageSpace();
         displayModel.addImageDisplayModelListener(new ImageDisplayModelListener() {
@@ -220,11 +220,11 @@ public class Viewport3D extends Model {
 
     public AxisRange getRange(AnatomicalAxis axis) {
         if (axis.sameAxis(getXAxis())) {
-            return new AxisRange(axis, getXAxisMin(), getXAxisMax());
+            return new AxisRange(axis, getXAxisMin(), getXAxisMin() + getXAxisExtent());
         } else if (axis.sameAxis(getYAxis())) {
-            return new AxisRange(axis, getYAxisMin(), getYAxisMax());
+            return new AxisRange(axis, getYAxisMin(), getYAxisMin() + getYAxisExtent() );
         } else if (axis.sameAxis(getZAxis())) {
-            return new AxisRange(axis, getZAxisMin(), getZAxisMax());
+            return new AxisRange(axis, getZAxisMin(), getZAxisMin() + getZAxisExtent());
         } else {
             throw new IllegalArgumentException("Invalid axis for viewport: " + axis);
         }

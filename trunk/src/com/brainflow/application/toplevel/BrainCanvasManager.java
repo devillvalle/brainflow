@@ -36,14 +36,15 @@ import java.util.logging.Logger;
  */
 public class BrainCanvasManager {
 
+    public static final String SELECTED_CANVAS_PROPERTY = "selectedCanvas";
+
+
     private static final Logger log = Logger.getLogger(BrainCanvasManager.class.getName());
 
     private List<BrainCanvas> canvasList = new ArrayList<BrainCanvas>();
 
     private BrainCanvas selectedCanvas = null;
-
-    public static final String SELECTED_CANVAS_PROPERTY = "selectedCanvas";
-
+   
     private PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     private ContextMenuHandler contextMenuHandler;

@@ -1,5 +1,7 @@
 package com.brainflow.core;
 
+import java.util.EventListener;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Brad Buchsbaum
@@ -7,7 +9,7 @@ package com.brainflow.core;
  * Time: 3:24:09 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface ImageLayerListener {
+public interface ImageLayerListener extends EventListener {
 
 
     public void thresholdChanged(ImageLayerEvent event);

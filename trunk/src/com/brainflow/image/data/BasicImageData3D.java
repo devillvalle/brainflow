@@ -26,6 +26,7 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
 
 
     private int planeSize;
+
     private int dim0;
 
     public BasicImageData3D(BasicImageData3D src) {
@@ -107,6 +108,7 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
     }
 
     public ImageInfo getImageInfo() {
+        // todo is this  what we really want to do?
         return new ImageInfo(this);
     }
 
@@ -125,6 +127,7 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
     }
 
     public BasicImageData2D getOrthogonalCut(int dimIndex, int orientation) {
+        //todo what is this method for?
         return null;
     }
 
@@ -234,8 +237,8 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
         }
 
         public boolean canJump(int number) {
-            int tmp = index + number;
-            if ((index + number) < end && (index - number >= begin))
+            //todo what on earth?
+            if ( ((index + number) < end) && ((index - number) >= begin) )
                 return true;
             return false;
         }

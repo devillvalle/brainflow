@@ -2,7 +2,7 @@ package com.brainflow.modes;
 
 import com.brainflow.core.ImageView;
 import com.brainflow.display.ICrosshair;
-import com.brainflow.display.Viewport3D;
+import com.brainflow.core.Viewport3D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 
 import javax.swing.*;

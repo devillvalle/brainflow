@@ -1,14 +1,19 @@
 package com.brainflow.image.io.afni;
 
+import com.brainflow.image.io.Key;
+
+
 /**
  * BrainFlow Project
  * User: Bradley Buchsbaum
  * Date: Jul 21, 2007
  * Time: 9:41:58 AM
  */
-public enum AFNIAttributeKey {
-
-
+public enum AFNIAttributeKey implements Key {
+    
+    BRICK_STATSYM,
+    BRICK_STATAUX,
+    IJK_TO_DICOM_REAL,
     HISTORY_NOTE,
     TYPESTRING,
     IDCODE_STRING,
@@ -38,7 +43,7 @@ public enum AFNIAttributeKey {
             System.out.println("" + keys[i].name());
         }
 
-        System.out.println(AFNIAttributeKey.valueOf("HISTORY_NOTE"));
+        
     }
 
 

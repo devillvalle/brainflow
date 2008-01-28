@@ -66,7 +66,7 @@ public abstract class AbstractLayer {
 
 
     public boolean isVisible() {
-        return properties.getVisible().isVisible();
+        return properties.isVisible();
     }
 
     public double getOpacity() {
@@ -96,20 +96,20 @@ public abstract class AbstractLayer {
 
 
 
-        properties.getInterpolation().addPropertyChangeListener(new PropertyChangeListener() {
+        /*properties.getInterpolation().addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 support.firePropertyChange(new PropertyChangeEvent(AbstractLayer.this, ImageLayerProperties.RESAMPLE_PROPERTY,
                         evt.getOldValue(), evt.getNewValue()));
             }
-        });
+        });  */
 
-        properties.getVisible().addPropertyChangeListener(new PropertyChangeListener() {
+        /*properties.getVisible().addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 support.firePropertyChange(new PropertyChangeEvent(AbstractLayer.this, ImageLayerProperties.VISIBLE_PROPERTY,
                         evt.getOldValue(), evt.getNewValue()));
 
             }
-        });
+        });  */
 
         /*properties.getOpacity().addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
@@ -119,13 +119,13 @@ public abstract class AbstractLayer {
             }
         });*/
 
-        properties.getSmoothingRadius().addPropertyChangeListener(new PropertyChangeListener() {
+        /*properties.getSmoothingRadius().addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 support.firePropertyChange(new PropertyChangeEvent(AbstractLayer.this, ImageLayerProperties.SMOOTHING_PROPERTY,
                         evt.getOldValue(), evt.getNewValue()));
 
             }
-        });
+        }); */
 
         properties.getThresholdRange().addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {

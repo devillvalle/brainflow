@@ -7,9 +7,9 @@ import com.brainflow.image.io.ImageReader;
 import com.brainflow.utils.ProgressListener;
 import org.apache.commons.vfs.FileObject;
 
-import java.awt.image.BufferedImage;
 import java.lang.ref.SoftReference;
 import java.util.logging.Logger;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,35 +20,23 @@ import java.util.logging.Logger;
  */
 
 
-public class SoftImageDataSource implements IImageDataSource {
+public class SoftImageDataSource extends AbstractImageDataSource {
 
     final static Logger log = Logger.getLogger(SoftImageDataSource.class.getCanonicalName());
 
-    private ImageIODescriptor descriptor;
-
-    private FileObject header;
-
-    private FileObject dataFile;
 
     private SoftReference<IImageData> dataRef = new SoftReference<IImageData>(null);
-
-    private BufferedImage previewImage;
 
 
     private ImageInfo imageInfo = null;
 
 
-
     public SoftImageDataSource(ImageIODescriptor _descriptor, FileObject _header, FileObject _data) {
-        descriptor = _descriptor;
-        //assert descriptor.getHeaderName(_data) == _header.getName().getBaseName();
-        dataFile = _data;
-        header = _header;
+        super(_descriptor, _header, _data);
     }
 
     public SoftImageDataSource(ImageIODescriptor _descriptor, FileObject _header) {
-        descriptor = _descriptor;
-        header = _header;
+        super(_descriptor, _header);
 
     }
 
@@ -64,41 +52,20 @@ public class SoftImageDataSource implements IImageDataSource {
         return true;
     }
 
-    public IImageData getData() {
-        if (dataRef.get() == null) {
-            try {
-                load();
-            } catch (BrainflowException e) {
-                log.severe("failed to load " + getDataFile().getName().getPath());
-                throw new RuntimeException(e);
-            }
-        }
-
-        return dataRef.get();
+    public ImageInfo readImageInfo() {
+        if (imageInfo == null) fetchImageInfo();
+        return imageInfo;
     }
 
-    public String getStem() {
-        return descriptor.getStem(header.getName().getBaseName());
-    }
 
-    public FileObject getDataFile() {
-        return dataFile;
-    }
+    //duplicate code (with ImageDataSource)
 
-    public FileObject getHeaderFile() {
-        return header;
-    }
-
-    public String getFileFormat() {
-        return descriptor.getFormatName();
-    }
-
-    public ImageInfo getImageInfo() {
+    protected void fetchImageInfo() {
         if (imageInfo == null) {
             try {
-                ImageInfoReader reader = (ImageInfoReader) descriptor.getHeaderReader().newInstance();
-                imageInfo = reader.readInfo(getHeaderFile());
-
+                ImageInfoReader reader = (ImageInfoReader) getDescriptor().getHeaderReader().newInstance();
+                List<? extends ImageInfo> info = reader.readInfo(getHeaderFile());
+                imageInfo = info.get(getImageIndex());
 
             } catch (BrainflowException e) {
                 //e.printStackTrace();
@@ -112,30 +79,34 @@ public class SoftImageDataSource implements IImageDataSource {
             }
         }
 
-        return imageInfo;
     }
 
-
-    public BufferedImage getPreview() {
-        if (previewImage == null) {
-
+    public IImageData getData() {
+        if (dataRef.get() == null) {
+            try {
+                load();
+            } catch (BrainflowException e) {
+                log.severe("failed to load " + getDataFile().getName().getPath());
+                throw new RuntimeException(e);
+            }
         }
 
-        return null;
+        return dataRef.get();
     }
+
 
 
     public IImageData load(ProgressListener plistener) throws BrainflowException {
         try {
 
 
-            imageInfo = getImageInfo();
+            imageInfo = readImageInfo();
 
-            if (imageInfo.getImageFile() == null) {
-                imageInfo.setImageFile(getDataFile());
+            if (imageInfo.getDataFile() == null) {
+                imageInfo.setDataFile(getDataFile());
             }
 
-            ImageReader ireader = (ImageReader) descriptor.getDataReader().newInstance();
+            ImageReader ireader = (ImageReader) getDescriptor().getDataReader().newInstance();
 
             IImageData data = ireader.readImage(imageInfo, plistener);
             data.setIdentifier(getUniqueID());
@@ -157,12 +128,12 @@ public class SoftImageDataSource implements IImageDataSource {
     public IImageData load() throws BrainflowException {
         try {
 
-            imageInfo = getImageInfo();
-            if (imageInfo.getImageFile() == null) {
-                imageInfo.setImageFile(getDataFile());
+            imageInfo = readImageInfo();
+            if (imageInfo.getDataFile() == null) {
+                imageInfo.setDataFile(getDataFile());
             }
 
-            ImageReader ireader = (ImageReader) descriptor.getDataReader().newInstance();
+            ImageReader ireader = (ImageReader) getDescriptor().getDataReader().newInstance();
             IImageData data = ireader.readImage(imageInfo, new ProgressListener() {
 
                 public void setValue(int val) {
@@ -208,33 +179,9 @@ public class SoftImageDataSource implements IImageDataSource {
         return hashCode();
     }
 
-    public String toString() {
-        return header.getName().getBaseName();
-
-    }
 
 
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        SoftImageDataSource that = (SoftImageDataSource) o;
-
-        if (!dataFile.getName().getPath().equals(that.dataFile.getName().getPath())) return false;
-        if (!header.getName().getPath().equals(that.header.getName().getPath())) return false;
-        if (!getFileFormat().equals(that.getFileFormat())) return false;
-
-        return true;
-    }
-
-
-    public int hashCode() {
-        int result;
-        result = header.getName().getPath().hashCode();
-        result = 31 * result + dataFile.getName().getPath().hashCode();
-        result = 17 * result + getFileFormat().hashCode();
-        return result;
-    }
+    
 
 
 }

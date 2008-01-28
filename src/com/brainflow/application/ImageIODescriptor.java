@@ -68,7 +68,6 @@ public class ImageIODescriptor {
                     FileObject dobj = VFS.getManager().resolveFile(fobjs[i].getParent(), getDataName(fobjs[i]));
 
                     if (dobj != null && dobj.exists()) {
-
                         limglist.add(new SoftImageDataSource(this, fobjs[i], dobj));
                     }
 
@@ -80,7 +79,7 @@ public class ImageIODescriptor {
             }
         }
 
-        SoftImageDataSource[] ret = new SoftImageDataSource[limglist.size()];
+        IImageDataSource[] ret = new IImageDataSource[limglist.size()];
         limglist.toArray(ret);
         return ret;
 

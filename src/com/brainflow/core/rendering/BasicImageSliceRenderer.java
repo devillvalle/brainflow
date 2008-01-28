@@ -183,7 +183,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
     private BufferedImage smooth(BufferedImage source) {
         ImageLayerProperties dprops = layer.getImageLayerProperties();
 
-        double radius = dprops.getSmoothingRadius().getSmoothingRadius();
+        double radius = dprops.smoothingRadius.get();
         if (radius < .01) return source;
 
         ImageSpace2D ispace = (ImageSpace2D) getData().getImageSpace();
@@ -200,7 +200,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
     private BufferedImage resample(BufferedImage source) {
 
         ImageLayerProperties dprops = layer.getImageLayerProperties();
-        InterpolationMethod interp = dprops.getInterpolation();
+        InterpolationType interp = dprops.getInterpolation();
         ImageSpace2D ispace = (ImageSpace2D) getData().getImageSpace();
 
         double sx = ispace.getImageAxis(Axis.X_AXIS).getRange().getInterval() / ispace.getDimension(Axis.X_AXIS);
@@ -217,12 +217,12 @@ public class BasicImageSliceRenderer implements SliceRenderer {
         AffineTransformOp aop = null;
 
 
-        if (interp.getInterpolation() == InterpolationType.NEAREST_NEIGHBOR) {
+        if (interp == InterpolationType.NEAREST_NEIGHBOR) {
             aop = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
 
-        } else if (interp.getInterpolation() == InterpolationType.CUBIC) {
+        } else if (interp == InterpolationType.CUBIC) {
             aop = new AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC);
-        } else if (interp.getInterpolation() == InterpolationType.LINEAR) {
+        } else if (interp == InterpolationType.LINEAR) {
             aop = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
         } else {
             aop = new AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC);

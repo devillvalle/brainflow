@@ -28,9 +28,6 @@ public class FileSystemEvent extends EventObject {
         id = _id;
 
         
-
-
-
     }
 
     public EventID getEventID() {

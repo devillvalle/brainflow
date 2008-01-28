@@ -59,7 +59,7 @@ public class ResampleImagesStage extends ImageProcessingStage {
     private BufferedImage resample(ImageLayer2D layer, BufferedImage source) {
 
         ImageLayerProperties dprops = layer.getImageLayerProperties();
-        InterpolationMethod interp = dprops.getInterpolation();
+        InterpolationType interp = dprops.getInterpolation();
         ImageSpace2D ispace = (ImageSpace2D) layer.getImageData().getImageSpace();
 
         double sx = ispace.getImageAxis(Axis.X_AXIS).getRange().getInterval() / ispace.getDimension(Axis.X_AXIS);
@@ -71,11 +71,11 @@ public class ResampleImagesStage extends ImageProcessingStage {
         AffineTransformOp aop = null;
 
 
-        if (interp.getInterpolation() == InterpolationType.NEAREST_NEIGHBOR) {
+        if (interp == InterpolationType.NEAREST_NEIGHBOR) {
             aop = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-        } else if (interp.getInterpolation() == InterpolationType.CUBIC) {
+        } else if (interp == InterpolationType.CUBIC) {
             aop = new AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC);
-        } else if (interp.getInterpolation() == InterpolationType.LINEAR) {
+        } else if (interp == InterpolationType.LINEAR) {
             aop = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
         } else {
             aop = new AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC);

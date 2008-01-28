@@ -1,13 +1,11 @@
 package com.brainflow.application.presentation;
 
-import com.brainflow.application.CompositeFileSelector;
-import com.brainflow.application.IImageDataSource;
-import com.brainflow.application.LoadableImageProvider;
-import com.brainflow.application.SoftImageDataSource;
+import com.brainflow.application.*;
 import com.brainflow.application.toplevel.ImageIOManager;
 import com.brainflow.gui.AbstractPresenter;
 import com.brainflow.gui.FileExplorer;
 import com.brainflow.utils.ResourceLoader;
+import com.brainflow.image.io.ImageInfo;
 import com.jidesoft.tree.AbstractTreeModel;
 import com.jidesoft.tree.DefaultTreeModelWrapper;
 import org.apache.commons.vfs.FileObject;
@@ -186,7 +184,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
         explorer.getJTree().setTransferHandler(handler);
     }
 
-    public SoftImageDataSource[] requestLoadableImages() {
+    public IImageDataSource[] requestLoadableImages() {
         TreePath[] paths = explorer.getJTree().getSelectionPaths();
         if (paths == null) return new SoftImageDataSource[0];
         List<IImageDataSource> list = new ArrayList<IImageDataSource>();
@@ -205,7 +203,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
             }
         }
 
-        SoftImageDataSource[] ret = new SoftImageDataSource[list.size()];
+        IImageDataSource[] ret = new IImageDataSource[list.size()];
         list.toArray(ret);
         return ret;
     }
@@ -400,6 +398,14 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
         }
     }*/
 
+
+
+    // data source node
+    // folder node
+    // bucket node
+
+
+
     public static class ImageFileObjectNode extends DefaultMutableTreeNode {
 
         private boolean areChildrenDefined = false;
@@ -421,6 +427,18 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
                 if (fileObject.getType() == FileType.FOLDER) {
                     leaf = false;
                 } else {
+                    if (ImageIOManager.getInstance().isLoadableImage(fileObject)) {
+                        try {
+                            ImageIODescriptor desc = ImageIOManager.getInstance().getDescriptor(fileObject);
+                            IImageDataSource source = desc.createLoadableImage(fileObject);
+                            System.out.println("reading image info ...");
+                            ImageInfo info = source.readImageInfo();
+                            System.out.println("info name : " + info.getDataFile());
+                            System.out.println("num images : " + info.getNumImages());
+                        } catch(BrainflowException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
                     leaf = true;
                 }
             } catch (FileSystemException e) {

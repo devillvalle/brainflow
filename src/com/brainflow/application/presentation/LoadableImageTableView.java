@@ -257,14 +257,14 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
             //sizeButton.addActionListener(new ClickAction(program, "Size", sizeButton));
             panel.add(sizeButton);
             panel.add(new NullLabel("Data Type", NullLabel.TRAILING));
-            NullJideButton dataTypeButton = new NullJideButton(limg.getImageInfo().getDataType().toString());
+            NullJideButton dataTypeButton = new NullJideButton(limg.readImageInfo().getDataType().toString());
             dataTypeButton.setHorizontalAlignment(SwingConstants.TRAILING);
             dataTypeButton.setButtonStyle(NullJideButton.HYPERLINK_STYLE);
             //dataTypeButton.addActionListener(new ClickAction(program, "Used", dataTypeButton));
             panel.add(dataTypeButton);
 
             panel.add(new NullLabel("Dimensions", NullLabel.TRAILING));
-            final NullJideButton dimButton = new NullJideButton(limg.getImageInfo().getArrayDim().toString());
+            final NullJideButton dimButton = new NullJideButton(limg.readImageInfo().getArrayDim().toString());
             dimButton.setButtonStyle(NullJideButton.HYPERLINK_STYLE);
             dimButton.setHorizontalAlignment(SwingConstants.TRAILING);
             panel.add(dimButton);

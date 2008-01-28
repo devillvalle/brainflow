@@ -14,7 +14,7 @@ import java.awt.image.BufferedImage;
  * Time: 2:04:22 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MemoryImageDataSource implements  IImageDataSource {
+public class MemoryImageDataSource implements IImageDataSource {
 
 
     private IImageData data;
@@ -23,12 +23,16 @@ public class MemoryImageDataSource implements  IImageDataSource {
         data = _data;
     }
 
-    public ImageInfo getImageInfo() {
+    public ImageInfo readImageInfo() {
         return data.getImageInfo();
     }
 
     public boolean isLoaded() {
         return true;
+    }
+
+    public int getImageIndex() {
+        return 0;  
     }
 
     public String getStem() {
@@ -37,6 +41,10 @@ public class MemoryImageDataSource implements  IImageDataSource {
 
     public BufferedImage getPreview() {
         throw new UnsupportedOperationException();
+    }
+
+    public ImageIODescriptor getDescriptor() {
+        throw new UnsupportedOperationException("MemoryImage does not have associated descriptor object");
     }
 
     public FileObject getDataFile() {
@@ -65,8 +73,7 @@ public class MemoryImageDataSource implements  IImageDataSource {
     }
 
     public int getUniqueID() {
-        // garbage/...
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return hashCode();
     }
 
     public void releaseData() {

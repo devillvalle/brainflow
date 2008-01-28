@@ -7,6 +7,7 @@ import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.BasicImageReader;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.io.nifti.NiftiInfoReader;
+import com.brainflow.image.io.nifti.NiftiImageInfo;
 import com.brainflow.utils.DataType;
 import com.brainflow.utils.IDimension;
 import com.brainflow.utils.ProgressListener;
@@ -21,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Logger;
+import java.util.List;
 
 /**
  * <p>Title: </p>
@@ -45,10 +47,10 @@ public class AnalyzeIO {
 
         NiftiInfoReader reader = new NiftiInfoReader();
 
-        ImageInfo info = reader.readInfo(new File(fname));
+        List<NiftiImageInfo> info = reader.readInfo(new File(fname));
 
-        BasicImageReader ireader = new BasicImageReader(info);
-        IImageData data = ireader.readImage(info, new ProgressListener() {
+        BasicImageReader ireader = new BasicImageReader(info.get(0));
+        IImageData data = ireader.readImage(info.get(0), new ProgressListener() {
             public void setValue(int val) {
 
             }
@@ -86,11 +88,11 @@ public class AnalyzeIO {
             AnalyzeInfoReader reader = new AnalyzeInfoReader();
             FileSystemManager fsManager = VFS.getManager();
             FileObject fobj = fsManager.resolveFile(header.getPath());
-            ImageInfo info = reader.readInfo(fobj);
-            log.info("AnalyzeInfo: " + info);
+            List<? extends ImageInfo> info = reader.readInfo(fobj);
+            log.info("AnalyzeInfo: " + info.get(0));
 
-            BasicImageReader ireader = new BasicImageReader(info);
-            data = ireader.readImage(info, new ProgressListener() {
+            BasicImageReader ireader = new BasicImageReader(info.get(0));
+            data = ireader.readImage(info.get(0), new ProgressListener() {
                 public void setValue(int val) {
 
                 }
@@ -128,11 +130,11 @@ public class AnalyzeIO {
         log.info("AnalyzeIO.readAnalyzeImage " + fname);
         AnalyzeInfoReader reader = new AnalyzeInfoReader();
 
-        ImageInfo info = reader.readInfo(new File(fname));
-        log.info("AnalyzeInfo: " + info);
+        List<ImageInfo> info = reader.readInfo(new File(fname));
+        log.info("AnalyzeInfo: " + info.get(0));
 
-        BasicImageReader ireader = new BasicImageReader(info);
-        IImageData data = ireader.readImage(info, new ProgressListener() {
+        BasicImageReader ireader = new BasicImageReader(info.get(0));
+        IImageData data = ireader.readImage(info.get(0), new ProgressListener() {
             public void setValue(int val) {
 
             }
@@ -198,14 +200,14 @@ public class AnalyzeIO {
             }
         });
 
-        data.setImageLabel(info.getImageFile().getName().getBaseName());
+        data.setImageLabel(info.getDataFile().getName().getBaseName());
 
         return data;
     }
 
     public static void appendAnalyzeImage(int imgNum, ImageInfo info, BasicImageData data) throws BrainflowException {
         FileImageOutputStream ostream = null;
-        String fname = info.getImageFile().getName().getPath();
+        String fname = info.getDataFile().getName().getPath();
 
         IDimension dim3d = info.getArrayDim();
         int pos = (int) (imgNum * info.getDataType().getBytesPerUnit() * dim3d.getDim(0).intValue() * dim3d.getDim(1).intValue() * dim3d.getDim(2).intValue());

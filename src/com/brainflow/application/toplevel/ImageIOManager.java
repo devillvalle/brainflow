@@ -64,6 +64,21 @@ public class ImageIOManager {
 
     }
 
+    public boolean isLoadableImage(FileObject header) {
+        assert descriptorList.size() > 0 : "ImageIODescriptors not available";
+        for (Iterator<ImageIODescriptor> iter = descriptorList.iterator(); iter.hasNext();) {
+            ImageIODescriptor desc = iter.next();
+            if (desc.isHeaderMatch(header)) {
+                return true;
+            }
+            //IImageDataSource[] limg = desc.findLoadableImages(fobjs);
+            //Collections.addAll(limglist, limg);
+        }
+
+        return false;
+
+    }
+
     public IImageDataSource[] findLoadableImages(File[] files) {
         assert descriptorList.size() > 0 : "ImageIODescriptors not available";
         FileObject[] fobjs = new FileObject[files.length];
@@ -98,7 +113,7 @@ public class ImageIOManager {
     }
 
 
-    public void initialize() throws BrainflowException, IOException {
+    public void initialize() throws BrainflowException {
         if (initialized) return;
         InputStream istream = getClass().getClassLoader().getResourceAsStream("resources/config/imageio-config.xml");
         try {

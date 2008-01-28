@@ -29,14 +29,14 @@ public class SingletonRegistry {
                 logger.info("created singleton: " + singleton);
             }
             catch (ClassNotFoundException cnf) {
-                logger.severe("Couldn'three find class " + classname);
+                logger.severe("Couldn't find class " + classname);
             }
             catch (InstantiationException ie) {
-                logger.severe("Couldn'three instantiate an object of type " +
+                logger.severe("Couldn't instantiate an object of type " +
                         classname);
             }
             catch (IllegalAccessException ia) {
-                logger.severe("Couldn'three access class " + classname);
+                logger.severe("Couldn't access class " + classname);
             }
             map.put(classname, singleton);
         }

@@ -3,7 +3,7 @@ package com.brainflow.modes;
 import com.brainflow.core.ImageView;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
-import com.brainflow.display.Viewport3D;
+import com.brainflow.core.Viewport3D;
 
 import javax.swing.*;
 import java.awt.event.MouseWheelEvent;

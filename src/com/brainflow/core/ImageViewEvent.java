@@ -1,6 +1,6 @@
 package com.brainflow.core;
 
-import com.brainflow.display.Viewport3D;
+import com.brainflow.core.Viewport3D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 
 import java.util.EventObject;

@@ -23,7 +23,7 @@ public class LayerVisibilityAction extends BasicAction {
         putValue(Action.NAME, "Visible");
         putValue(ActionManager.BUTTON_TYPE, ActionManager.BUTTON_TYPE_VALUE_CHECKBOX);
 
-        setSelected(layer.getVisible().isVisible());
+        setSelected(layer.isVisible());
     }
 
     protected void execute(ActionEvent actionEvent) throws Exception {

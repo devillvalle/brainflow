@@ -50,7 +50,7 @@ public class ImageInfoInspector {
             UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceBusinessBlueSteelLookAndFeel());
 
             IImageDataSource source = BrainFlowUtilities.quickDataSource("icbm452_atlas_probability_gray.hdr");
-            ImageInfo info = source.getImageInfo();
+            ImageInfo info = source.readImageInfo();
 
             ImageInfoInspector inspector = new ImageInfoInspector(info);
 

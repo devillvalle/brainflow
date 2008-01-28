@@ -41,6 +41,8 @@ public class ImageInfo implements java.io.Serializable {
 
     private int numImages = 1;
 
+    private int imageIndex = 0;
+
     private int byteOffset = 0;
 
     private int dimensionality = 3;
@@ -55,11 +57,13 @@ public class ImageInfo implements java.io.Serializable {
 
     private ByteOrder endian = ByteOrder.nativeOrder();
 
-    private List<Double> scaleFactors = new ArrayList<Double>(Arrays.asList(new Double(1)));
+    private double scaleFactor = 1;
 
-    private List<Double> intercepts = new ArrayList<Double>(Arrays.asList(new Double(0)));
+    private double intercept = 0;
 
-    private FileObject imageFile;
+    private String imageLabel = "image0";
+
+    private FileObject dataFile;
 
     private FileObject headerFile;
 
@@ -68,18 +72,20 @@ public class ImageInfo implements java.io.Serializable {
     }
 
     public ImageInfo(ImageInfo info) {
-        imageFile = info.imageFile;
+        dataFile = info.dataFile;
         headerFile = info.headerFile;
         endian = info.endian;
-        scaleFactors = info.scaleFactors;
+        scaleFactor = info.scaleFactor;
+        intercept = info.intercept;
         dataType = info.dataType;
         anatomy = info.anatomy;
         dimensionality = info.dimensionality;
         byteOffset = info.byteOffset;
         numImages = info.numImages;
         origin = new Point3D(info.origin);
+        imageIndex = info.imageIndex;
         voxelOffset = new Dimension3D<Integer>(info.voxelOffset);
-
+        imageLabel = info.imageLabel;
         spacing = info.spacing;
         arrayDim = info.arrayDim;
     }
@@ -89,7 +95,6 @@ public class ImageInfo implements java.io.Serializable {
         IImageSpace space = data.getImageSpace();
         int[] dimensions = space.getDimensionVector();
 
-        assert dimensions.length >= 3;
 
         setAnatomy((Anatomy3D) space.getAnatomy());
 
@@ -98,28 +103,12 @@ public class ImageInfo implements java.io.Serializable {
         setDimensionality(space.getNumDimensions());
 
 
-        if (space.getNumDimensions() == 4) {
-            setNumImages(space.getDimension(Axis.T_AXIS));
-            double[] sf = new double[space.getDimension(Axis.T_AXIS)];
-            Arrays.fill(sf, 1);
-
-            double[] intercept = new double[space.getDimension(Axis.T_AXIS)];
-            Arrays.fill(intercept, 0);
-
-
-            setScaleFactors(makeNumericList(sf));
-            setIntercepts(makeNumericList(intercept));
-
-
-        }
-
-
+        
         setSpacing(new Dimension3D<Double>(space.getSpacing(Axis.X_AXIS),
                 space.getSpacing(Axis.Y_AXIS),
                 space.getSpacing(Axis.Z_AXIS)));
 
-        //imageFile = VFS.getManager().
-
+        imageLabel = data.getImageLabel();
 
     }
 
@@ -144,16 +133,20 @@ public class ImageInfo implements java.io.Serializable {
                     aaxes[i], (int) arrayDim.getDim(i).doubleValue());
         }
 
-        ImageSpace3D space3d = new ImageSpace3D(iaxes[0], iaxes[1], iaxes[2]);
-        return space3d;
+        return new ImageSpace3D(iaxes[0], iaxes[1], iaxes[2]);
+
     }
 
-    public void setImageFile(FileObject fobj) {
-        imageFile = fobj;
+    public void setDataFile(FileObject fobj) {
+        dataFile = fobj;
     }
 
-    public FileObject getImageFile() {
-        return imageFile;
+    public FileObject getDataFile() {
+        return dataFile;
+    }
+
+    public FileObject getHeaderFile() {
+        return headerFile;
     }
 
     public ByteOrder getEndian() {
@@ -168,8 +161,13 @@ public class ImageInfo implements java.io.Serializable {
         return dataType;
     }
 
-    public int getByteOffset() {
+    public int getDataOffset() {
         return byteOffset;
+    }
+
+    public int getDataOffset(int index) {
+        return (getArrayDim().product() * getDataType().getBytesPerUnit() * index) + getDataOffset();
+
     }
 
     public IDimension calculateRealDim() {
@@ -185,18 +183,17 @@ public class ImageInfo implements java.io.Serializable {
         return anatomy;
     }
 
-    
-
-    public double getIntercept(int i) {
-        return intercepts.get(i);
+    public String getImageLabel() {
+        return imageLabel;
     }
 
-    public void setIntercepts(List<Double> interceptList) {
-        if (interceptList.size() != getNumImages()) {
-            throw new IllegalArgumentException("number of intercept values must equal number of total images");
-        }
+    public double getIntercept() {
+        return intercept;
     }
 
+    public void setIntercept(double intercept) {
+        this.intercept = intercept;
+    }
 
     public void setNumImages(int _numImages) {
         numImages = _numImages;
@@ -222,8 +219,20 @@ public class ImageInfo implements java.io.Serializable {
         return dimensionality;
     }
 
-    public double getScaleFactor(int imageNum) {
-        return scaleFactors.get(imageNum);
+    public double getScaleFactor() {
+        return scaleFactor;
+    }
+
+     public void setScaleFactor(double _scaleFactor) {
+        scaleFactor = _scaleFactor;
+    }
+
+    public int getImageIndex() {
+        return imageIndex;
+    }
+
+    public void setImageIndex(int imageIndex) {
+        this.imageIndex = imageIndex;
     }
 
     public void setAnatomy(Anatomy3D _anatomy) {
@@ -245,13 +254,7 @@ public class ImageInfo implements java.io.Serializable {
     }
 
 
-    public void setScaleFactors(List<Double> scaleFactorList) {
-        if (scaleFactorList.size() != getNumImages()) {
-            throw new IllegalArgumentException("number of intercept values must equal number of total images");
-        }
 
-        scaleFactors = scaleFactorList;
-    }
 
 
     public Point3D getOrigin() {
@@ -274,24 +277,7 @@ public class ImageInfo implements java.io.Serializable {
         endian = _endian;
     }
 
-    public String toString() {
-        return "ImageInfo{" +
-                "arrayDim=" + arrayDim +
-                ", spacing=" + spacing +
-                ", voxelOffset=" + voxelOffset +
-                ", origin=" + origin +
-                ", numImages=" + numImages +
-                ", byteOffset=" + byteOffset +
-                ", dimensionality=" + dimensionality +
-                ", anatomy=" + anatomy +
-                ", dataType=" + dataType +
-                ", endian=" + endian +
-                ", scaleFactor=" + scaleFactors +
-                ", intercept=" + intercepts +
-                ", imageFile=" + imageFile +
-                ", headerFile=" + headerFile +
-                '}';
-    }
+    
 
 
 }

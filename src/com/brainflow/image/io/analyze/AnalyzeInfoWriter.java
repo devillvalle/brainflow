@@ -100,7 +100,7 @@ public class AnalyzeInfoWriter implements com.brainflow.image.io.ImageInfoWriter
 
             ostream.writeFloat(vox_offset);
 
-            ostream.writeFloat((float) info.getScaleFactor(0));
+            ostream.writeFloat((float) info.getScaleFactor());
             ostream.writeFloat(funused2);
             ostream.writeFloat(funused3);
             ostream.writeFloat(cal_max);

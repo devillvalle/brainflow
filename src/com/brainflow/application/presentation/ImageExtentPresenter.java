@@ -1,9 +1,10 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.application.presentation.forms.TripleSliderForm;
-import com.brainflow.display.Viewport3D;
+import com.brainflow.core.Viewport3D;
 import com.brainflow.gui.AbstractPresenter;
 import com.brainflow.image.space.Axis;
+import com.brainflow.core.Viewport3D;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
 import com.jgoodies.binding.beans.BeanAdapter;

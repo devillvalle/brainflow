@@ -12,6 +12,7 @@ import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.Anatomy;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.data.IImageData;
+import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.utils.Range;
 import com.brainflow.utils.StaticTimer;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -42,7 +43,6 @@ import org.bushe.swing.action.ActionUIFactory;
 import org.bushe.swing.action.BasicAction;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
-import org.jvnet.substance.skin.SubstanceCremeLookAndFeel;
 import org.xml.sax.SAXException;
 
 import javax.swing.*;
@@ -729,8 +729,11 @@ public class Brainflow {
             JLabel messageLabel = new JLabel("Please select correct image orientation from menu: ");
             java.util.List<Anatomy3D> choices = Anatomy3D.getInstanceList();
             JComboBox choiceBox = new JComboBox(choices.toArray());
-            Anatomy anatomy = (Anatomy)dataSource.readImageInfo().getAnatomy();
+
+            //todo hackery alert
+            Anatomy anatomy = (Anatomy)dataSource.getImageInfo().getAnatomy();
             choiceBox.setSelectedItem(anatomy);
+
             FormLayout layout = new FormLayout("4dlu, l:p, p:g, 4dlu", "6dlu, p, 10dlu, p, 6dlu");
             CellConstraints cc = new CellConstraints();
             panel.setLayout(layout);
@@ -740,7 +743,8 @@ public class Brainflow {
             JOptionPane.showMessageDialog(brainFrame, panel, "Analyze 7.5 image format ...", JOptionPane.WARNING_MESSAGE);
             Anatomy selectedAnatomy = (Anatomy)choiceBox.getSelectedItem();
             if (selectedAnatomy != anatomy) {
-                dataSource.readImageInfo().setAnatomy((Anatomy3D)selectedAnatomy);
+                //todo hackery alert
+                dataSource.getImageInfo().setAnatomy((Anatomy3D)selectedAnatomy);
                 dataSource.releaseData();
             }
         }

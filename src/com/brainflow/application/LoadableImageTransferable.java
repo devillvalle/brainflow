@@ -1,5 +1,7 @@
 package com.brainflow.application;
 
+import com.brainflow.image.io.IImageDataSource;
+
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -15,7 +17,7 @@ import java.io.IOException;
 public class LoadableImageTransferable implements Transferable {
 
     private String localObject = DataFlavor.javaJVMLocalObjectMimeType +
-                                    ";class=com.brainflow.application.IImageDataSource";
+                                    ";class=com.brainflow.image.io.IImageDataSource";
 
 
     private DataFlavor loadableImageFlavor = null;

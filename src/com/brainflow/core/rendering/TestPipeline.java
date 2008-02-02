@@ -9,7 +9,7 @@ import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.data.IImageData;
-import com.brainflow.image.io.analyze.AnalyzeIO;
+import com.brainflow.image.io.BrainIO;
 import com.brainflow.image.space.Axis;
 import com.brainflow.utils.Range;
 import org.apache.commons.pipeline.StageException;
@@ -29,8 +29,8 @@ public class TestPipeline {
 
     public TestPipeline() throws BrainflowException, StageException, ValidationException {
         IImageDisplayModel model = new ImageDisplayModel("test");
-        IImageData data = AnalyzeIO.readNiftiImage("F:/data/anyback/sbhighres_mean.nii");
-        IImageData data2 = AnalyzeIO.readNiftiImage("F:/data/anyback/FLag_sphericity_linear.nii");
+        IImageData data = BrainIO.readNiftiImage("F:/data/anyback/sbhighres_mean.nii");
+        IImageData data2 = BrainIO.readNiftiImage("F:/data/anyback/FLag_sphericity_linear.nii");
 
         Range range = new Range(data.getMinValue(), data.getMaxValue());
 

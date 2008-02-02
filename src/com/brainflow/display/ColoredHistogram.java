@@ -6,7 +6,7 @@ import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMapDeprecated;
 import com.brainflow.image.Histogram;
 import com.brainflow.image.data.IImageData;
-import com.brainflow.image.io.analyze.AnalyzeIO;
+import com.brainflow.image.io.BrainIO;
 import com.brainflow.jfreechart.AxisPointer;
 import com.brainflow.jfreechart.HistogramDataset;
 import com.brainflow.utils.NumberUtils;
@@ -275,7 +275,7 @@ public class ColoredHistogram extends JPanel implements MouseListener, MouseMoti
 
     public static void main(String[] args) {
         try {
-            IImageData data = AnalyzeIO.readAnalyzeImage("C:/DTI/slopes/bAge.Norm");
+            IImageData data = BrainIO.readAnalyzeImage("C:/DTI/slopes/bAge.Norm");
             Histogram hist = new Histogram(data, 100);
             ColoredHistogram chist = new ColoredHistogram(hist);
             chist.setColorModel(new LinearColorMapDeprecated(0, 255, ColorTable.SPECTRUM));

@@ -1,6 +1,6 @@
 package com.brainflow.core;
 
-import com.brainflow.application.IImageDataSource;
+import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.application.MemoryImageDataSource;
 import com.brainflow.core.rendering.BasicImageSliceRenderer;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;

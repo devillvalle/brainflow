@@ -2,14 +2,12 @@ package com.brainflow.application.presentation.forms;
 
 import com.brainflow.core.*;
 import com.brainflow.image.data.IImageData;
-import com.brainflow.image.io.analyze.AnalyzeIO;
+import com.brainflow.image.io.BrainIO;
 import com.brainflow.utils.Range;
 import com.jgoodies.binding.adapter.BasicComponentFactory;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.dialog.ButtonPanel;
-import com.jidesoft.swing.JideTabbedPane;
-import org.jvnet.substance.SubstanceLookAndFeel;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -247,12 +245,12 @@ public class MaskConfigurationControl extends JPanel implements ImageViewClient 
 
             JFrame frame = new JFrame();
             URL url = ClassLoader.getSystemResource("resources/data/icbm452_atlas_probability_gray.hdr");
-            IImageData data = AnalyzeIO.readAnalyzeImage(url);
+            IImageData data = BrainIO.readAnalyzeImage(url);
 
             ImageLayer ilayer = new ImageLayer3D(data, new ImageLayerProperties(new Range(data.getMinValue(), data.getMaxValue())));
 
             url = ClassLoader.getSystemResource("resources/data/icbm452_atlas_probability_white.hdr");
-            data = AnalyzeIO.readAnalyzeImage(url);
+            data = BrainIO.readAnalyzeImage(url);
             ImageLayer ilayer2 = new ImageLayer3D(data, new ImageLayerProperties(new Range(data.getMinValue(), data.getMaxValue())));
 
 

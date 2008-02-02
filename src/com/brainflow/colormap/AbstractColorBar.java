@@ -23,8 +23,11 @@ public abstract class AbstractColorBar extends JPanel {
     private int orientation = SwingConstants.VERTICAL;
 
     protected BufferedImage cachedImage = null;
+
     protected BufferedImage backgroundImage = null;
+
     protected BufferedImage cachedBackgroundImage = null;
+
     private PropertyChangeListener mapListener;
 
     protected IColorMap colorMap;
@@ -183,6 +186,7 @@ public abstract class AbstractColorBar extends JPanel {
 
 
     protected void initListener(IColorMap imap) {
+        // todo this is no longer relevant because color maps are immutable ???
         if (colorMap != null) {
             colorMap.removePropertyChangeListener(mapListener);
         }

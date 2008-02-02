@@ -3,18 +3,15 @@ package com.brainflow.image.operations;
 import com.brainflow.image.data.*;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.Axis;
-import com.brainflow.image.space.ImageSpace3D;
-import com.brainflow.image.io.analyze.AnalyzeIO;
-import com.brainflow.application.IImageDataSource;
+import com.brainflow.image.io.BrainIO;
+import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.application.MemoryImageDataSource;
 import com.brainflow.application.BrainflowException;
 import com.brainflow.display.ThresholdRange;
 
 import java.util.List;
-import java.util.Arrays;
 
 import cern.colt.list.IntArrayList;
-import cern.colt.list.DoubleArrayList;
 
 /**
  * Created by IntelliJ IDEA.
@@ -276,7 +273,7 @@ public class ConnectedComponentsFilter3 extends AbstractImageFilter {
 
     public static void main(String[] args) {
         try {
-            IImageDataSource img = new MemoryImageDataSource(AnalyzeIO.readNiftiImage("F:/data/anyback/tRepeat-stat.nii"));
+            IImageDataSource img = new MemoryImageDataSource(BrainIO.readNiftiImage("F:/data/anyback/tRepeat-stat.nii"));
             IImageData3D data = (IImageData3D) img.getData();
 
             MaskedData3D mask = new MaskedData3D(data, new ThresholdRange(-1000, 1));
@@ -298,7 +295,7 @@ public class ConnectedComponentsFilter3 extends AbstractImageFilter {
             System.out.println("avg time " + (etime - btime) / 200.00);
 
             //IImageData idata = filter.getOutput();
-            //AnalyzeIO.writeAnalyzeImage("\"F:/data/anyback/tRepeat-stat-clustered-meth3", (BasicImageData) idata);
+            //BrainIO.writeAnalyzeImage("\"F:/data/anyback/tRepeat-stat-clustered-meth3", (BasicImageData) idata);
 
 
         } catch (BrainflowException e) {

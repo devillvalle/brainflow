@@ -5,7 +5,7 @@ import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.axis.ImageAxis;
-import com.brainflow.image.io.analyze.AnalyzeIO;
+import com.brainflow.image.io.BrainIO;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace2D;
@@ -308,7 +308,7 @@ public class ImageFiller {
         try {
 
 
-            IImageData3D data = (IImageData3D) AnalyzeIO.readAnalyzeImage("c:/code/icbm/icbm452_atlas_probability_white.img");
+            IImageData3D data = (IImageData3D) BrainIO.readAnalyzeImage("c:/code/icbm/icbm452_atlas_probability_white.img");
             ImageFiller filler = new ImageFiller();
             BasicImageData2D slice = filler.fillImage(data, AnatomicalAxis.ANTERIOR_POSTERIOR, AnatomicalAxis.SUPERIOR_INFERIOR,
                     new AnatomicalPoint1D(AnatomicalAxis.LEFT_RIGHT, 50));

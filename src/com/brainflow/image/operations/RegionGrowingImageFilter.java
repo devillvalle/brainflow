@@ -5,7 +5,7 @@ import com.brainflow.image.data.BasicImageData;
 import com.brainflow.image.data.BasicImageData3D;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.data.IImageData3D;
-import com.brainflow.image.io.analyze.AnalyzeIO;
+import com.brainflow.image.io.BrainIO;
 import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.utils.DataType;
 import com.brainflow.utils.Index3D;
@@ -88,7 +88,7 @@ public class RegionGrowingImageFilter extends AbstractImageFilter {
 
     public static void main(String[] args) {
         try {
-            IImageData data = AnalyzeIO.readAnalyzeImage("c:/brains/sign_lang/zstat1");
+            IImageData data = BrainIO.readAnalyzeImage("c:/brains/sign_lang/zstat1");
             ThresholdImageFilter tfilter = new ThresholdImageFilter();
             tfilter.setThreshold(2);
             tfilter.addInput(data);

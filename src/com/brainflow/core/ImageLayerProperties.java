@@ -3,6 +3,7 @@ package com.brainflow.core;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMapDeprecated;
+import com.brainflow.colormap.LinearColorMap2;
 import com.brainflow.display.*;
 import com.brainflow.utils.IRange;
 import com.jgoodies.binding.beans.PropertyAdapter;
@@ -92,13 +93,13 @@ public class ImageLayerProperties implements Serializable {
 
     public ImageLayerProperties(IRange _dataRange) {
         BeanContainer.bind(this);
-        IColorMap imap = new LinearColorMapDeprecated(_dataRange.getMin(), _dataRange.getMax(), ColorTable.GRAYSCALE);
+        IColorMap imap = new LinearColorMap2(_dataRange.getMin(), _dataRange.getMax(), ColorTable.GRAYSCALE);
         init(imap, _dataRange);
     }
 
     public ImageLayerProperties(IRange _dataRange, ThresholdRange _thresholdRange) {
         BeanContainer.bind(this);
-        IColorMap imap = new LinearColorMapDeprecated(_dataRange.getMin(), _dataRange.getMax(), ColorTable.GRAYSCALE);
+        IColorMap imap = new LinearColorMap2(_dataRange.getMin(), _dataRange.getMax(), ColorTable.GRAYSCALE);
         init(imap, _dataRange);
 
         //temporary hack replace with builder
@@ -107,7 +108,7 @@ public class ImageLayerProperties implements Serializable {
 
     public ImageLayerProperties(IndexColorModel _icm, IRange _dataRange) {
         BeanContainer.bind(this);
-        IColorMap imap = new LinearColorMapDeprecated(_dataRange.getMin(), _dataRange.getMax(), _icm);
+        IColorMap imap = new LinearColorMap2(_dataRange.getMin(), _dataRange.getMax(), _icm);
         init(imap, _dataRange);
     }
 

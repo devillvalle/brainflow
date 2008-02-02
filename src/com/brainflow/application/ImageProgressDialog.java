@@ -1,6 +1,7 @@
 package com.brainflow.application;
 
 import com.brainflow.image.data.IImageData;
+import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.utils.ProgressListener;
 import com.jidesoft.dialog.JideOptionPane;
 
@@ -67,7 +68,8 @@ public class ImageProgressDialog extends SwingWorker<IImageData, Integer> implem
         panel.add(Box.createVerticalStrut(3));
         panel.add(progressBar);
         panel.add(Box.createVerticalStrut(3));
-        //panel.add(new JLabel("Scanning C:\\Program Files\\...\\win.ini ..."));
+        panel.add(new JLabel("Loading Image: " + loadable.getImageInfo().getImageLabel()));
+        
         JideOptionPane optionPane = new JideOptionPane(panel, JOptionPane.INFORMATION_MESSAGE, 0, null, new Object[]{
                 new JButton("Cancel")});
 
@@ -99,6 +101,8 @@ public class ImageProgressDialog extends SwingWorker<IImageData, Integer> implem
     }
 
     protected void done() {
+        dialog.setVisible(false);
+        dialog.dispose();
 
     }
 

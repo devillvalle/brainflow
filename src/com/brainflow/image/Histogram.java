@@ -5,7 +5,6 @@ import cern.jet.stat.Descriptive;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.utils.ArrayUtils;
-import com.brainflow.utils.Range;
 import com.brainflow.utils.IRange;
 
 /**
@@ -21,13 +20,17 @@ import com.brainflow.utils.IRange;
 public class Histogram {
 
     private int numBins;
+
     private IImageData data;
+
     private double binSize;
 
     private DoubleArrayList binList;
+
     private DoubleArrayList binIntervals;
 
     private double minValue;
+
     private double maxValue;
 
     private IRange ignore;
@@ -43,7 +46,7 @@ public class Histogram {
         return numBins;
     }
 
-    public double[] getBins() {
+    public double[] computeBins() {
         if (computed)
             return binList.elements();
 
@@ -100,19 +103,19 @@ public class Histogram {
 
     public double binMean() {
         if (!computed)
-            getBins();
+            computeBins();
         return Descriptive.mean(binList);
     }
 
     public double binStandardDeviation() {
         if (!computed)
-            getBins();
+            computeBins();
         return Math.sqrt(Descriptive.sampleVariance(binList, binMean()));
     }
 
     public double binMedian() {
         if (!computed)
-            getBins();
+            computeBins();
         DoubleArrayList sortedBins = binList.copy();
         sortedBins.sort();
         return Descriptive.median(sortedBins);
@@ -120,7 +123,7 @@ public class Histogram {
 
     public double intervalMedian() {
         if (!computed)
-            getBins();
+            computeBins();
         return Descriptive.median(binIntervals);
     }
 

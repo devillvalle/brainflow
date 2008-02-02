@@ -1,13 +1,13 @@
 package com.brainflow.core;
 
-import com.brainflow.application.IImageDataSource;
+import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.application.MemoryImageDataSource;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.LinearColorMapDeprecated;
 import com.brainflow.colormap.DiscreteColorMap;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
-import com.brainflow.image.io.analyze.AnalyzeIO;
+import com.brainflow.image.io.BrainIO;
 
 import javax.media.jai.JAI;
 import javax.swing.*;
@@ -127,12 +127,12 @@ public class SnapShooter {
         try {
 
             ImageDisplayModel dset = new ImageDisplayModel("snapper");
-            IImageDataSource il1 = new MemoryImageDataSource(AnalyzeIO.readAnalyzeImage("c:/DTI/slopes/ch2"));
-            IImageDataSource il2 = new com.brainflow.application.MemoryImageDataSource(AnalyzeIO.readAnalyzeImage("c:/DTI/slopes/tAgeXDiag"));
-            IImageDataSource il3 = new MemoryImageDataSource(AnalyzeIO.readAnalyzeImage("c:/DTI/slopes/tAge.Schiz"));
-            IImageDataSource il4 = new MemoryImageDataSource(AnalyzeIO.readAnalyzeImage("c:/DTI/slopes/tAge.Norm"));
-            IImageDataSource il5 = new MemoryImageDataSource(AnalyzeIO.readAnalyzeImage("c:/DTI/slopes/bAge.Schiz"));
-            IImageDataSource il6 = new MemoryImageDataSource(AnalyzeIO.readAnalyzeImage("c:/DTI/slopes/bAge.Norm"));
+            IImageDataSource il1 = new MemoryImageDataSource(BrainIO.readAnalyzeImage("c:/DTI/slopes/ch2"));
+            IImageDataSource il2 = new com.brainflow.application.MemoryImageDataSource(BrainIO.readAnalyzeImage("c:/DTI/slopes/tAgeXDiag"));
+            IImageDataSource il3 = new MemoryImageDataSource(BrainIO.readAnalyzeImage("c:/DTI/slopes/tAge.Schiz"));
+            IImageDataSource il4 = new MemoryImageDataSource(BrainIO.readAnalyzeImage("c:/DTI/slopes/tAge.Norm"));
+            IImageDataSource il5 = new MemoryImageDataSource(BrainIO.readAnalyzeImage("c:/DTI/slopes/bAge.Schiz"));
+            IImageDataSource il6 = new MemoryImageDataSource(BrainIO.readAnalyzeImage("c:/DTI/slopes/bAge.Norm"));
 
 
             LinearColorMapDeprecated lmap = new LinearColorMapDeprecated(0, 221, ColorTable.GRAYSCALE);
@@ -149,8 +149,8 @@ public class SnapShooter {
    try {
 
        ImageDisplayModel dset = new ImageDisplayModel("snapper");
-       IImageDataSource il1 = new MemoryImage(AnalyzeIO.readAnalyzeImage("/r/d5/despo/buchs/MSSM_TEMPLATE"));
-       IImageDataSource il2 = new MemoryImage(AnalyzeIO.readAnalyzeImage("/r/d5/despo/buchs/TDiagnosis_G75.midbrain.Covar"));
+       IImageDataSource il1 = new MemoryImage(BrainIO.readAnalyzeImage("/r/d5/despo/buchs/MSSM_TEMPLATE"));
+       IImageDataSource il2 = new MemoryImage(BrainIO.readAnalyzeImage("/r/d5/despo/buchs/TDiagnosis_G75.midbrain.Covar"));
 
        LinearColorMapDeprecated lmap = new LinearColorMapDeprecated(0, 221, ColorTable.GRAYSCALE);
        RaggedColorMap ragged = new RaggedColorMap();

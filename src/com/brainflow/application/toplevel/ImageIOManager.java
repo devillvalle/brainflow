@@ -2,7 +2,7 @@ package com.brainflow.application.toplevel;
 
 
 import com.brainflow.application.BrainflowException;
-import com.brainflow.application.IImageDataSource;
+import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.application.ImageIODescriptor;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;

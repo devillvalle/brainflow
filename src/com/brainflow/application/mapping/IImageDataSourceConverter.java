@@ -1,7 +1,7 @@
 package com.brainflow.application.mapping;
 
 import com.brainflow.application.BrainflowException;
-import com.brainflow.application.IImageDataSource;
+import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.application.ImageIODescriptor;
 import com.brainflow.application.toplevel.ImageIOManager;
 import com.thoughtworks.xstream.converters.Converter;

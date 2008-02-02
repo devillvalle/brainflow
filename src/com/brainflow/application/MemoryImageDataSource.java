@@ -2,10 +2,13 @@ package com.brainflow.application;
 
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.ImageInfo;
+import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.utils.ProgressListener;
 import org.apache.commons.vfs.FileObject;
 
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,7 +26,11 @@ public class MemoryImageDataSource implements IImageDataSource {
         data = _data;
     }
 
-    public ImageInfo readImageInfo() {
+    public List<? extends ImageInfo> getImageInfoList() {
+        return Arrays.asList(data.getImageInfo());
+    }
+
+    public ImageInfo getImageInfo() {
         return data.getImageInfo();
     }
 

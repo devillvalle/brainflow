@@ -1,7 +1,7 @@
 package com.brainflow.image.data;
 
 import com.brainflow.image.interpolation.InterpolationFunction3D;
-import com.brainflow.image.io.analyze.AnalyzeIO;
+import com.brainflow.image.io.BrainIO;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.image.space.Axis;
@@ -303,7 +303,7 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
 
     public static void main(String[] args) {
         try {
-            BasicImageData3D data1 = (BasicImageData3D) AnalyzeIO.readAnalyzeImage("c:/brains/icbm452_atlas_warp5_sinc");
+            BasicImageData3D data1 = (BasicImageData3D) BrainIO.readAnalyzeImage("c:/brains/icbm452_atlas_warp5_sinc");
             Index3D vox = new Index3D();
 
             int idx = data1.indexOf(0, 16, 72);

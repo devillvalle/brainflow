@@ -5,7 +5,7 @@ import com.brainflow.colormap.RangeCellRenderer;
 import com.brainflow.core.*;
 import com.brainflow.display.ThresholdRange;
 import com.brainflow.image.data.IImageData;
-import com.brainflow.image.io.analyze.AnalyzeIO;
+import com.brainflow.image.io.BrainIO;
 import com.brainflow.image.operations.BinaryOperation;
 import com.brainflow.utils.IRange;
 import com.brainflow.utils.Range;
@@ -164,14 +164,14 @@ public class MaskListEditor {
             com.jidesoft.utils.Lm.verifyLicense("UIN", "BrainFlow", "S5XiLlHH0VReaWDo84sDmzPxpMJvjP3");
 
             URL url = ClassLoader.getSystemResource("resources/data/icbm452_atlas_probability_temporal.hdr");
-            IImageData data = AnalyzeIO.readAnalyzeImage(url);
+            IImageData data = BrainIO.readAnalyzeImage(url);
 
 
             IImageDisplayModel model = new ImageDisplayModel("none");
             model.addLayer(new ImageLayer3D(data, new ImageLayerProperties(new Range(0, 256))));
 
             url = ClassLoader.getSystemResource("resources/data/icbm452_atlas_probability_gray.hdr");
-            data = AnalyzeIO.readAnalyzeImage(url);
+            data = BrainIO.readAnalyzeImage(url);
             model.addLayer(new ImageLayer3D(data, new ImageLayerProperties(new Range(0, 256))));
 
             ImageMaskList mlist = new ImageMaskList(new ImageLayer3D(data));

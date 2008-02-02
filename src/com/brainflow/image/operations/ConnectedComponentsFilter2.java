@@ -1,13 +1,13 @@
 package com.brainflow.image.operations;
 
 import com.brainflow.application.BrainflowException;
-import com.brainflow.application.IImageDataSource;
+import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.application.MemoryImageDataSource;
 import com.brainflow.image.data.BasicImageData;
 import com.brainflow.image.data.BasicImageData3D;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.data.IImageData3D;
-import com.brainflow.image.io.analyze.AnalyzeIO;
+import com.brainflow.image.io.BrainIO;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace3D;
@@ -141,7 +141,7 @@ public class ConnectedComponentsFilter2 extends AbstractImageFilter {
 
     public static void main(String[] args) {
         try {
-            IImageDataSource img = new MemoryImageDataSource(AnalyzeIO.readAnalyzeImage("C:/DTI/slopes/bAge.Norm.hdr"));
+            IImageDataSource img = new MemoryImageDataSource(BrainIO.readAnalyzeImage("C:/DTI/slopes/bAge.Norm.hdr"));
             IImageData3D data = (IImageData3D) img.getData();
             ConnectedComponentsFilter2 filter = null;
 
@@ -157,7 +157,7 @@ public class ConnectedComponentsFilter2 extends AbstractImageFilter {
             System.out.println("avg time " + (etime - btime) / 200.00);
 
             IImageData idata = filter.getOutput();
-            AnalyzeIO.writeAnalyzeImage("c:/DTI/slopes/bAge.Norm_index_largekernel.hdr", (BasicImageData) idata);
+            BrainIO.writeAnalyzeImage("c:/DTI/slopes/bAge.Norm_index_largekernel.hdr", (BasicImageData) idata);
 
 
         } catch (BrainflowException e) {

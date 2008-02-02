@@ -6,7 +6,7 @@
 
 package com.brainflow.application.toplevel;
 
-import com.brainflow.application.IImageDataSource;
+import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.application.ImageProgressDialog;
 import com.brainflow.application.ImageViewTransferHandler;
 import com.brainflow.application.services.LoadableImageStatusEvent;
@@ -69,7 +69,7 @@ public class DataSourceManager {
         }
 
         imageMap.put(uid, limg);
-        log.info("firing LoadableImageStatusEvent ...");
+        log.fine("registering image ..." + limg.getImageInfo().getImageLabel());
         EventBus.publish(new LoadableImageStatusEvent(limg, LoadableImageStatusEvent.EventID.IMAGE_REGISTERED));
     }
 

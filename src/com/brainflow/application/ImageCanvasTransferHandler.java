@@ -3,6 +3,8 @@ package com.brainflow.application;
 import com.brainflow.application.toplevel.Brainflow;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.BrainCanvas;
+import com.brainflow.image.io.SoftImageDataSource;
+import com.brainflow.image.io.IImageDataSource;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -37,7 +39,7 @@ public class ImageCanvasTransferHandler extends TransferHandler {
     public ImageCanvasTransferHandler() {
         try {
             loadableImageFlavor = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType +
-                    ";class=com.brainflow.application.IImageDataSource");
+                    ";class=com.brainflow.image.io.IImageDataSource");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }

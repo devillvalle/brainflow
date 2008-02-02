@@ -19,7 +19,6 @@ import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMapDeprecated;
 import com.brainflow.core.ImageView;
-import com.brainflow.display.Property;
 import com.jidesoft.swing.JideSplitButton;
 import com.jidesoft.swing.JideBoxLayout;
 import org.bushe.swing.action.BasicAction;
@@ -30,6 +29,10 @@ import java.awt.event.ActionEvent;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+
+import net.java.dev.properties.container.BeanContainer;
+import net.java.dev.properties.events.PropertyListener;
+import net.java.dev.properties.BaseProperty;
 
 /**
  * @author buchs
@@ -86,12 +89,17 @@ public class ColorBarPresenter extends ImageViewPresenter {
             action.putContextValue(ActionContext.SELECTED_IMAGE_VIEW, view);
         }
 
+        BeanContainer.get().addListener(view.getSelectedLayer().getImageLayerProperties().colorMap, new PropertyListener() {
+            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+                IColorMap cmap = (IColorMap)newValue;
+                form.setColorMap(cmap);
+            }
+        });
+
     }
 
 
-    public void setColorMap(Property<IColorMap> param) {
-        form.setColorMap(param.getProperty());
-    }
+
 
 
     public JComponent getComponent() {

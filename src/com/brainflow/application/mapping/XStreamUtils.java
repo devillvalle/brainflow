@@ -1,11 +1,10 @@
 package com.brainflow.application.mapping;
 
-import com.brainflow.application.IImageDataSource;
-import com.brainflow.application.SoftImageDataSource;
+import com.brainflow.image.io.IImageDataSource;
+import com.brainflow.image.io.SoftImageDataSource;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageLayer3D;
 import com.brainflow.display.InterpolationMethod;
-import com.brainflow.display.InterpolationType;
 import com.brainflow.display.ThresholdRange;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;

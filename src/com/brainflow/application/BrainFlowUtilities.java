@@ -5,6 +5,7 @@ import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.ImageDisplayModel;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageLayer3D;
+import com.brainflow.image.io.IImageDataSource;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.VFS;
 

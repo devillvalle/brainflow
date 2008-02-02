@@ -1,12 +1,12 @@
 package com.brainflow.image.operations;
 
 import com.brainflow.application.BrainflowException;
-import com.brainflow.application.IImageDataSource;
+import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.application.MemoryImageDataSource;
 import com.brainflow.image.data.BasicImageData3D;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.data.IImageData3D;
-import com.brainflow.image.io.analyze.AnalyzeIO;
+import com.brainflow.image.io.BrainIO;
 import com.brainflow.image.space.Axis;
 
 import java.util.ArrayList;
@@ -272,7 +272,7 @@ public class ConnectedComponentsFilter extends AbstractImageFilter {
     public static void main(String[] args) {
         try {
 
-            IImageDataSource img = new MemoryImageDataSource(AnalyzeIO.readAnalyzeImage("C:/DTI/slopes/bAge.Norm.hdr"));
+            IImageDataSource img = new MemoryImageDataSource(BrainIO.readAnalyzeImage("C:/DTI/slopes/bAge.Norm.hdr"));
             IImageData3D data = (IImageData3D) img.getData();
 
             ConnectedComponentsFilter filter = null;
@@ -290,7 +290,7 @@ public class ConnectedComponentsFilter extends AbstractImageFilter {
             /*ConnectedComponentsFilter filter = new ConnectedComponentsFilter();
          filter.addInput(data);
          IImageData idata = filter.getOutput();
-         AnalyzeIO.writeAnalyzeImage("c:/DTI/slopes/bAge.Norm_index.hdr", (BasicImageData) idata); */
+         BrainIO.writeAnalyzeImage("c:/DTI/slopes/bAge.Norm_index.hdr", (BasicImageData) idata); */
 
         } catch (BrainflowException e) {
             e.printStackTrace();

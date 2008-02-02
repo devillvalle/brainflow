@@ -26,7 +26,20 @@ public class LinearColorBar extends AbstractColorBar {
         //todo allow for the fact that the first and last intervals MIGHT have a fractional size of 0.
 
         IColorMap model = getColorMap();
-        float[] frac = new float[model.getMapSize()];
+        int startIndex = 0;
+        int endIndex= model.getMapSize()-1;
+
+        if (!(model.getLowClip() > model.getMinimumValue())) {
+            startIndex = 1;
+        }
+
+        if (!(model.getHighClip() < model.getMaximumValue())) {
+            endIndex = endIndex-1;
+        }
+
+
+
+        float[] frac = new float[endIndex-startIndex-1];
 
 
         double cRange = model.getMaximumValue() - model.getMinimumValue();

@@ -5,6 +5,7 @@ import com.brainflow.application.toplevel.BrainflowProjectListener;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.ImageDisplayModelListener;
 import com.brainflow.image.space.IImageSpace;
+import com.brainflow.image.io.IImageDataSource;
 
 import javax.swing.event.ListDataEvent;
 import java.util.*;

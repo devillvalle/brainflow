@@ -1,5 +1,7 @@
 package com.brainflow.application;
 
+import com.brainflow.image.io.IImageDataSource;
+
 /**
  * Created by IntelliJ IDEA.
  * User: bradley

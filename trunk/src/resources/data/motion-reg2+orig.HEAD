@@ -1,0 +1,119 @@
+
+type = string-attribute
+name = HISTORY_NOTE
+count = 2305
+'[buchs@despo86.neuro.berkeley.edu: Fri Jan 25 19:09:24 2008] 3dDeconvolve -input ../NIfTI/srBRB-EPI-001.nii ../NIfTI/srBRB-EPI-002.nii ../NIfTI/srBRB-EPI-003.nii ../NIfTI/srBRB-EPI-004.nii ../NIfTI/srBRB-EPI-005.nii ../NIfTI/srBRB-EPI-006.nii ../NIfTI/srBRB-EPI-007.nii ../NIfTI/srBRB-EPI-008.nii ../NIfTI/srBRB-EPI-009.nii ../NIfTI/srBRB-EPI-010.nii ../NIfTI/srBRB-EPI-011.nii ../NIfTI/srBRB-EPI-012.nii ../NIfTI/srBRB-EPI-013.nii ../NIfTI/srBRB-EPI-014.nii ../NIfTI/srBRB-EPI-015.nii ../NIfTI/srBRB-EPI-016.nii ../NIfTI/srBRB-EPI-017.nii ../NIfTI/srBRB-EPI-018.nii ../NIfTI/srBRB-EPI-019.nii ../NIfTI/srBRB-EPI-020.nii -mask ../global_mask.nii -polort 7 -num_stimts 20 -stim_times 1 motionL0.txt 'BLOCK( 2 )' -stim_label 1 motionL0 -stim_times 2 motionL1Cor.txt 'BLOCK( 2 )' -stim_label 2 motionL1Cor -stim_times 3 motionL1InCor.txt 'BLOCK( 2 )' -stim_label 3 motionL1InCor -stim_times 4 motionL2Cor.txt 'BLOCK( 2 )' -stim_label 4 motionL2Cor -stim_times 5 motionL2InCor.txt 'BLOCK( 2 )' -stim_label 5 motionL2InCor -stim_times 6 motionL3Cor.txt 'BLOCK( 2 )' -stim_label 6 motionL3Cor -stim_times 7 motionL3InCor.txt 'BLOCK( 2 )' -stim_label 7 motionL3InCor -stim_times 8 motionL4.txt 'BLOCK( 2 )' -stim_label 8 motionL4 -stim_times 9 motionL5.txt 'BLOCK( 2 )' -stim_label 9 motionL5 -stim_times 10 motionL6.txt 'BLOCK( 2 )' -stim_label 10 motionL6 -stim_times 11 motionR0.txt 'BLOCK( 2 )' -stim_label 11 motionR0 -stim_times 12 motionR1Cor.txt 'BLOCK( 2 )' -stim_label 12 motionR1Cor -stim_times 13 motionR1InCor.txt 'BLOCK( 2 )' -stim_label 13 motionR1InCor -stim_times 14 motionR2Cor.txt 'BLOCK( 2 )' -stim_label 14 motionR2Cor -stim_times 15 motionR2InCor.txt 'BLOCK( 2 )' -stim_label 15 motionR2InCor -stim_times 16 motionR3Cor.txt 'BLOCK( 2 )' -stim_label 16 motionR3Cor -stim_times 17 motionR3InCor.txt 'BLOCK( 2 )' -stim_label 17 motionR3InCor -stim_times 18 motionR4.txt 'BLOCK( 2 )' -stim_label 18 motionR4 -stim_times 19 motionR5.txt 'BLOCK( 2 )' -stim_label 19 motionR5 -stim_times 20 motionR6.txt 'BLOCK( 2 )' -stim_label 20 motionR6 -num_glt 1 -gltsym glt-accuracy.txt -glt_label 1 accuracy -full_first -fout -tout -nobout -nocout -bucket motion-reg2 -cbucket motioncoef2 -vout -xout -x1D design.mat\n[buchs@despo86.neuro.berkeley.edu: Fri Jan 25 19:09:24 2008] Output prefix: motion-reg2~
+
+type = string-attribute
+name = TYPESTRING
+count = 15
+'3DIM_HEAD_FUNC~
+
+type = string-attribute
+name = IDCODE_STRING
+count = 27
+'XYZ_D7h90VOpl3WrwEqFHy_yJw~
+
+type = string-attribute
+name = IDCODE_DATE
+count = 25
+'Fri Jan 25 19:09:24 2008~
+
+type = integer-attribute
+name = SCENE_DATA
+count = 8
+ 0 11 1 -999 -999
+ -999 -999 -999
+
+type = string-attribute
+name = LABEL_1
+count = 5
+'zyxt~
+
+type = string-attribute
+name = LABEL_2
+count = 5
+'zyxt~
+
+type = string-attribute
+name = DATASET_NAME
+count = 5
+'zyxt~
+
+type = integer-attribute
+name = ORIENT_SPECIFIC
+count = 3
+ 0 2 4
+
+type  = float-attribute
+name  = ORIGIN
+count = 3
+      -110.7422       110.7422      -46.74998
+
+type  = float-attribute
+name  = DELTA
+count = 3
+       3.515625      -3.515625       5.499998
+
+type  = float-attribute
+name  = IJK_TO_DICOM
+count = 12
+       3.515625              0              0      -110.7422              0
+      -3.515625              0       110.7422              0              0
+       5.499998      -46.74998
+
+type  = float-attribute
+name  = IJK_TO_DICOM_REAL
+count = 12
+       3.515625              0              0      -110.7422              0
+      -3.515625              0       110.7422              0              0
+       5.499998      -46.74998
+
+type  = float-attribute
+name  = BRICK_STATS
+count = 10
+              0       1713.448              0       298.2294      -13.38846
+       14.05773      -7.923428       7.316482              0       62.78108
+
+type = integer-attribute
+name = DATASET_RANK
+count = 8
+ 3 5 0 0 0
+ 0 0 0
+
+type = integer-attribute
+name = DATASET_DIMENSIONS
+count = 5
+ 64 64 18 0 0
+
+type = integer-attribute
+name = BRICK_TYPES
+count = 5
+ 1 1 1 1 1
+
+type  = float-attribute
+name  = BRICK_FLOAT_FACS
+count = 5
+     0.05229189    0.009101517    0.000429021   0.0002418112    0.001915985
+
+type = string-attribute
+name = BRICK_LABS
+count = 80
+'Full_MSE~Full_Fstat~accuracy_GLT#0_Coef~accuracy_GLT#0_Tstat~accuracy_GLT_Fstat~
+
+type  = float-attribute
+name  = BRICK_STATAUX
+count = 14
+              1              4              2             20          11320
+              3              3              1          11320              4
+              4              2              1          11320
+
+type = string-attribute
+name = BRICK_STATSYM
+count = 54
+'none;Ftest(20,11320);none;Ttest(11320);Ftest(1,11320)~
+
+type = string-attribute
+name = BYTEORDER_STRING
+count = 10
+'LSB_FIRST~

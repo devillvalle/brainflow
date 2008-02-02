@@ -152,14 +152,6 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     private void listenToLayer(final ImageLayer layer) {
 
-        layer.addPropertyChangeListener(ImageLayerProperties.COLOR_MAP_PROPERTY, new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
-                for (ImageLayerListener listener : listeners) {
-                    listener.colorMapChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer) evt.getSource()));
-                }
-            }
-        });
 
 
         layer.addPropertyChangeListener(ImageLayerProperties.RESAMPLE_PROPERTY, new PropertyChangeListener() {
@@ -179,6 +171,17 @@ public class ImageDisplayModel implements IImageDisplayModel {
                 }
             }
         });
+
+       
+         BeanContainer.get().addListener(layer.getImageLayerProperties().colorMap, new PropertyListener() {
+            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+                ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
+                for (ImageLayerListener listener : listeners) {
+                    listener.colorMapChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
+                }
+            }
+        });
+
 
         BeanContainer.get().addListener(layer.getImageLayerProperties().interpolationType, new PropertyListener() {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
@@ -422,7 +425,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
     }
 
     /* (non-Javadoc)
-    * @see com.brainflow.core.IImageDisplayModel#setLayer(int, com.brainflow.application.SoftImageDataSource, com.brainflow.display.props.DisplayProperties)
+    * @see com.brainflow.core.IImageDisplayModel#setLayer(int, com.brainflow.image.io.SoftImageDataSource, com.brainflow.display.props.DisplayProperties)
     */
     //public void setLayer(int index, ImageLayer layer) {
     //    assert index >= 0 && index < size();

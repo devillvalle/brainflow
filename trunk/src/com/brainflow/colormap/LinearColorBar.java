@@ -23,12 +23,13 @@ public class LinearColorBar extends AbstractColorBar {
     }
 
     private float[] getFractions() {
+        //todo allow for the fact that the first and last intervals MIGHT have a fractional size of 0.
+
         IColorMap model = getColorMap();
         float[] frac = new float[model.getMapSize()];
 
 
         double cRange = model.getMaximumValue() - model.getMinimumValue();
-
 
 
         for (int i = 0; i < model.getMapSize(); i++) {
@@ -37,11 +38,15 @@ public class LinearColorBar extends AbstractColorBar {
             double max = ci.getMaximum();
             double diff = max - model.getMinimumValue();
             float f = (float) (diff / cRange);
-
+            if (diff > cRange) {
+                System.out.println("diff is greater than crange");
+            }
             frac[i] = f;
-
+            System.out.println("frac : " + i + " --> " + frac[i]);
 
         }
+
+
 
         //System.out.println("high clip : " + model.getHighClip());
         ///System.out.println("last value = " + frac[model.getMapSize()-1]);
@@ -75,7 +80,10 @@ public class LinearColorBar extends AbstractColorBar {
             paint = getColorMap().getInterval(0).getColor();
         } else if (getOrientation() == SwingConstants.HORIZONTAL) {
             // todo check for correct increasing fractions
+
             paint = new LinearGradientPaint(0f, 0f, (float) length, (float) 0, getFractions(), getColors());
+
+
         } else {
             paint = new LinearGradientPaint(0f, 0f, (float) 0, (float) length, getFractions(), getColors());
         }

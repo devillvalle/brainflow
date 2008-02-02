@@ -6,7 +6,7 @@ import com.brainflow.application.MemoryImageDataSource;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.core.*;
 import com.brainflow.image.data.IImageData;
-import com.brainflow.image.io.analyze.AnalyzeIO;
+import com.brainflow.image.io.BrainIO;
 import com.brainflow.utils.Range;
 import com.jidesoft.docking.DefaultDockingManager;
 import com.jidesoft.document.DocumentComponent;
@@ -80,10 +80,10 @@ public class BrainTest {
     public ImageView createView() {
         try {
             URL url = ClassLoader.getSystemResource("resources/data/icbm452_atlas_probability_gray.hdr");
-            IImageData data1 = AnalyzeIO.readAnalyzeImage(url);
+            IImageData data1 = BrainIO.readAnalyzeImage(url);
 
             url = ClassLoader.getSystemResource("resources/data/icbm452_atlas_probability_white.hdr");
-            IImageData data2 = AnalyzeIO.readAnalyzeImage(url);
+            IImageData data2 = BrainIO.readAnalyzeImage(url);
 
 
             IImageDisplayModel model = new ImageDisplayModel("model");

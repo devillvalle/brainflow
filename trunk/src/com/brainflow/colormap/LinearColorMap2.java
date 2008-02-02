@@ -90,10 +90,15 @@ public final class LinearColorMap2 extends AbstractColorMap {
 
         binSize = (getMaximumValue() - getMinimumValue()) / (mapSize - 1);
 
-        highClip = max - binSize;
-        lowClip = min + binSize;
+        highClip = max;
+        lowClip = min;
 
-        init(min, max, lowClip, highClip, mapSize);
+        setMinimumValue(min);
+        setMaximumValue(max);
+
+
+
+        //init(min, max, lowClip, highClip, mapSize);
 
 
     }
@@ -102,7 +107,10 @@ public final class LinearColorMap2 extends AbstractColorMap {
         setMinimumValue(min);
         setMaximumValue(max);
 
-        binSize = (highClip - lowClip) / (mapSize - 3);
+        if (highClip > max) throw new IllegalArgumentException("high clip must be less than or equal to max");
+        if (lowClip < min) throw new IllegalArgumentException("low clip must be greater than or equal to min");
+
+        binSize = (highClip - lowClip) / (mapSize - 1);
       
 
     }

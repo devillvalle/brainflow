@@ -5,7 +5,7 @@ import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.image.data.BasicImageData;
 import com.brainflow.image.data.BasicImageData3D;
 import com.brainflow.image.data.IImageData3D;
-import com.brainflow.image.io.analyze.AnalyzeIO;
+import com.brainflow.image.io.BrainIO;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace3D;
@@ -48,10 +48,10 @@ public class MakeData {
         System.out.println("num one samples : " + data4.getDimension(Axis.Z_AXIS));
 
         try {
-            AnalyzeIO.writeAnalyzeImage("c:/horizontal_stripes", (BasicImageData) data1);
-            AnalyzeIO.writeAnalyzeImage("c:/vertical_stripes", (BasicImageData) data2);
-            AnalyzeIO.writeAnalyzeImage("c:/checkered_stripes", (BasicImageData) data3);
-            AnalyzeIO.writeAnalyzeImage("c:/diagonal_stripes", (BasicImageData) data4);
+            BrainIO.writeAnalyzeImage("c:/horizontal_stripes", (BasicImageData) data1);
+            BrainIO.writeAnalyzeImage("c:/vertical_stripes", (BasicImageData) data2);
+            BrainIO.writeAnalyzeImage("c:/checkered_stripes", (BasicImageData) data3);
+            BrainIO.writeAnalyzeImage("c:/diagonal_stripes", (BasicImageData) data4);
         } catch (Exception e) {
             e.printStackTrace();
         }

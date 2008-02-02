@@ -441,7 +441,7 @@ public class FileExplorer extends AbstractPresenter {
 
             } catch (Exception e) {
                 log.severe(e.getMessage());
-                return null;
+                throw new RuntimeException(e);
             }
 
 

@@ -1,6 +1,6 @@
 package com.brainflow.application.services;
 
-import com.brainflow.application.IImageDataSource;
+import com.brainflow.image.io.IImageDataSource;
 import org.bushe.swing.event.AbstractEventServiceEvent;
 
 /**

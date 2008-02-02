@@ -2,7 +2,9 @@ package com.brainflow.application.actions;
 
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMapDeprecated;
+import com.brainflow.colormap.LinearColorMap2;
 import com.brainflow.core.ImageView;
+import com.brainflow.core.ImageLayer;
 import org.bushe.swing.action.BasicAction;
 
 import javax.swing.*;
@@ -30,21 +32,12 @@ public class SelectColorMapAction extends BasicAction {
         ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
         if (view != null) {
 
-            int layer = view.getModel().getSelectedIndex();
-            IColorMap map = view.getModel().getLayer(layer).
-                    getImageLayerProperties().getColorMap();
+            ImageLayer layer = view.getSelectedLayer();
 
-            LinearColorMapDeprecated lmap = new LinearColorMapDeprecated(map.getMinimumValue(), map.getMaximumValue(), icm);
-            if (map instanceof LinearColorMapDeprecated) {
-                LinearColorMapDeprecated lmap2 = (LinearColorMapDeprecated) map;
+            IColorMap map = layer.getImageLayerProperties().getColorMap();
 
-                lmap.setHighClip(lmap2.getHighClip());
-                lmap.setLowClip(lmap2.getLowClip());
-               
-            }
-
-            view.getModel().getLayer(layer).
-                    getImageLayerProperties().colorMap.set(lmap);
+            LinearColorMap2 lmap = new LinearColorMap2(map.getMinimumValue(), map.getMaximumValue(), map.getLowClip(), map.getHighClip(), icm);
+            layer.getImageLayerProperties().colorMap.set(lmap);
 
 
         }

@@ -129,7 +129,7 @@ public class ShowUIDefaults extends JFrame implements ActionListener {
     }
 
     private void addComponentTabs(JTabbedPane pane, Map components) {
-        String[] colName = {"Key", "Value", "Sample"};
+        String[] colName = {"AFNIAttributeKey", "Value", "Sample"};
         Set c = components.keySet();
 
         for (Iterator ci = c.iterator(); ci.hasNext();) {

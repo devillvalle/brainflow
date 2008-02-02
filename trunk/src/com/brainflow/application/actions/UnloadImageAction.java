@@ -1,6 +1,6 @@
 package com.brainflow.application.actions;
 
-import com.brainflow.application.IImageDataSource;
+import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.application.toplevel.DataSourceManager;
 import org.bushe.swing.action.BasicAction;
 

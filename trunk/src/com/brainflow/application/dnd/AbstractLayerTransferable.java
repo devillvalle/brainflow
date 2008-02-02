@@ -1,6 +1,5 @@
 package com.brainflow.application.dnd;
 
-import com.brainflow.application.IImageDataSource;
 import com.brainflow.core.AbstractLayer;
 
 import java.awt.datatransfer.Transferable;

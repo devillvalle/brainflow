@@ -6,7 +6,7 @@ import com.brainflow.display.ThresholdRange;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.data.IImageData3D;
 import com.brainflow.image.data.MaskedData3D;
-import com.brainflow.image.io.analyze.AnalyzeIO;
+import com.brainflow.image.io.BrainIO;
 import com.brainflow.utils.Range;
 
 import javax.swing.*;
@@ -53,7 +53,7 @@ public class MaskViewPanel extends JPanel {
         try {
             JFrame frame = new JFrame();
             URL url = ClassLoader.getSystemResource("resources/data/icbm452_atlas_probability_gray.hdr");
-            IImageData data = AnalyzeIO.readAnalyzeImage(url);
+            IImageData data = BrainIO.readAnalyzeImage(url);
 
             ImageLayer ilayer = new ImageLayer3D(new MemoryImageDataSource(data), new ImageLayerProperties(new Range(0, 256)));
 

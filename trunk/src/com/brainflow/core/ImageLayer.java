@@ -9,8 +9,7 @@
 
 package com.brainflow.core;
 
-import com.brainflow.application.IImageDataSource;
-import com.brainflow.application.IImageDataSource;
+import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.space.IImageSpace;
@@ -96,7 +95,7 @@ public abstract class ImageLayer extends AbstractLayer {
 
 
     public String toString() {
-        return dataSource.getStem();
+        return dataSource.getImageInfo().getImageLabel();
     }
 
     public boolean equals(Object o) {

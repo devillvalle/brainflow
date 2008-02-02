@@ -1,0 +1,247 @@
+
+type = string-attribute
+name = HISTORY_NOTE
+count = 2216
+'[buchs@despo86.neuro.berkeley.edu: Fri Jan 25 19:09:24 2008] 3dDeconvolve -input ../NIfTI/srBRB-EPI-001.nii ../NIfTI/srBRB-EPI-002.nii ../NIfTI/srBRB-EPI-003.nii ../NIfTI/srBRB-EPI-004.nii ../NIfTI/srBRB-EPI-005.nii ../NIfTI/srBRB-EPI-006.nii ../NIfTI/srBRB-EPI-007.nii ../NIfTI/srBRB-EPI-008.nii ../NIfTI/srBRB-EPI-009.nii ../NIfTI/srBRB-EPI-010.nii ../NIfTI/srBRB-EPI-011.nii ../NIfTI/srBRB-EPI-012.nii ../NIfTI/srBRB-EPI-013.nii ../NIfTI/srBRB-EPI-014.nii ../NIfTI/srBRB-EPI-015.nii ../NIfTI/srBRB-EPI-016.nii ../NIfTI/srBRB-EPI-017.nii ../NIfTI/srBRB-EPI-018.nii ../NIfTI/srBRB-EPI-019.nii ../NIfTI/srBRB-EPI-020.nii -mask ../global_mask.nii -polort 7 -num_stimts 20 -stim_times 1 motionL0.txt 'BLOCK( 2 )' -stim_label 1 motionL0 -stim_times 2 motionL1Cor.txt 'BLOCK( 2 )' -stim_label 2 motionL1Cor -stim_times 3 motionL1InCor.txt 'BLOCK( 2 )' -stim_label 3 motionL1InCor -stim_times 4 motionL2Cor.txt 'BLOCK( 2 )' -stim_label 4 motionL2Cor -stim_times 5 motionL2InCor.txt 'BLOCK( 2 )' -stim_label 5 motionL2InCor -stim_times 6 motionL3Cor.txt 'BLOCK( 2 )' -stim_label 6 motionL3Cor -stim_times 7 motionL3InCor.txt 'BLOCK( 2 )' -stim_label 7 motionL3InCor -stim_times 8 motionL4.txt 'BLOCK( 2 )' -stim_label 8 motionL4 -stim_times 9 motionL5.txt 'BLOCK( 2 )' -stim_label 9 motionL5 -stim_times 10 motionL6.txt 'BLOCK( 2 )' -stim_label 10 motionL6 -stim_times 11 motionR0.txt 'BLOCK( 2 )' -stim_label 11 motionR0 -stim_times 12 motionR1Cor.txt 'BLOCK( 2 )' -stim_label 12 motionR1Cor -stim_times 13 motionR1InCor.txt 'BLOCK( 2 )' -stim_label 13 motionR1InCor -stim_times 14 motionR2Cor.txt 'BLOCK( 2 )' -stim_label 14 motionR2Cor -stim_times 15 motionR2InCor.txt 'BLOCK( 2 )' -stim_label 15 motionR2InCor -stim_times 16 motionR3Cor.txt 'BLOCK( 2 )' -stim_label 16 motionR3Cor -stim_times 17 motionR3InCor.txt 'BLOCK( 2 )' -stim_label 17 motionR3InCor -stim_times 18 motionR4.txt 'BLOCK( 2 )' -stim_label 18 motionR4 -stim_times 19 motionR5.txt 'BLOCK( 2 )' -stim_label 19 motionR5 -stim_times 20 motionR6.txt 'BLOCK( 2 )' -stim_label 20 motionR6 -num_glt 1 -gltsym glt-accuracy.txt -glt_label 1 accuracy -full_first -fout -tout -nobout -nocout -bucket motion-reg2 -cbucket motioncoef2 -vout -xout -x1D design.mat~
+
+type = string-attribute
+name = TYPESTRING
+count = 15
+'3DIM_HEAD_FUNC~
+
+type = string-attribute
+name = IDCODE_STRING
+count = 27
+'XYZ_9sgbYeydgd38YGzglqqB4A~
+
+type = string-attribute
+name = IDCODE_DATE
+count = 25
+'Fri Jan 25 19:09:24 2008~
+
+type = integer-attribute
+name = SCENE_DATA
+count = 8
+ 0 11 1 -999 -999
+ -999 -999 -999
+
+type = string-attribute
+name = LABEL_1
+count = 5
+'zyxt~
+
+type = string-attribute
+name = LABEL_2
+count = 5
+'zyxt~
+
+type = string-attribute
+name = DATASET_NAME
+count = 5
+'zyxt~
+
+type = integer-attribute
+name = ORIENT_SPECIFIC
+count = 3
+ 0 2 4
+
+type  = float-attribute
+name  = ORIGIN
+count = 3
+      -110.7422       110.7422      -46.74998
+
+type  = float-attribute
+name  = DELTA
+count = 3
+       3.515625      -3.515625       5.499998
+
+type  = float-attribute
+name  = IJK_TO_DICOM
+count = 12
+       3.515625              0              0      -110.7422              0
+      -3.515625              0       110.7422              0              0
+       5.499998      -46.74998
+
+type  = float-attribute
+name  = IJK_TO_DICOM_REAL
+count = 12
+       3.515625              0              0      -110.7422              0
+      -3.515625              0       110.7422              0              0
+       5.499998      -46.74998
+
+type  = float-attribute
+name  = BRICK_STATS
+count = 360
+              0        1242.14      -69.63713       105.2345       -34.0793
+       30.90611      -20.44651       14.65457      -16.93381       12.02322
+      -23.07911       25.53893       -17.2076        17.7571      -26.47179
+       32.06184              0       1255.174      -41.92181       59.52215
+        -25.839       21.13361       -21.5899       21.53653      -13.78407
+       15.72806      -26.90174       16.53906      -23.33769       19.17612
+      -13.45504       10.70301              0       1276.937       -40.5685
+       50.44046      -26.02897       21.77514      -21.50095       16.87687
+      -17.72649        20.7237      -14.57339       9.723304      -18.89252
+       15.76116      -11.94805       10.37172              0        1292.83
+      -55.69295       28.36062      -16.39886       32.80274      -11.71562
+       15.24263      -19.27926       9.974121      -16.54038       12.64898
+      -19.34282       6.759094      -10.68185       11.25948              0
+       1242.077      -56.26339        66.5962      -23.37809       39.51866
+      -23.48412       14.97832      -18.18588       23.26722      -13.44375
+       14.46576      -9.475211       19.37921        -13.858       22.18621
+              0       1272.973      -54.59517       62.27095      -30.20262
+       35.65918      -23.52901       22.72549      -17.16258       19.77795
+      -17.54484       34.89267      -25.01242       20.12322      -15.17772
+        19.0416              0       1265.701      -30.10509       32.68675
+      -15.42228       23.72386      -11.90919       16.76887      -27.55378
+       13.87822      -26.73735        14.5596      -25.29374       18.45755
+      -42.48927       27.85461              0       1270.947      -41.89835
+       24.58253      -16.11287       17.30881      -12.22745       16.28818
+      -16.12795       11.95015       -23.5683       9.662666      -13.40873
+       11.02669      -30.27127       6.930604              0        1338.32
+      -65.55419       37.25948      -19.89193       26.23355      -25.07422
+       48.77454      -22.36113       17.23746      -18.26585       13.25886
+      -10.47598       10.10063      -17.49268        14.1796              0
+       1338.528      -62.45064        48.6119      -22.00142       23.49729
+      -25.09637         17.903      -19.93111        13.1769      -17.19944
+         8.6404      -15.27154       9.744477      -19.97226       10.90621
+              0       1342.259      -41.74967        48.5765      -12.79148
+       12.95356       -29.6896       11.37858      -17.89264        18.6271
+       -19.6992       17.80365      -18.92754       10.55638      -16.33174
+       10.94032              0       1334.434      -68.98949        101.394
+      -47.79738       48.63299      -25.12205       13.01069      -37.50995
+       28.43096      -17.15073       31.10005      -41.01918       20.32494
+      -29.62154       21.60572              0       1204.938      -52.37879
+       50.52131       -39.6805       30.81242      -16.56875       27.06152
+      -23.29349       18.36139       -24.2028       10.40808      -7.222353
+       10.96792      -32.98614       11.51449              0       1223.363
+      -38.54586       36.85895      -30.58827       27.10255      -17.26051
+       15.16398      -14.14798       18.42628      -23.23104       14.44753
+      -10.12252       24.41191      -26.80703       19.70992              0
+       1231.457      -48.68439       50.46317      -22.00483       20.62747
+      -25.15715       22.77095      -10.62418       15.15157      -13.39922
+       13.31661      -15.20229       15.96735       -20.0542        27.1244
+              0       1235.617       -34.7892       34.79132      -10.56212
+       13.81373      -19.04128       13.65089      -14.27708       18.99533
+      -11.28341        13.3982      -16.74371       22.35519      -23.12866
+       12.46394              0       1246.722      -49.45666       51.24419
+      -15.57193       28.04009      -12.20972        22.6185      -18.18148
+       13.08387      -7.399009       15.86775      -25.86832       11.94062
+      -13.00249       26.05189              0       1275.396      -53.62835
+       66.43629      -26.73115        25.3027      -27.16737       25.51082
+      -14.73516       11.30444      -10.29799       29.02661      -23.86776
+       10.30552      -15.93799       19.86761              0       1275.071
+      -64.32149       39.21281      -27.25435       15.51652      -26.31093
+       21.11972      -21.22665       24.63636      -30.27993       15.51006
+      -23.35409       20.99281      -24.49913       25.04096              0
+       1259.188      -59.25051       47.75555      -31.47025       37.25113
+      -30.14335       14.88355      -13.61034       19.09036      -13.45184
+       17.93014      -24.65292       18.77164      -20.63773        13.3493
+      -9.222477       9.168156       -7.42543       9.275631      -7.274731
+       9.877802      -9.973987       9.490005      -8.320986       9.617415
+       -7.28603        10.1428      -9.828803       10.06219      -6.638668
+       9.587431      -5.630804       9.571724      -5.993275       8.889266
+      -8.421362       6.852588      -9.786964       7.361056      -9.128709
+       7.225908      -8.302482       7.273762      -8.005249       7.525427
+      -6.537693       7.451928      -11.22216       6.422251      -6.647744
+       7.817213      -5.359828       8.201433      -5.564565       8.449218
+
+type = integer-attribute
+name = DATASET_RANK
+count = 8
+ 3 180 0 0 0
+ 0 0 0
+
+type = integer-attribute
+name = DATASET_DIMENSIONS
+count = 5
+ 64 64 18 0 0
+
+type = integer-attribute
+name = BRICK_TYPES
+count = 180
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+ 1 1 1 1 1
+
+type  = float-attribute
+name  = BRICK_FLOAT_FACS
+count = 180
+     0.03790827      0.0032116    0.001040049    0.000623997   0.0005167945
+     0.00077941   0.0005419204   0.0009784796     0.03830604    0.001816527
+   0.0007885677   0.0006588917    0.000479997   0.0008210008   0.0007122315
+   0.0004106277      0.0389702    0.001539368   0.0007943654    0.000656177
+   0.0006324564   0.0004447582   0.0005765715   0.0003646365     0.03945524
+    0.001699666    0.001001091   0.0004651824   0.0005883743   0.0005047879
+   0.0005903139   0.0003436224     0.03790635    0.002032417    0.001206051
+   0.0007167002   0.0007100808   0.0004414736   0.0005914245     0.00067709
+     0.03884922    0.001900416    0.001088265   0.0007180704   0.0006035935
+    0.001064872   0.0007633419   0.0005811212      0.0386273   0.0009975509
+   0.0007240169    0.000511761   0.0008409003    0.000815984   0.0007719272
+    0.001296709     0.03878741    0.001278675    0.000528239   0.0004970911
+    0.000492201   0.0007192695   0.0004092144   0.0009238341     0.04084353
+    0.002000616   0.0008006089    0.001488526   0.0006824284   0.0005574464
+   0.0003197112   0.0005338505     0.04084989    0.001905901   0.0007171023
+   0.0007659037   0.0006082678   0.0005249013   0.0004660645   0.0006095236
+     0.04096375    0.001482482   0.0003953233   0.0009060823   0.0005684714
+   0.0006011902   0.0005776404   0.0004984202     0.04072493    0.003094393
+    0.001484206   0.0007666876    0.001144748   0.0009491273    0.001251844
+   0.0009040052      0.0367729    0.001598523     0.00121099   0.0008258774
+   0.0007108826   0.0007386332   0.0003347246    0.001006688     0.03733523
+    0.001176362   0.0009335085    0.000526765   0.0005623426   0.0007089768
+   0.0007450151   0.0008181105     0.03758224    0.001540061   0.0006715546
+   0.0007677586   0.0004624034   0.0004089241   0.0004872999   0.0008277964
+      0.0377092    0.001061779   0.0004215743   0.0005811114   0.0005797092
+   0.0004088932   0.0006822472   0.0007058522     0.03804808    0.001563896
+   0.0008557418   0.0006902829   0.0005548716     0.00048426   0.0007894626
+   0.0007950649     0.03892318    0.002027537    0.000815795   0.0008291078
+   0.0004496952   0.0008858488   0.0007284085   0.0006063299     0.03891327
+    0.001962996    0.000831762   0.0008029703   0.0007518649   0.0009240982
+    0.000712732   0.0007642127     0.03842854    0.001808237    0.001136849
+   0.0009199302   0.0005826094    0.000547201   0.0007523703   0.0006298326
+   0.0002814562   0.0002830784   0.0003014558   0.0003043912   0.0002935092
+   0.0003095433   0.0003070829   0.0002925941   0.0002921147   0.0002712871
+   0.0002570074   0.0002986836   0.0002785946   0.0002533794   0.0002443083
+   0.0002274217   0.0003424835   0.0002385697   0.0002502955   0.0002578575
+
+type = string-attribute
+name = BRICK_LABS
+count = 2116
+'Run#1Pol#0~Run#1Pol#1~Run#1Pol#2~Run#1Pol#3~Run#1Pol#4~Run#1Pol#5~Run#1Pol#6~Run#1Pol#7~Run#2Pol#0~Run#2Pol#1~Run#2Pol#2~Run#2Pol#3~Run#2Pol#4~Run#2Pol#5~Run#2Pol#6~Run#2Pol#7~Run#3Pol#0~Run#3Pol#1~Run#3Pol#2~Run#3Pol#3~Run#3Pol#4~Run#3Pol#5~Run#3Pol#6~Run#3Pol#7~Run#4Pol#0~Run#4Pol#1~Run#4Pol#2~Run#4Pol#3~Run#4Pol#4~Run#4Pol#5~Run#4Pol#6~Run#4Pol#7~Run#5Pol#0~Run#5Pol#1~Run#5Pol#2~Run#5Pol#3~Run#5Pol#4~Run#5Pol#5~Run#5Pol#6~Run#5Pol#7~Run#6Pol#0~Run#6Pol#1~Run#6Pol#2~Run#6Pol#3~Run#6Pol#4~Run#6Pol#5~Run#6Pol#6~Run#6Pol#7~Run#7Pol#0~Run#7Pol#1~Run#7Pol#2~Run#7Pol#3~Run#7Pol#4~Run#7Pol#5~Run#7Pol#6~Run#7Pol#7~Run#8Pol#0~Run#8Pol#1~Run#8Pol#2~Run#8Pol#3~Run#8Pol#4~Run#8Pol#5~Run#8Pol#6~Run#8Pol#7~Run#9Pol#0~Run#9Pol#1~Run#9Pol#2~Run#9Pol#3~Run#9Pol#4~Run#9Pol#5~Run#9Pol#6~Run#9Pol#7~Run#10Pol#0~Run#10Pol#1~Run#10Pol#2~Run#10Pol#3~Run#10Pol#4~Run#10Pol#5~Run#10Pol#6~Run#10Pol#7~Run#11Pol#0~Run#11Pol#1~Run#11Pol#2~Run#11Pol#3~Run#11Pol#4~Run#11Pol#5~Run#11Pol#6~Run#11Pol#7~Run#12Pol#0~Run#12Pol#1~Run#12Pol#2~Run#12Pol#3~Run#12Pol#4~Run#12Pol#5~Run#12Pol#6~Run#12Pol#7~Run#13Pol#0~Run#13Pol#1~Run#13Pol#2~Run#13Pol#3~Run#13Pol#4~Run#13Pol#5~Run#13Pol#6~Run#13Pol#7~Run#14Pol#0~Run#14Pol#1~Run#14Pol#2~Run#14Pol#3~Run#14Pol#4~Run#14Pol#5~Run#14Pol#6~Run#14Pol#7~Run#15Pol#0~Run#15Pol#1~Run#15Pol#2~Run#15Pol#3~Run#15Pol#4~Run#15Pol#5~Run#15Pol#6~Run#15Pol#7~Run#16Pol#0~Run#16Pol#1~Run#16Pol#2~Run#16Pol#3~Run#16Pol#4~Run#16Pol#5~Run#16Pol#6~Run#16Pol#7~Run#17Pol#0~Run#17Pol#1~Run#17Pol#2~Run#17Pol#3~Run#17Pol#4~Run#17Pol#5~Run#17Pol#6~Run#17Pol#7~Run#18Pol#0~Run#18Pol#1~Run#18Pol#2~Run#18Pol#3~Run#18Pol#4~Run#18Pol#5~Run#18Pol#6~Run#18Pol#7~Run#19Pol#0~Run#19Pol#1~Run#19Pol#2~Run#19Pol#3~Run#19Pol#4~Run#19Pol#5~Run#19Pol#6~Run#19Pol#7~Run#20Pol#0~Run#20Pol#1~Run#20Pol#2~Run#20Pol#3~Run#20Pol#4~Run#20Pol#5~Run#20Pol#6~Run#20Pol#7~motionL0#0~motionL1Cor#0~motionL1InCor#0~motionL2Cor#0~motionL2InCor#0~motionL3Cor#0~motionL3InCor#0~motionL4#0~motionL5#0~motionL6#0~motionR0#0~motionR1Cor#0~motionR1InCor#0~motionR2Cor#0~motionR2InCor#0~motionR3Cor#0~motionR3InCor#0~motionR4#0~motionR5#0~motionR6#0~
+
+type = string-attribute
+name = BYTEORDER_STRING
+count = 10
+'LSB_FIRST~

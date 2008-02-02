@@ -50,7 +50,6 @@ public class ImageInfo implements java.io.Serializable {
     // SPM Default anatomy is LPI (Neurological)
 
 
-
     private Anatomy3D anatomy = Anatomy3D.AXIAL_LPI;
 
     private DataType dataType = DataType.BYTE;
@@ -61,7 +60,8 @@ public class ImageInfo implements java.io.Serializable {
 
     private double intercept = 0;
 
-    private String imageLabel = "image0";
+
+    private String imageLabel = null;
 
     private FileObject dataFile;
 
@@ -88,6 +88,7 @@ public class ImageInfo implements java.io.Serializable {
         imageLabel = info.imageLabel;
         spacing = info.spacing;
         arrayDim = info.arrayDim;
+        imageLabel = info.imageLabel;
     }
 
 
@@ -103,7 +104,6 @@ public class ImageInfo implements java.io.Serializable {
         setDimensionality(space.getNumDimensions());
 
 
-        
         setSpacing(new Dimension3D<Double>(space.getSpacing(Axis.X_AXIS),
                 space.getSpacing(Axis.Y_AXIS),
                 space.getSpacing(Axis.Z_AXIS)));
@@ -137,13 +137,18 @@ public class ImageInfo implements java.io.Serializable {
 
     }
 
-    public void setDataFile(FileObject fobj) {
+    void setDataFile(FileObject fobj) {
         dataFile = fobj;
     }
 
     public FileObject getDataFile() {
         return dataFile;
     }
+
+    void setHeaderFile(FileObject fobj) {
+        headerFile = fobj;
+    }
+
 
     public FileObject getHeaderFile() {
         return headerFile;
@@ -184,18 +189,23 @@ public class ImageInfo implements java.io.Serializable {
     }
 
     public String getImageLabel() {
+        if (imageLabel == null) return getHeaderFile().getName().getBaseName();
         return imageLabel;
+    }
+
+    void setImageLabel(String imageLabel) {
+        this.imageLabel = imageLabel;
     }
 
     public double getIntercept() {
         return intercept;
     }
 
-    public void setIntercept(double intercept) {
+    void setIntercept(double intercept) {
         this.intercept = intercept;
     }
 
-    public void setNumImages(int _numImages) {
+    void setNumImages(int _numImages) {
         numImages = _numImages;
     }
 
@@ -203,7 +213,7 @@ public class ImageInfo implements java.io.Serializable {
         return numImages;
     }
 
-    public void setVoxelOffset(Dimension3D _voxelOffset) {
+    void setVoxelOffset(Dimension3D _voxelOffset) {
         voxelOffset = _voxelOffset;
     }
 
@@ -211,7 +221,7 @@ public class ImageInfo implements java.io.Serializable {
         return voxelOffset;
     }
 
-    public void setDimensionality(int _dimensionality) {
+    void setDimensionality(int _dimensionality) {
         dimensionality = _dimensionality;
     }
 
@@ -223,7 +233,7 @@ public class ImageInfo implements java.io.Serializable {
         return scaleFactor;
     }
 
-     public void setScaleFactor(double _scaleFactor) {
+    void setScaleFactor(double _scaleFactor) {
         scaleFactor = _scaleFactor;
     }
 
@@ -231,37 +241,35 @@ public class ImageInfo implements java.io.Serializable {
         return imageIndex;
     }
 
-    public void setImageIndex(int imageIndex) {
+    void setImageIndex(int imageIndex) {
         this.imageIndex = imageIndex;
     }
 
+    // public because this can be reset after loading when information is incorrect...
     public void setAnatomy(Anatomy3D _anatomy) {
         anatomy = _anatomy;
     }
 
-    public void setArrayDim(IDimension arrayDim) {
+    void setArrayDim(IDimension arrayDim) {
         this.arrayDim = arrayDim;
         calculateRealDim();
     }
 
-    public void setDataType(DataType dataType) {
+    void setDataType(DataType dataType) {
         this.dataType = dataType;
 
     }
 
-    public void setByteOffset(int byteOffset) {
+    void setByteOffset(int byteOffset) {
         this.byteOffset = byteOffset;
     }
-
-
-
 
 
     public Point3D getOrigin() {
         return origin;
     }
 
-    public void setOrigin(Point3D origin) {
+    void setOrigin(Point3D origin) {
         this.origin = origin;
     }
 
@@ -269,15 +277,13 @@ public class ImageInfo implements java.io.Serializable {
         return spacing;
     }
 
-    public void setSpacing(Dimension3D spacing) {
+    void setSpacing(Dimension3D spacing) {
         this.spacing = spacing;
     }
 
     public void setEndian(ByteOrder _endian) {
         endian = _endian;
     }
-
-    
 
 
 }

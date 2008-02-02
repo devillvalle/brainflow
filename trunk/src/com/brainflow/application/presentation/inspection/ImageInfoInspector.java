@@ -1,7 +1,7 @@
 package com.brainflow.application.presentation.inspection;
 
 import com.brainflow.application.BrainFlowUtilities;
-import com.brainflow.application.IImageDataSource;
+import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.utils.IDimension;
 import com.brainflow.utils.Point3D;
@@ -50,7 +50,7 @@ public class ImageInfoInspector {
             UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceBusinessBlueSteelLookAndFeel());
 
             IImageDataSource source = BrainFlowUtilities.quickDataSource("icbm452_atlas_probability_gray.hdr");
-            ImageInfo info = source.readImageInfo();
+            ImageInfo info = source.getImageInfo();
 
             ImageInfoInspector inspector = new ImageInfoInspector(info);
 

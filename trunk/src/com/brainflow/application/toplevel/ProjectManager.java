@@ -1,7 +1,7 @@
 package com.brainflow.application.toplevel;
 
 import com.brainflow.application.BrainflowProject;
-import com.brainflow.application.IImageDataSource;
+import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.application.services.ImageDisplayModelEvent;
 import com.brainflow.application.services.LoadableImageStatusEvent;
 import com.brainflow.colormap.LinearColorMap2;

@@ -62,8 +62,8 @@ public class SearchableImageFileExplorer extends AbstractPresenter {
                     @Override
                     protected void configureListModelWrapper(ListModelWrapper wrapper, Object node) {
 
-                        if (node instanceof ImageFileExplorer.ImageFileObjectNode) {
-                            ImageFileExplorer.ImageFileObjectNode inode = (ImageFileExplorer.ImageFileObjectNode) node;
+                        if (node instanceof ImageFileExplorer.LazyNode) {
+                            ImageFileExplorer.LazyNode inode = (ImageFileExplorer.LazyNode) node;
 
                             boolean expanded = explorer.getJTree().isExpanded(new TreePath(inode.getPath()));
 

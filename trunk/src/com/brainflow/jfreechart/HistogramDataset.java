@@ -6,7 +6,6 @@ import org.jfree.data.general.DatasetChangeListener;
 import org.jfree.data.xy.IntervalXYDataset;
 
 import com.brainflow.image.*;
-import com.brainflow.utils.*;
 
 /**
  * <p>Title: </p>
@@ -31,7 +30,7 @@ public class HistogramDataset extends AbstractDataset implements IntervalXYDatas
     
     public HistogramDataset(Histogram _histogram) {
         histogram = _histogram;
-        bins = histogram.getBins();
+        bins = histogram.computeBins();
         binIntervals = histogram.getBinIntervals();
         System.out.println("first bin interval = " + binIntervals[0]);
     }

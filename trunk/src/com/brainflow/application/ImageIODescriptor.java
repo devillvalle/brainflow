@@ -1,6 +1,8 @@
 package com.brainflow.application;
 
 import com.brainflow.utils.FileObjectFilter;
+import com.brainflow.image.io.SoftImageDataSource;
+import com.brainflow.image.io.IImageDataSource;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.VFS;

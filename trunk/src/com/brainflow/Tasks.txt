@@ -15,3 +15,4 @@ Fix: Progress Dialog is messed up.
 Fix: ImageCanvas Views are added to bottom layer and are sometimes occluded.
 Fix: Within slice crosshair change does not cause repaint
 Fix: Color Bar not updated with high/low range changed.
+    -- fixed

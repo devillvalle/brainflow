@@ -1,8 +1,8 @@
 package com.brainflow.application.mapping;
 
-import com.brainflow.application.IImageDataSource;
+import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.application.ImageIODescriptor;
-import com.brainflow.application.SoftImageDataSource;
+import com.brainflow.image.io.SoftImageDataSource;
 import com.brainflow.application.toplevel.ImageIOManager;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageLayer3D;
@@ -13,7 +13,6 @@ import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.VFS;
 import org.apache.commons.vfs.provider.local.LocalFile;
 
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 

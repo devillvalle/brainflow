@@ -1,8 +1,5 @@
 package com.brainflow.application.mapping;
 
-import com.brainflow.application.IImageDataSource;
-import com.brainflow.core.ImageLayer;
-import com.brainflow.core.ImageLayer3D;
 import com.brainflow.display.ThresholdRange;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;

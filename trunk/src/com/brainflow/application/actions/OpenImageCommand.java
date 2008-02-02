@@ -1,6 +1,6 @@
 package com.brainflow.application.actions;
 
-import com.brainflow.application.IImageDataSource;
+import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.application.toplevel.DataSourceManager;
 import com.brainflow.application.toplevel.ImageIOManager;
 import com.pietschy.command.file.AbstractFileOpenCommand;

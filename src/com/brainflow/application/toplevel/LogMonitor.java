@@ -27,7 +27,6 @@ public class LogMonitor extends StreamHandler {
 
     @Override
     public synchronized void publish(LogRecord record) {
-        System.out.println("supposed to be logging");
         super.publish(record);
         flush();
         output.setCaretPosition(output.getDocument().getLength() - 1);

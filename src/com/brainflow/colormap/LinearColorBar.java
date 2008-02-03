@@ -22,44 +22,59 @@ public class LinearColorBar extends AbstractColorBar {
 
     }
 
-    private float[] getFractions() {
-        //todo allow for the fact that the first and last intervals MIGHT have a fractional size of 0.
-
-        IColorMap model = getColorMap();
+    private int computeStartIndex(IColorMap model) {
         int startIndex = 0;
-        int endIndex= model.getMapSize()-1;
 
         if (!(model.getLowClip() > model.getMinimumValue())) {
             startIndex = 1;
         }
 
+        return startIndex;
+
+    }
+
+    private int computeEndIndex(IColorMap model) {
+        int endIndex = model.getMapSize() - 1;
         if (!(model.getHighClip() < model.getMaximumValue())) {
-            endIndex = endIndex-1;
+            endIndex = endIndex - 1;
         }
 
+        return endIndex;
 
 
-        float[] frac = new float[endIndex-startIndex-1];
+    }
+
+    private float[] getFractions() {
+        //todo allow for the fact that the first and last intervals MIGHT have a fractional size of 0.
+
+        IColorMap model = getColorMap();
+
+        int startIndex = computeStartIndex(model);
+        int endIndex = computeEndIndex(model);
+
+        float[] frac = new float[endIndex - startIndex + 1];
 
 
         double cRange = model.getMaximumValue() - model.getMinimumValue();
 
+        //System.out.println("start index : " + startIndex);
+        //System.out.println("end index : " + endIndex);
 
-        for (int i = 0; i < model.getMapSize(); i++) {
+        float lastFrac = -1;
+        for (int i = startIndex; i <= endIndex; i++) {
 
             ColorInterval ci = model.getInterval(i);
             double max = ci.getMaximum();
             double diff = max - model.getMinimumValue();
             float f = (float) (diff / cRange);
-            if (diff > cRange) {
-                System.out.println("diff is greater than crange");
-            }
-            frac[i] = f;
-            System.out.println("frac : " + i + " --> " + frac[i]);
 
+
+            frac[i - startIndex] = f;
+
+            assert f > lastFrac;
+
+            lastFrac=f;
         }
-
-
 
         //System.out.println("high clip : " + model.getHighClip());
         ///System.out.println("last value = " + frac[model.getMapSize()-1]);
@@ -72,14 +87,18 @@ public class LinearColorBar extends AbstractColorBar {
 
     private Color[] getColors() {
         IColorMap model = getColorMap();
-        Color[] clrs = new Color[model.getMapSize()];
-        ListIterator<ColorInterval> iter = model.iterator();
-        int i = 0;
-        while (iter.hasNext()) {
-            ColorInterval ci = iter.next();
-            clrs[i] = ci.getColor();
-            i++;
+        int startIndex = computeStartIndex(model);
+        int endIndex = computeEndIndex(model);
+
+        Color[] clrs = new Color[endIndex - startIndex + 1];
+
+        for (int i = startIndex; i <= endIndex; i++) {
+
+            ColorInterval ci = model.getInterval(i);
+            clrs[i - startIndex] = ci.getColor();
+
         }
+
 
         return clrs;
 

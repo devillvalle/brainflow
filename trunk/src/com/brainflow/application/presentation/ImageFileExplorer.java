@@ -485,7 +485,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
         }
 
         public String toString() {
-            System.out.println("leaf node : " + getUserObject().getImageInfo().getHeaderFile().getName().getBaseName());
+        
             return getUserObject().getImageInfo().getImageLabel();
 
         }

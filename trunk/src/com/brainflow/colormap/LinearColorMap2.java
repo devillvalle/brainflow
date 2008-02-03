@@ -29,7 +29,7 @@ public final class LinearColorMap2 extends AbstractColorMap {
 
 
     public LinearColorMap2(double min, double max, IndexColorModel icm) {
-        assert max >= min : "max must exceed min in LinearColorMapDeprecated";
+        assert max >= min : "max must exceed min in LinearColorMap2";
 
         initColors(icm);
         init(min, max, icm.getMapSize());
@@ -40,7 +40,7 @@ public final class LinearColorMap2 extends AbstractColorMap {
 
 
     public LinearColorMap2(double min, double max, LinearColorMap2 lcm) {
-        assert max >= min : "max must exceed min in LinearColorMapDeprecated";
+        assert max >= min : "max must exceed min in LinearColorMap2";
 
         colors = lcm.colors;
         init(min, max, lcm.getMapSize());
@@ -51,10 +51,10 @@ public final class LinearColorMap2 extends AbstractColorMap {
     }
 
     public LinearColorMap2(double min, double max, double lowClip, double highClip, LinearColorMap2 lcm) {
-        assert max >= min : "max must exceed min in LinearColorMapDeprecated";
+        assert max > min : "max must exceed min in LinearColorMap2";
         assert highClip > lowClip : "highClip must exceeed lowClip";
-        assert highClip < max : "maximum must be greater than highClip";
-        assert lowClip > min : "minimum must be less than lowClip";
+        assert highClip <= max : "maximum must be greater than highClip";
+        assert lowClip >= min : "minimum must be less than lowClip";
 
         this.lowClip = lowClip;
         this.highClip = highClip;
@@ -69,10 +69,10 @@ public final class LinearColorMap2 extends AbstractColorMap {
     }
 
     public LinearColorMap2(double min, double max, double lowClip, double highClip, IndexColorModel icm) {
-        assert max >= min : "max must exceed min in LinearColorMapDeprecated";
+        assert max > min : "max must exceed min in LinearColorMap2";
         assert highClip > lowClip : "highClip must exceeed lowClip";
-        assert highClip < max : "maximum must be greater than highClip";
-        assert lowClip > min : "minimum must be less than lowClip";
+        assert highClip <= max : "maximum must be greater than highClip";
+        assert lowClip >= min : "minimum must be less than lowClip";
 
         this.lowClip = lowClip;
         this.highClip = highClip;
@@ -88,7 +88,8 @@ public final class LinearColorMap2 extends AbstractColorMap {
 
     private void init(double min, double max, int mapSize) {
 
-        binSize = (getMaximumValue() - getMinimumValue()) / (mapSize - 1);
+        binSize = (max - min) / (mapSize - 1.0);
+        assert binSize > 0;
 
         highClip = max;
         lowClip = min;
@@ -129,6 +130,7 @@ public final class LinearColorMap2 extends AbstractColorMap {
     }
 
     private void initSegments() {
+        assert binSize > 0;
         segments = new double[getMapSize()];
 
         segments[0] = getMinimumValue();
@@ -142,7 +144,7 @@ public final class LinearColorMap2 extends AbstractColorMap {
     }
 
     private void initColors(IndexColorModel model) {
-        assert model.getMapSize() == getMapSize();
+        //assert model.getMapSize() == getMapSize();
         colors = new ArrayList<Color>(model.getMapSize());
         for (int i=0; i<model.getMapSize(); i++) {
             Color clr = new Color(model.getRed(i), model.getGreen(i),

@@ -89,8 +89,11 @@ public class ColorBarPresenter extends ImageViewPresenter {
             action.putContextValue(ActionContext.SELECTED_IMAGE_VIEW, view);
         }
 
+        form.setColorMap(view.getSelectedLayer().getImageLayerProperties().colorMap.get());
+
         BeanContainer.get().addListener(view.getSelectedLayer().getImageLayerProperties().colorMap, new PropertyListener() {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+                System.out.println("color map changed :" + this);
                 IColorMap cmap = (IColorMap)newValue;
                 form.setColorMap(cmap);
             }

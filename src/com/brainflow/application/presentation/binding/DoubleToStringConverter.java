@@ -30,7 +30,6 @@ public class DoubleToStringConverter extends ObservableWrapper.ReadWrite<String>
 
     @Override
     public String get() {
-        System.out.println("getting : " + getValue());
         double val = getValue();
         return formatter.format(val);
     }

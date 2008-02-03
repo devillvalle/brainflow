@@ -43,6 +43,7 @@ public abstract class ImageViewPresenter extends AbstractPresenter implements Im
                 // remove listeners from old selected view
                 if (selectedView != null) {
                     selectedView.getModel().removeImageDisplayModelListener(ImageViewPresenter.this);
+                    viewDeselected(selectedView);
                 }
 
 
@@ -110,6 +111,8 @@ public abstract class ImageViewPresenter extends AbstractPresenter implements Im
     }
 
     public abstract void viewSelected(ImageView view);
+
+    public  void viewDeselected(ImageView view) {}
 
     public abstract void allViewsDeselected();
 

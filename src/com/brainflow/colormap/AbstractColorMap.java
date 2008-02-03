@@ -137,7 +137,6 @@ public abstract class AbstractColorMap implements IColorMap {
                 rgba[2][i] = (byte) cn.getBlue();
                 rgba[3][i] = (byte) cn.getAlpha();
             } else {
-
                 Color ci = getColor(val);
                 rgba[0][i] = (byte) ci.getRed();
                 rgba[1][i] = (byte) ci.getGreen();

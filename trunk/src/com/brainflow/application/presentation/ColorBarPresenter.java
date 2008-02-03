@@ -45,6 +45,8 @@ public class ColorBarPresenter extends ImageViewPresenter {
 
     private List<Action> actions;
 
+    private PropertyListener colorMapListener;
+
     /**
      * Creates a new instance of ColorBarPresenter
      */
@@ -76,6 +78,25 @@ public class ColorBarPresenter extends ImageViewPresenter {
         }
 
         colorMenu.add(new GradientColorAction("Solid Color ..."));
+
+
+        colorMapListener = new PropertyListener() {
+            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+                System.out.println("color map changed :" + this);
+                System.out.println("oldValue " + oldValue);
+                System.out.println("newValue " + newValue);
+                
+                IColorMap cmap = (IColorMap)newValue;
+                System.out.println("highclip : " + cmap.getHighClip());
+                System.out.println("lowclip : " + cmap.getLowClip());
+                form.setColorMap(cmap);
+            }
+        };
+    }
+
+    public void viewDeselected(ImageView view) {
+        System.out.println("removing colormap listener ...");
+        BeanContainer.get().removeListener(view.getSelectedLayer().getImageLayerProperties().colorMap, colorMapListener);
     }
 
     public void allViewsDeselected() {
@@ -91,13 +112,7 @@ public class ColorBarPresenter extends ImageViewPresenter {
 
         form.setColorMap(view.getSelectedLayer().getImageLayerProperties().colorMap.get());
 
-        BeanContainer.get().addListener(view.getSelectedLayer().getImageLayerProperties().colorMap, new PropertyListener() {
-            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
-                System.out.println("color map changed :" + this);
-                IColorMap cmap = (IColorMap)newValue;
-                form.setColorMap(cmap);
-            }
-        });
+        BeanContainer.get().addListener(view.getSelectedLayer().getImageLayerProperties().colorMap, colorMapListener);
 
     }
 

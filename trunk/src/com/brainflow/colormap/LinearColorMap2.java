@@ -169,7 +169,7 @@ public final class LinearColorMap2 extends AbstractColorMap {
 
     @Testable
     public double getBinSize() {
-         return (getHighClip() - getLowClip()) / (getMapSize() - 3);
+         return binSize;
     }
 
     public ColorInterval getInterval(int index) {

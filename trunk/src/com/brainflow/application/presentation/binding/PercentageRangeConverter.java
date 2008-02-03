@@ -41,12 +41,10 @@ public class PercentageRangeConverter extends ObservableWrapper.ReadWrite<Intege
 
     @Override
     public void set(Integer o) {
-        System.out.println("integer to convert " + o);
         double val = o.intValue();
         double newval = (val / numUnits) * (max - min) + min;
         WProperty<Double> wprop = (WProperty<Double>) getProperty();
         wprop.set(new Double(newval));
-        System.out.println("converted to  " + newval);
 
 
     }

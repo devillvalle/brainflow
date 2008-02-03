@@ -153,7 +153,6 @@ public class ImageDisplayModel implements IImageDisplayModel {
     private void listenToLayer(final ImageLayer layer) {
 
 
-
         layer.addPropertyChangeListener(ImageLayerProperties.RESAMPLE_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
@@ -172,8 +171,8 @@ public class ImageDisplayModel implements IImageDisplayModel {
             }
         });
 
-       
-         BeanContainer.get().addListener(layer.getImageLayerProperties().colorMap, new PropertyListener() {
+
+        BeanContainer.get().addListener(layer.getImageLayerProperties().colorMap, new PropertyListener() {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
                 ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
                 for (ImageLayerListener listener : listeners) {
@@ -194,7 +193,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
                 }
             }
         });
-  
+
         BeanContainer.get().addListener(layer.getImageLayerProperties().visible, new PropertyListener() {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
                 ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
@@ -228,8 +227,14 @@ public class ImageDisplayModel implements IImageDisplayModel {
                 Number highClip = layer.getImageLayerProperties().clipRange.get().getHighClip();
                 ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
                 for (ImageLayerListener listener : listeners) {
-                    IColorMap newMap = layer.getImageLayerProperties().getColorMap().newClipRange(lowClip.doubleValue(), highClip.doubleValue());
-                    layer.getImageLayerProperties().colorMap.set(newMap);
+
+                    IColorMap oldMap = layer.getImageLayerProperties().getColorMap();
+
+                    if (oldMap.getLowClip() != lowClip.doubleValue()) {
+                        IColorMap newMap = oldMap.newClipRange(lowClip.doubleValue(), highClip.doubleValue());
+                        layer.getImageLayerProperties().colorMap.set(newMap);
+
+                    }
 
                     // may not be necessary if because of  call above ...
                     listener.clipRangeChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
@@ -245,8 +250,13 @@ public class ImageDisplayModel implements IImageDisplayModel {
                 ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
                 for (ImageLayerListener listener : listeners) {
 
-                    IColorMap newMap = layer.getImageLayerProperties().getColorMap().newClipRange(lowClip.doubleValue(), highClip.doubleValue());
-                    layer.getImageLayerProperties().colorMap.set(newMap);
+                    IColorMap oldMap = layer.getImageLayerProperties().getColorMap();
+
+                    if (oldMap.getHighClip() != highClip.doubleValue()) {
+                        IColorMap newMap = oldMap.newClipRange(lowClip.doubleValue(), highClip.doubleValue());
+                        layer.getImageLayerProperties().colorMap.set(newMap);
+
+                    }
 
                     // may not be necessary if because of  call above ...
                     listener.clipRangeChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));

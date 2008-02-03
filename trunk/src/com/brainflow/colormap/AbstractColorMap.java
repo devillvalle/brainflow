@@ -118,11 +118,14 @@ public abstract class AbstractColorMap implements IColorMap {
         Color cn = getInterval(lastidx).getColor();
 
         assert getLowClip() <= getHighClip();
+
+
         while (iter.hasNext()) {
 
             int i = iter.index();
             double val = iter.next();
 
+          
             if (val < getLowClip()) {
                 rgba[0][i] = (byte) c0.getRed();
                 rgba[1][i] = (byte) c0.getGreen();

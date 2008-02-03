@@ -43,7 +43,7 @@ public class ExclusiveRange implements IRange {
     }
 
     public boolean contains(double val) {
-        if (val < min || val > max)
+        if (val <= min || val >= max)
             return true;
         return false;
     }

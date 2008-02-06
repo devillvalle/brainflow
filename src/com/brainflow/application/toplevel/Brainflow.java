@@ -658,7 +658,10 @@ public class Brainflow {
 
         JideTabbedPane tabbedPane = new JideTabbedPane();
 
-        DockableFrame dframe = new DockableFrame("Controls", new ImageIcon(getClass().getClassLoader().getResource("resources/icons/types.gif")));
+         DockableFrame dframe = DockWindowManager.getInstance().createDockableFrame("Tool Box",
+                    "resources/icons/types.gif",
+                    DockContext.STATE_FRAMEDOCKED,
+                    DockContext.DOCK_SIDE_EAST);
 
 
         ColorAdjustmentControl colorAdjustmentControl = new ColorAdjustmentControl();
@@ -675,9 +678,7 @@ public class Brainflow {
 
 
         dframe.getContentPane().add(tabbedPane);
-        dframe.getContext().setInitMode(DockContext.STATE_AUTOHIDE);
-        dframe.getContext().setInitSide(DockContext.DOCK_SIDE_EAST);
-        dframe.getContext().setInitIndex(1);
+
         dframe.setPreferredSize(new Dimension(300, 500));
         brainFrame.getDockingManager().addFrame(dframe);
 

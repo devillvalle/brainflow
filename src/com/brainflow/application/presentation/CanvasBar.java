@@ -174,14 +174,10 @@ public class CanvasBar extends ImageViewPresenter {
                 int selIdx = view.getModel().getSelectedIndex();
                 if (selIdx != buttonIndex) {
                     view.getModel().getLayerSelection().setSelectionIndex(buttonIndex);
-                    System.out.println("button " + buttonIndex + " is selected");
+
                 }
 
-
-            } else {
-                System.out.println("button " + buttonIndex + " is deselected");
             }
-
 
         }
     }
@@ -205,13 +201,11 @@ public class CanvasBar extends ImageViewPresenter {
             ImageView view = getSelectedView();
             if (index >= 0) {
                 AbstractLayer layer = view.getModel().getLayer(index);
-                System.out.println("trying to drag layer : " + layer);
                 super.exportAsDrag(comp, e, action);
             }
         }
 
         public boolean canImport(TransferSupport support) {
-            System.out.println("canImport");
             return true;
         }
 
@@ -220,9 +214,6 @@ public class CanvasBar extends ImageViewPresenter {
         }
 
         public boolean importData(TransferSupport support) {
-            System.out.println("importing data");
-            System.out.println("component is :" + support.getComponent());
-            System.out.println("transferable is: " + support.getTransferable());
 
 
             try {
@@ -235,12 +226,7 @@ public class CanvasBar extends ImageViewPresenter {
                     getSelectedView().getModel().swapLayers(dropIndex, sourceIndex);
                 }
 
-                /*System.out.println("layer is " + layer);
-                System.out.println("dragged component is " + support.getComponent());
-                System.out.println("index of component is : " + layerButtonList.indexOf(support.getComponent()));
-                System.out.println("drop location is " + support.getDropLocation().getDropPoint());
 
-                */
             } catch (UnsupportedFlavorException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {
@@ -264,6 +250,7 @@ public class CanvasBar extends ImageViewPresenter {
                 return new AbstractLayerTransferable(layer);
             }
 
+            //todo null return ok?
             return null;
 
 

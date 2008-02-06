@@ -6,6 +6,9 @@ import com.jidesoft.docking.event.DockableFrameListener;
 import com.jidesoft.docking.event.DockableFrameEvent;
 import com.jidesoft.swing.JideMenu;
 import com.brainflow.application.actions.ActivateDockableFrameAction;
+import com.brainflow.application.actions.ActivateDockableFrameCommand;
+import com.pietschy.command.ActionCommand;
+import com.pietschy.command.face.Face;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,12 +49,26 @@ class DockWindowManager implements DockableFrameListener {
         dframe.getContext().setInitMode(state);
         dframe.getContext().setInitSide(side);
         dframe.getContext().setInitIndex(0);
+        dframe.getContext().setHidable(false);
+        
 
-        dockMenu.add(ActionUIFactory.getInstance().createMenuItem(new ActivateDockableFrameAction(dframe)));
-             
+       
+        dockMenu.add(createCommand(dframe, title).createMenuItem());
+
 
         windowMap.put(title, dframe);
         return dframe;
+
+    }
+
+    private ActionCommand createCommand(DockableFrame dframe, String title) {
+        ActionCommand command = new ActivateDockableFrameCommand(dframe);
+        command.getDefaultFace(true).setIcon(dframe.getIcon());
+        Face menuFace = command.getFace(Face.MENU, true);
+        menuFace.setExtendsContext(Face.DEFAULT);
+        menuFace.setIcon( dframe.getIcon());
+        menuFace.setText(title);
+        return command;
 
     }
 
@@ -66,11 +83,11 @@ class DockWindowManager implements DockableFrameListener {
         dframe.getContext().setInitIndex(index);
 
         dframe.addDockableFrameListener(this);
-       
+        //dframe.getContext().setHidable(false);
 
         windowMap.put(title, dframe);
-       
-        dockMenu.add(ActionUIFactory.getInstance().createMenuItem(new ActivateDockableFrameAction(dframe)));
+        dockMenu.add(createCommand(dframe, title).createMenuItem());
+
        
         return dframe;
 

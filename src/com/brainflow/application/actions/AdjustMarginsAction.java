@@ -94,19 +94,6 @@ public class AdjustMarginsAction extends BasicAction {
 
 
 
-            panel.addPropertyChangeListener(new PropertyChangeListener() {
-
-                public void propertyChange(PropertyChangeEvent evt) {
-                    System.out.println("insets event: " + evt.getNewValue());
-                }
-            });
-           
-            panel.addItemListener(new ItemListener() {
-
-                public void itemStateChanged(ItemEvent e) {
-                    //System.out.println("item changed: " + e.getItem());
-                }
-            });
 
             dialog = new JDialog(JOptionPane.getFrameForComponent(view));
             dialog.setLayout(new BorderLayout());

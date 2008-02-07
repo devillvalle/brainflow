@@ -26,7 +26,6 @@ import com.jidesoft.plaf.LookAndFeelFactory;
 import com.jidesoft.status.LabelStatusBarItem;
 import com.jidesoft.status.StatusBar;
 import com.jidesoft.swing.JideBoxLayout;
-import com.jidesoft.swing.JideMenu;
 import com.jidesoft.swing.JideTabbedPane;
 import com.pietschy.command.CommandContainer;
 import com.pietschy.command.GuiCommands;
@@ -37,13 +36,10 @@ import com.pietschy.command.toggle.ToggleGroup;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.VFS;
-import org.bushe.swing.action.ActionList;
-import org.bushe.swing.action.ActionManager;
-import org.bushe.swing.action.ActionUIFactory;
-import org.bushe.swing.action.BasicAction;
+
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
-import org.xml.sax.SAXException;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,8 +71,6 @@ public class Brainflow {
 
     private BrainFrame brainFrame = null;
 
-    private MountFileSystemAction mountFileSystemAction;
-
 
 
     private RecentPathMenu pathMenu = new RecentPathMenu();
@@ -96,8 +90,6 @@ public class Brainflow {
     private CommandContainer commandContainer;
 
 
-    private static final String JIDE_FACTORY = "jide_factory";
-
     protected Brainflow() {
         // Exists only to thwart instantiation.
     }
@@ -115,14 +107,14 @@ public class Brainflow {
 
             //UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
 
-            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceSaharaLookAndFeel());
+            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceRavenGraphiteGlassLookAndFeel());
             //UIManager.setLookAndFeel(new org.jdesktop.swingx.plaf.nimbus.NimbusLookAndFeel());
 
             //UIManager.setLookAndFeel(new A03LookAndFeel());
             //UIManager.setLookAndFeel(lf);
             //LookAndFeelFactory.installDefaultLookAndFeel();
-            LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
-            //LookAndFeelFactory.installJideExtension(LookAndFeelFactory.OFFICE2003_STYLE);
+            //LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
+            LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE_WITHOUT_MENU);
         } catch (Exception e) {
             Logger.getAnonymousLogger().severe("Error Loading LookAndFeel, exiting");
             e.printStackTrace();
@@ -181,11 +173,8 @@ public class Brainflow {
 
         BrainCanvasManager.getInstance().createCanvas();
 
-        JideActionUIFactory jideFactory = new JideActionUIFactory(ActionManager.getInstance());
 
-        ActionUIFactory.setInstance(Brainflow.JIDE_FACTORY, jideFactory);
 
-        StaticTimer.start();
         loadCommands();
         bindContainer();
 
@@ -244,23 +233,7 @@ public class Brainflow {
 
 
     private void initializeActions() {
-        applicationContext.putValue(ActionContext.APPLICATION_FRAME, brainFrame);
-        try {
-            ActionManager.getInstance().register(getClass().getClassLoader().
-                    getResource("resources/config/brainflow-actions.xml"));
-        } catch (SAXException e1) {
-            //todo log
-            e1.printStackTrace();
-        } catch (IOException e2) {
-            //todo log
-            e2.printStackTrace();
-        }
-
-
-        log.info("initializing Actions");
-
-        mountFileSystemAction = new MountFileSystemAction();
-
+        
 
     }
 
@@ -273,13 +246,18 @@ public class Brainflow {
     private void initializeMenu() {
         log.info("initializing Menu");
 
-
+        CommandGroup fileMenuGroup = new CommandGroup("file-menu");
+        fileMenuGroup.bind(getApplicationFrame());
         JMenuBar menuBar = new JMenuBar();
-        //
-        //menuBar.setOpaque(false);
-        //menuBar.setPaintBackground(false);
+        menuBar.add(fileMenuGroup.createMenuItem());
+        brainFrame.setJMenuBar(menuBar);
 
-        //
+        MountFileSystemCommand mountFileSystemCommand = new MountFileSystemCommand();
+        mountFileSystemCommand.bind(getApplicationFrame());
+        //brainFrame.getGlassPane().setVisible(true);
+
+
+        /*JMenuBar menuBar = new JMenuBar();
 
 
         JideMenu fileMenu = new JideMenu("File");
@@ -294,16 +272,15 @@ public class Brainflow {
         BasicAction exit = (BasicAction) ActionManager.getInstance().getAction("main-exit");
         fileMenu.add(exit);
 
-        //brainFrame.getGlassPane().setVisible(true);
 
         brainFrame.setJMenuBar(menuBar);
-        brainFrame.getJMenuBar().add(fileMenu);
+        brainFrame.getJMenuBar().add(fileMenu);   */
 
         //ActionList navList = ActionManager.getInstance().getActionList("navigation-menu");
         //brainFrame.getJMenuBar().add(ActionUIFactory.getInstance(JIDE_FACTORY).createMenu(navList));
 
-        ActionList annotationList = ActionManager.getInstance().getActionList("annotation-menu");
-        brainFrame.getJMenuBar().add(ActionUIFactory.getInstance(JIDE_FACTORY).createMenu(annotationList));
+        //ActionList annotationList = ActionManager.getInstance().getActionList("annotation-menu");
+        //brainFrame.getJMenuBar().add(ActionUIFactory.getInstance(JIDE_FACTORY).createMenu(annotationList));
 
         //ActionList debugList = ActionManager.getInstance().getActionList("debug-menu");
         //brainFrame.getJMenuBar().add(ActionUIFactory.getInstance(JIDE_FACTORY).createMenu(debugList));
@@ -352,50 +329,7 @@ public class Brainflow {
 
     private void initializeToolBar() {
 
-        //ActionList globalList = ActionManager.getInstance().getActionList("view-menu");
-        //ActionAttributes attr = new ActionAttributes();
-        //attr.putValue(ActionManager.TOOLBAR_SHOWS_TEXT, true);
 
-        //CommandBar mainToolbar = ((JideActionUIFactory) ActionUIFactory.getInstance(JIDE_FACTORY)).createCommandBar(globalList);
-
-        /// hack from jidesoft for synthetica lookandfeel
-        //mainToolbar.setPaintBackground(false);
-        //mainToolbar.setOpaque(false);
-        //////////////////////////////////////////////////
-
-        //JideSplitButton sliderDirection = new JideSplitButton("0  ");
-        //sliderDirection.add(new JRadioButtonMenuItem("Z Axis"));
-        //sliderDirection.add(new JRadioButtonMenuItem("X Axis"));
-        //sliderDirection.add(new JRadioButtonMenuItem("Y Axis"));
-
-        //JLabel sliceLabel = new JLabel("0 ");
-
-        //mainToolbar.addSeparator();
-
-        //ImageViewSliderPresenter sliderPresenter = new ImageViewSliderPresenter();
-        //PropertyAdapter adapter = new PropertyAdapter(sliceLabel, "text");
-        //sliderPresenter.setValueLabel(adapter);
-        //mainToolbar.add(sliderPresenter.getComponent());
-        //mainToolbar.add(sliderDirection);
-
-        //mainToolbar.addSeparator();
-        //Action crossAction = ActionManager.getInstance().getAction("toggle-cross");
-
-        //AbstractButton crossToggle = ((JideActionUIFactory) ActionUIFactory.getInstance(JIDE_FACTORY)).
-        //        createJideButton(crossAction);
-        //mainToolbar.add(crossToggle);
-
-        //Action axisLabelAction = ActionManager.getInstance().getAction("toggle-axislabel");
-
-        //AbstractButton axisLabelToggle = ((JideActionUIFactory) ActionUIFactory.getInstance(JIDE_FACTORY)).
-        //        createJideButton(axisLabelAction);
-        //mainToolbar.add(axisLabelToggle);
-
-        //Action colorbarAction = ActionManager.getInstance().getAction("toggle-colorbar");
-        //AbstractButton colorbarToggle = ((JideActionUIFactory) ActionUIFactory.getInstance(JIDE_FACTORY)).
-        //        createButton(colorbarAction);
-
-        //mainToolbar.add(colorbarToggle);
 
         CommandGroup mainToolbarGroup = new CommandGroup("main-toolbar");
         mainToolbarGroup.bind(getApplicationFrame());

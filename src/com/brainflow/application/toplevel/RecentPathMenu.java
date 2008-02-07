@@ -2,7 +2,8 @@ package com.brainflow.application.toplevel;
 
 import com.brainflow.application.FileSystemEvent;
 import com.brainflow.application.FileSystemEventListener;
-import com.brainflow.application.actions.MountDirectoryAction;
+
+import com.brainflow.application.actions.MountDirectoryCommand;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -57,7 +58,7 @@ public class RecentPathMenu {
         directoryMenu.removeAll();
         Iterator<String> iter = recentDirectories.iterator();
         while (iter.hasNext()) {
-            JMenuItem item = new JMenuItem(new MountDirectoryAction(iter.next()));
+            JMenuItem item = new MountDirectoryCommand(iter.next()).createMenuItem();
             directoryMenu.add(item);
         }
     }

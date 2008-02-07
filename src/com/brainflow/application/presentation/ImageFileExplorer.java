@@ -9,6 +9,7 @@ import com.brainflow.image.io.SoftImageDataSource;
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.image.io.ImageInfo;
 import com.jidesoft.tree.DefaultTreeModelWrapper;
+import com.jidesoft.swing.DefaultOverlayable;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSelector;
 import org.apache.commons.vfs.FileSystemException;
@@ -55,6 +56,8 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
 
     private ImageIcon imageBucketIcon = new ImageIcon(ResourceLoader.getResource("resources/icons/bin_closed.png"));
 
+    //private DefaultOverlayable panel;
+
 
     public ImageFileExplorer(FileObject _rootObject) {
 
@@ -68,6 +71,8 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
             }
 
         };
+
+
 
 
         explorer.addTreeExpansionListener(new TreeExpansionListener() {

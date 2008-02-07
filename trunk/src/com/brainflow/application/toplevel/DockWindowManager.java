@@ -1,21 +1,16 @@
 package com.brainflow.application.toplevel;
 
 import com.jidesoft.docking.DockableFrame;
-import com.jidesoft.docking.DockContext;
 import com.jidesoft.docking.event.DockableFrameListener;
 import com.jidesoft.docking.event.DockableFrameEvent;
-import com.jidesoft.swing.JideMenu;
-import com.brainflow.application.actions.ActivateDockableFrameAction;
 import com.brainflow.application.actions.ActivateDockableFrameCommand;
 import com.pietschy.command.ActionCommand;
 import com.pietschy.command.face.Face;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.HashMap;
 
-import org.bushe.swing.action.ActionManager;
-import org.bushe.swing.action.ActionUIFactory;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,7 +24,7 @@ class DockWindowManager implements DockableFrameListener {
 
     private HashMap<String, DockableFrame> windowMap = new HashMap<String, DockableFrame>();
 
-    private JMenu dockMenu = new JideMenu("Window");
+    private JMenu dockMenu = new JMenu("Window");
 
 
     public DockWindowManager() {

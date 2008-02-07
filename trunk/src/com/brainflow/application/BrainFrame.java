@@ -46,8 +46,10 @@ public class BrainFrame extends DefaultDockableHolder {
 
 
         BrainFrame bf = new BrainFrame();
+    
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        bf.setSize((int) screenSize.getWidth(), (int) screenSize.getHeight() - 50);
+        bf.setLocationRelativeTo(null);
+       // bf.setSize((int) screenSize.getWidth()-10, (int) screenSize.getHeight() - 10);
         bf.setVisible(true);
 
     }

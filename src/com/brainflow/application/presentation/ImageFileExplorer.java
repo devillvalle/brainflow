@@ -10,6 +10,7 @@ import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.image.io.ImageInfo;
 import com.jidesoft.tree.DefaultTreeModelWrapper;
 import com.jidesoft.swing.DefaultOverlayable;
+import com.jidesoft.swing.InfiniteProgressPanel;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSelector;
 import org.apache.commons.vfs.FileSystemException;
@@ -56,7 +57,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
 
     private ImageIcon imageBucketIcon = new ImageIcon(ResourceLoader.getResource("resources/icons/bin_closed.png"));
 
-    //private DefaultOverlayable panel;
+    private DefaultOverlayable overlayPanel;
 
 
     public ImageFileExplorer(FileObject _rootObject) {
@@ -72,7 +73,18 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
 
         };
 
+        explorer.addTreeSelectionListener(this);
+        overlayPanel = new DefaultOverlayable(explorer.getJTree());
 
+        final InfiniteProgressPanel progressPanel = new InfiniteProgressPanel() {
+            public Dimension getPreferredSize() {
+                return new Dimension(20, 20);
+            }
+        };
+
+        overlayPanel.addOverlayComponent(progressPanel);
+        progressPanel.stop();
+        overlayPanel.setOverlayVisible(false);
 
 
         explorer.addTreeExpansionListener(new TreeExpansionListener() {
@@ -82,11 +94,29 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
 
                 if (!node.areChildrenDefined()) {
                     ImageNodeWorker worker = new ImageNodeWorker(node);
+                    progressPanel.start();
+                    overlayPanel.setOverlayVisible(true);
                     worker.execute();
                     worker.addPropertyChangeListener(new PropertyChangeListener() {
 
                         public void propertyChange(PropertyChangeEvent evt) {
-                            log.fine("image node worker : " + evt.getNewValue());
+                            SwingWorker.StateValue state = (SwingWorker.StateValue) evt.getNewValue();
+
+                            switch (state) {
+
+                                case DONE:
+                                    System.out.println("done!");
+                                    progressPanel.stop();
+                                    overlayPanel.setOverlayVisible(false);
+                                    break;
+                                case PENDING:
+                                    break;
+                                case STARTED:
+                                    System.out.println("started!");
+
+                                    break;
+                            }
+
                         }
                     });
 
@@ -143,9 +173,6 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
         });
 
 
-        explorer.addTreeSelectionListener(this);
-
-
     }
 
     public TreeModel getTreeModel() {
@@ -154,7 +181,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
     }
 
     public JComponent getComponent() {
-        return explorer.getJTree();
+        return overlayPanel;
     }
 
     public JTree getJTree() {
@@ -490,7 +517,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
         }
 
         public String toString() {
-        
+
             return getUserObject().getImageInfo().getImageLabel();
 
         }

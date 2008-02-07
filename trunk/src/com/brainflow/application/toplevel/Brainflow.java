@@ -107,7 +107,7 @@ public class Brainflow {
 
             //UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
 
-            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceRavenGraphiteGlassLookAndFeel());
+            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceCremeCoffeeLookAndFeel());
             //UIManager.setLookAndFeel(new org.jdesktop.swingx.plaf.nimbus.NimbusLookAndFeel());
 
             //UIManager.setLookAndFeel(new A03LookAndFeel());

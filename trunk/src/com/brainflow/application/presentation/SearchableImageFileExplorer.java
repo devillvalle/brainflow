@@ -93,7 +93,7 @@ public class SearchableImageFileExplorer extends AbstractPresenter {
         DataTipManager.get().register(tree);
 
 
-        treePanel.add(new JScrollPane(tree));
+        treePanel.add(explorer.getComponent());
 
         mainPanel.add(treePanel);
         mainPanel.add(quickSearchPanel, BorderLayout.BEFORE_FIRST_LINE);

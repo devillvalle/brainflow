@@ -69,7 +69,10 @@ public class CanvasBar extends ImageViewPresenter {
         repopulate();
     }
 
+
+    @Override
     protected void layerSelected(ImageLayer layer) {
+        
         ImageView view = getSelectedView();
         int selidx = view.getModel().indexOf(layer);
 
@@ -77,9 +80,8 @@ public class CanvasBar extends ImageViewPresenter {
         if (buttonGroup.getSelection() != button.getModel()) {
             button.setSelected(true);
         }
-
-
     }
+
 
     private JToolBar createToggleBar() {
         toggleBar = new JToolBar();
@@ -173,7 +175,8 @@ public class CanvasBar extends ImageViewPresenter {
 
                 int selIdx = view.getModel().getSelectedIndex();
                 if (selIdx != buttonIndex) {
-                    view.getModel().getLayerSelection().setSelectionIndex(buttonIndex);
+                    view.setSelectedLayerIndex(buttonIndex);
+
 
                 }
 

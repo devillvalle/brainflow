@@ -11,6 +11,10 @@ import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import net.java.dev.properties.container.BeanContainer;
+import net.java.dev.properties.events.PropertyListener;
+import net.java.dev.properties.BaseProperty;
+
 /**
  * BrainFlow Project
  * User: Bradley Buchsbaum
@@ -52,21 +56,19 @@ public class ColorBarAnnotation extends AbstractAnnotation {
     public ColorBarAnnotation(IImageDisplayModel _model) {
         model = _model;
 
-        model.getLayerSelection().getSelectionIndexHolder().addValueChangeListener(new PropertyChangeListener() {
-
-            public void propertyChange(PropertyChangeEvent evt) {
-                Object obj = evt.getNewValue();
-                if (obj instanceof Integer && isVisible()) {
-                    // hack to force repaints on selected layer change
-
+        BeanContainer.get().addListener(model.getListSelection(), new PropertyListener() {
+            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+                Integer sel = (Integer)newValue;
+                if (isVisible()) {
                     AbstractLayer oldLayer = selectedLayer;
-                    int selectedIndex = (Integer) evt.getNewValue();
-                    selectedLayer = ColorBarAnnotation.this.model.getLayer(selectedIndex);
-                    System.out.println("layer changed! repaint me");
-                    support.firePropertyChange("LAYER_CHANGED", oldLayer, selectedLayer);
+                    selectedLayer = ColorBarAnnotation.this.model.getLayer(sel);
+
+                    //support.firePropertyChange("LAYER_CHANGED", oldLayer, selectedLayer);
+
                 }
             }
         });
+       
     }
 
 
@@ -91,7 +93,7 @@ public class ColorBarAnnotation extends AbstractAnnotation {
     public void setBarLength(double barLength) {
         double old = getBarLength();
         this.barLength = barLength;
-        System.out.println("new bar length " + barLength);
+
         support.firePropertyChange(ColorBarAnnotation.BAR_LENGTH_PROPERTY, old, getBarLength());
     }
 

@@ -56,8 +56,8 @@ public class OpacityPresenter extends ImageViewPresenter implements Bindable {
         form.setEnabled(false);
     }
 
-
-    protected void layerSelected(AbstractLayer layer) {
+    @Override
+    protected void layerSelected(ImageLayer layer) {
         bind();
     }
 

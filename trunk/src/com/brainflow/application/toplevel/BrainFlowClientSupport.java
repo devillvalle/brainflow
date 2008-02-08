@@ -6,6 +6,7 @@ import com.brainflow.application.services.ImageViewLayerSelectionEvent;
 import com.brainflow.application.services.ImageViewSelectionEvent;
 import com.brainflow.core.AbstractLayer;
 import com.brainflow.core.ImageView;
+import com.brainflow.core.ImageLayer;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventServiceEvent;
 import org.bushe.swing.event.EventSubscriber;
@@ -55,7 +56,7 @@ public class BrainFlowClientSupport {
                     int idx = selectedView.getModel().getSelectedIndex();
 
                     if (idx >= 0) {
-                        AbstractLayer newLayer = selectedView.getModel().getLayer(idx);
+                        ImageLayer newLayer = selectedView.getModel().getLayer(idx);
                         BrainFlowClientSupport.this.client.layerSelected(newLayer);
                     }
 

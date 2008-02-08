@@ -33,13 +33,15 @@ public class ImageViewClientSupport {
         this.client = client;
         this.view = view;
         this.view.displayModel.get().addImageDisplayModelListener(listener);
-        this.view.displayModel.get().getLayerSelection().addValueChangeListener(layerSelectionListener);
 
+
+
+        BeanContainer.get().addListener(view.displayModel.get().getListSelection(), layerSelectionListener);
         BeanContainer.get().addListener(this.view.displayModel, new PropertyListener() {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
                 IImageDisplayModel old = (IImageDisplayModel)oldValue;
                 old.removeImageDisplayModelListener(listener);
-                old.getLayerSelection().removeValueChangeListener(layerSelectionListener);
+                BeanContainer.get().removeListener(old.getListSelection(), layerSelectionListener);
                 
             }
         });
@@ -59,11 +61,14 @@ public class ImageViewClientSupport {
         return view.displayModel.get().getSelectedIndex();
     }
 
-    class LayerSelectionListener implements PropertyChangeListener {
-        public void propertyChange(PropertyChangeEvent evt) {
-            ImageLayer layer = (ImageLayer) evt.getNewValue();
+    class LayerSelectionListener implements PropertyListener {
+        public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+            ImageLayer layer = (ImageLayer) newValue;
             client.selectedLayerChanged(layer);
+
         }
+
+
     }
 
 

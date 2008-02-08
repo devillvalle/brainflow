@@ -19,6 +19,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.text.NumberFormat;
 
+import net.java.dev.properties.binding.swing.adapters.SwingBind;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Brad Buchsbaum
@@ -44,9 +46,15 @@ public class ProjectListView extends ImageViewPresenter {
 
     public ProjectListView(BrainflowProject _project) {
         project = _project;
-
-
         buildGUI();
+
+    }
+
+     public void bind() {
+        SwingBind.get().bindContent(getSelectedView().getModel().getListModel(), layerList);
+        SwingBind.get().bindSelectionIndex(getSelectedView().getModel().getListSelection(), layerList);
+
+
 
     }
 
@@ -59,7 +67,8 @@ public class ProjectListView extends ImageViewPresenter {
 
         if (project.size() > 0) {
             selectedModel = project.getModel(0);
-            layerList = new JList(selectedModel.getLayerSelection());
+            //layerList = new JList(selectedModel.getLayerSelection());
+            layerList = new JList();
             modelList.setSelectedIndex(0);
         } else {
             layerList = new JList();
@@ -83,8 +92,8 @@ public class ProjectListView extends ImageViewPresenter {
             public void valueChanged(ListSelectionEvent e) {
                 int i = modelList.getSelectedIndex();
                 selectedModel = project.getModel(i);
-
-                layerList.setModel(selectedModel.getLayerSelection());
+                bind();
+                //layerList.setModel(selectedModel.getLayerSelection());
             }
         });
 

@@ -107,7 +107,8 @@ public class MaskConfigurationPanel extends JPanel {
         int index = model.getSelectedIndex();
 
         selectedIndex.setValue(index);
-        SelectionInList<ImageLayer> sourceList = new SelectionInList<ImageLayer>(model.getLayerSelection().getListModel(), selectedIndex);
+        //SelectionInList<ImageLayer> sourceList = new SelectionInList<ImageLayer>(model.getLayerSelection().getListModel(), selectedIndex);
+        SelectionInList<ImageLayer> sourceList = new SelectionInList<ImageLayer>(model.getListModel().get(), selectedIndex);
 
         sourceSelection = BasicComponentFactory.createComboBox(sourceList);
         sourceSelection.setSelectedIndex(index);

@@ -5,6 +5,7 @@ import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.BrainIO;
 import com.brainflow.utils.Range;
 import com.jgoodies.binding.adapter.BasicComponentFactory;
+import com.jgoodies.binding.list.SelectionInList;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.dialog.ButtonPanel;
@@ -224,7 +225,7 @@ public class MaskConfigurationControl extends JPanel implements ImageViewClient 
             layout = new FormLayout("8dlu, p, 8dlu, l:max(25dlu;p):g, 1dlu, 8dlu", "8dlu, p, 8dlu, p, 8dlu, p, 8dlu");
             CellConstraints cc = new CellConstraints();
 
-            selectedLayerList = BasicComponentFactory.createList(modelSupport.getModel().getLayerSelection());
+            selectedLayerList = BasicComponentFactory.createList(new SelectionInList<ImageLayer>(modelSupport.getModel().getListModel().get()));
              setLayout(layout);
 
             add(new JLabel("Selected Layer: "), cc.xy(2, 2));

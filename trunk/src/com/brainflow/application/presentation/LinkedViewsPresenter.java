@@ -140,9 +140,7 @@ public class LinkedViewsPresenter extends BrainCanvasPresenter {
 
     }
 
-    private void populateViewBox() {
 
-    }
 
     public JComponent getComponent() {
         return form;

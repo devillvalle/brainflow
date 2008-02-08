@@ -13,6 +13,8 @@ import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import net.java.dev.properties.binding.swing.adapters.SwingBind;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Brad Buchsbaum
@@ -51,23 +53,29 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
         CellConstraints cc = new CellConstraints();
 
         layerLabel = new JLabel("Selected Layer: ");
-        form.add(layerLabel, cc.xy(2, 2));
+
+
 
         layerSelector = new CheckBoxList();
-
-
-        if (getSelectedView() != null) {
-            visibilitySelection = new VisibilitySelection(getSelectedView());
-        }
-
         initVisibilityModel();
 
 
         formPane = new JScrollPane(layerSelector);
-
+        form.add(layerLabel, cc.xy(2, 2));
         form.add(formPane, cc.xywh(2, 4, 2, 2));
-
         layout.addGroupedColumn(2);
+
+        if (getSelectedView() != null) {
+            bind();
+        }
+
+    }
+
+    private void bind() {
+        visibilitySelection = new VisibilitySelection(getSelectedView());
+        SwingBind.get().bindContent(getSelectedView().getModel().getListModel(), layerSelector);
+        SwingBind.get().bindSelectionIndex(getSelectedView().getModel().getListSelection(), layerSelector);
+        initVisibilityModel();
 
     }
 
@@ -85,11 +93,11 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
                 for (int i = f1; i <= f2; i++) {
                     AbstractLayer layer = view.getModel().getLayer(i);
-
+                    boolean vis = layer.getImageLayerProperties().visible.get();
                     if (model.isSelectedIndex(i)) {
-                        layer.getImageLayerProperties().visible.set(true);
+                        if (!vis) { layer.getImageLayerProperties().visible.set(true); }
                     } else {
-                        layer.getImageLayerProperties().visible.set(false);
+                        if (vis)  { layer.getImageLayerProperties().visible.set(false); }
 
                     }
                 }
@@ -99,7 +107,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
         ImageView view = getSelectedView();
         if (view != null) {
-
+            // todo make model iterable
             int n = view.getModel().getNumLayers();
             for (int i = 0; i < n; i++) {
                 AbstractLayer layer = view.getModel().getLayer(i);
@@ -127,28 +135,15 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
             visibilitySelection = new VisibilitySelection(view);
         } else {
             visibilitySelection.setImageView(view);
-
         }
 
-        //assert view.getModel().getSelectedLayerIndex() >= 0;
-        //layerSelector.clearSelection();
-
-        if (layerSelector.getModel() != view.getModel().getLayerSelection()) {
-            layerSelector.setSelectionModel(new DefaultListSelectionModel());
-            layerSelector.setModel(view.getModel().getLayerSelection());
-            layerSelector.setSelectionModel(
-                    new SingleListSelectionAdapter(
-                            view.getModel().getLayerSelection().getSelectionIndexHolder()));
-
-            initVisibilityModel();
-        }
-
-
+        bind();
         layerSelector.setEnabled(true);
 
     }
 
-    public void layerSelected(AbstractLayer layer) {
+    @Override
+    public void layerSelected(ImageLayer layer) {
 
     }
 
@@ -203,7 +198,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
         }
 
-
+       
     }
 
 

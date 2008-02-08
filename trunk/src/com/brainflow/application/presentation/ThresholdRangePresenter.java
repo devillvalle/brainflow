@@ -12,6 +12,7 @@ package com.brainflow.application.presentation;
 import com.brainflow.application.presentation.forms.ThresholdRangeForm;
 import com.brainflow.core.AbstractLayer;
 import com.brainflow.core.ImageView;
+import com.brainflow.core.ImageLayer;
 import com.brainflow.display.Property;
 import com.brainflow.display.ThresholdRange;
 import com.jgoodies.binding.adapter.Bindings;
@@ -60,8 +61,8 @@ public class ThresholdRangePresenter extends ImageViewPresenter {
         }
     }
 
-
-    protected void layerSelected(AbstractLayer layer) {
+    @Override
+    protected void layerSelected(ImageLayer layer) {
         initBinding();
     }
 

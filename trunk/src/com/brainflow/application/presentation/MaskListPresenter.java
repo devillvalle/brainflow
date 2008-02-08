@@ -152,7 +152,8 @@ public class MaskListPresenter extends ImageViewPresenter {
 
     }
 
-    protected void layerSelected(AbstractLayer layer) {
+    @Override
+    protected void layerSelected(ImageLayer layer) {
         IImageDisplayModel model = getSelectedView().getModel();
 
         int idx = model.getSelectedIndex();

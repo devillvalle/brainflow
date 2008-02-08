@@ -26,14 +26,14 @@ public class DecreaseContrastCommand extends BrainFlowCommand {
         if (view != null) {
             int idx = view.getSelectedLayerIndex();
             AbstractLayer layer = view.getModel().getLayer(idx);
-            incrementContrast(layer);
+            decrementContrast(layer);
 
         }
 
     }
 
 
-    private void incrementContrast(AbstractLayer layer) {
+    private void decrementContrast(AbstractLayer layer) {
         ImageLayerProperties props = layer.getImageLayerProperties();
         ClipRange clipRange = props.getClipRange();
         double highClip = clipRange.getHighClip();
@@ -42,8 +42,8 @@ public class DecreaseContrastCommand extends BrainFlowCommand {
         double distance = highClip - lowClip;
         double increment = (percMultiplier * distance) / 2;
 
-        double newHighClip = highClip + increment;
-        double newLowClip = lowClip - increment;
+        double newHighClip = Math.min(highClip + increment, layer.getImageLayerProperties().getColorMap().getMaximumValue());
+        double newLowClip = Math.max(lowClip - increment, layer.getImageLayerProperties().getColorMap().getMinimumValue());
 
 
         clipRange.setHighClip(newHighClip);

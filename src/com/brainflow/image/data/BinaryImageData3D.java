@@ -25,34 +25,25 @@ public class BinaryImageData3D extends BinaryImageData implements IMaskedData3D 
     private int dim0;
 
     public BinaryImageData3D(ImageSpace3D _space) {
-        space = _space;
-        allocateBits();
-
-        if (getBitVector().size() != getImageSpace().getNumSamples()) {
-            throw new IllegalArgumentException("BitVector has wrong number of samples: " + bits.size());
-        }
+        super(_space);
 
         init();
     }
 
-    private BinaryImageData3D(ImageSpace3D _space, BitVector bits) {
-        space = _space;
-        this.bits = bits;
-
-        if (bits.size() != getImageSpace().getNumSamples()) {
-            throw new IllegalArgumentException("BitVector has wrong number of samples: " + bits.size());
-        }
-
+    private BinaryImageData3D(ImageSpace3D space, BitVector bits) {
+        super(space, bits);
         init();
+    }
 
-
+    public ImageSpace3D getImageSpace() {
+        return (ImageSpace3D)space;
     }
 
     public BinaryImageData3D(MaskedData3D src) {
-        space = src.getImageSpace();
-        bits = new BitVector(space.getNumSamples());
-
+        super(src.getImageSpace());
+        BitVector bits = getBitVector();
         ImageIterator iter = src.iterator();
+
         while (iter.hasNext()) {
             int i = iter.index();
             double val = iter.next();
@@ -61,12 +52,14 @@ public class BinaryImageData3D extends BinaryImageData implements IMaskedData3D 
             }
         }
 
+        init();
+
     }
 
 
-    public BinaryImageData3D(ImageSpace3D _space, boolean[] elements) {
-        space = _space;
-        allocateBits(elements);
+    public BinaryImageData3D(ImageSpace3D space, boolean[] elements) {
+        super(space, elements);
+
         init();
     }
 
@@ -82,7 +75,7 @@ public class BinaryImageData3D extends BinaryImageData implements IMaskedData3D 
             throw new IllegalArgumentException("argument must have same dimensions as image for OR operation");
         }
 
-        BitVector ret = bits.copy();
+        BitVector ret = getBitVector().copy();
         ret.or(data.getBitVector());
         return new BinaryImageData3D((ImageSpace3D) getImageSpace(), ret);
     }
@@ -93,7 +86,7 @@ public class BinaryImageData3D extends BinaryImageData implements IMaskedData3D 
         }
 
 
-        BitVector ret = bits.copy();
+        BitVector ret = getBitVector().copy();
         ret.and(data.getBitVector());
         return new BinaryImageData3D((ImageSpace3D) getImageSpace(), ret);
 

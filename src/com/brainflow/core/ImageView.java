@@ -14,6 +14,8 @@ import com.pietschy.command.toggle.ToggleCommand;
 import com.pietschy.command.toggle.ToggleVetoException;
 import net.java.dev.properties.IndexedProperty;
 import net.java.dev.properties.Property;
+import net.java.dev.properties.BaseProperty;
+import net.java.dev.properties.events.PropertyListener;
 import net.java.dev.properties.container.BeanContainer;
 import net.java.dev.properties.container.ObservableIndexed;
 import net.java.dev.properties.container.ObservableProperty;
@@ -48,10 +50,10 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
     private static final Logger log = Logger.getLogger(ImageView.class.getName());
 
-   
+
     public final Property<IImageDisplayModel> displayModel = ObservableProperty.create();
 
-    public final IndexedProperty<IImagePlot> plotList =  new ObservableIndexed<IImagePlot>();
+    public final IndexedProperty<IImagePlot> plotList = new ObservableIndexed<IImagePlot>();
 
     public final Property<Integer> plotSelection = ObservableProperty.create(-1);
 
@@ -77,7 +79,7 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
             super.set(ap);
 
             IImagePlot selectedPlot = getSelectedPlot();
-            if (selectedPlot != null){
+            if (selectedPlot != null) {
                 AnatomicalPoint1D slice = ap.getValue(selectedPlot.getDisplayAnatomy().ZAXIS);
                 sliceController.setSlice(slice);
                 selectedPlot.getComponent().repaint();
@@ -85,13 +87,13 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
             //EventBus.publish(new ImageViewCursorEvent(ImageView.this));//To change body of overridden methods use File | Settings | File Templates.
         }
 
-       
+
     };
 
     public final Property<Double> cursorX = new ObservableProperty<Double>() {
         public void set(Double aDouble) {
             super.set(aDouble);
-            cursorPos.set(new AnatomicalPoint3D(cursorPos.get().getAnatomy(), aDouble,  cursorPos.get().getY(),  cursorPos.get().getZ()));
+            cursorPos.set(new AnatomicalPoint3D(cursorPos.get().getAnatomy(), aDouble, cursorPos.get().getY(), cursorPos.get().getZ()));
         }
 
         public Double get() {
@@ -102,7 +104,7 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
     public final Property<Double> cursorY = new ObservableProperty<Double>() {
         public void set(Double aDouble) {
             super.set(aDouble);
-            cursorPos.set(new AnatomicalPoint3D(cursorPos.get().getAnatomy(), cursorPos.get().getX(),  aDouble,  cursorPos.get().getZ()));
+            cursorPos.set(new AnatomicalPoint3D(cursorPos.get().getAnatomy(), cursorPos.get().getX(), aDouble, cursorPos.get().getZ()));
         }
 
         public Double get() {
@@ -113,14 +115,13 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
     public final Property<Double> cursorZ = new ObservableProperty<Double>() {
         public void set(Double aDouble) {
             super.set(aDouble);
-            cursorPos.set(new AnatomicalPoint3D(cursorPos.get().getAnatomy(), cursorPos.get().getX(),  cursorPos.get().getY(), aDouble));
+            cursorPos.set(new AnatomicalPoint3D(cursorPos.get().getAnatomy(), cursorPos.get().getX(), cursorPos.get().getY(), aDouble));
         }
 
         public Double get() {
             return cursorPos.get().getZ();
         }
     };
-
 
 
     private InterpolationType screenInterpolation = InterpolationType.NEAREST_NEIGHBOR;
@@ -194,7 +195,9 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
         viewport.removePropertyChangeListener(viewportHandler);
         displayModel.get().removeImageDisplayModelListener(this);
         //crosshair.removePropertyChangeListener(crosshairHandler);
-        displayModel.get().getLayerSelection().removePropertyChangeListener(layerSelectionListener);
+
+        BeanContainer.get().removeListener(displayModel.get().getListSelection(), layerSelectionListener );
+
         removeMouseListener(plotSelectionHandler);
     }
 
@@ -207,9 +210,8 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
         addMouseListener(plotSelectionHandler);
 
         //crosshair.addPropertyChangeListener(crosshairHandler);
-
-        displayModel.get().getLayerSelection().addPropertyChangeListener(layerSelectionListener);
-
+        BeanContainer.get().addListener(displayModel.get().getListSelection(), layerSelectionListener );
+       
 
     }
 
@@ -239,7 +241,6 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
     }
 
-    
 
     public SliceController getSliceController() {
         return sliceController;
@@ -279,9 +280,10 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
         }
 
     }
+
     public IImagePlot getSelectedPlot() {
         int idx = plotSelection.get();
-        if (idx >= 0 ) {
+        if (idx >= 0) {
             return plotList.get(idx);
         }
 
@@ -294,7 +296,7 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
     }
 
     public int getSelectedLayerIndex() {
-        return displayModel.get().getLayerSelection().getSelectionIndex();
+        return displayModel.get().getSelectedIndex();
     }
 
     public void setSelectedLayerIndex(int selectedIndex) {
@@ -400,7 +402,7 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
     public boolean pointInPlot(Component source, Point p) {
         Point viewPoint = SwingUtilities.convertPoint(source, p, this);
-        return(!(whichPlot(viewPoint) == null));
+        return (!(whichPlot(viewPoint) == null));
 
     }
 
@@ -501,17 +503,17 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
         return identifier.get();
     }
 
-    class ImageLayerSelectionListener implements PropertyChangeListener {
+    class ImageLayerSelectionListener implements PropertyListener {
 
-        public void propertyChange(PropertyChangeEvent evt) {
-            if (evt.getPropertyName().equals(SelectionInList.PROPERTYNAME_SELECTION_INDEX)) {
-                int selectionIndex = (Integer) evt.getNewValue();
-                if (selectionIndex >= 0) {
-                    EventBus.publish(new ImageViewLayerSelectionEvent(ImageView.this, (Integer) evt.getNewValue()));
-                }
+        public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+            int selectionIndex = (Integer) newValue;
+            if (selectionIndex >= 0) {
+                EventBus.publish(new ImageViewLayerSelectionEvent(ImageView.this, selectionIndex));
             }
 
         }
+
+
     }
 
 

@@ -4,6 +4,7 @@ import com.brainflow.image.interpolation.InterpolationFunction2D;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
+import com.brainflow.image.space.ImageSpace2D;
 import com.brainflow.utils.DataType;
 import com.brainflow.utils.NumberUtils;
 
@@ -30,30 +31,30 @@ public class UByteImageData2D extends AbstractImageData implements IImageData2D 
     private byte[] data;
 
 
-    public UByteImageData2D(IImageSpace _space) {
-        if (_space.getNumDimensions() != 2) {
-            throw new IllegalArgumentException("ImageSpace must have dimension = 2.");
-        }
-
-        space = _space;
-
+    public UByteImageData2D(ImageSpace2D _space) {
+        super(_space);
+       
         datatype = DataType.BYTE;
         data = new byte[space.getNumSamples()];
 
 
     }
 
-    public UByteImageData2D(IImageSpace _space, byte[] _data) {
-        if (_space.getNumDimensions() != 2) {
-            throw new IllegalArgumentException("ImageSpace must have dimension = 2.");
+    public UByteImageData2D(ImageSpace2D space, byte[] _data) {
+        super(space);
+        if (_data.length != space.getNumSamples()) {
+            throw new IllegalArgumentException("supplied data array has incorrect length");
         }
-
-        space = _space;
 
         datatype = DataType.BYTE;
         data = _data;
 
 
+    }
+
+    public ImageSpace2D getImageSpace() {
+        return (ImageSpace2D)space;
+         
     }
 
     public double getMaxValue() {

@@ -30,7 +30,7 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
     private int dim0;
 
     public BasicImageData3D(BasicImageData3D src) {
-        space = new ImageSpace3D((ImageSpace3D) src.getImageSpace());
+        super((ImageSpace3D) src.getImageSpace());
         datatype = src.getDataType();
         fillBuffer(src.storage, space.getNumSamples());
         planeSize = space.getDimension(Axis.X_AXIS) * space.getDimension(Axis.Y_AXIS);
@@ -38,9 +38,8 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
     }
 
 
-    public BasicImageData3D(IImageSpace _space, DataType _type) {
-        assert _space.getNumDimensions() == 3;
-        space = _space;
+    public BasicImageData3D(ImageSpace3D space, DataType _type) {
+        super(space);
         datatype = _type;
         data = allocateBuffer(space.getNumSamples());
         planeSize = space.getDimension(Axis.X_AXIS) * space.getDimension(Axis.Y_AXIS);
@@ -48,9 +47,8 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
 
     }
 
-    public BasicImageData3D(IImageSpace _space, Object array) {
-        assert _space.getNumDimensions() == 3;
-        space = _space;
+    public BasicImageData3D(ImageSpace3D space, Object array) {
+        super(space);       
         storage = array;
         establishDataType(storage);
         data = allocateBuffer(space.getNumSamples());
@@ -110,6 +108,11 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
     public ImageInfo getImageInfo() {
         // todo is this  what we really want to do?
         return new ImageInfo(this);
+    }
+
+    public ImageSpace3D getImageSpace() {
+        return (ImageSpace3D)space;
+
     }
 
     public final Index3D voxelOf(int idx, Index3D voxel) {

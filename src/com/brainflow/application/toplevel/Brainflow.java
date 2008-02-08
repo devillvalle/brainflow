@@ -53,6 +53,8 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+import sun.swing.plaf.nimbus.NimbusLookAndFeel;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -108,7 +110,7 @@ public class Brainflow {
             //UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
 
             UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceCremeCoffeeLookAndFeel());
-            //UIManager.setLookAndFeel(new org.jdesktop.swingx.plaf.nimbus.NimbusLookAndFeel());
+           //UIManager.setLookAndFeel(new NimbusLookAndFeel());
 
             //UIManager.setLookAndFeel(new A03LookAndFeel());
             //UIManager.setLookAndFeel(lf);

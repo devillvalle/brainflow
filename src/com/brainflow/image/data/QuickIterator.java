@@ -10,8 +10,11 @@ package com.brainflow.image.data;
 public interface QuickIterator {
 
     public boolean hasNext();
+
     public int next();
+
     public void reset();
+    
     public int size();
 
 }

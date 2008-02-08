@@ -13,8 +13,13 @@ import com.brainflow.utils.WeakEventListenerList;
 import com.jgoodies.binding.list.ArrayListModel;
 import com.jgoodies.binding.list.SelectionInList;
 import net.java.dev.properties.BaseProperty;
+import net.java.dev.properties.Property;
+import net.java.dev.properties.IndexedProperty;
 import net.java.dev.properties.container.BeanContainer;
+import net.java.dev.properties.container.ObservableProperty;
+import net.java.dev.properties.container.ObservableIndexed;
 import net.java.dev.properties.events.PropertyListener;
+import net.java.dev.properties.events.IndexedPropertyListener;
 
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
@@ -40,9 +45,17 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     public static final String IMAGE_SPACE_PROPERTY = "imageSpace";
 
-    private ArrayListModel imageListModel = new ArrayListModel();
 
-    private SelectionInList layerSelection = new SelectionInList((ListModel) imageListModel);
+    public final IndexedProperty<ImageLayer> listModel = ObservableIndexed.create();
+
+    public final Property<Integer> listSelection = new ObservableProperty<Integer>(-1) {
+        public void set(Integer integer) {
+            if (integer >= listModel.size() || integer < -1) {
+                throw new IllegalArgumentException("selection index exceeds size of list");
+            }
+            super.set(integer);
+        }
+    };
 
 
     private EventListenerList eventListeners = new WeakEventListenerList();
@@ -63,29 +76,41 @@ public class ImageDisplayModel implements IImageDisplayModel {
     private String name;
 
     public ImageDisplayModel(String _name) {
+        BeanContainer.bind(this);
         name = _name;
-        imageListModel.addListDataListener(forwarder);
+
+        BeanContainer.get().addListener(listModel, new IndexedPropertyListener() {
+            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+                forwarder.fireContentsChanged(new ListDataEvent(ImageDisplayModel.this, ListDataEvent.CONTENTS_CHANGED, index, index));
+            }
+
+            public void propertyInserted(IndexedProperty prop, Object value, int index) {
+                forwarder.fireIntervalAdded(new ListDataEvent(ImageDisplayModel.this, ListDataEvent.INTERVAL_ADDED, index, index));
+            }
+
+            public void propertyRemoved(IndexedProperty prop, Object value, int index) {
+                forwarder.fireIntervalRemoved(new ListDataEvent(ImageDisplayModel.this, ListDataEvent.INTERVAL_REMOVED, index, index));
+            }
+        });
+
     }
 
+    public IndexedProperty<ImageLayer> getListModel() {
+        return listModel;
+    }
+
+    public Property<Integer> getListSelection() {
+        return listSelection;
+    }
 
     public ImageLayerProperties getLayerParameters(int layer) {
-        assert layer >= 0 && layer < imageListModel.size();
-        ImageLayer ilayer = (ImageLayer) imageListModel.get(layer);
+        if (layer < 0 || layer > listModel.size()) {
+            throw new IllegalArgumentException("illegal layer index");
+        }
+        ImageLayer ilayer = (ImageLayer) listModel.get(layer);
         return ilayer.getImageLayerProperties();
     }
 
-    public ImageLayer getLayer(ImageLayerProperties params) {
-        for (int i = 0; i < imageListModel.size(); i++) {
-            ImageLayer layer = (ImageLayer) imageListModel.get(i);
-            if (params == layer.getImageLayerProperties()) return layer;
-        }
-
-        return null;
-    }
-
-    public SelectionInList getLayerSelection() {
-        return layerSelection;
-    }
 
     public void setSelectedIndex(int index) {
         if (index < 0 || index >= getNumLayers()) {
@@ -93,16 +118,16 @@ public class ImageDisplayModel implements IImageDisplayModel {
         }
 
         if (getSelectedIndex() != index) {
-            layerSelection.setSelectionIndex(index);
+            listSelection.set(index);
         }
     }
 
     public int getSelectedIndex() {
-        return layerSelection.getSelectionIndex();
+        return listSelection.get();
     }
 
     public ImageLayer getSelectedLayer() {
-        return (ImageLayer) layerSelection.getSelection();
+        return listModel.get(listSelection.get());
     }
 
     public String getName() {
@@ -134,17 +159,17 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
 
     public String getLayerName(int idx) {
-        assert idx >= 0 && idx < imageListModel.size();
-        ImageLayer layer = (ImageLayer) imageListModel.get(idx);
+        assert idx >= 0 && idx < listModel.size();
+        ImageLayer layer = listModel.get(idx);
         return layer.getLabel();
     }
 
 
     public void addLayer(ImageLayer layer) {
         listenToLayer(layer);
-        imageListModel.add(layer);
-        if (imageListModel.size() == 1) {
-            layerSelection.setSelectionIndex(0);
+        listModel.add(layer);
+        if (listModel.size() == 1) {
+            listSelection.set(0);
         }
         computeImageSpace();
 
@@ -272,8 +297,8 @@ public class ImageDisplayModel implements IImageDisplayModel {
     private void computeImageSpace() {
         IImageSpace uspace = null;
 
-        if (!imageListModel.isEmpty()) {
-            for (int i = 0; i < imageListModel.size(); i++) {
+        if (!(listModel.size() == 0)) {
+            for (int i = 0; i < listModel.size(); i++) {
                 ICoordinateSpace cspace = getLayer(i).getCoordinateSpace();
                 if (uspace == null) {
                     uspace = new ImageSpace3D(cspace);
@@ -295,15 +320,15 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
 
     public int indexOf(ImageLayer layer) {
-        return imageListModel.indexOf(layer);
+        return listModel.get().indexOf(layer);
 
 
     }
 
     public List<Integer> indexOf(IImageData data) {
         List<Integer> ret = new ArrayList<Integer>();
-        for (int i = 0; i < imageListModel.size(); i++) {
-            ImageLayer layer = (ImageLayer) imageListModel.get(i);
+        for (int i = 0; i < listModel.size(); i++) {
+            ImageLayer layer = listModel.get(i);
 
             if (layer.getDataSource() == data) {
                 ret.add(i);
@@ -317,19 +342,19 @@ public class ImageDisplayModel implements IImageDisplayModel {
     public void rotateLayers() {
         if (getNumLayers() < 2) return;
 
-        ArrayListModel newModel = new ArrayListModel();
+        List<ImageLayer> newModel = new ArrayList<ImageLayer>();
         ImageLayer firstLayer = getLayer(getNumLayers() - 1);
 
         newModel.add(firstLayer);
-        for (int i = 0; i < imageListModel.size() - 1; i++) {
-            newModel.add(imageListModel.get(i));
-
-
+        for (int i = 0; i < listModel.size() - 1; i++) {
+            newModel.add(listModel.get(i));
         }
 
-        imageListModel = newModel;
-        imageListModel.addListDataListener(forwarder);
-        layerSelection.setListModel(imageListModel);
+        listModel.set(newModel);
+
+        //imageListModel = newModel;
+        //imageListModel.addListDataListener(forwarder);
+        //layerSelection.setListModel(imageListModel);
 
         forwarder.fireContentsChanged(new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, 0, getNumLayers() - 1));
 
@@ -348,28 +373,28 @@ public class ImageDisplayModel implements IImageDisplayModel {
             throw new IllegalArgumentException("Invalid layer index : " + index1);
         }
 
-        ArrayListModel newModel = new ArrayListModel();
-        for (int i = 0; i < imageListModel.size(); i++) {
+        List<ImageLayer> newModel = new ArrayList<ImageLayer>();
+        for (int i = 0; i < listModel.size(); i++) {
             if (i == index0) {
-                newModel.add(i, imageListModel.get(index1));
+                newModel.add(i, listModel.get(index1));
             } else if (i == index1) {
-                newModel.add(i, imageListModel.get(index0));
+                newModel.add(i, listModel.get(index0));
             } else {
-                newModel.add(i, imageListModel.get(i));
+                newModel.add(i, listModel.get(i));
             }
 
         }
 
-        imageListModel = newModel;
-        imageListModel.addListDataListener(forwarder);
-        layerSelection.setListModel(imageListModel);
+        listModel.set(newModel);
+        //imageListModel.addListDataListener(forwarder);
+        //layerSelection.setListModel(imageListModel);
 
         forwarder.fireContentsChanged(new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, index0, index1));
     }
 
     public void removeLayer(int layer) {
-        assert imageListModel.size() > layer && layer >= 0;
-        if (layerSelection.getSelectionIndex() == layer) {
+        assert listModel.size() > layer && layer >= 0;
+        if (listSelection.get() == layer) {
             int selidx = -1;
             if (layer > 1) {
                 selidx = layer - 1;
@@ -377,33 +402,33 @@ public class ImageDisplayModel implements IImageDisplayModel {
                 selidx = 1;
             }
 
-            layerSelection.setSelectionIndex(selidx);
+            listSelection.set(selidx);
 
         }
 
-        imageListModel.remove(layer);
+        listModel.remove(layer);
         computeImageSpace();
 
     }
 
     public void removeLayer(ImageLayer layer) {
-        assert imageListModel.contains(layer);
-        int idx = imageListModel.indexOf(layer);
+        assert listModel.get().contains(layer);
+        int idx = listModel.get().indexOf(layer);
         removeLayer(idx);
     }
 
     public boolean containsLayer(ImageLayer layer) {
-        return imageListModel.contains(layer);
+        return listModel.get().contains(layer);
     }
 
     public ImageLayer getLayer(int layer) {
-        assert layer >= 0 && layer < imageListModel.size();
-        return (ImageLayer) imageListModel.get(layer);
+        assert layer >= 0 && layer < listModel.size();
+        return listModel.get(layer);
     }
 
 
     public int size() {
-        return imageListModel.size();
+        return listModel.size();
     }
 
     public int getNumLayers() {

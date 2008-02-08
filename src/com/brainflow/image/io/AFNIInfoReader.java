@@ -102,7 +102,6 @@ public class AFNIInfoReader implements ImageInfoReader {
             throw new BrainflowException(e);
         } catch (IOException e) {
             throw new BrainflowException(e);
-
         }
 
         return ret;

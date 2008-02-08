@@ -30,7 +30,7 @@ public class MakeData {
         ImageAxis axis2 = new ImageAxis(0, 100, AnatomicalAxis.POSTERIOR_ANTERIOR, ydim);
         ImageAxis axis3 = new ImageAxis(0, 100, AnatomicalAxis.INFERIOR_SUPERIOR, zdim);
 
-        IImageSpace space = new ImageSpace3D(axis1, axis2, axis3);
+        ImageSpace3D space = new ImageSpace3D(axis1, axis2, axis3);
         IImageData3D data1 = new BasicImageData3D(space, DataType.INTEGER);
         IImageData3D data2 = new BasicImageData3D(space, DataType.INTEGER);
         IImageData3D data3 = new BasicImageData3D(space, DataType.INTEGER);

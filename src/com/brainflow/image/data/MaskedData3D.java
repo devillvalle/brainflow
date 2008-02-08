@@ -5,6 +5,7 @@ import com.brainflow.utils.DataType;
 import com.brainflow.image.interpolation.InterpolationFunction3D;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.Axis;
+import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.image.anatomy.Anatomy;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.iterators.ImageIterator;
@@ -98,7 +99,7 @@ public class MaskedData3D implements IMaskedData3D {
         source.setInt(x, y, z, val);
     }
 
-    public IImageSpace getImageSpace() {
+    public ImageSpace3D getImageSpace() {
         return source.getImageSpace();
     }
 

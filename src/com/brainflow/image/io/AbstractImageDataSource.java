@@ -10,6 +10,7 @@ import org.apache.commons.vfs.FileObject;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -84,6 +85,9 @@ public abstract class AbstractImageDataSource implements IImageDataSource {
         } catch (IllegalAccessException e3) {
             //e3.printStackTrace();
             throw new RuntimeException(e3);
+        } catch(Throwable t) {
+            Logger.getAnonymousLogger().severe("failed to read image info for : " + getHeaderFile());
+            throw new RuntimeException(t);
         }
 
     }

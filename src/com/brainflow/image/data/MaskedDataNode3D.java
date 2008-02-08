@@ -4,6 +4,7 @@ import com.brainflow.image.interpolation.InterpolationFunction3D;
 import com.brainflow.image.anatomy.Anatomy;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
+import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.image.operations.BinaryOperation;
@@ -130,7 +131,7 @@ public class MaskedDataNode3D implements IMaskedData3D {
         return imageLabel;
     }
 
-    public IImageSpace getImageSpace() {
+    public ImageSpace3D getImageSpace() {
         return left.getImageSpace();
     }
 

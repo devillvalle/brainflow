@@ -4,6 +4,7 @@ import com.brainflow.image.interpolation.InterpolationFunction2D;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.Axis;
+import com.brainflow.image.space.ImageSpace2D;
 import com.brainflow.image.anatomy.Anatomy;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.utils.DataType;
@@ -70,8 +71,8 @@ public class MaskedData2D implements IImageData2D {
 
     }
 
-    public IImageSpace getImageSpace() {
-        return source.getImageSpace();
+    public ImageSpace2D getImageSpace() {
+        return (ImageSpace2D)source.getImageSpace();
     }
 
     public DataType getDataType() {

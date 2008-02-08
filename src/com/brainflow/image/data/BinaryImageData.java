@@ -3,6 +3,7 @@ package com.brainflow.image.data;
 import cern.colt.bitvector.BitVector;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.image.space.IImageSpace;
+import com.brainflow.image.space.ImageSpace3D;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,15 +15,33 @@ import com.brainflow.image.space.IImageSpace;
 public abstract class BinaryImageData extends AbstractImageData {
 
 
-    protected BitVector bits;
+    private BitVector bits;
 
 
-    protected BinaryImageData() {
+    public BinaryImageData(IImageSpace space) {
+        super(space);
+        allocateBits();
     }
 
-    protected void allocateBits() {
-        bits = new BitVector(space.getNumSamples());
+    public BinaryImageData(IImageSpace space, BitVector _bits) {
+        super(space);
 
+        if (_bits.size() != getImageSpace().getNumSamples()) {
+            throw new IllegalArgumentException("BitVector has wrong number of samples: " + bits.size());
+        }
+
+        bits = _bits;
+
+    }
+
+    public BinaryImageData(IImageSpace space, boolean[] elements) {
+        super(space);
+        allocateBits(elements);
+
+    }
+
+    private void allocateBits() {
+        bits = new BitVector(space.getNumSamples());
     }
 
     protected void allocateBits(boolean[] elements) {

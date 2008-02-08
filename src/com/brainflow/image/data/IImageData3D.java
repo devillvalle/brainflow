@@ -3,6 +3,8 @@ package com.brainflow.image.data;
 import com.brainflow.utils.Index3D;
 import com.brainflow.utils.ArrayUtils;
 import com.brainflow.image.space.Axis;
+import com.brainflow.image.space.ImageSpace2D;
+import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.image.interpolation.InterpolationFunction3D;
 
 /**
@@ -40,6 +42,8 @@ public interface IImageData3D extends IImageData {
     public void setFloat(int x, int y, int z, float val);
 
     public void setInt(int x, int y, int z, int val);
+
+    public ImageSpace3D getImageSpace();
 
 
 }

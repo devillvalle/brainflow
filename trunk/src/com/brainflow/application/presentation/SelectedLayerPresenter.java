@@ -1,8 +1,7 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.core.*;
-import com.brainflow.display.Visibility;
-import com.jgoodies.binding.adapter.ComboBoxAdapter;
+
 import com.jgoodies.binding.adapter.SingleListSelectionAdapter;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -28,7 +27,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
     private JLabel layerLabel;
 
-    //private JComboBox layerSelector;
+
     private CheckBoxList layerSelector;
 
     private VisibilitySelection visibilitySelection;
@@ -37,7 +36,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
     private JScrollPane formPane;
 
-    private ComboBoxAdapter adapter;
+
 
     public SelectedLayerPresenter() {
         buildGUI();

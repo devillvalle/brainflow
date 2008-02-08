@@ -96,7 +96,12 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
                     ImageNodeWorker worker = new ImageNodeWorker(node);
                     progressPanel.start();
                     overlayPanel.setOverlayVisible(true);
-                    worker.execute();
+
+                    try {
+                        worker.execute();
+                    } catch(Throwable t) {
+                        System.out.println("caught the bastard!");
+                    }
                     worker.addPropertyChangeListener(new PropertyChangeListener() {
 
                         public void propertyChange(PropertyChangeEvent evt) {
@@ -105,14 +110,12 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
                             switch (state) {
 
                                 case DONE:
-                                    System.out.println("done!");
                                     progressPanel.stop();
                                     overlayPanel.setOverlayVisible(false);
                                     break;
                                 case PENDING:
                                     break;
                                 case STARTED:
-                                    System.out.println("started!");
 
                                     break;
                             }
@@ -318,7 +321,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
         }
 
         protected List<LazyNode> doInBackground() throws Exception {
-            log.info("fetching image file nodes in background");
+            log.fine("fetching image file nodes in background");
             return parent.fetchChildNodes();
 
 

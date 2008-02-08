@@ -1,6 +1,8 @@
 package com.brainflow.image.data;
 
 import com.brainflow.image.space.Axis;
+import com.brainflow.image.space.IImageSpace;
+import com.brainflow.image.space.ImageSpace2D;
 import com.brainflow.image.interpolation.InterpolationFunction2D;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.image.rendering.RenderUtils;
@@ -38,7 +40,5 @@ public interface IImageData2D extends IImageData {
 
     public ImageIterator iterator();
 
-   
-
-
+    public ImageSpace2D getImageSpace();
 }

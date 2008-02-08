@@ -16,7 +16,7 @@ import com.brainflow.utils.DataType;
  */
 public interface IImageData {
 
-    public IImageSpace getImageSpace();
+
 
     public DataType getDataType();
 
@@ -31,7 +31,8 @@ public interface IImageData {
     public int getNumElements();
 
     public ImageInfo getImageInfo();
-
+    
+    public IImageSpace getImageSpace();
 
     public void setImageLabel(String imageLabel);
 

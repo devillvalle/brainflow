@@ -21,25 +21,21 @@ import cern.colt.bitvector.BitVector;
 public class BinaryImageData2D extends BinaryImageData implements IImageData2D {
 
 
-    private BinaryImageData2D(ImageSpace2D _space, BitVector bits) {
-        space = _space;
-        this.bits = bits;
 
-        if (bits.size() != getImageSpace().getNumSamples()) {
-            throw new IllegalArgumentException("BitVector has wrong number of samples: " + bits.size());
-        }
+
+    public BinaryImageData2D(ImageSpace2D space, BitVector bits) {
+        super(space, bits);
 
     }
 
     public BinaryImageData2D(BinaryImageData2D src) {
-        space = src.getImageSpace();
-        bits = src.getBitVector().copy();
+        super(src.getImageSpace(), src.getBitVector().copy());
     }
 
     public BinaryImageData2D(MaskedData2D src) {
-        space = src.getImageSpace();
-        bits = new BitVector(space.getNumSamples());
+        super(src.getImageSpace());
 
+        BitVector bits = getBitVector();
         ImageIterator iter = src.iterator();
         while (iter.hasNext()) {
             int i = iter.index();
@@ -52,17 +48,20 @@ public class BinaryImageData2D extends BinaryImageData implements IImageData2D {
     }
 
     public BinaryImageData2D(ImageSpace2D _space) {
-        space = _space;
+        super(_space);
 
     }
 
+    public ImageSpace2D getImageSpace() {
+        return (ImageSpace2D)space;
+    }
 
     public BinaryImageData2D OR(BinaryImageData data) {
         if (data.getNumElements() != this.getNumElements()) {
             throw new IllegalArgumentException("cannot combine images of unequal size");
         }
 
-        BitVector ret = bits.copy();
+        BitVector ret = getBitVector().copy();
         ret.or(data.getBitVector());
         return new BinaryImageData2D((ImageSpace2D)getImageSpace(), ret);
     }
@@ -71,7 +70,7 @@ public class BinaryImageData2D extends BinaryImageData implements IImageData2D {
         if (data.getNumElements() != this.getNumElements()) {
             throw new IllegalArgumentException("cannot combine images of unequal size");
         }
-        BitVector ret = bits.copy();
+        BitVector ret = getBitVector().copy();
         ret.or(data.getBitVector());
         return new BinaryImageData2D((ImageSpace2D)getImageSpace(), ret);
 

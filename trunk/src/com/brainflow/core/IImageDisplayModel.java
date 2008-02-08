@@ -10,6 +10,9 @@ import com.jgoodies.binding.list.SelectionInList;
 
 import java.util.List;
 
+import net.java.dev.properties.Property;
+import net.java.dev.properties.IndexedProperty;
+
 /**
  * Created by IntelliJ IDEA.
  * User: bradley
@@ -20,9 +23,11 @@ import java.util.List;
 public interface IImageDisplayModel {
 
 
-    public String getName();
+    public Property<Integer> getListSelection();
 
-    public SelectionInList getLayerSelection();
+    public IndexedProperty<ImageLayer> getListModel();
+    
+    public String getName();
 
     public void setSelectedIndex(int index);
 

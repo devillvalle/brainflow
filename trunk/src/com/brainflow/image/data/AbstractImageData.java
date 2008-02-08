@@ -15,21 +15,24 @@ import com.brainflow.utils.DataType;
  */
 public abstract class AbstractImageData implements IImageData {
 
-    protected IImageSpace space;
+    // todo private
+    protected final IImageSpace space;
 
+    // todo private
     protected DataType datatype;
 
     private String imageLabel;
 
     private ImageInfo info = new ImageInfo();
 
+    // todo get rid of this abomination
     protected int identifier = 0;
 
-
-    public IImageSpace getImageSpace() {
-        return space;
+    public AbstractImageData(IImageSpace space) {
+        this.space = space;
     }
 
+  
     public DataType getDataType() {
         return datatype;
     }

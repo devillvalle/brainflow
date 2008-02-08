@@ -23,15 +23,14 @@ public class BasicImageData2D extends BasicImageData implements IImageData2D {
 
 
     public BasicImageData2D(BasicImageData2D src) {
-        space = new ImageSpace2D((ImageSpace2D) src.getImageSpace());
+        super((ImageSpace2D) src.getImageSpace());
         datatype = src.getDataType();
         fillBuffer(src.storage, space.getNumSamples());
 
     }
 
-    public BasicImageData2D(IImageSpace _space, DataType _type) {
-        assert _space.getNumDimensions() == 2;
-        space = _space;
+    public BasicImageData2D(ImageSpace2D space, DataType _type) {
+        super(space);
         datatype = _type;
         data = allocateBuffer(space.getNumSamples());
 
@@ -42,15 +41,18 @@ public class BasicImageData2D extends BasicImageData implements IImageData2D {
         return new ImageInfo(this);
     }
 
-    public BasicImageData2D(IImageSpace _space, Object array) {
-        assert _space.getNumDimensions() == 2;
-        space = _space;
+    public BasicImageData2D(ImageSpace2D space, Object array) {
+        super(space);
         storage = array;
         establishDataType(storage);
         data = allocateBuffer(space.getNumSamples());
 
     }
 
+    public ImageSpace2D getImageSpace() {
+        return (ImageSpace2D)space;
+
+    }
 
     public final int indexOf(int x, int y) {
         return space.getDimension(Axis.X_AXIS) * y + x;

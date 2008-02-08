@@ -6,6 +6,8 @@ import com.brainflow.image.data.BasicImageData2D;
 import com.brainflow.image.data.BasicImageData3D;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.space.IImageSpace;
+import com.brainflow.image.space.ImageSpace2D;
+import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.utils.DataType;
 import com.brainflow.utils.NumberUtils;
 import com.brainflow.utils.ProgressListener;
@@ -192,14 +194,14 @@ public class BasicImageReader implements ImageReader {
             //}
 
             if (fileDimensionality == 2) {
-                BasicImageData dat = new BasicImageData2D(imageSpace, data);
+                BasicImageData dat = new BasicImageData2D((ImageSpace2D)imageSpace, data);
                 //todo bloody hack
                 dat.setImageLabel(info.getDataFile().getName().getBaseName());
                 listener.finished();
                 return dat;
             } else if (fileDimensionality == 3) {
                 //todo bloody hack
-                BasicImageData dat = new BasicImageData3D(imageSpace, data);
+                BasicImageData dat = new BasicImageData3D((ImageSpace3D)imageSpace, data);
                 dat.setImageLabel(info.getDataFile().getName().getBaseName());
                 listener.finished();
                 return dat;
@@ -276,11 +278,11 @@ public class BasicImageReader implements ImageReader {
 
 
             if (fileDimensionality == 2) {
-                BasicImageData2D data2d = new BasicImageData2D(imageSpace, dataArray);
+                BasicImageData2D data2d = new BasicImageData2D((ImageSpace2D)imageSpace, dataArray);
                 data2d.setImageLabel(info.getDataFile().getName().getBaseName());
                 return data2d;
             } else if (fileDimensionality == 3) {
-                BasicImageData3D data3d = new BasicImageData3D(imageSpace, dataArray);
+                BasicImageData3D data3d = new BasicImageData3D((ImageSpace3D)imageSpace, dataArray);
                 data3d.setImageLabel(info.getDataFile().getName().getBaseName());
                 return data3d;
             } else {

@@ -2,6 +2,8 @@ package com.brainflow.image.data;
 
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.image.space.IImageSpace;
+import com.brainflow.image.space.ImageSpace2D;
+import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.utils.DataType;
 
 import java.awt.image.*;
@@ -35,7 +37,8 @@ public abstract class BasicImageData extends AbstractImageData {
     protected int identifier = 0;
 
 
-    public BasicImageData() {
+    public BasicImageData(IImageSpace space) {
+        super(space);
     }
 
 
@@ -156,10 +159,10 @@ public abstract class BasicImageData extends AbstractImageData {
 
     public static BasicImageData create(IImageSpace space, DataType type) {
         if (space.getNumDimensions() == 2) {
-            return new BasicImageData2D(space, type);
+            return new BasicImageData2D((ImageSpace2D)space, type);
         }
         if (space.getNumDimensions() == 3) {
-            return new BasicImageData3D(space, type);
+            return new BasicImageData3D((ImageSpace3D)space, type);
         } else
             throw new IllegalArgumentException("Cannot create BasicImageData with dimensionality " + space.getNumDimensions());
     }

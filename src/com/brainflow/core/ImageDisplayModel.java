@@ -55,6 +55,14 @@ public class ImageDisplayModel implements IImageDisplayModel {
             }
             super.set(integer);
         }
+
+        public Integer get() {
+            if ( (listModel.size() == 1) && (super.get() == -1) ) {
+                return 0;
+            }
+            
+            return super.get();    //To change body of overridden methods use File | Settings | File Templates.
+        }
     };
 
 

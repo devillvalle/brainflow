@@ -3,6 +3,7 @@ package com.brainflow.application;
 import com.brainflow.core.AbstractLayer;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.ImageView;
+import com.brainflow.core.ImageLayer;
 import com.brainflow.image.space.IImageSpace;
 
 import javax.swing.event.ListDataEvent;
@@ -21,7 +22,7 @@ public interface IBrainFlowClient {
 
     public void layerChangeNotification();
 
-    public void layerSelected(AbstractLayer layer);
+    public void layerSelected(ImageLayer layer);
 
     public void layerAdded(ListDataEvent event);
 

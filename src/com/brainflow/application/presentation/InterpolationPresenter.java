@@ -2,6 +2,7 @@ package com.brainflow.application.presentation;
 
 import com.brainflow.core.AbstractLayer;
 import com.brainflow.core.ImageView;
+import com.brainflow.core.ImageLayer;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.list.SelectionInList;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -54,8 +55,8 @@ public class InterpolationPresenter extends ImageViewPresenter {
         return form;
     }
 
-
-    protected void layerSelected(AbstractLayer layer) {
+    @Override
+    protected void layerSelected(ImageLayer layer) {
         SelectionInList sel = layer.getImageLayerProperties().getInterpolationMethod();
         Bindings.bind(choices, sel);
 

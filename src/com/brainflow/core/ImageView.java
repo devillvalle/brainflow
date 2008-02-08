@@ -506,8 +506,10 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
     class ImageLayerSelectionListener implements PropertyListener {
 
         public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+
             int selectionIndex = (Integer) newValue;
             if (selectionIndex >= 0) {
+
                 EventBus.publish(new ImageViewLayerSelectionEvent(ImageView.this, selectionIndex));
             }
 

@@ -66,8 +66,8 @@ public class RenderingParamsPresenter extends ImageViewPresenter implements Bind
         form.getInterpolationLabel().setEnabled(false);
     }
 
-
-    protected void layerSelected(AbstractLayer layer) {
+    @Override
+    protected void layerSelected(ImageLayer layer) {
         bind();
         //SelectionInList sel = layer.getImageLayerProperties().getInterpolationMethod();
         //Bindings.bind(form.getInterpolationChoices(), sel);

@@ -2,8 +2,8 @@ package com.brainflow.colormap;
 
 import cern.colt.list.DoubleArrayList;
 import com.brainflow.application.BrainflowException;
-import com.brainflow.utils.ArrayUtils;
-import com.brainflow.utils.BSpline;
+import com.brainflow.math.ArrayUtils;
+import com.brainflow.math.BSpline;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;

@@ -26,11 +26,13 @@ public enum DataType implements Serializable {
 
 
     private final String idString;
+
     private final int bytes;
+
     private final int datacode;
 
 
-    DataType(String _idString, int _bytes, int _datacode) {
+    private DataType(String _idString, int _bytes, int _datacode) {
         idString = _idString;
         bytes = _bytes;
         datacode = _datacode;

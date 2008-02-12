@@ -5,9 +5,8 @@ import com.brainflow.image.io.BrainIO;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.image.space.Axis;
-import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace3D;
-import com.brainflow.utils.ArrayUtils;
+import com.brainflow.math.ArrayUtils;
 import com.brainflow.utils.DataType;
 import com.brainflow.utils.Index3D;
 

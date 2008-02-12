@@ -59,6 +59,8 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
 
     private DefaultOverlayable overlayPanel;
 
+    private JScrollPane scrollPane;
+
 
     public ImageFileExplorer(FileObject _rootObject) {
 
@@ -83,8 +85,9 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
         };
 
         overlayPanel.addOverlayComponent(progressPanel);
-        progressPanel.stop();
         overlayPanel.setOverlayVisible(false);
+
+        progressPanel.stop();
 
 
         explorer.addTreeExpansionListener(new TreeExpansionListener() {
@@ -99,16 +102,17 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
 
                     try {
                         worker.execute();
-                    } catch(Throwable t) {
+                    } catch (Throwable t) {
                         System.out.println("caught the bastard!");
                     }
+
+
                     worker.addPropertyChangeListener(new PropertyChangeListener() {
 
                         public void propertyChange(PropertyChangeEvent evt) {
                             SwingWorker.StateValue state = (SwingWorker.StateValue) evt.getNewValue();
 
                             switch (state) {
-
                                 case DONE:
                                     progressPanel.stop();
                                     overlayPanel.setOverlayVisible(false);
@@ -116,7 +120,6 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
                                 case PENDING:
                                     break;
                                 case STARTED:
-
                                     break;
                             }
 
@@ -151,29 +154,24 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
                         label.setIcon(imageBucketOpenIcon);
                     }
 
-                }
-
-                /*Object userObject = node.getUserObject();
-                    if (userObject instanceof IImageDataSource) {
-                        IImageDataSource limg = (IImageDataSource) userObject;
-                        if (limg.isLoaded() && !selected) {
-                            label.setForeground(Color.GREEN.darker().darker());
-                        }
-
-                        //explorer.getJTree().isExpanded()
-                        // boolean expanded = explorer.getJTree().isExpanded(new TreePath(node.getPath()));
-
-
+                } else if (value instanceof ImageLeafNode) {
+                    ImageLeafNode node = (ImageLeafNode) value;
+                    IImageDataSource limg = node.getUserObject();
+                    if (limg.isLoaded() && !selected) {
+                        label.setForeground(Color.GREEN.darker().darker());
                     }
 
                 }
-                */
+
+               
 
                 return label;
             }
 
 
         });
+
+        scrollPane = new JScrollPane(overlayPanel);
 
 
     }
@@ -184,7 +182,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
     }
 
     public JComponent getComponent() {
-        return overlayPanel;
+        return scrollPane;
     }
 
     public JTree getJTree() {
@@ -344,7 +342,8 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
             } catch (InterruptedException e) {
                 log.fine("file expansion interrupted");
             } catch (ExecutionException e) {
-                throw new RuntimeException(e);
+                log.severe("failed to load all image nodes");
+                //throw new RuntimeException(e);
             }
 
 
@@ -397,9 +396,15 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
 
 
         } catch (FileSystemException e) {
-            throw new RuntimeException(e);
+            log.severe("failed to load image info for file : " + fobj);
+            return null;
+            //throw new RuntimeException(e);
         } catch (BrainflowException e) {
-            throw new RuntimeException(e);
+            log.severe("failed to load image info for file : " + fobj);
+            //throw new RuntimeException(e);
+            return null;
+        } catch (RuntimeException e) {
+            return null;
         }
 
         return ret;

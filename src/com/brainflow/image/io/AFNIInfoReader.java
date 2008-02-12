@@ -201,6 +201,8 @@ public class AFNIInfoReader implements ImageInfoReader {
         if (typeStr == null) return null;
 
         String nameStr = reader.readLine();
+       
+
         String countStr = reader.readLine();
 
         StringBuffer sb = new StringBuffer();
@@ -208,9 +210,11 @@ public class AFNIInfoReader implements ImageInfoReader {
         String line = null;
         do {
             line = reader.readLine();
-            sb.append(line);
+            if (line != null) { sb.append(line); }
+            
         } while (line != null && !line.equals(""));
 
+        //sb.trimToSize();
         HeaderAttribute.HEADER_ATTRIBUTE_TYPE type = HeaderAttribute.parseType(typeStr.replaceFirst("-", "_"));
 
         //todo should check to see whether attribute exists ..s
@@ -474,7 +478,7 @@ public class AFNIInfoReader implements ImageInfoReader {
     public static void main(String[] args) {
         File f = null;
         try {
-            URL url = ClassLoader.getSystemResource("resources/data/motion-reg2+orig.HEAD");
+            URL url = ClassLoader.getSystemResource("resources/data/global_mean+orig.HEAD");
             ImageInfoReader reader = new AFNIInfoReader();
 
             List<? extends ImageInfo> ilist = reader.readInfo(url.openStream());

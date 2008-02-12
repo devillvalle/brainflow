@@ -1,9 +1,6 @@
 package com.brainflow.image.data;
 
 import com.brainflow.utils.Index3D;
-import com.brainflow.utils.ArrayUtils;
-import com.brainflow.image.space.Axis;
-import com.brainflow.image.space.ImageSpace2D;
 import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.image.interpolation.InterpolationFunction3D;
 

@@ -31,6 +31,8 @@ import com.pietschy.command.CommandContainer;
 import com.pietschy.command.GuiCommands;
 import com.pietschy.command.configuration.ParseException;
 import com.pietschy.command.group.CommandGroup;
+import com.pietschy.command.group.GroupBuilder;
+import com.pietschy.command.group.ExpansionPointBuilder;
 import com.pietschy.command.toggle.ToggleCommand;
 import com.pietschy.command.toggle.ToggleGroup;
 import org.apache.commons.vfs.FileObject;
@@ -172,7 +174,8 @@ public class Brainflow {
         //JFrame.setDefaultLookAndFeelDecorated(true);
 
         brainFrame = new BrainFrame();
-
+        brainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
         BrainCanvasManager.getInstance().createCanvas();
 
 
@@ -251,11 +254,24 @@ public class Brainflow {
         CommandGroup fileMenuGroup = new CommandGroup("file-menu");
         fileMenuGroup.bind(getApplicationFrame());
         JMenuBar menuBar = new JMenuBar();
+
+
+        
         menuBar.add(fileMenuGroup.createMenuItem());
+
         brainFrame.setJMenuBar(menuBar);
 
         MountFileSystemCommand mountFileSystemCommand = new MountFileSystemCommand();
         mountFileSystemCommand.bind(getApplicationFrame());
+
+        ExitApplicationCommand exitCommand = new ExitApplicationCommand();
+        exitCommand.bind(getApplicationFrame());
+
+        ExpansionPointBuilder builder = fileMenuGroup.getExpansionPointBuilder();
+        builder.add(pathMenu.getCommandGroup());
+        builder.applyChanges();
+
+        
         //brainFrame.getGlassPane().setVisible(true);
 
 

@@ -17,7 +17,7 @@
                 name="Exit"
                 mnemonic="E"
                 accel="control X"
-                actionClass="com.brainflow.application.actions.ExitApplicationAction"
+                actionClass="com.brainflow.application.actions.ExitApplicationCommand"
                 desc="Exits the application"/>
         <action id="main-save-colorbar"
                 name="Save color bar"

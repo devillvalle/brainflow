@@ -2,7 +2,7 @@ package com.brainflow.application.presentation;
 
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.application.actions.ActionContext;
-import com.brainflow.application.actions.RemoveLoadableImageAction;
+import com.brainflow.application.actions.RemoveLoadableImageCommand;
 import com.brainflow.application.services.LoadableImageStatusEvent;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.core.*;
@@ -16,8 +16,8 @@ import com.jidesoft.swing.NullButton;
 import com.jidesoft.swing.NullJideButton;
 import com.jidesoft.swing.NullLabel;
 import com.jidesoft.swing.NullPanel;
+import com.pietschy.command.ActionCommand;
 import org.apache.commons.vfs.FileSystemException;
-import org.bushe.swing.action.BasicAction;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 
@@ -58,12 +58,14 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
     public static final int LARGE_ICON_HEIGHT = 60;
 
     private HierarchicalTable table;
+
     private ImageTableModel imageTableModel;
+
     private Map<IImageDataSource, ImageIcon> imap = new HashMap<IImageDataSource, ImageIcon>();
 
     private List<IImageDataSource> imageList = new ArrayList<IImageDataSource>();
 
-    private BasicAction removeAction = new RemoveLoadableImageAction();
+    private ActionCommand removeCommand = new RemoveLoadableImageCommand();
 
     public LoadableImageTableView() {
         EventBus.subscribe(LoadableImageStatusEvent.class, this);
@@ -135,7 +137,6 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
             case IMAGE_LOADED:
                 break;
             case IMAGE_REGISTERED:
-                System.out.println("image : " + event.getLoadableImage() + " is registered");
                 imageList.add(event.getLoadableImage());
                 imageTableModel.update();
                 break;
@@ -249,6 +250,7 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
         }
 
         JComponent createControlPanel() {
+
             NullPanel panel = new NullPanel(new GridLayout(5, 2, 5, 0));
             panel.add(new NullLabel("Size", NullLabel.TRAILING));
             NullJideButton sizeButton = new NullJideButton(convertBytesToString(getImageSize(limg)));
@@ -256,6 +258,7 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
             sizeButton.setHorizontalAlignment(SwingConstants.TRAILING);
             //sizeButton.addActionListener(new ClickAction(program, "Size", sizeButton));
             panel.add(sizeButton);
+
             panel.add(new NullLabel("Data Type", NullLabel.TRAILING));
             NullJideButton dataTypeButton = new NullJideButton(limg.getImageInfo().getDataType().toString());
             dataTypeButton.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -268,18 +271,22 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
             dimButton.setButtonStyle(NullJideButton.HYPERLINK_STYLE);
             dimButton.setHorizontalAlignment(SwingConstants.TRAILING);
             panel.add(dimButton);
+
             panel.add(new NullLabel("Showing", NullLabel.TRAILING));
             final NullJideButton showingButton = new NullJideButton("true");
             showingButton.setButtonStyle(NullJideButton.HYPERLINK_STYLE);
             showingButton.setHorizontalAlignment(SwingConstants.TRAILING);
             //dimButton.addActionListener(new ClickAction(program, "Last Used On", dimButton));
             panel.add(showingButton);
+
             NullButton loadButton = new NullButton("Load");
             //loadButton.addActionListener(new ClickAction(program, "Change", changeButton));
             panel.add(loadButton);
+
             NullButton removeButton = new NullButton("Remove");
-            removeAction.putContextValue(ActionContext.SELECTED_LOADABLE_IMAGE, limg);
-            removeButton.addActionListener(removeAction);
+            removeCommand.putParameter(ActionContext.SELECTED_LOADABLE_IMAGE, limg);
+
+            removeButton.addActionListener(removeCommand.getActionAdapter());
             panel.add(removeButton);
             return panel;
         }

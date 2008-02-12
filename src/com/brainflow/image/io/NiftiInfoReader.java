@@ -185,7 +185,7 @@ public class NiftiInfoReader implements ImageInfoReader {
             }
 
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new BrainflowException(e);
         }
 

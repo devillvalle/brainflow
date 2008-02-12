@@ -8,7 +8,7 @@ package com.brainflow.image.io;
  * Time: 9:41:58 AM
  */
 public enum AFNIAttributeKey implements HeaderKey {
-
+   
     MARKS_FLAGS,
     MARKS_HELP,
     MARKS_LAB,

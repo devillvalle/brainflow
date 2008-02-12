@@ -7,7 +7,7 @@
  * and open the template in the editor.
  */
 
-package com.brainflow.utils;
+package com.brainflow.math;
 
 /**
  *

@@ -7,8 +7,9 @@ import com.brainflow.colormap.LinearColorMapDeprecated;
 import com.brainflow.image.Histogram;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.BrainIO;
-import com.brainflow.jfreechart.AxisPointer;
-import com.brainflow.jfreechart.HistogramDataset;
+import com.brainflow.chart.AxisPointer;
+import com.brainflow.chart.HistogramDataset;
+import com.brainflow.chart.LogHistogramDataset;
 import com.brainflow.utils.NumberUtils;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -39,36 +40,33 @@ import java.awt.image.IndexColorModel;
  * @version 1.0
  */
 
-public class ColoredHistogram extends JPanel implements MouseListener, MouseMotionListener {
+public class ColoredHistogram extends JPanel {
 
-    Histogram histogram;
-    HistogramDataset dataset;
+    private Histogram histogram;
 
-    Point lastPressed;
-    Rectangle2D dataArea;
+    private HistogramDataset dataset;
 
-    AxisPointer xaxisPointer;
+    private Point lastPressed;
 
-    JFreeChart chart;
-    ChartPanel chartPanel;
-    NumberAxis hAxis;
-    NumberAxis yAxis;
+    private Rectangle2D dataArea;
 
-    IColorMap colorModel;
 
-    double xmedian;
+    private JFreeChart chart;
 
-    JPanel bottom = new JPanel();
-    JPanel sliderPanel1 = new JPanel();
-    JPanel sliderPanel2 = new JPanel();
-    JLabel ylabel = new JLabel("Count");
+    private ChartPanel chartPanel;
 
-    JLabel xlabel1 = new JLabel("min value");
-    JLabel xlabel2 = new JLabel("max value");
+    private NumberAxis hAxis;
 
-    JSlider xminSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0);
-    JSlider xmaxSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 100);
-    JSlider yBoundsSlider = new JSlider(JSlider.VERTICAL, 0, 100, 100);
+    private NumberAxis yAxis;
+
+    private IColorMap colorModel;
+
+    private double xmedian;
+
+    private JPanel bottom = new JPanel();
+
+
+
 
     double ybound;
 
@@ -95,40 +93,41 @@ public class ColoredHistogram extends JPanel implements MouseListener, MouseMoti
 
         chart.getXYPlot().setDomainAxis(hAxis);
         chart.getXYPlot().setRangeAxis(yAxis);
-        chart.getXYPlot().setDomainCrosshairVisible(true);
         chart.getXYPlot().setDomainGridlinesVisible(false);
         chart.getXYPlot().setRangeGridlinesVisible(false);
+
         chart.getPlot().setBackgroundPaint(Color.black);
 
 
         class MyBarRenderer extends org.jfree.chart.renderer.xy.XYBarRenderer {
 
+
             public MyBarRenderer() {
-                //setDefaultPaint(Color.orange);
+                super();
 
             }
 
 
+
+            @Override
             public void drawItem(Graphics2D g2, XYItemRendererState state, Rectangle2D dataArea, PlotRenderingInfo info,
                                  XYPlot plot, ValueAxis domainAxis, ValueAxis rangeAxis,
                                  XYDataset data, int series, int item, CrosshairState crosshairState, int pass) {
 
 
-                if (dataset.getBinInterval(item).contains(xaxisPointer.getAxisValue())) {
-
-                    int x = (int) domainAxis.valueToJava2D(xaxisPointer.getAxisValue(), dataArea, plot.getDomainAxisEdge());
-                    xaxisPointer.draw(g2, x, (int) dataArea.getMinY());
-
-                    crosshairState.updateCrosshairX(xaxisPointer.getAxisValue());
-                }
+              
+                System.out.println("drawing item : " + item + " series : " + series);
 
                 int numBins = histogram.getNumBins();
                 int colorIdx = (int) ((item + 1) / (double) numBins * 255f);
-                System.out.println("numbins: " + numBins);
-                System.out.println("coloridx: " + colorIdx);
+                //System.out.println("numbins: " + numBins);
+                //System.out.println("coloridx: " + colorIdx);
 
-                Color rgb = colorModel.getInterval(colorIdx).getColor();
-                super.setSeriesPaint(series, rgb);
+                double xval= dataset.getXValue(series, item);
+                Color rgb = colorModel.getColor(xval);
+
+                super.setSeriesPaint(series, rgb, false);
+
                 super.drawItem(g2, state, dataArea, info, plot, domainAxis, rangeAxis, data, series, item, crosshairState, pass);
 
             }
@@ -136,19 +135,19 @@ public class ColoredHistogram extends JPanel implements MouseListener, MouseMoti
 
 
         chartPanel = new ChartPanel(chart);
-        chartPanel.addMouseListener(this);
-        chartPanel.addMouseMotionListener(this);
+        //chartPanel.addMouseListener(this);
+        //chartPanel.addMouseMotionListener(this);
 
 
-        xaxisPointer = new AxisPointer(this, 10, 10);
-        xaxisPointer.setAxisValue((double) hAxis.getLowerBound() + 1);
+        //xaxisPointer = new AxisPointer(this, 10, 10);
+        //xaxisPointer.setAxisValue((double) hAxis.getLowerBound() + 1);
 
-        chart.getXYPlot().setDomainCrosshairValue(xaxisPointer.getAxisValue());
-        chart.getXYPlot().setDomainCrosshairPaint(Color.GREEN);
+        //chart.getXYPlot().setDomainCrosshairValue(xaxisPointer.getAxisValue());
+        //chart.getXYPlot().setDomainCrosshairPaint(Color.GREEN);
         MyBarRenderer bren = new MyBarRenderer();
-
+        bren.setDrawBarOutline(false);
         chart.getXYPlot().setRenderer(bren);
-        chart.getXYPlot().setDomainCrosshairVisible(true);
+        //chart.getXYPlot().setDomainCrosshairVisible(true);
 
 
         add(chartPanel, "Center");
@@ -156,26 +155,19 @@ public class ColoredHistogram extends JPanel implements MouseListener, MouseMoti
         //add(yBoundsSlider, "East");
     }
 
-    public void setPreferredSize(Dimension d) {
-        super.setPreferredSize(d);
-        chartPanel.setPreferredSize(d);
-    }
-
-    //public void setColorModel(IColorMap  icm) {
-    //    colorModel = icm;
-
-    //}
+    
 
 
     public void setHistogram(Histogram histogram) {
 
         xmedian = histogram.intervalMedian();
-        dataset = new HistogramDataset(histogram);
+        dataset = new LogHistogramDataset(histogram);
 
         hAxis.setLowerBound(histogram.getMinValue());
         hAxis.setUpperBound(histogram.getMaxValue());
 
-        ybound = histogram.binMedian() + (2 * histogram.binStandardDeviation());
+        //ybound = histogram.binMedian() + (2 * histogram.binStandardDeviation());
+        ybound = dataset.getYRange().getMax();
         yAxis.setUpperBound(ybound);
         yAxis.setLowerBound(0);
 
@@ -202,60 +194,10 @@ public class ColoredHistogram extends JPanel implements MouseListener, MouseMoti
 
     }
 
-    public void mouseClicked(MouseEvent e) {
-        if (e.getClickCount() == 2) {
-            double xrange = hAxis.getUpperBound() - hAxis.getLowerBound();
-            double nrange = .8 * xrange;
-            double hloc = hAxis.java2DToValue((float) e.getX(), dataArea, getXYPlot().getDomainAxisEdge());
-            hAxis.setUpperBound(hloc + nrange / 2);
-            hAxis.setLowerBound(hloc - nrange / 2);
-        }
-    }
-
-    public void mousePressed(MouseEvent e) {
-        lastPressed = e.getPoint();
-    }
-
-    public void mouseReleased(MouseEvent e) {
-        chart.getXYPlot().setDomainCrosshairValue(xaxisPointer.getAxisValue());
-        xaxisPointer.setDragging(true);
-    }
-
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    public void mouseExited(MouseEvent e) {
-
-    }
 
 
-    int paintCount = 0;
-    int paintAt = 2;
-    boolean dragging = true;
 
-    public void mouseDragged(MouseEvent e) {
-        dataArea = chartPanel.getChartRenderingInfo().getPlotInfo().getDataArea();
-        if (dataArea == null) {
-            return;
-        }
-        double hloc = hAxis.java2DToValue((float) e.getX(), dataArea, getXYPlot().getDomainAxisEdge());
 
-        if (NumberUtils.equals(xaxisPointer.getAxisValue(), hloc, .5)) {
-            xaxisPointer.setDragging(true);
-
-        }
-        if (xaxisPointer.isDragging())
-            xaxisPointer.setAxisValue(hloc);
-        // System.out.println("new hloc is: " + hloc);
-        if (paintCount == paintAt) {
-            chart.getXYPlot().setDomainCrosshairValue(hloc);
-            paintCount = 0;
-        } else
-            paintCount++;
-
-        //System.out.println("repainting");
-    }
 
     public void setIndexColorModel(IndexColorModel icm) {
         colorModel = new LinearColorMapDeprecated(colorModel.getMaximumValue(), colorModel.getMaximumValue(), icm);
@@ -268,9 +210,7 @@ public class ColoredHistogram extends JPanel implements MouseListener, MouseMoti
     }
 
 
-    public void mouseMoved(MouseEvent e) {
 
-    }
 
 
     public static void main(String[] args) {

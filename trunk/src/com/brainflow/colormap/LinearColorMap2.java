@@ -52,7 +52,7 @@ public final class LinearColorMap2 extends AbstractColorMap {
 
     public LinearColorMap2(double min, double max, double lowClip, double highClip, LinearColorMap2 lcm) {
         assert max > min : "max must exceed min in LinearColorMap2";
-        assert highClip > lowClip : "highClip must exceeed lowClip";
+        assert highClip >= lowClip : "highClip must begreater than or equal to lowClip";
         assert highClip <= max : "maximum must be greater than highClip";
         assert lowClip >= min : "minimum must be less than lowClip";
 
@@ -70,7 +70,7 @@ public final class LinearColorMap2 extends AbstractColorMap {
 
     public LinearColorMap2(double min, double max, double lowClip, double highClip, IndexColorModel icm) {
         assert max > min : "max must exceed min in LinearColorMap2";
-        assert highClip > lowClip : "highClip must exceeed lowClip";
+        assert highClip >= lowClip : "highClip must begreater than orequal to lowClip";
         assert highClip <= max : "maximum must be greater than highClip";
         assert lowClip >= min : "minimum must be less than lowClip";
 
@@ -130,7 +130,7 @@ public final class LinearColorMap2 extends AbstractColorMap {
     }
 
     private void initSegments() {
-        assert binSize > 0;
+        assert binSize >= 0;
         segments = new double[getMapSize()];
 
         segments[0] = getMinimumValue();
@@ -199,6 +199,8 @@ public final class LinearColorMap2 extends AbstractColorMap {
     }
 
     public LinearColorMap2 newClipRange(double lowClip, double highClip) {
+        if (lowClip > highClip) lowClip = highClip;
+        if (highClip < lowClip) highClip = lowClip;
         return new LinearColorMap2(getMinimumValue(), getMaximumValue(), lowClip, highClip, this);
     }
 }

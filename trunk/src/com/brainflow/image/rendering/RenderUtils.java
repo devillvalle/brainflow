@@ -1,6 +1,6 @@
 package com.brainflow.image.rendering;
 
-import com.brainflow.utils.ArrayUtils;
+import com.brainflow.math.ArrayUtils;
 import com.brainflow.utils.NumberUtils;
 
 import java.awt.*;

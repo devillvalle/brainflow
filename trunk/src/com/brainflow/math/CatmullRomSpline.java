@@ -1,4 +1,4 @@
-package com.brainflow.utils;
+package com.brainflow.math;
 import cern.colt.list.*;
 
 /**

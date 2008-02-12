@@ -1,4 +1,6 @@
-package com.brainflow.utils;
+package com.brainflow.math;
+
+import com.brainflow.utils.NumberUtils;
 
 /**
  * Title:        LCBR Home Project

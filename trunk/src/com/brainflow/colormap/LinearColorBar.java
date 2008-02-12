@@ -71,7 +71,7 @@ public class LinearColorBar extends AbstractColorBar {
 
             frac[i - startIndex] = f;
 
-            assert f > lastFrac;
+            assert f > lastFrac : "bin index : " + i + " bin max " + max + " bin diff " + diff + " frac " + f;
 
             lastFrac=f;
         }

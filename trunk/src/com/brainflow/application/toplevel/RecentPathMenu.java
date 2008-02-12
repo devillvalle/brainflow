@@ -4,6 +4,9 @@ import com.brainflow.application.FileSystemEvent;
 import com.brainflow.application.FileSystemEventListener;
 
 import com.brainflow.application.actions.MountDirectoryCommand;
+import com.pietschy.command.group.CommandGroup;
+import com.pietschy.command.group.GroupBuilder;
+import com.pietschy.command.ActionCommand;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -27,7 +30,8 @@ public class RecentPathMenu {
 
     private static Preferences userPrefs = Preferences.userNodeForPackage(RecentPathMenu.class);
 
-    private JMenu directoryMenu = new JMenu("Recently Mounted");
+
+    private CommandGroup commandGroup;
 
     public RecentPathMenu() {
         DirectoryManager.getInstance().addFileSystemEventListener(new FileSystemEventListener() {
@@ -47,20 +51,44 @@ public class RecentPathMenu {
         });
 
         initRecentlyMounted();
-        updateMenu();
+        createGroup();
     }
 
-    public JMenu getMenu() {
-        return directoryMenu;
+    //public JMenu getMenu() {
+    //    return directoryMenu;
+    //}
+
+    public CommandGroup getCommandGroup() {
+        return commandGroup;
+    }
+
+    private void createGroup() {
+        commandGroup = new CommandGroup();
+        commandGroup.getDefaultFace(true).setText("Recently Mounted");
+        
+        GroupBuilder builder = commandGroup.getBuilder();
+        Iterator<String> iter = recentDirectories.iterator();
+        while (iter.hasNext()) {
+            ActionCommand command = new MountDirectoryCommand(iter.next());
+            builder.add(command);
+        }
+
+        builder.applyChanges();
+
+
     }
 
     private void updateMenu() {
-        directoryMenu.removeAll();
+        GroupBuilder builder = commandGroup.getBuilder();
+        builder.clear();
         Iterator<String> iter = recentDirectories.iterator();
         while (iter.hasNext()) {
-            JMenuItem item = new MountDirectoryCommand(iter.next()).createMenuItem();
-            directoryMenu.add(item);
+            ActionCommand command = new MountDirectoryCommand(iter.next());
+            builder.add(command);
         }
+
+        builder.applyChanges();
+
     }
 
 

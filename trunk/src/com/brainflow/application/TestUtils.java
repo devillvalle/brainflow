@@ -18,13 +18,17 @@ import java.net.URL;
  * Time: 9:32:49 AM
  * To change this template use File | Settings | File Templates.
  */
-public class BrainFlowUtilities {
+public class TestUtils {
 
 
     private static final String dataDir = "resources/data/";
     
     public static URL getDataURL(String fileName) {
-        return ClassLoader.getSystemClassLoader().getResource(dataDir + fileName);
+        if (fileName.startsWith(dataDir)) {
+            return ClassLoader.getSystemClassLoader().getResource(fileName);
+        } else {
+            return ClassLoader.getSystemClassLoader().getResource(dataDir + fileName);
+        }
     }
 
     public static IImageDisplayModel quickModel(String headerName) {
@@ -56,7 +60,7 @@ public class BrainFlowUtilities {
         ImageLayer layer;
 
         try {
-            IImageDataSource dataSource = BrainFlowUtilities.quickDataSource(headerName);
+            IImageDataSource dataSource = TestUtils.quickDataSource(headerName);
             layer = new ImageLayer3D(dataSource);
         } catch(Exception e) {
             throw new RuntimeException(e);

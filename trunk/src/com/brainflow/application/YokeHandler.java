@@ -104,7 +104,6 @@ public class YokeHandler {
             AnatomicalPoint3D ap = (AnatomicalPoint3D)newValue;
 
             if (!ap.equals(getTargetLocation())) {
-                log.info("forwarding cursor change to view : " + target);
                 setTargetLocation(ap);              
             }
 

@@ -1,14 +1,12 @@
 package com.brainflow.core;
 
-import com.brainflow.application.BrainFlowUtilities;
+import com.brainflow.application.TestUtils;
 import com.brainflow.image.space.IImageSpace;
 import net.java.dev.properties.container.BeanContainer;
 import net.java.dev.properties.events.PropertyListener;
 import net.java.dev.properties.BaseProperty;
 
 import javax.swing.event.ListDataEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * Created by IntelliJ IDEA.
@@ -91,11 +89,11 @@ public class ImageViewClientSupport {
     }
 
     public static void main(String[] args) {
-        ImageLayer layer = BrainFlowUtilities.quickLayer("icbm452_atlas_probability_gray.hdr");
+        ImageLayer layer = TestUtils.quickLayer("icbm452_atlas_probability_gray.hdr");
         IImageDisplayModel model = new ImageDisplayModel("junk");
         model.addLayer(layer);
         
-        ImageLayer layer2 = BrainFlowUtilities.quickLayer("icbm452_atlas_probability_white.hdr");
+        ImageLayer layer2 = TestUtils.quickLayer("icbm452_atlas_probability_white.hdr");
         model.addLayer(layer2);
         model.setSelectedIndex(1);
 

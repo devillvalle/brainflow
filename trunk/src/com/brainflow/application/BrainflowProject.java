@@ -149,7 +149,7 @@ public class BrainflowProject {
 
     private void fireModelRemoved(BrainflowProjectEvent event) {
         for (BrainflowProjectListener l : listenerList) {
-            l.modelAdded(event);
+            l.modelRemoved(event);
 
         }
 

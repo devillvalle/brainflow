@@ -1,14 +1,8 @@
 package com.brainflow.image.data;
 
-import com.brainflow.image.space.Axis;
-import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace2D;
 import com.brainflow.image.interpolation.InterpolationFunction2D;
 import com.brainflow.image.iterators.ImageIterator;
-import com.brainflow.image.rendering.RenderUtils;
-import com.brainflow.utils.ArrayUtils;
-
-import java.awt.image.RenderedImage;
 
 /**
  * Created by IntelliJ IDEA.

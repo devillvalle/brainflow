@@ -4,8 +4,12 @@ import cern.colt.list.DoubleArrayList;
 import cern.jet.stat.Descriptive;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.iterators.ImageIterator;
-import com.brainflow.utils.ArrayUtils;
+import com.brainflow.image.io.IImageDataSource;
+import com.brainflow.math.ArrayUtils;
 import com.brainflow.utils.IRange;
+import com.brainflow.application.TestUtils;
+
+import java.util.Arrays;
 
 /**
  * <p>Title: </p>
@@ -71,7 +75,7 @@ public class Histogram {
         }
         computed = true;
         binList = new DoubleArrayList(ArrayUtils.castToDoubles(bins));
-        getBinIntervals();
+        getBinIntervals(binSize);
         binList.trimToSize();
         return binList.elements();
     }
@@ -80,8 +84,16 @@ public class Histogram {
         ignore = range;
     }
 
+    public double getBinSize() {
+        computeBins();
+        return binSize;
 
-    public double[] getBinIntervals() {
+    }
+
+  
+
+
+    public double[] getBinIntervals(double binSize) {
         if (binIntervals == null) {
             double[] intervals = new double[numBins + 1];
             intervals[0] = minValue;
@@ -133,6 +145,13 @@ public class Histogram {
 
     public double getMaxValue() {
         return data.getMaxValue();
+    }
+
+    public static void main(String[] args) {
+        IImageDataSource dataSource = TestUtils.quickDataSource("resources/data/global_mean+orig.HEAD");
+        Histogram histo = new Histogram(dataSource.getData(),256);
+        histo.computeBins();
+        System.out.println("histo : " + Arrays.toString(histo.computeBins()));
     }
 
 

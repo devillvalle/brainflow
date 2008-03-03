@@ -1,4 +1,4 @@
-package com.brainflow.jfreechart;
+package com.brainflow.chart;
 
 import org.jfree.data.*;
 import org.jfree.data.general.AbstractDataset;
@@ -6,7 +6,6 @@ import org.jfree.data.general.DatasetChangeListener;
 import org.jfree.data.xy.IntervalXYDataset;
 
 import com.brainflow.image.*;
-import com.brainflow.utils.*;
 
 /**
  * <p>Title: </p>
@@ -18,7 +17,7 @@ import com.brainflow.utils.*;
  * @version 1.0
  */
 
-public class HistogramDataset extends AbstractDataset implements IntervalXYDataset {
+public class HistogramDatasetX extends AbstractDataset implements IntervalXYDataset {
 
     
     Histogram histogram;
@@ -29,11 +28,14 @@ public class HistogramDataset extends AbstractDataset implements IntervalXYDatas
     double[] bins;
     double[] binIntervals;
     
-    public HistogramDataset(Histogram _histogram) {
+    public HistogramDatasetX(Histogram _histogram) {
         histogram = _histogram;
-        bins = histogram.getBins();
-        binIntervals = histogram.getBinIntervals();
-        System.out.println("first bin interval = " + binIntervals[0]);
+        bins = histogram.computeBins();
+        binIntervals = histogram.getBinIntervals(histogram.getBinSize());
+    }
+
+    protected double[] getBins() {
+        return bins;
     }
     
     public double getStartXValue(int series, int item) {

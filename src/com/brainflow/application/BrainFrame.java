@@ -30,19 +30,11 @@ public class BrainFrame extends DefaultDockableHolder {
 
    
     public static void main(String[] args) {
-        //com.incors.plaf.alloy.AlloyLookAndFeel.setProperty("alloy.licenseCode", "v#ej_technologies#uwbjzx#e6pck8");
-        //com.incors.plaf.alloy.AlloyLookAndFeel.setProperty("alloy.isLookAndFeelFrameDecoration", "true");
-        //com.incors.plaf.alloy.AlloyLookAndFeel alloylookandfeel = new com.incors.plaf.alloy.AlloyLookAndFeel();
+        log.info("verifying license");
         com.jidesoft.utils.Lm.verifyLicense("UIN", "BrainFrame", "7.YTcWgxxjx1xjSnUqG:U1ldgGetfRn1");
 
 
-        try {
-            UIManager.setLookAndFeel(new com.jidesoft.plaf.eclipse.EclipseWindowsLookAndFeel());
-            //UIManager.setLookAndFeel(new com.jgoodies.looks.plastic.Plastic3DLookAndFeel());
-            //LookAndFeelFactory.installJideExtension();
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
+     
 
 
         BrainFrame bf = new BrainFrame();
@@ -50,6 +42,8 @@ public class BrainFrame extends DefaultDockableHolder {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         bf.setLocationRelativeTo(null);
        // bf.setSize((int) screenSize.getWidth()-10, (int) screenSize.getHeight() - 10);
+
+        log.info("showing frame");
         bf.setVisible(true);
 
     }

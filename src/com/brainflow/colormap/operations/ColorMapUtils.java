@@ -1,7 +1,7 @@
 package com.brainflow.colormap.operations;
 import java.awt.image.*;
 import java.awt.Point;
-import javax.media.jai.*;
+
 import java.awt.image.RenderedImage;
 import java.awt.image.renderable.ParameterBlock;
 import java.awt.*;
@@ -35,24 +35,15 @@ public class ColorMapUtils {
 
 
   public static RenderedImage insertColorMap(RenderedImage img, IndexColorModel icm) {
-    if (! (img.getColorModel() instanceof IndexColorModel) )
-      throw new IllegalArgumentException("Image must have Color Model of type IndexColorModel!");
+    assert false;
+    return null;
 
-
-    Raster raster = img.getData();
-    TiledImage timg = new TiledImage(raster.getMinX(), raster.getMinY(), raster.getWidth(), raster.getHeight(), 0,0,
-                                     raster.getSampleModel(), icm);
-
-
-    timg.setData(raster);
-
-    return timg;
 
   }
 
 
 
-  public static RenderedImage createTiledImage(byte[] data, int width, int height, IndexColorModel icm) {
+  /*public static RenderedImage createTiledImage(byte[] data, int width, int height, IndexColorModel icm) {
     WritableRaster raster = WritableRaster.createInterleavedRaster(DataBuffer.TYPE_BYTE,
                         width, height, 1, new Point(0,0));
     raster.setDataElements(0,0, width, height, data);
@@ -71,11 +62,11 @@ public class ColorMapUtils {
     return JAI.create("format", pb, hints);
 
 
-  }
+  }  */
 
 
 
-  public static RenderedImage paletteToRGB(RenderedImage src, boolean hasAlpha) {
+  /*public static RenderedImage paletteToRGB(RenderedImage src, boolean hasAlpha) {
     if (hasAlpha)
       return ColorMapUtils.paletteToRGB(src);
 
@@ -99,10 +90,10 @@ public class ColorMapUtils {
     }
 
     return dst;
-  }
+  } */
 
 
-  public static RenderedImage paletteToRGB(RenderedImage src) {
+  /*public static RenderedImage paletteToRGB(RenderedImage src) {
     RenderedImage dst = null;
 
     if(src.getColorModel() instanceof IndexColorModel) {
@@ -127,7 +118,7 @@ public class ColorMapUtils {
     }
 
     return dst;
-  }
+  }   */
 
 
   public static RenderedImage createImage(byte[] data, int width, int height, IndexColorModel icm) {

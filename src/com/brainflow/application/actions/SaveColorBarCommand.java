@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,12 +19,11 @@ import java.io.File;
  * Time: 4:08:52 PM
  * To change this template use File | Settings | File Templates.
  */
-public class SaveColorBarAction extends BasicAction {
+public class SaveColorBarCommand extends BrainFlowCommand {
 
-
-    protected void execute(ActionEvent actionEvent) throws Exception {
-
-        ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
+    protected void handleExecute()  {
+        ImageView view = getSelectedView();
+        //To change body of implemented methods use File | Settings | File Templates.
 
         if (view != null) {
             int idx = view.getModel().getSelectedIndex();
@@ -41,7 +41,13 @@ public class SaveColorBarAction extends BasicAction {
 
             if (res == JFileChooser.APPROVE_OPTION) {
                 File f = chooser.getSelectedFile();
-                ImageIO.write(bimg, "png", f);
+
+                try {
+                    ImageIO.write(bimg, "png", f);
+                } catch (IOException e) {
+                    throw new RuntimeException("Error during attempt to save color bar image: " + f, e);
+                }
+
             }
         }
 

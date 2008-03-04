@@ -55,9 +55,7 @@ public class CompositeImageProducer extends AbstractImageProducer {
         initPipeline();
 
         setSlice(slice);
-        System.out.println("creating new layer listener " + layerListener);
         layerListener = new PipelineLayerListener();
-        System.out.println("adding layer listener " + layerListener);
         getModel().addImageLayerListener(layerListener);
         initPipeline();
 

@@ -10,8 +10,9 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.application.actions.ActionContext;
-import com.brainflow.application.actions.DesignColorMapAction;
+
 import com.brainflow.application.actions.SelectColorMapAction;
+import com.brainflow.application.actions.DesignColorMapCommand;
 import com.brainflow.application.presentation.forms.ColorBarForm;
 import com.brainflow.application.toplevel.BrainCanvasManager;
 import com.brainflow.application.toplevel.ResourceManager;
@@ -147,8 +148,10 @@ public class ColorBarPresenter extends ImageViewPresenter {
 
         }
 
-        BasicAction designAction = new DesignColorMapAction("Custom Colors...");
-        designAction.setContext(map);
+        DesignColorMapCommand command = new DesignColorMapCommand();
+        command.getDefaultFace(true).setText("Custom Colors...");
+        Action designAction = command.getActionAdapter();
+
         actions.add(designAction);
 
         return actions;

@@ -1,7 +1,5 @@
 package com.brainflow.core;
 
-import com.brainflow.display.ICrosshair;
-import com.brainflow.display.Viewport3D;
 
 /**
  * Created by IntelliJ IDEA.

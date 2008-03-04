@@ -21,32 +21,27 @@ import java.util.logging.Logger;
  * Time: 12:59:23 PM
  * To change this template use File | Settings | File Templates.
  */
-public class CrosshairDialogAction extends BasicAction {
+public class CrosshairDialogCommand extends BrainFlowCommand {
 
-    private static final Logger log = Logger.getLogger(CrosshairDialogAction.class.getName());
+    private static final Logger log = Logger.getLogger(CrosshairDialogCommand.class.getName());
 
     private JDialog dialog;
 
 
-
-
-
-    public CrosshairDialogAction() {
-        super();
-
+    public CrosshairDialogCommand() {
 
 
     }
 
-    protected void execute(ActionEvent actionEvent) throws Exception {
+    protected void handleExecute() {
 
-        final ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
+        ImageView view = getSelectedView();
 
 
         if (view != null) {
-            final CrosshairAnnotation icross = (CrosshairAnnotation)view.getAnnotation(view.getSelectedPlot(), CrosshairAnnotation.ID);
-            final CrosshairAnnotation safeCopy = (CrosshairAnnotation)icross.safeCopy();
-            
+            final CrosshairAnnotation icross = (CrosshairAnnotation) view.getAnnotation(view.getSelectedPlot(), CrosshairAnnotation.ID);
+            final CrosshairAnnotation safeCopy = (CrosshairAnnotation) icross.safeCopy();
+
             if (icross != null) {
                 CrosshairPresenter presenter = new CrosshairPresenter((CrosshairAnnotation) icross);
                 Container c = JOptionPane.getFrameForComponent(view);
@@ -71,7 +66,7 @@ public class CrosshairDialogAction extends BasicAction {
                         icross.setLineWidth(safeCopy.getLineWidth());
                         icross.setGap(safeCopy.getGap());
                         icross.setVisible(safeCopy.isVisible());
-                        
+
 
                         dialog.setVisible(false);
                         dialog.dispose();
@@ -79,11 +74,7 @@ public class CrosshairDialogAction extends BasicAction {
                 });
 
 
-
-
                 final JButton applyButton = new JButton("Apply");
-
-
 
 
                 dialog = new JDialog(JOptionPane.getFrameForComponent(view));
@@ -109,8 +100,7 @@ public class CrosshairDialogAction extends BasicAction {
             }
         }
 
-
-
-
     }
+
+
 }

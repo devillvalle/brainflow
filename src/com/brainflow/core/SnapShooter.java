@@ -9,7 +9,6 @@ import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.io.BrainIO;
 
-import javax.media.jai.JAI;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -83,7 +82,10 @@ public class SnapShooter {
             else num = num + i;
 
             String fname = path + "/" + prefix + "_" + num + ".png";
-            JAI.create("filestore", rimg[i], fname, "png");
+
+            //todo fixme
+            assert false;
+            //JAI.create("filestore", rimg[i], fname, "png");
         }
     }
 

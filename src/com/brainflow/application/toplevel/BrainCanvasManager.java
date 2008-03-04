@@ -47,7 +47,6 @@ public class BrainCanvasManager {
    
     private PropertyChangeSupport support = new PropertyChangeSupport(this);
 
-    private ContextMenuHandler contextMenuHandler;
 
     private CanvasSelectionListener canvasListener;
 
@@ -61,6 +60,7 @@ public class BrainCanvasManager {
     
 
     protected BrainCanvasManager() {
+        log.info("instantiating BrainCanvasManager");
         // Exists only to thwart instantiation.
         //EventBus.subscribe(ImageViewCursorEvent.class, this);
     }
@@ -72,15 +72,13 @@ public class BrainCanvasManager {
 
     private void listenToCanvas(BrainCanvas canvas) {
         if (canvasListener == null) canvasListener = new CanvasSelectionListener();
-        if (contextMenuHandler == null) contextMenuHandler = new ContextMenuHandler();
-        if (cursorListener == null) cursorListener = new ImageViewMouseMotionListener();
+         if (cursorListener == null) cursorListener = new ImageViewMouseMotionListener();
 
         //canvas.getImageCanvasModel().addPropertyChangeListener(canvasListener);
         //canvas.getImageCanvasModel().listSelection.
 
         BeanContainer.get().addListener(canvas.getImageCanvasModel().listSelection, canvasListener);
 
-        canvas.addMouseListener(contextMenuHandler);
         canvas.addInteractor(cursorListener);
 
     }
@@ -149,7 +147,9 @@ public class BrainCanvasManager {
     }
 
     public BrainCanvas createCanvas() {
+        log.info("creating Brain Canvas");
         BrainCanvas canvas = new BrainCanvas();
+        log.info("adding Brain Canvas");
         addImageCanvas(canvas);
         return canvas;
     }
@@ -221,23 +221,6 @@ public class BrainCanvasManager {
 
     }
 
-    class ContextMenuHandler extends MouseAdapter {
-
-
-        public void mouseReleased(MouseEvent e) {
-            Action yokeAction = ActionManager.getInstance().getAction("yoke-views");
-            Action unyokeAction = ActionManager.getInstance().getAction("unyoke-views");
-            if (e.isPopupTrigger()) {
-                JPopupMenu popup = new JPopupMenu();
-
-                popup.add(ActionUIFactory.getInstance().createMenuItem(yokeAction));
-                popup.add(ActionUIFactory.getInstance().createMenuItem(unyokeAction));
-                popup.setInvoker(getSelectedCanvas());
-                popup.setLocation(e.getXOnScreen(), e.getYOnScreen());
-                popup.setVisible(true);
-            }
-        }
-    }
 
 
     class ImageViewMouseMotionListener extends ImageViewInteractor {

@@ -26,8 +26,6 @@ public class PercentageRangeConverter extends ObservableWrapper.ReadWrite<Intege
         this.max = max;
         this.numUnits = numUnits;
 
-
-
     }
 
     

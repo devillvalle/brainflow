@@ -22,8 +22,7 @@ import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 
 import javax.imageio.ImageIO;
-import javax.media.jai.JAI;
-import javax.media.jai.RenderedImageAdapter;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -52,9 +51,11 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
 
 
     public static final int SMALL_ICON_WIDTH = 24;
+
     public static final int SMALL_ICON_HEIGHT = 24;
 
     public static final int LARGE_ICON_WIDTH = 60;
+    
     public static final int LARGE_ICON_HEIGHT = 60;
 
     private HierarchicalTable table;
@@ -168,41 +169,7 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
 
     }
 
-    private ImageIcon getSnapshot(IImageDataSource limg, int width, int height) {
-        ImageIcon icon = imap.get(limg);
-
-        if (icon == null) {
-            ImageDisplayModel dmodel = new ImageDisplayModel("" + limg.getUniqueID());
-
-            IRange dataRange = new Range(limg.getData().getMinValue(), limg.getData().getMaxValue());
-            ImageLayerProperties parms = new ImageLayerProperties(ColorTable.GRAYSCALE, dataRange);
-            ImageLayer layer = new ImageLayer3D(limg, parms);
-
-            dmodel.addLayer(layer);
-
-            AnatomicalPoint1D point = dmodel.getImageAxis(Anatomy3D.getCanonicalAxial().ZAXIS).getRange().getCenter();
-            SnapShooter shooter = new SnapShooter(dmodel, Anatomy3D.getCanonicalAxial());
-            RenderedImage rimg = shooter.shoot(point.getX());
-            float sx = (float) width / (float) rimg.getWidth();
-            float sy = (float) height / (float) rimg.getHeight();
-            ParameterBlock pb = new ParameterBlock();
-
-            pb.add(sx);
-            pb.add(sy);
-            pb.addSource(rimg);
-
-            rimg = JAI.create("scale", pb);
-
-            RenderedImageAdapter rapter = new RenderedImageAdapter(rimg);
-            icon = new ImageIcon(rapter.getAsBufferedImage());
-
-
-            imap.put(limg, icon);
-        }
-
-        return icon;
-    }
-
+   
 
     class ImageInfoPanel extends JPanel {
         IImageDataSource limg;

@@ -1,8 +1,8 @@
-package com.brainflow.jfreechart;
+package com.brainflow.chart;
 
 import cern.colt.list.DoubleArrayList;
-import com.brainflow.utils.BSpline;
-import com.brainflow.utils.CatmullRomSpline;
+import com.brainflow.math.BSpline;
+import com.brainflow.math.CatmullRomSpline;
 import com.brainflow.utils.Pair;
 
 import java.util.ArrayList;
@@ -202,12 +202,12 @@ public class DynamicSplineXYDataset extends DynamicXYDataset {
     }
 
     public int getSeriesCount() {
-        /**@todo: Override this com.brainflow.jfreechart.DynamicXYDataset method*/
+        /**@todo: Override this com.brainflow.chart.DynamicXYDataset method*/
         return dataset.getSeriesCount();
     }
 
     public void setSeriesNames(String[] parm1) {
-        /**@todo: Override this com.brainflow.jfreechart.DynamicXYDataset method*/
+        /**@todo: Override this com.brainflow.chart.DynamicXYDataset method*/
         dataset.setSeriesNames(parm1);
     }
 

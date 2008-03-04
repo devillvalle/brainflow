@@ -17,40 +17,19 @@ import java.awt.event.ActionEvent;
  * Time: 3:12:21 PM
  * To change this template use File | Settings | File Templates.
  */
-public class DesignColorMapAction extends BasicAction {
+public class DesignColorMapCommand extends BrainFlowCommand {
 
 
-    public static void main(String[] args) {
-
-        try {
-            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceModerateLookAndFeel());
-
-
-            JFrame frame = new JFrame();
-            frame.setVisible(true);
-            frame.setSize(800, 800);
-
-
-            int ret = JOptionPane.showOptionDialog(frame, new JPanel(), "Option", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
-                    null, null, null);
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+    public DesignColorMapCommand() {
+        super();
 
     }
 
-    public DesignColorMapAction(String string) {
-        super(string);
+    protected void handleExecute() {
+        //To change body of implemented methods use File | Settings | File Templates.
 
-    }
-
-    protected void execute(ActionEvent actionEvent) throws Exception {
-
-        ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
-        BrainCanvas canvas = (BrainCanvas) getContextValue(ActionContext.SELECTED_CANVAS);
+        ImageView view = getSelectedView();
+        
         if (view != null) {
 
             //int layer = view.getModel().getSelectedLayerIndex();

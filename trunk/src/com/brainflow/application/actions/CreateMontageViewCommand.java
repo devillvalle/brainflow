@@ -20,29 +20,18 @@ import java.awt.event.ActionEvent;
  * Time: 11:42:04 PM
  * To change this template use File | Settings | File Templates.
  */
-public class CreateMontageViewAction extends BasicAction {
+public class CreateMontageViewCommand extends BrainFlowCommand {
 
 
-    protected void contextChanged() {
-
-        ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
-
-        if (view != null) {
-            setEnabled(true);
-        } else {
-            setEnabled(false);
-        }
-    }
-
-    protected void execute(ActionEvent actionEvent) throws Exception {
-        ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
+    protected void handleExecute() {
+        ImageView view = getSelectedView();
 
         if (view != null) {
             IImageDisplayModel displayModel = view.getModel();
             //ImageView sview = ImageViewFactory.createOrthogonalView(displayModel);
 
             InputPanel ip = new InputPanel(view);
-            BrainCanvas canvas = (BrainCanvas) getContextValue(ActionContext.SELECTED_CANVAS);
+            BrainCanvas canvas = getSelectedCanvas();
 
             JOptionPane.showMessageDialog(canvas, ip);
             ImageView sview = ImageViewFactory.createMontageView(displayModel, ip.getRows(), ip.getColumns(), ip.getSliceGap());
@@ -53,6 +42,7 @@ public class CreateMontageViewAction extends BasicAction {
         }
 
     }
+
 
     class InputPanel extends JPanel {
 
@@ -82,25 +72,25 @@ public class CreateMontageViewAction extends BasicAction {
             add(colSpinner, cc.xyw(4, 4, 2));
             add(gapSpinner, cc.xyw(4, 6, 2));
 
-            add(new JLabel("Rows:"), cc.xy(2,2));
-            add(new JLabel("Columns:"), cc.xy(2,4));
-            add(new JLabel("Slice Gap:"), cc.xy(2,6));
+            add(new JLabel("Rows:"), cc.xy(2, 2));
+            add(new JLabel("Columns:"), cc.xy(2, 4));
+            add(new JLabel("Slice Gap:"), cc.xy(2, 6));
 
 
         }
 
         public int getRows() {
-            return ((Number)rowSpinner.getValue()).intValue();
+            return ((Number) rowSpinner.getValue()).intValue();
         }
 
         public int getColumns() {
-            return ((Number)colSpinner.getValue()).intValue();
+            return ((Number) colSpinner.getValue()).intValue();
         }
 
         public double getSliceGap() {
-            return ((Number)gapSpinner.getValue()).doubleValue();
+            return ((Number) gapSpinner.getValue()).doubleValue();
         }
     }
 
-    
+
 }

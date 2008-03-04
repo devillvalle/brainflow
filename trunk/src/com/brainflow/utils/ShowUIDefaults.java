@@ -8,7 +8,7 @@ package com.brainflow.utils;
  * To change this template use File | Settings | File Templates.
  */
 
-import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
+
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -217,7 +217,7 @@ public class ShowUIDefaults extends JFrame implements ActionListener {
         //javax.swing.LookAndFeel lipstikLnF = new com.lipstikLF.LipstikLookAndFeel();
         try {
             //SyntheticaLookAndFeel lf = new SyntheticaStandardLookAndFeel();
-            UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
+            //UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
             //LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.

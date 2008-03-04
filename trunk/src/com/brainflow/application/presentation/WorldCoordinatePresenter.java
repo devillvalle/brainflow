@@ -10,6 +10,7 @@ import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 
 import net.java.dev.properties.binding.swing.adapters.SwingBind;
+import net.java.dev.properties.container.BeanContainer;
 
 import javax.swing.*;
 

@@ -15,6 +15,9 @@ import javax.swing.event.ListSelectionListener;
 
 import net.java.dev.properties.binding.swing.adapters.SwingBind;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Brad Buchsbaum
@@ -72,16 +75,28 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
     }
 
     private void bind() {
+
         visibilitySelection = new VisibilitySelection(getSelectedView());
-        SwingBind.get().bindContent(getSelectedView().getModel().getListModel(), layerSelector);
         SwingBind.get().bindSelectionIndex(getSelectedView().getModel().getListSelection(), layerSelector);
+        SwingBind.get().bindContent(getSelectedView().getModel().getListModel(), layerSelector);
+
         initVisibilityModel();
 
     }
 
     private void initVisibilityModel() {
-        CheckBoxListSelectionModel model = new CheckBoxListSelectionModel();
+
+        CheckBoxListSelectionModel model = new CheckBoxListSelectionModel() {
+
+            public void insertIndexInterval(int i, int i1, boolean b) {
+                //do nothing    
+            }
+        };
+
+
         layerSelector.setCheckBoxListSelectionModel(model);
+
+       
         model.addListSelectionListener(new ListSelectionListener() {
 
 
@@ -91,6 +106,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
                 CheckBoxListSelectionModel model = (CheckBoxListSelectionModel) e.getSource();
                 ImageView view = getSelectedView();
 
+                System.out.println("layer selection value changed !");
                 for (int i = f1; i <= f2; i++) {
                     AbstractLayer layer = view.getModel().getLayer(i);
                     boolean vis = layer.getImageLayerProperties().visible.get();
@@ -148,6 +164,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
     }
 
     public void intervalAdded(ListDataEvent e) {
+        //System.out.println("layer selection interval added !");
         int index = e.getIndex0();
         ImageView view = getSelectedView();
         AbstractLayer layer = view.getModel().getLayer(index);
@@ -188,8 +205,10 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
                 int i = getSelectedView().getModel().indexOf(layer);
                 boolean vis = layer.isVisible();
                 if (vis) {
+                    //layerSelector.addCheckBoxListSelectedIndex(i);
                     layerSelector.getCheckBoxListSelectionModel().addSelectionInterval(i, i);
                 } else {
+                    //layerSelector.removeCheckBoxListSelectedIndex(i);
                     layerSelector.getCheckBoxListSelectionModel().removeSelectionInterval(i, i);
 
                 }

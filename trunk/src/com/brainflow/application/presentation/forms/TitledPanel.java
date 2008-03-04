@@ -9,6 +9,8 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.logging.Logger;
 
+import org.jvnet.substance.skin.SubstanceCremeLookAndFeel;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -69,7 +71,7 @@ public class TitledPanel extends JPanel {
         com.jidesoft.utils.Lm.verifyLicense("UIN", "Brainflow", "7.YTcWgxxjx1xjSnUqG:U1ldgGetfRn1");
         try {
             //UIManager.setLookAndFeel(new com.jidesoft.plaf.eclipse.EclipseWindowsLookAndFeel());
-            UIManager.setLookAndFeel(new com.jidesoft.plaf.vsnet.VsnetWindowsLookAndFeel());
+            UIManager.setLookAndFeel(new SubstanceCremeLookAndFeel());
             LookAndFeelFactory.installJideExtension();
         } catch (UnsupportedLookAndFeelException e) {
             Logger.getAnonymousLogger().severe("Could not load Look and Feel, aborting");

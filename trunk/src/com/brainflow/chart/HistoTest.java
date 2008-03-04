@@ -30,7 +30,7 @@ public class HistoTest extends JPanel {
     private void buildDataSet() {
 
 
-        //HistogramDataset dataset = new HistogramDataset(histogram);
+        //HistogramDatasetX dataset = new HistogramDatasetX(histogram);
         ColoredHistogram chist = new ColoredHistogram(histogram);
         LinearColorMap2 lmap = new LinearColorMap2(histogram.getMinValue(), histogram.getMaxValue(), ColorTable.SPECTRUM);
         chist.setColorModel(lmap);

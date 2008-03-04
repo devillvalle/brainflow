@@ -7,10 +7,8 @@ import com.brainflow.colormap.LinearColorMapDeprecated;
 import com.brainflow.image.Histogram;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.BrainIO;
-import com.brainflow.chart.AxisPointer;
-import com.brainflow.chart.HistogramDataset;
+import com.brainflow.chart.HistogramDatasetX;
 import com.brainflow.chart.LogHistogramDataset;
-import com.brainflow.utils.NumberUtils;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -24,9 +22,6 @@ import org.jfree.data.xy.XYDataset;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.IndexColorModel;
 
@@ -44,7 +39,7 @@ public class ColoredHistogram extends JPanel {
 
     private Histogram histogram;
 
-    private HistogramDataset dataset;
+    private HistogramDatasetX dataset;
 
     private Point lastPressed;
 
@@ -185,7 +180,7 @@ public class ColoredHistogram extends JPanel {
         return chart.getXYPlot();
     }
 
-    public HistogramDataset getDataset() {
+    public HistogramDatasetX getDataset() {
         return dataset;
     }
 

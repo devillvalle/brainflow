@@ -1,4 +1,4 @@
-package com.brainflow.jfreechart;
+package com.brainflow.chart;
 
 import com.brainflow.graphics.GraphicalPointer;
 

@@ -53,16 +53,17 @@ public class ImageDisplayModel implements IImageDisplayModel {
             if (integer >= listModel.size() || integer < -1) {
                 throw new IllegalArgumentException("selection index exceeds size of list");
             }
+
+
+            if (integer < 0 && listModel.size() > 0) {
+                log.warning("sliently aborting attempt to set layer index < 0");
+                return;
+            }
+
             super.set(integer);
         }
 
-        public Integer get() {
-            if ( (listModel.size() == 1) && (super.get() == -1) ) {
-                return 0;
-            }
-            
-            return super.get();    //To change body of overridden methods use File | Settings | File Templates.
-        }
+        
     };
 
 
@@ -179,6 +180,8 @@ public class ImageDisplayModel implements IImageDisplayModel {
         if (listModel.size() == 1) {
             listSelection.set(0);
         }
+
+        
         computeImageSpace();
 
     }
@@ -430,7 +433,9 @@ public class ImageDisplayModel implements IImageDisplayModel {
     }
 
     public ImageLayer getLayer(int layer) {
-        assert layer >= 0 && layer < listModel.size();
+        if (layer < 0 || layer >= listModel.size()) {
+            throw new IllegalArgumentException("illagal layer index");
+        }
         return listModel.get(layer);
     }
 

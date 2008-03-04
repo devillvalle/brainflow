@@ -3,7 +3,7 @@ package com.brainflow.application.presentation.forms;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
+
 import com.jidesoft.hints.ListDataIntelliHints;
 import com.jidesoft.swing.FolderChooser;
 import com.jidesoft.swing.SelectAllUtils;
@@ -245,7 +245,7 @@ public class SnapshotForm extends JPanel {
     public static void main(String[] args) {
         try {
 
-            UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
+            //UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
             BufferedImage bimg = ImageIO.read(ClassLoader.getSystemResource("resources/data/axial_slice.png"));
             SnapshotForm form = new SnapshotForm(bimg);
 

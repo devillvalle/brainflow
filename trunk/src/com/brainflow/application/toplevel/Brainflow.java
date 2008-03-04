@@ -51,11 +51,13 @@ import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Callable;
+import java.util.concurrent.FutureTask;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
-
-import sun.swing.plaf.nimbus.NimbusLookAndFeel;
 
 
 /**
@@ -76,7 +78,6 @@ public class Brainflow {
     private BrainFrame brainFrame = null;
 
 
-
     private RecentPathMenu pathMenu = new RecentPathMenu();
 
     private DocumentPane documentPane = new DocumentPane();
@@ -93,6 +94,7 @@ public class Brainflow {
 
     private CommandContainer commandContainer;
 
+    private ExecutorService threadService = Executors.newCachedThreadPool();
 
     protected Brainflow() {
         // Exists only to thwart instantiation.
@@ -107,17 +109,9 @@ public class Brainflow {
         com.jidesoft.utils.Lm.verifyLicense("UIN", "BrainFlow", "S5XiLlHH0VReaWDo84sDmzPxpMJvjP3");
 
         try {
-            //SyntheticaLookAndFeel lf = new SyntheticaStandardLookAndFeel();
-
-            //UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
 
             UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceCremeCoffeeLookAndFeel());
-           //UIManager.setLookAndFeel(new NimbusLookAndFeel());
 
-            //UIManager.setLookAndFeel(new A03LookAndFeel());
-            //UIManager.setLookAndFeel(lf);
-            //LookAndFeelFactory.installDefaultLookAndFeel();
-            //LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
             LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE_WITHOUT_MENU);
         } catch (Exception e) {
             Logger.getAnonymousLogger().severe("Error Loading LookAndFeel, exiting");
@@ -132,11 +126,13 @@ public class Brainflow {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 try {
+                    log.info("Launching Brainflow ...");
                     bflow.launch();
                 } catch (Throwable e) {
                     Logger.getAnonymousLogger().severe("Error Launching Brainflow, exiting");
                     e.printStackTrace();
                     System.exit(-1);
+
                 }
 
             }
@@ -162,49 +158,101 @@ public class Brainflow {
 
     }
 
+    private void reportTime(long startTime, String message) {
+        long curTime = System.currentTimeMillis();
+        long duration = curTime - startTime;
+
+        log.info(message + " : " + duration);
+    }
 
     public void launch() throws Throwable {
-        final SplashScreen splash = SplashScreen.getSplashScreen();
-
-        if (splash == null) {
-            //throw new RuntimeException("Cannot create splash screen");
-
-        }
+        //final SplashScreen splash = SplashScreen.getSplashScreen();
 
         //JFrame.setDefaultLookAndFeelDecorated(true);
 
+        long startTime = System.currentTimeMillis();
+
+
         brainFrame = new BrainFrame();
+        reportTime(startTime, "created brainframe");
         brainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        
+
+        log.info("initilaizing BrainCanvasManager ...");
         BrainCanvasManager.getInstance().createCanvas();
 
+        log.info("initializing resources ...");
+        FutureTask<Boolean> initResources = new FutureTask<Boolean>(new Callable<Boolean>() {
+            public Boolean call() throws Exception {
+                return initializeResources();
+            }
+        });
+
+        threadService.execute(initResources);
 
 
-        loadCommands();
-        bindContainer();
+        log.info("loading commands ...");
+        FutureTask<Boolean> loadCommandsTask = new FutureTask<Boolean>(new Callable<Boolean>() {
+            public Boolean call() throws Exception {
+                return loadCommands();
+            }
+        });
+
+        threadService.execute(loadCommandsTask);
 
 
-        initImageIO();
+        log.info("initializing IO ...");
+        FutureTask<Boolean> initIOTask = new FutureTask<Boolean>(new Callable<Boolean>() {
+            public Boolean call() throws Exception {
+                return initImageIO();
+            }
+        });
 
-        initializeActions();
+        threadService.execute(initIOTask);
 
-        intializeKeyActions();
 
-        initializeMenu();
 
+
+        log.info("initializing status bar ...");
         initializeStatusBar();
+        reportTime(startTime, "initialized status bar");
 
-        initializeToolBar();
 
+
+
+        log.info("initializing work space ...");
         initializeWorkspace();
+        reportTime(startTime, "initialized work space");
 
-        initializeResources();
-    
+        loadCommandsTask.get();
+        reportTime(startTime, "loaded commands");
+        
+        log.info("binding container ...");
+        bindContainer();
+        reportTime(startTime, "bound container");
+
+
+        log.info("initializing tool bar ...");
+        initializeToolBar();
+        reportTime(startTime, "initialized tool bar");
+
+
+        log.info("initializing menu ...");
+        initializeMenu();
+        reportTime(startTime, "initialized menu");
+
+
+        initIOTask.get();
+        reportTime(startTime, "initialized IO");
+
+        initResources.get();
+        reportTime(startTime, "initialized resources");
+
+
 
     }
 
 
-    private void loadCommands() {
+    private boolean loadCommands() {
         try {
 
             GuiCommands.load("resources/commands/ImageViewCommands");
@@ -215,6 +263,8 @@ public class Brainflow {
             log.severe(e.getMessage());
             throw new RuntimeException(e);
         }
+
+        return true;
     }
 
     public CommandContainer getCommandContainer() {
@@ -237,17 +287,6 @@ public class Brainflow {
     }
 
 
-    private void initializeActions() {
-        
-
-    }
-
-
-    private void intializeKeyActions() {
-
-
-    }
-
     private void initializeMenu() {
         log.info("initializing Menu");
 
@@ -256,7 +295,6 @@ public class Brainflow {
         JMenuBar menuBar = new JMenuBar();
 
 
-        
         menuBar.add(fileMenuGroup.createMenuItem());
 
         brainFrame.setJMenuBar(menuBar);
@@ -270,38 +308,6 @@ public class Brainflow {
         ExpansionPointBuilder builder = fileMenuGroup.getExpansionPointBuilder();
         builder.add(pathMenu.getCommandGroup());
         builder.applyChanges();
-
-        
-        //brainFrame.getGlassPane().setVisible(true);
-
-
-        /*JMenuBar menuBar = new JMenuBar();
-
-
-        JideMenu fileMenu = new JideMenu("File");
-
-        fileMenu.add(mountFileSystemAction);
-        pathMenu.getMenu().setName("Mount Recent");
-        fileMenu.add(pathMenu.getMenu());
-      
-        Action action = ActionManager.getInstance().getAction("main-save-colorbar");
-        fileMenu.add(action);
-
-        BasicAction exit = (BasicAction) ActionManager.getInstance().getAction("main-exit");
-        fileMenu.add(exit);
-
-
-        brainFrame.setJMenuBar(menuBar);
-        brainFrame.getJMenuBar().add(fileMenu);   */
-
-        //ActionList navList = ActionManager.getInstance().getActionList("navigation-menu");
-        //brainFrame.getJMenuBar().add(ActionUIFactory.getInstance(JIDE_FACTORY).createMenu(navList));
-
-        //ActionList annotationList = ActionManager.getInstance().getActionList("annotation-menu");
-        //brainFrame.getJMenuBar().add(ActionUIFactory.getInstance(JIDE_FACTORY).createMenu(annotationList));
-
-        //ActionList debugList = ActionManager.getInstance().getActionList("debug-menu");
-        //brainFrame.getJMenuBar().add(ActionUIFactory.getInstance(JIDE_FACTORY).createMenu(debugList));
 
         brainFrame.getJMenuBar().add(DockWindowManager.getInstance().getDockMenu());
 
@@ -346,7 +352,6 @@ public class Brainflow {
     }
 
     private void initializeToolBar() {
-
 
 
         CommandGroup mainToolbarGroup = new CommandGroup("main-toolbar");
@@ -465,12 +470,17 @@ public class Brainflow {
         documentPane.openDocument(new DocumentComponent(new JScrollPane(canvas), "Canvas-1"));
         documentPane.setActiveDocument("Canvas-1");
 
-
+        log.info("initializing loading dock");
         initLoadingDock();
+        log.info("initializing project view");
         initProjectView();
+        log.info("initializing image table view");
         initLoadableImageTableView();
+        log.info("initializing control panel");
         initControlPanel();
+        log.info("initializing event monitor");
         initEventBusMonitor();
+        log.info("initializing log monitor");
         initLogMonitor();
 
 
@@ -610,17 +620,20 @@ public class Brainflow {
 
         JideTabbedPane tabbedPane = new JideTabbedPane();
 
-         DockableFrame dframe = DockWindowManager.getInstance().createDockableFrame("Tool Box",
-                    "resources/icons/types.gif",
-                    DockContext.STATE_FRAMEDOCKED,
-                    DockContext.DOCK_SIDE_EAST);
+        DockableFrame dframe = DockWindowManager.getInstance().createDockableFrame("Tool Box",
+                "resources/icons/types.gif",
+                DockContext.STATE_FRAMEDOCKED,
+                DockContext.DOCK_SIDE_EAST);
 
-
+        log.fine("instantiating coloradjustment control");
         ColorAdjustmentControl colorAdjustmentControl = new ColorAdjustmentControl();
+        log.fine("instantiating coordinate controls");
         CoordinateControls coordinateControls = new CoordinateControls();
 
+        log.fine("instantiating color map table presenter");
         ColorMapTablePresenter tablePresenter = new ColorMapTablePresenter();
 
+        log.fine("instantiating mask presenter");
         MaskTablePresenter maskPresenter = new MaskTablePresenter();
 
         tabbedPane.addTab("Adjustment", new JScrollPane(colorAdjustmentControl.getComponent()));
@@ -637,20 +650,22 @@ public class Brainflow {
     }
 
 
-    private void initImageIO() {
+    private boolean initImageIO() {
         log.info("initializing imageio");
         try {
             ImageIOManager.getInstance().initialize();
         } catch (BrainflowException e) {
             log.severe("Could not initialize IO facilities, aborting");
             throw new RuntimeException(e);
-        } 
+        }
+
+        return true;
     }
 
-    private void initializeResources() {
+    private boolean initializeResources() {
         log.info("initializing resources");
         ResourceManager.getInstance().getColorMaps();
-
+        return true;
     }
 
 
@@ -684,20 +699,20 @@ public class Brainflow {
             JComboBox choiceBox = new JComboBox(choices.toArray());
 
             //todo hackery alert
-            Anatomy anatomy = (Anatomy)dataSource.getImageInfo().getAnatomy();
+            Anatomy anatomy = (Anatomy) dataSource.getImageInfo().getAnatomy();
             choiceBox.setSelectedItem(anatomy);
 
             FormLayout layout = new FormLayout("4dlu, l:p, p:g, 4dlu", "6dlu, p, 10dlu, p, 6dlu");
             CellConstraints cc = new CellConstraints();
             panel.setLayout(layout);
-            panel.add(messageLabel, cc.xyw(2,2,2));
-            panel.add(choiceBox, cc.xyw(2,4,2));
+            panel.add(messageLabel, cc.xyw(2, 2, 2));
+            panel.add(choiceBox, cc.xyw(2, 4, 2));
 
             JOptionPane.showMessageDialog(brainFrame, panel, "Analyze 7.5 image format ...", JOptionPane.WARNING_MESSAGE);
-            Anatomy selectedAnatomy = (Anatomy)choiceBox.getSelectedItem();
+            Anatomy selectedAnatomy = (Anatomy) choiceBox.getSelectedItem();
             if (selectedAnatomy != anatomy) {
                 //todo hackery alert
-                dataSource.getImageInfo().setAnatomy((Anatomy3D)selectedAnatomy);
+                dataSource.getImageInfo().setAnatomy((Anatomy3D) selectedAnatomy);
                 dataSource.releaseData();
             }
         }
@@ -743,6 +758,8 @@ public class Brainflow {
                 ImageLayer layer = new ImageLayer3D(limg, params);
 
                 dset.addLayer(layer);
+                // todo hack alert
+                //layer.getImageLayerProperties().visible.set(true);
 
             }
         }

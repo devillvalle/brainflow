@@ -1,7 +1,7 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.application.presentation.forms.SnapshotForm;
-import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
+
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -51,11 +51,8 @@ public class SnapshotDialog extends JDialog {
     public static void main(String[] args) {
         try {
 
-            UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
-             BufferedImage bimg = ImageIO.read(ClassLoader.getSystemResource("resources/data/axial_slice.png"));
-            SnapshotDialog form = new SnapshotDialog(bimg);
-
-            
+            BufferedImage bimg = ImageIO.read(ClassLoader.getSystemResource("resources/data/axial_slice.png"));
+            SnapshotDialog form = new SnapshotDialog(bimg);        
             form.setVisible(true);
             form.pack();
         } catch (Exception e) {

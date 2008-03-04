@@ -9,7 +9,7 @@ import com.brainflow.image.Histogram;
  * Time: 10:22:43 AM
  * To change this template use File | Settings | File Templates.
  */
-public class LogHistogramDataset extends HistogramDataset {
+public class LogHistogramDataset extends HistogramDatasetX {
 
     public LogHistogramDataset(Histogram _histogram) {
         super(_histogram);

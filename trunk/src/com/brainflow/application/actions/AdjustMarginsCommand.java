@@ -31,34 +31,21 @@ import java.beans.PropertyChangeEvent;
  * Time: 7:22:24 PM
  * To change this template use File | Settings | File Templates.
  */
-public class AdjustMarginsAction extends BasicAction {
+public class AdjustMarginsCommand extends BrainFlowCommand {
 
-    private static final Logger log = Logger.getLogger(AdjustMarginsAction.class.getName());
+    private static final Logger log = Logger.getLogger(AdjustMarginsCommand.class.getName());
 
     private JDialog dialog;
 
 
-    public AdjustMarginsAction() {
-        putValue(Action.NAME, "Adjust Margins");
+    public AdjustMarginsCommand() {
+        // icon = "/resources/icons/layout_header.png"
+        //putValue(Action.NAME, "Adjust Margins");
+        
     }
 
-    protected void contextChanged() {
-
-        ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
-        if (view != null) {
-            setEnabled(true);
-
-
-        } else {
-            setEnabled(false);
-        }
-    }
-
-
-    protected void execute(ActionEvent evt) throws Exception {
-        super.execute(evt);    //To change body of overridden methods use File | Settings | File Templates.
-
-        final ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
+    protected void handleExecute() {
+        final ImageView view = (ImageView) getSelectedView();
 
         if (view != null) {
             final IImagePlot plot = view.getPlots().get(0);
@@ -109,12 +96,16 @@ public class AdjustMarginsAction extends BasicAction {
             dialog.pack();
             dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
             dialog.setLocation((int) (p.getX() + c.getWidth() / 2f), (int) (p.getY() + c.getHeight() / 2f));
-            dialog.setVisible(true);   
-            
+            dialog.setVisible(true);
+
         } else {
             setEnabled(false);
         }
+        //To change body of implemented methods use File | Settings | File Templates.
     }
+
+
+
 
 
 }

@@ -19,22 +19,21 @@ import java.util.logging.Logger;
  * Time: 12:59:23 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ColorBarAnnotationDialogAction extends BasicAction {
+public class ColorBarAnnotationDialogCommand extends BrainFlowCommand {
 
-    private static final Logger log = Logger.getLogger(ColorBarAnnotationDialogAction.class.getName());
+    private static final Logger log = Logger.getLogger(ColorBarAnnotationDialogCommand.class.getName());
 
     private JDialog dialog;
 
 
-    public ColorBarAnnotationDialogAction() {
+    public ColorBarAnnotationDialogCommand() {
         super();
 
 
     }
 
-    protected void execute(ActionEvent actionEvent) throws Exception {
-
-        final ImageView view = (ImageView) getContextValue(ActionContext.SELECTED_IMAGE_VIEW);
+    protected void handleExecute() {
+        ImageView view = getSelectedView(); 
 
 
         if (view != null) {

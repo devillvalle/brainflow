@@ -383,7 +383,7 @@ public class DiscreteColorMap extends AbstractColorMap {
 
     public byte[] getInterleavedRGBAComponents(IImageData data) {
 
-        int len = data.getNumElements();
+        int len = data.numElements();
         byte[] rgba = new byte[len * 4];
 
         double minValue = getMinimumValue();

@@ -3,7 +3,6 @@ package com.brainflow.image.data;
 import com.brainflow.image.interpolation.InterpolationFunction3D;
 import com.brainflow.image.anatomy.Anatomy;
 import com.brainflow.image.space.Axis;
-import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.iterators.ImageIterator;
@@ -26,7 +25,6 @@ public class MaskedDataNode3D implements IMaskedData3D {
 
     private BinaryOperation operation = BinaryOperation.AND;
 
-    private int identifier;
 
     private String imageLabel = "";
 
@@ -43,17 +41,7 @@ public class MaskedDataNode3D implements IMaskedData3D {
 
     }
 
-    public float getFloat(int x, int y, int z) {
-        return operation.compute(left.isTrue(x, y, z), right.isTrue(x, y, z));
-    }
 
-    public int getInt(int index) {
-        return operation.compute(left.isTrue(index), right.isTrue(index));
-    }
-
-    public int getInt(int x, int y, int z) {
-        return operation.compute(left.isTrue(x, y, z), right.isTrue(x, y, z));
-    }
 
     public double getRealValue(double realx, double realy, double realz, InterpolationFunction3D interp) {
         return operation.compute((int) left.getRealValue(realx, realy, realz, interp), (int) right.getRealValue(realx, realy, realz, interp));
@@ -77,22 +65,12 @@ public class MaskedDataNode3D implements IMaskedData3D {
 
     public double getValue(int x, int y, int z) {
         return operation.compute(left.isTrue(x, y, z), right.isTrue(x, y, z));
-
     }
 
     public int indexOf(int x, int y, int z) {
         return left.indexOf(x, y, z);
     }
 
-    public void setFloat(int x, int y, int z, float val) {
-        throw new RuntimeException("illegal operation");
-
-    }
-
-    public void setInt(int x, int y, int z, int val) {
-        throw new RuntimeException("illegal operation");
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
 
     public void setValue(int idx, double val) {
         throw new RuntimeException("illegal operation");
@@ -103,8 +81,8 @@ public class MaskedDataNode3D implements IMaskedData3D {
         throw new RuntimeException("illegal operation");
     }
 
-    public Index3D voxelOf(int idx, Index3D voxel) {
-        return left.voxelOf(idx, voxel);
+    public Index3D indexToGrid(int idx, Index3D voxel) {
+        return left.indexToGrid(idx, voxel);
     }
 
     public Anatomy getAnatomy() {
@@ -119,9 +97,6 @@ public class MaskedDataNode3D implements IMaskedData3D {
         return left.getDimension(axisNum);
     }
 
-    public int getIdentifier() {
-        return left.getIdentifier() + right.getIdentifier();
-    }
 
     public ImageInfo getImageInfo() {
         return left.getImageInfo();
@@ -135,26 +110,24 @@ public class MaskedDataNode3D implements IMaskedData3D {
         return left.getImageSpace();
     }
 
-    public double getMaxValue() {
-        return Math.max(left.getMaxValue(), right.getMaxValue());
+    public double maxValue() {
+        return Math.max(left.maxValue(), right.maxValue());
     }
 
-    public double getMinValue() {
-        return Math.min(left.getMinValue(), right.getMinValue());
+    public double minValue() {
+        return Math.min(left.minValue(), right.minValue());
 
     }
 
-    public int getNumElements() {
-        return left.getNumElements();
+    public int numElements() {
+        return left.numElements();
     }
 
     public ImageIterator iterator() {
         return new MaskedDataNodeIterator();
     }
 
-    public void setIdentifier(int identifier) {
-        this.identifier = identifier;
-    }
+    
 
     public void setImageLabel(String imageLabel) {
         this.imageLabel = imageLabel;

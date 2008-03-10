@@ -89,7 +89,6 @@ public class SoftImageDataSource extends AbstractImageDataSource {
             ImageReader ireader = (ImageReader) getDescriptor().getDataReader().newInstance();
 
             IImageData data = ireader.readImage(imageInfo, plistener);
-            data.setIdentifier(getUniqueID());
             data.setImageLabel(getStem());
             dataRef = new SoftReference(data);
         } catch (IllegalAccessException e) {
@@ -120,7 +119,6 @@ public class SoftImageDataSource extends AbstractImageDataSource {
                     log.info(message);
                 }
             });
-            data.setIdentifier(getUniqueID());
             data.setImageLabel(getStem());
             dataRef = new SoftReference(data);
 

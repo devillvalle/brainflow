@@ -22,17 +22,7 @@ public interface IImageData2D extends IImageData {
 
     public double getValue(int x, int y);
 
-    public float getFloat(int x, int y);
-
-    public int getInt(int x, int y);
-
     public void setValue(int x, int y, double val);
-
-    public void setFloat(int x, int y, float val);
-
-    public void setInt(int x, int y, int val);
-
-    public ImageIterator iterator();
 
     public ImageSpace2D getImageSpace();
 }

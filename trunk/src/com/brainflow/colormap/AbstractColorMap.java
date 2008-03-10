@@ -107,7 +107,7 @@ public abstract class AbstractColorMap implements IColorMap {
     public RGBAImage getRGBAImage(IImageData2D data) {
 
 
-        int len = data.getNumElements();
+        int len = data.numElements();
 
         byte[][] rgba = new byte[4][len];
         int lastidx = getMapSize() - 1;

@@ -23,15 +23,13 @@ public class BasicImageData2D extends BasicImageData implements IImageData2D {
 
 
     public BasicImageData2D(BasicImageData2D src) {
-        super((ImageSpace2D) src.getImageSpace());
-        datatype = src.getDataType();
+        super((ImageSpace2D) src.getImageSpace(),src.getDataType());
         fillBuffer(src.storage, space.getNumSamples());
 
     }
 
     public BasicImageData2D(ImageSpace2D space, DataType _type) {
-        super(space);
-        datatype = _type;
+        super(space, _type);
         data = allocateBuffer(space.getNumSamples());
 
     }
@@ -42,9 +40,9 @@ public class BasicImageData2D extends BasicImageData implements IImageData2D {
     }
 
     public BasicImageData2D(ImageSpace2D space, Object array) {
-        super(space);
+        super(space, establishDataType(array));
         storage = array;
-        establishDataType(storage);
+
         data = allocateBuffer(space.getNumSamples());
 
     }
@@ -52,6 +50,14 @@ public class BasicImageData2D extends BasicImageData implements IImageData2D {
     public ImageSpace2D getImageSpace() {
         return (ImageSpace2D)space;
 
+    }
+
+    public double getValue(int index) {
+        return data.getElemDouble(index);
+    }
+
+    public void setValue(int idx, double val) {
+        data.setElemDouble(idx, val);
     }
 
     public final int indexOf(int x, int y) {
@@ -72,26 +78,13 @@ public class BasicImageData2D extends BasicImageData implements IImageData2D {
         return data.getElemDouble(indexOf(x, y));
     }
 
-    public final float getFloat(int x, int y) {
-        return data.getElemFloat(indexOf(x, y));
-    }
 
-    public final int getInt(int x, int y) {
-        return data.getElem(indexOf(x, y));
-    }
 
     public final void setValue(int x, int y, double val) {
         data.setElemDouble(indexOf(x, y), val);
     }
 
-    public final void setFloat(int x, int y, float val) {
-        data.setElemFloat(indexOf(x, y), val);
-    }
-
-    public final void setInt(int x, int y, int val) {
-        data.setElem(indexOf(x, y), val);
-    }
-
+  
 
     public ImageIterator iterator() {
         return new Iterator2D();

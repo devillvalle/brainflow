@@ -13,7 +13,7 @@ import com.brainflow.application.presentation.forms.ThresholdRangeForm;
 import com.brainflow.core.AbstractLayer;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.ImageLayer;
-import com.brainflow.display.Property;
+
 import com.brainflow.display.ThresholdRange;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;

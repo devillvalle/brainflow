@@ -85,7 +85,7 @@ public class ImageDataSource extends AbstractImageDataSource {
                     //To change body of implemented methods use File | Settings | File Templates.
                 }
             });
-            data.setIdentifier(getUniqueID());
+
             data.setImageLabel(getStem());
             dataRef = data;
 
@@ -112,7 +112,6 @@ public class ImageDataSource extends AbstractImageDataSource {
             ImageReader ireader = (ImageReader) getDescriptor().getDataReader().newInstance();
 
             IImageData data = ireader.readImage(imageInfo, plistener);
-            data.setIdentifier(getUniqueID());
             data.setImageLabel(getStem());
             dataRef = data;
         } catch (IllegalAccessException e) {

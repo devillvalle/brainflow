@@ -87,7 +87,7 @@ public class BrainTest {
 
 
             IImageDisplayModel model = new ImageDisplayModel("model");
-            Range range = new Range(data1.getMinValue(), data1.getMaxValue());
+            Range range = new Range(data1.minValue(), data1.maxValue());
             ImageLayer layer = new ImageLayer3D(new MemoryImageDataSource(data1),
                     new ImageLayerProperties(ColorTable.GRAYSCALE, range));
             model.addLayer(layer);

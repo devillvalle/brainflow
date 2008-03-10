@@ -1,4 +1,4 @@
-package com.brainflow.functional;
+package org.boxwood.data;
 
 /**
  * Title:        LCBR Home Project
@@ -12,26 +12,23 @@ package com.brainflow.functional;
 
 public class Level {
 
-    private String label;
+    private final String label;
 
-    private int code = 0;
+    private final int code;
 
     public Level(String _label, int _code) {
         label = _label;
         code = _code;
     }
 
-    public int getCode() {
+    public int code() {
         return code;
     }
 
-    public String getLabel() {
+    public String label() {
         return new String(label);
     }
-
-    public void setLabel(String _label) {
-        label = _label;
-    }
+ 
 
     public boolean equals(Object o) {
         if (this == o) return true;

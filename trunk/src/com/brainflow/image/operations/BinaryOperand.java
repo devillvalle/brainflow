@@ -10,5 +10,9 @@ package com.brainflow.image.operations;
 public enum BinaryOperand {
 
     AND,
-    OR
+    OR,
+    GT,
+    LT,
+    LT_EQ,
+    GT_EQ
 }

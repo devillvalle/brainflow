@@ -63,7 +63,7 @@ public class MaskViewPanel extends JPanel {
 
 
             System.out.println("cardinality: " + mpanel.getMask().cardinality());
-            System.out.println("mask maximum : " + mpanel.getMask().getMaxValue());
+            System.out.println("mask maximum : " + mpanel.getMask().maxValue());
             frame.add(mpanel, BorderLayout.CENTER);
             frame.pack();
             frame.setVisible(true);

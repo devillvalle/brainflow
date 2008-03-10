@@ -320,7 +320,7 @@ public class LinearColorMapDeprecated extends AbstractColorMap {
 
     private byte[] getThresholdedInterleavedRGBAComponents(IImageData data) {
 
-        int len = data.getNumElements();
+        int len = data.numElements();
 
         byte[] rgba = new byte[len * 4];
 
@@ -355,7 +355,7 @@ public class LinearColorMapDeprecated extends AbstractColorMap {
     public byte[] getInterleavedRGBAComponents(IImageData data) {
 
 
-        int len = data.getNumElements();
+        int len = data.numElements();
         byte[] rgba = new byte[len * 4];
 
         double mapRange = highClip - lowClip;
@@ -381,7 +381,7 @@ public class LinearColorMapDeprecated extends AbstractColorMap {
     }
 
     public byte[][] getRGBAComponents(IImageData data) {
-        int len = data.getNumElements();
+        int len = data.numElements();
         byte[][] rgba = new byte[4][len];
         int lastidx = getMapSize() - 1;
 

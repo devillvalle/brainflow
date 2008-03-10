@@ -63,7 +63,7 @@ public class MakeData {
         for (int x = 0; x < data.getDimension(Axis.X_AXIS); x++) {
             for (int y = 0; y < data.getDimension(Axis.Y_AXIS); y++) {
                 for (int z = 0; z < data.getDimension(Axis.Z_AXIS); z++) {
-                    if (x == y) data.setInt(x, y, z, 100);
+                    if (x == y) data.setValue(x, y, z, 100);
                 }
 
             }
@@ -77,7 +77,7 @@ public class MakeData {
         for (int x = 0; x < data.getDimension(Axis.X_AXIS); x++) {
             for (int y = 0; y < data.getDimension(Axis.Y_AXIS); y++) {
                 for (int z = 0; z < data.getDimension(Axis.Z_AXIS); z++) {
-                    if ((y % 2) == 1) data.setInt(x, y, z, 100);
+                    if ((y % 2) == 1) data.setValue(x, y, z, 100);
                 }
 
             }
@@ -91,7 +91,7 @@ public class MakeData {
         for (int x = 0; x < data.getDimension(Axis.X_AXIS); x++) {
             for (int y = 0; y < data.getDimension(Axis.Y_AXIS); y++) {
                 for (int z = 0; z < data.getDimension(Axis.Z_AXIS); z++) {
-                    if ((x % 2) == 1) data.setInt(x, y, z, 100);
+                    if ((x % 2) == 1) data.setValue(x, y, z, 100);
                 }
 
             }

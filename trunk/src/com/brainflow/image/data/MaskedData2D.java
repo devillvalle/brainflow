@@ -2,7 +2,6 @@ package com.brainflow.image.data;
 
 import com.brainflow.image.interpolation.InterpolationFunction2D;
 import com.brainflow.image.iterators.ImageIterator;
-import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.ImageSpace2D;
 import com.brainflow.image.anatomy.Anatomy;
@@ -46,25 +45,19 @@ public class MaskedData2D implements IImageData2D {
         return predicate.mask(source.getValue(x, y));
     }
 
-    public float getFloat(int x, int y) {
-        return predicate.mask(source.getFloat(x, y));
+    public double getValue(int index) {
+        return predicate.mask(source.getValue(index));
     }
 
-    public int getInt(int x, int y) {
-        return predicate.mask(source.getInt(x, y));
+    public void setValue(int idx, double val) {
+        source.setValue(idx, val);
     }
 
     public void setValue(int x, int y, double val) {
         source.setValue(x, y, val);
     }
 
-    public void setFloat(int x, int y, float val) {
-        source.setFloat(x, y, val);
-    }
 
-    public void setInt(int x, int y, int val) {
-        source.setInt(x, y, val);
-    }
 
     public ImageIterator iterator() {
         return new MaskedIterator();
@@ -87,16 +80,16 @@ public class MaskedData2D implements IImageData2D {
         return source.getDimension(axisNum);
     }
 
-    public double getMaxValue() {
-        return source.getMaxValue();
+    public double maxValue() {
+        return source.maxValue();
     }
 
-    public double getMinValue() {
-        return source.getMinValue();
+    public double minValue() {
+        return source.minValue();
     }
 
-    public int getNumElements() {
-        return source.getNumElements();
+    public int numElements() {
+        return source.numElements();
     }
 
     public ImageInfo getImageInfo() {
@@ -111,13 +104,7 @@ public class MaskedData2D implements IImageData2D {
         return source.getImageLabel();
     }
 
-    public int getIdentifier() {
-        return source.getIdentifier();
-    }
 
-    public void setIdentifier(int identifier) {
-        source.setIdentifier(identifier);
-    }
 
     class MaskedIterator implements ImageIterator {
 

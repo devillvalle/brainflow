@@ -166,12 +166,12 @@ public class RegionGrowingImageFilter extends AbstractImageFilter {
 
             for (int i = 0; i < searchSet.length; i++) {
                 int idx = searchSet[i];
-                if (visited.getInt(idx) != 0) {
+                if (visited.getValue(idx) != 0) {
                     continue;
                 }
                 if (data.getValue(idx) > 0) {
                     Index3D voxel = new Index3D();
-                    data.voxelOf(idx, voxel);
+                    data.indexToGrid(idx, voxel);
                     visited.setValue(idx, 1);
                     searchStack.push(voxel.toArray());
 

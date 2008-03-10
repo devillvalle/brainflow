@@ -41,23 +41,25 @@ public abstract class BasicImageData extends AbstractImageData {
         super(space);
     }
 
+    protected BasicImageData(IImageSpace space, DataType dtype) {
+        super(space, dtype);
+    }
 
     public Object getStorage() {
         return storage;
     }
 
 
-    protected DataType establishDataType(Object array) {
-        if (array instanceof byte[]) datatype = DataType.BYTE;
-        else if (array instanceof short[]) datatype = DataType.SHORT;
-        else if (array instanceof float[]) datatype = DataType.FLOAT;
-        else if (array instanceof int[]) datatype = DataType.INTEGER;
-        else if (array instanceof double[]) datatype = DataType.DOUBLE;
+    public static DataType establishDataType(Object array) {
+        if (array instanceof byte[]) return DataType.BYTE;
+        else if (array instanceof short[]) return DataType.SHORT;
+        else if (array instanceof float[]) return DataType.FLOAT;
+        else if (array instanceof int[]) return DataType.INTEGER;
+        else if (array instanceof double[]) return DataType.DOUBLE;
         else {
             throw new IllegalArgumentException("BasicImageData: illegal array type: " + array);
         }
 
-        return datatype;
     }
 
     protected void fillBuffer(Object storage, int size) {
@@ -112,7 +114,7 @@ public abstract class BasicImageData extends AbstractImageData {
         return data;
     }
 
-    public double getMaxValue() {
+    public double maxValue() {
         if (!recomputeMax)
             return maxValue;
 
@@ -127,7 +129,7 @@ public abstract class BasicImageData extends AbstractImageData {
         return maxValue;
     }
 
-    public double getMinValue() {
+    public double minValue() {
         if (!recomputeMin)
             return minValue;
         ImageIterator iter = this.iterator();
@@ -142,7 +144,7 @@ public abstract class BasicImageData extends AbstractImageData {
     }
 
 
-    public final int getNumElements() {
+    public final int numElements() {
         return data.getSize();
     }
 

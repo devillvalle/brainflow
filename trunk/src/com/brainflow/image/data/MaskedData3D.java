@@ -3,7 +3,6 @@ package com.brainflow.image.data;
 import com.brainflow.utils.Index3D;
 import com.brainflow.utils.DataType;
 import com.brainflow.image.interpolation.InterpolationFunction3D;
-import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.image.anatomy.Anatomy;
@@ -38,8 +37,8 @@ public class MaskedData3D implements IMaskedData3D {
     }
 
 
-    public Index3D voxelOf(int idx, Index3D voxel) {
-        return source.voxelOf(idx, voxel);
+    public Index3D indexToGrid(int idx, Index3D voxel) {
+        return source.indexToGrid(idx, voxel);
     }
 
     public int indexOf(int x, int y, int z) {
@@ -55,33 +54,24 @@ public class MaskedData3D implements IMaskedData3D {
     }
 
     public int isTrue(int index) {
-        return predicate.mask(source.getInt(index));
+        return predicate.mask(source.getValue(index));
 
     }
 
     public int isTrue(int x, int y, int z) {
-        return predicate.mask(source.getInt(x, y, z));
+        return predicate.mask(source.getValue(x, y, z));
     }
 
     public double getValue(int index) {
         return predicate.mask(source.getValue(index));
     }
 
-    public int getInt(int index) {
-        return predicate.mask(source.getInt(index));
-    }
 
     public double getValue(int x, int y, int z) {
         return predicate.mask(source.getValue(x, y, z));
     }
 
-    public float getFloat(int x, int y, int z) {
-        return predicate.mask(source.getFloat(x, y, z));
-    }
 
-    public int getInt(int x, int y, int z) {
-        return predicate.mask(source.getInt(x, y, z));
-    }
 
     public void setValue(int idx, double val) {
         source.setValue(idx, val);
@@ -91,13 +81,7 @@ public class MaskedData3D implements IMaskedData3D {
         source.setValue(x, y, z, val);
     }
 
-    public void setFloat(int x, int y, int z, float val) {
-        source.setFloat(x, y, z, val);
-    }
 
-    public void setInt(int x, int y, int z, int val) {
-        source.setInt(x, y, z, val);
-    }
 
     public ImageSpace3D getImageSpace() {
         return source.getImageSpace();
@@ -115,16 +99,16 @@ public class MaskedData3D implements IMaskedData3D {
         return source.getDimension(axisNum);
     }
 
-    public double getMaxValue() {
+    public double maxValue() {
         return 1;
     }
 
-    public double getMinValue() {
+    public double minValue() {
         return 0;
     }
 
-    public int getNumElements() {
-        return source.getNumElements();
+    public int numElements() {
+        return source.numElements();
     }
 
     public ImageInfo getImageInfo() {
@@ -143,13 +127,7 @@ public class MaskedData3D implements IMaskedData3D {
         return new MaskedIterator();
     }
 
-    public int getIdentifier() {
-        return source.getIdentifier();
-    }
-
-    public void setIdentifier(int identifier) {
-        source.setIdentifier(identifier);
-    }
+   
 
     public int cardinality() {
         MaskedIterator iter = new MaskedIterator();

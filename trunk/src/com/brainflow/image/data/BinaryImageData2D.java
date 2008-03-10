@@ -1,13 +1,9 @@
 package com.brainflow.image.data;
 
 import com.brainflow.image.interpolation.InterpolationFunction2D;
-import com.brainflow.image.rendering.RenderUtils;
 import com.brainflow.image.space.Axis;
-import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace2D;
 import com.brainflow.image.iterators.ImageIterator;
-
-import java.awt.image.RenderedImage;
 
 import cern.colt.bitvector.BitVector;
 
@@ -19,8 +15,6 @@ import cern.colt.bitvector.BitVector;
  * To change this template use File | Settings | File Templates.
  */
 public class BinaryImageData2D extends BinaryImageData implements IImageData2D {
-
-
 
 
     public BinaryImageData2D(ImageSpace2D space, BitVector bits) {
@@ -41,7 +35,7 @@ public class BinaryImageData2D extends BinaryImageData implements IImageData2D {
             int i = iter.index();
             double val = iter.next();
             if (val > 0) {
-                bits.set(i);    
+                bits.set(i);
             }
         }
 
@@ -53,26 +47,26 @@ public class BinaryImageData2D extends BinaryImageData implements IImageData2D {
     }
 
     public ImageSpace2D getImageSpace() {
-        return (ImageSpace2D)space;
+        return (ImageSpace2D) space;
     }
 
     public BinaryImageData2D OR(BinaryImageData data) {
-        if (data.getNumElements() != this.getNumElements()) {
+        if (data.numElements() != this.numElements()) {
             throw new IllegalArgumentException("cannot combine images of unequal size");
         }
 
         BitVector ret = getBitVector().copy();
         ret.or(data.getBitVector());
-        return new BinaryImageData2D((ImageSpace2D)getImageSpace(), ret);
+        return new BinaryImageData2D((ImageSpace2D) getImageSpace(), ret);
     }
 
     public BinaryImageData2D AND(BinaryImageData data) {
-        if (data.getNumElements() != this.getNumElements()) {
+        if (data.numElements() != this.numElements()) {
             throw new IllegalArgumentException("cannot combine images of unequal size");
         }
         BitVector ret = getBitVector().copy();
         ret.or(data.getBitVector());
-        return new BinaryImageData2D((ImageSpace2D)getImageSpace(), ret);
+        return new BinaryImageData2D((ImageSpace2D) getImageSpace(), ret);
 
     }
 
@@ -95,26 +89,17 @@ public class BinaryImageData2D extends BinaryImageData implements IImageData2D {
         return getBitVector().getQuick(indexOf(x, y)) ? 1.0 : 0.0;
     }
 
-    public float getFloat(int x, int y) {
-        return getBitVector().getQuick(indexOf(x, y)) ? 1f : 0f;
+    public double getValue(int index) {
+        return getBitVector().getQuick(index) ? 1.0 : 0.0;
     }
 
-    public int getInt(int x, int y) {
-        return getBitVector().getQuick(indexOf(x, y)) ? 1 : 0;
+    public void setValue(int idx, double val) {
+        getBitVector().putQuick(idx, val > 0);
     }
 
     public void setValue(int x, int y, double val) {
         getBitVector().putQuick(indexOf(x, y), val > 0);
     }
 
-    public void setFloat(int x, int y, float val) {
-        getBitVector().putQuick(indexOf(x, y), val > 0);
-    }
-
-    public void setInt(int x, int y, int val) {
-        getBitVector().putQuick(indexOf(x, y), val > 0);
-    }
-
-    
 
 }

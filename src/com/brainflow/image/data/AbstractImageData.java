@@ -13,26 +13,30 @@ import com.brainflow.utils.DataType;
  * Time: 2:28:17 PM
  * To change this template use File | Settings | File Templates.
  */
+
+
 public abstract class AbstractImageData implements IImageData {
 
-    // todo private
+
     protected final IImageSpace space;
 
-    // todo private
-    protected DataType datatype;
+    protected final DataType datatype;
 
     private String imageLabel;
 
     private ImageInfo info = new ImageInfo();
 
-    // todo get rid of this abomination
-    protected int identifier = 0;
 
     public AbstractImageData(IImageSpace space) {
         this.space = space;
+        datatype = DataType.DOUBLE;
     }
 
-  
+    public AbstractImageData(IImageSpace space, DataType dtype) {
+        this.space = space;
+        this.datatype = dtype;
+    }
+
     public DataType getDataType() {
         return datatype;
     }
@@ -45,7 +49,7 @@ public abstract class AbstractImageData implements IImageData {
         return space.getDimension(axis);
     }
 
-    public int getNumElements() {
+    public int numElements() {
         return space.getNumSamples();
     }
 
@@ -61,11 +65,5 @@ public abstract class AbstractImageData implements IImageData {
         return imageLabel;
     }
 
-    public int getIdentifier() {
-        return identifier;
-    }
 
-    public void setIdentifier(int identifier) {
-        this.identifier = identifier;
-    }
 }

@@ -25,31 +25,31 @@ public interface ICrosshair {
     
     public static final String Z_VALUE_PROPERTY = "ZValue";
 
-    Viewport3D getViewport();
+    public Viewport3D getViewport();
 
-    Anatomy3D getAnatomy();
+    public Anatomy3D getAnatomy();
 
     public void addPropertyChangeListener(PropertyChangeListener listener);
 
     public void removePropertyChangeListener(PropertyChangeListener listener);
 
-    double getXValue();
+    public double getXValue();
 
-    double getYValue();
+    public double getYValue();
 
-    double getZValue();
+    public double getZValue();
 
-    AnatomicalPoint1D getValue(AnatomicalAxis axis);
+    public AnatomicalPoint1D getValue(AnatomicalAxis axis);
 
-    void setLocation(AnatomicalPoint3D ap);
+    public void setLocation(AnatomicalPoint3D ap);
 
-    AnatomicalPoint3D getLocation();
+    public AnatomicalPoint3D getLocation();
 
-    void setXValue(double x);
+    public void setXValue(double x);
 
-    void setYValue(double y);
+    public void setYValue(double y);
 
-    void setZValue(double z);
+    public void setZValue(double z);
 
-    void setValue(AnatomicalPoint1D val);
+    public void setValue(AnatomicalPoint1D val);
 }

@@ -92,7 +92,7 @@ public class BinaryImageData3D extends BinaryImageData implements IMaskedData3D 
 
     }
 
-    public Index3D voxelOf(int idx, Index3D voxel) {
+    public Index3D indexToGrid(int idx, Index3D voxel) {
         voxel.setZ(idx / planeSize);
         int remainder = (idx % planeSize);
         voxel.setY(remainder / space.getDimension(Axis.X_AXIS));

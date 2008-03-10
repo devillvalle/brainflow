@@ -10,19 +10,32 @@ import java.util.Arrays;
  * Time: 5:05:25 PM
  * To change this template use File | Settings | File Templates.
  */
-public class VariableNode implements BaseNode {
+public class VariableNode extends AbstractNode {
 
+   
     private String varName;
 
     public VariableNode(String varName) {
         this.varName = varName;
     }
 
+    public String getVarName() {
+        return varName;
+    }
+
     public String toString() {
         return "var : " + varName;
     }
 
-    public List<BaseNode> getChildren() {
+    public boolean isLeaf() {
+        return true;
+    }
+
+    public void apply(TreeWalker walker) {
+        walker.caseVariableNode(this);
+    }
+
+    public List<INode> getChildren() {
         return Arrays.asList();
     }
 }

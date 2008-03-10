@@ -248,11 +248,11 @@ public class MaskConfigurationControl extends JPanel implements ImageViewClient 
             URL url = ClassLoader.getSystemResource("resources/data/icbm452_atlas_probability_gray.hdr");
             IImageData data = BrainIO.readAnalyzeImage(url);
 
-            ImageLayer ilayer = new ImageLayer3D(data, new ImageLayerProperties(new Range(data.getMinValue(), data.getMaxValue())));
+            ImageLayer ilayer = new ImageLayer3D(data, new ImageLayerProperties(new Range(data.minValue(), data.maxValue())));
 
             url = ClassLoader.getSystemResource("resources/data/icbm452_atlas_probability_white.hdr");
             data = BrainIO.readAnalyzeImage(url);
-            ImageLayer ilayer2 = new ImageLayer3D(data, new ImageLayerProperties(new Range(data.getMinValue(), data.getMaxValue())));
+            ImageLayer ilayer2 = new ImageLayer3D(data, new ImageLayerProperties(new Range(data.minValue(), data.maxValue())));
 
 
             IImageDisplayModel model = new ImageDisplayModel("model");

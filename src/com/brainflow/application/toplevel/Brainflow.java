@@ -14,7 +14,6 @@ import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.utils.Range;
-import com.brainflow.utils.StaticTimer;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.docking.DefaultDockingManager;
@@ -31,7 +30,6 @@ import com.pietschy.command.CommandContainer;
 import com.pietschy.command.GuiCommands;
 import com.pietschy.command.configuration.ParseException;
 import com.pietschy.command.group.CommandGroup;
-import com.pietschy.command.group.GroupBuilder;
 import com.pietschy.command.group.ExpansionPointBuilder;
 import com.pietschy.command.toggle.ToggleCommand;
 import com.pietschy.command.toggle.ToggleGroup;
@@ -750,10 +748,10 @@ public class Brainflow {
                 IImageDisplayModel dset = view.getModel();
 
                 //todo data range should be a property of ImageLayerProperties, not IColorMap
-                ImageLayerProperties params = new ImageLayerProperties(new Range(data.getMinValue(), data.getMaxValue()));
+                ImageLayerProperties params = new ImageLayerProperties(new Range(data.minValue(), data.maxValue()));
 
                 //todo check data caches min and max values
-                params.colorMap.set(new LinearColorMap2(data.getMinValue(), data.getMaxValue(), ResourceManager.getInstance().getDefaultColorMap()));
+                params.colorMap.set(new LinearColorMap2(data.minValue(), data.maxValue(), ResourceManager.getInstance().getDefaultColorMap()));
 
                 ImageLayer layer = new ImageLayer3D(limg, params);
 

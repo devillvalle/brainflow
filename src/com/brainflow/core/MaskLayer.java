@@ -92,11 +92,11 @@ public class MaskLayer extends ImageLayer {
     }
 
     public double getMinValue() {
-        return getData().getMinValue();
+        return getData().minValue();
     }
 
     public double getMaxValue() {
-        return getData().getMaxValue();
+        return getData().maxValue();
     }
 
     public String getLabel() {

@@ -39,8 +39,6 @@ public class LargeSearchKernel3D implements ISearchKernel3D {
         i5 = 1+planexy;
         i6 = dimx+planexy;
         i7 = 1+dimy+planexy;
-
-
         i8 = planexy -1 -dimx;
         i10 = planexy -dimx;
         i11 = planexy +1 -dimx;

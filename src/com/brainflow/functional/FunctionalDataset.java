@@ -29,15 +29,19 @@ import org.jdom.DataConversionException;
 public class FunctionalDataset {
 
     Logger log = Logger.getLogger(FunctionalDataset.class.getName());
-    private String name;
-    private String id;
-    private String basepath;
-    private String description;
 
+    private String name;
+
+    private String id;
+
+    private String basepath;
+
+    private String description;
 
     private List<ImageInfo> imageList = new ArrayList<ImageInfo>();
 
     private int nimages = 0;
+
     private int nfiles = 0;
 
 

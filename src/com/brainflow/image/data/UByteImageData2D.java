@@ -32,21 +32,20 @@ public class UByteImageData2D extends AbstractImageData implements IImageData2D 
 
 
     public UByteImageData2D(ImageSpace2D _space) {
-        super(_space);
+        super(_space,DataType.BYTE);
        
-        datatype = DataType.BYTE;
         data = new byte[space.getNumSamples()];
 
 
     }
 
     public UByteImageData2D(ImageSpace2D space, byte[] _data) {
-        super(space);
+        super(space, DataType.BYTE);
         if (_data.length != space.getNumSamples()) {
             throw new IllegalArgumentException("supplied data array has incorrect length");
         }
 
-        datatype = DataType.BYTE;
+
         data = _data;
 
 
@@ -57,13 +56,13 @@ public class UByteImageData2D extends AbstractImageData implements IImageData2D 
          
     }
 
-    public double getMaxValue() {
+    public double maxValue() {
         if (!recomputeMax) {
             return maxValue;
         }
 
         int sz = data.length;
-        double _max = Double.MIN_VALUE;
+        double _max = -Double.MAX_VALUE;
 
         for (int i = 0; i < sz; i++) {
             double val = NumberUtils.ubyte(data[i]);
@@ -78,7 +77,7 @@ public class UByteImageData2D extends AbstractImageData implements IImageData2D 
         return maxValue;
     }
 
-    public double getMinValue() {
+    public double minValue() {
         if (!recomputeMin) {
             return minValue;
         }
@@ -120,6 +119,14 @@ public class UByteImageData2D extends AbstractImageData implements IImageData2D 
 
     }
 
+    public double getValue(int index) {
+        return data[index];
+    }
+
+    public void setValue(int idx, double val) {
+        data[idx] = (byte)val;
+    }
+
     public byte[] getByteArray() {
         return data;
     }
@@ -140,25 +147,15 @@ public class UByteImageData2D extends AbstractImageData implements IImageData2D 
         return NumberUtils.ubyte(data[indexOf(x, y)]);
     }
 
-    public float getFloat(int x, int y) {
-        return NumberUtils.ubyte(data[indexOf(x, y)]);
-    }
 
-    public int getInt(int x, int y) {
-        return NumberUtils.ubyte(data[indexOf(x, y)]);
-    }
 
     public void setValue(int x, int y, double val) {
         data[indexOf(x, y)] = (byte) val;
     }
 
-    public void setFloat(int x, int y, float val) {
-        data[indexOf(x, y)] = (byte) val;
-    }
 
-    public void setInt(int x, int y, int val) {
-        data[indexOf(x, y)] = (byte) val;
-    }
+
+
 
     final class Iterator2D implements ImageIterator {
 

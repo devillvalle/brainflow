@@ -17,18 +17,21 @@ import com.brainflow.utils.DataType;
 public interface IImageData {
 
 
-
     public DataType getDataType();
 
     public Anatomy getAnatomy();
 
     public int getDimension(Axis axisNum);
 
-    public double getMaxValue();
+    public double getValue(int index);
 
-    public double getMinValue();
+    public void setValue(int idx, double val);
 
-    public int getNumElements();
+    public double maxValue();
+
+    public double minValue();
+
+    public int numElements();
 
     public ImageInfo getImageInfo();
     
@@ -40,9 +43,6 @@ public interface IImageData {
 
     public ImageIterator iterator();
 
-    public int getIdentifier();
-
-    public void setIdentifier(int identifier);
-
+    
 
 }

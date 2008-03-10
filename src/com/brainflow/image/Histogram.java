@@ -54,8 +54,8 @@ public class Histogram {
         if (computed)
             return binList.elements();
 
-        maxValue = data.getMaxValue();
-        minValue = data.getMinValue();
+        maxValue = data.maxValue();
+        minValue = data.minValue();
 
         int[] bins = new int[numBins];
 
@@ -140,11 +140,11 @@ public class Histogram {
     }
 
     public double getMinValue() {
-        return data.getMinValue();
+        return data.minValue();
     }
 
     public double getMaxValue() {
-        return data.getMaxValue();
+        return data.maxValue();
     }
 
     public static void main(String[] args) {

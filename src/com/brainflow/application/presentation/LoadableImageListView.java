@@ -131,7 +131,7 @@ public class LoadableImageListView extends JList {
             /*if (icon == null) {
                 ImageDisplayModel dmodel = new ImageDisplayModel("" + limg.getUniqueID());
 
-                ImageLayerProperties parms = new ImageLayerProperties(new LinearColorMapDeprecated(limg.getData().getMinValue(), limg.getData().getMaxValue(), ColorTable.GRAYSCALE));
+                ImageLayerProperties parms = new ImageLayerProperties(new LinearColorMapDeprecated(limg.getData().minValue(), limg.getData().maxValue(), ColorTable.GRAYSCALE));
                 ImageLayer layer = new ImageLayer3D(limg, parms);
 
                 dmodel.addLayer(layer);

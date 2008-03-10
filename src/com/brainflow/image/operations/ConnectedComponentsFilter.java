@@ -25,9 +25,13 @@ public class ConnectedComponentsFilter extends AbstractImageFilter {
     private RunSet runs;
 
     private int nruns;
+
     private int[] rows;
+
     private int nx;
+
     private int ny;
+    
     private int nz;
 
     public IImageData getOutput() {

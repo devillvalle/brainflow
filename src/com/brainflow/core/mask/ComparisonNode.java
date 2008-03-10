@@ -10,30 +10,60 @@ import java.util.Arrays;
  * Time: 5:14:52 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ComparisonNode implements BaseNode {
+public class ComparisonNode extends AbstractNode {
 
-    private BaseNode left;
 
-    private BaseNode right;
+    private INode left;
 
-    private String operation;
+    private INode right;
 
-    public ComparisonNode(BaseNode left, BaseNode right, String operation) {
+    private Operation op;
+
+
+
+    public ComparisonNode(INode left, INode right, Operation op) {
         this.left = left;
         this.right = right;
-        this.operation = operation;
+        this.op = op;
+
+        left.setParent(this);
+        right.setParent(this);
     }
 
-    public List<BaseNode> getChildren() {
+    public List<INode> getChildren() {
         return Arrays.asList(left, right);
     }
 
+
+    public INode left() {
+        return left;
+    }
+
+    public INode right() {
+        return right;
+    }
+
+    public boolean isLeaf() {
+        return false;
+    }
+
+    public void apply(TreeWalker walker) {
+        walker.caseComparisonNode(this);
+    }
+
+    public void replaceChild(INode oldChild, INode newChild) {
+        if (left == oldChild) {
+            left = newChild;
+        } else if (right == oldChild) {
+            right = newChild;
+        }
+    }
 
     public String toString() {
         return "ComparisonNode{" +
                 "left=" + left +
                 ", right=" + right +
-                ", operation='" + operation + '\'' +
+                ", operation='" + op + '\'' +
                 '}';
     }
 }

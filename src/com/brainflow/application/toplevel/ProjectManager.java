@@ -59,11 +59,11 @@ public class ProjectManager implements EventSubscriber, BrainflowProjectListener
 
 
         ImageLayerProperties params = new ImageLayerProperties(
-                new Range(limg.getData().getMinValue(),
-                        limg.getData().getMaxValue()));
+                new Range(limg.getData().minValue(),
+                        limg.getData().maxValue()));
 
-        params.colorMap.set(new LinearColorMap2(limg.getData().getMinValue(),
-                limg.getData().getMaxValue(),
+        params.colorMap.set(new LinearColorMap2(limg.getData().minValue(),
+                limg.getData().maxValue(),
                 ResourceManager.getInstance().getDefaultColorMap()));
 
         ImageLayer layer = new ImageLayer3D(limg, params);

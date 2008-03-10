@@ -1,4 +1,4 @@
-package org.boxwood;
+package org.boxwood.data;
 
 /**
  * Created by IntelliJ IDEA.
@@ -9,9 +9,17 @@ package org.boxwood;
  */
 public interface IVariable<T> {
 
+    public String name();
+
     public T valueAt(int i);
 
     public int length();
+
+    public T apply(SummaryFunction<T> func);
+
+    public IVariable<T>  filter(FilterFunction<T, ? extends IVariable<T>> func);
+
+    public Class<?> getElementType();
 
 
 

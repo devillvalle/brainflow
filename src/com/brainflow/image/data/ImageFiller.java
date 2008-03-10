@@ -129,7 +129,7 @@ public class ImageFiller {
             y = slowIterator.next();
             while (fastIterator.hasNext()) {
                 x = fastIterator.next();
-                op[i] = data.getFloat(x, y, z);
+                op[i] = (float)data.getValue(x, y, z);
                 i++;
             }
             fastIterator.reset();
@@ -151,7 +151,7 @@ public class ImageFiller {
             while (fastIterator.hasNext()) {
                 y = fastIterator.next();
 
-                op[i] = data.getFloat(x, y, z);
+                op[i] = (float)data.getValue(x, y, z);
                 i++;
             }
             fastIterator.reset();
@@ -171,7 +171,7 @@ public class ImageFiller {
             z = slowIterator.next();
             while (fastIterator.hasNext()) {
                 x = fastIterator.next();
-                op[i] = data.getFloat(x, y, z);
+                op[i] = (float)data.getValue(x, y, z);
                 i++;
             }
             fastIterator.reset();
@@ -191,7 +191,7 @@ public class ImageFiller {
             z = slowIterator.next();
             while (fastIterator.hasNext()) {
                 y = fastIterator.next();
-                op[i] = data.getFloat(x, y, z);
+                op[i] = (float)data.getValue(x, y, z);
                 i++;
             }
             fastIterator.reset();
@@ -211,7 +211,7 @@ public class ImageFiller {
             y = slowIterator.next();
             while (fastIterator.hasNext()) {
                 z = fastIterator.next();
-                op[i] = data.getFloat(x, y, z);
+                op[i] = (float)data.getValue(x, y, z);
                 i++;
             }
             fastIterator.reset();
@@ -231,7 +231,7 @@ public class ImageFiller {
             x = slowIterator.next();
             while (fastIterator.hasNext()) {
                 z = fastIterator.next();
-                op[i] = data.getFloat(x, y, z);
+                op[i] = (float)data.getValue(x, y, z);
             }
             fastIterator.reset();
         }

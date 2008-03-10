@@ -15,7 +15,9 @@ import java.util.*;
 public class Factor {
 
     private String name;
+
     private Map<String, List<Integer>> levelMap = new TreeMap<String, List<Integer>>();
+
     private List<String> values = new ArrayList<String>();
 
     private int length = 0;

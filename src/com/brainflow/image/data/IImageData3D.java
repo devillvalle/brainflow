@@ -13,32 +13,17 @@ import com.brainflow.image.interpolation.InterpolationFunction3D;
  */
 public interface IImageData3D extends IImageData {
 
-
-    public Index3D voxelOf(int idx, Index3D voxel);
-
     public int indexOf(int x, int y, int z);
+
+    public Index3D indexToGrid(int idx, Index3D voxel);
 
     public double getValue(double x, double y, double z, InterpolationFunction3D interp);
 
     public double getRealValue(double realx, double realy, double realz, InterpolationFunction3D interp);
 
-    public double getValue(int index);
-
-    public int getInt(int index);
-
-    public double getValue(int x, int y, int z);
-
-    public float getFloat(int x, int y, int z);
-
-    public int getInt(int x, int y, int z);
-
-    public void setValue(int idx, double val);
+    public double getValue(int x, int y, int z);  
 
     public void setValue(int x, int y, int z, double val);
-
-    public void setFloat(int x, int y, int z, float val);
-
-    public void setInt(int x, int y, int z, int val);
 
     public ImageSpace3D getImageSpace();
 

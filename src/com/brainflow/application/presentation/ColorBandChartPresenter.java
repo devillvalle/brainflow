@@ -4,7 +4,7 @@ import com.brainflow.colormap.*;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
 import com.brainflow.display.ColorBandChart;
-import com.brainflow.display.Property;
+
 import net.java.dev.properties.BaseProperty;
 
 import javax.swing.*;
@@ -85,9 +85,7 @@ public class ColorBandChartPresenter extends ImageViewPresenter {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void setColorMap(Property<IColorMap> colorMapParameter) {
 
-    }
 
 
     class ChangeHandler implements ChangeListener {

@@ -65,12 +65,12 @@ public abstract class BinaryImageData extends AbstractImageData {
 
 
 
-    public double getMaxValue() {
+    public double maxValue() {
         if (bits.cardinality() > 0) return 1;
         else return 0;
     }
 
-    public double getMinValue() {
+    public double minValue() {
         if (bits.cardinality() == bits.size()) return 1;
         else return 0;
 
@@ -80,7 +80,7 @@ public abstract class BinaryImageData extends AbstractImageData {
         return bits.cardinality();
     }
 
-    public int getNumElements() {
+    public int numElements() {
         return bits.size();
     }
 

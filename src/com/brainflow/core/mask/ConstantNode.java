@@ -10,8 +10,9 @@ import java.util.Arrays;
  * Time: 5:04:29 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ConstantNode implements BaseNode {
-        
+public class ConstantNode extends AbstractNode {
+
+
     private double value;
 
     public ConstantNode(double value) {
@@ -22,7 +23,15 @@ public class ConstantNode implements BaseNode {
         return "value : " + value;
     }
 
-    public List<BaseNode> getChildren() {
+    public boolean isLeaf() {
+        return true;
+    }
+
+    public void apply(TreeWalker walker) {
+        walker.caseConstantNode(this);
+    }
+
+    public List<INode> getChildren() {
         return Arrays.asList();
     }
 }

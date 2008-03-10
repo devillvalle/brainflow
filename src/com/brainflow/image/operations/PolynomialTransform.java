@@ -15,16 +15,21 @@ import com.brainflow.utils.Point3D;
 public class PolynomialTransform extends AbstractTransform {
 
     public static final int MAX_ORDER = 12;
+
     public static final int MAX_COEFFP = 455;
+
     public static final int MAX_COORD = 3;
+
     public static final int MIN_COORD = 2;
 
     int order;
+
     int coeffp;
+
     int dimensionality;
 
-
     double[][] matrix;
+    
     double[] dx;
 
     /**

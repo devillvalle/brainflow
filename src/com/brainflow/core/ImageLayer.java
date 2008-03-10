@@ -33,8 +33,8 @@ public abstract class ImageLayer extends AbstractLayer {
         this.dataSource = dataSource;
 
         if (dataSource.isLoaded()) {
-            getImageLayerProperties().getClipRange().setLowClip(getData().getMinValue());
-            getImageLayerProperties().getClipRange().setHighClip(getData().getMaxValue());
+            getImageLayerProperties().getClipRange().setLowClip(getData().minValue());
+            getImageLayerProperties().getClipRange().setHighClip(getData().maxValue());
 
         }
         //data = dataSource.getData();
@@ -46,8 +46,8 @@ public abstract class ImageLayer extends AbstractLayer {
         this.dataSource = dataSource;
 
         try { if (dataSource.isLoaded()) {
-            getImageLayerProperties().getClipRange().setLowClip(getData().getMinValue());
-            getImageLayerProperties().getClipRange().setHighClip(getData().getMaxValue());
+            getImageLayerProperties().getClipRange().setLowClip(getData().minValue());
+            getImageLayerProperties().getClipRange().setHighClip(getData().maxValue());
 
         }
         } catch(NullPointerException e) {
@@ -86,11 +86,11 @@ public abstract class ImageLayer extends AbstractLayer {
     }
 
     public double getMaxValue() {
-        return dataSource.getData().getMaxValue();
+        return dataSource.getData().maxValue();
     }
 
     public double getMinValue() {
-        return dataSource.getData().getMinValue();
+        return dataSource.getData().minValue();
     }
 
 

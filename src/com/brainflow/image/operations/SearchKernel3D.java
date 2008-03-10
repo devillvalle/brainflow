@@ -18,7 +18,9 @@ public class SearchKernel3D implements ISearchKernel3D {
 
 
     private int dimx;
+
     private int dimy;
+
     private int dimz;
 
     private int planexy;

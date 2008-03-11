@@ -86,16 +86,20 @@ public class TestVariableSubstitution {
         assertTrue(cnode.left() instanceof ComparisonNode);
         assertTrue(cnode.right() instanceof ImageDataNode);
 
-        ComparisonNode left = (ComparisonNode)cnode.left();
-        ImageDataNode right = (ImageDataNode)cnode.right();
+        ComparisonNode left = (ComparisonNode) cnode.left();
+        ImageDataNode right = (ImageDataNode) cnode.right();
 
 
         assertTrue(left.left().toString(), left.left() instanceof ImageDataNode);
-        assertTrue(left.right().toString(),left.right() instanceof ImageDataNode);
+        assertTrue(left.right().toString(), left.right() instanceof ImageDataNode);
 
         assertEquals(right.getData().getValue(0), 27, .0001);
 
     }
 
 
+    @Test
+    public void testVariableSubstitution() {
+        fail(); // @todo - implement
+    } // testVariableSubstitution()
 }

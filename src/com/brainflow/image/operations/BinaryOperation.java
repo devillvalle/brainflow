@@ -23,6 +23,8 @@ public abstract class BinaryOperation {
 
     public abstract int compute(int left, int right);
 
+     public abstract int compute(double left, double right);
+
     protected BinaryOperand operand = null;
 
     public BinaryOperand getOperand() {
@@ -40,6 +42,10 @@ public abstract class BinaryOperation {
             return left & right;
         }
 
+        public final int compute(double left, double right) {
+            return (left > 0 && right > 0) ? 1 : 0;
+        }
+
         public String toString() {
             return operand.toString();
         }
@@ -52,7 +58,11 @@ public abstract class BinaryOperation {
         }
 
         public final int compute(int left, int right) {
-            return left | right;
+           return (left > 0 || right > 0) ? 1 : 0;
+        }
+
+        public final int compute(double left, double right) {
+            return (left > 0 || right > 0) ? 1 : 0;
         }
 
         public String toString() {

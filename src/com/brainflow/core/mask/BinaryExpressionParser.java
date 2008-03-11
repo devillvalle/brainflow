@@ -95,8 +95,8 @@ public class BinaryExpressionParser {
         INode node = parser.parse("(V1 > 5) and (V2 < 4)");
         VariableSubstitution builder = new VariableSubstitution(null);
         builder.start(node);
-        DepthFirstAdapter walker = new DepthFirstAdapter();
-        walker.start(node);
+
+        
         
         
 

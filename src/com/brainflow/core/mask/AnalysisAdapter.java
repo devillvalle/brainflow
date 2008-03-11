@@ -14,26 +14,72 @@ public class AnalysisAdapter implements TreeWalker {
 
     public void start(INode rootNode) {
         this.rootNode = rootNode;
+        inStart(rootNode);
         rootNode.apply(this);
+        outStart(rootNode);
+    }
+
+    public void inStart(INode rootNode) {
+
+    }
+
+    public void outStart(INode rootNode) {
+
     }
 
     public void caseComparisonNode(ComparisonNode node) {
+        inComparison(node);
         node.left().apply(this);
         node.right().apply(this);
+        outComparison(node);
 
     }
 
+    public void inComparison(ComparisonNode node) {
+
+    }
+
+    public void outComparison(ComparisonNode node) {
+
+    }
+
+
+
     public void caseVariableNode(VariableNode node) {
-        System.out.println(node);
+
+
+    }
+
+    public void inVariable(VariableNode node) {
+
+    }
+
+    public void outVariable(VariableNode node) {
 
     }
 
     public void caseConstantNode(ConstantNode node) {
-        System.out.println(node);
+
+
+    }
+
+    public void inConstant(ConstantNode node) {
+  
+    }
+
+    public void outConstant(ConstantNode node) {
 
     }
 
     public void caseImageDataNode(ImageDataNode node) {
-        System.out.println(node);
+
+    }
+
+    public void inImageData(ImageDataNode node) {
+
+    }
+
+    public void outImageData(ImageDataNode node) {
+
     }
 }

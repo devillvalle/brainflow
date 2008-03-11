@@ -38,9 +38,10 @@ public class VariableSubstitution extends AnalysisAdapter {
 
     }
 
+    
+
     public void caseConstantNode(ConstantNode node) {
         node.replaceBy(new ImageDataNode(ImageData.createConstantData(node.getValue(), model.getSelectedLayer().getData().getImageSpace())));
-        
     }
 
     public void caseVariableNode(VariableNode node) {

@@ -103,7 +103,7 @@ public class MaskedDataNode3D implements IMaskedData3D {
     }
 
     public String getImageLabel() {
-        return imageLabel;
+        return left.getImageLabel() + ":" + right.getImageLabel();
     }
 
     public ImageSpace3D getImageSpace() {

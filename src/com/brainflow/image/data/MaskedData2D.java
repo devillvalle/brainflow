@@ -96,9 +96,7 @@ public class MaskedData2D implements IImageData2D {
         return source.getImageInfo();
     }
 
-    public void setImageLabel(String imageLabel) {
-        source.setImageLabel(imageLabel);
-    }
+    
 
     public String getImageLabel() {
         return source.getImageLabel();

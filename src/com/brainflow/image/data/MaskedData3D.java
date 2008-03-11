@@ -115,10 +115,7 @@ public class MaskedData3D implements IMaskedData3D {
         return source.getImageInfo();
     }
 
-    public void setImageLabel(String imageLabel) {
-        source.setImageLabel(imageLabel);
-    }
-
+    
     public String getImageLabel() {
         return source.getImageLabel();
     }

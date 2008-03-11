@@ -37,11 +37,12 @@ public interface IImageData {
     
     public IImageSpace getImageSpace();
 
-    public void setImageLabel(String imageLabel);
-
+    
     public String getImageLabel();
 
     public ImageIterator iterator();
+
+
 
     
 

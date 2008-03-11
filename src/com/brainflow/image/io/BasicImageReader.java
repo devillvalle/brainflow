@@ -194,15 +194,15 @@ public class BasicImageReader implements ImageReader {
             //}
 
             if (fileDimensionality == 2) {
-                BasicImageData dat = new BasicImageData2D((ImageSpace2D)imageSpace, data);
-                //todo bloody hack
-                dat.setImageLabel(info.getDataFile().getName().getBaseName());
+                BasicImageData dat = new BasicImageData2D((ImageSpace2D)imageSpace, data, info.getDataFile().getName().getBaseName());
+
+                //dat.setImageLabel(info.getDataFile().getName().getBaseName());
                 listener.finished();
                 return dat;
             } else if (fileDimensionality == 3) {
-                //todo bloody hack
-                BasicImageData dat = new BasicImageData3D((ImageSpace3D)imageSpace, data);
-                dat.setImageLabel(info.getDataFile().getName().getBaseName());
+
+                BasicImageData dat = new BasicImageData3D((ImageSpace3D)imageSpace, data, info.getDataFile().getName().getBaseName());
+                //dat.setImageLabel(info.getDataFile().getName().getBaseName());
                 listener.finished();
                 return dat;
             } else
@@ -278,12 +278,12 @@ public class BasicImageReader implements ImageReader {
 
 
             if (fileDimensionality == 2) {
-                BasicImageData2D data2d = new BasicImageData2D((ImageSpace2D)imageSpace, dataArray);
-                data2d.setImageLabel(info.getDataFile().getName().getBaseName());
+                BasicImageData2D data2d = new BasicImageData2D((ImageSpace2D)imageSpace, dataArray, info.getDataFile().getName().getBaseName());
+                //data2d.setImageLabel(info.getDataFile().getName().getBaseName());
                 return data2d;
             } else if (fileDimensionality == 3) {
-                BasicImageData3D data3d = new BasicImageData3D((ImageSpace3D)imageSpace, dataArray);
-                data3d.setImageLabel(info.getDataFile().getName().getBaseName());
+                BasicImageData3D data3d = new BasicImageData3D((ImageSpace3D)imageSpace, dataArray, info.getDataFile().getName().getBaseName());
+                //data3d.setImageLabel(info.getDataFile().getName().getBaseName());
                 return data3d;
             } else {
                 throw new RuntimeException("BasicImageReader.getOutput(): Dimensionality of: " + fileDimensionality + " not supported!");

@@ -126,9 +126,7 @@ public abstract class AbstractGriddedImageView extends ImageView  {
 
     }
 
-    public RenderedImage captureImage() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+
 
 
    

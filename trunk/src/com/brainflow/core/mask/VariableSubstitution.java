@@ -2,6 +2,7 @@ package com.brainflow.core.mask;
 
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.image.data.IImageData;
+import com.brainflow.image.data.ImageData;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -35,6 +36,11 @@ public class VariableSubstitution extends AnalysisAdapter {
         String numberPart = varName.substring(1);
         return Integer.parseInt(numberPart) -1 ;
 
+    }
+
+    public void caseConstantNode(ConstantNode node) {
+        node.replaceBy(new ImageDataNode(ImageData.createConstantData(node.getValue(), model.getSelectedLayer().getData().getImageSpace())));
+        
     }
 
     public void caseVariableNode(VariableNode node) {

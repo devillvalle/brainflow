@@ -34,18 +34,35 @@ public class BasicImageData2D extends BasicImageData implements IImageData2D {
 
     }
 
+    public BasicImageData2D(ImageSpace2D space, DataType _type, String _imageLabel) {
+        super(space, _type, _imageLabel);
+        data = allocateBuffer(space.getNumSamples());
 
-    public ImageInfo getImageInfo() {
-        return new ImageInfo(this);
+
     }
 
-    public BasicImageData2D(ImageSpace2D space, Object array) {
+     public BasicImageData2D(ImageSpace2D space, Object array) {
         super(space, establishDataType(array));
         storage = array;
 
         data = allocateBuffer(space.getNumSamples());
 
     }
+
+    public BasicImageData2D(ImageSpace2D space, Object array, String imageLabel) {
+        super(space, establishDataType(array), imageLabel);
+        storage = array;
+
+        data = allocateBuffer(space.getNumSamples());
+
+    }
+
+
+    public ImageInfo getImageInfo() {
+        return new ImageInfo(this);
+    }
+
+
 
     public ImageSpace2D getImageSpace() {
         return (ImageSpace2D)space;

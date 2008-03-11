@@ -2,12 +2,14 @@ package com.brainflow.image.data;
 
 import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.image.space.Axis;
+import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.interpolation.InterpolationFunction3D;
 import com.brainflow.image.anatomy.Anatomy;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.utils.Index3D;
 import com.brainflow.utils.DataType;
+import test.Testable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,7 +20,15 @@ import com.brainflow.utils.DataType;
  */
 public class ImageData {
 
+     public static IImageData3D createConstantData(final double value, final IImageSpace space) {
+         if (space instanceof ImageSpace3D) {
+             return ImageData.createConstantData(value, (ImageSpace3D)space);
+         } else {
+             throw new IllegalArgumentException("IImageSpace argumnet must be of class ImageSpace3D");
+         }
+     }
 
+    @Testable
     public static IImageData3D createConstantData(final double value, final ImageSpace3D space) {
         return new AbstractImageData3D(space, DataType.DOUBLE) {
             public double getValue(int index) {

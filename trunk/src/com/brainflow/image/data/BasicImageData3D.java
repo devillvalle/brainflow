@@ -45,8 +45,26 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
 
     }
 
+    public BasicImageData3D(ImageSpace3D space, DataType _type, String imageLabel) {
+        super(space, _type, imageLabel);
+        data = allocateBuffer(space.getNumSamples());
+        planeSize = space.getDimension(Axis.X_AXIS) * space.getDimension(Axis.Y_AXIS);
+        dim0 = space.getDimension(Axis.X_AXIS);
+
+    }
+
     public BasicImageData3D(ImageSpace3D space, Object array) {
         super(space,establishDataType(array));
+        storage = array;
+
+        data = allocateBuffer(space.getNumSamples());
+        planeSize = space.getDimension(Axis.X_AXIS) * space.getDimension(Axis.Y_AXIS);
+        dim0 = space.getDimension(Axis.X_AXIS);
+
+    }
+
+    public BasicImageData3D(ImageSpace3D space, Object array, String imageLabel) {
+        super(space,establishDataType(array), imageLabel);
         storage = array;
 
         data = allocateBuffer(space.getNumSamples());
@@ -153,8 +171,6 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
     public final double getValue(int x, int y, int z) {
         return data.getElemDouble(indexOf(x, y, z));
     }
-
-
 
 
     public final void setValue(int idx, double val) {

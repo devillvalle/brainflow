@@ -23,6 +23,10 @@ public class ConstantNode extends AbstractNode {
         return "value : " + value;
     }
 
+    public double getValue() {
+        return value;
+    }
+
     public boolean isLeaf() {
         return true;
     }

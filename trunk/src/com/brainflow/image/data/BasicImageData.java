@@ -45,6 +45,10 @@ public abstract class BasicImageData extends AbstractImageData {
         super(space, dtype);
     }
 
+    protected BasicImageData(IImageSpace space, DataType dtype, String imageLabel) {
+        super(space, dtype, imageLabel);
+    }
+
     public Object getStorage() {
         return storage;
     }

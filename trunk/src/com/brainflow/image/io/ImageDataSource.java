@@ -86,7 +86,7 @@ public class ImageDataSource extends AbstractImageDataSource {
                 }
             });
 
-            data.setImageLabel(getStem());
+            //data.setImageLabel(getStem());
             dataRef = data;
 
         } catch (IllegalAccessException e) {
@@ -112,7 +112,7 @@ public class ImageDataSource extends AbstractImageDataSource {
             ImageReader ireader = (ImageReader) getDescriptor().getDataReader().newInstance();
 
             IImageData data = ireader.readImage(imageInfo, plistener);
-            data.setImageLabel(getStem());
+            //data.setImageLabel(getStem());
             dataRef = data;
         } catch (IllegalAccessException e) {
             log.warning("Error caught in BasicImageData.load()");

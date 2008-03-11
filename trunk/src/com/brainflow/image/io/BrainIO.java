@@ -200,7 +200,7 @@ public class BrainIO {
             }
         });
 
-        data.setImageLabel(info.getDataFile().getName().getBaseName());
+        //data.setImageLabel(info.getDataFile().getName().getBaseName());
 
         return data;
     }

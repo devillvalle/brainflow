@@ -22,7 +22,7 @@ public abstract class AbstractImageData implements IImageData {
 
     protected final DataType datatype;
 
-    private String imageLabel;
+    private final String imageLabel;
 
     private ImageInfo info = new ImageInfo();
 
@@ -30,11 +30,19 @@ public abstract class AbstractImageData implements IImageData {
     public AbstractImageData(IImageSpace space) {
         this.space = space;
         datatype = DataType.DOUBLE;
+        this.imageLabel = "";
     }
 
     public AbstractImageData(IImageSpace space, DataType dtype) {
         this.space = space;
         this.datatype = dtype;
+        this.imageLabel = "";
+    }
+
+    public AbstractImageData(IImageSpace space, DataType dtype, String imageLabel) {
+        this.space = space;
+        this.datatype = dtype;
+        this.imageLabel = imageLabel;
     }
 
     public DataType getDataType() {
@@ -57,10 +65,7 @@ public abstract class AbstractImageData implements IImageData {
         return info;
     }
 
-    public void setImageLabel(String imageLabel) {
-        this.imageLabel = imageLabel;
-    }
-
+    
     public String getImageLabel() {
         return imageLabel;
     }

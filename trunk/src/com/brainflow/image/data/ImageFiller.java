@@ -112,7 +112,7 @@ public class ImageFiller {
         } else if (axis1 == axis2.getFlippedAxis()) {
             return new Decrementor(ispace.getDimension(axis2) - 1, -1);
         } else {
-            throw new AssertionError();
+            throw new IllegalArgumentException("illegal axis");
         }
 
     }
@@ -243,9 +243,9 @@ public class ImageFiller {
 
     private static class Incrementor implements QuickIterator {
 
-        private int value;
-        private int startValue;
-        private int endValue;
+        private  int value;
+        private final int startValue;
+        private final int endValue;
 
         public Incrementor(int startValue, int endValue) {
             value = startValue;
@@ -275,8 +275,8 @@ public class ImageFiller {
     private static class Decrementor implements QuickIterator {
 
         private int value;
-        private int startValue;
-        private int endValue;
+        private final int startValue;
+        private final int endValue;
 
         public Decrementor(int startValue, int endValue) {
             value = startValue;

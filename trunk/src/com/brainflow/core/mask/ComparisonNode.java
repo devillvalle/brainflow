@@ -1,5 +1,7 @@
 package com.brainflow.core.mask;
 
+import com.brainflow.image.operations.BinaryOperand;
+
 import java.util.List;
 import java.util.Arrays;
 
@@ -17,11 +19,11 @@ public class ComparisonNode extends AbstractNode {
 
     private INode right;
 
-    private Operation op;
+    private BinaryOperand op;
 
 
 
-    public ComparisonNode(INode left, INode right, Operation op) {
+    public ComparisonNode(INode left, INode right, BinaryOperand op) {
         this.left = left;
         this.right = right;
         this.op = op;
@@ -34,6 +36,13 @@ public class ComparisonNode extends AbstractNode {
         return Arrays.asList(left, right);
     }
 
+    public BinaryOperand getOp() {
+        return op;
+    }
+
+    public int depth() {
+        return 1 + Math.max(left.depth(), right.depth());
+    }
 
     public INode left() {
         return left;

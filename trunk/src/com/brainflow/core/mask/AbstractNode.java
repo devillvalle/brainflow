@@ -27,16 +27,22 @@ public abstract class AbstractNode implements INode {
     }
 
     public boolean isLeaf() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return getChildren().size() == 0;
     }
 
+    
+
+
     public void replaceChild(INode oldChild, INode newChild) {
+        throw new UnsupportedOperationException();
 
     }
 
     public void replaceBy(INode node) {
         if (parent != null) {
             parent.replaceChild(this, node);
+        } else {
+            throw new RuntimeException("cannot replace parentless node");
         }
     }
 

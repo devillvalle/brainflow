@@ -16,6 +16,8 @@ public interface INode {
 
     public boolean isLeaf();
 
+    public int depth();
+    
     public void apply(TreeWalker walker);
 
     public void setParent(INode parent);

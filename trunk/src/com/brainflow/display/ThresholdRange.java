@@ -226,12 +226,9 @@ public class ThresholdRange extends LayerProperty implements MaskPredicate, IRan
         return thresholdRange.contains(val);
     }
 
-    public final int mask(double value) {
-        if (thresholdRange.contains(value)) {
-            return 1;
-        } else {
-            return 0;
-        }
+    public final boolean mask(double value) {
+        return thresholdRange.contains(value);
+
     }
 
 

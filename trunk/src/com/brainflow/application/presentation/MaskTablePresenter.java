@@ -2,6 +2,7 @@ package com.brainflow.application.presentation;
 
 import com.brainflow.core.*;
 import com.brainflow.utils.IRange;
+import com.brainflow.image.operations.Operations;
 import com.brainflow.image.operations.BinaryOperation;
 import com.brainflow.display.ThresholdRange;
 import com.brainflow.colormap.RangeCellEditor;
@@ -9,7 +10,6 @@ import com.brainflow.colormap.RangeCellRenderer;
 import com.jidesoft.grid.*;
 import com.jidesoft.combobox.ListComboBox;
 import com.jidesoft.combobox.AbstractComboBox;
-import com.jidesoft.swing.JideSwingUtilities;
 import com.jidesoft.swing.JideBoxLayout;
 import com.xduke.xswing.DataTipManager;
 
@@ -19,7 +19,6 @@ import java.util.*;
 import java.util.List;
 import java.awt.event.ItemListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
 import java.awt.*;
 
 /**
@@ -60,7 +59,7 @@ public class MaskTablePresenter extends ImageViewPresenter {
         CellEditorManager.registerEditor(boolean.class, editorFactory, BooleanCheckBoxCellEditor.CONTEXT);
 
 
-        maskTable.setDefaultEditor(BinaryOperation.class, new OpCellEditor());
+        maskTable.setDefaultEditor(Operations.class, new OpCellEditor());
         maskTable.setDefaultEditor(Integer.class, new GroupCellEditor());
 
         maskTable.setDefaultEditor(IRange.class, new RangeCellEditor());
@@ -195,7 +194,7 @@ public class MaskTablePresenter extends ImageViewPresenter {
 
         private Map<String, Integer> columnMap = new HashMap<String, Integer>();
 
-        private Class[] colClasses = new Class[]{AbstractLayer.class, IRange.class, Integer.class, BinaryOperation.class, Boolean.class};
+        private Class[] colClasses = new Class[]{AbstractLayer.class, IRange.class, Integer.class, Operations.class, Boolean.class};
 
 
         public MaskRowTableModel(List<MaskLayerRow> list) {
@@ -463,7 +462,7 @@ public class MaskTablePresenter extends ImageViewPresenter {
         public AbstractComboBox createAbstractComboBox() {
             if (_comboBox == null) {
                 _comboBox = new ListComboBox(
-                        new DefaultComboBoxModel(new BinaryOperation[]{BinaryOperation.AND, BinaryOperation.OR}));
+                        new DefaultComboBoxModel(new BinaryOperation[]{Operations.AND, Operations.OR}));
             }
 
             return _comboBox;

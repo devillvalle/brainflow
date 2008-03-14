@@ -31,6 +31,10 @@ public class VariableNode extends AbstractNode {
         return true;
     }
 
+    public int depth() {
+        return 0;  
+    }
+
     public void apply(TreeWalker walker) {
         walker.caseVariableNode(this);
     }

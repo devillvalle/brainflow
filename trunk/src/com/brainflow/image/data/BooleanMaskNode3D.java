@@ -6,7 +6,8 @@ import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.iterators.ImageIterator;
-import com.brainflow.image.operations.BinaryOperation;
+import com.brainflow.image.operations.BooleanOperation;
+import com.brainflow.image.operations.Operations;
 import com.brainflow.utils.Index3D;
 import com.brainflow.utils.DataType;
 
@@ -17,24 +18,22 @@ import com.brainflow.utils.DataType;
  * Time: 1:16:28 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MaskedDataNode3D implements IMaskedData3D {
+public class BooleanMaskNode3D implements IMaskedData3D {
 
     private IMaskedData3D left;
 
     private IMaskedData3D right;
 
-    private BinaryOperation operation = BinaryOperation.AND;
+    private BooleanOperation operation = Operations.AND;
 
 
-    private String imageLabel = "";
-
-    public MaskedDataNode3D(IMaskedData3D left, IMaskedData3D right) {
+    public BooleanMaskNode3D(IMaskedData3D left, IMaskedData3D right) {
         this.left = left;
         this.right = right;
 
     }
 
-    public MaskedDataNode3D(IMaskedData3D left, IMaskedData3D right, BinaryOperation operation) {
+    public BooleanMaskNode3D(IMaskedData3D left, IMaskedData3D right, BooleanOperation operation) {
         this.left = left;
         this.right = right;
         this.operation = operation;
@@ -42,29 +41,28 @@ public class MaskedDataNode3D implements IMaskedData3D {
     }
 
 
-
     public double getRealValue(double realx, double realy, double realz, InterpolationFunction3D interp) {
-        return operation.compute((int) left.getRealValue(realx, realy, realz, interp), (int) right.getRealValue(realx, realy, realz, interp));
+        return operation.isTrue((int) left.getRealValue(realx, realy, realz, interp), (int) right.getRealValue(realx, realy, realz, interp)) ? 1 : 0;
     }
 
-    public int isTrue(int index) {
-        return operation.compute(left.isTrue(index), right.isTrue(index));
+    public boolean isTrue(int index) {
+        return operation.isTrue(left.isTrue(index), right.isTrue(index));
     }
 
-    public int isTrue(int x, int y, int z) {
-        return operation.compute(left.isTrue(x, y, z), right.isTrue(x, y, z));
+    public boolean isTrue(int x, int y, int z) {
+        return operation.isTrue(left.isTrue(x, y, z), right.isTrue(x, y, z));
     }
 
     public double getValue(int index) {
-        return operation.compute(left.isTrue(index), right.isTrue(index));
+        return operation.isTrue(left.isTrue(index), right.isTrue(index)) ? 1 : 0;
     }
 
     public double getValue(double x, double y, double z, InterpolationFunction3D interp) {
-        return operation.compute((int) left.getValue(x, y, z, interp), (int) right.getRealValue(x, y, z, interp));
+        return operation.isTrue((int) left.getValue(x, y, z, interp), (int) right.getValue(x, y, z, interp)) ? 1 : 0;
     }
 
     public double getValue(int x, int y, int z) {
-        return operation.compute(left.isTrue(x, y, z), right.isTrue(x, y, z));
+        return operation.isTrue(left.isTrue(x, y, z), right.isTrue(x, y, z)) ? 1 : 0;
     }
 
     public int indexOf(int x, int y, int z) {
@@ -99,7 +97,7 @@ public class MaskedDataNode3D implements IMaskedData3D {
 
 
     public ImageInfo getImageInfo() {
-        return left.getImageInfo();
+        return new ImageInfo(this);
     }
 
     public String getImageLabel() {
@@ -111,10 +109,12 @@ public class MaskedDataNode3D implements IMaskedData3D {
     }
 
     public double maxValue() {
+        //todo not strictly correct
         return Math.max(left.maxValue(), right.maxValue());
     }
 
     public double minValue() {
+        //todo not strictly correct
         return Math.min(left.minValue(), right.minValue());
 
     }
@@ -127,11 +127,6 @@ public class MaskedDataNode3D implements IMaskedData3D {
         return new MaskedDataNodeIterator();
     }
 
-    
-
-    public void setImageLabel(String imageLabel) {
-        this.imageLabel = imageLabel;
-    }
 
     public int cardinality() {
         MaskedDataNodeIterator iter = new MaskedDataNodeIterator();
@@ -145,6 +140,10 @@ public class MaskedDataNode3D implements IMaskedData3D {
         return count;
     }
 
+    public String toString() {
+        return left.getImageLabel() + " " + operation + " " + right.getImageLabel();
+    }
+
 
     class MaskedDataNodeIterator implements ImageIterator {
 
@@ -156,7 +155,7 @@ public class MaskedDataNode3D implements IMaskedData3D {
 
         public double next() {
             advance();
-            return operation.compute(left.isTrue(iter.index()), right.isTrue(iter.index()));
+            return operation.isTrue(left.isTrue(iter.index()), right.isTrue(iter.index())) ? 1 : 0;
 
         }
 
@@ -166,7 +165,7 @@ public class MaskedDataNode3D implements IMaskedData3D {
 
         public double previous() {
             iter.jump(-1);
-            return operation.compute(left.isTrue(iter.index()), right.isTrue(iter.index()));
+            return operation.isTrue(left.isTrue(iter.index()), right.isTrue(iter.index())) ? 1 : 0;
 
         }
 

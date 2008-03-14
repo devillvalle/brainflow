@@ -34,19 +34,19 @@ public class MaskedData2D implements IImageData2D {
     }
 
     public double getValue(double x, double y, InterpolationFunction2D interp) {
-        return predicate.mask(source.getValue(x, y, interp));
+        return predicate.mask(source.getValue(x, y, interp))? 1 : 0;
     }
 
     public double getRealValue(double realx, double realy, InterpolationFunction2D interp) {
-        return predicate.mask(source.getRealValue(realx, realy, interp));
+        return predicate.mask(source.getRealValue(realx, realy, interp)) ? 1 : 0;
     }
 
     public double getValue(int x, int y) {
-        return predicate.mask(source.getValue(x, y));
+        return predicate.mask(source.getValue(x, y)) ? 1 : 0;
     }
 
     public double getValue(int index) {
-        return predicate.mask(source.getValue(index));
+        return predicate.mask(source.getValue(index)) ? 1 : 0;
     }
 
     public void setValue(int idx, double val) {
@@ -113,7 +113,7 @@ public class MaskedData2D implements IImageData2D {
         }
 
         public double next() {
-            return predicate.mask(iter.next());
+            return predicate.mask(iter.next()) ? 1 : 0;
         }
 
         public void advance() {
@@ -121,7 +121,7 @@ public class MaskedData2D implements IImageData2D {
         }
 
         public double previous() {
-            return predicate.mask(iter.previous());
+            return predicate.mask(iter.previous()) ? 1 : 0;
         }
 
         public boolean hasNext() {

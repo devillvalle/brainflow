@@ -159,12 +159,12 @@ public class BinaryImageData3D extends BinaryImageData implements IMaskedData3D 
         getBitVector().putQuick(indexOf(x, y, z), val > 0);
     }
 
-    public final int isTrue(int x, int y, int z) {
-        return getBitVector().getQuick(indexOf(x, y, z)) ? 1 : 0;
+    public final boolean isTrue(int x, int y, int z) {
+        return getBitVector().getQuick(indexOf(x, y, z));
     }
 
-    public final int isTrue(int index) {
-        return getBitVector().getQuick(index) ? 1 : 0;
+    public final boolean isTrue(int index) {
+        return getBitVector().getQuick(index);
 
     }
 }

@@ -2,6 +2,7 @@ package com.brainflow.core.mask;
 
 import jfun.parsec.*;
 import test.Testable;
+import com.brainflow.image.operations.BinaryOperand;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,7 +14,7 @@ import test.Testable;
 public class BinaryExpressionParser {
 
 
-    private static Binary<INode> toMap2(final Operation op) {
+    private static Binary<INode> toMap2(final BinaryOperand op) {
         return new Binary<INode>() {
             public INode map(INode o1, INode o2) {
                 return new ComparisonNode(o1,o2,op);
@@ -55,10 +56,10 @@ public class BinaryExpressionParser {
         final Parser<Tok> p_lparen = ops.getParser("(");
         final Parser<Tok> p_rparen = ops.getParser(")");
 
-        final Parser<Binary<INode>> p_lt = lt_op.seq(Parsers.retn(toMap2(Operation.LT)));
-        final Parser<Binary<INode>> p_gt = gt_op.seq(Parsers.retn(toMap2(Operation.GT)));
-        final Parser<Binary<INode>> p_and = and_op.seq(Parsers.retn(toMap2(Operation.AND)));
-        final Parser<Binary<INode>> p_or = or_op.seq(Parsers.retn(toMap2(Operation.OR)));
+        final Parser<Binary<INode>> p_lt = lt_op.seq(Parsers.retn(toMap2(BinaryOperand.LT)));
+        final Parser<Binary<INode>> p_gt = gt_op.seq(Parsers.retn(toMap2(BinaryOperand.GT)));
+        final Parser<Binary<INode>> p_and = and_op.seq(Parsers.retn(toMap2(BinaryOperand.AND)));
+        final Parser<Binary<INode>> p_or = or_op.seq(Parsers.retn(toMap2(BinaryOperand.OR)));
 
 
         //lt_op.seq(Parsers.retn())

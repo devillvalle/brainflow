@@ -21,6 +21,10 @@ public class ImageDataNode extends AbstractNode {
         return data;
     }
 
+    public int depth() {
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public void apply(TreeWalker walker) {
         walker.caseImageDataNode(this);
     }

@@ -6,6 +6,7 @@ import com.brainflow.core.*;
 import com.brainflow.display.ThresholdRange;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.BrainIO;
+import com.brainflow.image.operations.Operations;
 import com.brainflow.image.operations.BinaryOperation;
 import com.brainflow.utils.IRange;
 import com.brainflow.utils.Range;
@@ -79,7 +80,7 @@ public class MaskListEditor {
         maskTable.setDefaultRenderer(AbstractLayer.class, CellRendererManager.getRenderer(String.class));
 
         maskTable.setDefaultRenderer(IRange.class, new RangeCellRenderer());
-        maskTable.setDefaultEditor(BinaryOperation.class, new OpCellEditor());
+        maskTable.setDefaultEditor(Operations.class, new OpCellEditor());
 
         /*final JButton addButton = new JButton("Add Row");
      final JButton removeButton = new JButton("Remove Row");
@@ -201,7 +202,7 @@ public class MaskListEditor {
 
         private Map<String, Integer> columnMap = new HashMap<String, Integer>();
 
-        private Class[] colClasses = new Class[]{AbstractLayer.class, IRange.class, Integer.class, BinaryOperation.class, Boolean.class};
+        private Class[] colClasses = new Class[]{AbstractLayer.class, IRange.class, Integer.class, Operations.class, Boolean.class};
 
 
         public MaskTableModel() {
@@ -350,7 +351,7 @@ public class MaskListEditor {
     class OpCellEditor extends ListComboBoxCellEditor implements ItemListener {
 
         public OpCellEditor() {
-            super(new DefaultComboBoxModel(new BinaryOperation[]{BinaryOperation.AND, BinaryOperation.OR}));
+            super(new DefaultComboBoxModel(new BinaryOperation[]{Operations.AND, Operations.OR}));
         }
 
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {

@@ -1,5 +1,6 @@
 package com.brainflow.core;
 
+import com.brainflow.image.operations.Operations;
 import com.brainflow.image.operations.BinaryOperation;
 import com.brainflow.display.ThresholdRange;
 

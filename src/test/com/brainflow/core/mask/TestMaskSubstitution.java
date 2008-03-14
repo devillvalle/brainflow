@@ -55,12 +55,23 @@ public class TestMaskSubstitution {
     @Test
     public void testMaskSubstitution() {
         Parser<INode> parser = new BinaryExpressionParser().createParser();
-        INode node = parser.parse("V1 and V2 and 27");
+        INode node = parser.parse("(V1 > 5) and (V2 < 2) or (V1 > 27)");
+
+        System.out.println("DEPTH : " + node.depth());
         VariableSubstitution sub = new VariableSubstitution(model);
         sub.start(node);
-
+        System.out.println("DEPTH : " + node.depth());
         MaskSubstitution masksub = new MaskSubstitution();
-        masksub.start(node);
+        INode ret = masksub.start(node);
+
+        System.out.println("DEPTH : " +ret.depth());
+        System.out.println(ret);
+        System.out.println("AGAIN ...");
+        ret = masksub.start(ret);
+
+        System.out.println("DEPTH : " +ret.depth());
+        //System.out.println("AGAIN ...");
+        //ret = masksub.start(ret);
 
     } // testInComparison()
 }

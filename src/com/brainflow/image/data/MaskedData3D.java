@@ -46,29 +46,28 @@ public class MaskedData3D implements IMaskedData3D {
     }
 
     public double getValue(double x, double y, double z, InterpolationFunction3D interp) {
-        return predicate.mask(source.getValue(x, y, z, interp));
+        return predicate.mask(source.getValue(x, y, z, interp)) ? 1 : 0;
     }
 
     public double getRealValue(double realx, double realy, double realz, InterpolationFunction3D interp) {
-        return predicate.mask(source.getRealValue(realx, realy, realz, interp));
+        return predicate.mask(source.getRealValue(realx, realy, realz, interp)) ? 1 : 0;
     }
 
-    public int isTrue(int index) {
+    public boolean isTrue(int index) {
         return predicate.mask(source.getValue(index));
-
     }
 
-    public int isTrue(int x, int y, int z) {
+    public boolean isTrue(int x, int y, int z) {
         return predicate.mask(source.getValue(x, y, z));
     }
 
     public double getValue(int index) {
-        return predicate.mask(source.getValue(index));
+        return predicate.mask(source.getValue(index)) ? 1 : 0;
     }
 
 
     public double getValue(int x, int y, int z) {
-        return predicate.mask(source.getValue(x, y, z));
+        return predicate.mask(source.getValue(x, y, z)) ? 1 : 0;
     }
 
 
@@ -88,7 +87,7 @@ public class MaskedData3D implements IMaskedData3D {
     }
 
     public DataType getDataType() {
-        return source.getDataType();
+        return DataType.INTEGER;
     }
 
     public Anatomy getAnatomy() {
@@ -100,10 +99,12 @@ public class MaskedData3D implements IMaskedData3D {
     }
 
     public double maxValue() {
+        //todo needs to be computed
         return 1;
     }
 
     public double minValue() {
+        //todo needs to be computed
         return 0;
     }
 
@@ -148,7 +149,7 @@ public class MaskedData3D implements IMaskedData3D {
         }
 
         public double next() {
-            return predicate.mask(iter.next());
+            return predicate.mask(iter.next()) ? 1 : 0;
         }
 
         public void advance() {
@@ -156,7 +157,7 @@ public class MaskedData3D implements IMaskedData3D {
         }
 
         public double previous() {
-            return predicate.mask(iter.previous());
+            return predicate.mask(iter.previous()) ? 1 : 0;
         }
 
         public boolean hasNext() {

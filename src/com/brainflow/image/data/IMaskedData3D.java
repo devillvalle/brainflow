@@ -13,9 +13,9 @@ public interface IMaskedData3D extends IImageData3D {
 
     public int cardinality();
 
-    public int isTrue(int x, int y, int z);
+    public boolean isTrue(int x, int y, int z);
 
-    public int isTrue(int index);
+    public boolean isTrue(int index);
 
    // public MaskPredicate getPredicate();
 

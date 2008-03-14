@@ -9,21 +9,25 @@ package com.brainflow.core.mask;
  */
 public class AnalysisAdapter implements TreeWalker {
 
-    private INode rootNode;
+    protected INode rootNode;
 
 
-    public void start(INode rootNode) {
+
+
+
+    public INode start(INode rootNode) {
         this.rootNode = rootNode;
         inStart(rootNode);
         rootNode.apply(this);
-        outStart(rootNode);
+        return outStart(rootNode);
     }
 
     public void inStart(INode rootNode) {
 
     }
 
-    public void outStart(INode rootNode) {
+    public INode outStart(INode rootNode) {
+        return rootNode;
 
     }
 
@@ -42,7 +46,6 @@ public class AnalysisAdapter implements TreeWalker {
     public void outComparison(ComparisonNode node) {
 
     }
-
 
 
     public void caseVariableNode(VariableNode node) {
@@ -64,7 +67,7 @@ public class AnalysisAdapter implements TreeWalker {
     }
 
     public void inConstant(ConstantNode node) {
-  
+
     }
 
     public void outConstant(ConstantNode node) {
@@ -82,4 +85,18 @@ public class AnalysisAdapter implements TreeWalker {
     public void outImageData(ImageDataNode node) {
 
     }
+
+    public void caseMaskDataNode(MaskDataNode node) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+
+    public void inMaskData(MaskDataNode node) {
+
+    }
+
+    public void outMaskData(MaskDataNode node) {
+
+    }
+
 }

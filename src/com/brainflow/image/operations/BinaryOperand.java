@@ -9,10 +9,22 @@ package com.brainflow.image.operations;
  */
 public enum BinaryOperand {
 
-    AND,
-    OR,
-    GT,
-    LT,
-    LT_EQ,
-    GT_EQ
+    AND("and"),
+    OR("or"),
+    GT(">"),
+    LT("<"),
+    EQ("=="),
+    GT_EQ(">="),
+    LT_EQ("<=");
+
+    private String id;
+
+    BinaryOperand(String _id) {
+        id = _id;
+    }
+
+    public String getID() {
+        return id;
+    }
+
 }

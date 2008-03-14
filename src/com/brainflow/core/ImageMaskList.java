@@ -3,8 +3,9 @@ package com.brainflow.core;
 import com.brainflow.image.data.IImageData3D;
 import com.brainflow.image.data.IMaskedData3D;
 import com.brainflow.image.data.MaskedData3D;
-import com.brainflow.image.data.MaskedDataNode3D;
-import com.brainflow.image.operations.BinaryOperation;
+import com.brainflow.image.data.BooleanMaskNode3D;
+import com.brainflow.image.operations.Operations;
+import com.brainflow.image.operations.BooleanOperation;
 import com.jgoodies.binding.beans.ExtendedPropertyChangeSupport;
 
 import javax.swing.event.ListDataEvent;
@@ -99,8 +100,9 @@ public class ImageMaskList implements IMaskList {
         if (item.getGroup() > group) {
             return node;
         } else {
-            return makeGroupNode(itemList, new MaskedDataNode3D(node, new MaskedData3D((IImageData3D) (item.getSource().getData()),
-                    item.getPredicate()), item.getOperation()), current + 1, item.getGroup());
+            return makeGroupNode(itemList, new BooleanMaskNode3D(node, new MaskedData3D((IImageData3D) (item.getSource().getData()),
+                    //todo hacked a cast here...
+                    item.getPredicate()), (BooleanOperation)item.getOperation()), current + 1, item.getGroup());
         }
 
 
@@ -114,7 +116,8 @@ public class ImageMaskList implements IMaskList {
         } else {
             IMaskItem item = getMaskItem(current);
             IImageData3D data = (IImageData3D) item.getSource().getDataSource();
-            MaskedDataNode3D newNode = new MaskedDataNode3D(node, new MaskedData3D(data, item.getPredicate()), item.getOperation());
+            BooleanMaskNode3D newNode = new BooleanMaskNode3D(node, new MaskedData3D(data, item.getPredicate()),
+                    (BooleanOperation)item.getOperation());
 
             return makeTreeNode(groupList, newNode, current + 1);
 
@@ -237,7 +240,7 @@ public class ImageMaskList implements IMaskList {
     public IMaskItem dupMask() {
         ImageMaskItem item = new ImageMaskItem(getLastItem().getSource(),
                 getLastItem().getPredicate().copy(),
-                getLastItem().getGroup(), BinaryOperation.AND, false);
+                getLastItem().getGroup(), Operations.AND, false);
 
         addMask(item);
         return item;

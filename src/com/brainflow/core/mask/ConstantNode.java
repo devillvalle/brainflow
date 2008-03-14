@@ -27,6 +27,10 @@ public class ConstantNode extends AbstractNode {
         return value;
     }
 
+    public int depth() {
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public boolean isLeaf() {
         return true;
     }

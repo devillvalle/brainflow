@@ -1,5 +1,6 @@
 package com.brainflow.core;
 
+import com.brainflow.image.operations.Operations;
 import com.brainflow.image.operations.BinaryOperation;
 import com.brainflow.display.ThresholdRange;
 import com.jgoodies.binding.beans.Model;
@@ -28,7 +29,7 @@ public class MaskItem extends Model implements IMaskItem {
         this.source = source;
         this.predicate = predicate;
         this.group = group;
-        operation = BinaryOperation.AND;
+        operation = Operations.AND;
     }
 
     public MaskItem(ImageLayer source, ThresholdRange predicate, int group, BinaryOperation operation) {

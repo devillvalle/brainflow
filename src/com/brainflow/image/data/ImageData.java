@@ -66,6 +66,12 @@ public class ImageData {
             public void setValue(int x, int y, int z, double val) {
                 throw new UnsupportedOperationException();
             }
+
+            public String getImageLabel() {
+                return "constant: " + value;
+            }
+
+
         };
 
 

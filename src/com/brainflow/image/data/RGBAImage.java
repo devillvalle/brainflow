@@ -16,15 +16,15 @@ import java.awt.image.BufferedImage;
 public class RGBAImage {
 
 
-    private UByteImageData2D red;
+    private final UByteImageData2D red;
 
-    private UByteImageData2D green;
+    private final UByteImageData2D green;
 
-    private UByteImageData2D blue;
+    private final UByteImageData2D blue;
 
-    private UByteImageData2D alpha;
+    private final UByteImageData2D alpha;
 
-    private IImageData2D source;
+    private final IImageData2D source;
 
     public RGBAImage(IImageData2D source, UByteImageData2D red, UByteImageData2D green, UByteImageData2D blue, UByteImageData2D alpha) {
         if (!checkSpace(red.getImageSpace(),
@@ -40,6 +40,13 @@ public class RGBAImage {
         this.blue = blue;
         this.alpha = alpha;
     }
+
+    /*public RGBAImage(ImageSpace2D space) {
+        this.red = new UByteImageData2D(space);
+        this.green = new UByteImageData2D(space);
+        this.blue = new UByteImageData2D(space);
+        this.alpha = new UByteImageData2D(space);
+    }*/
 
 
     public IImageData2D getSource() {
@@ -65,12 +72,7 @@ public class RGBAImage {
         return red.getImageSpace().getDimension(Axis.Y_AXIS);
     }
 
-    public RGBAImage(ImageSpace2D space) {
-        this.red = new UByteImageData2D(space);
-        this.green = new UByteImageData2D(space);
-        this.blue = new UByteImageData2D(space);
-        this.alpha = new UByteImageData2D(space);
-    }
+
 
     public final byte getRed(int x, int y) {
         return red.get(x, y);
@@ -110,7 +112,7 @@ public class RGBAImage {
         return alpha;
     }
 
-    public void setRed(UByteImageData2D _red) {
+    /*public void setRed(UByteImageData2D _red) {
         if (!_red.getImageSpace().equals(red.getImageSpace())) {
             throw new IllegalArgumentException("incomaptible image space");
 
@@ -139,7 +141,7 @@ public class RGBAImage {
         }
 
         alpha = _alpha;
-    }
+    }  */
 
 
 }

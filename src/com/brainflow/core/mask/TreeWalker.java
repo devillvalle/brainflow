@@ -17,6 +17,8 @@ public interface TreeWalker {
 
     public void caseImageDataNode(ImageDataNode node);
 
+    public void caseMaskDataNode(MaskDataNode node);
+
 
 
 

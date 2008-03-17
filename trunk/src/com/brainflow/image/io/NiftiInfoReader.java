@@ -1,11 +1,13 @@
 package com.brainflow.image.io;
 
 import com.brainflow.application.BrainflowException;
+import com.brainflow.application.TestUtils;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.io.ImageInfoReader;
 import com.brainflow.utils.DataType;
 import com.brainflow.utils.Dimension3D;
 import com.brainflow.utils.Point3D;
+import com.brainflow.math.Vector3f;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.VFS;
@@ -17,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
+import java.net.URL;
 
 /**
  * Created by IntelliJ IDEA.
@@ -289,6 +292,23 @@ public class NiftiInfoReader implements ImageInfoReader {
             info.setEndian(ByteOrder.LITTLE_ENDIAN);
         }
 
+        info.quaternion = new Vector3f(nifti.quatern[0], nifti.quatern[1], nifti.quatern[2]);
+        info.qfac = nifti.qfac;
+        info.qoffset = new Vector3f(nifti.qoffset[0], nifti.qoffset[1], nifti.qoffset[2]);
+
+        Vector3f q = info.quaternion;
+        Vector3f qo = info.qoffset;
+
+        //info.
+        info.qform = NiftiImageInfo.quaternionToMatrix(q.get(0), q.get(1),q.get(2),
+                qo.get(0), qo.get(1), qo.get(2),
+                pixdim[1], pixdim[2],pixdim[3],
+                info.qfac);
+
+       
+
+
+
 
         return info;
 
@@ -334,9 +354,10 @@ public class NiftiInfoReader implements ImageInfoReader {
     public static void main(String[] args) {
         try {
 
-            String niftigz1 = "c:/javacode/googlecode/brainflow/test/data/corr_with_zperf_index.nii.gz";
             NiftiInfoReader reader = new NiftiInfoReader();
-            System.out.println(reader.readInfo(VFS.getManager().resolveFile(niftigz1)).toString());
+
+            URL url = TestUtils.getDataURL("mean-BRB-EPI-001.nii");
+            System.out.println(reader.readInfo(VFS.getManager().resolveFile(url.toString())).toString());
 
 
         } catch (Exception e) {

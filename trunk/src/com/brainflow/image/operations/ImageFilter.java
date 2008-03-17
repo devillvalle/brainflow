@@ -16,8 +16,11 @@ import com.brainflow.utils.DataType;
 public interface ImageFilter {
     
     public void addInput(IImageData data);
+
     public void setInput(int i, IImageData _data);
+
     public IImageData getOutput();
+
     public void setOutputDataType(DataType dtype);
     
 }

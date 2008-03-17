@@ -123,6 +123,8 @@ public class ArrayUtils {
         else throw new IllegalArgumentException("ArrayUtils.sclaeToBytes: array argument is invalid array type!");
     }
 
+    
+
     public static byte[] scaleBytes(byte[] data, float sf) {
         for (int i = 0; i < data.length; i++) {
             data[i] = (byte) (data[i] * sf);

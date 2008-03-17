@@ -40,7 +40,7 @@ public class LinearTransform extends AbstractTransform {
         matrix4X4 = algie.inverse(matrix4X4);
     }
 
-    public void readAsciiMatrix(String file) throws FileNotFoundException, IOException {
+    public void readAsciiMatrix(String file) throws IOException {
         File f = new File(file);
         BufferedReader reader = new BufferedReader(new FileReader(f));
         double[][] matrix = new double[4][4];

@@ -13,6 +13,7 @@ import cern.colt.function.DoubleProcedure;
 public abstract class RangePredicate implements DoubleProcedure {
 
     protected double min;
+
     protected double max;
 
     public RangePredicate() {

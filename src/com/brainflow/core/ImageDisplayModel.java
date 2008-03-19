@@ -290,6 +290,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
                     if (oldMap.getHighClip() != highClip.doubleValue()) {
                         IColorMap newMap = oldMap.newClipRange(lowClip.doubleValue(), highClip.doubleValue());
+                        assert newMap != null;
                         layer.getImageLayerProperties().colorMap.set(newMap);
 
                     }

@@ -162,12 +162,12 @@ public class ColorGradientEditor extends JPanel {
     private void updateColorMap() {
         if (gradientSetting == ColorGradientEditor.TWO_COLOR_GRADIENT) {
             IndexColorModel icm = ColorTable.createIndexColorModel(ColorTable.createColorGradient(colorOne, colorTwo, 256));
-            colorMap = new LinearColorMapDeprecated(colorMap.getMinimumValue(), colorMap.getMaximumValue(), icm);
+            colorMap = new LinearColorMap2(colorMap.getMinimumValue(), colorMap.getMaximumValue(), icm);
             colorBar.setColorMap(colorMap);
         } else {
             IndexColorModel icm = ColorTable.createConstantMap(colorOne);
-            colorMap = new LinearColorMapDeprecated(colorMap.getMinimumValue(), colorMap.getMaximumValue(), icm);
-            colorBar.setColorMap(new LinearColorMapDeprecated(0, 100, icm));
+            colorMap = new LinearColorMap2(colorMap.getMinimumValue(), colorMap.getMaximumValue(), icm);
+            colorBar.setColorMap(new LinearColorMap2(0, 100, icm));
 
         }
 

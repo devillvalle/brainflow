@@ -7,6 +7,7 @@ import com.brainflow.image.space.ImageSpace2D;
 import com.brainflow.image.anatomy.Anatomy;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.utils.DataType;
+import com.brainflow.utils.IDimension;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,6 +32,10 @@ public class MaskedData2D implements IImageData2D {
 
     public int indexOf(int x, int y) {
         return source.indexOf(x, y);
+    }
+
+    public IDimension<Integer> getDimension() {
+        return source.getDimension();
     }
 
     public double getValue(double x, double y, InterpolationFunction2D interp) {

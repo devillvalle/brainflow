@@ -8,12 +8,12 @@
 
     <target name="init">
         <!-- You can set up any variables you want used throughout the script here. -->
-        <property name="jar.dir" value="../jarlib"/>
+        <property name="jar.dir" getValue="../jarlib"/>
         <!-- To use e.g. Jikes, uncomment this line. -->
         <!-- (Or make the same change in Tools | Options | Ant Settings | Properties.) -->
-        <!-- <propertyID name="build.compiler" value="jikes"/> -->
+        <!-- <propertyID name="build.compiler" getValue="jikes"/> -->
         <!-- You might like to set up some overridable paths, etc.: -->
-        <!-- <propertyID name="mylib" value="../lib/mylib.jar"/> -->
+        <!-- <propertyID name="mylib" getValue="../lib/mylib.jar"/> -->
     </target>
 
     <target depends="init" name="compile">

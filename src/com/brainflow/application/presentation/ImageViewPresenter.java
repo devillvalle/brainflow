@@ -48,10 +48,10 @@ public abstract class ImageViewPresenter extends AbstractPresenter implements Im
 
 
                 selectedView = event.getSelectedImageView();
-                selectedView.getModel().addImageDisplayModelListener(ImageViewPresenter.this);
 
 
                 if (selectedView != null) {
+                    selectedView.getModel().addImageDisplayModelListener(ImageViewPresenter.this);                 
                     viewSelected(selectedView);
 
                 } else {

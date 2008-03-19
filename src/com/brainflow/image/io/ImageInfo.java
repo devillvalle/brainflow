@@ -94,7 +94,9 @@ public class ImageInfo implements java.io.Serializable {
 
     public ImageInfo(IImageData data) {
         IImageSpace space = data.getImageSpace();
-        int[] dimensions = space.getDimensionVector();
+
+        IDimension<Integer> dim = space.getDimension();
+        int[] dimensions = new int[] {dim.getDim(0), dim.getDim(1), dim.getDim(2)};
 
 
         setAnatomy((Anatomy3D) space.getAnatomy());

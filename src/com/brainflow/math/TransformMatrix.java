@@ -371,7 +371,7 @@ public class TransformMatrix  implements Serializable {
      * @return the string representation of this object.
      */
     public String toString() {
-        return "com.jme.math.TransformMatrix\n[\n"+
+        return "TransformMatrix\n[\n"+
                 rot.toString() + ":" +
                 translation.toString() + ":" +
                 scale.toString();

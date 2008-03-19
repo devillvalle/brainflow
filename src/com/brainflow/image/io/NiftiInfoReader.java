@@ -4,6 +4,7 @@ import com.brainflow.application.BrainflowException;
 import com.brainflow.application.TestUtils;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.io.ImageInfoReader;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.utils.DataType;
 import com.brainflow.utils.Dimension3D;
 import com.brainflow.utils.Point3D;
@@ -275,9 +276,6 @@ public class NiftiInfoReader implements ImageInfoReader {
         fillPixDim(pixdim, info);
         System.out.println(Arrays.toString(pixdim));
 
-        // difficulty. requires qform support //////////
-        info.setAnatomy(ImageInfo.DEFAULT_ANATOMY);
-        /////////////////////////////////////////
 
         info.calculateRealDim();
 
@@ -286,6 +284,7 @@ public class NiftiInfoReader implements ImageInfoReader {
         info.setIntercept(nifti.scl_inter);
         info.setByteOffset((int) nifti.vox_offset);
         info.setOrigin(new Point3D(nifti.qoffset[0], nifti.qoffset[1], nifti.qoffset[2]));
+
         if (nifti.big_endian) {
             info.setEndian(ByteOrder.BIG_ENDIAN);
         } else {
@@ -305,8 +304,9 @@ public class NiftiInfoReader implements ImageInfoReader {
                 pixdim[1], pixdim[2],pixdim[3],
                 info.qfac);
 
-       
-
+        
+        Anatomy3D anat = NiftiImageInfo.nearestAnatomy(info.qform);
+        info.setAnatomy(anat);
 
 
 
@@ -355,9 +355,11 @@ public class NiftiInfoReader implements ImageInfoReader {
         try {
 
             NiftiInfoReader reader = new NiftiInfoReader();
-
-            URL url = TestUtils.getDataURL("mean-BRB-EPI-001.nii");
-            System.out.println(reader.readInfo(VFS.getManager().resolveFile(url.toString())).toString());
+           
+            URL url = TestUtils.getDataURL("BRB-20071214-09-t1_mprage-001.nii");
+            NiftiImageInfo info = reader.readInfo(VFS.getManager().resolveFile(url.toString())).get(0);
+            System.out.println("info : " + info);
+            System.out.println("nearest anatomy : " + NiftiImageInfo.nearestAnatomy(info.qform));
 
 
         } catch (Exception e) {

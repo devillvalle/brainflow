@@ -56,6 +56,10 @@ public class UByteImageData2D extends AbstractImageData implements IImageData2D 
          
     }
 
+    
+
+
+
     public double maxValue() {
         if (!recomputeMax) {
             return maxValue;

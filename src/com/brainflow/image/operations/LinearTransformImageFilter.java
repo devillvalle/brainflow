@@ -106,7 +106,7 @@ public class LinearTransformImageFilter extends AbstractTransformImageFilter {
             DoubleMatrix1D res = transform.transform(idmat);
 
 
-            double val = src.getRealValue(res.getQuick(0) / res.getQuick(3), res.getQuick(1) / res.getQuick(3), res.getQuick(2) / res.getQuick(3), interpolator);
+            double val = src.getWorldValue(res.getQuick(0) / res.getQuick(3), res.getQuick(1) / res.getQuick(3), res.getQuick(2) / res.getQuick(3), interpolator);
             odat.setValue(xidx, yidx, zidx, val);
 
 

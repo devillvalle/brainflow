@@ -286,7 +286,7 @@ public class BoundedRangeAdapterExt implements BoundedRangeModel, Serializable {
             newValue = max - getExtent();
         }
 
-        System.out.println("new value " + newValue);
+        System.out.println("new getValue " + newValue);
         setRangeProperties(newValue, getExtent(), min, max, isAdjusting);
     }
 
@@ -391,7 +391,7 @@ public class BoundedRangeAdapterExt implements BoundedRangeModel, Serializable {
      */
     public String toString() {
         String modelString =
-                "value="
+                "getValue="
                         + getValue()
                         + ", "
                         + "extent="

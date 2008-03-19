@@ -7,11 +7,7 @@ import com.brainflow.core.annotations.BoxAnnotation;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
-import com.jgoodies.binding.adapter.SpinnerAdapterFactory;
 import com.jgoodies.binding.beans.BeanAdapter;
-import com.jgoodies.binding.beans.PropertyAdapter;
-import com.jgoodies.binding.value.ValueHolder;
-import com.jgoodies.binding.value.ValueModel;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.swing.JideBorderLayout;
@@ -317,7 +313,7 @@ public class ImageViewportPresenter extends ImageViewPresenter {
         //yfovSlider.setModel(yfovAdapter);
 
         // this line links zero and zero extent so that changing zero changes the other
-        //PropertyConnector.connect(xextent, "value", yextent, "value");
+        //PropertyConnector.connect(xextent, "getValue", yextent, "getValue");
 
     }
 

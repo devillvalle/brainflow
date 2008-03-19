@@ -48,7 +48,7 @@ public class ImageLayer3D extends ImageLayer {
         double y = pt.getValue(space.getAnatomicalAxis(Axis.Y_AXIS)).getX();
         double z = pt.getValue(space.getAnatomicalAxis(Axis.Z_AXIS)).getX();
 
-        return getData().getRealValue(x, y, z, new NearestNeighborInterpolator());
+        return getData().getWorldValue(x, y, z, new NearestNeighborInterpolator());
     }
 
     public SliceRenderer getSliceRenderer(AnatomicalPoint1D slice) {

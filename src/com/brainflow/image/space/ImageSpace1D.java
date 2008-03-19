@@ -1,6 +1,7 @@
 package com.brainflow.image.space;
 
 import com.brainflow.image.anatomy.AnatomicalPoint;
+import com.brainflow.utils.IDimension;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,5 +19,9 @@ public class ImageSpace1D extends AbstractImageSpace implements IImageSpace {
 
     public AnatomicalPoint getCentroid() {
         return null;
+    }
+
+    public IDimension getDimension() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

@@ -50,7 +50,9 @@ public class AnalyzeInfoWriter implements com.brainflow.image.io.ImageInfoWriter
 
 
             IImageSpace space = info.createImageSpace();
-            int[] _dim = space.getDimensionVector();
+
+            int[] _dim = new int[] { space.getDimension(Axis.X_AXIS), space.getDimension(Axis.Y_AXIS), space.getDimension(Axis.Z_AXIS) };
+            
             dim[0] = (short) _dim.length;
             dim[1] = (short) _dim[0];
             dim[2] = (short) _dim[1];

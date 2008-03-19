@@ -15,7 +15,7 @@ public class SmoothingRadius extends LayerProperty {
 
     public static final String RADIUS_PROPERTY = "smoothingRadius";
 
-    @XStreamAlias("value")
+    @XStreamAlias("getValue")
     @XStreamAsAttribute
     private int smoothingRadius = 0;
 

@@ -302,7 +302,7 @@ public class ColorMapChooser extends JPanel implements ActionListener, ListSelec
                 //ColorBar cbar = new ColorBar();
                 //cbar.setSize(SWATCH_WIDTH, SWATCH_HEIGHT);
                 //BufferedImage bimg = new BufferedImage(SWATCH_WIDTH, SWATCH_HEIGHT, BufferedImage.TYPE_3BYTE_BGR);
-                //IndexColorModel cmodel = (IndexColorModel) value;
+                //IndexColorModel cmodel = (IndexColorModel) getValue;
                 //cbar.setColorModel(cmodel);
                 //cbar.paintComponent(bimg.createGraphics());
 

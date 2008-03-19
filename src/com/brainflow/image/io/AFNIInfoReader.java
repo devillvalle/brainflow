@@ -294,7 +294,7 @@ public class AFNIInfoReader implements ImageInfoReader {
         } else if (orderStr.equals("MSB_FIRST")) {
             bord = ByteOrder.BIG_ENDIAN;
         } else {
-            throw new RuntimeException("unrecognized BYTEORDER attribute value : " + orderStr);
+            throw new RuntimeException("unrecognized BYTEORDER attribute getValue : " + orderStr);
         }
 
         for (ImageInfo info : infoList) {
@@ -478,11 +478,12 @@ public class AFNIInfoReader implements ImageInfoReader {
     public static void main(String[] args) {
         File f = null;
         try {
-            URL url = ClassLoader.getSystemResource("resources/data/global_mean+orig.HEAD");
+            URL url = ClassLoader.getSystemResource("resources/data/motion-reg2+orig.HEAD");
             ImageInfoReader reader = new AFNIInfoReader();
 
             List<? extends ImageInfo> ilist = reader.readInfo(url.openStream());
             System.out.println("" + ilist.size());
+            System.out.println("scalefactor " + ilist.get(41).getScaleFactor());
 
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.

@@ -1,13 +1,9 @@
 package com.brainflow.application.presentation.wizards;
 
 import com.brainflow.gui.AbstractPresenter;
-import com.brainflow.core.annotations.CrosshairAnnotation;
 import com.brainflow.image.space.ICoordinateSpace;
-import com.jgoodies.binding.adapter.BoundedRangeAdapter;
 import com.jgoodies.binding.adapter.SpinnerAdapterFactory;
-import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.beans.BeanAdapter;
-import com.jgoodies.binding.beans.PropertyAdapter;
 import com.jgoodies.binding.beans.PropertyConnector;
 import com.jgoodies.binding.value.ValueModel;
 
@@ -65,7 +61,7 @@ public class CoordinateTableSetupPresenter extends AbstractPresenter {
         form.getTableSizeSpinner().setModel(spinnerModel);
 
         ValueModel defaultColor = adapter.getValueModel(CoordinateTableSetupInfo.DEFAULT_COLOR_PROPERTY);
-        PropertyConnector connector = PropertyConnector.connect(defaultColor, "value", form.getColorChooser(), "selectedColor");
+        PropertyConnector connector = PropertyConnector.connect(defaultColor, "getValue", form.getColorChooser(), "selectedColor");
         connector.updateProperty2();
         
 

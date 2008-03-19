@@ -9,12 +9,12 @@
 
 package com.brainflow.application.presentation;
 
-import com.brainflow.application.actions.ActionContext;
 
-import com.brainflow.application.actions.SelectColorMapAction;
+
 import com.brainflow.application.actions.DesignColorMapCommand;
+import com.brainflow.application.actions.SelectColorMapCommand;
 import com.brainflow.application.presentation.forms.ColorBarForm;
-import com.brainflow.application.toplevel.BrainCanvasManager;
+
 import com.brainflow.application.toplevel.ResourceManager;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
@@ -22,7 +22,6 @@ import com.brainflow.colormap.LinearColorMapDeprecated;
 import com.brainflow.core.ImageView;
 import com.jidesoft.swing.JideSplitButton;
 import com.jidesoft.swing.JideBoxLayout;
-import org.bushe.swing.action.BasicAction;
 
 import javax.swing.*;
 import java.awt.image.IndexColorModel;
@@ -86,7 +85,7 @@ public class ColorBarPresenter extends ImageViewPresenter {
                 System.out.println("color map changed :" + this);
                 System.out.println("oldValue " + oldValue);
                 System.out.println("newValue " + newValue);
-                
+                //todo why null?
                 IColorMap cmap = (IColorMap)newValue;
                 System.out.println("highclip : " + cmap.getHighClip());
                 System.out.println("lowclip : " + cmap.getLowClip());
@@ -105,11 +104,6 @@ public class ColorBarPresenter extends ImageViewPresenter {
     }
 
     public void viewSelected(ImageView view) {
-        Iterator<Action> iter = actions.iterator();
-        while (iter.hasNext()) {
-            BasicAction action = (BasicAction) iter.next();
-            action.putContextValue(ActionContext.SELECTED_IMAGE_VIEW, view);
-        }
 
         form.setColorMap(view.getSelectedLayer().getImageLayerProperties().colorMap.get());
 
@@ -129,21 +123,16 @@ public class ColorBarPresenter extends ImageViewPresenter {
         Map<String, IndexColorModel> maps = ResourceManager.getInstance().getColorMaps();
         actions = new ArrayList<Action>();
         Iterator<String> iter = maps.keySet().iterator();
-        Map map = new HashMap();
-        map.put(ActionContext.SELECTED_IMAGE_VIEW, BrainCanvasManager.getInstance().
-                getSelectedCanvas().getSelectedView());
-        map.put(ActionContext.SELECTED_CANVAS, BrainCanvasManager.getInstance().
-                getSelectedCanvas());
 
         while (iter.hasNext()) {
             String name = iter.next();
             IndexColorModel icm = maps.get(name);
-            SelectColorMapAction action = new SelectColorMapAction(name,
+            SelectColorMapCommand action = new SelectColorMapCommand(name,
                     ColorTable.createImageIcon(icm, 30, 12), icm);
 
 
-            action.setContext(map);
-            actions.add(action);
+
+            actions.add(action.getActionAdapter());
 
 
         }

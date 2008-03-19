@@ -1,7 +1,6 @@
 package com.brainflow.image.data;
 
 import com.brainflow.image.interpolation.InterpolationFunction3D;
-import com.brainflow.image.io.BrainIO;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.image.space.Axis;
@@ -9,6 +8,7 @@ import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.math.ArrayUtils;
 import com.brainflow.utils.DataType;
 import com.brainflow.utils.Index3D;
+import com.brainflow.utils.IDimension;
 import com.brainflow.application.TestUtils;
 
 
@@ -73,7 +73,7 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
 
     }
 
-
+   
 
     public double maxValue() {
         if (!recomputeMax) {
@@ -152,7 +152,7 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
     }
 
 
-    public final double getRealValue(double realx, double realy, double realz, InterpolationFunction3D interp) {
+    public final double getWorldValue(double realx, double realy, double realz, InterpolationFunction3D interp) {
         double x = space.getImageAxis(Axis.X_AXIS).fractionalSample(realx);
         double y = space.getImageAxis(Axis.Y_AXIS).fractionalSample(realy);
         double z = space.getImageAxis(Axis.Z_AXIS).fractionalSample(realz);

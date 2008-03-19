@@ -11,16 +11,16 @@ import com.brainflow.image.iterators.ImageIterator;
  * Time: 1:10:25 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface IImageData2D extends IImageData {
+public interface IImageData2D extends IImageData, DataAccessor2D {
 
 
     public int indexOf(int x, int y);
 
-    public double getValue(double x, double y, InterpolationFunction2D interp);
+    //public double getValue(double x, double y, InterpolationFunction2D interp);
 
-    public double getRealValue(double realx, double realy, InterpolationFunction2D interp);
+    //public double getRealValue(double realx, double realy, InterpolationFunction2D interp);
 
-    public double getValue(int x, int y);
+    //public double getValue(int x, int y);
 
     public void setValue(int x, int y, double val);
 

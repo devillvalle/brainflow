@@ -2,7 +2,6 @@ package com.brainflow.colormap;
 
 import javax.swing.*;
 import java.util.ListIterator;
-import java.util.Collections;
 import java.util.ArrayList;
 import java.awt.*;
 
@@ -50,7 +49,7 @@ public class ConstantColorMap extends AbstractColorMap {
     }
 
     public Color getColor(double value) {
-        // todo check if value is in bounds?
+        // todo check if getValue is in bounds?
         return interval.getColor();
     }
 

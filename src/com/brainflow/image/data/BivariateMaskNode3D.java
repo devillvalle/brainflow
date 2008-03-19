@@ -6,10 +6,10 @@ import com.brainflow.image.interpolation.InterpolationFunction3D;
 import com.brainflow.image.anatomy.Anatomy;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.iterators.ImageIterator;
-import com.brainflow.image.operations.Operations;
 import com.brainflow.image.operations.BinaryOperation;
 import com.brainflow.utils.Index3D;
 import com.brainflow.utils.DataType;
+import com.brainflow.utils.IDimension;
 
 /**
  * Created by IntelliJ IDEA.
@@ -53,12 +53,16 @@ public class BivariateMaskNode3D implements IMaskedData3D {
         return operation.isTrue(left.getValue(x, y, z), right.getValue(x, y, z));
     }
 
+    public IDimension<Integer> getDimension() {
+        return left.getDimension();
+    }
+
     public ImageSpace3D getImageSpace() {
         return left.getImageSpace();
     }
 
-    public double getRealValue(double realx, double realy, double realz, InterpolationFunction3D interp) {
-        return operation.isTrue(left.getRealValue(realx, realy, realz, interp), right.getRealValue(realx, realy, realz, interp)) ? 1 : 0;
+    public double getWorldValue(double realx, double realy, double realz, InterpolationFunction3D interp) {
+        return operation.isTrue(left.getWorldValue(realx, realy, realz, interp), right.getWorldValue(realx, realy, realz, interp)) ? 1 : 0;
     }
 
     public double getValue(double x, double y, double z, InterpolationFunction3D interp) {

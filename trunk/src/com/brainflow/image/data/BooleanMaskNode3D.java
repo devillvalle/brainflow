@@ -10,6 +10,7 @@ import com.brainflow.image.operations.BooleanOperation;
 import com.brainflow.image.operations.Operations;
 import com.brainflow.utils.Index3D;
 import com.brainflow.utils.DataType;
+import com.brainflow.utils.IDimension;
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,9 +41,12 @@ public class BooleanMaskNode3D implements IMaskedData3D {
 
     }
 
+    public IDimension<Integer> getDimension() {
+        return left.getDimension();
+    }
 
-    public double getRealValue(double realx, double realy, double realz, InterpolationFunction3D interp) {
-        return operation.isTrue((int) left.getRealValue(realx, realy, realz, interp), (int) right.getRealValue(realx, realy, realz, interp)) ? 1 : 0;
+    public double getWorldValue(double realx, double realy, double realz, InterpolationFunction3D interp) {
+        return operation.isTrue((int) left.getWorldValue(realx, realy, realz, interp), (int) right.getWorldValue(realx, realy, realz, interp)) ? 1 : 0;
     }
 
     public boolean isTrue(int index) {

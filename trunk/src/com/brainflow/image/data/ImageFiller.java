@@ -9,6 +9,8 @@ import com.brainflow.image.io.BrainIO;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace2D;
+import com.brainflow.math.ArrayUtils;
+import test.Testable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,6 +23,7 @@ public class ImageFiller {
 
     private IImageSpace ispace;
 
+    @Testable
     public BasicImageData2D fillImage(IImageData3D inputData, AnatomicalAxis axis1,
                                       AnatomicalAxis axis2, AnatomicalPoint1D fixedPoint) {
 
@@ -57,7 +60,6 @@ public class ImageFiller {
         }
         //XZY
         else if (xaxis.sameAxis(axis1) && zaxis.sameAxis(axis2)) {
-
             fastIterator = makeIterator(xaxis, axis1);
             slowIterator = makeIterator(zaxis, axis2);
             values = fillXZY(inputData, fastIterator, slowIterator, getFixedValue(yaxis, fixedPoint));
@@ -76,10 +78,11 @@ public class ImageFiller {
             slowIterator = makeIterator(xaxis, axis2);
             values = fillZXY(inputData, fastIterator, slowIterator, getFixedValue(yaxis, fixedPoint));
 
+        } else{
+            throw new IllegalArgumentException("illegal combination of axes: " + axis1 + " and " + axis2);
         }
 
-        assert values != null;
-
+       
 
         AxisRange arange1 = ispace.getImageAxis(axis1, true).getRange();
         AxisRange arange2 = ispace.getImageAxis(axis2, true).getRange();
@@ -90,8 +93,10 @@ public class ImageFiller {
 
         ImageAxis a2 = new ImageAxis(arange2.getBeginning().getX(), arange2.getEnd().getX(),
                 axis2, ispace.getDimension(axis2));
-        return new BasicImageData2D(new ImageSpace2D(a1, a2), values);
 
+
+        return new BasicImageData2D(new ImageSpace2D(a1, a2), values);
+      
 
     }
 
@@ -211,6 +216,7 @@ public class ImageFiller {
             y = slowIterator.next();
             while (fastIterator.hasNext()) {
                 z = fastIterator.next();
+
                 op[i] = (float)data.getValue(x, y, z);
                 i++;
             }
@@ -231,7 +237,9 @@ public class ImageFiller {
             x = slowIterator.next();
             while (fastIterator.hasNext()) {
                 z = fastIterator.next();
+                //System.out.println("x : " + x + " y: " + y + " z: " + z + "value : " + data.getValue(x, y, z));
                 op[i] = (float)data.getValue(x, y, z);
+                i++;
             }
             fastIterator.reset();
         }

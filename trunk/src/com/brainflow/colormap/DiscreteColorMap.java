@@ -268,9 +268,9 @@ public class DiscreteColorMap extends AbstractColorMap {
 
     }
 
-    /*private void setBoundary(int boundary, double value) {
+    /*private void setBoundary(int boundary, double getValue) {
         //assert boundary > 0 && boundary < (boundaryArray.length - 1);
-        //assert value >= boundaryArray[0] && value <= boundaryArray[boundaryArray.length - 1];
+        //assert getValue >= boundaryArray[0] && getValue <= boundaryArray[boundaryArray.length - 1];
 
 
         double oldValue = boundaryArray[boundary];
@@ -283,14 +283,14 @@ public class DiscreteColorMap extends AbstractColorMap {
 
         System.arraycopy(boundaryArray, 0, oldArray, 0, boundaryArray.length);
 
-        if (value > oldValue) {
+        if (getValue > oldValue) {
             double totalSpan = maxValue - oldValue;
-            double difference = value - oldValue;
+            double difference = getValue - oldValue;
 
             int begin = boundary + 1;
             int end = boundaryArray.length - 1;
 
-            boundaryArray[boundary] = value;
+            boundaryArray[boundary] = getValue;
             for (int i = begin; i < end; i++) {
                 double oldInterval = oldArray[i] - oldArray[i - 1];
                 double perc = oldInterval / totalSpan;
@@ -299,12 +299,12 @@ public class DiscreteColorMap extends AbstractColorMap {
                 boundaryArray[i] = Math.min(boundaryArray[i - 1] + oldInterval - localfudge, maxValue);
 
             }
-        } else if (value < oldValue) {
-            double difference = oldValue - value;
+        } else if (getValue < oldValue) {
+            double difference = oldValue - getValue;
             double totalSpan = oldValue - minValue;
 
 
-            boundaryArray[boundary] = value;
+            boundaryArray[boundary] = getValue;
 
             for (int i = boundary - 1; i > 0; i--) {
                 double oldInterval = oldArray[i + 1] - oldArray[i];

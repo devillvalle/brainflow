@@ -2,6 +2,7 @@ package com.brainflow.image.data;
 
 import com.brainflow.utils.Index3D;
 import com.brainflow.utils.DataType;
+import com.brainflow.utils.IDimension;
 import com.brainflow.image.interpolation.InterpolationFunction3D;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.ImageSpace3D;
@@ -36,6 +37,9 @@ public class MaskedData3D implements IMaskedData3D {
         return source;
     }
 
+    public IDimension<Integer> getDimension() {
+        return source.getDimension();
+    }
 
     public Index3D indexToGrid(int idx, Index3D voxel) {
         return source.indexToGrid(idx, voxel);
@@ -49,8 +53,8 @@ public class MaskedData3D implements IMaskedData3D {
         return predicate.mask(source.getValue(x, y, z, interp)) ? 1 : 0;
     }
 
-    public double getRealValue(double realx, double realy, double realz, InterpolationFunction3D interp) {
-        return predicate.mask(source.getRealValue(realx, realy, realz, interp)) ? 1 : 0;
+    public double getWorldValue(double realx, double realy, double realz, InterpolationFunction3D interp) {
+        return predicate.mask(source.getWorldValue(realx, realy, realz, interp)) ? 1 : 0;
     }
 
     public boolean isTrue(int index) {

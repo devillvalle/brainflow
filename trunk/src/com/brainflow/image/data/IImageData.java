@@ -14,7 +14,7 @@ import com.brainflow.utils.DataType;
  * Time: 1:00:04 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface IImageData {
+public interface IImageData extends DataAccessor {
 
 
     public DataType getDataType();
@@ -23,21 +23,16 @@ public interface IImageData {
 
     public int getDimension(Axis axisNum);
 
-    public double getValue(int index);
-
     public void setValue(int idx, double val);
 
     public double maxValue();
 
     public double minValue();
-
-    public int numElements();
-
+ 
     public ImageInfo getImageInfo();
     
     public IImageSpace getImageSpace();
 
-    
     public String getImageLabel();
 
     public ImageIterator iterator();

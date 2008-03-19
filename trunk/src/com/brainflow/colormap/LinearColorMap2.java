@@ -89,7 +89,10 @@ public final class LinearColorMap2 extends AbstractColorMap {
     private void init(double min, double max, int mapSize) {
 
         binSize = (max - min) / (mapSize - 1.0);
-        assert binSize > 0;
+
+        if (binSize <= 0) {
+            throw new IllegalArgumentException("Illegal bin size for color map : " + "min = " + min + " max = " + max + " size = " + mapSize);
+        }
 
         highClip = max;
         lowClip = min;

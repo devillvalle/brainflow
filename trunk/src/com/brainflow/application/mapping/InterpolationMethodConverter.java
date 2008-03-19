@@ -2,7 +2,6 @@ package com.brainflow.application.mapping;
 
 import com.brainflow.display.InterpolationMethod;
 import com.brainflow.display.InterpolationType;
-import com.brainflow.display.ThresholdRange;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -20,7 +19,7 @@ public class InterpolationMethodConverter implements Converter {
     public void marshal(Object o, HierarchicalStreamWriter writer, MarshallingContext context) {
         InterpolationMethod imeth = (InterpolationMethod)o;
 
-        writer.addAttribute("value", "" + imeth.getInterpolation().toString());
+        writer.addAttribute("getValue", "" + imeth.getInterpolation().toString());
 
     }
 
@@ -33,7 +32,7 @@ public class InterpolationMethodConverter implements Converter {
     }
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        String value = reader.getAttribute("value");
+        String value = reader.getAttribute("getValue");
         return new InterpolationMethod(InterpolationType.valueOf(value));     
     }
 }

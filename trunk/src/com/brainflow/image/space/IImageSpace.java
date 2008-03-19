@@ -4,6 +4,7 @@ import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.AnatomicalPoint;
 import com.brainflow.image.anatomy.Anatomy;
 import com.brainflow.image.axis.ImageAxis;
+import com.brainflow.utils.IDimension;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,7 +15,7 @@ import com.brainflow.image.axis.ImageAxis;
  */
 public interface IImageSpace extends ICoordinateSpace {
 
-    public int[] getDimensionVector();
+    public IDimension<Integer> getDimension();
 
     public int getDimension(Axis axis);
 

@@ -18,7 +18,7 @@ import com.thoughtworks.xstream.annotations.XStreamOmitField;
 public class Visibility extends Model {
 
     @XStreamAsAttribute()
-    @XStreamAlias("value")
+    @XStreamAlias("getValue")
     private boolean visible = true;
 
     @XStreamOmitField

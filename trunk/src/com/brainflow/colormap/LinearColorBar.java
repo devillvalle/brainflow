@@ -5,7 +5,6 @@ import com.brainflow.image.LinearSet1D;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ListIterator;
 
 /**
  * Created by IntelliJ IDEA.
@@ -77,8 +76,8 @@ public class LinearColorBar extends AbstractColorBar {
         }
 
         //System.out.println("high clip : " + model.getHighClip());
-        ///System.out.println("last value = " + frac[model.getMapSize()-1]);
-        //System.out.println("second to last value = " + frac[model.getMapSize()-2]);
+        ///System.out.println("last getValue = " + frac[model.getMapSize()-1]);
+        //System.out.println("second to last getValue = " + frac[model.getMapSize()-2]);
 
         return frac;
 

@@ -1,10 +1,7 @@
 package com.brainflow.image.io;
 
 import com.brainflow.application.BrainflowException;
-import com.brainflow.image.data.BasicImageData;
-import com.brainflow.image.data.BasicImageData2D;
-import com.brainflow.image.data.BasicImageData3D;
-import com.brainflow.image.data.IImageData;
+import com.brainflow.image.data.*;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace2D;
 import com.brainflow.image.space.ImageSpace3D;
@@ -53,7 +50,6 @@ public class BasicImageReader implements ImageReader {
 
     public ByteBuffer buffer;
 
-    private float sf = 1f;
 
 
     private int skipUnits = 0;
@@ -76,7 +72,6 @@ public class BasicImageReader implements ImageReader {
         setFileDimensionality(info.getDimensionality());
         setDataType(info.getDataType());
         setImageSpace(info.createImageSpace());
-        sf = (float) info.getScaleFactor();
         inputFile = info.getDataFile();
 
     }
@@ -111,7 +106,7 @@ public class BasicImageReader implements ImageReader {
     }
 
 
-    protected BasicImageData getOutput(ProgressListener listener) throws IOException {
+    protected IImageData getOutput(ProgressListener listener) throws IOException {
 
         InputStream istream = null;
 
@@ -143,7 +138,7 @@ public class BasicImageReader implements ImageReader {
             listener.setString("Reading Image Data ...");
 
             byte[] tmpdata = new byte[chunkSize];
-            log.info("max = " + numBytes);
+
             for (int i = 0; i < NUM_CHUNKS; i++) {
                 istream.read(tmpdata);
                 //rac.readFully(tmpdata);
@@ -164,11 +159,12 @@ public class BasicImageReader implements ImageReader {
             wholeBuffer.rewind();
             listener.setString("Converting Bytes To Array of Type: " + datatype);
             Object data = null;
-
+            double sf = info.getScaleFactor();
             boolean scaleRequired = true;
-            if (NumberUtils.equals(sf, 1, .0001)) {
+             if (NumberUtils.equals(sf, 1, .000001) || NumberUtils.equals(sf, 0, .0000001)) {
                 scaleRequired = false;
             }
+            
             if (datatype == DataType.BYTE) {
                 data = new byte[numBytes];
                 wholeBuffer.get((byte[]) data);
@@ -201,8 +197,10 @@ public class BasicImageReader implements ImageReader {
                 return dat;
             } else if (fileDimensionality == 3) {
 
-                BasicImageData dat = new BasicImageData3D((ImageSpace3D)imageSpace, data, info.getDataFile().getName().getBaseName());
-                //dat.setImageLabel(info.getDataFile().getName().getBaseName());
+                IImageData3D dat = new BasicImageData3D((ImageSpace3D)imageSpace, data, info.getDataFile().getName().getBaseName());
+                if (scaleRequired) {
+                    dat = ImageData.createScaledData(dat,sf);
+                }
                 listener.finished();
                 return dat;
             } else
@@ -254,7 +252,7 @@ public class BasicImageReader implements ImageReader {
             Object dataArray = null;
 
             boolean scaleRequired = true;
-            if (NumberUtils.equals(sf, 1, .0001)) {
+            if (NumberUtils.equals(info.getScaleFactor(), 1, .000001) || NumberUtils.equals(info.getScaleFactor(), 0, .0000001)) {
                 scaleRequired = false;
             }
             if (datatype == DataType.BYTE) {
@@ -278,11 +276,11 @@ public class BasicImageReader implements ImageReader {
 
 
             if (fileDimensionality == 2) {
-                BasicImageData2D data2d = new BasicImageData2D((ImageSpace2D)imageSpace, dataArray, info.getDataFile().getName().getBaseName());
+                IImageData2D data2d = new BasicImageData2D((ImageSpace2D)imageSpace, dataArray, info.getDataFile().getName().getBaseName());
                 //data2d.setImageLabel(info.getDataFile().getName().getBaseName());
                 return data2d;
             } else if (fileDimensionality == 3) {
-                BasicImageData3D data3d = new BasicImageData3D((ImageSpace3D)imageSpace, dataArray, info.getDataFile().getName().getBaseName());
+                IImageData3D data3d = new BasicImageData3D((ImageSpace3D)imageSpace, dataArray, info.getDataFile().getName().getBaseName());
                 //data3d.setImageLabel(info.getDataFile().getName().getBaseName());
                 return data3d;
             } else {

@@ -5,6 +5,7 @@ import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.utils.DataType;
+import com.brainflow.utils.IDimension;
 
 /**
  * Created by IntelliJ IDEA.
@@ -43,6 +44,10 @@ public abstract class AbstractImageData implements IImageData {
         this.space = space;
         this.datatype = dtype;
         this.imageLabel = imageLabel;
+    }
+
+     public IDimension<Integer> getDimension() {
+        return space.getDimension();
     }
 
     public DataType getDataType() {

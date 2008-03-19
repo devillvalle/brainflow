@@ -61,7 +61,7 @@ public class PolynomialTransformImageFilter extends AbstractTransformImageFilter
    while (iter.hasNext()) {
        holder = iter.next(holder);
        res = transform.transformPoint(holder, res);
-       double val = src.getRealValue(res.zero,res.zero,res.one,interpolator);
+       double val = src.getWorldValue(res.zero,res.zero,res.one,interpolator);
             
        odat.setValue(iter.getXIndex(), iter.getYIndex(), iter.getZIndex(), val);
    }

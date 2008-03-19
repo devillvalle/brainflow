@@ -3,6 +3,8 @@ package com.brainflow.image.space;
 import com.brainflow.image.anatomy.Anatomy2D;
 import com.brainflow.image.anatomy.AnatomicalPoint;
 import com.brainflow.image.axis.ImageAxis;
+import com.brainflow.utils.IDimension;
+import com.brainflow.utils.Dimension2D;
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,6 +42,10 @@ public class ImageSpace2D extends AbstractImageSpace {
     public IImageOrigin getImageOrigin() {
         return origin;
 
+    }
+
+    public IDimension<Integer> getDimension() {
+        return new Dimension2D<Integer>(getDimension(Axis.X_AXIS), getDimension(Axis.Y_AXIS));
     }
 
     public IImageSpace union(IImageSpace other) {

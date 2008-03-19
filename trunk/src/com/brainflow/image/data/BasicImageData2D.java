@@ -7,6 +7,8 @@ import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace2D;
 import com.brainflow.utils.DataType;
+import com.brainflow.utils.IDimension;
+import com.brainflow.utils.Dimension2D;
 
 
 /**
@@ -62,7 +64,9 @@ public class BasicImageData2D extends BasicImageData implements IImageData2D {
         return new ImageInfo(this);
     }
 
-
+    public IDimension<Integer> getDimension() {
+        return space.getDimension();
+    }
 
     public ImageSpace2D getImageSpace() {
         return (ImageSpace2D)space;

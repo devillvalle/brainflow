@@ -20,7 +20,7 @@ public class ConstantNode extends AbstractNode {
     }
 
     public String toString() {
-        return "value : " + value;
+        return "getValue : " + value;
     }
 
     public double getValue() {

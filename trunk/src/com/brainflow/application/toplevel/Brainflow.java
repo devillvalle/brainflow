@@ -676,7 +676,7 @@ public class Brainflow {
             sb.append("Image " + limg.getDataFile().getName().getBaseName());
             sb.append(" has already been loaded, would you like to reload from disk?");
             Integer ret = JOptionPane.showConfirmDialog(brainFrame, sb.toString(), "Image Already Loaded", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-            log.info("return value is: " + ret);
+            log.info("return getValue is: " + ret);
 
             if (ret == JOptionPane.YES_OPTION) {
                 limg.releaseData();
@@ -780,31 +780,7 @@ public class Brainflow {
 
     }
 
-    public static JPopupMenu createColorMapPopup() {
-        Map<String, IndexColorModel> maps = ResourceManager.getInstance().getColorMaps();
-        JPopupMenu popup = new JPopupMenu("color maps");
-        Iterator<String> iter = maps.keySet().iterator();
-        while (iter.hasNext()) {
-            String name = iter.next();
-            IndexColorModel icm = maps.get(name);
-            SelectColorMapAction action = new SelectColorMapAction(name,
-                    ColorTable.createImageIcon(icm, 40, 12), icm);
-
-
-            BrainCanvas canvas = BrainCanvasManager.getInstance().
-                    getSelectedCanvas();
-
-            Map map = new HashMap();
-            map.put(ActionContext.SELECTED_IMAGE_VIEW, BrainCanvasManager.getInstance().
-                    getSelectedCanvas().getSelectedView());
-            action.setContext(map);
-            popup.add(action);
-
-
-        }
-
-        return popup;
-    }
+    
 
     class ValueStatusItem extends LabelStatusBarItem implements EventSubscriber {
 

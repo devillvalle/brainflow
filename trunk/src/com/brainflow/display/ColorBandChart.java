@@ -299,10 +299,10 @@ public class ColorBandChart implements MouseMotionListener, MouseListener {
 
     private void setNewXValue(int series, int item, int value) {
         System.out.println("new zero: " + value);
-        /*if (value >= colorMap.getMapSize()) {
-            value = colorMap.getMapSize() - 1;
-        } else if (value < 0) {
-            value = 0;
+        /*if (getValue >= colorMap.getMapSize()) {
+            getValue = colorMap.getMapSize() - 1;
+        } else if (getValue < 0) {
+            getValue = 0;
         } */
 
         fittedLine.setXValue(series, item, value);

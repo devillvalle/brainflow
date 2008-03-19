@@ -63,7 +63,7 @@ public class Pipeline implements Runnable, StageContext {
     // The list of listeners registered with the rendering.
     private final List<StageEventListener> listeners;
 
-    // Holds value of property validator.
+    // Holds getValue of property validator.
     private PipelineValidator validator;
 
     // Feeder used to handle output of final stage

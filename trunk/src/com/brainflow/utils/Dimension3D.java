@@ -14,7 +14,9 @@ public class Dimension3D<T extends Number> implements IDimension, java.io.Serial
 
 
     public T zero;
+
     public T one;
+
     public T two;
 
 

@@ -25,13 +25,13 @@ public class TrilinearInterpolator implements InterpolationFunction3D {
             return 0;
 
 
-        if (dx > data.getDimension(Axis.X_AXIS) - 1) {
+        if (dx > (data.getDimension(Axis.X_AXIS) - 1) ) {
             return 0;
         }
-        if (dy > data.getDimension(Axis.Y_AXIS) - 1) {
+        if (dy > (data.getDimension(Axis.Y_AXIS) - 1) ) {
             return 0;
         }
-        if (dz > data.getDimension(Axis.Z_AXIS) - 1) {
+        if (dz > (data.getDimension(Axis.Z_AXIS) - 1) ) {
             return 0;
         }
 

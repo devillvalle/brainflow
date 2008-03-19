@@ -2,7 +2,6 @@ package com.brainflow.application.presentation;
 
 import com.brainflow.core.*;
 
-import com.jgoodies.binding.adapter.SingleListSelectionAdapter;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.swing.CheckBoxList;
@@ -14,9 +13,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import net.java.dev.properties.binding.swing.adapters.SwingBind;
-
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
 
 /**
  * Created by IntelliJ IDEA.
@@ -106,7 +102,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
                 CheckBoxListSelectionModel model = (CheckBoxListSelectionModel) e.getSource();
                 ImageView view = getSelectedView();
 
-                System.out.println("layer selection value changed !");
+                System.out.println("layer selection getValue changed !");
                 for (int i = f1; i <= f2; i++) {
                     AbstractLayer layer = view.getModel().getLayer(i);
                     boolean vis = layer.getImageLayerProperties().visible.get();

@@ -4,8 +4,7 @@ import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.ImageAxis;
-import com.brainflow.utils.Index3D;
-import com.brainflow.utils.Point3D;
+import com.brainflow.utils.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -55,6 +54,10 @@ public class ImageSpace3D extends AbstractImageSpace {
                 zaxis.getAnatomicalAxis().getMinDirection(), xaxis.getRange().getBeginning().getX(),
                 yaxis.getRange().getBeginning().getX(), zaxis.getRange().getBeginning().getX());
 
+    }
+
+     public IDimension<Integer> getDimension() {
+         return new Dimension3D<Integer>(getDimension(Axis.X_AXIS), getDimension(Axis.Y_AXIS),getDimension(Axis.Z_AXIS));
     }
 
 

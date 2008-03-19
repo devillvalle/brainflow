@@ -64,14 +64,19 @@ public class TestMaskSubstitution {
         MaskSubstitution masksub = new MaskSubstitution();
         INode ret = masksub.start(node);
 
-        System.out.println("DEPTH : " +ret.depth());
+        System.out.println("DEPTH : " + ret.depth());
         System.out.println(ret);
         System.out.println("AGAIN ...");
         ret = masksub.start(ret);
 
-        System.out.println("DEPTH : " +ret.depth());
+        System.out.println("DEPTH : " + ret.depth());
         //System.out.println("AGAIN ...");
         //ret = masksub.start(ret);
 
+    } // testInComparison()
+
+    @Test
+    public void testInComparison() {
+        fail(); // @todo - implement
     } // testInComparison()
 }

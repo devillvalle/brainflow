@@ -41,9 +41,7 @@ public class BooleanMaskNode3D implements IMaskedData3D {
 
     }
 
-    public IDimension<Integer> getDimension() {
-        return left.getDimension();
-    }
+
 
     public double getWorldValue(double realx, double realy, double realz, InterpolationFunction3D interp) {
         return operation.isTrue((int) left.getWorldValue(realx, realy, realz, interp), (int) right.getWorldValue(realx, realy, realz, interp)) ? 1 : 0;

@@ -2,6 +2,7 @@ package com.brainflow.image.data;
 
 import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.image.space.Axis;
+import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.interpolation.InterpolationFunction3D;
 import com.brainflow.image.anatomy.Anatomy;
 import com.brainflow.image.io.ImageInfo;
@@ -51,10 +52,6 @@ public class BivariateMaskNode3D implements IMaskedData3D {
 
     public boolean isTrue(int x, int y, int z) {
         return operation.isTrue(left.getValue(x, y, z), right.getValue(x, y, z));
-    }
-
-    public IDimension<Integer> getDimension() {
-        return left.getDimension();
     }
 
     public ImageSpace3D getImageSpace() {

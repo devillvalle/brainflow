@@ -37,9 +37,7 @@ public class MaskedData3D implements IMaskedData3D {
         return source;
     }
 
-    public IDimension<Integer> getDimension() {
-        return source.getDimension();
-    }
+   
 
     public Index3D indexToGrid(int idx, Index3D voxel) {
         return source.indexToGrid(idx, voxel);

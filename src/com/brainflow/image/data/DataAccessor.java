@@ -1,6 +1,8 @@
 package com.brainflow.image.data;
 
 import com.brainflow.utils.IDimension;
+import com.brainflow.image.space.IImageSpace;
+import com.brainflow.image.space.ImageSpace2D;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,8 +16,10 @@ public interface DataAccessor {
 
     public double getValue(int index);
 
-    public IDimension<Integer> getDimension();
+    //public IImageSpace getImageSpace();
 
     public int numElements();
+
+    public IImageSpace getImageSpace();
 
 }

@@ -30,14 +30,12 @@ public interface IImageData extends DataAccessor {
     public double minValue();
  
     public ImageInfo getImageInfo();
-    
-    public IImageSpace getImageSpace();
-
+   
     public String getImageLabel();
 
     public ImageIterator iterator();
 
-
+    
 
     
 

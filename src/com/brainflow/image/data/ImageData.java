@@ -84,9 +84,6 @@ public class ImageData {
                 data.setValue(idx,val);
             }
 
-            public IDimension<Integer> getDimension() {
-                return data.getDimension();
-            }
 
             public final double getValue(int index) {
                 return data.getValue(index) * scaleFactor;

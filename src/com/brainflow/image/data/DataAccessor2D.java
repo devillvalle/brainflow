@@ -1,6 +1,8 @@
 package com.brainflow.image.data;
 
 import com.brainflow.image.interpolation.InterpolationFunction2D;
+import com.brainflow.image.space.IImageSpace;
+import com.brainflow.image.space.ImageSpace2D;
 import com.brainflow.utils.IDimension;
 import com.brainflow.utils.Dimension2D;
 
@@ -19,5 +21,5 @@ public interface DataAccessor2D extends DataAccessor {
 
     public double getValue(int x, int y);
 
-    
+    public ImageSpace2D getImageSpace();
 }

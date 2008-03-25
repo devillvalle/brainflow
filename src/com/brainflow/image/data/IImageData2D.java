@@ -16,13 +16,7 @@ public interface IImageData2D extends IImageData, DataAccessor2D {
 
     public int indexOf(int x, int y);
 
-    //public double getValue(double x, double y, InterpolationFunction2D interp);
-
-    //public double getRealValue(double realx, double realy, InterpolationFunction2D interp);
-
-    //public double getValue(int x, int y);
-
+    
     public void setValue(int x, int y, double val);
 
-    public ImageSpace2D getImageSpace();
 }

@@ -34,10 +34,7 @@ public class MaskedData2D implements IImageData2D {
         return source.indexOf(x, y);
     }
 
-    public IDimension<Integer> getDimension() {
-        return source.getDimension();
-    }
-
+    
     public double getValue(double x, double y, InterpolationFunction2D interp) {
         return predicate.mask(source.getValue(x, y, interp))? 1 : 0;
     }

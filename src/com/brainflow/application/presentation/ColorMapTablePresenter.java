@@ -8,7 +8,6 @@ import com.brainflow.utils.ResourceLoader;
 import com.jidesoft.dialog.ButtonPanel;
 import com.jidesoft.grid.TableUtils;
 import com.jidesoft.swing.JideBoxLayout;
-import org.bushe.swing.action.BasicAction;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -159,7 +158,7 @@ public class ColorMapTablePresenter extends ImageViewPresenter {
     }
 
 
-    class ColorGradientAction extends BasicAction {
+    class ColorGradientAction extends AbstractAction {
 
 
         public ColorGradientAction() {
@@ -171,7 +170,7 @@ public class ColorMapTablePresenter extends ImageViewPresenter {
             }
         }
 
-        protected void execute(ActionEvent actionEvent) throws Exception {
+        public void actionPerformed(ActionEvent actionEvent)  {
             IColorMap colorMap = colorTable.getEditedColorMap();
             if (colorMap instanceof DiscreteColorMap) {
                 JTable table = colorTable.getComponent();
@@ -213,7 +212,7 @@ public class ColorMapTablePresenter extends ImageViewPresenter {
         }
     }
 
-    class SelectAllAction extends BasicAction {
+    class SelectAllAction extends AbstractAction {
 
         public SelectAllAction() {
             try {
@@ -226,7 +225,7 @@ public class ColorMapTablePresenter extends ImageViewPresenter {
             }
         }
 
-        protected void execute(ActionEvent actionEvent) throws Exception {
+        public void actionPerformed(ActionEvent actionEvent)  {
             JTable table = colorTable.getComponent();
             DefaultListSelectionModel model = new DefaultListSelectionModel();
             model.setSelectionInterval(0, table.getRowCount() - 1);
@@ -238,7 +237,7 @@ public class ColorMapTablePresenter extends ImageViewPresenter {
     }
 
 
-    class EqualBinsAction extends BasicAction {
+    class EqualBinsAction extends AbstractAction {
 
 
         public EqualBinsAction() {
@@ -251,7 +250,7 @@ public class ColorMapTablePresenter extends ImageViewPresenter {
             }
         }
 
-        protected void execute(ActionEvent actionEvent) throws Exception {
+        public void actionPerformed(ActionEvent actionEvent)  {
             IColorMap colorMap = colorTable.getEditedColorMap();
             if (colorMap instanceof DiscreteColorMap) {
                 JTable table = colorTable.getComponent();

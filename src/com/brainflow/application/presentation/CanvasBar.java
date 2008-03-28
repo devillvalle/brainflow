@@ -49,7 +49,7 @@ public class CanvasBar extends ImageViewPresenter {
     }
 
     public void viewSelected(ImageView view) {
-        System.out.println("repopulating");
+
         repopulate();
     }
 
@@ -119,13 +119,10 @@ public class CanvasBar extends ImageViewPresenter {
         for (AbstractButton button : layerButtonList) {
             toggleBar.add(button);
             buttonGroup.add(button);
-
-
         }
 
 
         int selIdx = getSelectedView().getSelectedLayerIndex();
-        System.out.println("repopulate: layer index " + selIdx);
 
         if (selIdx >= 0 && (getSelectedView().getModel().getNumLayers() > 0) ) {
             JToggleButton button = (JToggleButton) layerButtonList.get(selIdx);

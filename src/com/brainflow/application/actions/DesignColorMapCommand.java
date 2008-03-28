@@ -5,7 +5,7 @@ import com.brainflow.colormap.IColorMap;
 import com.brainflow.core.BrainCanvas;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
-import org.bushe.swing.action.BasicAction;
+
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

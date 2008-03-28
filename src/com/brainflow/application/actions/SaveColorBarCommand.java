@@ -3,7 +3,6 @@ package com.brainflow.application.actions;
 import com.brainflow.colormap.AbstractColorBar;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.core.ImageView;
-import org.bushe.swing.action.BasicAction;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

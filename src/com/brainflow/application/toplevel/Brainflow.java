@@ -14,6 +14,8 @@ import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.utils.Range;
+import com.brainflow.misc.tracing.TracingEventQueue;
+import com.brainflow.misc.tracing.TracingEventQueueJMX;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.docking.DefaultDockingManager;
@@ -111,6 +113,9 @@ public class Brainflow {
             UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceCremeCoffeeLookAndFeel());
 
             LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE_WITHOUT_MENU);
+            Toolkit.getDefaultToolkit().getSystemEventQueue().push(
+                new TracingEventQueueJMX());
+            
         } catch (Exception e) {
             Logger.getAnonymousLogger().severe("Error Loading LookAndFeel, exiting");
             e.printStackTrace();

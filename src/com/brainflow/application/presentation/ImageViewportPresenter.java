@@ -228,6 +228,7 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
         BeanContainer.get().addListener(view.plotSelection, new PropertyListener() {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+                System.out.println("repainting plotSelector ....");
                 plotSelector.repaint();
             }
         });

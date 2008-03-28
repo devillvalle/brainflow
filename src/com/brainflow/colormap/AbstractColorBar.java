@@ -70,7 +70,7 @@ public abstract class AbstractColorBar extends JPanel {
 
 
     protected void initBackground() {
-        URL url = getClass().getClassLoader().getResource("resources/icons/checkerboard.jpg");
+        /*URL url = getClass().getClassLoader().getResource("resources/icons/checkerboard.jpg");
         BufferedImage icon = null;
         try {
             icon = ImageIO.read(url);
@@ -78,6 +78,7 @@ public abstract class AbstractColorBar extends JPanel {
             e.printStackTrace();
         }
         setBackgroundImage(icon);
+        */
 
     }
 

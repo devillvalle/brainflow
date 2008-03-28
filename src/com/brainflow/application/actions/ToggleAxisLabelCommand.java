@@ -4,7 +4,7 @@ import com.brainflow.core.ImageView;
 import com.brainflow.core.annotations.AxisLabelAnnotation;
 import com.pietschy.command.toggle.ToggleCommand;
 import com.pietschy.command.toggle.ToggleVetoException;
-import org.bushe.swing.action.ActionManager;
+
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

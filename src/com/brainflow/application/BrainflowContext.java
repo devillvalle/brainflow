@@ -2,7 +2,7 @@ package com.brainflow.application;
 
 import com.brainflow.application.actions.ActionContext;
 import com.brainflow.application.services.ImageViewSelectionEvent;
-import org.bushe.swing.action.ActionManager;
+
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 
@@ -29,7 +29,7 @@ public class BrainflowContext {
 
     public void putValue(ActionContext key, Object value) {
         context.put(key, value);
-        ActionManager.getInstance().putContextValueForAll(key, value);
+
     }
 
 
@@ -37,9 +37,7 @@ public class BrainflowContext {
         EventBus.subscribeStrongly(ImageViewSelectionEvent.class, new EventSubscriber() {
             public void onEvent(Object evt) {
                 ImageViewSelectionEvent event = (ImageViewSelectionEvent) evt;
-                ActionManager.getInstance().putContextValueForAll(ActionContext.SELECTED_IMAGE_VIEW,
-                        event.getSelectedImageView());
-
+                
 
             }
         });

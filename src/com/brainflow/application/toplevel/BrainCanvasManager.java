@@ -17,8 +17,7 @@ import com.brainflow.modes.ImageViewInteractor;
 import net.java.dev.properties.container.BeanContainer;
 import net.java.dev.properties.events.PropertyListener;
 import net.java.dev.properties.BaseProperty;
-import org.bushe.swing.action.ActionManager;
-import org.bushe.swing.action.ActionUIFactory;
+
 import org.bushe.swing.event.EventBus;
 
 import javax.swing.*;
@@ -156,7 +155,7 @@ public class BrainCanvasManager {
 
     public BrainCanvas getImageCanvas(int idx) {
         if (canvasList.size() > idx && idx >= 0)
-            return (BrainCanvas) canvasList.get(idx);
+            return canvasList.get(idx);
         else {
             throw new IllegalArgumentException("No canvas exists at index" + idx);
         }
@@ -213,6 +212,7 @@ public class BrainCanvasManager {
 
         public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
             BrainCanvasModel model = (BrainCanvasModel)prop.getParent();
+            log.info("image view slected: firing event");
             EventBus.publish(new ImageViewSelectionEvent(model.getSelectedView()));
 
 

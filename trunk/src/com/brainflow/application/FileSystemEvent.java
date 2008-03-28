@@ -20,6 +20,7 @@ public class FileSystemEvent extends EventObject {
     };
 
     private EventID id;
+    
     private FileObject fobj;
 
     public FileSystemEvent(FileObject source, EventID _id) {

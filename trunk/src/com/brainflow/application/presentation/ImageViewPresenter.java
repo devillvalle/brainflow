@@ -38,6 +38,9 @@ public abstract class ImageViewPresenter extends AbstractPresenter implements Im
         EventBus.subscribeStrongly(ImageViewSelectionEvent.class, new EventSubscriber() {
 
             public void onEvent(Object evt) {
+                double startTime = System.currentTimeMillis();
+                log.info("Image View Selected: on event");
+                log.info("Class : " + ImageViewPresenter.this.getClass().getName());
                 ImageViewSelectionEvent event = (ImageViewSelectionEvent) evt;
 
                 // remove listeners from old selected view
@@ -57,6 +60,11 @@ public abstract class ImageViewPresenter extends AbstractPresenter implements Im
                 } else {
                     allViewsDeselected();
                 }
+
+                double endTime = System.currentTimeMillis();
+                log.info("Total Time : " + (endTime - startTime));
+
+
             }
         });
 

@@ -1,8 +1,5 @@
 package com.brainflow.application.actions;
 
-import org.bushe.swing.action.BasicAction;
-import org.bushe.swing.action.ActionManager;
-
 import javax.swing.*;
 
 import com.brainflow.core.ImageView;
@@ -22,7 +19,7 @@ public class ToggleColorbarAction extends BasicAction {
 
      public ToggleColorbarAction() {
         putValue(Action.NAME, "Toggle Colorbar");
-        putValue(ActionManager.BUTTON_TYPE, ActionManager.BUTTON_TYPE_VALUE_TOGGLE);
+        //putValue(ActionManager.BUTTON_TYPE, ActionManager.BUTTON_TYPE_VALUE_TOGGLE);
     }
 
 

@@ -5,7 +5,6 @@ import com.pietschy.command.ActionCommand;
 import com.pietschy.command.face.Face;
 import org.apache.commons.vfs.VFS;
 import org.apache.commons.vfs.FileSystemException;
-import org.bushe.swing.action.BasicAction;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

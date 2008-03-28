@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.logging.Logger;
 
 import net.java.dev.properties.container.BeanContainer;
 import net.java.dev.properties.events.PropertyListener;
@@ -38,6 +39,8 @@ import net.java.dev.properties.BaseProperty;
  * @author buchs
  */
 public class ColorBarPresenter extends ImageViewPresenter {
+
+    private static final Logger log = Logger.getLogger(ColorBarPresenter.class.getName());
 
     private ColorBarForm form;
 
@@ -83,19 +86,17 @@ public class ColorBarPresenter extends ImageViewPresenter {
         colorMapListener = new PropertyListener() {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
                 System.out.println("color map changed :" + this);
-                System.out.println("oldValue " + oldValue);
-                System.out.println("newValue " + newValue);
+
                 //todo why null?
                 IColorMap cmap = (IColorMap)newValue;
-                System.out.println("highclip : " + cmap.getHighClip());
-                System.out.println("lowclip : " + cmap.getLowClip());
+               
                 form.setColorMap(cmap);
             }
         };
     }
 
     public void viewDeselected(ImageView view) {
-        System.out.println("removing colormap listener ...");
+
         BeanContainer.get().removeListener(view.getSelectedLayer().getImageLayerProperties().colorMap, colorMapListener);
     }
 
@@ -103,11 +104,14 @@ public class ColorBarPresenter extends ImageViewPresenter {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void viewSelected(ImageView view) {
+    public void viewSelected(final ImageView view) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                form.setColorMap(view.getSelectedLayer().getImageLayerProperties().colorMap.get());
+            }
+        });
 
-        form.setColorMap(view.getSelectedLayer().getImageLayerProperties().colorMap.get());
-
-        BeanContainer.get().addListener(view.getSelectedLayer().getImageLayerProperties().colorMap, colorMapListener);
+         BeanContainer.get().addListener(view.getSelectedLayer().getImageLayerProperties().colorMap, colorMapListener);
 
     }
 

@@ -24,7 +24,7 @@ public class ImageFiller {
     private IImageSpace ispace;
 
     @Testable
-    public BasicImageData2D fillImage(IImageData3D inputData, AnatomicalAxis axis1,
+    public BasicImageData2D fillImage(DataAccessor3D inputData, AnatomicalAxis axis1,
                                       AnatomicalAxis axis2, AnatomicalPoint1D fixedPoint) {
 
         ispace = inputData.getImageSpace();
@@ -123,7 +123,7 @@ public class ImageFiller {
     }
 
 
-    private float[] fillXYZ(IImageData3D data, QuickIterator fastIterator, QuickIterator slowIterator, int fixed) {
+    private float[] fillXYZ(DataAccessor3D data, QuickIterator fastIterator, QuickIterator slowIterator, int fixed) {
         int x, y, z;
         z = fixed;
 
@@ -144,7 +144,7 @@ public class ImageFiller {
 
     }
 
-    private float[] fillYXZ(IImageData3D data, QuickIterator fastIterator, QuickIterator slowIterator, int fixed) {
+    private float[] fillYXZ(DataAccessor3D data, QuickIterator fastIterator, QuickIterator slowIterator, int fixed) {
         int x, y, z;
         z = fixed;
         float[] op = new float[fastIterator.size() * slowIterator.size()];
@@ -166,7 +166,7 @@ public class ImageFiller {
 
     }
 
-    private float[] fillXZY(IImageData3D data, QuickIterator fastIterator, QuickIterator slowIterator, int fixed) {
+    private float[] fillXZY(DataAccessor3D data, QuickIterator fastIterator, QuickIterator slowIterator, int fixed) {
         int x, y, z;
         y = fixed;
         float[] op = new float[fastIterator.size() * slowIterator.size()];
@@ -186,7 +186,7 @@ public class ImageFiller {
 
     }
 
-    private float[] fillYZX(IImageData3D data, QuickIterator fastIterator, QuickIterator slowIterator, int fixed) {
+    private float[] fillYZX(DataAccessor3D data, QuickIterator fastIterator, QuickIterator slowIterator, int fixed) {
         int x, y, z;
         x = fixed;
         float[] op = new float[fastIterator.size() * slowIterator.size()];
@@ -206,7 +206,7 @@ public class ImageFiller {
 
     }
 
-    private float[] fillZYX(IImageData3D data, QuickIterator fastIterator, QuickIterator slowIterator, int fixed) {
+    private float[] fillZYX(DataAccessor3D data, QuickIterator fastIterator, QuickIterator slowIterator, int fixed) {
         int x, y, z;
         x = fixed;
         float[] op = new float[fastIterator.size() * slowIterator.size()];
@@ -227,7 +227,7 @@ public class ImageFiller {
 
     }
 
-    private float[] fillZXY(IImageData3D data, QuickIterator fastIterator, QuickIterator slowIterator, int fixed) {
+    private float[] fillZXY(DataAccessor3D data, QuickIterator fastIterator, QuickIterator slowIterator, int fixed) {
         int x, y, z;
         y = fixed;
         float[] op = new float[fastIterator.size() * slowIterator.size()];

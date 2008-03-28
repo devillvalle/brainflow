@@ -25,7 +25,7 @@ public class CoordinateControls {
 
     private IndexCoordinatePresenter indexCoordinatePresenter;
 
-    private ImageViewportPresenter imageViewportPresenter;
+    //private ImageViewportPresenter imageViewportPresenter;
 
     private LinkedViewsPresenter linkedViewsPresenter;
 
@@ -43,7 +43,7 @@ public class CoordinateControls {
         linkedViewsPresenter = new LinkedViewsPresenter();
         worldCoordinatePresenter = new WorldCoordinatePresenter();
         indexCoordinatePresenter = new IndexCoordinatePresenter();
-        imageViewportPresenter = new ImageViewportPresenter();
+        //imageViewportPresenter = new ImageViewportPresenter();
         //imageExtentPresenter = new ImageExtentPresenter(activeView.getViewport());
 
         CollapsiblePane p1 = new CollapsiblePane();
@@ -67,12 +67,12 @@ public class CoordinateControls {
         p2.setOpaque(false);
         cpanes.add(p2);
 
-        CollapsiblePane p3 = new CollapsiblePane();
-        p3.setContentPane(imageViewportPresenter.getComponent());
-        p3.setTitle("Plot Viewport");
-        p3.setEmphasized(true);
-        p3.setOpaque(false);
-        cpanes.add(p3);
+        //CollapsiblePane p3 = new CollapsiblePane();
+        //p3.setContentPane(imageViewportPresenter.getComponent());
+        //p3.setTitle("Plot Viewport");
+        //p3.setEmphasized(true);
+        //p3.setOpaque(false);
+        //cpanes.add(p3);
 
         //CollapsiblePane p4 = new CollapsiblePane();
         //p4.setContentPane(imageExtentPresenter.getComponent());

@@ -6,7 +6,6 @@
 
 package com.brainflow.application.actions;
 
-import org.bushe.swing.action.BasicAction;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

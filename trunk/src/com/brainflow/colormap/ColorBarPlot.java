@@ -39,7 +39,8 @@ public class ColorBarPlot extends ChartPanel {
 
     private AbstractColorBar colorBar;
 
-    private ChangeHandler handler = new ChangeHandler();
+    //todo what on earther was this for?
+    //private ChangeHandler handler = new ChangeHandler();
 
     /**
      * Creates a new instance of ColorBarPlot
@@ -50,7 +51,7 @@ public class ColorBarPlot extends ChartPanel {
         dataset = new ColorMapDataset(cmap);
         colorBar = dataset.getColorMap().createColorBar();
         colorBar.setOrientation(SwingUtilities.HORIZONTAL);
-        dataset.addChangeListener(handler);
+        //dataset.addChangeListener(handler);
         init();
 
     }
@@ -59,17 +60,21 @@ public class ColorBarPlot extends ChartPanel {
         super(null);
 
         dataset = new ColorMapDataset(new LinearColorMapDeprecated(0, 255, ColorTable.SPECTRUM));
-        dataset.addChangeListener(handler);
+        //dataset.addChangeListener(handler);
         colorBar = dataset.getColorMap().createColorBar();
         colorBar.setOrientation(SwingUtilities.HORIZONTAL);
         init();
     }
 
+    //todo somewhat expensive method
     public void setColorMap(IColorMap map) {
+
         dataset.setColorMap(map);
 
         chart.getXYPlot().getDomainAxis().setRange(map.getMinimumValue(), map.getMaximumValue());
+
         colorBar = map.createColorBar();
+        
         colorBar.setOrientation(SwingUtilities.HORIZONTAL);
         chart.getXYPlot().setBackgroundImage(colorBar.getImage());
 

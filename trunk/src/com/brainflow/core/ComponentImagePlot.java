@@ -109,6 +109,8 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         repaint();
     }
 
+
+
     public void setSlice(AnatomicalPoint1D slice) {
         if (getSlice() == null || !getSlice().equals(slice)) {
             this.slice = slice;
@@ -316,6 +318,10 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         int x = (int) (pt.getX() * getScaleX() + plotMargins.left + insets.left);
         int y = (int) (pt.getY() * getScaleY() + plotMargins.top + insets.top);
         return new Point(x, y);
+    }
+
+    public void repaint() {
+        super.repaint();
     }
 
 

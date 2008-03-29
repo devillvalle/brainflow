@@ -113,8 +113,8 @@ public class Brainflow {
             UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceCremeCoffeeLookAndFeel());
 
             LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE_WITHOUT_MENU);
-            Toolkit.getDefaultToolkit().getSystemEventQueue().push(
-                new TracingEventQueueJMX());
+            //Toolkit.getDefaultToolkit().getSystemEventQueue().push(
+            //    new TracingEventQueueJMX());
             
         } catch (Exception e) {
             Logger.getAnonymousLogger().severe("Error Loading LookAndFeel, exiting");

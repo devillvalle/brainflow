@@ -9,8 +9,12 @@ import org.apache.commons.pipeline.Feeder;
 import org.apache.commons.pipeline.driver.SynchronousStageDriverFactory;
 import org.apache.commons.pipeline.validation.ValidationException;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -43,7 +47,7 @@ public class CompositeImageProducer extends AbstractImageProducer {
 
 
     public CompositeImageProducer(IImagePlot plot, Anatomy3D displayAnatomy) {
-        this(plot, displayAnatomy,plot.getModel().getImageAxis(displayAnatomy.ZAXIS).getRange().getCenter());
+        this(plot, displayAnatomy, plot.getModel().getImageAxis(displayAnatomy.ZAXIS).getRange().getCenter());
 
     }
 
@@ -58,7 +62,6 @@ public class CompositeImageProducer extends AbstractImageProducer {
         layerListener = new PipelineLayerListener();
         getModel().addImageLayerListener(layerListener);
         initPipeline();
-
 
 
     }
@@ -188,18 +191,95 @@ public class CompositeImageProducer extends AbstractImageProducer {
 
  }   */
 
+    public synchronized BufferedImage render() {
+        pipeline.getSourceFeeder().feed(getModel());
+        pipeline.run();
+        return terminal.getImage();
+
+    }
+
     public BufferedImage getImage() {
         // does this spawn a new thread?
         // could be submitted to thread pool?
 
-
-        pipeline.getSourceFeeder().feed(getModel());
-        //Thread t = new Thread(rendering);
-        //t.start();
-        pipeline.run();
+        if (terminal.getImage() == null) {
+            render();
+        }
 
         return terminal.getImage();
     }
+
+    class TaskQueue<T> {
+
+        private ExecutorService service;
+
+        private FutureTask<T> currentTask;
+
+        private FutureTask<T> nextTask;
+
+
+        public TaskQueue() {
+            service = Executors.newFixedThreadPool(1);
+
+        }
+
+        private void submitNext() {
+            if (nextTask != null) {
+                System.out.println("submitting next");
+                service.submit(nextTask);
+            }
+        }
+
+        public void submit(Callable<T> task) {
+
+            FutureTask<T> ft = new FutureTask<T>(task) {
+                protected void done() {
+                    System.out.println("done!");
+                    plot.getComponent().repaint();
+                    if (nextTask == this) {
+                        System.out.println("this is next task, setting to null");
+                        nextTask = null;
+                    } else {
+                        submitNext();
+                    }
+
+
+                }
+            };
+
+            //execute immediately or add to queue
+            if (currentTask != null && !currentTask.isDone()) {
+                System.out.println("busy ... queing task");
+                nextTask = ft;
+            } else {
+                System.out.println("not busy ... submitting task");
+                currentTask = ft;
+                service.submit(ft);
+
+            }
+
+            
+
+
+            
+        }
+    }
+
+    
+
+    private Callable<BufferedImage> createRenderTask() {
+        return new Callable<BufferedImage>() {
+            public BufferedImage call() throws Exception {              
+                return render();
+
+            }
+
+        };
+
+
+
+    }
+
 
     class TerminalFeeder implements Feeder {
 
@@ -215,6 +295,8 @@ public class CompositeImageProducer extends AbstractImageProducer {
         }
     }
 
+    private final TaskQueue<BufferedImage> renderQueue = new TaskQueue<BufferedImage>();
+
     protected void finalize() throws Throwable {
         System.out.println("garbage collecting " + this);
         getModel().removeImageLayerListener(layerListener);
@@ -226,42 +308,49 @@ public class CompositeImageProducer extends AbstractImageProducer {
         public void thresholdChanged(ImageLayerEvent event) {
             //todo make this a bit more intelligent. "clearPath" flushes the renderers
             pipeline.clearPath(gatherRenderersStage);
-            plot.getComponent().repaint();
+            renderQueue.submit(createRenderTask());
+            //plot.getComponent().repaint();
         }
 
         public void smoothingChanged(ImageLayerEvent event) {
             pipeline.clearPath(gatherRenderersStage);
-            plot.getComponent().repaint();
+            renderQueue.submit(createRenderTask());
+
         }
 
         public void colorMapChanged(ImageLayerEvent event) {
             pipeline.clearPath(gatherRenderersStage);
-            plot.getComponent().repaint();
+            renderQueue.submit(createRenderTask());
+            //plot.getComponent().repaint();
         }
 
         public void opacityChanged(ImageLayerEvent event) {
             pipeline.clearPath(gatherRenderersStage);
-            plot.getComponent().repaint();
+            renderQueue.submit(createRenderTask());
+            //plot.getComponent().repaint();
         }
 
         public void interpolationMethodChanged(ImageLayerEvent event) {
             pipeline.clearPath(gatherRenderersStage);
-            plot.getComponent().repaint();
+            renderQueue.submit(createRenderTask());
+            //plot.getComponent().repaint();
         }
 
         public void visibilityChanged(ImageLayerEvent event) {
             pipeline.clearPath(gatherRenderersStage);
-            plot.getComponent().repaint();
+            renderQueue.submit(createRenderTask());
+            //plot.getComponent().repaint();
         }
 
         public void clipRangeChanged(ImageLayerEvent event) {
             pipeline.clearPath(gatherRenderersStage);
-            plot.getComponent().repaint();
+            renderQueue.submit(createRenderTask());
+            //plot.getComponent().repaint();
 
         }
 
         public String toString() {
-           return "PipelineLayerListener for plot : " + plot.hashCode() + " with model " + plot.getModel();
+            return "PipelineLayerListener for plot : " + plot.hashCode() + " with model " + plot.getModel();
         }
     }
 

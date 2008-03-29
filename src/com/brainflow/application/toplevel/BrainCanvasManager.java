@@ -59,9 +59,7 @@ public class BrainCanvasManager {
     
 
     protected BrainCanvasManager() {
-        log.info("instantiating BrainCanvasManager");
-        // Exists only to thwart instantiation.
-        //EventBus.subscribe(ImageViewCursorEvent.class, this);
+
     }
 
 
@@ -146,9 +144,7 @@ public class BrainCanvasManager {
     }
 
     public BrainCanvas createCanvas() {
-        log.info("creating Brain Canvas");
         BrainCanvas canvas = new BrainCanvas();
-        log.info("adding Brain Canvas");
         addImageCanvas(canvas);
         return canvas;
     }

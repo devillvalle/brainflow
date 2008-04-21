@@ -2,6 +2,7 @@ package com.brainflow.image.data;
 
 import com.brainflow.utils.Index3D;
 import com.brainflow.image.space.ImageSpace3D;
+import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.interpolation.InterpolationFunction3D;
 
 /**
@@ -19,6 +20,5 @@ public interface IImageData3D extends IImageData, DataAccessor3D {
 
     public void setValue(int x, int y, int z, double val);
 
-    
-
+    public ImageSpace3D getImageSpace();
 }

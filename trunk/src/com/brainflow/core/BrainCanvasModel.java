@@ -40,13 +40,12 @@ public class BrainCanvasModel {
     
     public final IndexedProperty<ImageView> imageViewList = ObservableIndexed.create();
 
-    private Map<ImageView, YokeHandler> viewLinkMap = new HashMap<ImageView, YokeHandler>();
+    private Map<ImageView, YokeHandler> viewLinkMap = new WeakHashMap<ImageView, YokeHandler>();
 
 
 
     public BrainCanvasModel() {
         BeanContainer.bind(this);
-
         
 
 
@@ -54,7 +53,7 @@ public class BrainCanvasModel {
 
 
     private List<ImageView> views() {
-        return  (List<ImageView>)imageViewList.get();
+        return  imageViewList.get();
 
 
     }
@@ -101,21 +100,32 @@ public class BrainCanvasModel {
             listSelection.set(listSelection.get()-1);
         }
 
+        System.out.println("removing image view " + view);
         cutLinks(view);
+        view.clearListeners();
+        System.out.println("cutting links " + view);
+        System.gc();
 
     }
 
     private void cutLinks(ImageView view) {
+        System.out.println("view link set size : " + viewLinkMap.size());
         Set<ImageView> viewSet = viewLinkMap.keySet();
         Iterator<ImageView> iter = viewSet.iterator();
 
         while (iter.hasNext()) {
             ImageView cur = iter.next();
-            if (viewLinkMap.get(cur).containsSource(view))
-                viewLinkMap.get(cur).removeSource(view);
+            if (viewLinkMap.get(cur).containsSource(view)) {
+
+                YokeHandler handler = viewLinkMap.get(cur);
+                handler.removeSource(view);
+                System.out.println("handler sources : " + handler.getSources().size());
+            }
         }
 
         viewLinkMap.remove(view);
+        System.out.println("view link set size : " + viewLinkMap.size());
+        System.out.println("image view list size : " + imageViewList.size());
     }
 
     public Set<ImageView> getYokedViews(ImageView view) {

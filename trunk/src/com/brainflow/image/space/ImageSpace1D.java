@@ -14,14 +14,14 @@ public class ImageSpace1D extends AbstractImageSpace implements IImageSpace {
 
 
     public IImageOrigin getImageOrigin() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public AnatomicalPoint getCentroid() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public IDimension getDimension() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        throw new UnsupportedOperationException();
     }
 }

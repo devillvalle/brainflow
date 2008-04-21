@@ -41,6 +41,7 @@ public class BrainCanvas extends JComponent implements InternalFrameListener {
         setLayout(new BorderLayout());
 
         add(desktopPane, "Center");
+        desktopPane.setOpaque(false);
         addInteractor(new CrosshairInteractor());
         addInteractor(new MouseWheelInteractor());
         addInteractor(new PanningInteractor());
@@ -275,6 +276,8 @@ public class BrainCanvas extends JComponent implements InternalFrameListener {
        if (e.getInternalFrame().getContentPane() instanceof ImageView) {
            ImageView view = (ImageView)e.getInternalFrame().getContentPane();
            removeImageView(view);
+           //e.getInternalFrame().dispose();
+           System.out.println("number of internal frames ? " + desktopPane.getAllFrames().length);
        }
     }
 

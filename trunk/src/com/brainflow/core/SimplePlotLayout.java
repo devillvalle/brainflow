@@ -1,7 +1,6 @@
 package com.brainflow.core;
 
 import com.brainflow.image.anatomy.Anatomy3D;
-import com.brainflow.image.axis.AxisRange;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +30,7 @@ public class SimplePlotLayout extends ImagePlotLayout {
 
     protected List<IImagePlot> createPlots() {
         List<IImagePlot> plots = new ArrayList<IImagePlot>();
-        IImagePlot plot = createBasicPlot(displayAnatomy);
+        IImagePlot plot = createPlot(displayAnatomy);
         plots.add(plot);
 
         return plots;

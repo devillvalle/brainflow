@@ -8,6 +8,7 @@ import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.utils.DataType;
 import com.brainflow.utils.Dimension3D;
 import com.brainflow.utils.Point3D;
+import com.brainflow.utils.IDimension;
 import com.brainflow.math.Vector3f;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
@@ -361,6 +362,12 @@ public class NiftiInfoReader implements ImageInfoReader {
             System.out.println("info : " + info);
             System.out.println("nearest anatomy : " + NiftiImageInfo.nearestAnatomy(info.qform));
 
+            System.out.println(info.qform.mult(new Vector3f(0,0,0)));
+
+            IDimension dim = info.getArrayDim();
+            System.out.println(info.qform.mult(new Vector3f(0,0,0)));
+            System.out.println("dim : " + dim);
+            System.out.println(info.qform.mult(new Vector3f(239,255,159)));
 
         } catch (Exception e) {
             e.printStackTrace();

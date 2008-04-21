@@ -24,10 +24,13 @@ import com.jidesoft.docking.DockableFrame;
 import com.jidesoft.document.DocumentComponent;
 import com.jidesoft.document.DocumentPane;
 import com.jidesoft.plaf.LookAndFeelFactory;
+import com.jidesoft.plaf.UIDefaultsLookup;
+import com.jidesoft.plaf.basic.ThemePainter;
 import com.jidesoft.status.LabelStatusBarItem;
 import com.jidesoft.status.StatusBar;
 import com.jidesoft.swing.JideBoxLayout;
 import com.jidesoft.swing.JideTabbedPane;
+import com.jidesoft.dialog.JideOptionPane;
 import com.pietschy.command.CommandContainer;
 import com.pietschy.command.GuiCommands;
 import com.pietschy.command.configuration.ParseException;
@@ -35,6 +38,7 @@ import com.pietschy.command.group.CommandGroup;
 import com.pietschy.command.group.ExpansionPointBuilder;
 import com.pietschy.command.toggle.ToggleCommand;
 import com.pietschy.command.toggle.ToggleGroup;
+import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.VFS;
@@ -47,6 +51,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.IndexColorModel;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -84,13 +90,10 @@ public class Brainflow {
 
     private ImageFileExplorer loadingDock = null;
 
-    private StatusBar statusBar = new StatusBar();
+    private StatusBar statusBar;
 
-    private CursorCoordinates cursorCoordinates = new CursorCoordinates();
 
-    private CrosshairCoordinates crosshairCoordinates = new CrosshairCoordinates();
-
-    private SelectedViewStatus viewStatus = new SelectedViewStatus();
+    private SelectedViewStatus viewStatus;
 
     private CommandContainer commandContainer;
 
@@ -104,23 +107,18 @@ public class Brainflow {
         return (Brainflow) SingletonRegistry.REGISTRY.getInstance("com.brainflow.application.toplevel.Brainflow");
     }
 
-    public static void main(String[] args) {
 
+    public static void main(String[] args) {
         com.jidesoft.utils.Lm.verifyLicense("UIN", "BrainFlow", "S5XiLlHH0VReaWDo84sDmzPxpMJvjP3");
 
         try {
 
-            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceCremeCoffeeLookAndFeel());
+            UIManager.setLookAndFeel(new WindowsLookAndFeel());
+            System.out.println(UIManager.getLookAndFeel());
 
-            LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE_WITHOUT_MENU);
-            //Toolkit.getDefaultToolkit().getSystemEventQueue().push(
-            //    new TracingEventQueueJMX());
-            
-        } catch (Exception e) {
-            Logger.getAnonymousLogger().severe("Error Loading LookAndFeel, exiting");
-            e.printStackTrace();
-            System.exit(-1);
-
+            LookAndFeelFactory.installJideExtension(LookAndFeelFactory.OFFICE2003_STYLE);
+        } catch(UnsupportedLookAndFeelException e) {
+            log.severe("could not load look and feel");            
         }
 
 
@@ -169,6 +167,9 @@ public class Brainflow {
     }
 
     public void launch() throws Throwable {
+
+
+       
         //final SplashScreen splash = SplashScreen.getSplashScreen();
 
         //JFrame.setDefaultLookAndFeelDecorated(true);
@@ -177,6 +178,7 @@ public class Brainflow {
 
 
         brainFrame = new BrainFrame();
+        statusBar = new StatusBar();
         reportTime(startTime, "created brainframe");
         brainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -213,13 +215,9 @@ public class Brainflow {
         threadService.execute(initIOTask);
 
 
-
-
         log.info("initializing status bar ...");
         initializeStatusBar();
         reportTime(startTime, "initialized status bar");
-
-
 
 
         log.info("initializing work space ...");
@@ -228,7 +226,7 @@ public class Brainflow {
 
         loadCommandsTask.get();
         reportTime(startTime, "loaded commands");
-        
+
         log.info("binding container ...");
         bindContainer();
         reportTime(startTime, "bound container");
@@ -250,7 +248,60 @@ public class Brainflow {
         initResources.get();
         reportTime(startTime, "initialized resources");
 
+        initExceptionHandler();
 
+      
+    }
+
+    private void initExceptionHandler() {
+        LookAndFeelFactory.UIDefaultsCustomizer uiDefaultsCustomizer = new LookAndFeelFactory.UIDefaultsCustomizer() {
+            public void customize(UIDefaults defaults) {
+                ThemePainter painter = (ThemePainter) UIDefaultsLookup.get("Theme.painter");
+                defaults.put("OptionPaneUI", "com.jidesoft.plaf.basic.BasicJideOptionPaneUI");
+
+                defaults.put("OptionPane.showBanner", Boolean.TRUE); // show banner or not. default is true
+                //defaults.put("OptionPane.bannerIcon", JideIconsFactory.getImageIcon(JideIconsFactory.JIDE50));
+                defaults.put("OptionPane.bannerFontSize", 13);
+                defaults.put("OptionPane.bannerFontStyle", Font.BOLD);
+                defaults.put("OptionPane.bannerMaxCharsPerLine", 60);
+                defaults.put("OptionPane.bannerForeground", painter != null ? painter.getOptionPaneBannerForeground() : null);  // you should adjust this if banner background is not the default gradient paint
+                defaults.put("OptionPane.bannerBorder", null); // use default border
+
+                // set both bannerBackgroundDk and // set both bannerBackgroundLt to null if you don't want gradient
+                defaults.put("OptionPane.bannerBackgroundDk", painter != null ? painter.getOptionPaneBannerDk() : null);
+                defaults.put("OptionPane.bannerBackgroundLt", painter != null ? painter.getOptionPaneBannerLt() : null);
+                defaults.put("OptionPane.bannerBackgroundDirection", Boolean.TRUE); // default is true
+
+                // optionally, you can set a Paint object for BannerPanel. If so, the three UIDefaults related to banner background above will be ignored.
+                defaults.put("OptionPane.bannerBackgroundPaint", null);
+
+                defaults.put("OptionPane.buttonAreaBorder", BorderFactory.createEmptyBorder(6, 6, 6, 6));
+                defaults.put("OptionPane.buttonOrientation", SwingConstants.RIGHT);
+            }
+        };
+        uiDefaultsCustomizer.customize(UIManager.getDefaults());
+
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            public void uncaughtException(Thread t, Throwable e) {
+                e.printStackTrace();
+                JideOptionPane optionPane = new JideOptionPane("Click \"Details\" button to see more information ... ", JOptionPane.ERROR_MESSAGE, JideOptionPane.CLOSE_OPTION);
+                optionPane.setTitle("An " + e.getClass().getName() + " occurred in Brainflow : " + e.getMessage());
+
+
+                JTextArea textArea = new JTextArea();
+                StringWriter sw = new StringWriter();
+                PrintWriter out = new PrintWriter(sw);
+                e.printStackTrace(out);
+                // Add string to end of text area
+                textArea.append(sw.toString());
+                textArea.setRows(10);
+                optionPane.setDetails(new JScrollPane(textArea));
+                JDialog dialog = optionPane.createDialog(brainFrame, "Warning");
+                dialog.setResizable(true);
+                dialog.pack();
+                dialog.setVisible(true);
+            }
+        });
 
     }
 
@@ -297,7 +348,6 @@ public class Brainflow {
         fileMenuGroup.bind(getApplicationFrame());
         JMenuBar menuBar = new JMenuBar();
 
-
         menuBar.add(fileMenuGroup.createMenuItem());
 
         brainFrame.setJMenuBar(menuBar);
@@ -318,6 +368,7 @@ public class Brainflow {
     }
 
     private void initializeStatusBar() {
+        viewStatus = new SelectedViewStatus();
         log.info("initialzing status bar");
         statusBar.setAutoAddSeparator(false);
 
@@ -327,6 +378,10 @@ public class Brainflow {
         LabelStatusBarItem crossLabel = new LabelStatusBarItem();
         crossLabel.setText("Cross: ");
         statusBar.add(crossLabel, JideBoxLayout.FIX);
+
+        CursorCoordinates cursorCoordinates = new CursorCoordinates();
+
+        CrosshairCoordinates crosshairCoordinates = new CrosshairCoordinates();
 
         statusBar.add(crosshairCoordinates.getXaxisLabel(), JideBoxLayout.FIX);
         statusBar.add(crosshairCoordinates.getYaxisLabel(), JideBoxLayout.FIX);
@@ -637,11 +692,11 @@ public class Brainflow {
         ColorMapTablePresenter tablePresenter = new ColorMapTablePresenter();
 
         log.fine("instantiating mask presenter");
-        MaskTablePresenter maskPresenter = new MaskTablePresenter();
+        //MaskTablePresenter maskPresenter = new MaskTablePresenter();
 
         tabbedPane.addTab("Adjustment", new JScrollPane(colorAdjustmentControl.getComponent()));
         tabbedPane.addTab("Color Table", tablePresenter.getComponent());
-        tabbedPane.addTab("Mask Table", maskPresenter.getComponent());
+        //tabbedPane.addTab("Mask Table", maskPresenter.getComponent());
         tabbedPane.addTab("Coordinates", new JScrollPane(coordinateControls.getComponent()));
 
 
@@ -785,7 +840,6 @@ public class Brainflow {
 
     }
 
-    
 
     class ValueStatusItem extends LabelStatusBarItem implements EventSubscriber {
 

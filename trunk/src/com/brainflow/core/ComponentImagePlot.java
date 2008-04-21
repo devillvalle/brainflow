@@ -84,7 +84,6 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         annotationListener = new PropertyChangeListener() {
 
             public void propertyChange(PropertyChangeEvent evt) {
-                IAnnotation annot = (IAnnotation) evt.getSource();
                 repaint();
             }
         };

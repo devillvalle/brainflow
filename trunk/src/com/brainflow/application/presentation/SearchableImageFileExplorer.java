@@ -5,13 +5,15 @@ import com.jidesoft.list.ListModelWrapper;
 import com.jidesoft.swing.SearchableUtils;
 import com.jidesoft.tree.FilterableTreeModel;
 import com.jidesoft.tree.QuickTreeFilterField;
+import com.jidesoft.plaf.LookAndFeelFactory;
 import com.xduke.xswing.DataTipManager;
 
 import javax.swing.*;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.tree.*;
 import java.awt.*;
+
+import org.apache.commons.vfs.VFS;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,6 +32,24 @@ public class SearchableImageFileExplorer extends AbstractPresenter {
     public SearchableImageFileExplorer(ImageFileExplorer explorer) {
         this.explorer = explorer;
         init();
+    }
+
+    public static void main(String[] args) {
+        try {
+            //UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceCremeCoffeeLookAndFeel());
+            LookAndFeelFactory.installDefaultLookAndFeel();
+            ImageFileExplorer explorer = new ImageFileExplorer(VFS.getManager().resolveFile("C:/javacode"));
+            SearchableImageFileExplorer sexplorer = new SearchableImageFileExplorer(explorer);
+
+            JFrame frame = new JFrame();
+            frame.add(sexplorer.getComponent(), BorderLayout.CENTER);
+            frame.pack();
+            frame.setVisible(true);
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private TreePath getPathForNode(TreeNode current) {
@@ -62,17 +82,25 @@ public class SearchableImageFileExplorer extends AbstractPresenter {
                     @Override
                     protected void configureListModelWrapper(ListModelWrapper wrapper, Object node) {
 
-                        if (node instanceof ImageFileExplorer.LazyNode) {
-                            ImageFileExplorer.LazyNode inode = (ImageFileExplorer.LazyNode) node;
-
+                        if (node instanceof DefaultMutableTreeNode) {
+                            System.out.println("pricessing node : " + node);
+                            //ImageFileExplorer.LazyNode inode = (ImageFileExplorer.LazyNode) node;
+                            DefaultMutableTreeNode inode = (DefaultMutableTreeNode) node;
+                            //System.out.println("inode path " + inode.getPath());
                             boolean expanded = explorer.getJTree().isExpanded(new TreePath(inode.getPath()));
-
+                            //System.out.println("expanded ? " + expanded);
+                            //System.out.println("is leaf ? " + inode.isLeaf());
                             if (inode.isLeaf() || expanded) {
                                 super.configureListModelWrapper(wrapper, node);
                             }
 
+                        } else {
+                            //System.out.println("node aint no lazy node");
+                            //System.out.println("node is a  : " + node.getClass());
                         }
                     }
+
+                    
                 };
             }
         };

@@ -49,11 +49,11 @@ public class ImageSpace2D extends AbstractImageSpace {
     }
 
     public IImageSpace union(IImageSpace other) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        throw new UnsupportedOperationException();
     }
 
     public AnatomicalPoint getCentroid() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+       throw new UnsupportedOperationException();
     }
 
 

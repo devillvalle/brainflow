@@ -10,6 +10,7 @@ package com.brainflow.image;
 public interface IndexConverter2D {
 
     public int[] convertXY(int x, int y);
+
     public int[] convertXY(int x, int y, int[] out);
 
 }

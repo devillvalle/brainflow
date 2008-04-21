@@ -9,7 +9,10 @@ import net.java.dev.properties.events.PropertyListener;
 
 import java.util.HashMap;
 import java.util.Set;
+import java.util.WeakHashMap;
+import java.util.Map;
 import java.util.logging.Logger;
+import java.lang.ref.WeakReference;
 
 
 /**
@@ -19,24 +22,22 @@ import java.util.logging.Logger;
  * Time: 2:48:39 AM
  * To change this template use File | Settings | File Templates.
  */
-public class YokeHandler {
+public class YokeHandler  {
 
     private static final Logger log = Logger.getLogger(YokeHandler.class.getName());
 
     private ImageView target;
 
-    private HashMap<ImageView, Long> sources = new HashMap<ImageView, Long>();
+    private Map<ImageView, Long> sources = new WeakHashMap<ImageView, Long>();
 
-    private PropertyListener crossHandler = new CrosshairListener();
+    private CrossHandler crossHandler;
 
     public YokeHandler(ImageView _target) {
         target = _target;
+        crossHandler = new CrossHandler(this);
+
     }
 
-    public YokeHandler(ImageView _target, PropertyListener crossHandler) {
-        target = _target;
-        this.crossHandler = crossHandler;
-    }
 
     public void setTarget(ImageView _target) {
         target = _target;
@@ -61,12 +62,15 @@ public class YokeHandler {
     }
 
     public void removeSource(ImageView view) {
+        System.out.println("removing source " + view);
         if (sources.containsKey(view)) {
             sources.remove(view);
             BeanContainer.get().removeListener(view.cursorPos, crossHandler);
         } else {
             log.warning("Failed removal request: YokeHandler does not contain the view " + view);
         }
+
+        System.out.println("source size " + sources.size());
 
     }
 
@@ -97,20 +101,34 @@ public class YokeHandler {
         return target.getCursorPos();
     }
 
+    protected void finalize() throws Throwable {
+        super.finalize();    //To change body of overridden methods use File | Settings | File Templates.
+        System.out.println("yoke handler : target " + target + " is being finalized!");
+    }
 
-    class CrosshairListener implements PropertyListener {
 
-        public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
-            AnatomicalPoint3D ap = (AnatomicalPoint3D)newValue;
 
-            if (!ap.equals(getTargetLocation())) {
-                setTargetLocation(ap);              
-            }
+    public static class CrossHandler implements PropertyListener {
+        private WeakReference<YokeHandler> handler;
 
+        public CrossHandler(YokeHandler handler) {
+            this.handler = new WeakReference<YokeHandler>(handler);
         }
 
+        public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+            AnatomicalPoint3D ap = (AnatomicalPoint3D) newValue;
 
+            if (handler.get() != null) {
+                if (!ap.equals(handler.get().getTargetLocation())) {
+                    handler.get().setTargetLocation(ap);
+                }
+            } else {
+                System.out.println("reference was gc'd");
+            }
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
     }
+
 
     public static void main(String[] args) {
         ImageView target = new ImageView(new ImageDisplayModel("1"));

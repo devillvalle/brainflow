@@ -9,12 +9,11 @@ import com.brainflow.image.io.SoftImageDataSource;
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.image.io.ImageInfo;
 import com.jidesoft.tree.DefaultTreeModelWrapper;
+import com.jidesoft.tree.TreeUtils;
 import com.jidesoft.swing.DefaultOverlayable;
 import com.jidesoft.swing.InfiniteProgressPanel;
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSelector;
-import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.FileType;
+import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
+import org.apache.commons.vfs.*;
 import org.jvnet.substance.SubstanceDefaultTreeCellRenderer;
 
 import javax.swing.*;
@@ -50,6 +49,8 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
     private FileSelector selector;
 
     private ImageIcon folderIcon = new ImageIcon(ResourceLoader.getResource("resources/icons/folder.png"));
+
+    private ImageIcon brickIcon = new ImageIcon(ResourceLoader.getResource("resources/icons/brick.png"));
 
     private ImageIcon folderOpenIcon = new ImageIcon(ResourceLoader.getResource("resources/icons/folderOpen.png"));
 
@@ -134,7 +135,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
             }
         });
 
-        explorer.getJTree().setCellRenderer(new SubstanceDefaultTreeCellRenderer() {
+        explorer.getJTree().setCellRenderer(new DefaultTreeCellRenderer() {
 
 
             @Override
@@ -157,8 +158,10 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
                 } else if (value instanceof ImageLeafNode) {
                     ImageLeafNode node = (ImageLeafNode) value;
                     IImageDataSource limg = node.getUserObject();
+                    label.setIcon(brickIcon);
                     if (limg.isLoaded() && !selected) {
                         label.setForeground(Color.GREEN.darker().darker());
+
                     }
 
                 }
@@ -169,10 +172,28 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
             }
 
 
-        });
+        }); 
 
         scrollPane = new JScrollPane(overlayPanel);
 
+
+    }
+
+    public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel(new WindowsLookAndFeel());
+            ImageFileExplorer explorer = new ImageFileExplorer(VFS.getManager().resolveFile("C:/javacode"));
+
+
+            JFrame frame = new JFrame();
+            frame.add(explorer.getComponent(), BorderLayout.CENTER);
+            frame.pack();
+            frame.setVisible(true);
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -232,7 +253,12 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
 
 
         if (dtm != null) {
+            //workaraound for JIDE bug found in forum
+            Enumeration<TreePath> state = TreeUtils.saveExpansionStateByTreePath(getJTree());
             dtm.nodeStructureChanged(node);
+            
+            TreeUtils.loadExpansionStateByTreePath(getJTree(), state);
+
         }
 
     }
@@ -328,6 +354,8 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
         public void addNode(LazyNode node) {
             publish(node);
         }
+
+
 
 
         protected void done() {

@@ -6,7 +6,6 @@
 
 package com.brainflow.application.toplevel;
 
-import com.brainflow.application.YokeHandler;
 import com.brainflow.application.services.ImageViewMousePointerEvent;
 import com.brainflow.application.services.ImageViewSelectionEvent;
 import com.brainflow.core.BrainCanvas;
@@ -24,6 +23,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ComponentListener;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.*;
@@ -52,9 +52,9 @@ public class BrainCanvasManager {
     private ImageViewMouseMotionListener cursorListener;
 
 
-    private Map<ImageView, YokeHandler> yokeHandlers = new HashMap<ImageView, YokeHandler>();
 
-    private WeakHashMap<ImageView, IImageDisplayModel> registeredViews = new WeakHashMap<ImageView, IImageDisplayModel>();
+
+    //private WeakHashMap<ImageView, IImageDisplayModel> registeredViews = new WeakHashMap<ImageView, IImageDisplayModel>();
 
     
 
@@ -77,6 +77,7 @@ public class BrainCanvasManager {
         BeanContainer.get().addListener(canvas.getImageCanvasModel().listSelection, canvasListener);
 
         canvas.addInteractor(cursorListener);
+
 
     }
 
@@ -106,11 +107,12 @@ public class BrainCanvasManager {
 
         listenToCanvas(_canvas);
 
-        List<ImageView> views = _canvas.getImageCanvasModel().getImageViews();
+        //List<ImageView> views = _canvas.getImageCanvasModel().getImageViews();
 
-        for (ImageView v : views) {
-            registeredViews.put(v, v.getModel());
-        }
+        //for (ImageView v : views) {
+        //    registeredViews.put(v, v.getModel());
+
+        //}
 
     }
 

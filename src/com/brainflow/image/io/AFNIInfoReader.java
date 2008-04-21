@@ -5,7 +5,10 @@ import com.brainflow.image.io.ImageInfoReader;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.utils.*;
+import com.brainflow.math.Matrix4f;
+import com.brainflow.math.Vector3f;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.VFS;
@@ -484,6 +487,21 @@ public class AFNIInfoReader implements ImageInfoReader {
             List<? extends ImageInfo> ilist = reader.readInfo(url.openStream());
             System.out.println("" + ilist.size());
             System.out.println("scalefactor " + ilist.get(41).getScaleFactor());
+            System.out.println("anatomy : " + ilist.get(0).getAnatomy());
+
+            ImageInfo info = ilist.get(0);
+            ImageSpace3D space = (ImageSpace3D)info.createImageSpace();
+
+            System.out.println("origin : " + space.getImageOrigin());
+
+            Matrix4f mat = ((Anatomy3D)ilist.get(0).getAnatomy()).getReferenceTransform();
+
+            System.out.println("ref : " + mat);
+            IDimension spacing = info.getSpacing();
+            mat.scale(new Vector3f(spacing.getDim(0).floatValue(), spacing.getDim(1).floatValue(), spacing.getDim(2).floatValue()));
+            System.out.println("scale : " + mat);
+            mat.setTranslation(new Vector3f(100,100,100));
+            System.out.println("translated : " + mat);
 
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.

@@ -980,6 +980,8 @@ public class Matrix4f  implements Serializable {
         return vec4f;
     }
 
+    
+
     /**
      * <code>mult</code> multiplies an array of 4 floats against this rotation 
      * matrix. The results are stored directly in the array. (vec4f x mat4f)

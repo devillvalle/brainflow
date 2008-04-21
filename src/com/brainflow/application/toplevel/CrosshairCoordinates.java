@@ -7,6 +7,7 @@ import com.jidesoft.status.LabelStatusBarItem;
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.text.MessageFormat;
 
@@ -19,7 +20,9 @@ import java.text.MessageFormat;
 public class CrosshairCoordinates extends LabelStatusBarItem implements EventSubscriber {
 
     private LabelStatusBarItem xaxisLabel = new LabelStatusBarItem();
+
     private LabelStatusBarItem yaxisLabel = new LabelStatusBarItem();
+
     private LabelStatusBarItem zaxisLabel = new LabelStatusBarItem();
 
 
@@ -30,9 +33,12 @@ public class CrosshairCoordinates extends LabelStatusBarItem implements EventSub
         xaxisLabel.setText("0.0");
         yaxisLabel.setText("0.0");
         zaxisLabel.setText("0.0");
+        xaxisLabel.setBorder(new EmptyBorder(0,0,0,0));
         xaxisLabel.setMinimumSize(new Dimension(60, 0));
         yaxisLabel.setMinimumSize(new Dimension(60, 0));
         zaxisLabel.setMinimumSize(new Dimension(60, 0));
+
+        setBorder(new EmptyBorder(0,0,0,0));
 
     }
 

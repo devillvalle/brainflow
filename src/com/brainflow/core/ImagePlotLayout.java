@@ -37,18 +37,10 @@ public abstract class ImagePlotLayout {
         plots.clear();
     }
 
-    protected IImagePlot createBasicPlot(Anatomy3D displayAnatomy) {
+    protected IImagePlot createPlot(Anatomy3D displayAnatomy) {
+
+        IImagePlot plot = ImagePlotFactory.createComponentPlot(view.getModel(), displayAnatomy);
         
-        AxisRange xrange = getView().getModel().getImageAxis(displayAnatomy.XAXIS).getRange();
-        AxisRange yrange = getView().getModel().getImageAxis(displayAnatomy.YAXIS).getRange();
-
-        IImagePlot plot = new ComponentImagePlot(getView().getModel(), displayAnatomy, xrange, yrange);
-        plot.setName(displayAnatomy.XY_PLANE.getOrientation().toString());
-
-        IImageProducer producer = new CompositeImageProducer(plot, displayAnatomy);
-        plot.setImageProducer(producer);
-
-
         plot.setSlice(getView().getCursorPos().getValue(displayAnatomy.ZAXIS));
         plot.setScreenInterpolation(getView().getScreenInterpolation());
         return plot;

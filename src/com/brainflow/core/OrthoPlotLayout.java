@@ -40,9 +40,9 @@ public class OrthoPlotLayout extends ImagePlotLayout {
     protected List<IImagePlot> createPlots() {
 
         List<IImagePlot> plots = new ArrayList<IImagePlot>();
-        plots.add(super.createBasicPlot(Anatomy3D.getCanonicalAxial()));
-        plots.add(super.createBasicPlot(Anatomy3D.getCanonicalSagittal()));
-        plots.add(super.createBasicPlot(Anatomy3D.getCanonicalCoronal()));
+        plots.add(super.createPlot(Anatomy3D.getCanonicalAxial()));
+        plots.add(super.createPlot(Anatomy3D.getCanonicalSagittal()));
+        plots.add(super.createPlot(Anatomy3D.getCanonicalCoronal()));
         return plots;
 
 

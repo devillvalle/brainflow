@@ -2,6 +2,7 @@ package com.brainflow.image.anatomy;
 
 import com.brainflow.image.IndexConverter1D;
 import com.brainflow.image.axis.ImageAxis;
+import com.brainflow.math.Vector3f;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,16 +13,16 @@ import com.brainflow.image.axis.ImageAxis;
  */
 public class AnatomicalAxis implements Anatomy {
 
-    private static AnatomicalAxis[] instances = new AnatomicalAxis[6];
+    private static final AnatomicalAxis[] instances = new AnatomicalAxis[6];
 
-    public static final AnatomicalAxis ANTERIOR_POSTERIOR = new AnatomicalAxis(AnatomicalDirection.ANTERIOR, AnatomicalDirection.POSTERIOR);
-    public static final AnatomicalAxis POSTERIOR_ANTERIOR = new AnatomicalAxis(AnatomicalDirection.POSTERIOR, AnatomicalDirection.ANTERIOR);
+    public static final AnatomicalAxis ANTERIOR_POSTERIOR = new AnatomicalAxis(AnatomicalDirection.ANTERIOR, AnatomicalDirection.POSTERIOR, new Vector3f(0, -1, 0));
+    public static final AnatomicalAxis POSTERIOR_ANTERIOR = new AnatomicalAxis(AnatomicalDirection.POSTERIOR, AnatomicalDirection.ANTERIOR, new Vector3f(0,  1, 0));
 
-    public static final AnatomicalAxis INFERIOR_SUPERIOR = new AnatomicalAxis(AnatomicalDirection.INFERIOR, AnatomicalDirection.SUPERIOR);
-    public static final AnatomicalAxis SUPERIOR_INFERIOR = new AnatomicalAxis(AnatomicalDirection.SUPERIOR, AnatomicalDirection.INFERIOR);
+    public static final AnatomicalAxis INFERIOR_SUPERIOR = new AnatomicalAxis(AnatomicalDirection.INFERIOR, AnatomicalDirection.SUPERIOR, new Vector3f(0,  0,  1));
+    public static final AnatomicalAxis SUPERIOR_INFERIOR = new AnatomicalAxis(AnatomicalDirection.SUPERIOR, AnatomicalDirection.INFERIOR, new Vector3f(0,  0, -1));
 
-    public static final AnatomicalAxis LEFT_RIGHT = new AnatomicalAxis(AnatomicalDirection.LEFT, AnatomicalDirection.RIGHT);
-    public static final AnatomicalAxis RIGHT_LEFT = new AnatomicalAxis(AnatomicalDirection.RIGHT, AnatomicalDirection.LEFT);
+    public static final AnatomicalAxis LEFT_RIGHT = new AnatomicalAxis(AnatomicalDirection.LEFT, AnatomicalDirection.RIGHT, new Vector3f(1, 0, 0));
+    public static final AnatomicalAxis RIGHT_LEFT = new AnatomicalAxis(AnatomicalDirection.RIGHT, AnatomicalDirection.LEFT, new Vector3f(-1,0, 0));
 
 
     public final AnatomicalDirection min;
@@ -30,11 +31,13 @@ public class AnatomicalAxis implements Anatomy {
 
     private static int count = 0;
 
+    private final Vector3f directionVector;
 
-    private AnatomicalAxis(AnatomicalDirection min, AnatomicalDirection max) {
+    private AnatomicalAxis(AnatomicalDirection min, AnatomicalDirection max, Vector3f dvec) {
         this.min = min;
         this.max = max;
 
+        directionVector = dvec;
         instances[count] = this;
         count++;
     }
@@ -67,6 +70,9 @@ public class AnatomicalAxis implements Anatomy {
         }
     }
 
+    public Vector3f getDirectionVector() {
+        return directionVector;
+    }
 
     public AnatomicalDirection getMinDirection() {
         return min;

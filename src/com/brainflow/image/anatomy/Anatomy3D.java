@@ -1,5 +1,9 @@
 package com.brainflow.image.anatomy;
 
+import com.brainflow.math.Matrix4f;
+import com.brainflow.math.ArrayUtils;
+import com.brainflow.math.Vector3f;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,7 +17,7 @@ import java.util.List;
  */
 public class Anatomy3D implements Anatomy {
 
-    private static Anatomy3D[] instances = new Anatomy3D[24];
+    private static final Anatomy3D[] instances = new Anatomy3D[24];
 
 
 
@@ -60,6 +64,8 @@ public class Anatomy3D implements Anatomy {
 
     private static int count = 0;
 
+    private final Matrix4f referenceTransform;
+
 
     private Anatomy3D(AnatomicalOrientation _orientation, AnatomicalAxis _xAxis, AnatomicalAxis _yAxis, AnatomicalAxis _zAxis) {
         orientation = _orientation;
@@ -70,6 +76,12 @@ public class Anatomy3D implements Anatomy {
         XY_PLANE = Anatomy2D.matchAnatomy(XAXIS, YAXIS);
         XZ_PLANE = Anatomy2D.matchAnatomy(XAXIS, ZAXIS);
         YZ_PLANE = Anatomy2D.matchAnatomy(YAXIS, ZAXIS);
+
+        Vector3f v1 = XAXIS.getDirectionVector();
+        Vector3f v2 = YAXIS.getDirectionVector();
+        Vector3f v3 = ZAXIS.getDirectionVector();
+
+        referenceTransform = new Matrix4f(v1.getX(), v1.getY(), v1.getZ(), 0, v2.getX(), v2.getY(), v2.getZ(), 0, v3.getX(), v3.getY(), v3.getZ(), 0, 0, 0, 0, 1);
 
         instances[count] = this;
         count++;
@@ -99,6 +111,12 @@ public class Anatomy3D implements Anatomy {
 
     public static Anatomy3D getCanonicalAxial() {
         return AXIAL_LAI;
+    }
+
+    public Matrix4f getReferenceTransform() {
+        return referenceTransform;
+
+
 
     }
 
@@ -229,7 +247,7 @@ public class Anatomy3D implements Anatomy {
         sb.append(YAXIS.getMinDirection().toString());
         sb.append("-");
         sb.append(ZAXIS.getMinDirection().toString());
-        
+        sb.append("matrix : " + referenceTransform);
 
         return sb.toString();
 

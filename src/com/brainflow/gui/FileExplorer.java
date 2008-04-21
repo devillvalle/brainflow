@@ -1,6 +1,7 @@
 package com.brainflow.gui;
 
 import com.brainflow.utils.ResourceLoader;
+import com.brainflow.application.presentation.ImageFileExplorer;
 import org.apache.commons.vfs.*;
 import org.jvnet.substance.SubstanceDefaultTreeCellRenderer;
 
@@ -66,6 +67,36 @@ public class FileExplorer extends AbstractPresenter {
         fileTree.addTreeExpansionListener(tel);
     }
 
+    public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceCremeCoffeeLookAndFeel());
+            FileExplorer explorer = new FileExplorer(VFS.getManager().resolveFile("C:/javacode"), new FileSelector() {
+                public boolean includeFile(FileSelectInfo fileSelectInfo) throws Exception {
+                    return true;
+                }
+
+                public boolean traverseDescendents(FileSelectInfo fileSelectInfo) throws Exception {
+                    if (fileSelectInfo.getDepth() == 0) {
+                        return true;
+                    } else
+                        return false;
+                    
+                }
+            });
+
+
+            JFrame frame = new JFrame();
+            frame.add(explorer.getComponent(), BorderLayout.CENTER);
+            frame.pack();
+            frame.setVisible(true);
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     private void init() {
 
@@ -105,21 +136,6 @@ public class FileExplorer extends AbstractPresenter {
         return new FileObjectNode(fobj);
     }
 
-
-    public static void main(String args[]) {
-        try {
-            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceModerateLookAndFeel());
-            FileExplorer fe = new FileExplorer(VFS.getManager().resolveFile(System.getProperty("user.dir")), null);
-            JFrame jf = new JFrame("Tree Demo");
-            jf.add(fe.getComponent(), "Center");
-            jf.pack();
-            jf.setVisible(true);
-        } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-
-
-    }
 
     public JComponent getComponent() {
         return fileTree;
@@ -371,7 +387,7 @@ public class FileExplorer extends AbstractPresenter {
     }
 
 
-    private class FileTreeCellRenderer extends SubstanceDefaultTreeCellRenderer {
+    private class FileTreeCellRenderer extends DefaultTreeCellRenderer {
         /**
          * Icon cache to speed the rendering.
          */
@@ -383,11 +399,11 @@ public class FileExplorer extends AbstractPresenter {
         private Map<FileObject, String> rootNameCache = new HashMap<FileObject, String>();
 
         /*
-           * (non-Javadoc)
-           *
-           * @see javax.swing.tree.DefaultTreeCellRenderer#getTreeCellRendererComponent(javax.swing.JTree,
-           *      java.lang.Object, boolean, boolean, boolean, int, boolean)
-           */
+        * (non-Javadoc)
+        *
+        * @see javax.swing.tree.DefaultTreeCellRenderer#getTreeCellRendererComponent(javax.swing.JTree,
+        *      java.lang.Object, boolean, boolean, boolean, int, boolean)
+        */
         @Override
         public Component getTreeCellRendererComponent(JTree tree, Object value,
                                                       boolean sel, boolean expanded, boolean leaf, int row,

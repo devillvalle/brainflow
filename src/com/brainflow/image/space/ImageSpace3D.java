@@ -3,8 +3,10 @@ package com.brainflow.image.space;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.image.anatomy.Anatomy;
 import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.utils.*;
+import com.brainflow.math.Matrix4f;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,29 +20,56 @@ public class ImageSpace3D extends AbstractImageSpace {
 
     private IImageOrigin origin;
 
+    private Matrix4f transform;
 
     public ImageSpace3D(ICoordinateSpace cspace) {
-        // todo how can coordinate space be argument here, without sampling grid info?
-        Anatomy3D anat = (Anatomy3D) cspace.getAnatomy();
-        Anatomy3D check = Anatomy3D.matchAnatomy(anat.XAXIS, anat.YAXIS, anat.ZAXIS);
+        this(new ImageAxis(cspace.getImageAxis(Axis.X_AXIS).getRange(), 1),
+                new ImageAxis(cspace.getImageAxis(Axis.Y_AXIS).getRange(), 1),
+                new ImageAxis(cspace.getImageAxis(Axis.Z_AXIS).getRange(), 1));
 
-        assert check != null;
+    }
+
+    public ImageSpace3D(ImageSpace3D space) {
+
+        this(space.getImageAxis(Axis.X_AXIS),
+             space.getImageAxis(Axis.Y_AXIS),
+             space.getImageAxis(Axis.Z_AXIS));
+    }
+
+
+    public ImageSpace3D(ImageAxis xaxis, ImageAxis yaxis, ImageAxis zaxis) {
+        Anatomy3D check = Anatomy3D.matchAnatomy(xaxis.getAnatomicalAxis(), yaxis.getAnatomicalAxis(), zaxis.getAnatomicalAxis());
+        if (check == null) {
+            throw new IllegalArgumentException("could not initialize axes from supplied ImageAxes : " + xaxis + " : " + yaxis + ": " + zaxis);
+        }
+
 
         setAnatomy(check);
 
         createImageAxes(3);
 
-        initAxis(new ImageAxis(cspace.getImageAxis(Axis.X_AXIS).getRange(), 1), Axis.X_AXIS);
-        initAxis(new ImageAxis(cspace.getImageAxis(Axis.Y_AXIS).getRange(), 1), Axis.Y_AXIS);
-        initAxis(new ImageAxis(cspace.getImageAxis(Axis.Z_AXIS).getRange(), 1), Axis.Z_AXIS);
+        initAxis(xaxis, Axis.X_AXIS);
+        initAxis(yaxis, Axis.Y_AXIS);
+        initAxis(zaxis, Axis.Z_AXIS);
 
-        origin = cspace.getImageOrigin();
+        origin = new ImageOrigin3D(xaxis.getAnatomicalAxis().getMinDirection(), yaxis.getAnatomicalAxis().getMinDirection(),
+                zaxis.getAnatomicalAxis().getMinDirection(), xaxis.getRange().getBeginning().getX(),
+                yaxis.getRange().getBeginning().getX(), zaxis.getRange().getBeginning().getX());
+
+        transform = getAnatomy().getReferenceTransform();
 
     }
 
-    public ImageSpace3D(ImageAxis xaxis, ImageAxis yaxis, ImageAxis zaxis) {
+    public Anatomy3D getAnatomy() {
+        return (Anatomy3D) super.getAnatomy();    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    public ImageSpace3D(ImageAxis xaxis, ImageAxis yaxis, ImageAxis zaxis, Matrix4f transform) {
         Anatomy3D check = Anatomy3D.matchAnatomy(xaxis.getAnatomicalAxis(), yaxis.getAnatomicalAxis(), zaxis.getAnatomicalAxis());
-        assert check != null;
+        if (check == null) {
+            throw new IllegalArgumentException("could not initialize axes from supplied ImageAxes : " + xaxis + " : " + yaxis + ": " + zaxis);
+        }
+
 
         setAnatomy(check);
 
@@ -56,8 +85,9 @@ public class ImageSpace3D extends AbstractImageSpace {
 
     }
 
-     public IDimension<Integer> getDimension() {
-         return new Dimension3D<Integer>(getDimension(Axis.X_AXIS), getDimension(Axis.Y_AXIS),getDimension(Axis.Z_AXIS));
+
+    public IDimension<Integer> getDimension() {
+        return new Dimension3D<Integer>(getDimension(Axis.X_AXIS), getDimension(Axis.Y_AXIS), getDimension(Axis.Z_AXIS));
     }
 
 
@@ -75,19 +105,17 @@ public class ImageSpace3D extends AbstractImageSpace {
         AnatomicalPoint1D y = a2.getRange().getCenter();
         AnatomicalPoint1D z = a3.getRange().getCenter();
 
-        return new AnatomicalPoint3D((Anatomy3D) getAnatomy(), x.getX(), y.getX(), z.getX());
-
-
+        return new AnatomicalPoint3D(getAnatomy(), x.getX(), y.getX(), z.getX());
     }
 
-
-    public ImageSpace3D(ImageSpace3D space) {
-        setAnatomy(space.getAnatomy());
-        createImageAxes(3);
-        initAxis(space.getImageAxis(Axis.X_AXIS), Axis.X_AXIS);
-        initAxis(space.getImageAxis(Axis.Y_AXIS), Axis.Y_AXIS);
-        initAxis(space.getImageAxis(Axis.Z_AXIS), Axis.Z_AXIS);
+    public Matrix4f getVoxelToWorldTransform() {
+        throw new UnsupportedOperationException();
     }
+
+    public Matrix4f getWorldToVoxelTransform() {
+        throw new UnsupportedOperationException();
+    }
+
 
     public Index3D pointToVoxel(Point3D pt) {
         int x = getImageAxis(Axis.X_AXIS).nearestSample(pt.getX());

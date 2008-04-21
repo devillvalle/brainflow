@@ -58,10 +58,10 @@ class DockWindowManager implements DockableFrameListener {
 
     private ActionCommand createCommand(DockableFrame dframe, String title) {
         ActionCommand command = new ActivateDockableFrameCommand(dframe);
-        command.getDefaultFace(true).setIcon(dframe.getIcon());
+        //command.getDefaultFace(true).setIcon(dframe.getContext().getIcon());
         Face menuFace = command.getFace(Face.MENU, true);
         menuFace.setExtendsContext(Face.DEFAULT);
-        menuFace.setIcon( dframe.getIcon());
+        //menuFace.setIcon( dframe.getIcon());
         menuFace.setText(title);
         return command;
 

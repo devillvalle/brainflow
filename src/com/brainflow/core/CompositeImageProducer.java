@@ -5,7 +5,10 @@ import com.brainflow.display.InterpolationType;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
+import com.brainflow.utils.OndeckTaskExecutor;
 import org.apache.commons.pipeline.Feeder;
+import org.apache.commons.pipeline.Stage;
+import org.apache.commons.pipeline.StageDriver;
 import org.apache.commons.pipeline.driver.SynchronousStageDriverFactory;
 import org.apache.commons.pipeline.validation.ValidationException;
 
@@ -15,6 +18,7 @@ import java.awt.image.BufferedImage;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.*;
+import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,6 +28,8 @@ import java.util.concurrent.*;
  * To change this template use File | Settings | File Templates.
  */
 public class CompositeImageProducer extends AbstractImageProducer {
+
+    private static final Logger log = Logger.getLogger(CompositeImageProducer.class.getName());
 
     private IImagePlot plot;
 
@@ -45,6 +51,12 @@ public class CompositeImageProducer extends AbstractImageProducer {
 
     private TerminalFeeder terminal = new TerminalFeeder();
 
+    private boolean dirty = true;
+
+    private BufferedImage lastImage;
+
+    private final OndeckTaskExecutor<BufferedImage> renderQueue;
+
 
     public CompositeImageProducer(IImagePlot plot, Anatomy3D displayAnatomy) {
         this(plot, displayAnatomy, plot.getModel().getImageAxis(displayAnatomy.ZAXIS).getRange().getCenter());
@@ -53,40 +65,51 @@ public class CompositeImageProducer extends AbstractImageProducer {
 
     public CompositeImageProducer(IImagePlot plot,
                                   Anatomy3D displayAnatomy, AnatomicalPoint1D slice) {
-        this.plot = plot;
-        setDisplayAnatomy(displayAnatomy);
-
-        initPipeline();
-
-        setSlice(slice);
-        layerListener = new PipelineLayerListener();
-        getModel().addImageLayerListener(layerListener);
-        initPipeline();
-
+        this(plot, displayAnatomy, slice, Executors.newSingleThreadExecutor());
+        //initPipeline();
 
     }
 
+    public CompositeImageProducer(IImagePlot plot,
+                                      Anatomy3D displayAnatomy, AnatomicalPoint1D slice, ExecutorService service) {
+            this.plot = plot;
+            setDisplayAnatomy(displayAnatomy);
+
+            //initPipeline();
+
+            setSlice(slice);
+            layerListener = new PipelineLayerListener();
+            getModel().addImageLayerListener(layerListener);
+            renderQueue = new OndeckTaskExecutor<BufferedImage>(service);
+
+        }
+
+
+
+
     public void setScreenInterpolation(InterpolationType type) {
         super.setScreenInterpolation(type);
-        pipeline.clearPath(resizeImageStage);
+        //pipeline.clearPath(resizeImageStage);
+        dirty = true;
     }
 
 
     public void setScreenSize(Rectangle screenSize) {
         super.setScreenSize(screenSize);
-
-        pipeline.clearPath(resizeImageStage);
+        //pipeline.clearPath(resizeImageStage);
+        dirty = true;
     }
 
     public void reset() {
-        pipeline.clearPath(gatherRenderersStage);
+        //pipeline.clearPath(gatherRenderersStage);
+        dirty = true;
         //getPlot().getComponent().repaint();
     }
 
     public void setSlice(AnatomicalPoint1D slice) {
         super.setSlice(slice);
-
-        pipeline.clearPath(gatherRenderersStage);
+        //pipeline.clearPath(gatherRenderersStage);
+        dirty = true;
     }
 
     public void setPlot(IImagePlot plot) {
@@ -94,19 +117,22 @@ public class CompositeImageProducer extends AbstractImageProducer {
         this.plot = plot;
         getModel().addImageLayerListener(layerListener);
 
-        initPipeline();
+        //initPipeline();
+        dirty = true;
     }
 
     @Override
     public void setXAxis(AxisRange xaxis) {
         super.setXAxis(xaxis);
-        pipeline.clearPath(cropImageStage);
+        //pipeline.clearPath(cropImageStage);
+        dirty = true;
     }
 
     @Override
     public void setYAxis(AxisRange yaxis) {
         super.setYAxis(yaxis);
-        pipeline.clearPath(cropImageStage);
+        //pipeline.clearPath(cropImageStage);
+        dirty = true;
     }
 
 
@@ -116,6 +142,29 @@ public class CompositeImageProducer extends AbstractImageProducer {
 
     public IImagePlot getPlot() {
         return plot;
+    }
+
+    private ImagePlotPipeline createPipeline() {
+        pipeline = new ImagePlotPipeline(getPlot());
+        try {
+
+            // when creating pipeline we could supply cache
+            pipeline.addStage(new GatherRenderersStage(), new SynchronousStageDriverFactory());
+            pipeline.addStage(new RenderLayersStage(), new SynchronousStageDriverFactory());
+            pipeline.addStage(new CropImageStage(), new SynchronousStageDriverFactory());
+            pipeline.addStage(new ResizeImageStage(), new SynchronousStageDriverFactory());
+
+            pipeline.getSourceFeeder().feed(getModel());
+            pipeline.setTerminalFeeder(new TerminalFeeder());
+        }
+        catch (ValidationException e) {
+            // can'three really handle this exception, so throw uncheckedexception
+            throw new RuntimeException(e);
+        }
+
+        return pipeline;
+
+
     }
 
     private void initPipeline() {
@@ -146,136 +195,47 @@ public class CompositeImageProducer extends AbstractImageProducer {
 
     }
 
-    /*public void updateImage(DisplayChangeEvent event) {
-
-     switch (event.getChangeType()) {
-         case SLICE_CHANGE:
-             ferry.clearAll();
-             ferry.setSlice(getSlice());
-             break;
-         case COLOR_MAP_CHANGE:
-             assert event.getLayerLindex() >= 0;
-             ferry.clearColoredImage(event.getLayerLindex());
-             break;
-         case COMPOSITION_CHANGE:
-             ferry.clearComposition();
-             break;
-         case IMAGE_FILTER_CHANGE:
-             // do nothing for now
-             break;
-         case RESAMPLE_CHANGE:
-             assert event.getLayerLindex() >= 0;
-             ferry.clearResampledImage(event.getLayerLindex());
-             break;
-         case RESET_CHANGE:
-             ferry.clearAll();
-             break;
-         case SCREEN_SIZE_CHANGE:
-             ferry.clearResizedImage();
-             break;
-         case STRUCTURE_CHANGE:
-             ferry.clearAll();
-             break;
-
-         case VIEWPORT_CHANGE:
-             ferry.clearCroppedImage();
-             break;
-         case THRESHOLD_CHANGED:
-             ferry.clearThresholdedImage(event.getLayerLindex());
-             break;
-         case ANNOTATION_CHANGE:
-             // do nothing
-             break;
-     }
-
-
- }   */
 
     public synchronized BufferedImage render() {
+
+        //assert pipeline.getStageDrivers().get(0).getState() != StageDriver.State.RUNNING;
+        ImagePlotPipeline pipeline = createPipeline();
+
         pipeline.getSourceFeeder().feed(getModel());
         pipeline.run();
-        return terminal.getImage();
-
+        dirty = false;
+        lastImage = ((TerminalFeeder)pipeline.getTerminalFeeder()).getImage();
+        return lastImage;
     }
 
-    public BufferedImage getImage() {
+    public synchronized BufferedImage getImage() {
         // does this spawn a new thread?
         // could be submitted to thread pool?
 
-        if (terminal.getImage() == null) {
-            render();
+        if (dirty || lastImage == null) {
+            return render();
+        } else {
+            return lastImage;
         }
 
-        return terminal.getImage();
+
     }
 
-    class TaskQueue<T> {
-
-        private ExecutorService service;
-
-        private FutureTask<T> currentTask;
-
-        private FutureTask<T> nextTask;
 
 
-        public TaskQueue() {
-            service = Executors.newFixedThreadPool(1);
-
-        }
-
-        private void submitNext() {
-            if (nextTask != null) {
-                System.out.println("submitting next");
-                service.submit(nextTask);
-            }
-        }
-
-        public void submit(Callable<T> task) {
-
-            FutureTask<T> ft = new FutureTask<T>(task) {
-                protected void done() {
-                    System.out.println("done!");
-                    plot.getComponent().repaint();
-                    if (nextTask == this) {
-                        System.out.println("this is next task, setting to null");
-                        nextTask = null;
-                    } else {
-                        submitNext();
-                    }
-
-
-                }
-            };
-
-            //execute immediately or add to queue
-            if (currentTask != null && !currentTask.isDone()) {
-                System.out.println("busy ... queing task");
-                nextTask = ft;
-            } else {
-                System.out.println("not busy ... submitting task");
-                currentTask = ft;
-                service.submit(ft);
-
-            }
-
-            
-
-
-            
-        }
-    }
-
-    
 
     private Callable<BufferedImage> createRenderTask() {
         return new Callable<BufferedImage>() {
-            public BufferedImage call() throws Exception {              
-                return render();
+            public BufferedImage call() throws Exception {
+                BufferedImage buf = render();
+                plot.getComponent().repaint();
+                return buf;
 
             }
 
-        };
 
+
+        };
 
 
     }
@@ -295,7 +255,7 @@ public class CompositeImageProducer extends AbstractImageProducer {
         }
     }
 
-    private final TaskQueue<BufferedImage> renderQueue = new TaskQueue<BufferedImage>();
+
 
     protected void finalize() throws Throwable {
         System.out.println("garbage collecting " + this);
@@ -307,45 +267,53 @@ public class CompositeImageProducer extends AbstractImageProducer {
 
         public void thresholdChanged(ImageLayerEvent event) {
             //todo make this a bit more intelligent. "clearPath" flushes the renderers
-            pipeline.clearPath(gatherRenderersStage);
-            renderQueue.submit(createRenderTask());
+            //pipeline.clearPath(gatherRenderersStage);
+            dirty = true;
+            renderQueue.submitTask(createRenderTask());
             //plot.getComponent().repaint();
         }
 
         public void smoothingChanged(ImageLayerEvent event) {
-            pipeline.clearPath(gatherRenderersStage);
-            renderQueue.submit(createRenderTask());
+            //pipeline.clearPath(gatherRenderersStage);
+            dirty = true;
+            renderQueue.submitTask(createRenderTask());
 
         }
 
         public void colorMapChanged(ImageLayerEvent event) {
-            pipeline.clearPath(gatherRenderersStage);
-            renderQueue.submit(createRenderTask());
+            //pipeline.clearPath(gatherRenderersStage);
+            dirty = true;
+
+            ThreadPoolExecutor executor = (ThreadPoolExecutor)renderQueue.getExecutorService();
+            
+            System.out.println("ACTIVE TASKS: " + executor.getActiveCount());
+            renderQueue.submitTask(createRenderTask());
             //plot.getComponent().repaint();
         }
 
         public void opacityChanged(ImageLayerEvent event) {
-            pipeline.clearPath(gatherRenderersStage);
-            renderQueue.submit(createRenderTask());
+            //pipeline.clearPath(gatherRenderersStage);
+            dirty = true;
+            renderQueue.submitTask(createRenderTask());
             //plot.getComponent().repaint();
         }
 
         public void interpolationMethodChanged(ImageLayerEvent event) {
-            pipeline.clearPath(gatherRenderersStage);
-            renderQueue.submit(createRenderTask());
+            //pipeline.clearPath(gatherRenderersStage);
+            dirty = true;
+            renderQueue.submitTask(createRenderTask());
             //plot.getComponent().repaint();
         }
 
         public void visibilityChanged(ImageLayerEvent event) {
-            pipeline.clearPath(gatherRenderersStage);
-            renderQueue.submit(createRenderTask());
+            //pipeline.clearPath(gatherRenderersStage);
+            dirty = true;
+            renderQueue.submitTask(createRenderTask());
             //plot.getComponent().repaint();
         }
 
         public void clipRangeChanged(ImageLayerEvent event) {
-            pipeline.clearPath(gatherRenderersStage);
-            renderQueue.submit(createRenderTask());
-            //plot.getComponent().repaint();
+            // no need to repaint because clip events are also detected as color map events ...
 
         }
 

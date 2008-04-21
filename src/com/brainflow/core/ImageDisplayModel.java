@@ -63,13 +63,12 @@ public class ImageDisplayModel implements IImageDisplayModel {
             super.set(integer);
         }
 
-        
+
     };
 
 
     private EventListenerList eventListeners = new WeakEventListenerList();
 
-    private List<ListDataListener> listenerList = new ArrayList<ListDataListener>();
 
     private ForwardingListDataListener forwarder = new ForwardingListDataListener();
 
@@ -116,7 +115,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         if (layer < 0 || layer > listModel.size()) {
             throw new IllegalArgumentException("illegal layer index");
         }
-        ImageLayer ilayer = (ImageLayer) listModel.get(layer);
+        ImageLayer ilayer = listModel.get(layer);
         return ilayer.getImageLayerProperties();
     }
 
@@ -145,15 +144,17 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
 
     public void addImageDisplayModelListener(ImageDisplayModelListener listener) {
-        if (!listenerList.contains(listener)) {
-            listenerList.add(listener);
-        } else {
-            log.warning("addImageDisplayModelListener: supplied instance has already been added to listener list");
-        }
+        //if (!listenerList.contains(listener)) {
+        //    listenerList.add(listener);
+        //} else {
+        //    log.warning("addImageDisplayModelListener: supplied instance has already been added to listener list");
+        //}
+
+        eventListeners.add(ImageDisplayModelListener.class, listener);
     }
 
     public void removeImageDisplayModelListener(ImageDisplayModelListener listener) {
-        listenerList.remove(listener);
+        eventListeners.remove(ImageDisplayModelListener.class, listener);
     }
 
     public void addImageLayerListener(ImageLayerListener listener) {
@@ -181,7 +182,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
             listSelection.set(0);
         }
 
-        
+
         computeImageSpace();
 
     }
@@ -211,6 +212,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         BeanContainer.get().addListener(layer.getImageLayerProperties().colorMap, new PropertyListener() {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
                 ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
+                //System.out.println("color map changed");
                 for (ImageLayerListener listener : listeners) {
                     listener.colorMapChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
                 }
@@ -262,17 +264,18 @@ public class ImageDisplayModel implements IImageDisplayModel {
                 Number lowClip = (Number) newValue;
                 Number highClip = layer.getImageLayerProperties().clipRange.get().getHighClip();
                 ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
+
+                IColorMap oldMap = layer.getImageLayerProperties().getColorMap();
+
+                if (oldMap.getLowClip() == lowClip.doubleValue()) {
+                    return;
+                }
+
+                IColorMap newMap = oldMap.newClipRange(lowClip.doubleValue(), highClip.doubleValue());
+                layer.getImageLayerProperties().colorMap.set(newMap);
+
+                ///System.out.println("low clip : " + lowClip);
                 for (ImageLayerListener listener : listeners) {
-
-                    IColorMap oldMap = layer.getImageLayerProperties().getColorMap();
-
-                    if (oldMap.getLowClip() != lowClip.doubleValue()) {
-                        IColorMap newMap = oldMap.newClipRange(lowClip.doubleValue(), highClip.doubleValue());
-                        layer.getImageLayerProperties().colorMap.set(newMap);
-
-                    }
-
-                    // may not be necessary if because of  call above ...
                     listener.clipRangeChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
                 }
 
@@ -284,22 +287,27 @@ public class ImageDisplayModel implements IImageDisplayModel {
                 Number highClip = (Number) newValue;
                 Number lowClip = layer.getImageLayerProperties().clipRange.get().getLowClip();
                 ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
+
+                IColorMap oldMap = layer.getImageLayerProperties().getColorMap();
+
+                if (oldMap.getHighClip() == highClip.doubleValue()) {
+                    return;
+                }
+
+
+                IColorMap newMap = oldMap.newClipRange(lowClip.doubleValue(), highClip.doubleValue());
+                layer.getImageLayerProperties().colorMap.set(newMap);
                 for (ImageLayerListener listener : listeners) {
-
-                    IColorMap oldMap = layer.getImageLayerProperties().getColorMap();
-
-                    if (oldMap.getHighClip() != highClip.doubleValue()) {
-                        IColorMap newMap = oldMap.newClipRange(lowClip.doubleValue(), highClip.doubleValue());
-                        assert newMap != null;
-                        layer.getImageLayerProperties().colorMap.set(newMap);
-
-                    }
-
-                    // may not be necessary if because of  call above ...
-                    listener.clipRangeChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
+                  listener.clipRangeChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
 
                 }
+
+
             }
+
+            // may not be necessary if because of  call above ...
+
+
         });
 
 
@@ -364,9 +372,9 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
         listModel.set(newModel);
 
-        //imageListModel = newModel;
-        //imageListModel.addListDataListener(forwarder);
-        //layerSelection.setListModel(imageListModel);
+//imageListModel = newModel;
+//imageListModel.addListDataListener(forwarder);
+//layerSelection.setListModel(imageListModel);
 
         forwarder.fireContentsChanged(new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, 0, getNumLayers() - 1));
 
@@ -398,8 +406,8 @@ public class ImageDisplayModel implements IImageDisplayModel {
         }
 
         listModel.set(newModel);
-        //imageListModel.addListDataListener(forwarder);
-        //layerSelection.setListModel(imageListModel);
+//imageListModel.addListDataListener(forwarder);
+//layerSelection.setListModel(imageListModel);
 
         forwarder.fireContentsChanged(new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, index0, index1));
     }
@@ -473,14 +481,14 @@ public class ImageDisplayModel implements IImageDisplayModel {
         return retAxis;
     }
 
-    /* (non-Javadoc)
-    * @see com.brainflow.core.IImageDisplayModel#setLayer(int, com.brainflow.image.io.SoftImageDataSource, com.brainflow.display.props.DisplayProperties)
-    */
-    //public void setLayer(int index, ImageLayer layer) {
-    //    assert index >= 0 && index < size();
-    //    imageListModel.set(index, layer);
-    //    computeImageSpace();
-    // }
+/* (non-Javadoc)
+* @see com.brainflow.core.IImageDisplayModel#setLayer(int, com.brainflow.image.io.SoftImageDataSource, com.brainflow.display.props.DisplayProperties)
+*/
+//public void setLayer(int index, ImageLayer layer) {
+//    assert index >= 0 && index < size();
+//    imageListModel.set(index, layer);
+//    computeImageSpace();
+// }
 
 
     public String toString() {
@@ -503,8 +511,9 @@ public class ImageDisplayModel implements IImageDisplayModel {
         }
 
         private void fireIntervalAdded(ListDataEvent e) {
+            ImageDisplayModelListener[] listeners = eventListeners.getListeners(ImageDisplayModelListener.class);
             ListDataEvent ne = new ListDataEvent(ImageDisplayModel.this, e.getType(), e.getIndex0(), e.getIndex1());
-            for (ListDataListener l : listenerList) {
+            for (ListDataListener l : listeners) {
                 l.intervalAdded(ne);
 
             }
@@ -512,8 +521,9 @@ public class ImageDisplayModel implements IImageDisplayModel {
         }
 
         private void fireContentsChanged(ListDataEvent e) {
+            ImageDisplayModelListener[] listeners = eventListeners.getListeners(ImageDisplayModelListener.class);
             ListDataEvent ne = new ListDataEvent(ImageDisplayModel.this, e.getType(), e.getIndex0(), e.getIndex1());
-            for (ListDataListener l : listenerList) {
+            for (ListDataListener l : listeners) {
                 l.contentsChanged(ne);
 
             }
@@ -522,7 +532,8 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
         private void fireIntervalRemoved(ListDataEvent e) {
             ListDataEvent ne = new ListDataEvent(ImageDisplayModel.this, e.getType(), e.getIndex0(), e.getIndex1());
-            for (ListDataListener l : listenerList) {
+            ImageDisplayModelListener[] listeners = eventListeners.getListeners(ImageDisplayModelListener.class);
+            for (ListDataListener l : listeners) {
                 l.intervalRemoved(ne);
 
             }

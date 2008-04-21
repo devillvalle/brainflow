@@ -192,7 +192,6 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
             view = _view;
             view.getModel().addImageLayerListener(this);
 
-
         }
 
         public void visibilityChanged(ImageLayerEvent event) {

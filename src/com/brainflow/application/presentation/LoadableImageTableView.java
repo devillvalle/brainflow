@@ -55,7 +55,7 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
     public static final int SMALL_ICON_HEIGHT = 24;
 
     public static final int LARGE_ICON_WIDTH = 60;
-    
+
     public static final int LARGE_ICON_HEIGHT = 60;
 
     private HierarchicalTable table;
@@ -84,6 +84,8 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
     private HierarchicalTable createTable() {
         imageTableModel = new ImageTableModel();
         table = new HierarchicalTable() {
+
+            
             public TableModel getStyleModel() {
                 return imageTableModel; // designate it as the style model
             }
@@ -169,7 +171,6 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
 
     }
 
-   
 
     class ImageInfoPanel extends JPanel {
         IImageDataSource limg;
@@ -282,7 +283,7 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
             throw new RuntimeException(e);
             ///
 
-          
+
         }
     }
 

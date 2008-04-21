@@ -30,7 +30,7 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
     private int dim0;
 
     public BasicImageData3D(BasicImageData3D src) {
-        super((ImageSpace3D) src.getImageSpace(), src.getDataType());
+        super(src.getImageSpace(), src.getDataType());
         fillBuffer(src.storage, space.getNumSamples());
         planeSize = space.getDimension(Axis.X_AXIS) * space.getDimension(Axis.Y_AXIS);
         dim0 = space.getDimension(Axis.X_AXIS);

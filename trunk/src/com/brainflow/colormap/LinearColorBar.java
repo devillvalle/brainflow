@@ -1,6 +1,7 @@
 package com.brainflow.colormap;
 
 import com.brainflow.image.LinearSet1D;
+import com.brainflow.utils.NumberUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,6 +48,9 @@ public class LinearColorBar extends AbstractColorBar {
         //todo allow for the fact that the first and last intervals MIGHT have a fractional size of 0.
 
         IColorMap model = getColorMap();
+        if (NumberUtils.equals(model.getHighClip(), model.getLowClip(), .01)) {
+            return new float[]{0f, .5f, .51f, 1};
+        }
 
         int startIndex = computeStartIndex(model);
         int endIndex = computeEndIndex(model);
@@ -72,12 +76,12 @@ public class LinearColorBar extends AbstractColorBar {
 
             assert f > lastFrac : "bin index : " + i + " bin max " + max + " bin diff " + diff + " frac " + f;
 
-            lastFrac=f;
+            lastFrac = f;
         }
 
         //System.out.println("high clip : " + model.getHighClip());
-        ///System.out.println("last getValue = " + frac[model.getMapSize()-1]);
-        //System.out.println("second to last getValue = " + frac[model.getMapSize()-2]);
+        ///System.out.println("last value = " + frac[model.getMapSize()-1]);
+        //System.out.println("second to last value = " + frac[model.getMapSize()-2]);
 
         return frac;
 
@@ -86,6 +90,14 @@ public class LinearColorBar extends AbstractColorBar {
 
     private Color[] getColors() {
         IColorMap model = getColorMap();
+
+        if (NumberUtils.equals(model.getHighClip(), model.getLowClip(), .01)) {
+            Color c1 = model.getInterval(0).getColor();
+            Color c2 = model.getInterval(model.getMapSize()-1).getColor();
+            return new Color[]{c1, c1, c2, c2};
+
+        }
+
         int startIndex = computeStartIndex(model);
         int endIndex = computeEndIndex(model);
 
@@ -164,7 +176,7 @@ public class LinearColorBar extends AbstractColorBar {
         if (getOrientation() == SwingConstants.HORIZONTAL) {
             bimage = new BufferedImage(ncolors, 10, BufferedImage.TYPE_4BYTE_ABGR);
 
-            Graphics2D g2d = (Graphics2D) bimage.createGraphics();
+            Graphics2D g2d = bimage.createGraphics();
 
             for (int i = 0; i < ncolors; i++) {
                 Color clr = colorMap.getColor(samples[i]);
@@ -179,7 +191,7 @@ public class LinearColorBar extends AbstractColorBar {
         } else {
             bimage = new BufferedImage(10, ncolors, BufferedImage.TYPE_4BYTE_ABGR);
             int row = 0;
-            Graphics2D g2d = (Graphics2D) bimage.createGraphics();
+            Graphics2D g2d = bimage.createGraphics();
             for (int i = (ncolors - 1); i >= 0; i--, row++) {
 
                 Color clr = colorMap.getColor(samples[i]);
@@ -205,9 +217,34 @@ public class LinearColorBar extends AbstractColorBar {
         return new Dimension(256, 50);
     }
 
-
     public static void main(String[] args) {
-        LinearColorMapDeprecated cmap = new LinearColorMapDeprecated(-100, 100, ColorTable.SPECTRUM);
+
+        JPanel jp = new JPanel() {
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g;
+                int length = getWidth();
+                float[] frac = new float[]{0f, .5f, .51f, 1};
+                Color[] clrs = new Color[]{Color.BLACK, Color.BLACK, Color.WHITE, Color.WHITE};
+                LinearGradientPaint paint = new LinearGradientPaint(0f, 0f, (float) length, (float) 0, frac, clrs);
+                g2.setPaint(paint);
+                g2.fillRect(0, 0, getWidth(), getHeight());
+
+            }
+
+            public Dimension getPreferredSize() {
+                return new Dimension(400, 300);
+            }
+        };
+
+        JFrame frame = new JFrame();
+        frame.add(jp, BorderLayout.CENTER);
+        frame.pack();
+        frame.setVisible(true);
+
+    }
+    /*public static void main(String[] args) {
+        LinearColorMap2 cmap = new LinearColorMap2(-100, 100, ColorTable.GRAYSCALE);
         JFrame frame = new JFrame();
         LinearColorBar cbar = new LinearColorBar(cmap, SwingConstants.HORIZONTAL);
 
@@ -216,7 +253,7 @@ public class LinearColorBar extends AbstractColorBar {
         frame.setVisible(true);
 
 
-    }
+    }  */
 
 
 }

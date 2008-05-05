@@ -93,7 +93,7 @@ public class TestVariableSubstitution {
         assertTrue(left.left().toString(), left.left() instanceof ImageDataNode);
         assertTrue(left.right().toString(), left.right() instanceof ImageDataNode);
 
-        assertEquals(right.getData().getValue(0), 27, .0001);
+        assertEquals(right.getData().value(0), 27, .0001);
 
     }
 

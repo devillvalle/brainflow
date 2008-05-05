@@ -15,11 +15,11 @@ import com.brainflow.utils.Dimension3D;
  */
 public interface DataAccessor3D extends DataAccessor {
 
-    public double getValue(double x, double y, double z, InterpolationFunction3D interp);
+    public double value(float x, float y, float z, InterpolationFunction3D interp);
 
-    public double getWorldValue(double realx, double realy, double realz, InterpolationFunction3D interp);
+    public double worldValue(float realx, float realy, float realz, InterpolationFunction3D interp);
 
-    public double getValue(int x, int y, int z);
+    public double value(int x, int y, int z);
 
     public ImageSpace3D getImageSpace();
 

@@ -7,7 +7,6 @@ import com.brainflow.image.space.ImageSpace2D;
 import com.brainflow.image.anatomy.Anatomy;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.utils.DataType;
-import com.brainflow.utils.IDimension;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,20 +34,20 @@ public class MaskedData2D implements IImageData2D {
     }
 
     
-    public double getValue(double x, double y, InterpolationFunction2D interp) {
-        return predicate.mask(source.getValue(x, y, interp))? 1 : 0;
+    public double value(double x, double y, InterpolationFunction2D interp) {
+        return predicate.mask(source.value(x, y, interp))? 1 : 0;
     }
 
-    public double getRealValue(double realx, double realy, InterpolationFunction2D interp) {
-        return predicate.mask(source.getRealValue(realx, realy, interp)) ? 1 : 0;
+    public double worldValue(double realx, double realy, InterpolationFunction2D interp) {
+        return predicate.mask(source.worldValue(realx, realy, interp)) ? 1 : 0;
     }
 
-    public double getValue(int x, int y) {
-        return predicate.mask(source.getValue(x, y)) ? 1 : 0;
+    public double value(int x, int y) {
+        return predicate.mask(source.value(x, y)) ? 1 : 0;
     }
 
-    public double getValue(int index) {
-        return predicate.mask(source.getValue(index)) ? 1 : 0;
+    public double value(int index) {
+        return predicate.mask(source.value(index)) ? 1 : 0;
     }
 
     public void setValue(int idx, double val) {

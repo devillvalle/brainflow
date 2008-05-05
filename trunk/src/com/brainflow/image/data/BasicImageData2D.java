@@ -25,7 +25,7 @@ public class BasicImageData2D extends BasicImageData implements IImageData2D {
 
 
     public BasicImageData2D(BasicImageData2D src) {
-        super((ImageSpace2D) src.getImageSpace(),src.getDataType());
+        super(src.getImageSpace(),src.getDataType());
         fillBuffer(src.storage, space.getNumSamples());
 
     }
@@ -73,7 +73,7 @@ public class BasicImageData2D extends BasicImageData implements IImageData2D {
 
     }
 
-    public double getValue(int index) {
+    public double value(int index) {
         return data.getElemDouble(index);
     }
 
@@ -85,17 +85,17 @@ public class BasicImageData2D extends BasicImageData implements IImageData2D {
         return space.getDimension(Axis.X_AXIS) * y + x;
     }
 
-    public final double getValue(double x, double y, InterpolationFunction2D interp) {
+    public final double value(double x, double y, InterpolationFunction2D interp) {
         return interp.interpolate(x, y, this);
     }
 
-    public final double getRealValue(double realx, double realy, InterpolationFunction2D interp) {
+    public final double worldValue(double realx, double realy, InterpolationFunction2D interp) {
         double x = space.getImageAxis(Axis.X_AXIS).fractionalSample(realx);
         double y = space.getImageAxis(Axis.Y_AXIS).fractionalSample(realy);
         return interp.interpolate(x, y, this);
     }
 
-    public final double getValue(int x, int y) {
+    public final double value(int x, int y) {
         return data.getElemDouble(indexOf(x, y));
     }
 

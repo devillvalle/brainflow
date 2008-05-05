@@ -3,6 +3,7 @@ package com.brainflow.image.space;
 import com.brainflow.utils.Point3D;
 import com.brainflow.math.Vector3f;
 import com.brainflow.math.Matrix4f;
+import com.brainflow.image.anatomy.Anatomy3D;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,35 +16,109 @@ public class AffineMapping3D implements ImageMapping3D {
 
     private final Matrix4f mat;
 
+    private final Matrix4f invMat;
+
     public AffineMapping3D(Matrix4f mat) {
         this.mat = mat;
+        invMat = mat.invert();
     }
 
-    public void gridToWorld(int i, int j, int k, Point3D out) {
-        
+    public AffineMapping3D(Vector3f offset, Vector3f spacing, Anatomy3D anatomy) {
+        Matrix4f tmp = new Matrix4f(spacing.x, 0, 0, offset.x, 0, spacing.y, 0, offset.y, 0, 0, spacing.z, offset.z, 0, 0, 0, 1);
+        Matrix4f ref = anatomy.getReferenceTransform();
+
+        mat = tmp.scale(new Vector3f(ref.m00, ref.m11, ref.m22));
+        invMat = mat.invert();
     }
 
-    public void gridToWorld(int i, int j, int k, Vector3f out) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public Matrix4f getMatrix() {
+        return new Matrix4f(mat);
     }
 
+    @Override
+    public Vector3f gridToWorld(int i, int j, int k, Vector3f out) {
+        return mat.mult3f(i,j,k, out);
+    }
+
+    @Override
     public Vector3f gridToWorld(Vector3f in) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return mat.mult(in, new Vector3f());
     }
 
+    @Override
     public Vector3f gridToWorld(float i, float j, float k) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return mat.mult3f(i,j,k, new Vector3f());
     }
 
+    @Override
+    public Vector3f gridToWorld(float i, float j, float k, Vector3f out) {
+        return mat.mult3f(i,j,k, out);
+    }
+
+    @Override
     public Vector3f gridToWorld(int i, int j, int k) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return mat.mult3f(i,j,k, new Vector3f());
     }
 
-    public void worldToGrid(Vector3f in, Vector3f out) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    @Override
+    public Vector3f worldToGrid(Vector3f in, Vector3f out) {
+        return invMat.mult3f(in.x, in.y, in.z, out);
     }
 
+    @Override
     public Vector3f worldToGrid(Vector3f in) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return invMat.mult(in, new Vector3f());
+    }
+
+    @Override
+    public final float gridToWorldX(float x, float y, float z) {
+        return mat.multX(x,y,z);
+    }
+
+    @Override
+    public final float gridToWorldY(float x, float y, float z) {
+        return mat.multY(x,y,z);
+    }
+
+    @Override
+    public final float gridToWorldZ(float x, float y, float z) {
+        return mat.multZ(x,y,z);
+    }
+
+    @Override
+    public final float worldToGridX(float x, float y, float z) {
+        return invMat.multX(x,y,z);
+    }
+
+    @Override
+    public final float worldToGridY(float x, float y, float z) {
+        return invMat.multY(x,y,z);
+    }
+
+    @Override
+    public final float worldToGridZ(float x, float y, float z) {
+        return invMat.multZ(x,y,z);
+    }
+
+    public String toString() {
+        return mat.toString();
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AffineMapping3D)) return false;
+
+        AffineMapping3D that = (AffineMapping3D) o;
+
+        if (mat != null ? !mat.equals(that.mat) : that.mat != null) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result;
+        result = (mat != null ? mat.hashCode() : 0);
+        result = 31 * result + (invMat != null ? invMat.hashCode() : 0);
+        return result;
     }
 }

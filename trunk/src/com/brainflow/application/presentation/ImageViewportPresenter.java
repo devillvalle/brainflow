@@ -314,7 +314,7 @@ public class ImageViewportPresenter extends ImageViewPresenter {
         //yfovSlider.setModel(yfovAdapter);
 
         // this line links zero and zero extent so that changing zero changes the other
-        //PropertyConnector.connect(xextent, "getValue", yextent, "getValue");
+        //PropertyConnector.connect(xextent, "value", yextent, "value");
 
     }
 
@@ -358,12 +358,12 @@ public class ImageViewportPresenter extends ImageViewPresenter {
 
 
 
-        //xspinnerModel = new SpinnerNumberModel((Number) xval.getValue(), getXLowerBound(view), getXUpperBound(view), 1);
-        //yspinnerModel = new SpinnerNumberModel((Number) yval.getValue(), getYLowerBound(view), getYUpperBound(view), 1);
+        //xspinnerModel = new SpinnerNumberModel((Number) xval.value(), getXLowerBound(view), getXUpperBound(view), 1);
+        //yspinnerModel = new SpinnerNumberModel((Number) yval.value(), getYLowerBound(view), getYUpperBound(view), 1);
 
 
-        //SpinnerAdapterFactory.connect(xspinnerModel, xval, xval.getValue());
-        //SpinnerAdapterFactory.connect(yspinnerModel, yval, yval.getValue());
+        //SpinnerAdapterFactory.connect(xspinnerModel, xval, xval.value());
+        //SpinnerAdapterFactory.connect(yspinnerModel, yval, yval.value());
 
 
     }

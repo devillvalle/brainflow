@@ -87,7 +87,7 @@ public class SimpleColorEditor extends JPanel implements ChangeListener {
         int red = ((Number) redSpinner.getValue()).intValue();
         int green = ((Number) greenSpinner.getValue()).intValue();
         int blue = ((Number) blueSpinner.getValue()).intValue();
-        //int alpha = ((Number)alphaSpinner.getValue()).intValue();
+        //int alpha = ((Number)alphaSpinner.value()).intValue();
 
         //setColor(new Color(red,green,blue,alpha));
         setColor(new Color(red, green, blue));

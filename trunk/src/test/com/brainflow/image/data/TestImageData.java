@@ -43,8 +43,8 @@ public class TestImageData {
                 new ImageAxis(0,10, AnatomicalAxis.ANTERIOR_POSTERIOR,10),
                 new ImageAxis(0,10, AnatomicalAxis.INFERIOR_SUPERIOR,10)));
 
-        assertEquals(data.getValue(0), 32, .00001);
-        assertEquals(data.getValue(10), 32, .00001);
+        assertEquals(data.value(0), 32, .00001);
+        assertEquals(data.value(10), 32, .00001);
         Assert.assertNotNull(data.iterator());
 
         ImageIterator iter = data.iterator();

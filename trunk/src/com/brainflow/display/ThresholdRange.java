@@ -37,35 +37,30 @@ public class ThresholdRange extends LayerProperty implements MaskPredicate, IRan
 
 
     public ThresholdRange(double tmin, double tmax) {
-        thresholdRange = new ExclusiveRange(tmin, tmax);
+        initRange(tmin, tmax);
         globalRange = new Range(Double.MIN_VALUE, Double.MAX_VALUE);
     }
 
-    public ThresholdRange(double min, double max, IRange globalRange) {
-        if (inclusive) {
-            thresholdRange = new Range(min, max);
-        } else {
-            thresholdRange = new ExclusiveRange(min, max);
-        }
-
-        // todo check if valid
-        this.globalRange = globalRange;
-
-
+    public ThresholdRange(IRange range) {
+        thresholdRange = range;
+        globalRange = new Range(Double.MIN_VALUE, Double.MAX_VALUE);
     }
 
 
     public ThresholdRange(double min, double max, IRange globalRange, boolean inclusive, boolean symmetrical) {
-        if (inclusive) {
-            thresholdRange = new Range(min, max);
-        } else {
-            thresholdRange = new ExclusiveRange(min, max);
-        }
+        initRange(min, max);
 
         // todo check if valid
         this.globalRange = globalRange;
-
+        this.inclusive = inclusive;
         this.symmetrical = symmetrical;
+    }
+
+    private void initRange(double min, double max) {
+
+        thresholdRange = new Range(min, max);
+
+
     }
 
     public String getName() {

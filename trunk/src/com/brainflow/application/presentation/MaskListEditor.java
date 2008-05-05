@@ -268,7 +268,7 @@ public class MaskListEditor {
                     //maskList.getMaskItem(rowIndex).setSource((IImageData3D) aValue);
                     break;
                 case 1:
-                    maskList.getMaskItem(rowIndex).setPredicate((ThresholdRange) aValue);
+                    //maskList.getMaskItem(rowIndex).setPredicate((ThresholdRange) aValue);
                     break;
                 case 2:
                     maskList.getMaskItem(rowIndex).setGroup((Integer) aValue);

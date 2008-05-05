@@ -10,7 +10,6 @@ import com.brainflow.image.operations.BooleanOperation;
 import com.brainflow.image.operations.Operations;
 import com.brainflow.utils.Index3D;
 import com.brainflow.utils.DataType;
-import com.brainflow.utils.IDimension;
 
 /**
  * Created by IntelliJ IDEA.
@@ -43,8 +42,8 @@ public class BooleanMaskNode3D implements IMaskedData3D {
 
 
 
-    public double getWorldValue(double realx, double realy, double realz, InterpolationFunction3D interp) {
-        return operation.isTrue((int) left.getWorldValue(realx, realy, realz, interp), (int) right.getWorldValue(realx, realy, realz, interp)) ? 1 : 0;
+    public double worldValue(float realx, float realy, float realz, InterpolationFunction3D interp) {
+        return operation.isTrue((int) left.worldValue(realx, realy, realz, interp), (int) right.worldValue(realx, realy, realz, interp)) ? 1 : 0;
     }
 
     public boolean isTrue(int index) {
@@ -55,15 +54,15 @@ public class BooleanMaskNode3D implements IMaskedData3D {
         return operation.isTrue(left.isTrue(x, y, z), right.isTrue(x, y, z));
     }
 
-    public double getValue(int index) {
+    public double value(int index) {
         return operation.isTrue(left.isTrue(index), right.isTrue(index)) ? 1 : 0;
     }
 
-    public double getValue(double x, double y, double z, InterpolationFunction3D interp) {
-        return operation.isTrue((int) left.getValue(x, y, z, interp), (int) right.getValue(x, y, z, interp)) ? 1 : 0;
+    public double value(float x, float y, float z, InterpolationFunction3D interp) {
+        return operation.isTrue((int) left.value(x, y, z, interp), (int) right.value(x, y, z, interp)) ? 1 : 0;
     }
 
-    public double getValue(int x, int y, int z) {
+    public double value(int x, int y, int z) {
         return operation.isTrue(left.isTrue(x, y, z), right.isTrue(x, y, z)) ? 1 : 0;
     }
 

@@ -19,7 +19,7 @@ public class InterpolationMethodConverter implements Converter {
     public void marshal(Object o, HierarchicalStreamWriter writer, MarshallingContext context) {
         InterpolationMethod imeth = (InterpolationMethod)o;
 
-        writer.addAttribute("getValue", "" + imeth.getInterpolation().toString());
+        writer.addAttribute("value", "" + imeth.getInterpolation().toString());
 
     }
 
@@ -32,7 +32,7 @@ public class InterpolationMethodConverter implements Converter {
     }
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        String value = reader.getAttribute("getValue");
+        String value = reader.getAttribute("value");
         return new InterpolationMethod(InterpolationType.valueOf(value));     
     }
 }

@@ -49,7 +49,7 @@ public class ConstantColorMap extends AbstractColorMap {
     }
 
     public Color getColor(double value) {
-        // todo check if getValue is in bounds?
+        // todo check if value is in bounds?
         return interval.getColor();
     }
 

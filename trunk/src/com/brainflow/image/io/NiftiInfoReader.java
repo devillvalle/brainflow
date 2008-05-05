@@ -5,6 +5,7 @@ import com.brainflow.application.TestUtils;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.io.ImageInfoReader;
 import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.image.space.AffineMapping3D;
 import com.brainflow.utils.DataType;
 import com.brainflow.utils.Dimension3D;
 import com.brainflow.utils.Point3D;
@@ -110,11 +111,12 @@ public class NiftiInfoReader implements ImageInfoReader {
     public List<NiftiImageInfo> readInfo(InputStream istream) throws BrainflowException {
         List<NiftiImageInfo> ret = null;
         // todo check to see if valid nifti file extension
+        // todo provide dummy header name?
         try {
             ret = readHeader("", istream);
 
         } catch (Exception e) {
-            //log.warning("Exception caught in AnalyzeInfoReader.readInfo ");
+            log.warning("Exception caught in NiftiInfoReader.readInfo ");
             throw new BrainflowException(e);
         }
 
@@ -126,7 +128,7 @@ public class NiftiInfoReader implements ImageInfoReader {
 
     @Override
     public List<NiftiImageInfo> readInfo(File f) throws BrainflowException {
-        List<NiftiImageInfo> ret = null;
+        List<NiftiImageInfo> ret;
         // todo check to see if valid nifti file extension
         try {
 
@@ -176,7 +178,7 @@ public class NiftiInfoReader implements ImageInfoReader {
     }
 
     public List<NiftiImageInfo> readInfo(FileObject fobj) throws BrainflowException {
-        List<NiftiImageInfo> ret = null;
+        List<NiftiImageInfo> ret;
 
         try {
 
@@ -309,6 +311,8 @@ public class NiftiInfoReader implements ImageInfoReader {
         Anatomy3D anat = NiftiImageInfo.nearestAnatomy(info.qform);
         info.setAnatomy(anat);
 
+        AffineMapping3D mapping = new AffineMapping3D(info.qform);
+        info.setMapping(mapping);
 
 
         return info;

@@ -15,11 +15,11 @@ import com.brainflow.utils.Dimension2D;
  */
 public interface DataAccessor2D extends DataAccessor {
 
-    public double getValue(double x, double y, InterpolationFunction2D interp);
+    public double value(double x, double y, InterpolationFunction2D interp);
 
-    public double getRealValue(double realx, double realy, InterpolationFunction2D interp);
+    public double worldValue(double realx, double realy, InterpolationFunction2D interp);
 
-    public double getValue(int x, int y);
+    public double value(int x, int y);
 
     public ImageSpace2D getImageSpace();
 }

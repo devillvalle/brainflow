@@ -247,7 +247,7 @@ public class Anatomy3D implements Anatomy {
         sb.append(YAXIS.getMinDirection().toString());
         sb.append("-");
         sb.append(ZAXIS.getMinDirection().toString());
-        sb.append("matrix : " + referenceTransform);
+        //sb.append("matrix : " + referenceTransform);
 
         return sb.toString();
 

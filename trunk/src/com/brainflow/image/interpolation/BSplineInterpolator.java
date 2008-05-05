@@ -80,7 +80,7 @@ public class BSplineInterpolator implements InterpolationFunction3D {
         for (int z = 0; z < depth; z++) {
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
-                    row1D[x] = coefficientImage.getValue(x, y, z);
+                    row1D[x] = coefficientImage.value(x, y, z);
                 }
                 convertToInterpolationCoefficients(row1D, poles, epsilon);
                 for (int x = 0; x < width; x++) {
@@ -94,7 +94,7 @@ public class BSplineInterpolator implements InterpolationFunction3D {
         for (int z = 0; z < depth; z++) {
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
-                    row1D[y] = coefficientImage.getValue(x, y, z);
+                    row1D[y] = coefficientImage.value(x, y, z);
                 }
                 convertToInterpolationCoefficients(row1D, poles, epsilon);
                 for (int y = 0; y < height; y++) {
@@ -106,7 +106,7 @@ public class BSplineInterpolator implements InterpolationFunction3D {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 for (int z = 0; z < depth; z++) {
-                    row1D[z] = coefficientImage.getValue(x, y, z);
+                    row1D[z] = coefficientImage.value(x, y, z);
                 }
 
                 convertToInterpolationCoefficients(row1D, poles, epsilon);
@@ -412,7 +412,7 @@ public class BSplineInterpolator implements InterpolationFunction3D {
 
 
                 for (i = 0; i <= degree; i++) {
-                    sumx += xWeight[i] * coefficientImage.getValue(xIndex[i], yIndex[j], zIndex[q]);
+                    sumx += xWeight[i] * coefficientImage.value(xIndex[i], yIndex[j], zIndex[q]);
                 }
 
                 sumxy += yWeight[j] * sumx;

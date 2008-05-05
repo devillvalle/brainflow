@@ -8,7 +8,6 @@ import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.math.ArrayUtils;
 import com.brainflow.utils.DataType;
 import com.brainflow.utils.Index3D;
-import com.brainflow.utils.IDimension;
 import com.brainflow.application.TestUtils;
 
 
@@ -29,11 +28,17 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
 
     private int dim0;
 
+    private ImageSpace3D space3d;
+
     public BasicImageData3D(BasicImageData3D src) {
+        //todo look at all the code duplication
+        
         super(src.getImageSpace(), src.getDataType());
         fillBuffer(src.storage, space.getNumSamples());
         planeSize = space.getDimension(Axis.X_AXIS) * space.getDimension(Axis.Y_AXIS);
         dim0 = space.getDimension(Axis.X_AXIS);
+
+        space3d = getImageSpace();
     }
 
 
@@ -43,6 +48,8 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
         planeSize = space.getDimension(Axis.X_AXIS) * space.getDimension(Axis.Y_AXIS);
         dim0 = space.getDimension(Axis.X_AXIS);
 
+        space3d = getImageSpace();
+
     }
 
     public BasicImageData3D(ImageSpace3D space, DataType _type, String imageLabel) {
@@ -50,6 +57,8 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
         data = allocateBuffer(space.getNumSamples());
         planeSize = space.getDimension(Axis.X_AXIS) * space.getDimension(Axis.Y_AXIS);
         dim0 = space.getDimension(Axis.X_AXIS);
+
+        space3d = getImageSpace();
 
     }
 
@@ -61,6 +70,8 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
         planeSize = space.getDimension(Axis.X_AXIS) * space.getDimension(Axis.Y_AXIS);
         dim0 = space.getDimension(Axis.X_AXIS);
 
+        space3d = getImageSpace();
+
     }
 
     public BasicImageData3D(ImageSpace3D space, Object array, String imageLabel) {
@@ -70,6 +81,8 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
         data = allocateBuffer(space.getNumSamples());
         planeSize = space.getDimension(Axis.X_AXIS) * space.getDimension(Axis.Y_AXIS);
         dim0 = space.getDimension(Axis.X_AXIS);
+
+        space3d = getImageSpace();
 
     }
 
@@ -138,7 +151,6 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
         voxel.setX(remainder % space.getDimension(Axis.X_AXIS));
 
         return voxel;
-
     }
 
     public final int indexOf(int x, int y, int z) {
@@ -147,28 +159,28 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
 
    
 
-    public final double getValue(double x, double y, double z, InterpolationFunction3D interp) {
+    public final double value(float x, float y, float z, InterpolationFunction3D interp) {
         return interp.interpolate(x, y, z, this);
     }
 
 
-    public final double getWorldValue(double realx, double realy, double realz, InterpolationFunction3D interp) {
-        double x = space.getImageAxis(Axis.X_AXIS).fractionalSample(realx);
-        double y = space.getImageAxis(Axis.Y_AXIS).fractionalSample(realy);
-        double z = space.getImageAxis(Axis.Z_AXIS).fractionalSample(realz);
 
-        if (x < 0 | y < 0 | z < 0) return 0;
+    @Override
+    public final double worldValue(float realx, float realy, float realz, InterpolationFunction3D interp) {
+        double x = space3d.worldToGridX(realx, realy, realz);
+        double y = space3d.worldToGridY(realx, realy, realz);
+        double z = space3d.worldToGridZ(realx, realy, realz);
 
-
+       
         return interp.interpolate(x, y, z, this);
     }
 
-    public final double getValue(int index) {
+    public final double value(int index) {
         return data.getElemDouble(index);
     }
 
 
-    public final double getValue(int x, int y, int z) {
+    public final double value(int x, int y, int z) {
         return data.getElemDouble(indexOf(x, y, z));
     }
 
@@ -215,7 +227,7 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
         }
 
         public final double next() {
-            double dat = data.getValue(index);
+            double dat = data.value(index);
             index++;
             return dat;
         }
@@ -229,7 +241,7 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
         }
 
         public double previous() {
-            return data.getValue(--index);
+            return data.value(--index);
         }
 
         public final boolean hasNext() {
@@ -239,7 +251,7 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
 
         public double jump(int number) {
             index += number;
-            return data.getValue(number);
+            return data.value(number);
         }
 
         public boolean canJump(int number) {
@@ -251,12 +263,12 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
 
         public double nextRow() {
             index += space.getDimension(Axis.X_AXIS);
-            return data.getValue(index);
+            return data.value(index);
         }
 
         public double nextPlane() {
             index += planeSize;
-            return data.getValue(index);
+            return data.value(index);
         }
 
         public boolean hasNextRow() {
@@ -285,12 +297,12 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
 
         public double previousRow() {
             index -= space.getDimension(Axis.X_AXIS);
-            return data.getValue(index);
+            return data.value(index);
         }
 
         public double previousPlane() {
             index -= planeSize;
-            return data.getValue(index);
+            return data.value(index);
         }
 
         public int index() {

@@ -12,6 +12,7 @@ import com.brainflow.image.data.RGBAImage;
 import com.brainflow.image.interpolation.NearestNeighborInterpolator;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
+import com.brainflow.image.space.ImageSpace3D;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -66,19 +67,21 @@ public class MaskLayer extends ImageLayer {
 
     public double getValue(AnatomicalPoint3D pt) {
         IImageSpace space = getCoordinateSpace();
-        double x = pt.getValue(space.getAnatomicalAxis(Axis.X_AXIS)).getX();
-        double y = pt.getValue(space.getAnatomicalAxis(Axis.Y_AXIS)).getX();
-        double z = pt.getValue(space.getAnatomicalAxis(Axis.Z_AXIS)).getX();
+        float x = (float)pt.getValue(space.getAnatomicalAxis(Axis.X_AXIS)).getX();
+        float y = (float)pt.getValue(space.getAnatomicalAxis(Axis.Y_AXIS)).getX();
+        float z = (float)pt.getValue(space.getAnatomicalAxis(Axis.Z_AXIS)).getX();
 
-        return getData().getValue(x, y, z, new NearestNeighborInterpolator());
+        return getData().value(x, y, z, new NearestNeighborInterpolator());
     }
 
-    public SliceRenderer getSliceRenderer(AnatomicalPoint1D slice) {
-        return new BasicImageSliceRenderer(this, slice) {
-            protected RGBAImage thresholdRGBA(RGBAImage rgba) {
-                return rgba;
-            }
-        };
+
+    public SliceRenderer getSliceRenderer(IImageSpace refspace, AnatomicalPoint1D slice) {
+        return new BasicImageSliceRenderer((ImageSpace3D)refspace, this, slice) {
+                    protected RGBAImage thresholdRGBA(RGBAImage rgba) {
+                        return rgba;
+                    }
+                };
+
 
     }
 

@@ -2,7 +2,6 @@ package com.brainflow.image.data;
 
 import com.brainflow.utils.Index3D;
 import com.brainflow.utils.DataType;
-import com.brainflow.utils.IDimension;
 import com.brainflow.image.interpolation.InterpolationFunction3D;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.ImageSpace3D;
@@ -47,29 +46,29 @@ public class MaskedData3D implements IMaskedData3D {
         return source.indexOf(x, y, z);
     }
 
-    public double getValue(double x, double y, double z, InterpolationFunction3D interp) {
-        return predicate.mask(source.getValue(x, y, z, interp)) ? 1 : 0;
+    public double value(float x, float y, float z, InterpolationFunction3D interp) {
+        return predicate.mask(source.value(x, y, z, interp)) ? 1 : 0;
     }
 
-    public double getWorldValue(double realx, double realy, double realz, InterpolationFunction3D interp) {
-        return predicate.mask(source.getWorldValue(realx, realy, realz, interp)) ? 1 : 0;
+    public double worldValue(float realx, float realy, float realz, InterpolationFunction3D interp) {
+        return predicate.mask(source.worldValue(realx, realy, realz, interp)) ? 1 : 0;
     }
 
     public boolean isTrue(int index) {
-        return predicate.mask(source.getValue(index));
+        return predicate.mask(source.value(index));
     }
 
     public boolean isTrue(int x, int y, int z) {
-        return predicate.mask(source.getValue(x, y, z));
+        return predicate.mask(source.value(x, y, z));
     }
 
-    public double getValue(int index) {
-        return predicate.mask(source.getValue(index)) ? 1 : 0;
+    public double value(int index) {
+        return predicate.mask(source.value(index)) ? 1 : 0;
     }
 
 
-    public double getValue(int x, int y, int z) {
-        return predicate.mask(source.getValue(x, y, z)) ? 1 : 0;
+    public double value(int x, int y, int z) {
+        return predicate.mask(source.value(x, y, z)) ? 1 : 0;
     }
 
 

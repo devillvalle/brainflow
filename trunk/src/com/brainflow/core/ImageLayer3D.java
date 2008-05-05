@@ -10,6 +10,7 @@ import com.brainflow.image.data.IImageData3D;
 import com.brainflow.image.interpolation.NearestNeighborInterpolator;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
+import com.brainflow.image.space.ImageSpace3D;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,7 +19,13 @@ import com.brainflow.image.space.IImageSpace;
  * Time: 6:05:46 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ImageLayer3D extends ImageLayer {
+
+
+
+
+public class ImageLayer3D extends ImageLayer<ImageSpace3D> {
+
+
 
     public ImageLayer3D(IImageData data) {
         super(new MemoryImageDataSource(data));
@@ -37,21 +44,24 @@ public class ImageLayer3D extends ImageLayer {
         super(dataSource, _params);
     }
 
-
     public IImageData3D getData() {
-        return (IImageData3D) super.getData();    //To change body of overridden methods use File | Settings | File Templates.
+        return  (IImageData3D)super.getData();    //To change body of overridden methods use File | Settings | File Templates.
     }
 
     public double getValue(AnatomicalPoint3D pt) {
         IImageSpace space = getCoordinateSpace();
-        double x = pt.getValue(space.getAnatomicalAxis(Axis.X_AXIS)).getX();
-        double y = pt.getValue(space.getAnatomicalAxis(Axis.Y_AXIS)).getX();
-        double z = pt.getValue(space.getAnatomicalAxis(Axis.Z_AXIS)).getX();
+        float x = (float)pt.getValue(space.getAnatomicalAxis(Axis.X_AXIS)).getX();
+        float y = (float)pt.getValue(space.getAnatomicalAxis(Axis.Y_AXIS)).getX();
+        float z = (float)pt.getValue(space.getAnatomicalAxis(Axis.Z_AXIS)).getX();
 
-        return getData().getWorldValue(x, y, z, new NearestNeighborInterpolator());
+        return getData().worldValue(x, y, z, new NearestNeighborInterpolator());
     }
 
-    public SliceRenderer getSliceRenderer(AnatomicalPoint1D slice) {
-        return new BasicImageSliceRenderer(this, slice);
+    private SliceRenderer getSliceRenderer(ImageSpace3D refspace, AnatomicalPoint1D slice) {
+        return new BasicImageSliceRenderer(refspace, this, slice);
+    }
+
+    public SliceRenderer getSliceRenderer(IImageSpace refspace, AnatomicalPoint1D slice) {
+        return getSliceRenderer((ImageSpace3D)refspace, slice);
     }
 }

@@ -14,8 +14,6 @@ import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.utils.Range;
-import com.brainflow.misc.tracing.TracingEventQueue;
-import com.brainflow.misc.tracing.TracingEventQueueJMX;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.docking.DefaultDockingManager;
@@ -33,6 +31,7 @@ import com.jidesoft.swing.JideTabbedPane;
 import com.jidesoft.dialog.JideOptionPane;
 import com.pietschy.command.CommandContainer;
 import com.pietschy.command.GuiCommands;
+import com.pietschy.command.face.Face;
 import com.pietschy.command.configuration.ParseException;
 import com.pietschy.command.group.CommandGroup;
 import com.pietschy.command.group.ExpansionPointBuilder;
@@ -49,13 +48,13 @@ import org.bushe.swing.event.EventSubscriber;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.IndexColorModel;
+import java.awt.event.KeyEvent;
+import java.awt.event.AWTEventListener;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.NumberFormat;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -75,6 +74,10 @@ import java.util.logging.Logger;
  */
 
 public class Brainflow {
+
+    static {
+        com.jidesoft.utils.Lm.verifyLicense("UIN", "BrainFlow", "S5XiLlHH0VReaWDo84sDmzPxpMJvjP3");
+    }
 
 
     private final BrainflowContext applicationContext = new BrainflowContext();
@@ -109,17 +112,6 @@ public class Brainflow {
 
 
     public static void main(String[] args) {
-        com.jidesoft.utils.Lm.verifyLicense("UIN", "BrainFlow", "S5XiLlHH0VReaWDo84sDmzPxpMJvjP3");
-
-        try {
-
-            UIManager.setLookAndFeel(new WindowsLookAndFeel());
-            System.out.println(UIManager.getLookAndFeel());
-
-            LookAndFeelFactory.installJideExtension(LookAndFeelFactory.OFFICE2003_STYLE);
-        } catch(UnsupportedLookAndFeelException e) {
-            log.severe("could not load look and feel");            
-        }
 
 
         final Brainflow bflow = getInstance();
@@ -169,7 +161,16 @@ public class Brainflow {
     public void launch() throws Throwable {
 
 
-       
+        try {
+
+            UIManager.setLookAndFeel(new WindowsLookAndFeel());
+            System.out.println(UIManager.getLookAndFeel());
+
+            LookAndFeelFactory.installJideExtension(LookAndFeelFactory.OFFICE2003_STYLE);
+        } catch (UnsupportedLookAndFeelException e) {
+            log.severe("could not load look and feel");
+        }
+
         //final SplashScreen splash = SplashScreen.getSplashScreen();
 
         //JFrame.setDefaultLookAndFeelDecorated(true);
@@ -250,7 +251,7 @@ public class Brainflow {
 
         initExceptionHandler();
 
-      
+
     }
 
     private void initExceptionHandler() {
@@ -456,13 +457,30 @@ public class Brainflow {
         orthoGroup.bind(getApplicationFrame());
 
 
-        NextSliceCommand nextSliceCommand = new NextSliceCommand();
+        final NextSliceCommand nextSliceCommand = new NextSliceCommand();
         nextSliceCommand.bind(getApplicationFrame());
         nextSliceCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-        PreviousSliceCommand previousSliceCommand = new PreviousSliceCommand();
+
+        final PreviousSliceCommand previousSliceCommand = new PreviousSliceCommand();
         previousSliceCommand.bind(getApplicationFrame());
         previousSliceCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+        Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
+            public void eventDispatched(AWTEvent event) {
+                if (event.getID() == KeyEvent.KEY_PRESSED) {
+                    KeyEvent ke = (KeyEvent) event;
+                    if (ke.getKeyCode() == KeyEvent.VK_LEFT) {
+                        previousSliceCommand.execute();
+                    } else if (ke.getKeyCode() == KeyEvent.VK_RIGHT) {
+                        nextSliceCommand.execute();
+                    }
+
+                }
+
+            }
+        }, AWTEvent.KEY_EVENT_MASK);
+
 
         PageBackSliceCommand pageBackSliceCommand = new PageBackSliceCommand();
         pageBackSliceCommand.bind(getApplicationFrame());
@@ -507,6 +525,12 @@ public class Brainflow {
 
 
         brainFrame.getContentPane().add(mainToolbar, BorderLayout.NORTH);
+
+        //InputMap map = documentPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+
+        //for (KeyStroke ks : map.keys()) {
+        //    System.out.println("key : " + ks);
+        //}
 
 
     }
@@ -683,19 +707,22 @@ public class Brainflow {
                 DockContext.STATE_FRAMEDOCKED,
                 DockContext.DOCK_SIDE_EAST);
 
-        log.fine("instantiating coloradjustment control");
+
         ColorAdjustmentControl colorAdjustmentControl = new ColorAdjustmentControl();
-        log.fine("instantiating coordinate controls");
+
         CoordinateControls coordinateControls = new CoordinateControls();
 
-        log.fine("instantiating color map table presenter");
-        ColorMapTablePresenter tablePresenter = new ColorMapTablePresenter();
+        LayerInfoControl layerInfoControl = new LayerInfoControl();
 
-        log.fine("instantiating mask presenter");
+
+        //ColorMapTablePresenter tablePresenter = new ColorMapTablePresenter();
+
+
         //MaskTablePresenter maskPresenter = new MaskTablePresenter();
 
         tabbedPane.addTab("Adjustment", new JScrollPane(colorAdjustmentControl.getComponent()));
-        tabbedPane.addTab("Color Table", tablePresenter.getComponent());
+        tabbedPane.addTab("Layer Info", new JScrollPane(layerInfoControl.getComponent()));
+        //tabbedPane.addTab("Color Table", tablePresenter.getComponent());
         //tabbedPane.addTab("Mask Table", maskPresenter.getComponent());
         tabbedPane.addTab("Coordinates", new JScrollPane(coordinateControls.getComponent()));
 
@@ -736,7 +763,7 @@ public class Brainflow {
             sb.append("Image " + limg.getDataFile().getName().getBaseName());
             sb.append(" has already been loaded, would you like to reload from disk?");
             Integer ret = JOptionPane.showConfirmDialog(brainFrame, sb.toString(), "Image Already Loaded", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-            log.info("return getValue is: " + ret);
+            log.info("return value is: " + ret);
 
             if (ret == JOptionPane.YES_OPTION) {
                 limg.releaseData();

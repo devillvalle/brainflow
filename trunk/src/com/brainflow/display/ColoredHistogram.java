@@ -111,13 +111,9 @@ public class ColoredHistogram extends JPanel {
 
 
               
-                System.out.println("drawing item : " + item + " series : " + series);
 
-                int numBins = histogram.getNumBins();
-                int colorIdx = (int) ((item + 1) / (double) numBins * 255f);
-                //System.out.println("numbins: " + numBins);
-                //System.out.println("coloridx: " + colorIdx);
-
+                //int numBins = histogram.getNumBins();
+                //System.out.println("painting series");
                 double xval= dataset.getXValue(series, item);
                 Color rgb = colorModel.getColor(xval);
 
@@ -130,6 +126,12 @@ public class ColoredHistogram extends JPanel {
 
 
         chartPanel = new ChartPanel(chart);
+        chartPanel.setMinimumDrawHeight(200);
+        chartPanel.setMinimumDrawWidth(200);
+        chartPanel.setMaximumDrawHeight(800);
+        chartPanel.setMaximumDrawWidth(800);
+        
+
         //chartPanel.addMouseListener(this);
         //chartPanel.addMouseMotionListener(this);
 

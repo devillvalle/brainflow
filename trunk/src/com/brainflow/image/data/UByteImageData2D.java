@@ -112,18 +112,18 @@ public class UByteImageData2D extends AbstractImageData implements IImageData2D 
         return space.getDimension(Axis.X_AXIS) * y + x;
     }
 
-    public double getValue(double x, double y, InterpolationFunction2D interp) {
+    public double value(double x, double y, InterpolationFunction2D interp) {
         return interp.interpolate(x, y, this);
     }
 
-    public double getRealValue(double realx, double realy, InterpolationFunction2D interp) {
+    public double worldValue(double realx, double realy, InterpolationFunction2D interp) {
         double x = space.getImageAxis(Axis.X_AXIS).fractionalSample(realx);
         double y = space.getImageAxis(Axis.Y_AXIS).fractionalSample(realy);
         return interp.interpolate(x, y, this);
 
     }
 
-    public double getValue(int index) {
+    public double value(int index) {
         return data[index];
     }
 
@@ -147,7 +147,7 @@ public class UByteImageData2D extends AbstractImageData implements IImageData2D 
         return data[indexOf(x, y)];
     }
 
-    public double getValue(int x, int y) {
+    public double value(int x, int y) {
         return NumberUtils.ubyte(data[indexOf(x, y)]);
     }
 

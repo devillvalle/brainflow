@@ -72,6 +72,12 @@ public class AnalyzeInfoReader implements ImageInfoReader {
             return name + ".img";
     }
 
+    public static String getStem(String name) {
+        //todo check if valid header name
+        return name.substring(0, name.length() - 4);
+
+    }
+
 
     public List<ImageInfo> readInfo(File f) throws BrainflowException {
         List<ImageInfo> ret = null;
@@ -87,6 +93,7 @@ public class AnalyzeInfoReader implements ImageInfoReader {
             for (ImageInfo ii : ret) {
                 ii.setDataFile(dataFile);
                 ii.setHeaderFile(headerFile);
+                ii.setImageLabel(getStem(headerFile.getName().getBaseName()));
             }
 
 
@@ -126,6 +133,7 @@ public class AnalyzeInfoReader implements ImageInfoReader {
             for (ImageInfo ii : ret) {
                 ii.setDataFile(dataFile);
                 ii.setHeaderFile(headerFile);
+                 ii.setImageLabel(getStem(headerFile.getName().getBaseName()));
             }
 
         } catch (Exception e) {

@@ -2,6 +2,7 @@ package com.brainflow.core;
 
 import com.brainflow.image.operations.Operations;
 import com.brainflow.image.operations.BinaryOperation;
+import com.brainflow.image.data.MaskPredicate;
 import com.brainflow.display.ThresholdRange;
 
 /**
@@ -31,9 +32,9 @@ public interface IMaskItem {
 
     public void setSource(ImageLayer source);
 
-    public ThresholdRange getPredicate();
+    public MaskPredicate getPredicate();
 
-    public void setPredicate(ThresholdRange predicate);
+    //public void setPredicate(ThresholdRange predicate);
 
     public boolean isActive();
 

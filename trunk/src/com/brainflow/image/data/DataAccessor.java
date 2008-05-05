@@ -14,9 +14,7 @@ import com.brainflow.image.space.ImageSpace2D;
 public interface DataAccessor {
 
 
-    public double getValue(int index);
-
-    //public IImageSpace getImageSpace();
+    public double value(int index);
 
     public int numElements();
 

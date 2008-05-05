@@ -50,11 +50,8 @@ public class PercentageRangeConverter extends ObservableWrapper.ReadWrite<Intege
     @Override
     public Integer get() {
         double val = getValue();
-
-
         double percent = (val - min) / (max - min) * numUnits;
 
-      
         return (int)Math.round(percent);
     }
 

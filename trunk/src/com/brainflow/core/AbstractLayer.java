@@ -5,6 +5,7 @@ import com.brainflow.display.ThresholdRange;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.space.ICoordinateSpace;
+import com.brainflow.image.space.IImageSpace;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -62,7 +63,7 @@ public abstract class AbstractLayer {
 
     public abstract double getValue(AnatomicalPoint3D pt);
 
-    public abstract SliceRenderer getSliceRenderer(AnatomicalPoint1D slice);
+    public abstract SliceRenderer getSliceRenderer(IImageSpace refspace, AnatomicalPoint1D slice);
 
 
     public boolean isVisible() {
@@ -73,8 +74,8 @@ public abstract class AbstractLayer {
         return properties.opacity.get();
     }
 
-    public ThresholdRange getThreshold() {
-        return properties.getThresholdRange();
+    public ClipRange getThreshold() {
+        return properties.thresholdRange.get();
     }
 
     public ClipRange getClipRange() {
@@ -96,53 +97,7 @@ public abstract class AbstractLayer {
 
 
 
-        /*properties.getInterpolation().addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                support.firePropertyChange(new PropertyChangeEvent(AbstractLayer.this, ImageLayerProperties.RESAMPLE_PROPERTY,
-                        evt.getOldValue(), evt.getNewValue()));
-            }
-        });  */
 
-        /*properties.getVisible().addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                support.firePropertyChange(new PropertyChangeEvent(AbstractLayer.this, ImageLayerProperties.VISIBLE_PROPERTY,
-                        evt.getOldValue(), evt.getNewValue()));
-
-            }
-        });  */
-
-        /*properties.getOpacity().addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                support.firePropertyChange(new PropertyChangeEvent(AbstractLayer.this, ImageLayerProperties.OPACITY_PROPERTY,
-                        evt.getOldValue(), evt.getNewValue()));
-
-            }
-        });*/
-
-        /*properties.getSmoothingRadius().addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                support.firePropertyChange(new PropertyChangeEvent(AbstractLayer.this, ImageLayerProperties.SMOOTHING_PROPERTY,
-                        evt.getOldValue(), evt.getNewValue()));
-
-            }
-        }); */
-
-        properties.getThresholdRange().addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                System.out.println("threshold changed and my name is: " + AbstractLayer.this.getClass());
-                support.firePropertyChange(new PropertyChangeEvent(AbstractLayer.this, ImageLayerProperties.THRESHOLD_PROPERTY,
-                        evt.getOldValue(), evt.getNewValue()));
-
-            }
-        });
-
-         /*properties.getClipRange().addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                support.firePropertyChange(new PropertyChangeEvent(AbstractLayer.this, ImageLayerProperties.CLIP_RANGE_PROPERTY,
-                        evt.getOldValue(), evt.getNewValue()));
-
-            }
-        });*/
 
 
     }

@@ -142,7 +142,7 @@ public final class AxisRange implements Cloneable {
 
     public String toString() {
         StringBuffer sb = new StringBuffer();
-        sb.append("begin: " + begin).append("end: " + end).append("Anatomical Axis: " + aaxis);
+        sb.append("begin: " + begin).append(" end: " + end).append(" Anatomical Axis: " + aaxis);
 
         return sb.toString();
     }

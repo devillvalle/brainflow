@@ -19,7 +19,9 @@ import com.brainflow.application.toplevel.ResourceManager;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMapDeprecated;
+import com.brainflow.colormap.LinearColorMap2;
 import com.brainflow.core.ImageView;
+import com.brainflow.core.ImageLayer;
 import com.jidesoft.swing.JideSplitButton;
 import com.jidesoft.swing.JideBoxLayout;
 
@@ -56,7 +58,7 @@ public class ColorBarPresenter extends ImageViewPresenter {
 
 
     public ColorBarPresenter() {
-        colorMap = new LinearColorMapDeprecated(0, 255, ColorTable.GRAYSCALE);
+        colorMap = new LinearColorMap2(0, 255, ColorTable.GRAYSCALE);
         init();
 
 
@@ -105,19 +107,17 @@ public class ColorBarPresenter extends ImageViewPresenter {
     }
 
     public void viewSelected(final ImageView view) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                form.setColorMap(view.getSelectedLayer().getImageLayerProperties().colorMap.get());
-            }
-        });
+         form.setColorMap(view.getSelectedLayer().getImageLayerProperties().colorMap.get());
 
          BeanContainer.get().addListener(view.getSelectedLayer().getImageLayerProperties().colorMap, colorMapListener);
 
     }
 
+    protected void layerSelected(ImageLayer layer) {
+        form.setColorMap(layer.getImageLayerProperties().colorMap.get());
+        BeanContainer.get().addListener(layer.getImageLayerProperties().colorMap, colorMapListener);
 
-
-
+    }
 
     public JComponent getComponent() {
         return form;

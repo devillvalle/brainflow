@@ -2,7 +2,6 @@ package com.brainflow.image.data;
 
 import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.image.space.Axis;
-import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.interpolation.InterpolationFunction3D;
 import com.brainflow.image.anatomy.Anatomy;
 import com.brainflow.image.io.ImageInfo;
@@ -10,7 +9,6 @@ import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.image.operations.BinaryOperation;
 import com.brainflow.utils.Index3D;
 import com.brainflow.utils.DataType;
-import com.brainflow.utils.IDimension;
 
 /**
  * Created by IntelliJ IDEA.
@@ -47,27 +45,27 @@ public class BivariateMaskNode3D implements IMaskedData3D {
     }
 
     public boolean isTrue(int index) {
-        return operation.isTrue(left.getValue(index), right.getValue(index));
+        return operation.isTrue(left.value(index), right.value(index));
     }
 
     public boolean isTrue(int x, int y, int z) {
-        return operation.isTrue(left.getValue(x, y, z), right.getValue(x, y, z));
+        return operation.isTrue(left.value(x, y, z), right.value(x, y, z));
     }
 
     public ImageSpace3D getImageSpace() {
         return left.getImageSpace();
     }
 
-    public double getWorldValue(double realx, double realy, double realz, InterpolationFunction3D interp) {
-        return operation.isTrue(left.getWorldValue(realx, realy, realz, interp), right.getWorldValue(realx, realy, realz, interp)) ? 1 : 0;
+    public double worldValue(float realx, float realy, float realz, InterpolationFunction3D interp) {
+        return operation.isTrue(left.worldValue(realx, realy, realz, interp), right.worldValue(realx, realy, realz, interp)) ? 1 : 0;
     }
 
-    public double getValue(double x, double y, double z, InterpolationFunction3D interp) {
-        return operation.isTrue(left.getValue(x, y, z, interp), right.getValue(x, y, z, interp)) ? 1 : 0;
+    public double value(float x, float y, float z, InterpolationFunction3D interp) {
+        return operation.isTrue(left.value(x, y, z, interp), right.value(x, y, z, interp)) ? 1 : 0;
     }
 
-    public double getValue(int x, int y, int z) {
-        return operation.isTrue(left.getValue(x, y, z), right.getValue(x, y, z)) ? 1 : 0;
+    public double value(int x, int y, int z) {
+        return operation.isTrue(left.value(x, y, z), right.value(x, y, z)) ? 1 : 0;
     }
 
     public int indexOf(int x, int y, int z) {
@@ -102,8 +100,8 @@ public class BivariateMaskNode3D implements IMaskedData3D {
         return left.getImageLabel() + ":" + right.getImageLabel();
     }
 
-    public double getValue(int index) {
-        return operation.isTrue(left.getValue(index), right.getValue(index)) ? 1 : 0;
+    public double value(int index) {
+        return operation.isTrue(left.value(index), right.value(index)) ? 1 : 0;
     }
 
     public ImageIterator iterator() {
@@ -142,7 +140,7 @@ public class BivariateMaskNode3D implements IMaskedData3D {
 
         public double next() {
             advance();
-            return getValue(iter.index());
+            return value(iter.index());
 
         }
 
@@ -152,7 +150,7 @@ public class BivariateMaskNode3D implements IMaskedData3D {
 
         public double previous() {
             iter.jump(-1);
-            return getValue(iter.index());
+            return value(iter.index());
 
         }
 

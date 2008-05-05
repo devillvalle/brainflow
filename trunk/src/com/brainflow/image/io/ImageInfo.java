@@ -8,6 +8,7 @@ import com.brainflow.image.data.IImageData;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace3D;
+import com.brainflow.image.space.ImageMapping3D;
 import com.brainflow.utils.*;
 import org.apache.commons.vfs.FileObject;
 
@@ -37,6 +38,9 @@ public class ImageInfo implements java.io.Serializable {
 
     private Dimension3D voxelOffset = new Dimension3D<Integer>(0, 0, 0);
 
+
+    private ImageMapping3D mapping;
+
     private Point3D origin = new Point3D();
 
     private int numImages = 1;
@@ -56,9 +60,9 @@ public class ImageInfo implements java.io.Serializable {
 
     private ByteOrder endian = ByteOrder.nativeOrder();
 
-    private double scaleFactor = 1;
+    private float scaleFactor = 1;
 
-    private double intercept = 0;
+    private float intercept = 0;
 
 
     private String imageLabel = null;
@@ -89,6 +93,7 @@ public class ImageInfo implements java.io.Serializable {
         spacing = info.spacing;
         arrayDim = info.arrayDim;
         imageLabel = info.imageLabel;
+        mapping = info.mapping;
     }
 
 
@@ -96,7 +101,7 @@ public class ImageInfo implements java.io.Serializable {
         IImageSpace space = data.getImageSpace();
 
         IDimension<Integer> dim = space.getDimension();
-        int[] dimensions = new int[] {dim.getDim(0), dim.getDim(1), dim.getDim(2)};
+        int[] dimensions = new int[]{dim.getDim(0), dim.getDim(1), dim.getDim(2)};
 
 
         setAnatomy((Anatomy3D) space.getAnatomy());
@@ -135,7 +140,7 @@ public class ImageInfo implements java.io.Serializable {
                     aaxes[i], (int) arrayDim.getDim(i).doubleValue());
         }
 
-        return new ImageSpace3D(iaxes[0], iaxes[1], iaxes[2]);
+        return new ImageSpace3D(iaxes[0], iaxes[1], iaxes[2], mapping);
 
     }
 
@@ -190,6 +195,14 @@ public class ImageInfo implements java.io.Serializable {
         return anatomy;
     }
 
+    ImageMapping3D getMapping() {
+        return mapping;
+    }
+
+    void setMapping(ImageMapping3D mapping) {
+        this.mapping = mapping;
+    }
+
     public String getImageLabel() {
         if (imageLabel == null) return getHeaderFile().getName().getBaseName();
         return imageLabel;
@@ -203,7 +216,7 @@ public class ImageInfo implements java.io.Serializable {
         return intercept;
     }
 
-    void setIntercept(double intercept) {
+    void setIntercept(float intercept) {
         this.intercept = intercept;
     }
 
@@ -235,7 +248,7 @@ public class ImageInfo implements java.io.Serializable {
         return scaleFactor;
     }
 
-    void setScaleFactor(double _scaleFactor) {
+    void setScaleFactor(float _scaleFactor) {
         scaleFactor = _scaleFactor;
     }
 

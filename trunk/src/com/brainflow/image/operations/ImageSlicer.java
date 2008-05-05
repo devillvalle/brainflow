@@ -5,6 +5,7 @@ import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.data.BasicImageData2D;
 import com.brainflow.image.data.IImageData3D;
 import com.brainflow.image.data.ImageFiller;
+import com.brainflow.image.data.DataAccessor3D;
 
 import java.util.logging.Logger;
 
@@ -23,12 +24,12 @@ public class ImageSlicer {
 
     private Logger log = Logger.getLogger("com.brainflow.image");
 
-    private IImageData3D image;
+    private DataAccessor3D image;
 
     private Anatomy3D displayAnatomy = Anatomy3D.AXIAL_LAI;
 
 
-    public ImageSlicer(IImageData3D _image) {
+    public ImageSlicer(DataAccessor3D _image) {
         image = _image;
 
     }
@@ -82,13 +83,13 @@ public class ImageSlicer {
             if (probe.getAnatomicalPlane().isSwappedVersion(data.getAnatomicalPlane())) {
                 for (int zero = 0; zero < ysamples.length; zero++) {
                     for (int zero = 0; zero < xsamples.length; zero++) {
-                        outdata.setValue(xprobe[zero], yprobe[zero], image.getValue(xsamples[zero], ysamples[zero], idx));
+                        outdata.setValue(xprobe[zero], yprobe[zero], image.value(xsamples[zero], ysamples[zero], idx));
                     }
                 }
             } else {
                 for (int zero = 0; zero < ysamples.length; zero++) {
                     for (int zero = 0; zero < xsamples.length; zero++) {
-                        outdata.setValue(xprobe[zero], yprobe[zero], image.getValue(xsamples[zero], ysamples[zero], idx));
+                        outdata.setValue(xprobe[zero], yprobe[zero], image.value(xsamples[zero], ysamples[zero], idx));
                     }
                 }
             }
@@ -96,13 +97,13 @@ public class ImageSlicer {
             if (probe.getAnatomicalPlane().isSwappedVersion(data.getAnatomicalPlane())) {
                 for (int zero = 0; zero < ysamples.length; zero++) {
                     for (int zero = 0; zero < xsamples.length; zero++) {
-                        outdata.setValue(xprobe[zero], yprobe[zero], image.getValue(xsamples[zero], idx, ysamples[zero]));
+                        outdata.setValue(xprobe[zero], yprobe[zero], image.value(xsamples[zero], idx, ysamples[zero]));
                     }
                 }
             } else {
                 for (int zero = 0; zero < ysamples.length; zero++) {
                     for (int zero = 0; zero < xsamples.length; zero++) {
-                        outdata.setValue(xprobe[zero], yprobe[zero], image.getValue(xsamples[zero], idx, ysamples[zero]));
+                        outdata.setValue(xprobe[zero], yprobe[zero], image.value(xsamples[zero], idx, ysamples[zero]));
                     }
                 }
             }
@@ -110,13 +111,13 @@ public class ImageSlicer {
             if (probe.getAnatomicalPlane().isSwappedVersion(data.getAnatomicalPlane())) {
                 for (int zero = 0; zero < ysamples.length; zero++) {
                     for (int zero = 0; zero < xsamples.length; zero++) {
-                        outdata.setValue(xprobe[zero], yprobe[zero], image.getValue(idx, xsamples[zero], ysamples[zero]));
+                        outdata.setValue(xprobe[zero], yprobe[zero], image.value(idx, xsamples[zero], ysamples[zero]));
                     }
                 }
             } else {
                 for (int zero = 0; zero < ysamples.length; zero++) {
                     for (int zero = 0; zero < xsamples.length; zero++) {
-                        outdata.setValue(xprobe[zero], yprobe[zero], image.getValue(idx, xsamples[zero], ysamples[zero]));
+                        outdata.setValue(xprobe[zero], yprobe[zero], image.value(idx, xsamples[zero], ysamples[zero]));
                     }
                 }
             }

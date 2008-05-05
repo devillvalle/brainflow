@@ -612,7 +612,7 @@ public class Quaternion implements Externalizable  {
             float invSinTheta = 1f / FastMath.sin(theta);
 
             // Calculate the scale for q1 and q2, according to the angle and
-            // it's sine getValue
+            // it's sine value
             scale0 = FastMath.sin((1 - t) * theta) * invSinTheta;
             scale1 = FastMath.sin((t * theta)) * invSinTheta;
         }
@@ -669,7 +669,7 @@ public class Quaternion implements Externalizable  {
             float invSinTheta = 1f / FastMath.sin(theta);
 
             // Calculate the scale for q1 and q2, according to the angle and
-            // it's sine getValue
+            // it's sine value
             scale0 = FastMath.sin((1 - changeAmnt) * theta) * invSinTheta;
             scale1 = FastMath.sin((changeAmnt * theta)) * invSinTheta;
         }

@@ -54,7 +54,7 @@ public class NearestNeighborInterpolator implements InterpolationFunction3D {
             //z_up = 0;
             return 0;
 
-        total = data.getValue(x_up, y_up, z_up);
+        total = data.value(x_up, y_up, z_up);
 
         return total;
     }

@@ -3,6 +3,7 @@ package com.brainflow.core;
 import com.brainflow.display.ThresholdRange;
 import com.brainflow.image.operations.Operations;
 import com.brainflow.image.operations.BinaryOperation;
+import com.brainflow.image.data.MaskPredicate;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,19 +14,17 @@ import com.brainflow.image.operations.BinaryOperation;
  */
 public class ImageMaskItem extends MaskItem {
 
-    public ImageMaskItem(ImageLayer source, ThresholdRange predicate, int group) {
+    public ImageMaskItem(ImageLayer source, MaskPredicate predicate, int group) {
         super(source, predicate, group);
     }
 
-    public ImageMaskItem(ImageLayer source, ThresholdRange predicate, int group, BinaryOperation operation) {
+    public ImageMaskItem(ImageLayer source, MaskPredicate predicate, int group, BinaryOperation operation) {
         super(source, predicate, group, operation);
     }
 
-    public ImageMaskItem(ImageLayer source, ThresholdRange predicate, int group, BinaryOperation operation, boolean active) {
+    public ImageMaskItem(ImageLayer source, MaskPredicate predicate, int group, BinaryOperation operation, boolean active) {
         super(source, predicate, group, operation, active);
     }
 
-    public ImageLayer getSource() {
-        return (ImageLayer)super.getSource();    
-    }
+
 }

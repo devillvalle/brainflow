@@ -2,11 +2,9 @@ package com.brainflow.core;
 
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
-import com.brainflow.colormap.LinearColorMapDeprecated;
 import com.brainflow.colormap.LinearColorMap2;
 import com.brainflow.display.*;
 import com.brainflow.utils.IRange;
-import com.jgoodies.binding.beans.PropertyAdapter;
 import com.jgoodies.binding.list.SelectionInList;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
@@ -82,10 +80,12 @@ public class ImageLayerProperties implements Serializable {
 
     public final Property<Double> smoothingRadius = ObservableProperty.create(0.0);
 
-    private ThresholdRange threshold;
+    public final ObservableProperty<ClipRange> thresholdRange = ObservableProperty.create(new ClipRange(0, 0, 0, 0));
 
 
     public final ObservableProperty<ClipRange> clipRange = ObservableProperty.create(new ClipRange(0, 0, 0, 0));
+
+
 
     @XStreamOmitField
     private SelectionInList interpolationMethod;
@@ -103,7 +103,7 @@ public class ImageLayerProperties implements Serializable {
         init(imap, _dataRange);
 
         //temporary hack replace with builder
-        threshold = _thresholdRange;
+        //thresholdRange.get().setHighClip();
     }
 
     public ImageLayerProperties(IndexColorModel _icm, IRange _dataRange) {
@@ -120,21 +120,21 @@ public class ImageLayerProperties implements Serializable {
     private void init(IColorMap map, IRange dataRange) {
 
         colorMap.set(map);
-
-
-        threshold = new ThresholdRange(map.getMinimumValue(), map.getMinimumValue(), dataRange);
-
+       
         clipRange.get().maxValue.set(dataRange.getMax());
         clipRange.get().minValue.set(dataRange.getMin());
 
         clipRange.get().lowClip.set(map.getLowClip());
         clipRange.get().highClip.set(map.getHighClip());
 
+        thresholdRange.get().maxValue.set(dataRange.getMax());
+        thresholdRange.get().minValue.set(dataRange.getMin());
+
 
     }
 
     public ThresholdRange getThresholdRange() {
-        return threshold;
+        return null;
     }
 
     public double getSmoothingRadius() {

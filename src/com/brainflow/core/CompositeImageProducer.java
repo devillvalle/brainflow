@@ -285,8 +285,7 @@ public class CompositeImageProducer extends AbstractImageProducer {
             dirty = true;
 
             ThreadPoolExecutor executor = (ThreadPoolExecutor)renderQueue.getExecutorService();
-            
-            System.out.println("ACTIVE TASKS: " + executor.getActiveCount());
+           
             renderQueue.submitTask(createRenderTask());
             //plot.getComponent().repaint();
         }

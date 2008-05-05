@@ -9,7 +9,6 @@ import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.utils.Index3D;
 import com.brainflow.utils.DataType;
-import com.brainflow.utils.IDimension;
 import test.Testable;
 
 /**
@@ -85,24 +84,24 @@ public class ImageData {
             }
 
 
-            public final double getValue(int index) {
-                return data.getValue(index) * scaleFactor;
+            public final double value(int index) {
+                return data.value(index) * scaleFactor;
             }
 
             public int numElements() {
                 return data.numElements();
             }
 
-            public final double getValue(double x, double y, double z, InterpolationFunction3D interp) {
-                return data.getValue(x,y,z,interp) * scaleFactor;
+            public final double value(float x, float y, float z, InterpolationFunction3D interp) {
+                return data.value(x,y,z,interp) * scaleFactor;
             }
 
-            public final double getValue(int x, int y, int z) {
-                return data.getValue(x,y,z) * scaleFactor;
+            public final double value(int x, int y, int z) {
+                return data.value(x,y,z) * scaleFactor;
             }
 
-            public final double getWorldValue(double realx, double realy, double realz, InterpolationFunction3D interp) {
-                return data.getWorldValue(realx,realy,realz, interp);
+            public final double worldValue(float realx, float realy, float realz, InterpolationFunction3D interp) {
+                return data.worldValue(realx,realy,realz, interp);
             }
         };
     }
@@ -110,7 +109,7 @@ public class ImageData {
     @Testable
     public static IImageData3D createConstantData(final double value, final ImageSpace3D space) {
         return new AbstractImageData3D(space, DataType.DOUBLE) {
-            public double getValue(int index) {
+            public double value(int index) {
                 return value;
             }
 
@@ -130,15 +129,15 @@ public class ImageData {
                 return new BasicImageData3D.Iterator3D(this);
             }
 
-            public double getWorldValue(double realx, double realy, double realz, InterpolationFunction3D interp) {
+            public double worldValue(float realx, float realy, float realz, InterpolationFunction3D interp) {
                 return value;
             }
 
-            public double getValue(double x, double y, double z, InterpolationFunction3D interp) {
+            public double value(float x, float y, float z, InterpolationFunction3D interp) {
                 return value;
             }
 
-            public double getValue(int x, int y, int z) {
+            public double value(int x, int y, int z) {
                 return value;
             }
 

@@ -81,7 +81,7 @@ public class ConnectedComponentsFilter3 extends AbstractImageFilter {
                 for (int x = 0; x < dim[0]; x++) {
                     nr_set = 0;
 
-                    if (data.getValue(x, y, z) > 0) {
+                    if (data.value(x, y, z) > 0) {
                        
                         nabo[0] = checkPreviousSlice(labels, x, y, z, dim, connTable);
                         if (nabo[0] > 0) nr_set += 1;

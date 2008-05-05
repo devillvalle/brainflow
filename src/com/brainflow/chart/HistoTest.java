@@ -32,7 +32,9 @@ public class HistoTest extends JPanel {
 
         //HistogramDatasetX dataset = new HistogramDatasetX(histogram);
         ColoredHistogram chist = new ColoredHistogram(histogram);
+
         LinearColorMap2 lmap = new LinearColorMap2(histogram.getMinValue(), histogram.getMaxValue(), ColorTable.SPECTRUM);
+        lmap = lmap.newClipRange(0,4000);
         chist.setColorModel(lmap);
         add(chist, BorderLayout.CENTER);
 
@@ -40,7 +42,7 @@ public class HistoTest extends JPanel {
 
     public static void main(String[] args) {
         IImageDataSource dataSource = TestUtils.quickDataSource("resources/data/global_mean+orig.HEAD");
-        Histogram histo = new Histogram(dataSource.getData(),30);
+        Histogram histo = new Histogram(dataSource.getData(),256);
 
         JFrame jf = new JFrame();
 

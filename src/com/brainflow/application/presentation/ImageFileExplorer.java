@@ -401,7 +401,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
     }
 
 
-    private synchronized LazyNode makeNode(FileObject fobj) {
+    private LazyNode makeNode(FileObject fobj) {
 
         LazyNode ret = null;
 
@@ -438,7 +438,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
         return ret;
     }
 
-    private synchronized List<LazyNode> makeNodes(FileObject[] fobj) {
+    private  List<LazyNode> makeNodes(FileObject[] fobj) {
         List<LazyNode> nodeList = new ArrayList<LazyNode>();
         for (FileObject fo : fobj) {
             LazyNode node = makeNode(fo);

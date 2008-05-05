@@ -37,7 +37,7 @@ public class ImagePlotFactory {
         plot.setImageProducer(producer);
 
 
-        //plot.setSlice(getView().getCursorPos().getValue(displayAnatomy.ZAXIS));
+        //plot.setSlice(getView().getCursorPos().value(displayAnatomy.ZAXIS));
         //plot.setScreenInterpolation(getView().getScreenInterpolation());
         return plot;
 

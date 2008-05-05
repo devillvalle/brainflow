@@ -212,10 +212,10 @@ public class ImageAxis extends CoordinateAxis {
     public String toString() {
         StringBuffer sb = new StringBuffer();
 
-        sb.append("anatomical axis: " + getAnatomicalAxis().toString())
-                .append("axis range: " + getRange().toString())
-                .append("samples: " + samples)
-                .append("spacing: " + spacing);
+        sb.append(" anatomical axis: " + getAnatomicalAxis().toString()).append("\n")
+                .append(" axis range: " + getRange().toString()).append("\n")
+                .append(" samples: " + samples).append("\n")
+                .append(" spacing: " + spacing);
 
         return sb.toString();
 

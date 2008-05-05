@@ -199,7 +199,7 @@ public class ConnectedComponentsFilter extends AbstractImageFilter {
         int rownum = y * nx + x;
 
         for (int iz = 0; iz < nz; iz++) {
-            if (data.getValue(x, y, iz) > 0) {
+            if (data.value(x, y, iz) > 0) {
                 if (runCount == 0) {
                     runs.setStartIndex(rownum);
                 }
@@ -207,7 +207,7 @@ public class ConnectedComponentsFilter extends AbstractImageFilter {
                 runCount++;
                 Run run = new Run(x, y, iz);
                 int jz = iz + 1;
-                while (data.getValue(x, y, jz) > 0) {
+                while (data.value(x, y, jz) > 0) {
                     jz++;
                 }
                 run.zhigh = jz - 1;

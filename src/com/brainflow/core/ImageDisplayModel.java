@@ -56,7 +56,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
 
             if (integer < 0 && listModel.size() > 0) {
-                log.warning("sliently aborting attempt to set layer index < 0");
+                log.warning("silently aborting attempt to set layer index < 0");
                 return;
             }
 
@@ -68,7 +68,6 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
 
     private EventListenerList eventListeners = new WeakEventListenerList();
-
 
     private ForwardingListDataListener forwarder = new ForwardingListDataListener();
 
@@ -179,11 +178,16 @@ public class ImageDisplayModel implements IImageDisplayModel {
         listenToLayer(layer);
         listModel.add(layer);
         if (listModel.size() == 1) {
+            imageSpace = layer.getCoordinateSpace();
             listSelection.set(0);
         }
 
 
-        computeImageSpace();
+        //computeImageSpace();
+
+    }
+
+    private void updateColorMapClips() {
 
     }
 
@@ -195,15 +199,6 @@ public class ImageDisplayModel implements IImageDisplayModel {
                 ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
                 for (ImageLayerListener listener : listeners) {
                     listener.interpolationMethodChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer) evt.getSource()));
-                }
-            }
-        });
-
-        layer.addPropertyChangeListener(ImageLayerProperties.THRESHOLD_PROPERTY, new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
-                for (ImageLayerListener listener : listeners) {
-                    listener.thresholdChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer) evt.getSource()));
                 }
             }
         });
@@ -259,6 +254,26 @@ public class ImageDisplayModel implements IImageDisplayModel {
             }
         });
 
+
+        BeanContainer.get().addListener(layer.getImageLayerProperties().thresholdRange.get().lowClip, new PropertyListener() {
+            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+                ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
+                for (ImageLayerListener listener : listeners) {
+                    listener.thresholdChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
+                }
+            }
+        });
+
+        BeanContainer.get().addListener(layer.getImageLayerProperties().thresholdRange.get().highClip, new PropertyListener() {
+            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+                ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
+                for (ImageLayerListener listener : listeners) {
+                    listener.thresholdChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
+                }
+            }
+        });
+
+
         BeanContainer.get().addListener(layer.getImageLayerProperties().clipRange.get().lowClip, new PropertyListener() {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
                 Number lowClip = (Number) newValue;
@@ -272,6 +287,8 @@ public class ImageDisplayModel implements IImageDisplayModel {
                 }
 
                 IColorMap newMap = oldMap.newClipRange(lowClip.doubleValue(), highClip.doubleValue());
+
+
                 layer.getImageLayerProperties().colorMap.set(newMap);
 
                 ///System.out.println("low clip : " + lowClip);
@@ -298,7 +315,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
                 IColorMap newMap = oldMap.newClipRange(lowClip.doubleValue(), highClip.doubleValue());
                 layer.getImageLayerProperties().colorMap.set(newMap);
                 for (ImageLayerListener listener : listeners) {
-                  listener.clipRangeChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
+                    listener.clipRangeChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
 
                 }
 
@@ -315,7 +332,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
 
     private void computeImageSpace() {
-        IImageSpace uspace = null;
+        /*IImageSpace uspace = null;
 
         if (!(listModel.size() == 0)) {
             for (int i = 0; i < listModel.size(); i++) {
@@ -334,7 +351,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
             ICoordinateSpace old = imageSpace;
             imageSpace = uspace;
             changeSupport.firePropertyChange(ImageDisplayModel.IMAGE_SPACE_PROPERTY, old, imageSpace);
-        }
+        }   */
 
     }
 

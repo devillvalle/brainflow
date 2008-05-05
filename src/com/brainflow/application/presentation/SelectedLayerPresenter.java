@@ -102,7 +102,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
                 CheckBoxListSelectionModel model = (CheckBoxListSelectionModel) e.getSource();
                 ImageView view = getSelectedView();
 
-                System.out.println("layer selection getValue changed !");
+                System.out.println("layer selection value changed !");
                 for (int i = f1; i <= f2; i++) {
                     AbstractLayer layer = view.getModel().getLayer(i);
                     boolean vis = layer.getImageLayerProperties().visible.get();

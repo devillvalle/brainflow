@@ -4,13 +4,10 @@ package com.brainflow.image.io;
 import com.brainflow.application.BrainflowException;
 import com.brainflow.image.data.BasicImageData;
 import com.brainflow.image.data.IImageData;
-import com.brainflow.image.io.BasicImageReader;
-import com.brainflow.image.io.ImageInfo;
-import com.brainflow.image.io.NiftiInfoReader;
-import com.brainflow.image.io.NiftiImageInfo;
+
 import com.brainflow.utils.DataType;
 import com.brainflow.utils.IDimension;
-import com.brainflow.utils.ProgressListener;
+import com.brainflow.utils.ProgressAdapter;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
@@ -21,6 +18,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.net.MalformedURLException;
 import java.util.logging.Logger;
 import java.util.List;
 
@@ -43,80 +41,50 @@ public class BrainIO {
     }
 
 
-    public static IImageData readNiftiImage(String fname) throws BrainflowException {
+    public static IImageData readNiftiImage(URL header) throws BrainflowException {
 
-        NiftiInfoReader reader = new NiftiInfoReader();
+        IImageData data;
 
-        List<NiftiImageInfo> info = reader.readInfo(new File(fname));
+        try {
+            NiftiInfoReader reader = new NiftiInfoReader();
 
-        BasicImageReader ireader = new BasicImageReader(info.get(0));
-        IImageData data = ireader.readImage(info.get(0), new ProgressListener() {
-            public void setValue(int val) {
 
-            }
+            List<NiftiImageInfo> info = reader.readInfo(VFS.getManager().resolveFile(header.toString()));
 
-            public void setMinimum(int val) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
+            BasicImageReader ireader = new BasicImageReader(info.get(0));
+            data = ireader.readImage(info.get(0), new ProgressAdapter());
 
-            public void setMaximum(int val) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void setString(String message) {
-                log.info("Progress: " + message);
-            }
-
-            public void setIndeterminate(boolean b) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void finished() {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-        });
-
+        } catch (FileSystemException e) {
+            throw new BrainflowException(e);
+        }
 
         return data;
     }
 
 
-    public static IImageData readAnalyzeImage(URL header) throws BrainflowException {
-        IImageData data = null;
+    public static IImageData readNiftiImage(String fname) throws BrainflowException {
+
         try {
-            log.info("BrainIO.readAnalyzeImage " + header);
+            URL url = new File(fname).toURI().toURL();
+            return readNiftiImage(url);
+        } catch (MalformedURLException e) {
+            throw new BrainflowException(e);
+        }
+
+
+    }
+
+
+    public static IImageData readAnalyzeImage(URL header) throws BrainflowException {
+        IImageData data;
+        try {
             AnalyzeInfoReader reader = new AnalyzeInfoReader();
             FileSystemManager fsManager = VFS.getManager();
             FileObject fobj = fsManager.resolveFile(header.getPath());
             List<? extends ImageInfo> info = reader.readInfo(fobj);
-            log.info("AnalyzeInfo: " + info.get(0));
-
             BasicImageReader ireader = new BasicImageReader(info.get(0));
-            data = ireader.readImage(info.get(0), new ProgressListener() {
-                public void setValue(int val) {
+            data = ireader.readImage(info.get(0), new ProgressAdapter());
 
-                }
-
-                public void setMinimum(int val) {
-                    //To change body of implemented methods use File | Settings | File Templates.
-                }
-
-                public void setMaximum(int val) {
-                    //To change body of implemented methods use File | Settings | File Templates.
-                }
-
-                public void setString(String message) {
-                    log.info("Progress: " + message);
-                }
-
-                public void setIndeterminate(boolean b) {
-                    //To change body of implemented methods use File | Settings | File Templates.
-                }
-
-                public void finished() {
-                    //To change body of implemented methods use File | Settings | File Templates.
-                }
-            });
         } catch (FileSystemException e) {
             throw new BrainflowException(e.getMessage(), e);
         }
@@ -127,38 +95,12 @@ public class BrainIO {
 
 
     public static IImageData readAnalyzeImage(String fname) throws BrainflowException {
-        log.info("BrainIO.readAnalyzeImage " + fname);
         AnalyzeInfoReader reader = new AnalyzeInfoReader();
 
         List<ImageInfo> info = reader.readInfo(new File(fname));
-        log.info("AnalyzeInfo: " + info.get(0));
 
         BasicImageReader ireader = new BasicImageReader(info.get(0));
-        IImageData data = ireader.readImage(info.get(0), new ProgressListener() {
-            public void setValue(int val) {
-
-            }
-
-            public void setMinimum(int val) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void setMaximum(int val) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void setString(String message) {
-                log.info("Progress: " + message);
-            }
-
-            public void setIndeterminate(boolean b) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void finished() {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-        });
+        IImageData data = ireader.readImage(info.get(0), new ProgressAdapter());
 
 
         return data;
@@ -174,31 +116,7 @@ public class BrainIO {
 
         IImageData data = null;
 
-        data = ireader.readImage(info, new ProgressListener() {
-            public void setValue(int val) {
-
-            }
-
-            public void setMinimum(int val) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void setMaximum(int val) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void setString(String message) {
-                log.severe("Progress: " + message);
-            }
-
-            public void setIndeterminate(boolean b) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            public void finished() {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-        });
+        data = ireader.readImage(info, new ProgressAdapter());
 
         //data.setImageLabel(info.getDataFile().getName().getBaseName());
 
@@ -264,9 +182,6 @@ public class BrainIO {
             AnalyzeInfoWriter writer = new AnalyzeInfoWriter();
             ImageInfo info = new ImageInfo(data);
             String hdrName = AnalyzeInfoReader.getHeaderName(fname);
-
-            log.info("BrainIO.writeAnalyzeImage: data type is " + data.getDataType());
-            log.info("BrainIO.writeAnalyzeImage: is big endian?  " + info.getEndian());
             writer.writeInfo(new File(hdrName), info);
 
 

@@ -107,19 +107,19 @@ public class BinaryImageData3D extends BinaryImageData implements IMaskedData3D 
     }
 
 
-    public double getValue(double x, double y, double z, InterpolationFunction3D interp) {
+    public double value(float x, float y, float z, InterpolationFunction3D interp) {
         return interp.interpolate(x, y, z, this);
 
     }
 
-    public double getWorldValue(double realx, double realy, double realz, InterpolationFunction3D interp) {
+    public double worldValue(float realx, float realy, float realz, InterpolationFunction3D interp) {
         double x = space.getImageAxis(Axis.X_AXIS).fractionalSample(realx);
         double y = space.getImageAxis(Axis.Y_AXIS).fractionalSample(realy);
         double z = space.getImageAxis(Axis.Z_AXIS).fractionalSample(realz);
         return interp.interpolate(x, y, z, this);
     }
 
-    public double getValue(int index) {
+    public double value(int index) {
         return getBitVector().getQuick(index) ? 1.0 : 0.0;
 
     }
@@ -129,7 +129,7 @@ public class BinaryImageData3D extends BinaryImageData implements IMaskedData3D 
 
     }
 
-    public final double getValue(int x, int y, int z) {
+    public final double value(int x, int y, int z) {
         return getBitVector().getQuick(indexOf(x, y, z)) ? 1.0 : 0.0;
     }
 

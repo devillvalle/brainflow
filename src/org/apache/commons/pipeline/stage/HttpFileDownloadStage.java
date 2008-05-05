@@ -116,7 +116,7 @@ public class HttpFileDownloadStage extends BaseStage {
                 con.setRequestMethod("GET");
                 for (Iterator iter = params.entrySet().iterator(); iter.hasNext();) {
                     Map.Entry entry = (Map.Entry) iter.next();
-                    con.setRequestProperty((String) entry.getKey(), (String) entry.getValue());
+                    con.setRequestProperty((String) entry.getKey(), (String) entry.value());
                 }
             }
              */

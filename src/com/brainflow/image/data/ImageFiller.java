@@ -9,7 +9,6 @@ import com.brainflow.image.io.BrainIO;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace2D;
-import com.brainflow.math.ArrayUtils;
 import test.Testable;
 
 /**
@@ -134,7 +133,7 @@ public class ImageFiller {
             y = slowIterator.next();
             while (fastIterator.hasNext()) {
                 x = fastIterator.next();
-                op[i] = (float)data.getValue(x, y, z);
+                op[i] = (float)data.value(x, y, z);
                 i++;
             }
             fastIterator.reset();
@@ -156,7 +155,7 @@ public class ImageFiller {
             while (fastIterator.hasNext()) {
                 y = fastIterator.next();
 
-                op[i] = (float)data.getValue(x, y, z);
+                op[i] = (float)data.value(x, y, z);
                 i++;
             }
             fastIterator.reset();
@@ -176,7 +175,7 @@ public class ImageFiller {
             z = slowIterator.next();
             while (fastIterator.hasNext()) {
                 x = fastIterator.next();
-                op[i] = (float)data.getValue(x, y, z);
+                op[i] = (float)data.value(x, y, z);
                 i++;
             }
             fastIterator.reset();
@@ -196,7 +195,7 @@ public class ImageFiller {
             z = slowIterator.next();
             while (fastIterator.hasNext()) {
                 y = fastIterator.next();
-                op[i] = (float)data.getValue(x, y, z);
+                op[i] = (float)data.value(x, y, z);
                 i++;
             }
             fastIterator.reset();
@@ -217,7 +216,7 @@ public class ImageFiller {
             while (fastIterator.hasNext()) {
                 z = fastIterator.next();
 
-                op[i] = (float)data.getValue(x, y, z);
+                op[i] = (float)data.value(x, y, z);
                 i++;
             }
             fastIterator.reset();
@@ -237,8 +236,8 @@ public class ImageFiller {
             x = slowIterator.next();
             while (fastIterator.hasNext()) {
                 z = fastIterator.next();
-                //System.out.println("x : " + x + " y: " + y + " z: " + z + "value : " + data.getValue(x, y, z));
-                op[i] = (float)data.getValue(x, y, z);
+                //System.out.println("x : " + x + " y: " + y + " z: " + z + "value : " + data.value(x, y, z));
+                op[i] = (float)data.value(x, y, z);
                 i++;
             }
             fastIterator.reset();

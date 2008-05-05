@@ -368,7 +368,7 @@ public class MaskTablePresenter extends ImageViewPresenter {
                     item.setSource((ImageLayer) o);
                     break;
                 case 1:
-                    item.setPredicate((ThresholdRange) o);
+                    //item.setPredicate((ThresholdRange) o);
                     break;
                 case 2:
                     item.setGroup((Integer) o);

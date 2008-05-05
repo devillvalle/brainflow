@@ -71,12 +71,12 @@ public class TrilinearInterpolator implements InterpolationFunction3D {
         int yidx = y_down;
         int zidx = z_down;
 
-        double total = data.getValue(xidx, yidx, zidx) * d * e * f;
+        double total = data.value(xidx, yidx, zidx) * d * e * f;
         double val = 0;
 
         if (x_up != x_down) {
             xidx++;
-            val = data.getValue(xidx, yidx, zidx);
+            val = data.value(xidx, yidx, zidx);
             total += val * a * e * f;
         }
 
@@ -84,12 +84,12 @@ public class TrilinearInterpolator implements InterpolationFunction3D {
             yidx++;
             xidx = x_down;
 
-            val = data.getValue(xidx, yidx, zidx);
+            val = data.value(xidx, yidx, zidx);
             total += val * d * b * f;
 
             if (x_up != x_down) {
                 xidx++;
-                val = data.getValue(xidx, yidx, zidx);
+                val = data.value(xidx, yidx, zidx);
                 total += val * a * b * f;
             }
         }
@@ -98,24 +98,24 @@ public class TrilinearInterpolator implements InterpolationFunction3D {
             zidx++;
             yidx = y_down;
             xidx = x_down;
-            val = data.getValue(xidx, yidx, zidx);
+            val = data.value(xidx, yidx, zidx);
             total += val * d * e * c;
 
             if (x_up != x_down) {
                 xidx++;
-                val = data.getValue(xidx, yidx, zidx);
+                val = data.value(xidx, yidx, zidx);
                 total += val * a * e * c;
             }
 
             if (y_up != y_down) {
                 yidx++;
                 xidx = x_down;
-                val = data.getValue(xidx, yidx, zidx);
+                val = data.value(xidx, yidx, zidx);
                 total += val * d * b * c;
 
                 if (x_up != x_down) {
                     xidx++;
-                    val = data.getValue(xidx, yidx, zidx);
+                    val = data.value(xidx, yidx, zidx);
                     ;
                     total += val * a * b * c;
                 }

@@ -4,15 +4,11 @@ import com.brainflow.application.presentation.binding.Bindable;
 import com.brainflow.application.presentation.binding.PercentageRangeConverter;
 import com.brainflow.application.presentation.binding.DoubleToStringConverter;
 import com.brainflow.application.presentation.forms.DoubleSliderForm;
-import com.brainflow.colormap.AbstractColorMap;
-import com.brainflow.colormap.IColorMap;
+
 import com.brainflow.core.ClipRange;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageView;
-import com.brainflow.core.AbstractLayer;
-import com.jgoodies.binding.adapter.Bindings;
-import com.jgoodies.binding.adapter.BoundedRangeAdapter;
-import com.jgoodies.binding.beans.BeanAdapter;
+
 import net.java.dev.properties.binding.swing.adapters.SwingBind;
 
 import javax.swing.*;

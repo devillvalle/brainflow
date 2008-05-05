@@ -18,7 +18,7 @@ public class Opacity extends LayerProperty {
 
     public static final String OPACITY_PROPERTY = "opacity";
 
-    @XStreamAlias("getValue")
+    @XStreamAlias("value")
     @XStreamAsAttribute
     private double opacity = 1f;
 

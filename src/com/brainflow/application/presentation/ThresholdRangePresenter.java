@@ -10,9 +10,13 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.application.presentation.forms.ThresholdRangeForm;
+import com.brainflow.application.presentation.binding.PercentageRangeConverter;
+import com.brainflow.application.presentation.binding.DoubleToStringConverter;
+
 import com.brainflow.core.AbstractLayer;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.ImageLayer;
+import com.brainflow.core.ClipRange;
 
 import com.brainflow.display.ThresholdRange;
 import com.jgoodies.binding.adapter.Bindings;
@@ -22,6 +26,10 @@ import com.jgoodies.binding.value.ValueHolder;
 import com.jgoodies.binding.value.ValueModel;
 
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+
+import net.java.dev.properties.binding.swing.adapters.SwingBind;
 
 /**
  * @author buchs
@@ -29,112 +37,62 @@ import javax.swing.*;
 public class ThresholdRangePresenter extends ImageViewPresenter {
 
 
-    private ThresholdRangeForm thresholdForm;
+    private ThresholdRangeForm form;
 
-    private BeanAdapter adapter;
 
-    private PercentageConverter lowConverter;
-
-    private PercentageConverter highConverter;
 
 
     /**
      * Creates a new instance of ColorRangePanel
      */
     public ThresholdRangePresenter() {
-        thresholdForm = new ThresholdRangeForm();
-        thresholdForm.getSliderLabel1().setText("High: ");
-        thresholdForm.getSliderLabel2().setText("Low: ");
+        form = new ThresholdRangeForm();
+        form.getSliderLabel1().setText("High: ");
+        form.getSliderLabel2().setText("Low: ");
+
+        if (getSelectedView() != null) {
+            bind();
+        }
 
 
-        initBinding();
     }
 
 
     public void viewSelected(ImageView view) {
-        if (view != null & view.getModel().getNumLayers() > 0) {
-            thresholdForm.setEnabled(true);
-            initBinding();
-        } else {
-            thresholdForm.setEnabled(false);
-
-        }
+       bind();
     }
 
     @Override
     protected void layerSelected(ImageLayer layer) {
-        initBinding();
+        bind();
     }
 
     public void allViewsDeselected() {
-        thresholdForm.setEnabled(false);
+        //form.setEnabled(false);
     }
 
     public JComponent getComponent() {
-        return thresholdForm;
+        return form;
+    }
+
+    public void bind() {
+        ImageLayer layer = getSelectedView().getModel().getSelectedLayer();
+        ClipRange clip = layer.getImageLayerProperties().thresholdRange.get();
+
+
+        SwingBind.get().bind(new PercentageRangeConverter(clip.highClip, clip.minValue.get(), clip.maxValue.get(), 100), form.getSlider1());
+        SwingBind.get().bind(new PercentageRangeConverter(clip.lowClip, clip.minValue.get(), clip.maxValue.get(), 100), form.getSlider2());
+        SwingBind.get().bind(new DoubleToStringConverter(clip.highClip), form.getValueField1());
+        SwingBind.get().bind(new DoubleToStringConverter(clip.lowClip), form.getValueField2());
+
+       
+
     }
 
 
-    private void initBinding() {
-        ImageView view = getSelectedView();
-
-        if (view == null) return;
-
-        int idx = view.getModel().getSelectedIndex();
-        AbstractLayer layer = view.getModel().getLayer(idx);
-
-       ThresholdRange threshold = layer.getImageLayerProperties().getThresholdRange();
 
 
-        if (adapter != null) {
 
-            lowConverter.setMin(new ValueHolder(layer.getMinValue()));
-            lowConverter.setMax(new ValueHolder(layer.getMaxValue()));
-            highConverter.setMin(new ValueHolder(layer.getMinValue()));
-            highConverter.setMax(new ValueHolder(layer.getMaxValue()));
-            adapter.setBean(threshold);
-
-
-        } else {
-
-            adapter = new BeanAdapter(threshold, true);
-
-            ValueModel highThresh = adapter.getValueModel(ThresholdRange.MAX_PROPERTY);
-            ValueModel lowThresh = adapter.getValueModel(ThresholdRange.MIN_PROPERTY);
-
-
-            Bindings.bind(thresholdForm.getValueField1(), highThresh);
-            Bindings.bind(thresholdForm.getValueField2(), lowThresh);
-
-            //todo this is fucked up
-
-
-            lowConverter = new PercentageConverter(lowThresh,
-                    new ValueHolder(layer.getMinValue()),
-                    new ValueHolder(layer.getMaxValue()), 100);
-            BoundedRangeAdapter lowSliderAdapter = new BoundedRangeAdapter(lowConverter, 0, 0, 100);
-
-
-            highConverter = new PercentageConverter(highThresh,
-                    new ValueHolder(layer.getMinValue()),
-                    new ValueHolder(layer.getMaxValue()), 100);
-
-            BoundedRangeAdapter highSliderAdapter = new BoundedRangeAdapter(highConverter, 0, 0, 100);
-
-            thresholdForm.getSlider1().setModel(highSliderAdapter);
-            thresholdForm.getSlider2().setModel(lowSliderAdapter);
-
-            ValueModel inclusiveMask = adapter.getValueModel(ThresholdRange.INCLUSIVE_PROPERTY);
-            Bindings.bind(thresholdForm.getInclusiveCheckBox(), inclusiveMask);
-
-            ValueModel symValue = adapter.getValueModel(ThresholdRange.SYMMETRICAL_PROPERTY);
-            Bindings.bind(thresholdForm.getSymmetricalCheckBox(), symValue);
-
-
-        }
-
-
-    }
 
 
     public static void main(String[] args) {

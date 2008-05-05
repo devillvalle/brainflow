@@ -21,7 +21,7 @@ public class OndeckTaskExecutor<T> {
     private Task<T> waitingTask;
 
     public OndeckTaskExecutor() {
-        service = Executors.newFixedThreadPool(4);
+        service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     }
 
     public OndeckTaskExecutor(ExecutorService service) {

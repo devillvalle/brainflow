@@ -107,9 +107,9 @@ public class MaskLayerPanel extends JPanel {
         IImageData3D data = (IImageData3D) sourceLayer.getData();
         //IMaskedData3D mask = new MaskedData3D(data, maskItem.getPredicate());
         IImageDisplayModel model = new ImageDisplayModel("mask model");
-        ImageLayerProperties props = new ImageLayerProperties(new Range(0, 1), maskItem.getPredicate());
+        //ImageLayerProperties props = new ImageLayerProperties(new Range(0, 1), maskItem.getPredicate());
 
-        MaskLayer layer = new MaskLayer(maskItem, props, maskColorList.get(sourceLayer.getMaskList().indexOf(maskItem)));
+        //MaskLayer layer = new MaskLayer(maskItem, props, maskColorList.get(sourceLayer.getMaskList().indexOf(maskItem)));
         model.addLayer(layer);
         return model;
 
@@ -121,9 +121,9 @@ public class MaskLayerPanel extends JPanel {
         IImageDisplayModel model = new ImageDisplayModel("composite mask model");
         for (int i=0; i < maskList.size(); i++) {
             IMaskItem item = maskList.getMaskItem(i);
-            ImageLayerProperties props = new ImageLayerProperties(new Range(0, 1), item.getPredicate());
+           // ImageLayerProperties props = new ImageLayerProperties(new Range(0, 1), item.getPredicate());
             //props.getOpacity().setOpacity(.8);
-            MaskLayer layer = new MaskLayer(item, props, maskColorList.get(sourceLayer.getMaskList().indexOf(item)));
+          //  MaskLayer layer = new MaskLayer(item, props, maskColorList.get(sourceLayer.getMaskList().indexOf(item)));
             model.addLayer(layer);
             System.out.println("adding layer " + layer + " to composite mask");
         }

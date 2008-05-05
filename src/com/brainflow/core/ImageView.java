@@ -150,6 +150,11 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
         initView();
 
+       // getInputMap().put(KeyStroke.getKeyStroke("LEFT"),
+      //                      "none");
+
+
+
     }
 
 
@@ -246,6 +251,8 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
         registerListeners();
         setPlotLayout(plotLayout);
+
+        
 
 
     }

@@ -135,7 +135,7 @@ public class RegionGrowingImageFilter extends AbstractImageFilter {
             int centroidIdx = data.indexOf(seed[0], seed[1], seed[2]);
 
             // mark center as visited
-            if (data.getValue(centroidIdx) > 0) {
+            if (data.value(centroidIdx) > 0) {
                 visited.setValue(centroidIdx, 1);
                 searchStack.push(seed);
                 //regionIndices.add(centroidIdx);
@@ -166,10 +166,10 @@ public class RegionGrowingImageFilter extends AbstractImageFilter {
 
             for (int i = 0; i < searchSet.length; i++) {
                 int idx = searchSet[i];
-                if (visited.getValue(idx) != 0) {
+                if (visited.value(idx) != 0) {
                     continue;
                 }
-                if (data.getValue(idx) > 0) {
+                if (data.value(idx) > 0) {
                     Index3D voxel = new Index3D();
                     data.indexToGrid(idx, voxel);
                     visited.setValue(idx, 1);

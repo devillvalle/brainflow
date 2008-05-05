@@ -19,7 +19,7 @@ import java.beans.PropertyVetoException;
 /**
  * @author buchs
  */
-public class ColorAdjustmentControl {
+public class ColorAdjustmentControl extends AbstractPresenter {
 
 
     private CollapsiblePanes cpanes;
@@ -57,7 +57,7 @@ public class ColorAdjustmentControl {
 
         cp.setEmphasized(true);
         cp.setOpaque(false);
-
+        //cp.setStyle(CollapsiblePane.PLAIN_STYLE);
 
         try {
             cp.setCollapsed(collapsed);

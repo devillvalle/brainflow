@@ -298,9 +298,9 @@ public class IntervalLookupTable<T extends MutableInterval> {
         } catch (ArrayIndexOutOfBoundsException e) {
 
             System.out.println("index = " + index);
-            System.out.println("getValue = " + val);
-            System.out.println("min getValue " + getFirstInterval().getMinimum());
-            System.out.println("max getValue " + getLastInterval().getMaximum());
+            System.out.println("value = " + val);
+            System.out.println("min value " + getFirstInterval().getMinimum());
+            System.out.println("max value " + getLastInterval().getMaximum());
             throw e;
 
         }

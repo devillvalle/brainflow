@@ -85,8 +85,7 @@ public class NiftiImageInfo extends ImageInfo {
     public static Anatomy3D nearestAnatomy(Matrix4f R) {
         Matrix3f P = new Matrix3f();
         Matrix3f Q = new Matrix3f();
-        Matrix3f M = new Matrix3f();
-
+        
 
         float xi = R.m00;
         float xj = R.m01;
@@ -218,7 +217,7 @@ public class NiftiImageInfo extends ImageInfo {
 
                                 float detP = P.determinant();           /* sign of permutation */
                                 if (detP * detQ <= 0.0) continue;  /* doesn't match sign of Q */
-                                M = P.mult(Q);
+                                Matrix3f M = P.mult(Q);
                                 //M = nifti_mat33_mul(P,Q) ;
 
                                 /* angle of M rotation = 2.0*acos(0.5*sqrt(1.0+trace(M)))       */

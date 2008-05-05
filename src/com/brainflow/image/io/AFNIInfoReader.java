@@ -297,7 +297,7 @@ public class AFNIInfoReader implements ImageInfoReader {
         } else if (orderStr.equals("MSB_FIRST")) {
             bord = ByteOrder.BIG_ENDIAN;
         } else {
-            throw new RuntimeException("unrecognized BYTEORDER attribute getValue : " + orderStr);
+            throw new RuntimeException("unrecognized BYTEORDER attribute value : " + orderStr);
         }
 
         for (ImageInfo info : infoList) {

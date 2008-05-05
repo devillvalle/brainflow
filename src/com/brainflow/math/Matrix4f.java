@@ -32,6 +32,8 @@
 
 package com.brainflow.math;
 
+import com.brainflow.utils.NumberUtils;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.FloatBuffer;
@@ -980,6 +982,94 @@ public class Matrix4f  implements Serializable {
         return vec4f;
     }
 
+    public float multX(float x, float y, float z) {
+        return m00 * x + m01 * y + m02 * z + m03;
+    }
+
+    public float multY(float x, float y, float z) {
+        return m10 * x + m11 * y + m12 * z + m13;
+    }
+
+    public float multZ(float x, float y, float z) {
+        return m20 * x + m21 * y + m22 * z + m23;
+    }
+
+
+
+    public float[] mult3f(float[] vec3f) {
+
+        float x = vec3f[0], y = vec3f[1], z = vec3f[2];
+
+        vec3f[0] = m00 * x + m01 * y + m02 * z + m03;
+        vec3f[1] = m10 * x + m11 * y + m12 * z + m13;
+        vec3f[2] = m20 * x + m21 * y + m22 * z + m23;
+
+
+        return vec3f;
+    }
+
+    public Vector3f mult3f(int x, int y, int z, Vector3f out) {
+
+
+        out.x = m00 * x + m01 * y + m02 * z + m03;
+        out.y = m10 * x + m11 * y + m12 * z + m13;
+        out.z = m20 * x + m21 * y + m22 * z + m23;
+
+
+        return out;
+    }
+
+    public float[] mult3f(int x, int y, int z, float[] outvec) {
+
+
+        outvec[0] = m00 * x + m01 * y + m02 * z + m03;
+        outvec[1] = m10 * x + m11 * y + m12 * z + m13;
+        outvec[2] = m20 * x + m21 * y + m22 * z + m23;
+
+
+        return outvec;
+    }
+
+    public float[] mult3f(int x, int y, int z) {
+
+        float[] outvec = new float[3];
+        
+        outvec[0] = m00 * x + m01 * y + m02 * z + m03;
+        outvec[1] = m10 * x + m11 * y + m12 * z + m13;
+        outvec[2] = m20 * x + m21 * y + m22 * z + m23;
+
+
+        return outvec;
+    }
+
+    public Vector3f mult3f(float x, float y, float z, Vector3f out) {
+
+
+        out.x = m00 * x + m01 * y + m02 * z + m03;
+        out.y = m10 * x + m11 * y + m12 * z + m13;
+        out.z = m20 * x + m21 * y + m22 * z + m23;
+
+
+        return out;
+    }
+
+    public float[] mult3f(float x, float y, float z, float[] outvec) {
+
+
+        outvec[0] = m00 * x + m01 * y + m02 * z + m03;
+        outvec[1] = m10 * x + m11 * y + m12 * z + m13;
+        outvec[2] = m20 * x + m21 * y + m22 * z + m23;
+
+
+        return outvec;
+    }
+
+    
+
+
+
+
+
     
 
     /**
@@ -1550,7 +1640,7 @@ public class Matrix4f  implements Serializable {
      * @return the string representation of this object.
      */
     public String toString() {
-        StringBuffer result = new StringBuffer("com.jme.math.Matrix4f\n[\n");
+        StringBuffer result = new StringBuffer("Matrix4f: \n[\n");
         result.append(" ");
         result.append(m00);
         result.append("  ");
@@ -1641,25 +1731,26 @@ public class Matrix4f  implements Serializable {
         }
 
         Matrix4f comp = (Matrix4f) o;
-        if (Float.compare(m00,comp.m00) != 0) return false;
-        if (Float.compare(m01,comp.m01) != 0) return false;
-        if (Float.compare(m02,comp.m02) != 0) return false;
-        if (Float.compare(m03,comp.m03) != 0) return false;
+        float tol = 0.00001f;
+        if (!NumberUtils.equals(m00,comp.m00, tol)) return false;
+        if (!NumberUtils.equals(m01,comp.m01, tol)) return false;
+        if (!NumberUtils.equals(m02,comp.m02, tol)) return false;
+        if (!NumberUtils.equals(m03,comp.m03, tol)) return false;
 
-        if (Float.compare(m10,comp.m10) != 0) return false;
-        if (Float.compare(m11,comp.m11) != 0) return false;
-        if (Float.compare(m12,comp.m12) != 0) return false;
-        if (Float.compare(m13,comp.m13) != 0) return false;
+        if (!NumberUtils.equals(m10,comp.m10, tol)) return false;
+        if (!NumberUtils.equals(m11,comp.m11, tol)) return false;
+        if (!NumberUtils.equals(m12,comp.m12, tol)) return false;
+        if (!NumberUtils.equals(m13,comp.m13, tol)) return false;
 
-        if (Float.compare(m20,comp.m20) != 0) return false;
-        if (Float.compare(m21,comp.m21) != 0) return false;
-        if (Float.compare(m22,comp.m22) != 0) return false;
-        if (Float.compare(m23,comp.m23) != 0) return false;
+        if (!NumberUtils.equals(m20,comp.m20, tol)) return false;
+        if (!NumberUtils.equals(m21,comp.m21, tol)) return false;
+        if (!NumberUtils.equals(m22,comp.m22, tol)) return false;
+        if (!NumberUtils.equals(m23,comp.m23, tol)) return false;
 
-        if (Float.compare(m30,comp.m30) != 0) return false;
-        if (Float.compare(m31,comp.m31) != 0) return false;
-        if (Float.compare(m32,comp.m32) != 0) return false;
-        if (Float.compare(m33,comp.m33) != 0) return false;
+        if (!NumberUtils.equals(m30,comp.m30, tol)) return false;
+        if (!NumberUtils.equals(m31,comp.m31, tol)) return false;
+        if (!NumberUtils.equals(m32,comp.m32, tol)) return false;
+        if (!NumberUtils.equals(m33,comp.m33, tol)) return false;
 
         return true;
     }
@@ -1687,7 +1778,7 @@ public class Matrix4f  implements Serializable {
      * @param scale
      *            the scale to apply
      */
-    public void scale(Vector3f scale) {
+    public void scaleLocal(Vector3f scale) {
         m00 *= scale.getX();
         m10 *= scale.getX();
         m20 *= scale.getX();
@@ -1700,5 +1791,22 @@ public class Matrix4f  implements Serializable {
         m12 *= scale.getZ();
         m22 *= scale.getZ();
         m32 *= scale.getZ();
+    }
+
+    public Matrix4f scale(Vector3f scale) {
+        Matrix4f ret = new Matrix4f(this);
+        ret.m00 = m00 * scale.getX();
+        ret.m10 = m10 * scale.getX();
+        ret.m20 = m20 * scale.getX();
+        ret.m30 = m30 * scale.getX();
+        ret.m01 = m01 * scale.getY();
+        ret.m11 = m11 * scale.getY();
+        ret.m21 = m21 * scale.getY();
+        ret.m31 = m31 * scale.getY();
+        ret.m02 = m02 * scale.getZ();
+        ret.m12 = m12 * scale.getZ();
+        ret.m22 = m22 * scale.getZ();
+        ret.m32 = m32 * scale.getZ();
+        return ret;
     }
 }

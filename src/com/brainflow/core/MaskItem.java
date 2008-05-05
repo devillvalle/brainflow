@@ -2,6 +2,7 @@ package com.brainflow.core;
 
 import com.brainflow.image.operations.Operations;
 import com.brainflow.image.operations.BinaryOperation;
+import com.brainflow.image.data.MaskPredicate;
 import com.brainflow.display.ThresholdRange;
 import com.jgoodies.binding.beans.Model;
 
@@ -16,7 +17,7 @@ public class MaskItem extends Model implements IMaskItem {
 
     private ImageLayer source;
 
-    private ThresholdRange predicate;
+    private MaskPredicate predicate;
 
     private boolean active = true;
 
@@ -25,21 +26,21 @@ public class MaskItem extends Model implements IMaskItem {
     private BinaryOperation operation;
 
 
-    public MaskItem(ImageLayer source, ThresholdRange predicate, int group) {
+    public MaskItem(ImageLayer source, MaskPredicate predicate, int group) {
         this.source = source;
         this.predicate = predicate;
         this.group = group;
         operation = Operations.AND;
     }
 
-    public MaskItem(ImageLayer source, ThresholdRange predicate, int group, BinaryOperation operation) {
+    public MaskItem(ImageLayer source, MaskPredicate predicate, int group, BinaryOperation operation) {
         this.source = source;
         this.predicate = predicate;
         this.group = group;
         this.operation = operation;
     }
 
-    public MaskItem(ImageLayer source, ThresholdRange predicate, int group, BinaryOperation operation, boolean active) {
+    public MaskItem(ImageLayer source, MaskPredicate predicate, int group, BinaryOperation operation, boolean active) {
         this.source = source;
         this.predicate = predicate;
         this.group = group;
@@ -69,17 +70,10 @@ public class MaskItem extends Model implements IMaskItem {
 
     }
 
-    public ThresholdRange getPredicate() {
+    public MaskPredicate getPredicate() {
         return predicate;
     }
 
-    public void setPredicate(ThresholdRange predicate) {
-
-        ThresholdRange old = getPredicate();
-        this.predicate = predicate;
-        // todo listen to threshold predicate and fire event?
-        firePropertyChange(IMaskItem.THRESHOLD_PREDICATE_PROPERTY, old, getPredicate());
-    }
 
 
     public boolean isActive() {

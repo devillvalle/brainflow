@@ -52,7 +52,7 @@ public class ConnectedComponentsFilter2 extends AbstractImageFilter {
         for (int z = 0; z < (zdim - 1); z++) {
             for (int y = 0; y < (ydim - 1); y++) {
                 for (int x = 0; x < xdim - 1; x++) {
-                    if (data.getValue(x, y, z) > 0) {
+                    if (data.value(x, y, z) > 0) {
                         int index = data.indexOf(x, y, z);
                         labels[index] = labelCounter;
                         //System.out.println("label counter " + labelCounter);

@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 public class ResourceManager {
 
     private Logger log = Logger.getLogger(ResourceManager.class.getName());
+    
     private HashMap<String, IndexColorModel> cachedMaps = new HashMap();
 
     private static String defaultColorMap = "grayscale";

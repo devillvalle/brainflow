@@ -21,7 +21,7 @@ import com.brainflow.utils.Range;
  */
 
 
-public abstract class ImageLayer extends AbstractLayer {
+public abstract class ImageLayer<T extends IImageSpace> extends AbstractLayer {
 
 
     private IImageDataSource dataSource;
@@ -81,8 +81,8 @@ public abstract class ImageLayer extends AbstractLayer {
         return dataSource.getStem();
     }
 
-    public IImageSpace getCoordinateSpace() {
-        return dataSource.getData().getImageSpace();
+    public T getCoordinateSpace() {
+        return (T)dataSource.getData().getImageSpace();
     }
 
     public double getMaxValue() {

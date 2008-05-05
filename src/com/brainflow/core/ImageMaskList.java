@@ -1,11 +1,9 @@
 package com.brainflow.core;
 
-import com.brainflow.image.data.IImageData3D;
-import com.brainflow.image.data.IMaskedData3D;
-import com.brainflow.image.data.MaskedData3D;
-import com.brainflow.image.data.BooleanMaskNode3D;
+import com.brainflow.image.data.*;
 import com.brainflow.image.operations.Operations;
 import com.brainflow.image.operations.BooleanOperation;
+import com.brainflow.display.ThresholdRange;
 import com.jgoodies.binding.beans.ExtendedPropertyChangeSupport;
 
 import javax.swing.event.ListDataEvent;
@@ -36,8 +34,18 @@ public class ImageMaskList implements IMaskList {
     private List<ListDataListener> listDataListeners = new ArrayList<ListDataListener>();
 
 
-    public ImageMaskList(ImageLayer layer) {
-        root = new ImageMaskItem(layer, layer.getThreshold(), 0);
+    public ImageMaskList(final ImageLayer layer) {
+        // todo here is the bug
+
+        //final ClipRange threshhold = layer.getImageLayerProperties().thresholdRange.get();
+
+
+        root = new ImageMaskItem(layer, new MaskPredicate() {
+            public boolean mask(double value) {
+               return !layer.getImageLayerProperties().thresholdRange.get().contains(value);
+            }
+        }, 0);
+
         maskItems.add(root);
 
         root.addPropertyChangeListener(propertyListener);
@@ -238,13 +246,13 @@ public class ImageMaskList implements IMaskList {
     }
 
     public IMaskItem dupMask() {
-        ImageMaskItem item = new ImageMaskItem(getLastItem().getSource(),
-                getLastItem().getPredicate().copy(),
-                getLastItem().getGroup(), Operations.AND, false);
+        //ImageMaskItem item = new ImageMaskItem(getLastItem().getSource(),
+        //        getLastItem().getPredicate().copy(),
+        //        getLastItem().getGroup(), Operations.AND, false);
 
-        addMask(item);
-        return item;
-
+        //addMask(item);
+        //return item;
+        return null;
 
     }
 

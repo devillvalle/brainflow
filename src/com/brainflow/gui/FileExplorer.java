@@ -3,7 +3,7 @@ package com.brainflow.gui;
 import com.brainflow.utils.ResourceLoader;
 import com.brainflow.application.presentation.ImageFileExplorer;
 import org.apache.commons.vfs.*;
-import org.jvnet.substance.SubstanceDefaultTreeCellRenderer;
+
 
 import javax.swing.*;
 import javax.swing.event.TreeExpansionListener;
@@ -69,7 +69,7 @@ public class FileExplorer extends AbstractPresenter {
 
     public static void main(String[] args) {
         try {
-            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceCremeCoffeeLookAndFeel());
+            //UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceCremeCoffeeLookAndFeel());
             FileExplorer explorer = new FileExplorer(VFS.getManager().resolveFile("C:/javacode"), new FileSelector() {
                 public boolean includeFile(FileSelectInfo fileSelectInfo) throws Exception {
                     return true;

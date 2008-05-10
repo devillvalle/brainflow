@@ -4,6 +4,7 @@ import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.AnatomicalPoint;
 import com.brainflow.image.anatomy.Anatomy;
 import com.brainflow.image.axis.CoordinateAxis;
+import com.brainflow.utils.IDimension;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,7 +36,7 @@ public interface ICoordinateSpace {
 
     public Anatomy getAnatomy();
 
-    public IImageOrigin getImageOrigin();
+    public IDimension<Float> getOrigin();
 
 
 

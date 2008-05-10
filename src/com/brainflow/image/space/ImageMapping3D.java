@@ -12,7 +12,8 @@ import com.brainflow.math.Vector3f;
  */
 public interface ImageMapping3D {
 
-
+    public Vector3f getOrigin();
+    
     public Vector3f gridToWorld(int i, int j, int k, Vector3f out);
 
     public Vector3f gridToWorld(int i, int j, int k);

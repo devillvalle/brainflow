@@ -4,6 +4,7 @@ import com.brainflow.core.ImageView;
 import com.brainflow.core.ImageLayer;
 import com.brainflow.core.ImageLayer3D;
 import com.brainflow.image.io.IImageDataSource;
+import com.brainflow.image.space.IImageSpace;
 import com.jidesoft.grid.*;
 import com.jidesoft.converter.ObjectConverterManager;
 import com.jidesoft.converter.ConverterContext;
@@ -45,7 +46,7 @@ public class ImageLayerInfoPresenter extends ImageViewPresenter {
 
     private PropertyTable buildTable() {
         ImageLayer layer = getSelectedLayer();
-
+        IImageSpace space = layer.getCoordinateSpace();
 
         ArrayList<Property> list = new ArrayList<Property>();
         IImageDataSource source = layer.getDataSource();
@@ -61,6 +62,22 @@ public class ImageLayerInfoPresenter extends ImageViewPresenter {
 
         property = createProperty("Image Format", source.getFileFormat(), "Data Source", String.class, "The image file format from which the data was loaded.");
         list.add(property);
+
+        property = createProperty("Dimensions", space.getDimension().toString(), "Image Space", String.class, "The image data dimensions (x, y, z)");
+        list.add(property);
+
+        property = createProperty("Spacing", source.getImageInfo().getSpacing(), "Image Space", String.class, "The voxel sizes for each dimension (x, y, z)");
+        list.add(property);
+
+        property = createProperty("Data Orientation", space.getAnatomy(), "Image Space", String.class, "The anatomical orientation of the data axes (non-transformed)");
+        list.add(property);
+
+        property = createProperty("Origin", space.getOrigin().toString(), "Image Space", String.class, "The origin in world coordinates of the image data");
+        list.add(property);
+        
+        // rotation? translation? origin?
+
+
 
 
         PropertyTableModel model = new PropertyTableModel(list);

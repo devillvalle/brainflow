@@ -35,6 +35,11 @@ public class AffineMapping3D implements ImageMapping3D {
         return new Matrix4f(mat);
     }
 
+   
+    public Vector3f getOrigin() {
+        return mat.toTranslationVector();
+    }
+
     @Override
     public Vector3f gridToWorld(int i, int j, int k, Vector3f out) {
         return mat.mult3f(i,j,k, out);

@@ -13,7 +13,7 @@ import com.brainflow.utils.IDimension;
 public class ImageSpace1D extends AbstractImageSpace implements IImageSpace {
 
 
-    public IImageOrigin getImageOrigin() {
+    public IDimension<Float> getOrigin() {
         throw new UnsupportedOperationException();
     }
 
@@ -23,5 +23,13 @@ public class ImageSpace1D extends AbstractImageSpace implements IImageSpace {
 
     public IDimension getDimension() {
         throw new UnsupportedOperationException();
+    }
+
+    public float[] gridToWorld(int[] gridpos) {
+        return new float[0];  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public float[] worldToGrid(float[] coord) {
+        return new float[0];  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

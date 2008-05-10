@@ -33,6 +33,8 @@ import java.util.logging.Logger;
 /**
  * @author Bradley
  */
+
+
 public class BrainCanvasManager {
 
     public static final String SELECTED_CANVAS_PROPERTY = "selectedCanvas";

@@ -492,7 +492,7 @@ public class AFNIInfoReader implements ImageInfoReader {
             ImageInfo info = ilist.get(0);
             ImageSpace3D space = (ImageSpace3D)info.createImageSpace();
 
-            System.out.println("origin : " + space.getImageOrigin());
+            System.out.println("origin : " + space.getOrigin());
 
             Matrix4f mat = ((Anatomy3D)ilist.get(0).getAnatomy()).getReferenceTransform();
 

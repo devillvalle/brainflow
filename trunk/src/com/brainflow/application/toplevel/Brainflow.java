@@ -183,7 +183,7 @@ public class Brainflow {
         reportTime(startTime, "created brainframe");
         brainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        log.info("initilaizing BrainCanvasManager ...");
+        log.info("initializing BrainCanvasManager ...");
         BrainCanvasManager.getInstance().createCanvas();
 
         log.info("initializing resources ...");
@@ -345,11 +345,25 @@ public class Brainflow {
     private void initializeMenu() {
         log.info("initializing Menu");
 
+
+        GoToVoxelCommand gotoVoxelCommand = new GoToVoxelCommand();
+        gotoVoxelCommand.bind(getApplicationFrame());
+        gotoVoxelCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
         CommandGroup fileMenuGroup = new CommandGroup("file-menu");
         fileMenuGroup.bind(getApplicationFrame());
+
+        CommandGroup viewMenuGroup = new CommandGroup("view-menu");
+        viewMenuGroup.bind(getApplicationFrame());
+
+        CommandGroup gotoMenuGroup = new CommandGroup("goto-menu");
+        gotoMenuGroup.bind(getApplicationFrame());
+
         JMenuBar menuBar = new JMenuBar();
 
         menuBar.add(fileMenuGroup.createMenuItem());
+        menuBar.add(viewMenuGroup.createMenuItem());
+        menuBar.add(gotoMenuGroup.createMenuItem());
 
         brainFrame.setJMenuBar(menuBar);
 

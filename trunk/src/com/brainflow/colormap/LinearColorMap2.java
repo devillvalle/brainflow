@@ -208,4 +208,16 @@ public final class LinearColorMap2 extends AbstractColorMap {
         assert highClip >= lowClip;
         return new LinearColorMap2(getMinimumValue(), getMaximumValue(), lowClip, highClip, this);
     }
+
+     public LinearColorMap2 newClipRange(double lowClip, double highClip, double min, double max) {
+        if (lowClip > highClip) lowClip = highClip;
+        else if (highClip < lowClip) highClip = lowClip;
+
+         if (max < highClip) throw new IllegalArgumentException("max must be >= highClip");
+         if (min > lowClip) throw new IllegalArgumentException("min must be <= lowClip");
+
+
+        assert highClip >= lowClip;
+        return new LinearColorMap2(min, max, lowClip, highClip, this);
+    }
 }

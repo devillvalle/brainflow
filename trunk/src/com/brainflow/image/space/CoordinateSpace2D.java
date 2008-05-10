@@ -4,6 +4,8 @@ import com.brainflow.image.axis.CoordinateAxis;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.image.anatomy.*;
+import com.brainflow.utils.IDimension;
+import com.brainflow.utils.Dimension2D;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,7 +16,7 @@ import com.brainflow.image.anatomy.*;
  */
 public class CoordinateSpace2D extends AbstractCoordinateSpace {
 
-    private IImageOrigin origin;
+    private Dimension2D origin;
 
     private Anatomy2D anatomy = null;
 
@@ -30,7 +32,7 @@ public class CoordinateSpace2D extends AbstractCoordinateSpace {
         initAxis(new CoordinateAxis(anatomy.XAXIS, new AxisRange(anatomy.XAXIS, 0, 100)), Axis.X_AXIS);
         initAxis(new CoordinateAxis(anatomy.YAXIS, new AxisRange(anatomy.YAXIS, 0, 100)), Axis.Y_AXIS);
 
-        origin = new ImageOrigin2D(anatomy.XAXIS.getMinDirection(), anatomy.YAXIS.getMinDirection(), 0, 0);
+        origin = new Dimension2D<Float>(0f, 0f);
 
     }
 
@@ -46,9 +48,7 @@ public class CoordinateSpace2D extends AbstractCoordinateSpace {
         initAxis(xaxis, Axis.X_AXIS);
         initAxis(yaxis, Axis.Y_AXIS);
 
-        origin = new ImageOrigin2D(xaxis.getAnatomicalAxis().getMinDirection(), yaxis.getAnatomicalAxis().getMinDirection(),
-                xaxis.getRange().getBeginning().getX(),
-                yaxis.getRange().getBeginning().getX());
+        origin = new Dimension2D<Float>((float)xaxis.getRange().getBeginning().getX(), (float)yaxis.getRange().getBeginning().getX());
 
     }
 
@@ -59,7 +59,7 @@ public class CoordinateSpace2D extends AbstractCoordinateSpace {
         AnatomicalPoint1D x = a1.getRange().getCenter();
         AnatomicalPoint1D y = a2.getRange().getCenter();
 
-        return new AnatomicalPoint2D((Anatomy2D) getAnatomy(), x.getX(), y.getX());
+        return new AnatomicalPoint2D(getAnatomy(), x.getX(), y.getX());
     }
 
     protected CoordinateAxis[] getAxes() {
@@ -103,7 +103,7 @@ public class CoordinateSpace2D extends AbstractCoordinateSpace {
         return anatomy;
     }
 
-    public IImageOrigin getImageOrigin() {
+    public IDimension<Float> getOrigin() {
         return origin;
     }
 }

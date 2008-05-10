@@ -7,6 +7,9 @@ import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.Anatomy;
+import com.brainflow.utils.Dimension2D;
+import com.brainflow.utils.Dimension3D;
+import com.brainflow.utils.IDimension;
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,7 +20,8 @@ import com.brainflow.image.anatomy.Anatomy;
  */
 public class CoordinateSpace3D extends AbstractCoordinateSpace {
 
-    private IImageOrigin origin;
+
+    private Dimension3D<Float> origin;
 
     private Anatomy3D anatomy = null;
 
@@ -54,8 +58,7 @@ public class CoordinateSpace3D extends AbstractCoordinateSpace {
         initAxis(new CoordinateAxis(anatomy.YAXIS, new AxisRange(anatomy.YAXIS, 0, 100)), Axis.Y_AXIS);
         initAxis(new CoordinateAxis(anatomy.ZAXIS, new AxisRange(anatomy.ZAXIS, 0, 100)), Axis.Z_AXIS);
 
-        origin = new ImageOrigin3D(anatomy.XAXIS.getMinDirection(), anatomy.YAXIS.getMinDirection(),
-                anatomy.ZAXIS.getMinDirection(), 0, 0, 0);
+        origin = new Dimension3D<Float>(0f, 0f, 0f);
 
     }
 
@@ -72,14 +75,13 @@ public class CoordinateSpace3D extends AbstractCoordinateSpace {
         initAxis(yaxis, Axis.Y_AXIS);
         initAxis(zaxis, Axis.Z_AXIS);
 
-        origin = new ImageOrigin3D(xaxis.getAnatomicalAxis().getMinDirection(), yaxis.getAnatomicalAxis().getMinDirection(),
-                zaxis.getAnatomicalAxis().getMinDirection(), xaxis.getRange().getBeginning().getX(),
-                yaxis.getRange().getBeginning().getX(), zaxis.getRange().getBeginning().getX());
+        origin = new Dimension3D<Float>((float)xaxis.getRange().getBeginning().getX(),
+                (float)yaxis.getRange().getBeginning().getX(), (float)zaxis.getRange().getBeginning().getX());
 
     }
 
 
-    public IImageOrigin getImageOrigin() {
+    public IDimension<Float> getOrigin() {
         return origin;
     }
 

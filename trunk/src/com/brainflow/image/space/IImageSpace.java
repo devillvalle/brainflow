@@ -17,6 +17,8 @@ public interface IImageSpace extends ICoordinateSpace {
 
     public IDimension<Integer> getDimension();
 
+    public IDimension<Float> getOrigin();
+
     public int getDimension(Axis axis);
 
     public double getSpacing(Axis axis);
@@ -33,7 +35,12 @@ public interface IImageSpace extends ICoordinateSpace {
 
     public boolean sameGeometry(IImageSpace other);
 
+    public float[] gridToWorld(int[] gridpos);
+
+    public float[] worldToGrid(float[] coord);
+
     // todo should be a static library method
+    
     //public IImageSpace union(IImageSpace other);
 
     // todo should be a static library method

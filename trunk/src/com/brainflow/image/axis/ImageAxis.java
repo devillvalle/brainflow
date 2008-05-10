@@ -53,6 +53,13 @@ public class ImageAxis extends CoordinateAxis {
         spacing = getRange().getInterval() / samples;
     }
 
+    public ImageAxis(AnatomicalAxis _axis, double begin, double _spacing, int _samples) {
+        super(_axis, new AxisRange(_axis, begin, begin+ _spacing*_samples));
+        samples = _samples;
+        spacing = _spacing;
+
+    }
+
     public ImageAxis flip() {
         return new ImageAxis(getRange().getBeginning().getX(), getRange().getEnd().getX(), getAnatomicalAxis().getFlippedAxis(), samples);
     }

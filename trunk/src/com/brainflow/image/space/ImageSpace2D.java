@@ -39,8 +39,9 @@ public class ImageSpace2D extends AbstractImageSpace {
     }
 
 
-    public IImageOrigin getImageOrigin() {
-        return origin;
+    public IDimension<Float> getOrigin() {
+        //todo fixme
+        return null;
 
     }
 
@@ -56,5 +57,11 @@ public class ImageSpace2D extends AbstractImageSpace {
        throw new UnsupportedOperationException();
     }
 
+    public float[] gridToWorld(int[] gridpos) {
+        return new float[0];  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
+    public float[] worldToGrid(float[] coord) {
+        return new float[0];  //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

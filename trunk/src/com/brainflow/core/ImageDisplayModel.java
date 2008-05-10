@@ -460,7 +460,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     public ImageLayer getLayer(int layer) {
         if (layer < 0 || layer >= listModel.size()) {
-            throw new IllegalArgumentException("illagal layer index");
+            throw new IllegalArgumentException("illegal layer index");
         }
         return listModel.get(layer);
     }

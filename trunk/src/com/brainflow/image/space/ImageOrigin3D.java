@@ -14,6 +14,7 @@ import com.brainflow.image.anatomy.Anatomy3D;
 public class ImageOrigin3D implements IImageOrigin {
 
     private AnatomicalPoint3D origin;
+
     private AnatomicalDirection[] dirs;
 
     public ImageOrigin3D(AnatomicalDirection a1, AnatomicalDirection a2, AnatomicalDirection a3, double x, double y, double z) {

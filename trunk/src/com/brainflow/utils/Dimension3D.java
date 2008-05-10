@@ -1,5 +1,7 @@
 package com.brainflow.utils;
 
+import java.text.NumberFormat;
+
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -59,7 +61,9 @@ public class Dimension3D<T extends Number> implements IDimension, java.io.Serial
     }
 
     public String toString() {
-        return "[" + zero + ", " + one + ", " + two + "]";
+        NumberFormat f = NumberFormat.getNumberInstance();
+        f.setMaximumFractionDigits(2);
+        return "[" + f.format(zero) + ", " + f.format(one) + ", " + f.format(two) + "]";
     }
 
 

@@ -35,14 +35,21 @@ class SimpleSliceController implements SliceController {
     }
 
     public void setSlice(AnatomicalPoint1D slice) {
+        System.out.println("new slice = " + slice);
         AnatomicalPoint3D cursor = imageView.getCursorPos();
+        System.out.println("current cursor = " + cursor);
         AnatomicalPoint1D crossSlice = getSlice();
+
+        System.out.println("cross Slice = " + crossSlice);
       
         if (!slice.equals(crossSlice)) {
+            System.out.println("updating cursor slice to " + slice);
             cursor.setValue(slice);
             imageView.cursorPos.set(cursor);
            
         }
+
+        System.out.println("setting slice to " + slice);
 
         imageView.getSelectedPlot().setSlice(slice);
 
@@ -62,7 +69,7 @@ class SimpleSliceController implements SliceController {
 
         int sample = iaxis.nearestSample(slice);
         int nsample = sample + 1;
-        System.out.println("advancing slice " + nsample);
+
         if (nsample >= 0 && nsample < iaxis.getNumSamples()) {
             cursor.setValue(iaxis.valueOf(nsample));
             imageView.cursorPos.set(cursor);

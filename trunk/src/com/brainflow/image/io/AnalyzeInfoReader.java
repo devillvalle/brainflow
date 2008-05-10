@@ -185,7 +185,7 @@ public class AnalyzeInfoReader implements ImageInfoReader {
 
 
             dtype = istream.readShort();
-            DataType dataType = DataType.BYTE;
+            DataType dataType;
 
             switch (dtype) {
 

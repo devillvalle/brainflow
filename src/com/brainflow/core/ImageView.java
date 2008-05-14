@@ -84,7 +84,7 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
                 sliceController.setSlice(slice);
                 selectedPlot.getComponent().repaint();
             }
-            //EventBus.publish(new ImageViewCursorEvent(ImageView.this));//To change body of overridden methods use File | Settings | File Templates.
+
         }
 
 
@@ -150,14 +150,11 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
         initView();
 
-       // getInputMap().put(KeyStroke.getKeyStroke("LEFT"),
-      //                      "none");
-
+        // getInputMap().put(KeyStroke.getKeyStroke("LEFT"),
+        //                      "none");
 
 
     }
-
-
 
 
     public ImageView(IImageDisplayModel imodel, CommandContainer parentContainer) {
@@ -174,16 +171,10 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
     }
 
 
-
-
     protected void initCommands() {
 
     }
 
-    protected void finalize() throws Throwable {
-        super.finalize();    //To change body of overridden methods use File | Settings | File Templates.
-        System.out.println("Image View " + this + " is being finalized!");
-    }
 
     public ImagePlotLayout getPlotLayout() {
         return plotLayout;
@@ -207,12 +198,10 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
     public void clearListeners() {
         viewport.removePropertyChangeListener(viewportHandler);
         displayModel.get().removeImageDisplayModelListener(this);
-        //crosshair.removePropertyChangeListener(crosshairHandler);
-
-        BeanContainer.get().removeListener(displayModel.get().getListSelection(), layerSelectionListener );
+        BeanContainer.get().removeListener(displayModel.get().getListSelection(), layerSelectionListener);
 
         removeMouseListener(plotSelectionHandler);
-        
+
     }
 
 
@@ -222,10 +211,8 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
         displayModel.get().addImageDisplayModelListener(this);
 
         addMouseListener(plotSelectionHandler);
+        BeanContainer.get().addListener(displayModel.get().getListSelection(), layerSelectionListener);
 
-        //crosshair.addPropertyChangeListener(crosshairHandler);
-        BeanContainer.get().addListener(displayModel.get().getListSelection(), layerSelectionListener );
-       
 
     }
 
@@ -242,8 +229,7 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
     private void initView() {
 
         viewport = new Viewport3D(getModel());
-        //crosshair = new Crosshair(viewport);
-
+    
         cursorPos.set(new AnatomicalPoint3D((Anatomy3D) viewport.getBounds().getAnatomy(),
                 viewport.getXAxisMin() + (viewport.getXAxisExtent() / 2),
                 viewport.getYAxisMin() + (viewport.getYAxisExtent() / 2),
@@ -251,8 +237,6 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
         registerListeners();
         setPlotLayout(plotLayout);
-
-        
 
 
     }

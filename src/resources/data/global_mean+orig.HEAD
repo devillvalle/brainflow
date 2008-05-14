@@ -1,0 +1,104 @@
+
+type = string-attribute
+name = HISTORY_NOTE
+count = 1311
+'[aarthi@dellphi: Mon Jan 30 12:49:29 2006] to3d -time:zt 26 40 2000 zero -prefix Anyback_series002 -session /s1/aarthi/anyback/data/andrea_webb.111105_exam15121.3t1/untar/PACKRAT_TEMP/PRworkingDir_20060130124645.13937 '/s1/aarthi/anyback/data/andrea_webb.111105_exam15121.3t1/untar/PACKRAT_TEMP/PRworkingDir_20060130124645.13937/dcmOut_1_n0_0_n0_1_0_e1*dcm'\n[aarthi@dellphi: Mon Jan 30 14:31:58 2006] 3dTshift -Fourier -prefix a -tpattern alt+z raw+orig\n[aarthi@dellphi: Mon Jan 30 14:45:35 2006] 3dvolreg -verbose -Fourier -base 'global_mean+orig[0]' -prefix ra -1Dfile movement.1D -dfile movement.dfile a+orig\n[aarthi@dellphi: Mon Jan 30 15:11:50 2006] 3dTstat -datum short -prefix scan_mean ra+orig\n[aarthi@dellphi: Mon Jan 30 15:15:37 2006] 3dMean -datum short -prefix global_mean SCAN_2005_11_11-15121_002/scan_mean+orig.HEAD SCAN_2005_11_11-15121_003/scan_mean+orig.HEAD SCAN_2005_11_11-15121_004/scan_mean+orig.HEAD SCAN_2005_11_11-15121_005/scan_mean+orig.HEAD SCAN_2005_11_11-15121_006/scan_mean+orig.HEAD SCAN_2005_11_11-15121_007/scan_mean+orig.HEAD SCAN_2005_11_11-15121_008/scan_mean+orig.HEAD SCAN_2005_11_11-15121_009/scan_mean+orig.HEAD SCAN_2005_11_11-15121_010/scan_mean+orig.HEAD\n[buchsbab@linux: Sun Apr 23 13:19:57 2006] 3drefit -xorigin cen -yorigin cen -zorigin cen global_mean+orig~
+
+type = string-attribute
+name = TYPESTRING
+count = 15
+'3DIM_HEAD_FUNC~
+
+type = string-attribute
+name = IDCODE_STRING
+count = 27
+'XYZ_f6DP4CnlKRGowSGATx-vqQ~
+
+type = string-attribute
+name = IDCODE_DATE
+count = 25
+'Mon Jan 30 15:15:37 2006~
+
+type = integer-attribute
+name = SCENE_DATA
+count = 8
+ 0 11 1 -999 -999
+ -999 -999 -999
+
+type = string-attribute
+name = LABEL_1
+count = 5
+'zyxt~
+
+type = string-attribute
+name = LABEL_2
+count = 5
+'zyxt~
+
+type = string-attribute
+name = DATASET_NAME
+count = 5
+'zyxt~
+
+type = integer-attribute
+name = ORIENT_SPECIFIC
+count = 3
+ 0 3 4
+
+type  = float-attribute
+name  = ORIGIN
+count = 3
+      -119.0625      -119.0625          -62.5
+
+type  = float-attribute
+name  = DELTA
+count = 3
+          1.875          1.875              5
+
+type  = float-attribute
+name  = BRICK_STATS
+count = 2
+              0           8221
+
+type = integer-attribute
+name = DATASET_RANK
+count = 8
+ 3 1 0 0 0
+ 0 0 0
+
+type = integer-attribute
+name = DATASET_DIMENSIONS
+count = 5
+ 128 128 26 0 0
+
+type = integer-attribute
+name = BRICK_TYPES
+count = 1
+ 1
+
+type  = float-attribute
+name  = BRICK_FLOAT_FACS
+count = 1
+              0
+
+type = string-attribute
+name = BRICK_LABS
+count = 5
+'Mean~
+
+type = string-attribute
+name = BRICK_KEYWORDS
+count = 1
+'~
+
+type = string-attribute
+name = BYTEORDER_STRING
+count = 10
+'LSB_FIRST~
+
+type  = float-attribute
+name  = IJK_TO_DICOM
+count = 12
+          1.875              0              0       -112.623              0
+          1.875              0       -139.062              0              0
+              5       -31.3707

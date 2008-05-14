@@ -14,7 +14,7 @@ import com.brainflow.math.Vector3f;
  * Time: 9:00:46 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ImageSpace3D extends AbstractImageSpace {
+public class ImageSpace3D extends AbstractImageSpace implements IImageSpace3D {
 
 
     private ImageMapping3D mapping;
@@ -70,9 +70,9 @@ public class ImageSpace3D extends AbstractImageSpace {
         setAnatomy(check);
 
      
-        xaxis = new ImageAxis(xaxis.getAnatomicalAxis(), mapping.getOrigin().getX(), xaxis.getSpacing(), xaxis.getNumSamples());
-        yaxis = new ImageAxis(yaxis.getAnatomicalAxis(), mapping.getOrigin().getY(), yaxis.getSpacing(), yaxis.getNumSamples());
-        zaxis = new ImageAxis(zaxis.getAnatomicalAxis(), mapping.getOrigin().getZ(), zaxis.getSpacing(), zaxis.getNumSamples());
+        xaxis = new ImageAxis(xaxis.getAnatomicalAxis(), 0, xaxis.getSpacing(), xaxis.getNumSamples());
+        yaxis = new ImageAxis(yaxis.getAnatomicalAxis(), 0, yaxis.getSpacing(), yaxis.getNumSamples());
+        zaxis = new ImageAxis(zaxis.getAnatomicalAxis(), 0, zaxis.getSpacing(), zaxis.getNumSamples());
 
         createImageAxes(3);
 
@@ -80,7 +80,8 @@ public class ImageSpace3D extends AbstractImageSpace {
         initAxis(yaxis, Axis.Y_AXIS);
         initAxis(zaxis, Axis.Z_AXIS);
 
-        origin =  new Dimension3D<Float>((float)xaxis.getMinimum(), (float)yaxis.getMinimum(), (float)zaxis.getMinimum());
+        Vector3f og = mapping.getOrigin();
+        origin =  new Dimension3D<Float>(og.getX(), og.getY(), og.getZ());
 
 
 
@@ -109,6 +110,11 @@ public class ImageSpace3D extends AbstractImageSpace {
         return new Dimension3D<Integer>(getDimension(Axis.X_AXIS), getDimension(Axis.Y_AXIS), getDimension(Axis.Z_AXIS));
     }
 
+
+    public float[] gridToWorld(int x, int y, int z) {
+        Vector3f ret = mapping.gridToWorld(x, y, z);
+        return ret.toArray(new float[3]);
+    }
 
 
 

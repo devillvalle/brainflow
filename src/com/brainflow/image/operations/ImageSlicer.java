@@ -22,7 +22,6 @@ import java.util.logging.Logger;
 
 public class ImageSlicer {
 
-    private Logger log = Logger.getLogger("com.brainflow.image");
 
     private DataAccessor3D image;
 

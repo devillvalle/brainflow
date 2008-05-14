@@ -1362,6 +1362,7 @@ public class Matrix4f  implements Serializable {
     public Quaternion toRotationQuat() {
         Quaternion quat = new Quaternion();
         quat.fromRotationMatrix(toRotationMatrix());
+
         return quat;
     }
     

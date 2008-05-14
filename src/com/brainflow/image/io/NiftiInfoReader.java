@@ -301,6 +301,8 @@ public class NiftiInfoReader implements ImageInfoReader {
         Vector3f q = info.quaternion;
         Vector3f qo = info.qoffset;
 
+        System.out.println("NIFTI qoffset : " + info.qoffset);
+
         //info.
         info.qform = NiftiImageInfo.quaternionToMatrix(q.get(0), q.get(1),q.get(2),
                 qo.get(0), qo.get(1), qo.get(2),

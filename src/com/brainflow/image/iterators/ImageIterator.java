@@ -12,21 +12,35 @@ package com.brainflow.image.iterators;
 public interface ImageIterator {
 
   public double next();
+
   public void advance();
+
   public double previous();
+
   public boolean hasNext();
   //public double element(int number);
   public double jump(int number);
+
   public boolean canJump(int number);
+
   public double nextRow();
+
   public double nextPlane();
+
   public boolean hasNextRow();
+
   public boolean hasNextPlane();
+
   public boolean hasPreviousRow();
+
   public boolean hasPreviousPlane();
+
   public double previousRow();
+
   public double previousPlane();
+
   public void set(double val);
+    
   public int index();
 
 

@@ -96,8 +96,10 @@ public class Viewport3D extends Model {
 
     public Viewport3D(IImageDisplayModel _displayModel) {
         BeanContainer.bind(this);
+
         displayModel = _displayModel;
         bounds = _displayModel.getImageSpace();
+
         displayModel.addImageDisplayModelListener(new ImageDisplayModelListener() {
 
 
@@ -138,9 +140,9 @@ public class Viewport3D extends Model {
 
     public boolean inBounds(AnatomicalPoint3D pt) {
 
-        if (!bounds.getImageAxis(pt.getAnatomy().XAXIS, true).getRange().contains(pt.getX())) return false;
-        if (!bounds.getImageAxis(pt.getAnatomy().YAXIS, true).getRange().contains(pt.getY())) return false;
-        if (!bounds.getImageAxis(pt.getAnatomy().ZAXIS, true).getRange().contains(pt.getZ())) return false;
+        //if (!bounds.getImageAxis(pt.getAnatomy().XAXIS, true).getRange().contains(pt.getX())) return false;
+        //if (!bounds.getImageAxis(pt.getAnatomy().YAXIS, true).getRange().contains(pt.getY())) return false;
+        //if (!bounds.getImageAxis(pt.getAnatomy().ZAXIS, true).getRange().contains(pt.getZ())) return false;
 
         return true;
     }
@@ -280,8 +282,6 @@ public class Viewport3D extends Model {
 
 
     }
-
-
 
 
     public void setXAxisMin(double xAxisMin) {

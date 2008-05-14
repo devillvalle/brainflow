@@ -7,6 +7,7 @@ package com.brainflow.image;
 
 import com.brainflow.utils.Point3D;
 import com.brainflow.image.iterators.XYZIterator;
+import com.brainflow.math.Vector3f;
 
 // Referenced classes of package com.brainflow.image:
 //            ProbeSet, LinearSet1D, XYZIterator
@@ -15,20 +16,21 @@ public class LinearSet3D extends ProbeSet {
 
     class LinearProbeSet3DIterator implements XYZIterator {
 
-        public Point3D next() {
-            Point3D pt = new Point3D(xset.getSample(idx % xlen), yset.getSample((idx % planeLen) / xlen), zset.getSample(idx / planeLen));
+        public Vector3f next() {
+            Vector3f pt = new Vector3f((float) xset.getSample(idx % xlen), (float) yset.getSample((idx % planeLen) / xlen), (float) zset.getSample(idx / planeLen));
             idx++;
             return pt;
         }
 
-        public Point3D next(Point3D holder) {
-            holder.setX(xset.getSample(idx % xlen));
-            holder.setY(yset.getSample((idx % planeLen) / xlen));
-            holder.setZ(zset.getSample(idx / planeLen));
+        public Vector3f next(Vector3f holder) {
+            holder.setX((float) xset.getSample(idx % xlen));
+            holder.setY((float) yset.getSample((idx % planeLen) / xlen));
+            holder.setZ((float) zset.getSample(idx / planeLen));
             idx++;
             return holder;
         }
 
+      
         public boolean hasNext() {
             return idx < totalLen - 1;
         }
@@ -81,7 +83,7 @@ public class LinearSet3D extends ProbeSet {
 
     public double[] getSamples(int xidx, int yidx, int zidx) {
         return (new double[]{
-            xset.getSample(xidx), yset.getSample(yidx), zset.getSample(zidx)
+                xset.getSample(xidx), yset.getSample(yidx), zset.getSample(zidx)
         });
     }
 

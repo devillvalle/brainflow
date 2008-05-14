@@ -4,10 +4,12 @@ import com.brainflow.core.ImageView;
 import com.brainflow.display.ICrosshair;
 import com.brainflow.core.Viewport3D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.image.anatomy.AnatomicalPoint;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,6 +20,7 @@ import java.awt.event.MouseEvent;
  */
 public class CrosshairInteractor extends ImageViewInteractor {
 
+    private static final Logger log = Logger.getLogger(CrosshairInteractor.class.getName());
 
     private boolean dragging = false;
 
@@ -38,15 +41,18 @@ public class CrosshairInteractor extends ImageViewInteractor {
 
         AnatomicalPoint3D cursorPos = iview.getCursorPos();
         AnatomicalPoint3D ap = iview.getAnatomicalLocation(event.getComponent(), event.getPoint());
-        ap = AnatomicalPoint3D.convertPoint(ap,cursorPos.getAnatomy() );
+        AnatomicalPoint3D tap = AnatomicalPoint3D.convertPoint(ap,cursorPos.getAnatomy() );
 
 
         Viewport3D viewport = iview.getViewport();
 
-        if (ap != null && viewport.inBounds(ap)) {
-            iview.cursorPos.set(ap);
+        if (tap != null && viewport.inBounds(tap)) {
+            iview.cursorPos.set(tap);
         } else {
-            System.out.println("point is out of viewport bounds " + ap);
+             viewport.inBounds(tap);
+            log.warning("point is out of viewport bounds " + tap);
+            log.warning("cursor pos " + cursorPos);
+            log.warning("view point " + ap);
         }
 
     }

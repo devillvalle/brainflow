@@ -52,6 +52,7 @@ public class Anatomy3D implements Anatomy {
 
     public static final Anatomy3D REFERENCE_ANATOMY = AXIAL_LPI;
 
+
     private AnatomicalOrientation orientation;
 
     public final AnatomicalAxis XAXIS;
@@ -115,9 +116,6 @@ public class Anatomy3D implements Anatomy {
 
     public Matrix4f getReferenceTransform() {
         return referenceTransform;
-
-
-
     }
 
     public static List<Anatomy3D> getInstanceList() {

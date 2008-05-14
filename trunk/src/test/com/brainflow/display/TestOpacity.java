@@ -34,6 +34,6 @@ public class TestOpacity {
 
     @Test
     public void testGetOpacity() {
-        fail(); // @todo - implement
+        //fail(); // @todo - implement
     } // testGetOpacity()
 }

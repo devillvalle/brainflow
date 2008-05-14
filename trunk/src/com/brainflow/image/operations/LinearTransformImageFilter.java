@@ -18,6 +18,7 @@ import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.image.space.SpaceFactory;
 import com.brainflow.utils.Point3D;
+import com.brainflow.math.Vector3f;
 
 import java.util.List;
 
@@ -81,7 +82,7 @@ public class LinearTransformImageFilter extends AbstractTransformImageFilter {
     private IImageData3D resample(BasicImageData3D src, BasicImageData3D odat) {
 
         XYZIterator iter = SpaceFactory.createXYZiterator((ImageSpace3D) odat.getImageSpace());
-        Point3D holder = new Point3D();
+        Vector3f holder = new Vector3f();
         DoubleMatrix1D idmat = new DenseDoubleMatrix1D(4);
 
         //System.out.println("origin = " + origin);

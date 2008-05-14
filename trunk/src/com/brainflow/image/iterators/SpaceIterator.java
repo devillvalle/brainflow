@@ -12,9 +12,16 @@ package com.brainflow.image.iterators;
 public interface SpaceIterator {
 
   public int nextIndex();
+
   public int[] nextCoordinate(int[] coord);
+
+  public int[] nextCoordinate();
+
   public int remaining();
+
   public int previousIndex();
+
   public boolean hasNext();
+
   public boolean hasPrevious();
 }

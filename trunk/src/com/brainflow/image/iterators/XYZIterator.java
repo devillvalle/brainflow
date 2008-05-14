@@ -6,6 +6,7 @@
 
 package com.brainflow.image.iterators;
 import com.brainflow.utils.*;
+import com.brainflow.math.Vector3f;
 
 
 /**
@@ -14,13 +15,20 @@ import com.brainflow.utils.*;
  */
 public interface XYZIterator {
     
-    public Point3D next();
-    public Point3D next(Point3D holder);
+    public Vector3f next();
+
+    public Vector3f next(Vector3f holder);
+
     public int nextIndex();
+
     public boolean hasNext();
+
     public int getXIndex();
+
     public int getYIndex();
+
     public int getZIndex();
+
     public int getIndex();
     
 }

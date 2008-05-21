@@ -1,6 +1,6 @@
 package com.brainflow.display;
 
-import com.brainflow.core.ImageLayerProperties;
+import com.brainflow.core.layer.ImageLayerProperties;
 import com.jgoodies.binding.beans.Model;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;

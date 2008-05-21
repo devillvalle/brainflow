@@ -1,11 +1,9 @@
 package com.brainflow.image.data;
 
-import com.brainflow.application.BrainflowException;
 import com.brainflow.image.anatomy.AnatomicalAxis;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.axis.ImageAxis;
-import com.brainflow.image.io.BrainIO;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace2D;
@@ -22,15 +20,19 @@ public class ImageFiller {
 
     private IImageSpace ispace;
 
+
+
     @Testable
-    public BasicImageData2D fillImage(DataAccessor3D inputData, AnatomicalAxis axis1,
-                                      AnatomicalAxis axis2, AnatomicalPoint1D fixedPoint) {
+    public BasicImageData2D fillImage(DataAccessor3D inputData, Anatomy3D displayAnatomy, int displayIndex) {
 
         ispace = inputData.getImageSpace();
 
         AnatomicalAxis xaxis = ispace.getAnatomicalAxis(Axis.X_AXIS);
         AnatomicalAxis yaxis = ispace.getAnatomicalAxis(Axis.Y_AXIS);
         AnatomicalAxis zaxis = ispace.getAnatomicalAxis(Axis.Z_AXIS);
+
+        AnatomicalAxis axis1 = displayAnatomy.XAXIS;
+        AnatomicalAxis axis2 = displayAnatomy.YAXIS;
 
         QuickIterator fastIterator;
         QuickIterator slowIterator;
@@ -41,13 +43,15 @@ public class ImageFiller {
         if (xaxis.sameAxis(axis1) && yaxis.sameAxis(axis2)) {
             fastIterator = makeIterator(xaxis, axis1);
             slowIterator = makeIterator(yaxis, axis2);
-            values = fillXYZ(inputData, fastIterator, slowIterator, getFixedValue(zaxis, fixedPoint));
+            values = fillXYZ(inputData, fastIterator, slowIterator, displayIndex);
+            //values = fillXYZ(inputData, fastIterator, slowIterator, getFixedValue(zaxis, sliceIndex));
         }
         // YXZ
         else if (yaxis.sameAxis(axis1) & xaxis.sameAxis(axis2)) {
             fastIterator = makeIterator(yaxis, axis1);
             slowIterator = makeIterator(xaxis, axis2);
-            values = fillYXZ(inputData, fastIterator, slowIterator, getFixedValue(zaxis, fixedPoint));
+            values = fillYXZ(inputData, fastIterator, slowIterator, displayIndex);
+            //values = fillYXZ(inputData, fastIterator, slowIterator, getFixedValue(zaxis, sliceIndex));
 
         }
 
@@ -55,27 +59,31 @@ public class ImageFiller {
         else if (yaxis.sameAxis(axis1) && zaxis.sameAxis(axis2)) {
             fastIterator = makeIterator(yaxis, axis1);
             slowIterator = makeIterator(zaxis, axis2);
-            values = fillYZX(inputData, fastIterator, slowIterator, getFixedValue(xaxis, fixedPoint));
+            values = fillYZX(inputData, fastIterator, slowIterator, displayIndex);
+            //values = fillYZX(inputData, fastIterator, slowIterator, getFixedValue(xaxis, sliceIndex));
         }
         //XZY
         else if (xaxis.sameAxis(axis1) && zaxis.sameAxis(axis2)) {
             fastIterator = makeIterator(xaxis, axis1);
             slowIterator = makeIterator(zaxis, axis2);
-            values = fillXZY(inputData, fastIterator, slowIterator, getFixedValue(yaxis, fixedPoint));
+            values = fillXZY(inputData, fastIterator, slowIterator, getFixedValue(yaxis, displayIndex));
+            //values = fillXZY(inputData, fastIterator, slowIterator, getFixedValue(yaxis, sliceIndex));
         }
 
         //ZYX
         else if (zaxis.sameAxis(axis1) && yaxis.sameAxis(axis2)) {
             fastIterator = makeIterator(zaxis, axis1);
             slowIterator = makeIterator(yaxis, axis2);
-            values = fillZYX(inputData, fastIterator, slowIterator, getFixedValue(xaxis, fixedPoint));
+            values = fillZYX(inputData, fastIterator, slowIterator, getFixedValue(xaxis, displayIndex));
+            //values = fillZYX(inputData, fastIterator, slowIterator, getFixedValue(xaxis, sliceIndex));
         }
 
         //ZXY
         else if (zaxis.sameAxis(axis1) & xaxis.sameAxis(axis2)) {
             fastIterator = makeIterator(zaxis, axis1);
             slowIterator = makeIterator(xaxis, axis2);
-            values = fillZXY(inputData, fastIterator, slowIterator, getFixedValue(yaxis, fixedPoint));
+            values = fillZXY(inputData, fastIterator, slowIterator, getFixedValue(yaxis, displayIndex));
+            //values = fillZXY(inputData, fastIterator, slowIterator, getFixedValue(yaxis, sliceIndex));
 
         } else{
             throw new IllegalArgumentException("illegal combination of axes: " + axis1 + " and " + axis2);
@@ -87,10 +95,10 @@ public class ImageFiller {
         AxisRange arange2 = ispace.getImageAxis(axis2, true).getRange();
 
 
-        ImageAxis a1 = new ImageAxis(arange1.getBeginning().getX(), arange1.getEnd().getX(),
+        ImageAxis a1 = new ImageAxis(arange1.getBeginning().getValue(), arange1.getEnd().getValue(),
                 axis1, ispace.getDimension(axis1));
 
-        ImageAxis a2 = new ImageAxis(arange2.getBeginning().getX(), arange2.getEnd().getX(),
+        ImageAxis a2 = new ImageAxis(arange2.getBeginning().getValue(), arange2.getEnd().getValue(),
                 axis2, ispace.getDimension(axis2));
 
 
@@ -99,14 +107,18 @@ public class ImageFiller {
 
     }
 
-    protected int getFixedValue(AnatomicalAxis axis1, AnatomicalPoint1D fpoint) {
+    protected int getFixedValue(AnatomicalAxis axis1, int fpoint) {
 
-        ImageAxis iaxis = ispace.getImageAxis(axis1, true);
-        if (fpoint.getAnatomy() == axis1) {
-            return iaxis.nearestSample(fpoint);
-        } else if (fpoint.getAnatomy() == axis1.getFlippedAxis()) {
-            return iaxis.nearestSample(fpoint.mirrorPoint(iaxis));
-        } else throw new AssertionError();
+
+
+        //ImageAxis iaxis = ispace.getImageAxis(axis1, true);
+        //if (fpoint.getAnatomy() == axis1) {
+        //    return iaxis.nearestSample(fpoint);
+        //} else if (fpoint.getAnatomy() == axis1.getFlippedAxis()) {
+        //    return iaxis.nearestSample(fpoint.mirrorPoint(iaxis));
+        //} else throw new AssertionError();
+
+        return 0 ;
 
     }
 
@@ -311,36 +323,7 @@ public class ImageFiller {
     }
 
 
-    public static void main(String[] args) {
-        try {
-
-
-            IImageData3D data = (IImageData3D) BrainIO.readAnalyzeImage("c:/code/icbm/icbm452_atlas_probability_white.img");
-            ImageFiller filler = new ImageFiller();
-            BasicImageData2D slice = filler.fillImage(data, AnatomicalAxis.ANTERIOR_POSTERIOR, AnatomicalAxis.SUPERIOR_INFERIOR,
-                    new AnatomicalPoint1D(AnatomicalAxis.LEFT_RIGHT, 50));
-
-            int count = 0;
-            while (true) {
-                //JAI.create("filestore", slice.snapShot(), "c:/sliceASL.png", "png");
-                slice = filler.fillImage(data, AnatomicalAxis.ANTERIOR_POSTERIOR, AnatomicalAxis.INFERIOR_SUPERIOR,
-                        new AnatomicalPoint1D(AnatomicalAxis.LEFT_RIGHT, 50));
-                //JAI.create("filestore", slice.snapShot(), "c:/sliceAIL.png", "png");
-                slice = filler.fillImage(data, AnatomicalAxis.ANTERIOR_POSTERIOR, AnatomicalAxis.INFERIOR_SUPERIOR,
-                        new AnatomicalPoint1D(AnatomicalAxis.RIGHT_LEFT, 50));
-                //JAI.create("filestore", slice.snapShot(), "c:/sliceAIR.png", "png");
-                slice = filler.fillImage(data, AnatomicalAxis.ANTERIOR_POSTERIOR, AnatomicalAxis.SUPERIOR_INFERIOR,
-                        new AnatomicalPoint1D(AnatomicalAxis.RIGHT_LEFT, 50));
-                //JAI.create("filestore", slice.snapShot(), "c:/sliceAIR.png", "png");
-                count++;
-                System.out.println(count);
-            }
-
-
-        } catch (BrainflowException e) {
-            e.printStackTrace();
-        }
-    }
+    
 
 
 }

@@ -3,6 +3,7 @@ package com.brainflow.application.presentation;
 import com.brainflow.colormap.RangeCellEditor;
 import com.brainflow.colormap.RangeCellRenderer;
 import com.brainflow.core.*;
+import com.brainflow.core.layer.*;
 import com.brainflow.display.ThresholdRange;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.BrainIO;

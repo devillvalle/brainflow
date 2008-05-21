@@ -3,9 +3,8 @@ package com.brainflow.image.space;
 import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.AnatomicalDirection;
 import com.brainflow.image.anatomy.Anatomy;
-import com.brainflow.image.anatomy.AnatomicalPoint;
-import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.image.axis.AxisRange;
+import com.brainflow.image.axis.ImageAxis;
 
 /**
  * Created by IntelliJ IDEA.
@@ -219,9 +218,8 @@ public abstract class AbstractImageSpace implements IImageSpace {
     }
 
 
-
-
     protected void setAnatomy(Anatomy _anatomy) {
+        //todo this is bad!
         anatomy = _anatomy;
     }
 

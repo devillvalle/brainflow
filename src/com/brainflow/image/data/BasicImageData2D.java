@@ -4,11 +4,9 @@ import com.brainflow.image.interpolation.InterpolationFunction2D;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.image.space.Axis;
-import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace2D;
 import com.brainflow.utils.DataType;
 import com.brainflow.utils.IDimension;
-import com.brainflow.utils.Dimension2D;
 
 
 /**
@@ -90,8 +88,8 @@ public class BasicImageData2D extends BasicImageData implements IImageData2D {
     }
 
     public final double worldValue(double realx, double realy, InterpolationFunction2D interp) {
-        double x = space.getImageAxis(Axis.X_AXIS).fractionalSample(realx);
-        double y = space.getImageAxis(Axis.Y_AXIS).fractionalSample(realy);
+        double x = space.getImageAxis(Axis.X_AXIS).gridPosition(realx);
+        double y = space.getImageAxis(Axis.Y_AXIS).gridPosition(realy);
         return interp.interpolate(x, y, this);
     }
 

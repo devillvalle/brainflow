@@ -4,12 +4,13 @@ import com.brainflow.image.interpolation.InterpolationFunction3D;
 import com.brainflow.image.anatomy.Anatomy;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.ImageSpace3D;
+import com.brainflow.image.space.IImageSpace3D;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.image.operations.BooleanOperation;
 import com.brainflow.image.operations.Operations;
-import com.brainflow.utils.Index3D;
 import com.brainflow.utils.DataType;
+import com.brainflow.math.Index3D;
 
 /**
  * Created by IntelliJ IDEA.
@@ -80,8 +81,8 @@ public class BooleanMaskNode3D implements IMaskedData3D {
         throw new RuntimeException("illegal operation");
     }
 
-    public Index3D indexToGrid(int idx, Index3D voxel) {
-        return left.indexToGrid(idx, voxel);
+    public Index3D indexToGrid(int idx) {
+        return left.indexToGrid(idx);
     }
 
     public Anatomy getAnatomy() {
@@ -105,7 +106,7 @@ public class BooleanMaskNode3D implements IMaskedData3D {
         return left.getImageLabel() + ":" + right.getImageLabel();
     }
 
-    public ImageSpace3D getImageSpace() {
+    public IImageSpace3D getImageSpace() {
         return left.getImageSpace();
     }
 

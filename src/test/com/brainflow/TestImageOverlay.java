@@ -6,16 +6,11 @@ import static org.junit.Assert.*;
 import com.brainflow.image.data.IImageData3D;
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.image.space.IImageSpace;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.anatomy.AnatomicalAxis;
-import com.brainflow.application.TestUtils;
+import test.TestUtils;
 import com.brainflow.application.BrainflowException;
-import com.brainflow.core.ImageLayer3D;
+import com.brainflow.core.layer.ImageLayer3D;
 import com.brainflow.core.ImageDisplayModel;
 import com.brainflow.core.IImageDisplayModel;
-import com.brainflow.core.SliceRenderer;
-
-import java.util.Arrays;
 
 
 /**
@@ -74,12 +69,12 @@ public class TestImageOverlay {
         IImageSpace space2 = model.getImageSpace();
         assertEquals(space1, space2);
 
-        SliceRenderer backRenderer = backLayer.getSliceRenderer(model.getImageSpace(), new AnatomicalPoint1D(AnatomicalAxis.INFERIOR_SUPERIOR, 0));
+        //SliceRenderer backRenderer = backLayer.getSliceRenderer(model.getImageSpace(), new AnatomicalPoint3D(AnatomicalAxis.INFERIOR_SUPERIOR, 0));
 
-        SliceRenderer foreRenderer = foreLayer.getSliceRenderer(model.getImageSpace(), new AnatomicalPoint1D(AnatomicalAxis.INFERIOR_SUPERIOR, 0));
+        //SliceRenderer foreRenderer = foreLayer.getSliceRenderer(model.getImageSpace(), new AnatomicalPoint3D(AnatomicalAxis.INFERIOR_SUPERIOR, 0));
 
-        System.out.println("background : (0,0,0) : " + Arrays.toString(background.getImageSpace().gridToWorld(new int[] {0,0,0})));
-        System.out.println("background : (240,256,160) : " + Arrays.toString(background.getImageSpace().gridToWorld(new int[] {239,255,159})));
+        //System.out.println("background : (0,0,0) : " + Arrays.toString(background.getImageSpace().indexToWorld(new int[] {0,0,0})));
+        //System.out.println("background : (240,256,160) : " + Arrays.toString(background.getImageSpace().indexToWorld(new int[] {239,255,159})));
 
 
 

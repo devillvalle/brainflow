@@ -1,10 +1,8 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.application.toplevel.BrainCanvasManager;
-import com.brainflow.core.BrainCanvas;
 import com.brainflow.core.ImageView;
-import com.brainflow.core.AbstractLayer;
-import com.brainflow.display.Visibility;
+import com.brainflow.core.IBrainCanvas;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.swing.CheckBoxList;
@@ -15,8 +13,6 @@ import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -29,7 +25,7 @@ import java.util.Set;
  */
 public class LinkedViewsPresenter extends BrainCanvasPresenter {
 
-    private BrainCanvas canvas;
+    private IBrainCanvas canvas;
 
     private JComboBox viewBox;
 

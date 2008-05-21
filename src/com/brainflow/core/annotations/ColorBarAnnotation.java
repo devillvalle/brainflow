@@ -1,15 +1,13 @@
 package com.brainflow.core.annotations;
 
 import com.brainflow.colormap.AbstractColorBar;
-import com.brainflow.core.AbstractLayer;
+import com.brainflow.core.layer.AbstractLayer;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.IImagePlot;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import net.java.dev.properties.container.BeanContainer;
 import net.java.dev.properties.events.PropertyListener;

@@ -3,12 +3,13 @@ package com.brainflow.image.data;
 import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
+import com.brainflow.image.space.IImageSpace3D;
 import com.brainflow.image.interpolation.InterpolationFunction3D;
 import com.brainflow.image.anatomy.Anatomy;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.iterators.ImageIterator;
-import com.brainflow.utils.Index3D;
 import com.brainflow.utils.DataType;
+import com.brainflow.math.Index3D;
 import test.Testable;
 
 /**
@@ -30,7 +31,7 @@ public class ImageData {
 
     public static IImageData3D createScaledData(final IImageData3D data, final double scaleFactor) {
         return new IImageData3D() {
-            public ImageSpace3D getImageSpace() {
+            public IImageSpace3D getImageSpace() {
                 return data.getImageSpace();
             }
 
@@ -38,8 +39,8 @@ public class ImageData {
                 return data.indexOf(x,y,z);
             }
 
-            public Index3D indexToGrid(int idx, Index3D voxel) {
-                return data.indexToGrid(idx,voxel);
+            public Index3D indexToGrid(int idx) {
+                return data.indexToGrid(idx);
             }
 
             public void setValue(int x, int y, int z, double val) {
@@ -107,10 +108,14 @@ public class ImageData {
     }
 
     @Testable
-    public static IImageData3D createConstantData(final double value, final ImageSpace3D space) {
+    public static IImageData3D createConstantData(final double value, final IImageSpace3D space) {
         return new AbstractImageData3D(space, DataType.DOUBLE) {
             public double value(int index) {
                 return value;
+            }
+
+            public Index3D indexToGrid(int idx) {
+                throw new UnsupportedOperationException();
             }
 
             public void setValue(int idx, double val) {

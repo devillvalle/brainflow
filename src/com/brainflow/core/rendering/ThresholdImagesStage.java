@@ -12,7 +12,7 @@ import com.brainflow.image.data.UByteImageData2D;
 import com.brainflow.image.data.MaskedData2D;
 import com.brainflow.image.data.MaskPredicate;
 import com.brainflow.image.iterators.ImageIterator;
-import com.brainflow.core.AbstractLayer;
+import com.brainflow.core.layer.AbstractLayer;
 
 /**
  * Created by IntelliJ IDEA.

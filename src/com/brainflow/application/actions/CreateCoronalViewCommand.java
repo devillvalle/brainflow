@@ -1,8 +1,8 @@
 package com.brainflow.application.actions;
 
 import com.brainflow.application.toplevel.ImageViewFactory;
-import com.brainflow.core.BrainCanvas;
 import com.brainflow.core.ImageView;
+import com.brainflow.core.IBrainCanvas;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,7 +24,7 @@ public class CreateCoronalViewCommand extends BrainFlowCommand {
 
             ImageView sview = ImageViewFactory.createCoronalView(view);
 
-            BrainCanvas canvas = getSelectedCanvas();
+            IBrainCanvas canvas = getSelectedCanvas();
 
             if (canvas != null) {
                 canvas.addImageView(sview);

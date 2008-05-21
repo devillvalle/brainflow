@@ -1,9 +1,8 @@
 package com.brainflow.image.space;
 
 import com.brainflow.image.anatomy.AnatomicalAxis;
-import com.brainflow.image.anatomy.AnatomicalPoint;
-import com.brainflow.image.anatomy.Anatomy;
 import com.brainflow.image.axis.ImageAxis;
+import com.brainflow.math.IIndex;
 import com.brainflow.utils.IDimension;
 
 /**
@@ -35,16 +34,20 @@ public interface IImageSpace extends ICoordinateSpace {
 
     public boolean sameGeometry(IImageSpace other);
 
-    public float[] gridToWorld(int[] gridpos);
+    public IIndex indexToGrid(int idx);
 
-    public float[] worldToGrid(float[] coord);
+    public float[] indexToWorld(int ... index);
+
+    public float[] gridToWorld(float ... gridpos);
+
+    public float[] worldToGrid(float ... coord);
 
     // todo should be a static library method
     
     //public IImageSpace union(IImageSpace other);
 
     // todo should be a static library method
-    public AnatomicalPoint getCentroid();
+    //public AnatomicalPoint getCentroid();
 
 
 }

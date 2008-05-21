@@ -2,6 +2,7 @@ package com.brainflow.application.presentation.forms;
 
 import com.brainflow.application.presentation.BindingUtils;
 import com.brainflow.core.*;
+import com.brainflow.core.layer.*;
 import com.brainflow.display.ThresholdRange;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.BrainIO;

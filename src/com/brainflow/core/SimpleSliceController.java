@@ -1,10 +1,7 @@
 package com.brainflow.core;
 
-import com.brainflow.display.ICrosshair;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
-import com.brainflow.image.axis.ImageAxis;
-import com.brainflow.image.space.Axis;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,8 +21,8 @@ class SimpleSliceController implements SliceController {
     }
 
 
-    public AnatomicalPoint1D getSlice() {
-        return imageView.getCursorPos().getValue(imageView.getSelectedPlot().getDisplayAnatomy().ZAXIS);
+    public AnatomicalPoint3D getSlice() {
+        return imageView.getCursorPos();
 
     }
 
@@ -34,18 +31,12 @@ class SimpleSliceController implements SliceController {
 
     }
 
-    public void setSlice(AnatomicalPoint1D slice) {
-        System.out.println("new slice = " + slice);
+    public void setSlice(AnatomicalPoint3D slice) {
         AnatomicalPoint3D cursor = imageView.getCursorPos();
-        System.out.println("current cursor = " + cursor);
-        AnatomicalPoint1D crossSlice = getSlice();
 
-        System.out.println("cross Slice = " + crossSlice);
-      
-        if (!slice.equals(crossSlice)) {
+        if (!slice.equals(cursor)) {
             System.out.println("updating cursor slice to " + slice);
-            cursor.setValue(slice);
-            imageView.cursorPos.set(cursor);
+            imageView.cursorPos.set(slice);
            
         }
 
@@ -61,7 +52,7 @@ class SimpleSliceController implements SliceController {
     }
 
     public void nextSlice() {
-        AnatomicalPoint1D slice = getSlice();
+        /*AnatomicalPoint1D slice = getSlice();
         AnatomicalPoint3D cursor = imageView.getCursorPos();
 
         Axis axis = imageView.getViewport().getBounds().findAxis(imageView.getSelectedPlot().getDisplayAnatomy().ZAXIS);
@@ -74,10 +65,12 @@ class SimpleSliceController implements SliceController {
             cursor.setValue(iaxis.valueOf(nsample));
             imageView.cursorPos.set(cursor);
         }
+
+        */
     }
 
     public void previousSlice() {
-        AnatomicalPoint1D slice = getSlice();
+        /*AnatomicalPoint1D slice = getSlice();
         AnatomicalPoint3D cursor = imageView.getCursorPos();
 
         Axis axis = imageView.getViewport().getBounds().findAxis(imageView.getSelectedPlot().getDisplayAnatomy().ZAXIS);
@@ -90,10 +83,12 @@ class SimpleSliceController implements SliceController {
             imageView.cursorPos.set(cursor);
         }
 
+        */
+
     }
 
     public void pageBack() {
-        AnatomicalPoint1D slice = getSlice();
+        /*AnatomicalPoint1D slice = getSlice();
 
         AnatomicalPoint3D cursor = imageView.getCursorPos();
 
@@ -113,11 +108,11 @@ class SimpleSliceController implements SliceController {
             imageView.cursorPos.set(cursor);
         }
 
-
+      */
     }
 
     public void pageForward() {
-        AnatomicalPoint1D slice = getSlice();
+        /*AnatomicalPoint1D slice = getSlice();
 
         AnatomicalPoint3D cursor = imageView.getCursorPos();
 
@@ -140,6 +135,8 @@ class SimpleSliceController implements SliceController {
             cursor.setValue(iaxis.valueOf(nsample));
             imageView.cursorPos.set(cursor);
         }
+
+        */
 
     }
 }

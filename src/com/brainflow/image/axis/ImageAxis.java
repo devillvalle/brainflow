@@ -61,7 +61,7 @@ public class ImageAxis extends CoordinateAxis {
     }
 
     public ImageAxis flip() {
-        return new ImageAxis(getRange().getBeginning().getX(), getRange().getEnd().getX(), getAnatomicalAxis().getFlippedAxis(), samples);
+        return new ImageAxis(getRange().getBeginning().getValue(), getRange().getEnd().getValue(), getAnatomicalAxis().getFlippedAxis(), samples);
     }
 
 
@@ -120,7 +120,7 @@ public class ImageAxis extends CoordinateAxis {
             pt = pt.mirrorPoint(this);
         }
 
-        int idx = (int) (Math.abs(pt.getX() - getRange().getMinimum()) / spacing);
+        int idx = (int) (Math.abs(pt.getValue() - getRange().getMinimum()) / spacing);
         idx = Math.max(idx, 0);
         idx = Math.min(idx, getNumSamples() - 1);
         return getSamples()[idx];
@@ -133,7 +133,7 @@ public class ImageAxis extends CoordinateAxis {
             sample = sample.mirrorPoint(this);
         }
 
-        double relpos = sample.getX() * spacing + spacing / 2f;
+        double relpos = sample.getValue() * spacing + spacing / 2f;
         return relpos + getRange().getMinimum();
     }
 
@@ -175,9 +175,17 @@ public class ImageAxis extends CoordinateAxis {
     }
 
 
-    public final double fractionalSample(double pt) {
+    public final double gridPosition(double pt) {
         return ((pt - getRange().getMinimum()) / spacing);
     }
+
+    public final double gridToReal(double gridpt) {
+        return gridpt * spacing + getRange().getMinimum();
+    }
+
+    //public final double gridPosition(double pt) {
+   //     return ((pt - getRange().getMinimum()) / spacing);
+    //}
 
 
     public double taxi(double current, double step, AnatomicalDirection adir) {

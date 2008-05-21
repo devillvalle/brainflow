@@ -140,7 +140,7 @@ public class Viewport3D extends Model {
 
     public boolean inBounds(AnatomicalPoint3D pt) {
 
-        //if (!bounds.getImageAxis(pt.getAnatomy().XAXIS, true).getRange().contains(pt.getX())) return false;
+        //if (!bounds.getImageAxis(pt.getAnatomy().XAXIS, true).getRange().contains(pt.getValue())) return false;
         //if (!bounds.getImageAxis(pt.getAnatomy().YAXIS, true).getRange().contains(pt.getY())) return false;
         //if (!bounds.getImageAxis(pt.getAnatomy().ZAXIS, true).getRange().contains(pt.getZ())) return false;
 

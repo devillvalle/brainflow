@@ -2,8 +2,8 @@ package com.brainflow.core;
 
 import com.brainflow.core.annotations.IAnnotation;
 import com.brainflow.display.InterpolationType;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint2D;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
 
@@ -51,9 +51,9 @@ public interface IImagePlot {
 
     public double getScaleY();
 
-    public void setSlice(AnatomicalPoint1D slice);
+    public void setSlice(AnatomicalPoint3D slice);
 
-    public AnatomicalPoint1D getSlice();
+    public AnatomicalPoint3D getSlice();
 
     public Point translateAnatToScreen(AnatomicalPoint2D pt);
 

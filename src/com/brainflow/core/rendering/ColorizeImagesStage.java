@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
-import com.brainflow.core.ImageLayer2D;
+import com.brainflow.core.layer.ImageLayer2D;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.image.data.RGBAImage;
 

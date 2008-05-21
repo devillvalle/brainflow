@@ -1,6 +1,6 @@
 package com.brainflow.application.presentation.inspection;
 
-import com.brainflow.application.TestUtils;
+import test.TestUtils;
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.utils.IDimension;

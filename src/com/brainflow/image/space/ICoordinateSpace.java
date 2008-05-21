@@ -30,6 +30,7 @@ public interface ICoordinateSpace {
 
     public AnatomicalPoint getCentroid();
 
+
     public int getNumDimensions();
 
     public ICoordinateSpace union(ICoordinateSpace other);

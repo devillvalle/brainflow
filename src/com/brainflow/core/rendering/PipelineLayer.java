@@ -1,6 +1,6 @@
 package com.brainflow.core.rendering;
 
-import com.brainflow.core.ImageLayer2D;
+import com.brainflow.core.layer.ImageLayer2D;
 import com.brainflow.image.data.RGBAImage;
 
 import java.awt.image.BufferedImage;

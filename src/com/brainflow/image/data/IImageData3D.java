@@ -1,9 +1,8 @@
 package com.brainflow.image.data;
 
-import com.brainflow.utils.Index3D;
 import com.brainflow.image.space.ImageSpace3D;
-import com.brainflow.image.space.IImageSpace;
-import com.brainflow.image.interpolation.InterpolationFunction3D;
+import com.brainflow.image.space.IImageSpace3D;
+import com.brainflow.math.Index3D;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,9 +15,9 @@ public interface IImageData3D extends IImageData, DataAccessor3D {
 
     public int indexOf(int x, int y, int z);
 
-    public Index3D indexToGrid(int idx, Index3D voxel);
+    public Index3D indexToGrid(int idx);
 
     public void setValue(int x, int y, int z, double val);
 
-    public ImageSpace3D getImageSpace();
+    public IImageSpace3D getImageSpace();
 }

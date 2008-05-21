@@ -61,7 +61,7 @@ public class SelectRangeOp extends BaseColorMapOp  {
           ntable[i][j] = table[i][rnd];
           idx++;
         }
-        //System.out.println("table = " + i  + ", " + j + ": " + Acme.Utils.ubyte(table[i][j]));
+        //System.out.println("table = " + i  + ", " + j + ": " + Acme.TUtils.ubyte(table[i][j]));
       }
     }
 

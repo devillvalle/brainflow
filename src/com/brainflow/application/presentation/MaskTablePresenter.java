@@ -1,10 +1,13 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.core.*;
+import com.brainflow.core.layer.AbstractLayer;
+import com.brainflow.core.layer.ImageLayer;
+import com.brainflow.core.layer.IMaskList;
+import com.brainflow.core.layer.IMaskItem;
 import com.brainflow.utils.IRange;
 import com.brainflow.image.operations.Operations;
 import com.brainflow.image.operations.BinaryOperation;
-import com.brainflow.display.ThresholdRange;
 import com.brainflow.colormap.RangeCellEditor;
 import com.brainflow.colormap.RangeCellRenderer;
 import com.jidesoft.grid.*;

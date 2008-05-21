@@ -6,10 +6,9 @@ import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.anatomy.Anatomy;
-import com.brainflow.utils.Dimension2D;
 import com.brainflow.utils.Dimension3D;
-import com.brainflow.utils.IDimension;
+
+import java.util.Arrays;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,7 +17,7 @@ import com.brainflow.utils.IDimension;
  * Time: 3:31:12 PM
  * To change this template use File | Settings | File Templates.
  */
-public class CoordinateSpace3D extends AbstractCoordinateSpace {
+public class CoordinateSpace3D extends AbstractCoordinateSpace implements ICoordinateSpace3D {
 
 
     private Dimension3D<Float> origin;
@@ -26,6 +25,41 @@ public class CoordinateSpace3D extends AbstractCoordinateSpace {
     private Anatomy3D anatomy = null;
 
     private CoordinateAxis[] axes;
+
+
+
+
+    public CoordinateSpace3D(Anatomy3D anatomy) {
+
+        setAnatomy(anatomy);
+
+        createImageAxes(3);
+
+        initAxis(new CoordinateAxis(anatomy.XAXIS, new AxisRange(anatomy.XAXIS, -100, 100)), Axis.X_AXIS);
+        initAxis(new CoordinateAxis(anatomy.YAXIS, new AxisRange(anatomy.YAXIS, -100, 100)), Axis.Y_AXIS);
+        initAxis(new CoordinateAxis(anatomy.ZAXIS, new AxisRange(anatomy.ZAXIS, -100, 100)), Axis.Z_AXIS);
+
+        origin = new Dimension3D<Float>(-100f, -100f, -100f);
+
+    }
+
+
+    public CoordinateSpace3D(CoordinateAxis xaxis, CoordinateAxis yaxis, CoordinateAxis zaxis) {
+        Anatomy3D check = Anatomy3D.matchAnatomy(xaxis.getAnatomicalAxis(), yaxis.getAnatomicalAxis(), zaxis.getAnatomicalAxis());
+        assert check != null;
+
+        setAnatomy(check);
+
+        createImageAxes(3);
+
+        initAxis(xaxis, Axis.X_AXIS);
+        initAxis(yaxis, Axis.Y_AXIS);
+        initAxis(zaxis, Axis.Z_AXIS);
+
+        origin = new Dimension3D<Float>((float)xaxis.getRange().getBeginning().getValue(),
+                (float)yaxis.getRange().getBeginning().getValue(), (float)zaxis.getRange().getBeginning().getValue());
+
+    }
 
     protected CoordinateAxis[] getAxes() {
         return axes;
@@ -48,40 +82,7 @@ public class CoordinateSpace3D extends AbstractCoordinateSpace {
     }
 
 
-    public CoordinateSpace3D(Anatomy3D anatomy) {
-
-        setAnatomy(anatomy);
-
-        createImageAxes(3);
-
-        initAxis(new CoordinateAxis(anatomy.XAXIS, new AxisRange(anatomy.XAXIS, 0, 100)), Axis.X_AXIS);
-        initAxis(new CoordinateAxis(anatomy.YAXIS, new AxisRange(anatomy.YAXIS, 0, 100)), Axis.Y_AXIS);
-        initAxis(new CoordinateAxis(anatomy.ZAXIS, new AxisRange(anatomy.ZAXIS, 0, 100)), Axis.Z_AXIS);
-
-        origin = new Dimension3D<Float>(0f, 0f, 0f);
-
-    }
-
-
-    public CoordinateSpace3D(CoordinateAxis xaxis, CoordinateAxis yaxis, CoordinateAxis zaxis) {
-        Anatomy3D check = Anatomy3D.matchAnatomy(xaxis.getAnatomicalAxis(), yaxis.getAnatomicalAxis(), zaxis.getAnatomicalAxis());
-        assert check != null;
-
-        setAnatomy(check);
-
-        createImageAxes(3);
-
-        initAxis(xaxis, Axis.X_AXIS);
-        initAxis(yaxis, Axis.Y_AXIS);
-        initAxis(zaxis, Axis.Z_AXIS);
-
-        origin = new Dimension3D<Float>((float)xaxis.getRange().getBeginning().getX(),
-                (float)yaxis.getRange().getBeginning().getX(), (float)zaxis.getRange().getBeginning().getX());
-
-    }
-
-
-    public IDimension<Float> getOrigin() {
+    public Dimension3D<Float> getOrigin() {
         return origin;
     }
 
@@ -122,7 +123,7 @@ public class CoordinateSpace3D extends AbstractCoordinateSpace {
         AnatomicalPoint1D y = a2.getRange().getCenter();
         AnatomicalPoint1D z = a3.getRange().getCenter();
 
-        return new AnatomicalPoint3D((Anatomy3D) getAnatomy(), x.getX(), y.getX(), z.getX());
+        return new AnatomicalPoint3D(getAnatomy(), x.getValue(), y.getValue(), z.getValue());
 
 
     }
@@ -136,5 +137,24 @@ public class CoordinateSpace3D extends AbstractCoordinateSpace {
         initAxis(space.getImageAxis(Axis.Z_AXIS), Axis.Z_AXIS);
     }
 
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CoordinateSpace3D)) return false;
 
+        CoordinateSpace3D that = (CoordinateSpace3D) o;
+
+        if (anatomy != null ? !anatomy.equals(that.anatomy) : that.anatomy != null) return false;
+        if (!Arrays.equals(axes, that.axes)) return false;
+        if (origin != null ? !origin.equals(that.origin) : that.origin != null) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result;
+        result = (origin != null ? origin.hashCode() : 0);
+        result = 31 * result + (anatomy != null ? anatomy.hashCode() : 0);
+        result = 31 * result + (axes != null ? Arrays.hashCode(axes) : 0);
+        return result;
+    }
 }

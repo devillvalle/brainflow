@@ -18,10 +18,9 @@ import com.brainflow.application.presentation.forms.ColorBarForm;
 import com.brainflow.application.toplevel.ResourceManager;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
-import com.brainflow.colormap.LinearColorMapDeprecated;
 import com.brainflow.colormap.LinearColorMap2;
 import com.brainflow.core.ImageView;
-import com.brainflow.core.ImageLayer;
+import com.brainflow.core.layer.ImageLayer;
 import com.jidesoft.swing.JideSplitButton;
 import com.jidesoft.swing.JideBoxLayout;
 

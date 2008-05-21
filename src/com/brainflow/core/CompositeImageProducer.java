@@ -1,22 +1,19 @@
 package com.brainflow.core;
 
 import com.brainflow.core.rendering.*;
+import com.brainflow.core.layer.ImageLayerEvent;
+import com.brainflow.core.layer.ImageLayerListener;
 import com.brainflow.display.InterpolationType;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.utils.OndeckTaskExecutor;
 import org.apache.commons.pipeline.Feeder;
-import org.apache.commons.pipeline.Stage;
-import org.apache.commons.pipeline.StageDriver;
 import org.apache.commons.pipeline.driver.SynchronousStageDriverFactory;
 import org.apache.commons.pipeline.validation.ValidationException;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
 
@@ -59,19 +56,19 @@ public class CompositeImageProducer extends AbstractImageProducer {
 
 
     public CompositeImageProducer(IImagePlot plot, Anatomy3D displayAnatomy) {
-        this(plot, displayAnatomy, plot.getModel().getImageAxis(displayAnatomy.ZAXIS).getRange().getCenter());
+        this(plot, displayAnatomy, (AnatomicalPoint3D)plot.getModel().getImageSpace().getCentroid());
 
     }
 
     public CompositeImageProducer(IImagePlot plot,
-                                  Anatomy3D displayAnatomy, AnatomicalPoint1D slice) {
+                                  Anatomy3D displayAnatomy, AnatomicalPoint3D slice) {
         this(plot, displayAnatomy, slice, Executors.newSingleThreadExecutor());
         //initPipeline();
 
     }
 
     public CompositeImageProducer(IImagePlot plot,
-                                      Anatomy3D displayAnatomy, AnatomicalPoint1D slice, ExecutorService service) {
+                                      Anatomy3D displayAnatomy, AnatomicalPoint3D slice, ExecutorService service) {
             this.plot = plot;
             setDisplayAnatomy(displayAnatomy);
 
@@ -106,7 +103,7 @@ public class CompositeImageProducer extends AbstractImageProducer {
         //getPlot().getComponent().repaint();
     }
 
-    public void setSlice(AnatomicalPoint1D slice) {
+    public void setSlice(AnatomicalPoint3D slice) {
         super.setSlice(slice);
         //pipeline.clearPath(gatherRenderersStage);
         dirty = true;

@@ -2,10 +2,7 @@ package com.brainflow.image.data;
 
 import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.image.space.Axis;
-import com.brainflow.image.space.IImageSpace;
-import com.brainflow.image.anatomy.Anatomy;
-import com.brainflow.image.io.ImageInfo;
-import com.brainflow.utils.Index3D;
+import com.brainflow.image.space.IImageSpace3D;
 import com.brainflow.utils.DataType;
 
 /**
@@ -27,28 +24,28 @@ public abstract class AbstractImageData3D extends AbstractImageData implements I
         dim0 = space.getDimension(Axis.X_AXIS);
     }
 
-    protected AbstractImageData3D(ImageSpace3D space, DataType dtype) {
+    protected AbstractImageData3D(IImageSpace3D space, DataType dtype) {
         super(space, dtype);
         planeSize = space.getDimension(Axis.X_AXIS) * space.getDimension(Axis.Y_AXIS);
         dim0 = space.getDimension(Axis.X_AXIS);
     }
 
-    public ImageSpace3D getImageSpace() {
-        return (ImageSpace3D) space;
+    public IImageSpace3D getImageSpace() {
+        return (IImageSpace3D) space;
     }
 
     public int indexOf(int x, int y, int z) {
         return (z * planeSize) + dim0 * y + x;
     }
 
-    public Index3D indexToGrid(int idx, Index3D voxel) {
+    /*public Index3D indexToGrid(int idx, Index3D voxel) {
         voxel.setZ(idx / planeSize);
         int remainder = (idx % planeSize);
         voxel.setY(remainder / space.getDimension(Axis.X_AXIS));
-        voxel.setX(remainder % space.getDimension(Axis.X_AXIS));
+        voxel.setValue(remainder % space.getDimension(Axis.X_AXIS));
 
         return voxel;
-    }
+    }  */
 }
 
 

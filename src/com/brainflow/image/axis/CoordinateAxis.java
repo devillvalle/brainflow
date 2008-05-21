@@ -3,7 +3,6 @@ package com.brainflow.image.axis;
 import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.AnatomicalDirection;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.space.Axis;
 
 /**
  * Created by IntelliJ IDEA.
@@ -80,5 +79,22 @@ public class CoordinateAxis {
 
     }
 
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CoordinateAxis)) return false;
 
+        CoordinateAxis that = (CoordinateAxis) o;
+
+        if (axis != null ? !axis.equals(that.axis) : that.axis != null) return false;
+        if (range != null ? !range.equals(that.range) : that.range != null) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result;
+        result = (axis != null ? axis.hashCode() : 0);
+        result = 31 * result + (range != null ? range.hashCode() : 0);
+        return result;
+    }
 }

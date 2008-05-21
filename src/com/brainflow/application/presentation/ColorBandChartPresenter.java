@@ -1,11 +1,9 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.colormap.*;
-import com.brainflow.core.ImageLayer;
+import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.core.ImageView;
 import com.brainflow.display.ColorBandChart;
-
-import net.java.dev.properties.BaseProperty;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

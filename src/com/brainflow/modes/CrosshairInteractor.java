@@ -1,10 +1,8 @@
 package com.brainflow.modes;
 
 import com.brainflow.core.ImageView;
-import com.brainflow.display.ICrosshair;
 import com.brainflow.core.Viewport3D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
-import com.brainflow.image.anatomy.AnatomicalPoint;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,19 +38,34 @@ public class CrosshairInteractor extends ImageViewInteractor {
         }
 
         AnatomicalPoint3D cursorPos = iview.getCursorPos();
+        
         AnatomicalPoint3D ap = iview.getAnatomicalLocation(event.getComponent(), event.getPoint());
-        AnatomicalPoint3D tap = AnatomicalPoint3D.convertPoint(ap,cursorPos.getAnatomy() );
+
+
+        //IImageSpace fromSpace = iview.getViewport().getBounds();
+
+         //AxisRange a1 = iview.getSelectedPlot().getXAxisRange();
+         //AxisRange a2 =  iview.getSelectedPlot().getYAxisRange();
+
+        //ImageAxis xaxis = new ImageAxis(a1, 1.0);
+        //ImageAxis yaxis = new ImageAxis(a2, 1.0);
+
+
+        //ImageSpace2D fromSpace = new ImageSpace2D(xaxis, yaxis);
+        //AnatomicalPoint2D fromPoint = new AnatomicalPoint2D((Anatomy2D)fromSpace.getAnatomy(), ap.getValue(), ap.getY());
+        //AnatomicalPoint2D.convertPoint(fromSpace, fromPoint, cursorPos.getAnatomy().);
+
+
+        //AnatomicalPoint2D.convertPoint()
+
+        AnatomicalPoint3D tap = ap.convertTo(cursorPos.getSpace());
 
 
         Viewport3D viewport = iview.getViewport();
 
         if (tap != null && viewport.inBounds(tap)) {
             iview.cursorPos.set(tap);
-        } else {
-             viewport.inBounds(tap);
-            log.warning("point is out of viewport bounds " + tap);
-            log.warning("cursor pos " + cursorPos);
-            log.warning("view point " + ap);
+            
         }
 
     }
@@ -69,10 +82,11 @@ public class CrosshairInteractor extends ImageViewInteractor {
 
 
         AnatomicalPoint3D ap = iview.getAnatomicalLocation(source, p);
-        ap = AnatomicalPoint3D.convertPoint(ap,cursorPos.getAnatomy() );
+        ap = ap.convertTo(cursorPos.getSpace());
 
         if (ap != null && iview.getViewport().inBounds(ap)) {
             iview.cursorPos.set(ap);
+           
         }
     }
 

@@ -4,9 +4,9 @@ import org.apache.commons.pipeline.Pipeline;
 import org.apache.commons.pipeline.Stage;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.IImagePlot;
-import com.brainflow.core.ImageLayer2D;
+import com.brainflow.core.layer.ImageLayer2D;
 import com.brainflow.image.anatomy.Anatomy3D;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.Axis;
 
@@ -28,7 +28,7 @@ public class ImagePlotPipeline extends Pipeline {
 
     private Rectangle2D frameBounds;
 
-    private AnatomicalPoint1D slice;
+    private AnatomicalPoint3D slice;
 
 
     public ImagePlotPipeline(IImagePlot _plot) {
@@ -75,7 +75,7 @@ public class ImagePlotPipeline extends Pipeline {
         return plot.getDisplayAnatomy();
     }
 
-    public AnatomicalPoint1D getSlice() {
+    public AnatomicalPoint3D getSlice() {
         return plot.getSlice();
     }
 

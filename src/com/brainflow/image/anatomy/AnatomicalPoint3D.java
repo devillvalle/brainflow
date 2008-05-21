@@ -1,9 +1,10 @@
 package com.brainflow.image.anatomy;
 
 
-
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import com.brainflow.image.axis.CoordinateAxis;
+import com.brainflow.image.space.Axis;
+import com.brainflow.image.space.CoordinateSpace3D;
+import com.brainflow.image.space.ICoordinateSpace3D;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,105 +15,127 @@ import java.beans.PropertyChangeSupport;
  */
 public class AnatomicalPoint3D implements AnatomicalPoint {
 
-    public static final String X_PROPERTY = "zero";
-    public static final String Y_PROPERTY = "zero";
-    public static final String Z_PROPERTY = "one";
 
+    private ICoordinateSpace3D space;
 
-    private Anatomy3D anatomy;
+    private AnatomicalPoint1D x;
+    private AnatomicalPoint1D y;
+    private AnatomicalPoint1D z;
 
-    private double x;
-    private double y;
-    private double z;
-
-    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     public AnatomicalPoint3D(Anatomy3D _anatomy, double x, double y, double z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        anatomy = _anatomy;
+
+        space = new CoordinateSpace3D(_anatomy);
+        this.x = new AnatomicalPoint1D(space.getImageAxis(Axis.X_AXIS), x);
+        this.y = new AnatomicalPoint1D(space.getImageAxis(Axis.Y_AXIS), y);
+        this.z = new AnatomicalPoint1D(space.getImageAxis(Axis.Z_AXIS), z);
+
+    }
+
+    public AnatomicalPoint3D(ICoordinateSpace3D space, double x, double y, double z) {
+
+        this.space = space;
+        this.x = new AnatomicalPoint1D(space.getImageAxis(Axis.X_AXIS), x);
+        this.y = new AnatomicalPoint1D(space.getImageAxis(Axis.Y_AXIS), y);
+        this.z = new AnatomicalPoint1D(space.getImageAxis(Axis.Z_AXIS), z);
     }
 
     public Anatomy3D getAnatomy() {
-        return anatomy;
+        return space.getAnatomy();
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        changeSupport.addPropertyChangeListener(listener);
+    public ICoordinateSpace3D getSpace() {
+        return space;
     }
 
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        changeSupport.addPropertyChangeListener(listener);
+    public AnatomicalPoint3D convertTo(ICoordinateSpace3D other) {
+
+        //todo what happens if "other" is not contained by "this"?
+
+        AnatomicalPoint1D to_x = get(other.getAnatomy().XAXIS);
+        AnatomicalPoint1D to_y = get(other.getAnatomy().YAXIS);
+        AnatomicalPoint1D to_z = get(other.getAnatomy().ZAXIS);
+
+        AnatomicalPoint1D retx = to_x.convertTo(other.getImageAxis(Axis.X_AXIS));
+        AnatomicalPoint1D rety = to_y.convertTo(other.getImageAxis(Axis.Y_AXIS));
+        AnatomicalPoint1D retz = to_z.convertTo(other.getImageAxis(Axis.Z_AXIS));
+
+
+
+        return new AnatomicalPoint3D(other, retx.getValue(), rety.getValue(), retz.getValue());
+
+
     }
 
 
-    public static AnatomicalPoint3D convertPoint(AnatomicalPoint3D from, Anatomy3D to) {
-        AnatomicalPoint1D a1 = from.getValue(to.XAXIS);
-        AnatomicalPoint1D a2 = from.getValue(to.YAXIS);
-        AnatomicalPoint1D a3 = from.getValue(to.ZAXIS);
 
-        return new AnatomicalPoint3D(to, a1.getX(), a2.getX(), a3.getX());
+
+    private AnatomicalPoint1D get(AnatomicalAxis axis) {
+        if (axis.sameAxis(getAnatomy().XAXIS)) {
+            return x;
+        } else if (axis.sameAxis(getAnatomy().YAXIS)) {
+            return y;
+        } else if (axis.sameAxis(getAnatomy().ZAXIS)) {
+            return z;
+        } else {
+            throw new IllegalArgumentException("axis : " + axis + " incompatible with CoordinateSpace " + space);
+        }
+
     }
-
-
 
 
     public AnatomicalPoint1D getValue(AnatomicalAxis axis) {
-        if (axis.sameAxis(anatomy.XAXIS)) {
-            return new AnatomicalPoint1D(axis, anatomy.XAXIS.convertValue(axis, x));
-        } else if (axis.sameAxis(anatomy.YAXIS)) {
-            return new AnatomicalPoint1D(axis, anatomy.YAXIS.convertValue(axis, y));
-        } else if (axis.sameAxis(anatomy.ZAXIS)) {
-            return new AnatomicalPoint1D(axis, anatomy.ZAXIS.convertValue(axis, z));
+        CoordinateAxis caxis = getSpace().getImageAxis(axis, true);
+        if (axis.sameAxis(getAnatomy().XAXIS)) {
+            return new AnatomicalPoint1D(axis, getAnatomy().XAXIS.convertValue(axis, caxis.getMinimum(), caxis.getMaximum(), x.getValue()));
+        } else if (axis.sameAxis(getAnatomy().YAXIS)) {
+            return new AnatomicalPoint1D(axis, getAnatomy().YAXIS.convertValue(axis, caxis.getMinimum(), caxis.getMaximum(), y.getValue()));
+        } else if (axis.sameAxis(getAnatomy().ZAXIS)) {
+            return new AnatomicalPoint1D(axis, getAnatomy().ZAXIS.convertValue(axis, caxis.getMinimum(), caxis.getMaximum(), z.getValue()));
         } else {
-            throw new AssertionError();
+            throw new IllegalArgumentException("illegal axis " + axis + " for this coordinate space");
         }
     }
 
-     public void setValue(AnatomicalPoint1D val) {
-        if (val.getAnatomy().sameAxis(anatomy.XAXIS)) {
-            x = anatomy.XAXIS.convertValue(val.getAnatomy(), val.getX());
-        } else if (val.getAnatomy().sameAxis(anatomy.YAXIS)) {
-            y = anatomy.YAXIS.convertValue(val.getAnatomy(), val.getX());
-        } else if (val.getAnatomy().sameAxis(anatomy.ZAXIS)) {
-            z = anatomy.ZAXIS.convertValue(val.getAnatomy(), val.getX());   
-        } else {
-            throw new AssertionError();
-        }
 
+
+
+    public AnatomicalPoint1D getValue(AnatomicalAxis axis, double min, double max) {
+        if (axis.sameAxis(getAnatomy().XAXIS)) {
+            return new AnatomicalPoint1D(axis, getAnatomy().XAXIS.convertValue(axis, min, max, x.getValue()));
+        } else if (axis.sameAxis(getAnatomy().YAXIS)) {
+            return new AnatomicalPoint1D(axis, getAnatomy().YAXIS.convertValue(axis, min, max, y.getValue()));
+        } else if (axis.sameAxis(getAnatomy().ZAXIS)) {
+            return new AnatomicalPoint1D(axis, getAnatomy().ZAXIS.convertValue(axis, min, max, z.getValue()));
+        } else {
+            throw new IllegalArgumentException("illegal axis " + axis + " for this coordinate space");
+        }
+    }
+
+    /*public void setValue(AnatomicalPoint1D val) {
+     if (val.getAnatomy().sameAxis(anatomy.XAXIS)) {
+         x = anatomy.XAXIS.convertValue(val.getAnatomy(), val.getValue());
+     } else if (val.getAnatomy().sameAxis(anatomy.YAXIS)) {
+         y = anatomy.YAXIS.convertValue(val.getAnatomy(), val.getValue());
+     } else if (val.getAnatomy().sameAxis(anatomy.ZAXIS)) {
+         z = anatomy.ZAXIS.convertValue(val.getAnatomy(), val.getValue());
+     } else {
+         throw new AssertionError();
      }
+
+  }  */
 
 
     public double getX() {
-        return x;
+        return x.getValue();
     }
 
     public double getY() {
-        return y;
+        return y.getValue();
     }
 
     public double getZ() {
-        return z;
-    }
-
-
-    public void setX(double value) {
-        double oldValue = getX();
-        x = value;
-        changeSupport.firePropertyChange("zero", oldValue, value);
-    }
-
-    public void setY(double value) {
-        double oldValue = getY();
-        y = value;
-        changeSupport.firePropertyChange("zero", oldValue, value);
-    }
-
-    public void setZ(double value) {
-        double oldValue = getZ();
-        z = value;
-        changeSupport.firePropertyChange("one", oldValue, value);
+        return z.getValue();
     }
 
 
@@ -135,38 +158,34 @@ public class AnatomicalPoint3D implements AnatomicalPoint {
 
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof AnatomicalPoint3D)) return false;
 
         AnatomicalPoint3D that = (AnatomicalPoint3D) o;
 
-        if (Double.compare(that.x, x) != 0) return false;
-        if (Double.compare(that.y, y) != 0) return false;
-        if (Double.compare(that.z, z) != 0) return false;
-        if (anatomy != null ? !anatomy.equals(that.anatomy) : that.anatomy != null) return false;
+        if (space != null ? !space.equals(that.space) : that.space != null) return false;
+        if (x != null ? !x.equals(that.x) : that.x != null) return false;
+        if (y != null ? !y.equals(that.y) : that.y != null) return false;
+        if (z != null ? !z.equals(that.z) : that.z != null) return false;
 
         return true;
     }
 
     public int hashCode() {
         int result;
-        long temp;
-        result = (anatomy != null ? anatomy.hashCode() : 0);
-        temp = x != +0.0d ? Double.doubleToLongBits(x) : 0L;
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = y != +0.0d ? Double.doubleToLongBits(y) : 0L;
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = z != +0.0d ? Double.doubleToLongBits(z) : 0L;
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = (space != null ? space.hashCode() : 0);
+        result = 31 * result + (x != null ? x.hashCode() : 0);
+        result = 31 * result + (y != null ? y.hashCode() : 0);
+        result = 31 * result + (z != null ? z.hashCode() : 0);
         return result;
     }
 
-    public AnatomicalPoint3D clone()  {
-        return new AnatomicalPoint3D(anatomy, x,y,z);
+    public AnatomicalPoint3D clone() {
+        return new AnatomicalPoint3D(space, x.getValue(), y.getValue(), z.getValue());
     }
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(anatomy.XAXIS).append("-").append(anatomy.YAXIS).append("-").append(anatomy.ZAXIS);
+        sb.append(getAnatomy().XAXIS).append("-").append(getAnatomy().YAXIS).append("-").append(getAnatomy().ZAXIS);
         sb.append("X: ").append(getX()).append(" Y: ").append(getY()).append(" Z: ").append(getZ());
         return sb.toString();
     }
@@ -175,7 +194,7 @@ public class AnatomicalPoint3D implements AnatomicalPoint {
         AnatomicalPoint3D a = new AnatomicalPoint3D(Anatomy3D.AXIAL_LAI, 12, 50, 12);
         AnatomicalPoint3D b = new AnatomicalPoint3D(Anatomy3D.AXIAL_LPI, 12, 50, 12);
 
-        System.out.println(AnatomicalPoint3D.convertPoint(a,b.getAnatomy()));
+        System.out.println(a.convertTo(b.getSpace()));
 
     }
 }

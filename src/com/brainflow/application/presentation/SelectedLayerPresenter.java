@@ -1,6 +1,10 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.core.*;
+import com.brainflow.core.layer.AbstractLayer;
+import com.brainflow.core.layer.ImageLayer;
+import com.brainflow.core.layer.ImageLayerEvent;
+import com.brainflow.core.layer.ImageLayerListenerImpl;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;

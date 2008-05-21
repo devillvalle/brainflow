@@ -1,13 +1,14 @@
 package com.brainflow.image.data;
 
-import com.brainflow.utils.Index3D;
 import com.brainflow.utils.DataType;
 import com.brainflow.image.interpolation.InterpolationFunction3D;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.ImageSpace3D;
+import com.brainflow.image.space.IImageSpace3D;
 import com.brainflow.image.anatomy.Anatomy;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.iterators.ImageIterator;
+import com.brainflow.math.Index3D;
 
 /**
  * Created by IntelliJ IDEA.
@@ -38,8 +39,8 @@ public class MaskedData3D implements IMaskedData3D {
 
    
 
-    public Index3D indexToGrid(int idx, Index3D voxel) {
-        return source.indexToGrid(idx, voxel);
+    public Index3D indexToGrid(int idx) {
+        return source.indexToGrid(idx);
     }
 
     public int indexOf(int x, int y, int z) {
@@ -83,7 +84,7 @@ public class MaskedData3D implements IMaskedData3D {
 
 
 
-    public ImageSpace3D getImageSpace() {
+    public IImageSpace3D getImageSpace() {
         return source.getImageSpace();
     }
 

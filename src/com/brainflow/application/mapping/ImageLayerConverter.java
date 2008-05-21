@@ -1,8 +1,8 @@
 package com.brainflow.application.mapping;
 
 import com.brainflow.image.io.IImageDataSource;
-import com.brainflow.core.ImageLayer;
-import com.brainflow.core.ImageLayer3D;
+import com.brainflow.core.layer.ImageLayer;
+import com.brainflow.core.layer.ImageLayer3D;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;

@@ -65,17 +65,17 @@ public class CrosshairCoordinates extends LabelStatusBarItem implements EventSub
 
             xaxisLabel.setText(format.format(new Object[]{
                     anatomy.XAXIS.toString().substring(0, 1),
-                    cursor.getValue(anatomy.XAXIS).getX()}
+                    cursor.getValue(anatomy.XAXIS).getValue()}
             ));
 
             yaxisLabel.setText(format.format(new Object[]{
                     anatomy.YAXIS.toString().substring(0, 1),
-                    cursor.getValue(anatomy.YAXIS).getX()}
+                    cursor.getValue(anatomy.YAXIS).getValue()}
             ));
 
             zaxisLabel.setText(format.format(new Object[]{
                     anatomy.ZAXIS.toString().substring(0, 1),
-                    cursor.getValue(anatomy.ZAXIS).getX()}
+                    cursor.getValue(anatomy.ZAXIS).getValue()}
             ));
 
 

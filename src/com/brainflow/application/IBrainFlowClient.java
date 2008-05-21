@@ -1,9 +1,9 @@
 package com.brainflow.application;
 
-import com.brainflow.core.AbstractLayer;
+import com.brainflow.core.layer.AbstractLayer;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.ImageView;
-import com.brainflow.core.ImageLayer;
+import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.image.space.IImageSpace;
 
 import javax.swing.event.ListDataEvent;

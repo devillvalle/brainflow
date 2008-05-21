@@ -1,8 +1,9 @@
 package com.brainflow.modes;
 
-import com.brainflow.core.ImageView;
 import com.brainflow.core.BrainCanvas;
+import com.brainflow.core.ImageView;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.image.space.IImageSpace3D;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,6 +48,8 @@ public class MoveCrosshairMode extends ImageCanvasMode {
         if (canvas.isSelectedView(iview)) {
 
             AnatomicalPoint3D ap = iview.getAnatomicalLocation(source, p);
+            ap = ap.convertTo((IImageSpace3D)iview.getModel().getImageSpace());
+             System.out.println("ap ... " + ap);
             if (iview.getViewport().inBounds(ap)) {
                 iview.cursorPos.set(ap);
             }
@@ -71,6 +74,7 @@ public class MoveCrosshairMode extends ImageCanvasMode {
     public void mouseDragged(MouseEvent event) {
         if (SwingUtilities.isLeftMouseButton(event)) {
             dragging = true;
+            System.out.println("moving crosshair ...");
             moveCrosshair(event.getPoint(), (Component) event.getSource());
 
         }

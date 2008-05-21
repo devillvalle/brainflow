@@ -208,7 +208,7 @@ public class CoordinateSet3D {
         for (int i = 0; i < getRows(); i++) {
             double coord = getCoordinate(i, slice.getAnatomy());
             double radius = getRadius(i);
-            if (Math.abs(slice.getX() - coord) < radius) {
+            if (Math.abs(slice.getValue() - coord) < radius) {
                 idx.add(i);
             }
 
@@ -222,7 +222,7 @@ public class CoordinateSet3D {
         for (int i = 0; i < getRows(); i++) {
             double coord = getCoordinate(i, slice.getAnatomy());
             double radius = getRadius(i);
-            if (Math.abs(slice.getX() - coord) < radius) {
+            if (Math.abs(slice.getValue() - coord) < radius) {
                 pts.add(getAnatomicalPoint(i));
             }
 

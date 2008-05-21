@@ -77,12 +77,12 @@ public class BoxAnnotation extends AbstractAnnotation {
     }
 
     public double getNormalizedX(IImagePlot plot, double val) {
-        return (val - plot.getXAxisRange().getBeginning().getX()) / plot.getXAxisRange().getInterval();
+        return (val - plot.getXAxisRange().getBeginning().getValue()) / plot.getXAxisRange().getInterval();
 
     }
 
     public double getNormalizedY(IImagePlot plot, double val) {
-        return (val - plot.getYAxisRange().getBeginning().getX()) / plot.getYAxisRange().getInterval();
+        return (val - plot.getYAxisRange().getBeginning().getValue()) / plot.getYAxisRange().getInterval();
     }
 
     public double getNormalizedWidth(IImagePlot plot, double val) {

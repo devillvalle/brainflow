@@ -68,7 +68,7 @@ public class ScaleAlphaOp implements ColorMapTransformOp {
                 f = (float) Math.pow(f, 2);
 
             alpha[i] = (byte) (f * 255f);
-            //System.out.println("alpha = " + Acme.Utils.ubyte(alpha[i]));
+            //System.out.println("alpha = " + Acme.TUtils.ubyte(alpha[i]));
             //alpha[i] = (byte)255;
         }
 

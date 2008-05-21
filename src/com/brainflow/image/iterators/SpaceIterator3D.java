@@ -2,17 +2,11 @@ package com.brainflow.image.iterators;
 
 import com.brainflow.math.Vector3f;
 import com.brainflow.image.space.IImageSpace3D;
-import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.Axis;
-import com.brainflow.image.space.ImageSpace3D;
-import com.brainflow.image.axis.ImageAxis;
-import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.io.IImageDataSource;
-import com.brainflow.image.data.IImageData;
 import com.brainflow.image.data.IImageData3D;
-import com.brainflow.application.TestUtils;
+import test.TestUtils;
 import com.brainflow.application.BrainflowException;
-import com.brainflow.utils.Range;
 
 import java.util.Arrays;
 
@@ -60,13 +54,13 @@ public class SpaceIterator3D implements XYZIterator {
     }
 
     public Vector3f next() {
-        float[] ret = space.gridToWorld(getXIndex(), getYIndex(), getZIndex());
+        float[] ret = space.indexToWorld(getXIndex(), getYIndex(), getZIndex());
         idx++;
         return new Vector3f(ret[0], ret[1], ret[2]);
     }
 
     public Vector3f next(Vector3f holder) {
-        float[] ret = space.gridToWorld(getXIndex(), getYIndex(), getZIndex());
+        float[] ret = space.indexToWorld(getXIndex(), getYIndex(), getZIndex());
         holder.x = ret[0];
         holder.y = ret[1];
         holder.z = ret[2];
@@ -121,7 +115,7 @@ public class SpaceIterator3D implements XYZIterator {
             double ymax = Double.NEGATIVE_INFINITY;
             double zmax = Double.NEGATIVE_INFINITY;
 
-            System.out.println("(0,0,0): " + Arrays.toString(data.getImageSpace().gridToWorld(0,0,0)));
+            System.out.println("(0,0,0): " + Arrays.toString(data.getImageSpace().indexToWorld(0,0,0)));
 
             while (iter.hasNext()) {
 

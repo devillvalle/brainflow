@@ -4,19 +4,16 @@ import com.brainflow.colormap.IColorMap;
 import com.brainflow.display.InterpolationType;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.data.*;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.image.operations.ImageSlicer;
 import com.brainflow.image.rendering.PixelUtils;
 import com.brainflow.image.rendering.RenderUtils;
-import com.brainflow.image.space.Axis;
-import com.brainflow.image.space.IImageSpace;
-import com.brainflow.image.space.ImageSpace2D;
-import com.brainflow.image.space.ImageSpace3D;
+import com.brainflow.image.space.*;
 import com.brainflow.core.SliceRenderer;
-import com.brainflow.core.ImageLayer;
-import com.brainflow.core.ImageLayerProperties;
-import com.brainflow.core.ImageLayer3D;
+import com.brainflow.core.layer.ImageLayer;
+import com.brainflow.core.layer.ImageLayerProperties;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -38,7 +35,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
 
     private static Logger log = Logger.getLogger(BasicImageSliceRenderer.class.getName());
 
-    private AnatomicalPoint1D slice;
+    private AnatomicalPoint3D slice;
 
     private ImageLayer layer;
 
@@ -58,10 +55,10 @@ public class BasicImageSliceRenderer implements SliceRenderer {
 
     private Anatomy3D displayAnatomy = Anatomy3D.getCanonicalAxial();
 
-    private ImageSpace3D refSpace;
+    private IImageSpace3D refSpace;
 
 
-    public BasicImageSliceRenderer(ImageSpace3D refSpace, ImageLayer layer, AnatomicalPoint1D slice) {
+    public BasicImageSliceRenderer(IImageSpace3D refSpace, ImageLayer layer, AnatomicalPoint3D slice) {
         this.slice = slice;
         this.layer = layer;
         this.refSpace = refSpace;
@@ -85,7 +82,17 @@ public class BasicImageSliceRenderer implements SliceRenderer {
     private IImageData2D getData() {
         if (data != null) return data;
 
-        data = slicer.getSlice(getDisplayAnatomy(), getSlice());
+
+
+        float[] gridpos = refSpace.worldToGrid((float)slice.getX(), (float)slice.getY(), (float)slice.getZ());
+        AnatomicalPoint3D gridloc = new AnatomicalPoint3D(refSpace.getAnatomy(), gridpos[0], gridpos[1], gridpos[2]);
+
+        //AnatomicalPoint1D xdisp = gridloc.getValue(displayAnatomy.XAXIS, 0, refSpace.getDimension(displayAnatomy.XAXIS));
+       // AnatomicalPoint1D ydisp = gridloc.getValue(displayAnatomy.YAXIS, 0, refSpace.getDimension(displayAnatomy.YAXIS));
+        AnatomicalPoint1D zdisp = gridloc.getValue(displayAnatomy.ZAXIS, 0, refSpace.getDimension(displayAnatomy.ZAXIS));
+
+     
+        data = slicer.getSlice(getDisplayAnatomy(), (int)Math.round(zdisp.getValue()));
         return data;
     }
 
@@ -129,7 +136,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
     }
 
 
-    public void setSlice(AnatomicalPoint1D slice) {
+    public void setSlice(AnatomicalPoint3D slice) {
         if (!getSlice().equals(slice)) {
             this.slice = slice;
             flush();
@@ -169,7 +176,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
         return layer.isVisible();
     }
 
-    public AnatomicalPoint1D getSlice() {
+    public AnatomicalPoint3D getSlice() {
         return slice;
     }
 
@@ -209,14 +216,10 @@ public class BasicImageSliceRenderer implements SliceRenderer {
         double sy = ispace.getImageAxis(Axis.Y_AXIS).getRange().getInterval() / ispace.getDimension(Axis.Y_AXIS);
 
         // if (!source.isAlphaPremultiplied()) {
-        log.finest("premultiplying alpha prior to resize");
-        //PremultiplyFilter filter = new PremultiplyFilter();
+       //PremultiplyFilter filter = new PremultiplyFilter();
         //source = filter.filter(source, null);
         //  }
 
-        System.out.println("layer : " + layer);
-        System.out.println("scale factor sx : " + sx);
-        System.out.println("scale factor sy : " + sy);
 
         AffineTransform at = AffineTransform.getTranslateInstance(0, 0);
         at.scale(sx, sy);
@@ -276,7 +279,10 @@ public class BasicImageSliceRenderer implements SliceRenderer {
     protected RGBAImage thresholdRGBA(RGBAImage rgba) {
         //todo here's the rub
         ImageSlicer slicer = new ImageSlicer(new MappedDataAcessor3D(refSpace, layer.getMaskList().composeMask(true)));
-        IImageData2D maskData = slicer.getSlice(getDisplayAnatomy(), getSlice());
+
+        float z = refSpace.worldToGridZ((float)slice.getX(), (float)slice.getY(), (float)slice.getZ());
+        int zed = Math.round(z);
+        IImageData2D maskData = slicer.getSlice(getDisplayAnatomy(), zed);
 
         UByteImageData2D alpha = rgba.getAlpha();
         UByteImageData2D out = new UByteImageData2D(alpha.getImageSpace());

@@ -18,6 +18,8 @@ import org.junit.Test;
 
 import java.net.URL;
 
+import test.TestUtils;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Brad Buchsbaum

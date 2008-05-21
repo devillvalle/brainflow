@@ -4,6 +4,7 @@ import com.brainflow.application.BrainflowProject;
 import com.brainflow.application.toplevel.BrainflowProjectEvent;
 import com.brainflow.application.toplevel.BrainflowProjectListener;
 import com.brainflow.core.*;
+import com.brainflow.core.layer.AbstractLayer;
 import com.brainflow.image.space.IImageSpace;
 
 import javax.swing.*;

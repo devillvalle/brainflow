@@ -1,7 +1,6 @@
 package com.brainflow.core.annotations;
 
 import com.brainflow.core.IImagePlot;
-import com.brainflow.display.ICrosshair;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import net.java.dev.properties.Property;
@@ -87,13 +86,13 @@ public class CrosshairAnnotation extends AbstractAnnotation {
         if (!isVisible()) return;
 
 
-        // potential bug because may not match plot axes????
-        AnatomicalPoint1D xpt = crosshair.get().getValue(plot.getXAxisRange().getAnatomicalAxis());
-        AnatomicalPoint1D ypt = crosshair.get().getValue(plot.getYAxisRange().getAnatomicalAxis());
+        // todo is it fixed? -- (old note: potential bug because may not match plot axes????)
+        AnatomicalPoint1D xpt = crosshair.get().getValue(plot.getXAxisRange().getAnatomicalAxis(), plot.getXAxisRange().getBeginning().getValue(), plot.getXAxisRange().getEnd().getValue());
+        AnatomicalPoint1D ypt = crosshair.get().getValue(plot.getYAxisRange().getAnatomicalAxis(), plot.getYAxisRange().getBeginning().getValue(), plot.getYAxisRange().getEnd().getValue());
 
 
-        double percentX = (xpt.getX() - plot.getXAxisRange().getBeginning().getX()) / plot.getXAxisRange().getInterval();
-        double percentY = (ypt.getX() - plot.getYAxisRange().getBeginning().getX()) / plot.getYAxisRange().getInterval();
+        double percentX = (xpt.getValue() - plot.getXAxisRange().getBeginning().getValue()) / plot.getXAxisRange().getInterval();
+        double percentY = (ypt.getValue() - plot.getYAxisRange().getBeginning().getValue()) / plot.getYAxisRange().getInterval();
 
         double screenX = (percentX * plotArea.getWidth()) + plotArea.getX();
         double screenY = (percentY * plotArea.getHeight()) + plotArea.getY();

@@ -26,7 +26,7 @@ public class SnapshotCommand extends BrainFlowCommand {
 
         if (view != null) {
             RenderedImage image = view.captureImage();
-            SnapshotDialog dialog = new SnapshotDialog(JOptionPane.getFrameForComponent(getSelectedCanvas()), true, image);
+            SnapshotDialog dialog = new SnapshotDialog(JOptionPane.getFrameForComponent(getSelectedCanvas().getComponent()), true, image);
             dialog.pack();
             dialog.setVisible(true);
 

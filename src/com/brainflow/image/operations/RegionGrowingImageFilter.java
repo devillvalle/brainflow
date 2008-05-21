@@ -8,8 +8,9 @@ import com.brainflow.image.data.IImageData3D;
 import com.brainflow.image.io.BrainIO;
 import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.utils.DataType;
-import com.brainflow.utils.Index3D;
 import com.brainflow.utils.StaticTimer;
+import com.brainflow.math.Index3D;
+import com.brainflow.math.WIndex3D;
 
 import java.util.List;
 import java.util.Stack;
@@ -48,19 +49,19 @@ public class RegionGrowingImageFilter extends AbstractImageFilter {
     }
 
 
-    public RegionGrowingImageFilter(Index3D _seed) {
+    public RegionGrowingImageFilter(WIndex3D _seed) {
         seed = new int[3];
-        seed[0] = _seed.getX();
-        seed[1] = _seed.getY();
-        seed[2] = _seed.getZ();
+        seed[0] = _seed.i1();
+        seed[1] = _seed.i2();
+        seed[2] = _seed.i3();
 
     }
 
     public void setSeed(Index3D _seed) {
         seed = new int[3];
-        seed[0] = _seed.getX();
-        seed[1] = _seed.getY();
-        seed[2] = _seed.getZ();
+        seed[0] = _seed.i1();
+        seed[1] = _seed.i2();
+        seed[2] = _seed.i3();
     }
 
 
@@ -94,7 +95,7 @@ public class RegionGrowingImageFilter extends AbstractImageFilter {
             tfilter.addInput(data);
             data = tfilter.getOutput();
 
-            RegionGrowingImageFilter ifilter = new RegionGrowingImageFilter(new Index3D(69, 81, 36));
+            RegionGrowingImageFilter ifilter = new RegionGrowingImageFilter(new WIndex3D(69, 81, 36));
             ifilter.addInput(data);
 
 
@@ -170,8 +171,8 @@ public class RegionGrowingImageFilter extends AbstractImageFilter {
                     continue;
                 }
                 if (data.value(idx) > 0) {
-                    Index3D voxel = new Index3D();
-                    data.indexToGrid(idx, voxel);
+                    
+                    Index3D voxel = data.indexToGrid(idx);
                     visited.setValue(idx, 1);
                     searchStack.push(voxel.toArray());
 

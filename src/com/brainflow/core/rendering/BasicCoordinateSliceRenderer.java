@@ -1,9 +1,9 @@
 package com.brainflow.core.rendering;
 
 import com.brainflow.colormap.IColorMap;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.axis.CoordinateAxis;
 import com.brainflow.image.data.CoordinateSet3D;
@@ -11,7 +11,7 @@ import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.CoordinateSpace2D;
 import com.brainflow.image.space.ICoordinateSpace;
 import com.brainflow.core.SliceRenderer;
-import com.brainflow.core.CoordinateLayer;
+import com.brainflow.core.layer.CoordinateLayer;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
@@ -30,7 +30,7 @@ import java.util.List;
 public class BasicCoordinateSliceRenderer implements SliceRenderer {
 
 
-    private AnatomicalPoint1D slice;
+    private AnatomicalPoint3D slice;
 
     private CoordinateLayer layer;
 
@@ -40,7 +40,7 @@ public class BasicCoordinateSliceRenderer implements SliceRenderer {
 
     private ICoordinateSpace space;
 
-    public BasicCoordinateSliceRenderer(CoordinateLayer layer, AnatomicalPoint1D slice) {
+    public BasicCoordinateSliceRenderer(CoordinateLayer layer, AnatomicalPoint3D slice) {
         this.slice = slice;
         this.layer = layer;
 
@@ -77,20 +77,21 @@ public class BasicCoordinateSliceRenderer implements SliceRenderer {
 
     }
 
-    public void setSlice(AnatomicalPoint1D slice) {
+    public void setSlice(AnatomicalPoint3D slice) {
         if (!getSlice().equals(slice)) {
             this.slice = slice;
             flush();
         }
     }
 
-    public AnatomicalPoint1D getSlice() {
+    public AnatomicalPoint3D getSlice() {
         return slice;
     }
 
     public BufferedImage render() {
         CoordinateSet3D set = layer.getDataSource();
-        List<AnatomicalPoint3D> pts = set.pointsWithinPlane(getSlice());
+        AnatomicalAxis zaxis = getSlice().getAnatomy().ZAXIS;
+        List<AnatomicalPoint3D> pts = set.pointsWithinPlane(getSlice().getValue(zaxis));
 
         for (AnatomicalPoint3D pt : pts) {
             System.out.println("found point : " + pts);
@@ -101,7 +102,8 @@ public class BasicCoordinateSliceRenderer implements SliceRenderer {
 
     public void renderUnto(Rectangle2D frame, Graphics2D g2) {
         CoordinateSet3D set = layer.getDataSource();
-        List<Integer> indices = set.indicesWithinPlane(getSlice());
+        AnatomicalAxis zaxis = getSlice().getAnatomy().ZAXIS;
+        List<Integer> indices = set.indicesWithinPlane(getSlice().getValue(zaxis));
 
         if (indices.size() == 0) {
             return;
@@ -136,8 +138,8 @@ public class BasicCoordinateSliceRenderer implements SliceRenderer {
 
             double radius = set.getRadius(i);
 
-            double x = pt.getValue(displayAnatomy.XAXIS).getX();
-            double y = pt.getValue(displayAnatomy.YAXIS).getX();
+            double x = pt.getValue(displayAnatomy.XAXIS).getValue();
+            double y = pt.getValue(displayAnatomy.YAXIS).getValue();
 
             System.out.println("anat zero : " + x);
             System.out.println("anat zero : " + y);

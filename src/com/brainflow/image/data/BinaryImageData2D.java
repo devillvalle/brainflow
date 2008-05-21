@@ -79,8 +79,8 @@ public class BinaryImageData2D extends BinaryImageData implements IImageData2D {
     }
 
     public double worldValue(double realx, double realy, InterpolationFunction2D interp) {
-        double x = space.getImageAxis(Axis.X_AXIS).fractionalSample(realx);
-        double y = space.getImageAxis(Axis.Y_AXIS).fractionalSample(realy);
+        double x = space.getImageAxis(Axis.X_AXIS).gridPosition(realx);
+        double y = space.getImageAxis(Axis.Y_AXIS).gridPosition(realy);
         return interp.interpolate(x, y, this);
 
     }

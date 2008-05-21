@@ -3,7 +3,7 @@ package com.brainflow.chart;
 import com.brainflow.image.Histogram;
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.display.ColoredHistogram;
-import com.brainflow.application.TestUtils;
+import test.TestUtils;
 import com.brainflow.colormap.LinearColorMap2;
 import com.brainflow.colormap.ColorTable;
 

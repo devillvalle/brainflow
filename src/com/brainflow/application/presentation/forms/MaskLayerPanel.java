@@ -1,8 +1,10 @@
 package com.brainflow.application.presentation.forms;
 
 import com.brainflow.core.*;
+import com.brainflow.core.layer.ImageLayer;
+import com.brainflow.core.layer.IMaskList;
+import com.brainflow.core.layer.IMaskItem;
 import com.brainflow.image.data.IImageData3D;
-import com.brainflow.utils.Range;
 
 import javax.swing.*;
 import java.awt.*;

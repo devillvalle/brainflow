@@ -83,7 +83,7 @@ public class DataSourceManager {
     }
 
     public ImageProgressDialog createProgressDialog(final IImageDataSource dataSource) {
-        ImageProgressDialog id = new ImageProgressDialog(dataSource, BrainCanvasManager.getInstance().getSelectedCanvas()) {
+        ImageProgressDialog id = new ImageProgressDialog(dataSource, BrainCanvasManager.getInstance().getSelectedCanvas().getComponent()) {
 
             protected void done() {
                 IImageDisplayModel displayModel = ProjectManager.getInstance().addToActiveProject(dataSource);

@@ -44,11 +44,14 @@ public class GoToVoxelCommand extends BrainFlowCommand {
             }
         }
 
-        float[] coords = view.getModel().getImageSpace().gridToWorld(vox);
+        float[] coords = view.getModel().getImageSpace().indexToWorld(vox);
         System.out.println("coords = " + Arrays.toString(coords));
         System.out.println("anatomy of view : " + view.getModel().getImageSpace().getAnatomy());
         System.out.println("anatomy of cursor : " + view.cursorPos.get().getAnatomy());
+
         AnatomicalPoint3D ap = new AnatomicalPoint3D((Anatomy3D)view.getModel().getImageSpace().getAnatomy(), coords[0], coords[1], coords[2]);
-        view.cursorPos.set(ap);
+        view.cursorX.set(ap.getX());
+        view.cursorY.set(ap.getY());
+        view.cursorZ.set(ap.getZ());
     }
 }

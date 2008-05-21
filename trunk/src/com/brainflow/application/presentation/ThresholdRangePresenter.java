@@ -13,21 +13,11 @@ import com.brainflow.application.presentation.forms.ThresholdRangeForm;
 import com.brainflow.application.presentation.binding.PercentageRangeConverter;
 import com.brainflow.application.presentation.binding.DoubleToStringConverter;
 
-import com.brainflow.core.AbstractLayer;
 import com.brainflow.core.ImageView;
-import com.brainflow.core.ImageLayer;
+import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.core.ClipRange;
 
-import com.brainflow.display.ThresholdRange;
-import com.jgoodies.binding.adapter.Bindings;
-import com.jgoodies.binding.adapter.BoundedRangeAdapter;
-import com.jgoodies.binding.beans.BeanAdapter;
-import com.jgoodies.binding.value.ValueHolder;
-import com.jgoodies.binding.value.ValueModel;
-
 import javax.swing.*;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
 
 import net.java.dev.properties.binding.swing.adapters.SwingBind;
 

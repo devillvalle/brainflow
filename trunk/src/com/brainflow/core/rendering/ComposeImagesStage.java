@@ -10,7 +10,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.brainflow.core.ImageLayer2D;
+import com.brainflow.core.layer.ImageLayer2D;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.rendering.RenderUtils;

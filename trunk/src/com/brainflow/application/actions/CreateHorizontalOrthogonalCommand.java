@@ -1,9 +1,9 @@
 package com.brainflow.application.actions;
 
 import com.brainflow.application.toplevel.ImageViewFactory;
-import com.brainflow.core.BrainCanvas;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.OrthoPlotLayout;
+import com.brainflow.core.IBrainCanvas;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,7 +24,7 @@ public class CreateHorizontalOrthogonalCommand extends BrainFlowCommand {
         if (view != null) {
 
             ImageView sview = ImageViewFactory.createOrthogonalView(view, OrthoPlotLayout.ORIENTATION.HORIZONTAL);
-            BrainCanvas canvas = getSelectedCanvas();
+            IBrainCanvas canvas = getSelectedCanvas();
 
             if (canvas != null) {
                 canvas.addImageView(sview);

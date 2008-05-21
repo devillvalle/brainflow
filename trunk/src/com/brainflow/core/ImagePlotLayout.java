@@ -1,7 +1,6 @@
 package com.brainflow.core;
 
 import com.brainflow.image.anatomy.Anatomy3D;
-import com.brainflow.image.axis.AxisRange;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ public abstract class ImagePlotLayout {
 
         IImagePlot plot = ImagePlotFactory.createComponentPlot(view.getModel(), displayAnatomy);
         
-        plot.setSlice(getView().getCursorPos().getValue(displayAnatomy.ZAXIS));
+        plot.setSlice(getView().getCursorPos());
         plot.setScreenInterpolation(getView().getScreenInterpolation());
         return plot;
 

@@ -1,11 +1,11 @@
 package com.brainflow.image.space;
 
-import com.brainflow.image.anatomy.*;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.ImageAxis;
-import com.brainflow.utils.*;
-import com.brainflow.utils.Index3D;
-import com.brainflow.math.Matrix4f;
+import com.brainflow.math.Index3D;
 import com.brainflow.math.Vector3f;
+import com.brainflow.utils.Dimension3D;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,6 +24,9 @@ public class ImageSpace3D extends AbstractImageSpace implements IImageSpace3D {
     private final int dim0;
 
     private final Dimension3D<Float> origin;
+
+    
+
 
 
     public ImageSpace3D(ICoordinateSpace cspace) {
@@ -57,9 +60,9 @@ public class ImageSpace3D extends AbstractImageSpace implements IImageSpace3D {
 
          if (_mapping == null) {
 
-            this.mapping = new AffineMapping3D(new Vector3f((float)xaxis.getRange().getBeginning().getX(),
-                                                            (float)yaxis.getRange().getBeginning().getX(),
-                                                            (float)zaxis.getRange().getBeginning().getX()),
+            this.mapping = new AffineMapping3D(new Vector3f((float)xaxis.getRange().getBeginning().getValue(),
+                                                            (float)yaxis.getRange().getBeginning().getValue(),
+                                                            (float)zaxis.getRange().getBeginning().getValue()),
 
                     new Vector3f((float) xaxis.getSpacing(), (float) yaxis.getSpacing(), (float) zaxis.getSpacing()), check);
         } else {
@@ -69,10 +72,14 @@ public class ImageSpace3D extends AbstractImageSpace implements IImageSpace3D {
 
         setAnatomy(check);
 
-     
-        xaxis = new ImageAxis(xaxis.getAnatomicalAxis(), 0, xaxis.getSpacing(), xaxis.getNumSamples());
-        yaxis = new ImageAxis(yaxis.getAnatomicalAxis(), 0, yaxis.getSpacing(), yaxis.getNumSamples());
-        zaxis = new ImageAxis(zaxis.getAnatomicalAxis(), 0, zaxis.getSpacing(), zaxis.getNumSamples());
+        
+        double xinterval = xaxis.getSpacing()*xaxis.getNumSamples();
+        double yinterval = yaxis.getSpacing()*yaxis.getNumSamples();
+        double zinterval = zaxis.getSpacing()*zaxis.getNumSamples();
+
+        xaxis = new ImageAxis(xaxis.getAnatomicalAxis(), 0-xinterval/2, xaxis.getSpacing(), xaxis.getNumSamples());
+        yaxis = new ImageAxis(yaxis.getAnatomicalAxis(), 0-yinterval/2, yaxis.getSpacing(), yaxis.getNumSamples());
+        zaxis = new ImageAxis(zaxis.getAnatomicalAxis(), 0-zinterval/2, zaxis.getSpacing(), zaxis.getNumSamples());
 
         createImageAxes(3);
 
@@ -89,6 +96,7 @@ public class ImageSpace3D extends AbstractImageSpace implements IImageSpace3D {
         dim0 = getDimension(Axis.X_AXIS);
 
 
+
     }
 
 
@@ -102,7 +110,7 @@ public class ImageSpace3D extends AbstractImageSpace implements IImageSpace3D {
         return mapping;
     }
 
-    public IDimension<Float> getOrigin() {
+    public Dimension3D<Float> getOrigin() {
         return origin;
     }
 
@@ -111,15 +119,9 @@ public class ImageSpace3D extends AbstractImageSpace implements IImageSpace3D {
     }
 
 
-    public float[] gridToWorld(int x, int y, int z) {
-        Vector3f ret = mapping.gridToWorld(x, y, z);
-        return ret.toArray(new float[3]);
-    }
 
-
-
-    public float[] gridToWorld(int[] gridpos) {
-        if (gridpos.length != 3) { throw new IllegalArgumentException("integer array length must be 3"); }
+    public float[] gridToWorld(float[] gridpos) {
+        if (gridpos.length != 3) { throw new IllegalArgumentException("array length must be 3"); }
 
         float[] ret = new float[3];
         ret[0] = gridToWorldX(gridpos[0], gridpos[1], gridpos[2]);
@@ -127,8 +129,24 @@ public class ImageSpace3D extends AbstractImageSpace implements IImageSpace3D {
         ret[2] = gridToWorldZ(gridpos[0], gridpos[1], gridpos[2]);
 
         return ret;
-
     }
+
+    public float[] gridToWorld(float x, float y, float z) {
+        Vector3f ret = mapping.gridToWorld(x, y, z);
+        return ret.toArray(new float[3]);
+    }
+
+    
+    public float[] indexToWorld(int x, int y, int z) {
+
+        Vector3f ret = mapping.gridToWorld(x+.5f, y+.5f, z+.5f);
+        return ret.toArray(new float[3]);
+    }
+
+    public float[] indexToWorld(int[] index) {
+        return indexToWorld(index[0], index[1], index[2]);
+    }
+
 
     public float[] worldToGrid(float[] coord) {
         if (coord.length != 3) { throw new IllegalArgumentException("float array length must be 3"); }
@@ -142,21 +160,19 @@ public class ImageSpace3D extends AbstractImageSpace implements IImageSpace3D {
 
     }
 
-    public final Index3D indexToGrid(int idx, Index3D voxel) {
-        voxel.setZ(idx / planeSize);
+    /*public final Index3D indexToGrid(int idx, Index3D voxel) {
+        voxel.i = idx / planeSize;
         int remainder = (idx % planeSize);
-        voxel.setY(remainder / getDimension(Axis.X_AXIS));
-        voxel.setX(remainder % getDimension(Axis.X_AXIS));
+        voxel.k = remainder / getDimension(Axis.X_AXIS);
+        voxel.j = remainder % getDimension(Axis.X_AXIS);
 
         return voxel;
-    }
+    }   */
 
     public final Index3D indexToGrid(int idx) {
         int remainder = (idx % planeSize);
-        Index3D voxel = new Index3D(remainder % getDimension(Axis.X_AXIS), remainder / getDimension(Axis.X_AXIS), idx / planeSize);
-        voxel.setZ(idx / planeSize);
+        return new Index3D(remainder % getDimension(Axis.X_AXIS), remainder / getDimension(Axis.X_AXIS), idx / planeSize);
 
-        return voxel;
     }
 
     public final int indexToGridX(int idx) {
@@ -215,7 +231,7 @@ public class ImageSpace3D extends AbstractImageSpace implements IImageSpace3D {
 
 
     //public Index3D pointToVoxel(Point3D pt) {
-    //    int x = getImageAxis(Axis.X_AXIS).nearestSample(pt.getX());
+    //    int x = getImageAxis(Axis.X_AXIS).nearestSample(pt.getValue());
     //    int y = getImageAxis(Axis.Y_AXIS).nearestSample(pt.getY());
     //    int z = getImageAxis(Axis.Z_AXIS).nearestSample(pt.getZ());
     //    return new Index3D(x, y, z);
@@ -238,7 +254,7 @@ public class ImageSpace3D extends AbstractImageSpace implements IImageSpace3D {
        AnatomicalAxis yaxis = avol.findAxis(getAnatomicalAxis(Axis.Y_AXIS));
        AnatomicalAxis zaxis = avol.findAxis(getAnatomicalAxis(Axis.Z_AXIS));
 
-       double zero = xaxis.convertValue(this.getAnatomicalAxis(Axis.X_AXIS), otherPoint3D.getX());
+       double zero = xaxis.convertValue(this.getAnatomicalAxis(Axis.X_AXIS), otherPoint3D.getValue());
        double zero = yaxis.convertValue(this.getAnatomicalAxis(Axis.Y_AXIS), otherPoint3D.getY());
        double one = zaxis.convertValue(this.getAnatomicalAxis(Axis.Z_AXIS), otherPoint3D.getZ());
 

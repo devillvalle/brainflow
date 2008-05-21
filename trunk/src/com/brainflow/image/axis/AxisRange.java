@@ -79,8 +79,8 @@ public final class AxisRange implements Cloneable {
             throw new IllegalArgumentException("AxisRange.union(...): axes must have same Anatomical Direction");
         }
 
-        double nbegin = Math.min(getBeginning().getX(), other.getBeginning().getX());
-        double nend = Math.max(getEnd().getX(), other.getEnd().getX());
+        double nbegin = Math.min(getBeginning().getValue(), other.getBeginning().getValue());
+        double nend = Math.max(getEnd().getValue(), other.getEnd().getValue());
         return new AxisRange(aaxis, nbegin, nend);
     }
 

@@ -1,7 +1,7 @@
 package com.brainflow.core;
 
 import com.brainflow.display.InterpolationType;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
 
@@ -21,7 +21,7 @@ public abstract class AbstractImageProducer implements IImageProducer {
 
     private Anatomy3D displayAnatomy;
 
-    private AnatomicalPoint1D slice;
+    private AnatomicalPoint3D slice;
 
     private Rectangle screenSize;
 
@@ -48,7 +48,7 @@ public abstract class AbstractImageProducer implements IImageProducer {
         return displayAnatomy;
     }
 
-    public void setSlice(AnatomicalPoint1D slice) {
+    public void setSlice(AnatomicalPoint3D slice) {
         this.slice = slice;
 
     }
@@ -77,7 +77,7 @@ public abstract class AbstractImageProducer implements IImageProducer {
         this.yaxis = yaxis;
     }
 
-    public AnatomicalPoint1D getSlice() {
+    public AnatomicalPoint3D getSlice() {
         return slice;
     }
 

@@ -1,14 +1,11 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.core.ImageView;
-import com.brainflow.core.ImageLayer;
-import com.brainflow.core.ImageLayer3D;
+import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.image.space.IImageSpace;
 import com.jidesoft.grid.*;
 import com.jidesoft.converter.ObjectConverterManager;
-import com.jidesoft.converter.ConverterContext;
-import com.jidesoft.swing.JideSwingUtilities;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

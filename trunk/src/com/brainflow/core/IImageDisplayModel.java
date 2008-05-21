@@ -6,7 +6,9 @@ import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
-import com.jgoodies.binding.list.SelectionInList;
+import com.brainflow.core.layer.ImageLayer;
+import com.brainflow.core.layer.ImageLayerListener;
+import com.brainflow.core.layer.ImageLayerProperties;
 
 import java.util.List;
 

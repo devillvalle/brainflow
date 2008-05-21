@@ -1,6 +1,7 @@
 package com.brainflow.core.rendering;
 
 import com.brainflow.core.*;
+import com.brainflow.core.layer.AbstractLayer;
 
 import org.apache.commons.pipeline.StageException;
 
@@ -19,7 +20,7 @@ public class GatherRenderersStage extends ImageProcessingStage {
 
     private List<SliceRenderer> rendererList = null;
 
-    private static Logger log = Logger.getLogger(FetchSlicesStage.class.getName());
+    private static Logger log = Logger.getLogger(GatherRenderersStage.class.getName());
 
 
     public GatherRenderersStage() {

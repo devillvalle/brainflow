@@ -2,6 +2,7 @@ package com.brainflow.image.space;
 
 import com.brainflow.image.anatomy.AnatomicalPoint;
 import com.brainflow.utils.IDimension;
+import com.brainflow.math.IIndex;
 
 /**
  * Created by IntelliJ IDEA.
@@ -25,11 +26,19 @@ public class ImageSpace1D extends AbstractImageSpace implements IImageSpace {
         throw new UnsupportedOperationException();
     }
 
-    public float[] gridToWorld(int[] gridpos) {
+    public float[] indexToWorld(int[] index) {
+        return new float[0];  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public float[] gridToWorld(float[] gridpos) {
         return new float[0];  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public float[] worldToGrid(float[] coord) {
         return new float[0];  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public IIndex indexToGrid(int idx) {
+       throw new UnsupportedOperationException(); 
     }
 }

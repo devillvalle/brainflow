@@ -24,6 +24,8 @@ public abstract class AbstractCoordinateSpace implements ICoordinateSpace {
 
     protected abstract CoordinateAxis[] getAxes();
 
+    
+
     public CoordinateAxis getImageAxis(Axis axis) {
         assert axis.getId() < getNumDimensions();
         return getAxes()[axis.getId()];

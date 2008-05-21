@@ -5,6 +5,7 @@ import com.brainflow.image.anatomy.AnatomicalPoint;
 import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.utils.IDimension;
 import com.brainflow.utils.Dimension2D;
+import com.brainflow.math.Index2D;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,7 +29,7 @@ public class ImageSpace2D extends AbstractImageSpace {
 
         origin = new ImageOrigin2D(xaxis.getAnatomicalAxis().getMinDirection(),
                 yaxis.getAnatomicalAxis().getMinDirection(),
-                xaxis.getRange().getBeginning().getX(), yaxis.getRange().getBeginning().getX());
+                xaxis.getRange().getBeginning().getValue(), yaxis.getRange().getBeginning().getValue());
     }
 
     public ImageSpace2D(ImageSpace2D space) {
@@ -57,11 +58,19 @@ public class ImageSpace2D extends AbstractImageSpace {
        throw new UnsupportedOperationException();
     }
 
-    public float[] gridToWorld(int[] gridpos) {
-        return new float[0];  //To change body of implemented methods use File | Settings | File Templates.
+    public float[] worldToGrid(float[] coord) {
+        throw new UnsupportedOperationException();
     }
 
-    public float[] worldToGrid(float[] coord) {
-        return new float[0];  //To change body of implemented methods use File | Settings | File Templates.
+    public float[] indexToWorld(int[] index) {
+        throw new UnsupportedOperationException();
+    }
+
+    public float[] gridToWorld(float[] gridpos) {
+        throw new UnsupportedOperationException();
+    }
+
+    public Index2D indexToGrid(int idx) {
+        throw new UnsupportedOperationException();
     }
 }

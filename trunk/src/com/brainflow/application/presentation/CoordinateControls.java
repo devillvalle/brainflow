@@ -1,11 +1,7 @@
 package com.brainflow.application.presentation;
 
-import com.brainflow.application.services.ImageViewEvent;
-import com.brainflow.core.ImageView;
 import com.jidesoft.pane.CollapsiblePane;
 import com.jidesoft.pane.CollapsiblePanes;
-import org.bushe.swing.event.EventBus;
-import org.bushe.swing.event.EventSubscriber;
 
 import javax.swing.*;
 
@@ -21,9 +17,9 @@ public class CoordinateControls {
 
     private CollapsiblePanes cpanes;
 
-    private WorldCoordinatePresenter worldCoordinatePresenter;
+    private WorldCoordinatePresenter2 worldCoordinatePresenter;
 
-    private IndexCoordinatePresenter indexCoordinatePresenter;
+    private IndexCoordinatePresenter2 indexCoordinatePresenter;
 
     //private ImageViewportPresenter imageViewportPresenter;
 
@@ -41,8 +37,8 @@ public class CoordinateControls {
         cpanes = new CollapsiblePanes();
 
         linkedViewsPresenter = new LinkedViewsPresenter();
-        worldCoordinatePresenter = new WorldCoordinatePresenter();
-        indexCoordinatePresenter = new IndexCoordinatePresenter();
+        worldCoordinatePresenter = new WorldCoordinatePresenter2();
+        indexCoordinatePresenter = new IndexCoordinatePresenter2();
         //imageViewportPresenter = new ImageViewportPresenter();
         //imageExtentPresenter = new ImageExtentPresenter(activeView.getViewport());
 

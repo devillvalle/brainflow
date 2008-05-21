@@ -1,5 +1,7 @@
 package com.brainflow.core;
 
+import com.brainflow.core.layer.ImageLayer;
+
 import javax.swing.event.ListDataEvent;
 
 /**

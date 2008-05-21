@@ -107,35 +107,14 @@ public class ImageViewFactory {
     }
 
 
-    public static ImageView createExpandedView(IImageDisplayModel displayModel) {
-        ExpandedImageView view = new ExpandedImageView(displayModel, Anatomy3D.getCanonicalAxial());
-
-        return view;
-    }
-
+   
     public static ImageView createMontageView(IImageDisplayModel displayModel, int nrows, int ncols, double sliceGap) {
         MontageImageView view = new MontageImageView(displayModel, Anatomy3D.getCanonicalAxial(), nrows, ncols, sliceGap);
 
         return view;
     }
 
-    public static ImageView createOrthogonalView(IImageDisplayModel displayModel) {
-        SimpleOrthogonalImageView view = new SimpleOrthogonalImageView(displayModel);
-      //ITitledBorder tborder = border;
-        //tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
 
-
-        return view;
-    }
-
-    public static ImageView createCoronalView(IImageDisplayModel displayModel) {
-        SimpleImageView view = new SimpleImageView(displayModel, Anatomy3D.getCanonicalCoronal());
-
-        //ITitledBorder tborder = border;
-        //tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
-
-        return view;
-    }
 
     public static ImageView createSagittalView(ImageView source) {
         ImageView view = new ImageView(source.getModel(), Brainflow.getInstance().getCommandContainer());
@@ -164,14 +143,7 @@ public class ImageViewFactory {
 
     }
 
-    public static ImageView createSagittalView(IImageDisplayModel displayModel) {
-        SimpleImageView view = new SimpleImageView(displayModel, Anatomy3D.getCanonicalSagittal());
-       //ITitledBorder tborder = border;
-        //tborder.setTitleGenerator(new ImageViewTitleGenerator(view));
-
-
-        return view;
-    }
+    
 
 
     public static class ImageViewTitleGenerator implements StringGenerator {

@@ -1,7 +1,7 @@
 package com.brainflow.image.io;
 
 import com.brainflow.application.BrainflowException;
-import com.brainflow.application.TestUtils;
+import test.TestUtils;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.io.ImageInfoReader;
 import com.brainflow.image.anatomy.Anatomy3D;

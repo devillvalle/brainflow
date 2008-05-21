@@ -2,8 +2,8 @@ package com.brainflow.application.presentation;
 
 import com.brainflow.application.actions.RotateLayersCommand;
 import com.brainflow.application.dnd.AbstractLayerTransferable;
-import com.brainflow.core.AbstractLayer;
-import com.brainflow.core.ImageLayer;
+import com.brainflow.core.layer.AbstractLayer;
+import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.core.ImageView;
 import com.pietschy.command.ActionCommand;
 
@@ -190,7 +190,7 @@ public class CanvasBar extends ImageViewPresenter {
 
         public CanvasBarTransferHandler() {
             try {
-                flavor = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + ";class=com.brainflow.core.AbstractLayer");
+                flavor = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + ";class=com.brainflow.core.layer.AbstractLayer");
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

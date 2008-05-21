@@ -94,7 +94,7 @@ public class AnatomicalAxis implements Anatomy {
         return false;
     }
 
-    public double convertValue(AnatomicalAxis other, double value) {
+    public double convertValue(AnatomicalAxis other, double min, double max, double value) {
         if (!other.sameAxis(this)) {
             throw new ImageAxis.IncompatibleAxisException("axis: " + other + " is incompatible with this axis " + this);
         }
@@ -102,10 +102,10 @@ public class AnatomicalAxis implements Anatomy {
         if (other == this) {
             return value;
         } else if (other == getFlippedAxis()) {
-            return -value;
+            return (max - value) + min;
         }
 
-        throw new AssertionError("Shouldn'three ever get here.");
+        throw new AssertionError("Shouldn't ever get here.");
     }
 
     public AnatomicalAxis getFlippedAxis() {

@@ -48,7 +48,7 @@ public class CoordinateSpace2D extends AbstractCoordinateSpace {
         initAxis(xaxis, Axis.X_AXIS);
         initAxis(yaxis, Axis.Y_AXIS);
 
-        origin = new Dimension2D<Float>((float)xaxis.getRange().getBeginning().getX(), (float)yaxis.getRange().getBeginning().getX());
+        origin = new Dimension2D<Float>((float)xaxis.getRange().getBeginning().getValue(), (float)yaxis.getRange().getBeginning().getValue());
 
     }
 
@@ -59,7 +59,7 @@ public class CoordinateSpace2D extends AbstractCoordinateSpace {
         AnatomicalPoint1D x = a1.getRange().getCenter();
         AnatomicalPoint1D y = a2.getRange().getCenter();
 
-        return new AnatomicalPoint2D(getAnatomy(), x.getX(), y.getX());
+        return new AnatomicalPoint2D(getAnatomy(), x.getValue(), y.getValue());
     }
 
     protected CoordinateAxis[] getAxes() {

@@ -5,10 +5,11 @@ import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.ImageSpace3D;
+import com.brainflow.image.space.IImageSpace3D;
 import com.brainflow.math.ArrayUtils;
+import com.brainflow.math.Index3D;
 import com.brainflow.utils.DataType;
-import com.brainflow.utils.Index3D;
-import com.brainflow.application.TestUtils;
+import test.TestUtils;
 
 
 /**
@@ -28,7 +29,7 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
 
     private int dim0;
 
-    private ImageSpace3D space3d;
+    private IImageSpace3D space3d;
 
     public BasicImageData3D(BasicImageData3D src) {
         //todo look at all the code duplication
@@ -139,18 +140,13 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
         return new ImageInfo(this);
     }
 
-    public ImageSpace3D getImageSpace() {
-        return (ImageSpace3D)space;
+    public IImageSpace3D getImageSpace() {
+        return (IImageSpace3D)space;
 
     }
 
-    public final Index3D indexToGrid(int idx, Index3D voxel) {
-        voxel.setZ(idx / planeSize);
-        int remainder = (idx % planeSize);
-        voxel.setY(remainder / space.getDimension(Axis.X_AXIS));
-        voxel.setX(remainder % space.getDimension(Axis.X_AXIS));
-
-        return voxel;
+    public final Index3D indexToGrid(int idx) {
+        return space3d.indexToGrid(idx);
     }
 
     public final int indexOf(int x, int y, int z) {
@@ -210,7 +206,7 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
 
         private IImageData3D data;
 
-        private ImageSpace3D space;
+        private IImageSpace3D space;
 
         private int len;
         private int end;
@@ -322,7 +318,7 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
     public static void main(String[] args) {
         try {
             IImageData data = TestUtils.quickDataSource("mean-BRB-EPI-001.nii").load();
-            Index3D vox = new Index3D();
+            Index3D vox = new Index3D(0,0,0);
 
             System.out.println("class : " + data.getClass());
             System.out.println("double min : " + Double.MIN_VALUE);

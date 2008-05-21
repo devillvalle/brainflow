@@ -66,5 +66,24 @@ public class Dimension3D<T extends Number> implements IDimension, java.io.Serial
         return "[" + f.format(zero) + ", " + f.format(one) + ", " + f.format(two) + "]";
     }
 
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Dimension3D)) return false;
 
+        Dimension3D that = (Dimension3D) o;
+
+        if (one != null ? !one.equals(that.one) : that.one != null) return false;
+        if (two != null ? !two.equals(that.two) : that.two != null) return false;
+        if (zero != null ? !zero.equals(that.zero) : that.zero != null) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result;
+        result = (zero != null ? zero.hashCode() : 0);
+        result = 31 * result + (one != null ? one.hashCode() : 0);
+        result = 31 * result + (two != null ? two.hashCode() : 0);
+        return result;
+    }
 }

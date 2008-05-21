@@ -3,6 +3,7 @@ package com.brainflow.image.data;
 import com.brainflow.image.interpolation.InterpolationFunction3D;
 import com.brainflow.image.interpolation.TrilinearInterpolator;
 import com.brainflow.image.space.ImageSpace3D;
+import com.brainflow.image.space.IImageSpace3D;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,13 +14,13 @@ import com.brainflow.image.space.ImageSpace3D;
  */
 public class MappedDataAcessor3D implements DataAccessor3D {
 
-    private final ImageSpace3D refSpace;
+    private final IImageSpace3D refSpace;
 
     private final IImageData3D data;
 
     private InterpolationFunction3D interp = new TrilinearInterpolator();
 
-    public MappedDataAcessor3D(ImageSpace3D refSpace, IImageData3D data) {
+    public MappedDataAcessor3D(IImageSpace3D refSpace, IImageData3D data) {
         this.refSpace = refSpace;
         this.data = data;
     }
@@ -52,7 +53,7 @@ public class MappedDataAcessor3D implements DataAccessor3D {
 
     }
 
-    public ImageSpace3D getImageSpace() {
+    public IImageSpace3D getImageSpace() {
         return refSpace;
     }
 

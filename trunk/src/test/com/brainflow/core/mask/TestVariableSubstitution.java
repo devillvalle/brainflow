@@ -2,9 +2,9 @@ package test.com.brainflow.core.mask;
 
 import com.brainflow.core.mask.*;
 import com.brainflow.core.IImageDisplayModel;
-import com.brainflow.core.ImageLayer;
+import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.core.ImageDisplayModel;
-import com.brainflow.application.TestUtils;
+import test.TestUtils;
 import org.junit.*;
 import jfun.parsec.Parser;
 import static org.junit.Assert.*;

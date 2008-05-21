@@ -2,6 +2,10 @@ package com.brainflow.application.presentation.forms;
 
 import com.brainflow.application.MemoryImageDataSource;
 import com.brainflow.core.*;
+import com.brainflow.core.layer.ImageLayer;
+import com.brainflow.core.layer.ImageLayer3D;
+import com.brainflow.core.layer.ImageLayerProperties;
+import com.brainflow.core.layer.ImageMaskItem;
 import com.brainflow.display.ThresholdRange;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.data.IImageData3D;

@@ -2,13 +2,11 @@ package com.brainflow.application.actions;
 
 import com.brainflow.application.presentation.ColorBandChartPresenter;
 import com.brainflow.colormap.IColorMap;
-import com.brainflow.core.BrainCanvas;
-import com.brainflow.core.ImageLayer;
+import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.core.ImageView;
 
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 
 /**
  * Created by IntelliJ IDEA.

@@ -1,14 +1,12 @@
 package com.brainflow.application.actions;
 
 import com.brainflow.colormap.IColorMap;
-import com.brainflow.colormap.LinearColorMapDeprecated;
 import com.brainflow.colormap.LinearColorMap2;
 import com.brainflow.core.ImageView;
-import com.brainflow.core.ImageLayer;
+import com.brainflow.core.layer.ImageLayer;
 
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.awt.image.IndexColorModel;
 
 /**

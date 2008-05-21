@@ -7,7 +7,7 @@ import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.math.ArrayUtils;
 import com.brainflow.utils.IRange;
-import com.brainflow.application.TestUtils;
+import test.TestUtils;
 
 import java.util.Arrays;
 

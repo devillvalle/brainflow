@@ -116,16 +116,7 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
     }
 
 
-    public static void main(String[] args) {
-        JFrame jf1 = new JFrame("hello");
-        ImageCanvas canvas = new ImageCanvas();
-        jf1.add(canvas, BorderLayout.class);
-        jf1.setSize(800, 800);
-
-        SimpleImageView view = new SimpleImageView(new ImageDisplayModel("garbage"));
-        canvas.getImageCanvasModel().addImageView(view);
-
-    }
+    
 
     public BrainCanvasModel getImageCanvasModel() {
         return canvasModel;
@@ -192,7 +183,7 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
 
     public IImagePlot whichPlot(Point p) {
         Component c = rootPane.getLayeredPane().findComponentAt(p);
-        Container ct = SwingUtilities.getAncestorOfClass(ImagePane.class, c);
+        Container ct = SwingUtilities.getAncestorOfClass(ImageView.class, c);
         if (ct != null & ct instanceof ImageView) {
             ImageView iview = (ImageView) ct;
             Point relPoint = SwingUtilities.convertPoint(rootPane.getLayeredPane(), p, iview);

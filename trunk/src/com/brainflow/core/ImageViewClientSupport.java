@@ -1,7 +1,8 @@
 package com.brainflow.core;
 
-import com.brainflow.application.TestUtils;
+import test.TestUtils;
 import com.brainflow.image.space.IImageSpace;
+import com.brainflow.core.layer.ImageLayer;
 import net.java.dev.properties.container.BeanContainer;
 import net.java.dev.properties.events.PropertyListener;
 import net.java.dev.properties.BaseProperty;

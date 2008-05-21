@@ -54,6 +54,8 @@ import java.util.logging.Logger;
  * @version $Id: Vector3f.java,v 1.52 2007/09/21 15:45:27 nca Exp $
  */
 public class Vector3f implements Externalizable {
+
+
     private static final Logger logger = Logger.getLogger(Vector3f.class.getName());
 
     private static final long serialVersionUID = 1L;
@@ -985,4 +987,6 @@ public class Vector3f implements Externalizable {
         }
         throw new IllegalArgumentException("index must be either 0, 1 or 2");
     }
+
+
 }

@@ -5,9 +5,10 @@ import org.apache.commons.pipeline.StageException;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-import com.brainflow.core.CoordinateLayer;
-import com.brainflow.core.AbstractLayer;
+import com.brainflow.core.layer.CoordinateLayer;
+import com.brainflow.core.layer.AbstractLayer;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.image.anatomy.AnatomicalAxis;
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,7 +41,8 @@ public class RenderCoordinatesStage extends ImageProcessingStage {
     }
 
     private void renderUnto(CoordinateLayer layer, BufferedImage image) {
-        List<AnatomicalPoint3D> pts = layer.getDataSource().pointsWithinPlane(getSlice());
+        AnatomicalAxis zaxis = getSlice().getAnatomy().ZAXIS;
+        List<AnatomicalPoint3D> pts = layer.getDataSource().pointsWithinPlane(getSlice().getValue(zaxis));
         for (int i=0; i<pts.size(); i++) {
             System.out.println("point within plance: " + pts.get(i));
         }

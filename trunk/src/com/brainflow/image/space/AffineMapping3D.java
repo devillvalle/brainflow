@@ -1,9 +1,8 @@
 package com.brainflow.image.space;
 
-import com.brainflow.utils.Point3D;
-import com.brainflow.math.Vector3f;
-import com.brainflow.math.Matrix4f;
 import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.math.Matrix4f;
+import com.brainflow.math.Vector3f;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,8 +23,13 @@ public class AffineMapping3D implements ImageMapping3D {
     }
 
     public AffineMapping3D(Vector3f offset, Vector3f spacing, Anatomy3D anatomy) {
+        offset.x = anatomy.XAXIS.getDirectionVector().getX() * offset.x;
+        offset.y = anatomy.YAXIS.getDirectionVector().getY() * offset.y;
+        offset.z = anatomy.ZAXIS.getDirectionVector().getZ() * offset.z;
+
         Matrix4f tmp = new Matrix4f(spacing.x, 0, 0, offset.x, 0, spacing.y, 0, offset.y, 0, 0, spacing.z, offset.z, 0, 0, 0, 1);
         Matrix4f ref = anatomy.getReferenceTransform();
+
 
         mat = tmp.scale(new Vector3f(ref.m00, ref.m11, ref.m22));
         invMat = mat.invert();

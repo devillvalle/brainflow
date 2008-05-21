@@ -1,8 +1,8 @@
 package com.brainflow.image.anatomy;
 
+import com.brainflow.image.axis.AxisRange;
+import com.brainflow.image.axis.CoordinateAxis;
 import com.brainflow.image.axis.ImageAxis;
-
-import java.beans.PropertyChangeSupport;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,29 +14,50 @@ import java.beans.PropertyChangeSupport;
 public class AnatomicalPoint1D implements AnatomicalPoint {
 
 
-    private AnatomicalAxis anatomy;
 
-    private double x;
+    private double value;
 
-    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
+    private CoordinateAxis axis;
 
-    public AnatomicalPoint1D(AnatomicalAxis _anatomy, double x) {
-        this.x = x;
-        anatomy = _anatomy;
+
+    public AnatomicalPoint1D(AnatomicalAxis _anatomy, double value) {
+        this.value = value;
+        axis = new CoordinateAxis(new AxisRange(_anatomy, -1000,1000));
+    }
+
+    public AnatomicalPoint1D(CoordinateAxis axis, double value) {
+        this.value = value;
+        this.axis = axis;
     }
 
     public AnatomicalAxis getAnatomy() {
-        return anatomy;
+        return axis.getAnatomicalAxis();
     }
 
-    public double getX() {
-        return x;
+    public double getValue() {
+        return value;
     }
 
-    public void setX(double x) {
-        double oldProperty = this.x;
-        this.x = x;
-        changeSupport.firePropertyChange("zero", oldProperty, this.x);
+    public AnatomicalPoint1D convertTo(CoordinateAxis other) {
+
+        if (other.getAnatomicalAxis().sameDirection(getAnatomy())) {
+            // todo what if other axis does not contain point?
+            return new AnatomicalPoint1D(other, value);
+        }
+
+        if (other.getAnatomicalAxis() == getAnatomy().getFlippedAxis()) {
+            // flipped
+            double fval = (other.getMaximum() - value) + other.getMinimum();
+           
+
+            return new AnatomicalPoint1D(other, fval);
+
+        }
+
+
+        throw new IllegalArgumentException("cannot convert points between anatomical axes");
+           
+
     }
 
 
@@ -45,14 +66,14 @@ public class AnatomicalPoint1D implements AnatomicalPoint {
     }
 
     public AnatomicalPoint1D mirrorPoint(ImageAxis otherAxis) {
-        assert otherAxis.getAnatomicalAxis().sameAxis(anatomy) : "other axis cannot be orthogonal to this point";
+        assert otherAxis.getAnatomicalAxis().sameAxis(getAnatomy()) : "other axis cannot be orthogonal to this point";
 
-        if (otherAxis.getAnatomicalAxis() == anatomy) {
+        if (otherAxis.getAnatomicalAxis() == getAnatomy()) {
             //a copy
-            return new AnatomicalPoint1D(anatomy, getX());
+            return new AnatomicalPoint1D(getAnatomy(), getValue());
         } else {
-            double nvalue = otherAxis.getRange().getEnd().getX() - getX()
-                    + otherAxis.getRange().getBeginning().getX();
+            double nvalue = otherAxis.getRange().getEnd().getValue() - getValue()
+                    + otherAxis.getRange().getBeginning().getValue();
 
             return new AnatomicalPoint1D(otherAxis.getAnatomicalAxis(), nvalue);
         }
@@ -62,13 +83,13 @@ public class AnatomicalPoint1D implements AnatomicalPoint {
 
 
     public double getValue(int axisNum) {
-        assert axisNum == 0;
+
 
         if (axisNum == 0) {
-            return getX();
+            return getValue();
         }
 
-        throw new AssertionError();
+        throw new IllegalArgumentException("axisNum must be zero for 1 dimensional point");
     }
 
 
@@ -78,8 +99,8 @@ public class AnatomicalPoint1D implements AnatomicalPoint {
 
         AnatomicalPoint1D that = (AnatomicalPoint1D) o;
 
-        if (Double.compare(that.x, x) != 0) return false;
-        if (!anatomy.equals(that.anatomy)) return false;
+        if (Double.compare(that.value, value) != 0) return false;
+        if (!getAnatomy().equals(that.getAnatomy())) return false;
 
         return true;
     }
@@ -87,13 +108,13 @@ public class AnatomicalPoint1D implements AnatomicalPoint {
     public int hashCode() {
         int result;
         long temp;
-        result = anatomy.hashCode();
-        temp = x != +0.0d ? Double.doubleToLongBits(x) : 0L;
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = value != +0.0d ? Double.doubleToLongBits(value) : 0L;
+        result = (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (axis != null ? axis.hashCode() : 0);
         return result;
     }
 
     public String toString() {
-        return "[" + anatomy.toString() + "]" + getX();
+        return "[" + axis.getMinimum() +", " + axis.getMaximum() + "]" + " : " +  "[" + getAnatomy().toString() + "]" + getValue();
     }
 }

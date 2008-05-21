@@ -1,6 +1,8 @@
 package com.brainflow.image.anatomy;
 
 import com.jgoodies.binding.beans.ExtendedPropertyChangeSupport;
+import com.brainflow.image.space.ImageSpace2D;
+import com.brainflow.image.axis.ImageAxis;
 
 import java.beans.PropertyChangeSupport;
 
@@ -26,6 +28,23 @@ public class AnatomicalPoint2D implements AnatomicalPoint {
         this.y = y;
 
         anatomy = _anatomy;
+    }
+
+
+    
+    public static AnatomicalPoint2D convertPoint(ImageSpace2D fromSpace, AnatomicalPoint2D from, Anatomy2D to) {
+
+        ImageAxis to_x = fromSpace.getImageAxis(to.XAXIS, true);
+        ImageAxis to_y = fromSpace.getImageAxis(to.YAXIS, true);
+
+        AnatomicalPoint1D a1 = from.getValue(to_x.getAnatomicalAxis(), to_x.getMinimum(), to_x.getMaximum());
+        AnatomicalPoint1D a2 = from.getValue(to_y.getAnatomicalAxis(), to_y.getMinimum(), to_y.getMaximum());
+
+        assert a1.getAnatomy() == to.XAXIS;
+        assert a2.getAnatomy() == to.YAXIS;
+
+
+        return new AnatomicalPoint2D(to, a1.getValue(), a2.getValue());
     }
 
     public double getX() {
@@ -59,14 +78,35 @@ public class AnatomicalPoint2D implements AnatomicalPoint {
     }
 
     public double getValue(int axisNum) {
-        assert axisNum == 0 | axisNum == 1;
 
         if (axisNum == 0) {
             return getX();
         } else if (axisNum == 1) {
             return getY();
-        } else throw new AssertionError();
+        } else throw new IllegalArgumentException("illegal axis number " + axisNum);
 
+
+    }
+
+    public AnatomicalPoint1D getValue(AnatomicalAxis axis) {
+        if (axis.sameDirection(anatomy.XAXIS)) {
+            return new AnatomicalPoint1D(axis, x);
+        } else if (axis.sameDirection(anatomy.YAXIS)) {
+            return new AnatomicalPoint1D(axis, y);
+        } else {
+            throw new IllegalArgumentException("axis " + axis + " is not a member of this coordinate system : " + anatomy);
+        }
+    }
+
+
+    public AnatomicalPoint1D getValue(AnatomicalAxis axis, double min, double max) {
+        if (axis.sameAxis(anatomy.XAXIS)) {
+            return new AnatomicalPoint1D(axis, anatomy.XAXIS.convertValue(axis, min, max, x));
+        } else if (axis.sameAxis(anatomy.YAXIS)) {
+            return new AnatomicalPoint1D(axis, anatomy.YAXIS.convertValue(axis, min, max, y));
+        } else {
+            throw new AssertionError();
+        }
     }
 
 

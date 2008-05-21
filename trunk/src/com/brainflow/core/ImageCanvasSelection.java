@@ -69,7 +69,7 @@ public class ImageCanvasSelection implements MouseListener, MouseMotionListener 
         this.canvas = canvas;
     }
 
-    public BrainCanvas getCanvas() {
+    public IBrainCanvas getCanvas() {
         return canvas;
     }
 

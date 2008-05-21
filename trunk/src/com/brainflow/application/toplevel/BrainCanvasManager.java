@@ -8,10 +8,7 @@ package com.brainflow.application.toplevel;
 
 import com.brainflow.application.services.ImageViewMousePointerEvent;
 import com.brainflow.application.services.ImageViewSelectionEvent;
-import com.brainflow.core.BrainCanvas;
-import com.brainflow.core.BrainCanvasModel;
-import com.brainflow.core.IImageDisplayModel;
-import com.brainflow.core.ImageView;
+import com.brainflow.core.*;
 import com.brainflow.modes.ImageViewInteractor;
 import net.java.dev.properties.container.BeanContainer;
 import net.java.dev.properties.events.PropertyListener;
@@ -19,11 +16,8 @@ import net.java.dev.properties.BaseProperty;
 
 import org.bushe.swing.event.EventBus;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.ComponentListener;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.*;
@@ -42,9 +36,9 @@ public class BrainCanvasManager {
 
     private static final Logger log = Logger.getLogger(BrainCanvasManager.class.getName());
 
-    private List<BrainCanvas> canvasList = new ArrayList<BrainCanvas>();
+    private List<IBrainCanvas> canvasList = new ArrayList<IBrainCanvas>();
 
-    private BrainCanvas selectedCanvas = null;
+    private IBrainCanvas selectedCanvas = null;
    
     private PropertyChangeSupport support = new PropertyChangeSupport(this);
 
@@ -69,7 +63,7 @@ public class BrainCanvasManager {
         return (BrainCanvasManager) SingletonRegistry.REGISTRY.getInstance("com.brainflow.application.toplevel.BrainCanvasManager");
     }
 
-    private void listenToCanvas(BrainCanvas canvas) {
+    private void listenToCanvas(IBrainCanvas canvas) {
         if (canvasListener == null) canvasListener = new CanvasSelectionListener();
          if (cursorListener == null) cursorListener = new ImageViewMouseMotionListener();
 
@@ -102,7 +96,7 @@ public class BrainCanvasManager {
     }*/
 
 
-    public void addImageCanvas(BrainCanvas _canvas) {
+    public void addImageCanvas(IBrainCanvas _canvas) {
         canvasList.add(_canvas);
         if (selectedCanvas == null)
             selectedCanvas = _canvas;
@@ -126,13 +120,13 @@ public class BrainCanvasManager {
         support.removePropertyChangeListener(listener);
     }
 
-    public BrainCanvas getSelectedCanvas() {
+    public IBrainCanvas getSelectedCanvas() {
         return selectedCanvas;
     }
 
-    public void setSelectedCanvas(BrainCanvas canvas) {
+    public void setSelectedCanvas(IBrainCanvas canvas) {
         if (canvasList.contains(canvas)) {
-            BrainCanvas oldCanvas = this.selectedCanvas;
+            IBrainCanvas oldCanvas = this.selectedCanvas;
             selectedCanvas = canvas;
             support.firePropertyChange(SELECTED_CANVAS_PROPERTY, oldCanvas, selectedCanvas);
         } else {
@@ -141,19 +135,19 @@ public class BrainCanvasManager {
     }
 
 
-    public BrainCanvas[] getImageCanvases() {
+    public IBrainCanvas[] getImageCanvases() {
         BrainCanvas[] canvi = new BrainCanvas[canvasList.size()];
         canvasList.toArray(canvi);
         return canvi;
     }
 
-    public BrainCanvas createCanvas() {
+    public IBrainCanvas createCanvas() {
         BrainCanvas canvas = new BrainCanvas();
         addImageCanvas(canvas);
         return canvas;
     }
 
-    public BrainCanvas getImageCanvas(int idx) {
+    public IBrainCanvas getImageCanvas(int idx) {
         if (canvasList.size() > idx && idx >= 0)
             return canvasList.get(idx);
         else {
@@ -161,7 +155,7 @@ public class BrainCanvasManager {
         }
     }
 
-    public void removeImageCanvas(BrainCanvas canvas) {
+    public void removeImageCanvas(IBrainCanvas canvas) {
         if (canvasList.contains(canvas)) {
             canvasList.remove(canvas);
 

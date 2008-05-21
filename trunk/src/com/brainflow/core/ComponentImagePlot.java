@@ -2,10 +2,7 @@ package com.brainflow.core;
 
 import com.brainflow.core.annotations.IAnnotation;
 import com.brainflow.display.InterpolationType;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.anatomy.AnatomicalPoint2D;
-import com.brainflow.image.anatomy.Anatomy2D;
-import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.image.anatomy.*;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.axis.ImageAxis;
 
@@ -28,7 +25,7 @@ import java.util.Map;
  */
 public class ComponentImagePlot extends JComponent implements IImagePlot {
 
-    private AnatomicalPoint1D slice;
+    private AnatomicalPoint3D slice;
 
     private AxisRange xAxis;
 
@@ -110,7 +107,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
 
 
 
-    public void setSlice(AnatomicalPoint1D slice) {
+    public void setSlice(AnatomicalPoint3D slice) {
         if (getSlice() == null || !getSlice().equals(slice)) {
             this.slice = slice;
             producer.setSlice(slice);
@@ -120,7 +117,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         repaint();
     }
 
-    public AnatomicalPoint1D getSlice() {
+    public AnatomicalPoint3D getSlice() {
         return slice;
     }
 
@@ -328,6 +325,8 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         Insets insets = getInsets();
         Insets plotMargins = getPlotMargins();
 
+
+
         double x = (screenPoint.getX() - insets.left - plotMargins.left) / getScaleX();
         double y = (screenPoint.getY() - insets.top - plotMargins.top) / getScaleY();
         return new AnatomicalPoint2D(Anatomy2D.matchAnatomy(
@@ -335,7 +334,14 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
                 getYAxisRange().getAnatomicalAxis()),
                 x + getXAxisRange().getMinimum(),
                 y + getYAxisRange().getMinimum());
+
+
     }
+
+
+
+
+
 
 
     public AxisRange getXAxisRange() {

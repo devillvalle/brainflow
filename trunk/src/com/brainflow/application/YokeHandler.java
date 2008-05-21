@@ -7,12 +7,11 @@ import net.java.dev.properties.BaseProperty;
 import net.java.dev.properties.container.BeanContainer;
 import net.java.dev.properties.events.PropertyListener;
 
-import java.util.HashMap;
+import java.lang.ref.WeakReference;
+import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.util.Map;
 import java.util.logging.Logger;
-import java.lang.ref.WeakReference;
 
 
 /**
@@ -93,8 +92,9 @@ public class YokeHandler  {
     }
 
     public void setTargetLocation(AnatomicalPoint3D point) {
+        System.out.println("setting target location : " + point);
         target.cursorPos.set(point);
-
+      
     }
 
     public AnatomicalPoint3D getTargetLocation() {

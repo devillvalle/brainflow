@@ -4,6 +4,7 @@ import com.brainflow.application.services.ImageDisplayModelEvent;
 import com.brainflow.application.services.ImageViewLayerSelectionEvent;
 import com.brainflow.application.services.ImageViewSelectionEvent;
 import com.brainflow.core.*;
+import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.gui.AbstractPresenter;
 import com.brainflow.image.space.IImageSpace;
 import org.bushe.swing.event.EventBus;

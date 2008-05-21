@@ -3,7 +3,6 @@ package com.brainflow.image.data;
 import com.brainflow.image.interpolation.InterpolationFunction2D;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.image.space.Axis;
-import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace2D;
 import com.brainflow.utils.DataType;
 import com.brainflow.utils.NumberUtils;
@@ -117,8 +116,8 @@ public class UByteImageData2D extends AbstractImageData implements IImageData2D 
     }
 
     public double worldValue(double realx, double realy, InterpolationFunction2D interp) {
-        double x = space.getImageAxis(Axis.X_AXIS).fractionalSample(realx);
-        double y = space.getImageAxis(Axis.Y_AXIS).fractionalSample(realy);
+        double x = space.getImageAxis(Axis.X_AXIS).gridPosition(realx);
+        double y = space.getImageAxis(Axis.Y_AXIS).gridPosition(realy);
         return interp.interpolate(x, y, this);
 
     }

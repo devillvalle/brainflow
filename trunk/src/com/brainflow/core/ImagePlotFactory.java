@@ -1,11 +1,11 @@
 package com.brainflow.core;
 
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.Anatomy3D;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.axis.AxisRange;
 
-import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,7 +32,7 @@ public class ImagePlotFactory {
         IImagePlot plot = new ComponentImagePlot(model, displayAnatomy, xrange, yrange);
         plot.setName(displayAnatomy.XY_PLANE.getOrientation().toString());
 
-        AnatomicalPoint1D slice = model.getImageAxis(displayAnatomy.ZAXIS).getRange().getCenter();
+        AnatomicalPoint3D slice = (AnatomicalPoint3D)model.getImageSpace().getCentroid();
         IImageProducer producer = new CompositeImageProducer(plot, displayAnatomy, slice, threadService);
         plot.setImageProducer(producer);
 

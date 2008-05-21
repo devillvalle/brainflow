@@ -1,6 +1,6 @@
 package com.brainflow.application.dnd;
 
-import com.brainflow.core.AbstractLayer;
+import com.brainflow.core.layer.AbstractLayer;
 
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.DataFlavor;
@@ -17,7 +17,7 @@ import java.io.IOException;
 public class AbstractLayerTransferable implements Transferable {
 
     private String localObject = DataFlavor.javaJVMLocalObjectMimeType +
-            ";class=com.brainflow.core.AbstractLayer";
+            ";class=com.brainflow.core.layer.AbstractLayer";
 
 
     private DataFlavor abstractLayerFlavor = null;

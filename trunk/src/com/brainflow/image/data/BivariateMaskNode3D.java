@@ -2,13 +2,14 @@ package com.brainflow.image.data;
 
 import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.image.space.Axis;
+import com.brainflow.image.space.IImageSpace3D;
 import com.brainflow.image.interpolation.InterpolationFunction3D;
 import com.brainflow.image.anatomy.Anatomy;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.image.operations.BinaryOperation;
-import com.brainflow.utils.Index3D;
 import com.brainflow.utils.DataType;
+import com.brainflow.math.Index3D;
 
 /**
  * Created by IntelliJ IDEA.
@@ -52,7 +53,7 @@ public class BivariateMaskNode3D implements IMaskedData3D {
         return operation.isTrue(left.value(x, y, z), right.value(x, y, z));
     }
 
-    public ImageSpace3D getImageSpace() {
+    public IImageSpace3D getImageSpace() {
         return left.getImageSpace();
     }
 
@@ -72,8 +73,8 @@ public class BivariateMaskNode3D implements IMaskedData3D {
         return left.indexOf(x, y, z);
     }
 
-    public Index3D indexToGrid(int idx, Index3D voxel) {
-        return left.indexToGrid(idx, voxel);
+    public Index3D indexToGrid(int idx) {
+        return left.indexToGrid(idx);
     }
 
     public void setValue(int x, int y, int z, double val) {

@@ -1,6 +1,6 @@
 package test.com.brainflow.application.mapping;
 
-import com.brainflow.application.TestUtils;
+import test.TestUtils;
 import com.brainflow.application.mapping.XStreamUtils;
 import com.thoughtworks.xstream.XStream;
 import org.apache.commons.vfs.FileObject;

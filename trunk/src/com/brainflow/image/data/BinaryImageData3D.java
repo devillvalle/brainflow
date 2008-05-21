@@ -1,13 +1,11 @@
 package com.brainflow.image.data;
 
-import com.brainflow.image.interpolation.InterpolationFunction2D;
 import com.brainflow.image.interpolation.InterpolationFunction3D;
-import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace3D;
-import com.brainflow.image.space.ImageSpace2D;
 import com.brainflow.image.space.Axis;
+import com.brainflow.image.space.IImageSpace3D;
 import com.brainflow.image.iterators.ImageIterator;
-import com.brainflow.utils.Index3D;
+import com.brainflow.math.Index3D;
 import cern.colt.bitvector.BitVector;
 
 /**
@@ -24,13 +22,13 @@ public class BinaryImageData3D extends BinaryImageData implements IMaskedData3D 
 
     private int dim0;
 
-    public BinaryImageData3D(ImageSpace3D _space) {
+    public BinaryImageData3D(IImageSpace3D _space) {
         super(_space);
 
         init();
     }
 
-    private BinaryImageData3D(ImageSpace3D space, BitVector bits) {
+    private BinaryImageData3D(IImageSpace3D space, BitVector bits) {
         super(space, bits);
         init();
     }
@@ -88,17 +86,12 @@ public class BinaryImageData3D extends BinaryImageData implements IMaskedData3D 
 
         BitVector ret = getBitVector().copy();
         ret.and(data.getBitVector());
-        return new BinaryImageData3D((ImageSpace3D) getImageSpace(), ret);
+        return new BinaryImageData3D(getImageSpace(), ret);
 
     }
 
-    public Index3D indexToGrid(int idx, Index3D voxel) {
-        voxel.setZ(idx / planeSize);
-        int remainder = (idx % planeSize);
-        voxel.setY(remainder / space.getDimension(Axis.X_AXIS));
-        voxel.setX(remainder % space.getDimension(Axis.X_AXIS));
-
-        return voxel;
+    public Index3D indexToGrid(int idx) {
+       return getImageSpace().indexToGrid(idx);
 
     }
 
@@ -113,9 +106,9 @@ public class BinaryImageData3D extends BinaryImageData implements IMaskedData3D 
     }
 
     public double worldValue(float realx, float realy, float realz, InterpolationFunction3D interp) {
-        double x = space.getImageAxis(Axis.X_AXIS).fractionalSample(realx);
-        double y = space.getImageAxis(Axis.Y_AXIS).fractionalSample(realy);
-        double z = space.getImageAxis(Axis.Z_AXIS).fractionalSample(realz);
+        double x = space.getImageAxis(Axis.X_AXIS).gridPosition(realx);
+        double y = space.getImageAxis(Axis.Y_AXIS).gridPosition(realy);
+        double z = space.getImageAxis(Axis.Z_AXIS).gridPosition(realz);
         return interp.interpolate(x, y, z, this);
     }
 

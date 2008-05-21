@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  * Time: 11:35:22 AM
  * To change this template use File | Settings | File Templates.
  */
-public class BrainCanvas extends JComponent implements InternalFrameListener {
+public class BrainCanvas extends JComponent implements InternalFrameListener, IBrainCanvas {
 
     private static final Logger log = Logger.getLogger(BrainCanvas.class.getName());
 
@@ -50,6 +50,10 @@ public class BrainCanvas extends JComponent implements InternalFrameListener {
 
     public BrainCanvasModel getImageCanvasModel() {
         return canvasModel;
+    }
+
+    public JComponent getComponent() {
+        return this;
     }
 
     public void addInteractor(ImageViewInteractor interactor) {
@@ -122,7 +126,7 @@ public class BrainCanvas extends JComponent implements InternalFrameListener {
 
     public IImagePlot whichPlot(Point p) {
         Component c = desktopPane.findComponentAt(p);
-        Container ct = SwingUtilities.getAncestorOfClass(ImagePane.class, c);
+        Container ct = SwingUtilities.getAncestorOfClass(ImageView.class, c);
         if (ct != null && ct instanceof ImageView) {
             ImageView iview = (ImageView) ct;
             Point relPoint = SwingUtilities.convertPoint(desktopPane, p, iview);
@@ -277,7 +281,7 @@ public class BrainCanvas extends JComponent implements InternalFrameListener {
            ImageView view = (ImageView)e.getInternalFrame().getContentPane();
            removeImageView(view);
            //e.getInternalFrame().dispose();
-           System.out.println("number of internal frames ? " + desktopPane.getAllFrames().length);
+           //System.out.println("number of internal frames ? " + desktopPane.getAllFrames().length);
        }
     }
 

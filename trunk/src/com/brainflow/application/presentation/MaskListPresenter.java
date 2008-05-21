@@ -1,6 +1,10 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.core.*;
+import com.brainflow.core.layer.AbstractLayer;
+import com.brainflow.core.layer.ImageLayer;
+import com.brainflow.core.layer.ImageLayer3D;
+import com.brainflow.core.layer.ImageMaskList;
 import com.jidesoft.grid.*;
 import com.jidesoft.swing.JideSwingUtilities;
 import com.jidesoft.swing.JideBoxLayout;

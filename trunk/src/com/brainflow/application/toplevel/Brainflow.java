@@ -8,6 +8,10 @@ import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMap2;
 import com.brainflow.core.*;
+import com.brainflow.core.layer.AbstractLayer;
+import com.brainflow.core.layer.ImageLayer;
+import com.brainflow.core.layer.ImageLayer3D;
+import com.brainflow.core.layer.ImageLayerProperties;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.Anatomy;
 import com.brainflow.image.anatomy.Anatomy3D;
@@ -29,9 +33,10 @@ import com.jidesoft.status.StatusBar;
 import com.jidesoft.swing.JideBoxLayout;
 import com.jidesoft.swing.JideTabbedPane;
 import com.jidesoft.dialog.JideOptionPane;
+import com.jidesoft.action.CommandBar;
+import com.jidesoft.action.CommandMenuBar;
 import com.pietschy.command.CommandContainer;
 import com.pietschy.command.GuiCommands;
-import com.pietschy.command.face.Face;
 import com.pietschy.command.configuration.ParseException;
 import com.pietschy.command.group.CommandGroup;
 import com.pietschy.command.group.ExpansionPointBuilder;
@@ -163,10 +168,27 @@ public class Brainflow {
 
         try {
 
-            UIManager.setLookAndFeel(new WindowsLookAndFeel());
-            System.out.println(UIManager.getLookAndFeel());
+            String osname = System.getProperty("os.name");
+            if (osname.toUpperCase().contains("WINDOWS")) {
+                UIManager.setLookAndFeel(new WindowsLookAndFeel());
+                 //UIManager.setLookAndFeel(new com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel());
 
-            LookAndFeelFactory.installJideExtension(LookAndFeelFactory.OFFICE2003_STYLE);
+                //LookAndFeelFactory.NimbusInitializer init = new LookAndFeelFactory.NimbusInitializer();
+                //init.initialize(UIManager.getDefaults());
+
+                //UIManager.getDefaults().
+                LookAndFeelFactory.installJideExtension();
+                //LookAndFeelFactory.installJideExtension(LookAndFeelFactory.OFFICE2003_STYLE);
+            } else if (osname.toUpperCase().contains("LINUX")) {
+                UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+                LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
+
+            } else {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                LookAndFeelFactory.installJideExtension();
+
+            }
+
         } catch (UnsupportedLookAndFeelException e) {
             log.severe("could not load look and feel");
         }
@@ -254,58 +276,6 @@ public class Brainflow {
 
     }
 
-    private void initExceptionHandler() {
-        LookAndFeelFactory.UIDefaultsCustomizer uiDefaultsCustomizer = new LookAndFeelFactory.UIDefaultsCustomizer() {
-            public void customize(UIDefaults defaults) {
-                ThemePainter painter = (ThemePainter) UIDefaultsLookup.get("Theme.painter");
-                defaults.put("OptionPaneUI", "com.jidesoft.plaf.basic.BasicJideOptionPaneUI");
-
-                defaults.put("OptionPane.showBanner", Boolean.TRUE); // show banner or not. default is true
-                //defaults.put("OptionPane.bannerIcon", JideIconsFactory.getImageIcon(JideIconsFactory.JIDE50));
-                defaults.put("OptionPane.bannerFontSize", 13);
-                defaults.put("OptionPane.bannerFontStyle", Font.BOLD);
-                defaults.put("OptionPane.bannerMaxCharsPerLine", 60);
-                defaults.put("OptionPane.bannerForeground", painter != null ? painter.getOptionPaneBannerForeground() : null);  // you should adjust this if banner background is not the default gradient paint
-                defaults.put("OptionPane.bannerBorder", null); // use default border
-
-                // set both bannerBackgroundDk and // set both bannerBackgroundLt to null if you don't want gradient
-                defaults.put("OptionPane.bannerBackgroundDk", painter != null ? painter.getOptionPaneBannerDk() : null);
-                defaults.put("OptionPane.bannerBackgroundLt", painter != null ? painter.getOptionPaneBannerLt() : null);
-                defaults.put("OptionPane.bannerBackgroundDirection", Boolean.TRUE); // default is true
-
-                // optionally, you can set a Paint object for BannerPanel. If so, the three UIDefaults related to banner background above will be ignored.
-                defaults.put("OptionPane.bannerBackgroundPaint", null);
-
-                defaults.put("OptionPane.buttonAreaBorder", BorderFactory.createEmptyBorder(6, 6, 6, 6));
-                defaults.put("OptionPane.buttonOrientation", SwingConstants.RIGHT);
-            }
-        };
-        uiDefaultsCustomizer.customize(UIManager.getDefaults());
-
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            public void uncaughtException(Thread t, Throwable e) {
-                e.printStackTrace();
-                JideOptionPane optionPane = new JideOptionPane("Click \"Details\" button to see more information ... ", JOptionPane.ERROR_MESSAGE, JideOptionPane.CLOSE_OPTION);
-                optionPane.setTitle("An " + e.getClass().getName() + " occurred in Brainflow : " + e.getMessage());
-
-
-                JTextArea textArea = new JTextArea();
-                StringWriter sw = new StringWriter();
-                PrintWriter out = new PrintWriter(sw);
-                e.printStackTrace(out);
-                // Add string to end of text area
-                textArea.append(sw.toString());
-                textArea.setRows(10);
-                optionPane.setDetails(new JScrollPane(textArea));
-                JDialog dialog = optionPane.createDialog(brainFrame, "Warning");
-                dialog.setResizable(true);
-                dialog.pack();
-                dialog.setVisible(true);
-            }
-        });
-
-    }
-
 
     private boolean loadCommands() {
         try {
@@ -359,7 +329,12 @@ public class Brainflow {
         CommandGroup gotoMenuGroup = new CommandGroup("goto-menu");
         gotoMenuGroup.bind(getApplicationFrame());
 
-        JMenuBar menuBar = new JMenuBar();
+
+        CommandBar menuBar = new CommandMenuBar();
+
+        menuBar.setStretch(true);
+        menuBar.setPaintBackground(false);
+        //JMenuBar menuBar = new JMenuBar();
 
         menuBar.add(fileMenuGroup.createMenuItem());
         menuBar.add(viewMenuGroup.createMenuItem());
@@ -555,7 +530,7 @@ public class Brainflow {
         brainFrame.getDockingManager().getWorkspace().setLayout(new BorderLayout());
         brainFrame.getDockingManager().getWorkspace().add(documentPane, "Center");
 
-        BrainCanvas canvas = BrainCanvasManager.getInstance().getSelectedCanvas();
+        JComponent canvas = BrainCanvasManager.getInstance().getSelectedCanvas().getComponent();
         canvas.setRequestFocusEnabled(true);
         canvas.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
@@ -609,7 +584,7 @@ public class Brainflow {
             ImageCanvasTransferHandler handler = new ImageCanvasTransferHandler();
             loadingDock.setDragEnabled(true);
             loadingDock.setTransferHandler(handler);
-            BrainCanvasManager.getInstance().getSelectedCanvas().setTransferHandler(handler);
+            BrainCanvasManager.getInstance().getSelectedCanvas().getComponent().setTransferHandler(handler);
 
             DirectoryManager.getInstance().addFileSystemEventListener(new FileSystemEventListener() {
                 public void eventOccurred(FileSystemEvent event) {
@@ -728,9 +703,7 @@ public class Brainflow {
 
         LayerInfoControl layerInfoControl = new LayerInfoControl();
 
-
         //ColorMapTablePresenter tablePresenter = new ColorMapTablePresenter();
-
 
         //MaskTablePresenter maskPresenter = new MaskTablePresenter();
 
@@ -869,7 +842,7 @@ public class Brainflow {
         return BrainCanvasManager.getInstance().getSelectedCanvas().getSelectedView();
     }
 
-    public BrainCanvas getSelectedCanvas() {
+    public IBrainCanvas getSelectedCanvas() {
         return BrainCanvasManager.getInstance().getSelectedCanvas();
 
     }
@@ -978,6 +951,102 @@ public class Brainflow {
             return anatomyLabel;
         }
     }
+
+
+    private void initExceptionHandler() {
+        LookAndFeelFactory.UIDefaultsCustomizer uiDefaultsCustomizer = new LookAndFeelFactory.UIDefaultsCustomizer() {
+            public void customize(UIDefaults defaults) {
+                ThemePainter painter = (ThemePainter) UIDefaultsLookup.get("Theme.painter");
+                defaults.put("OptionPaneUI", "com.jidesoft.plaf.basic.BasicJideOptionPaneUI");
+
+                defaults.put("OptionPane.showBanner", Boolean.TRUE); // show banner or not. default is true
+                //defaults.put("OptionPane.bannerIcon", JideIconsFactory.getImageIcon(JideIconsFactory.JIDE50));
+                defaults.put("OptionPane.bannerFontSize", 13);
+                defaults.put("OptionPane.bannerFontStyle", Font.BOLD);
+                defaults.put("OptionPane.bannerMaxCharsPerLine", 60);
+                defaults.put("OptionPane.bannerForeground", painter != null ? painter.getOptionPaneBannerForeground() : null);  // you should adjust this if banner background is not the default gradient paint
+                defaults.put("OptionPane.bannerBorder", null); // use default border
+
+                // set both bannerBackgroundDk and // set both bannerBackgroundLt to null if you don't want gradient
+                defaults.put("OptionPane.bannerBackgroundDk", painter != null ? painter.getOptionPaneBannerDk() : null);
+                defaults.put("OptionPane.bannerBackgroundLt", painter != null ? painter.getOptionPaneBannerLt() : null);
+                defaults.put("OptionPane.bannerBackgroundDirection", Boolean.TRUE); // default is true
+
+                // optionally, you can set a Paint object for BannerPanel. If so, the three UIDefaults related to banner background above will be ignored.
+                defaults.put("OptionPane.bannerBackgroundPaint", null);
+
+                defaults.put("OptionPane.buttonAreaBorder", BorderFactory.createEmptyBorder(6, 6, 6, 6));
+                defaults.put("OptionPane.buttonOrientation", SwingConstants.RIGHT);
+            }
+        };
+        uiDefaultsCustomizer.customize(UIManager.getDefaults());
+
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            public void uncaughtException(Thread t, Throwable e) {
+                e.printStackTrace();
+                JideOptionPane optionPane = new JideOptionPane("Click \"Details\" button to see more information ... ", JOptionPane.ERROR_MESSAGE, JideOptionPane.CLOSE_OPTION);
+                optionPane.setTitle("An " + e.getClass().getName() + " occurred in Brainflow : " + e.getMessage());
+
+
+                JTextArea textArea = new JTextArea();
+                StringWriter sw = new StringWriter();
+                PrintWriter out = new PrintWriter(sw);
+                e.printStackTrace(out);
+                // Add string to end of text area
+                textArea.append(sw.toString());
+                textArea.setRows(10);
+                optionPane.setDetails(new JScrollPane(textArea));
+                JDialog dialog = optionPane.createDialog(brainFrame, "Warning");
+                dialog.setResizable(true);
+                dialog.pack();
+                dialog.setVisible(true);
+            }
+        });
+
+    }
+
+    /*public static class NimbusInitializer implements LookAndFeelFactory.UIDefaultsInitializer {
+        public void initialize(UIDefaults defaults) {
+            Object marginBorder = new SwingLazyValue(
+                    "javax.swing.plaf.basic.BasicBorders$MarginBorder");
+
+            Object[] uiDefaults = {
+                    "textHighlight", new ColorUIResource(197, 218, 233),
+                    "controlText", new ColorUIResource(Color.BLACK),
+                    "activeCaptionText", new ColorUIResource(Color.BLACK),
+                    "MenuItem.acceleratorFont", new FontUIResource("Arial", Font.PLAIN, 12),
+                    "ComboBox.background", new ColorUIResource(Color.WHITE),
+                    "ComboBox.disabledForeground", new ColorUIResource(Color.DARK_GRAY),
+                    "ComboBox.disabledBackground", new ColorUIResource(Color.GRAY),
+
+                    "activeCaption", new ColorUIResource(197, 218, 233),
+                    "inactiveCaption", new ColorUIResource(Color.DARK_GRAY),
+                    "control", new ColorUIResource(220, 223, 228),
+                    "controlLtHighlight", new ColorUIResource(Color.WHITE),
+                    "controlHighlight", new ColorUIResource(Color.LIGHT_GRAY),
+                    "controlShadow", new ColorUIResource(133, 137, 144),
+                    "controlDkShadow", new ColorUIResource(Color.BLACK),
+                    "MenuItem.background", new ColorUIResource(237, 239, 242),
+                    "SplitPane.background", new ColorUIResource(220, 223, 228),
+                    "Tree.hash", new ColorUIResource(Color.GRAY),
+
+                    "TextField.foreground", new ColorUIResource(Color.BLACK),
+                    "TextField.inactiveForeground", new ColorUIResource(Color.BLACK),
+                    "TextField.selectionForeground", new ColorUIResource(Color.WHITE),
+                    "TextField.selectionBackground", new ColorUIResource(197, 218, 233),
+                    "Table.gridColor", new ColorUIResource(Color.BLACK),
+                    "TextField.background", new ColorUIResource(Color.WHITE),
+
+                    "Menu.border", marginBorder,
+                    "MenuItem.border", marginBorder,
+                    "CheckBoxMenuItem.border", marginBorder,
+                    "RadioButtonMenuItem.border", marginBorder,
+                    "Table.selectionBackground", new ColorUIResource(237, 239, 242),
+                    "Table.selectionForeground", new ColorUIResource(12, 239, 242)
+            };
+            LookAndFeelFactory.putDefaults(defaults, uiDefaults);
+        }
+    }  */
 
 
 }

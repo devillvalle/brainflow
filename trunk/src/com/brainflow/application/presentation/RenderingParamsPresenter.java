@@ -12,10 +12,8 @@ package com.brainflow.application.presentation;
 import com.brainflow.application.presentation.binding.Bindable;
 import com.brainflow.application.presentation.binding.PercentageRangeConverter;
 import com.brainflow.application.presentation.forms.RenderingParamsForm;
-import com.brainflow.core.AbstractLayer;
 import com.brainflow.core.ImageView;
-import com.brainflow.core.ImageLayer;
-import com.jgoodies.binding.beans.BeanAdapter;
+import com.brainflow.core.layer.ImageLayer;
 
 import javax.swing.*;
 

@@ -1,7 +1,6 @@
 package com.brainflow.application.services;
 
 import com.brainflow.core.ImageView;
-import com.brainflow.display.ICrosshair;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 
 /**

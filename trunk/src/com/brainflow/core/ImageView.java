@@ -2,23 +2,26 @@ package com.brainflow.core;
 
 import com.brainflow.application.services.ImageViewLayerSelectionEvent;
 import com.brainflow.core.annotations.IAnnotation;
+import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.display.InterpolationType;
 import com.brainflow.image.anatomy.*;
 import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.ICoordinateSpace;
 import com.brainflow.image.space.IImageSpace;
-import com.jgoodies.binding.list.SelectionInList;
+import com.brainflow.image.space.IImageSpace3D;
 import com.pietschy.command.CommandContainer;
 import com.pietschy.command.toggle.ToggleCommand;
 import com.pietschy.command.toggle.ToggleVetoException;
+import net.java.dev.properties.BaseProperty;
 import net.java.dev.properties.IndexedProperty;
 import net.java.dev.properties.Property;
-import net.java.dev.properties.BaseProperty;
-import net.java.dev.properties.events.PropertyListener;
+import net.java.dev.properties.RProperty;
 import net.java.dev.properties.container.BeanContainer;
 import net.java.dev.properties.container.ObservableIndexed;
 import net.java.dev.properties.container.ObservableProperty;
+import net.java.dev.properties.container.ObservableWrapper;
+import net.java.dev.properties.events.PropertyListener;
 import org.bushe.swing.event.EventBus;
 
 import javax.swing.*;
@@ -73,6 +76,7 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
     public final Property<Double> pixelsPerUnit = ObservableProperty.create(1.5);
 
+
     public final Property<AnatomicalPoint3D> cursorPos = new ObservableProperty<AnatomicalPoint3D>() {
 
         public void set(AnatomicalPoint3D ap) {
@@ -80,20 +84,46 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
             IImagePlot selectedPlot = getSelectedPlot();
             if (selectedPlot != null) {
-                AnatomicalPoint1D slice = ap.getValue(selectedPlot.getDisplayAnatomy().ZAXIS);
-                sliceController.setSlice(slice);
+                //this is a hack.
+                //todo this should give rise to an event, whcih slice controller responds to
+                //AnatomicalPoint1D slice = ap.getValue(selectedPlot.getDisplayAnatomy().ZAXIS);
+                sliceController.setSlice(ap);
                 selectedPlot.getComponent().repaint();
             }
 
         }
-
-
     };
+
+    public final RProperty<AnatomicalPoint3D> worldCursorPos = new ObservableWrapper.ReadWrite<AnatomicalPoint3D>(cursorPos) {
+
+        public void set(AnatomicalPoint3D ap) {
+            RProperty<AnatomicalPoint3D> cpos = (RProperty<AnatomicalPoint3D>) getProperties()[0];
+            IImageSpace3D space = (IImageSpace3D)getModel().getImageSpace();
+            float[] gridpos = space.worldToGrid((float)ap.getX(), (float)ap.getY(), (float)ap.getZ());
+            double x1 = space.getImageAxis(Axis.X_AXIS).gridToReal(gridpos[0]);
+            double y1 = space.getImageAxis(Axis.Y_AXIS).gridToReal(gridpos[1]);
+            double z1 = space.getImageAxis(Axis.Z_AXIS).gridToReal(gridpos[2]);
+
+            cursorPos.set(new AnatomicalPoint3D(space, x1, y1, z1));
+        }
+
+        public AnatomicalPoint3D get() {
+            RProperty<AnatomicalPoint3D> cpos = (RProperty<AnatomicalPoint3D>) getProperties()[0];
+            IImageSpace3D space = (IImageSpace3D)getModel().getImageSpace();
+            double gridx = space.getImageAxis(Axis.X_AXIS).gridPosition(cpos.get().getX());
+            double gridy = space.getImageAxis(Axis.Y_AXIS).gridPosition(cpos.get().getY());
+            double gridz =  space.getImageAxis(Axis.Z_AXIS).gridPosition(cpos.get().getZ());
+
+            float[] ret = space.gridToWorld((float)gridx, (float)gridy, (float)gridz);
+            return new AnatomicalPoint3D(Anatomy3D.REFERENCE_ANATOMY, ret[0], ret[1], ret[2]);
+        }
+    };
+
 
     public final Property<Double> cursorX = new ObservableProperty<Double>() {
         public void set(Double aDouble) {
             super.set(aDouble);
-            cursorPos.set(new AnatomicalPoint3D(cursorPos.get().getAnatomy(), aDouble, cursorPos.get().getY(), cursorPos.get().getZ()));
+            cursorPos.set(new AnatomicalPoint3D((IImageSpace3D) getModel().getImageSpace(), aDouble, cursorPos.get().getY(), cursorPos.get().getZ()));
         }
 
         public Double get() {
@@ -104,7 +134,7 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
     public final Property<Double> cursorY = new ObservableProperty<Double>() {
         public void set(Double aDouble) {
             super.set(aDouble);
-            cursorPos.set(new AnatomicalPoint3D(cursorPos.get().getAnatomy(), cursorPos.get().getX(), aDouble, cursorPos.get().getZ()));
+            cursorPos.set(new AnatomicalPoint3D((IImageSpace3D) getModel().getImageSpace(), cursorPos.get().getX(), aDouble, cursorPos.get().getZ()));
         }
 
         public Double get() {
@@ -115,7 +145,7 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
     public final Property<Double> cursorZ = new ObservableProperty<Double>() {
         public void set(Double aDouble) {
             super.set(aDouble);
-            cursorPos.set(new AnatomicalPoint3D(cursorPos.get().getAnatomy(), cursorPos.get().getX(), cursorPos.get().getY(), aDouble));
+            cursorPos.set(new AnatomicalPoint3D((IImageSpace3D) getModel().getImageSpace(), cursorPos.get().getX(), cursorPos.get().getY(), aDouble));
         }
 
         public Double get() {
@@ -229,11 +259,9 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
     private void initView() {
 
         viewport = new Viewport3D(getModel());
-    
-        cursorPos.set(new AnatomicalPoint3D((Anatomy3D) viewport.getBounds().getAnatomy(),
-                viewport.getXAxisMin() + (viewport.getXAxisExtent() / 2),
-                viewport.getYAxisMin() + (viewport.getYAxisExtent() / 2),
-                viewport.getZAxisMin() + (viewport.getZAxisExtent() / 2)));
+
+        AnatomicalPoint3D centroid = (AnatomicalPoint3D) getModel().getImageSpace().getCentroid();
+        cursorPos.set(new CursorPosition((IImageSpace3D) getModel().getImageSpace(), centroid.getX(), centroid.getY(), centroid.getZ()));
 
         registerListeners();
         setPlotLayout(plotLayout);
@@ -382,12 +410,14 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
         }
 
         AnatomicalPoint3D ap = cursorPos.get();
+        //todo fix me
+        AnatomicalPoint3D dispAP = null;
 
-        AnatomicalPoint1D xpt = ap.getValue(plot.getDisplayAnatomy().XAXIS);
-        AnatomicalPoint1D ypt = ap.getValue(plot.getDisplayAnatomy().YAXIS);
+        double xpt = dispAP.getValue(Axis.X_AXIS.getId());
+        double ypt = dispAP.getValue(Axis.Y_AXIS.getId());
 
-        double percentX = (xpt.getX() - plot.getXAxisRange().getBeginning().getX()) / plot.getXAxisRange().getInterval();
-        double percentY = (ypt.getX() - plot.getYAxisRange().getBeginning().getX()) / plot.getYAxisRange().getInterval();
+        double percentX = (xpt - plot.getXAxisRange().getBeginning().getValue()) / plot.getXAxisRange().getInterval();
+        double percentY = (ypt - plot.getYAxisRange().getBeginning().getValue()) / plot.getYAxisRange().getInterval();
 
         Rectangle2D plotArea = plot.getPlotArea();
 
@@ -420,13 +450,14 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
         AnatomicalPoint2D apoint = plot.translateScreenToAnat(plotPoint);
 
         Anatomy3D displayAnatomy = plot.getDisplayAnatomy();
+
         AnatomicalPoint3D ap3d = new AnatomicalPoint3D(
                 Anatomy3D.matchAnatomy(
                         plot.getXAxisRange().getAnatomicalAxis(),
                         plot.getYAxisRange().getAnatomicalAxis(),
                         plot.getDisplayAnatomy().ZAXIS),
                 apoint.getX(), apoint.getY(),
-                getCursorPos().getValue(displayAnatomy.ZAXIS).getX());
+                getCursorPos().getValue(displayAnatomy.ZAXIS).getValue());
 
 
         return ap3d;

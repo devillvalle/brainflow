@@ -1,7 +1,7 @@
 package test.com.brainflow.application.mapping;
 
 import com.brainflow.application.mapping.XStreamUtils;
-import com.brainflow.core.ImageLayerProperties;
+import com.brainflow.core.layer.ImageLayerProperties;
 import com.brainflow.core.ClipRange;
 import com.brainflow.display.*;
 import com.brainflow.utils.Range;

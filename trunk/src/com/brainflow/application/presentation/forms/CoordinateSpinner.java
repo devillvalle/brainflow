@@ -2,6 +2,8 @@ package com.brainflow.application.presentation.forms;
 
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.CellConstraints;
+import com.jidesoft.swing.StyledLabel;
+import com.jidesoft.swing.StyleRange;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,6 +29,12 @@ public class CoordinateSpinner extends JPanel {
 
     private JLabel zlabel;
 
+    private StyledLabel xspinnerHeader;
+
+    private StyledLabel yspinnerHeader;
+
+    private StyledLabel zspinnerHeader;
+
     private FormLayout layout;
 
     public CoordinateSpinner() {
@@ -35,29 +43,62 @@ public class CoordinateSpinner extends JPanel {
         zlabel = new JLabel("Z: ");
 
         xspinner = new JSpinner(new SpinnerNumberModel());
+
         yspinner = new JSpinner(new SpinnerNumberModel());
+        
         zspinner = new JSpinner(new SpinnerNumberModel());
 
-        layout = new FormLayout("8dlu, l:p, 2dlu, 20dlu, 3dlu, l:p, 2dlu, 24dlu, 3dlu, l:p, 2dlu, 24dlu, 8dlu", "8dlu, p, 8dlu");
+        layout = new FormLayout("8dlu, l:p, 2dlu, 30dlu:g, 5dlu, l:p, 2dlu, 30dlu:g, 5dlu, l:p, 2dlu, 30dlu:g, 8dlu", "8dlu, pref, 2dlu, pref, 8dlu");
         setLayout(layout);
-        layout.addGroupedColumn(4);
-        layout.addGroupedColumn(8);
-        layout.addGroupedColumn(12);
+
+
 
         CellConstraints cc = new CellConstraints();
 
-        add(xlabel, cc.xy(2, 2));
-        add(xspinner, cc.xy(4, 2));
+        xspinnerHeader = new StyledLabel("X");
+        xspinnerHeader.setEnabled(false);
+        xspinnerHeader.addStyleRange(new StyleRange(Font.BOLD, Color.GRAY));
 
-        add(ylabel, cc.xy(6, 2));
-        add(yspinner, cc.xy(8, 2));
+        yspinnerHeader = new StyledLabel("Y");
+        yspinnerHeader.addStyleRange(new StyleRange(Font.BOLD, Color.GRAY));
+        yspinnerHeader.setEnabled(false);
+
+        zspinnerHeader = new StyledLabel("Z");
+        zspinnerHeader.addStyleRange(new StyleRange(Font.BOLD, Color.GRAY));
+        zspinnerHeader.setEnabled(false);
+
+        add(xspinnerHeader, cc.xy(4, 2));
+        add(yspinnerHeader, cc.xy(8, 2));
+        add(zspinnerHeader, cc.xy(12, 2));
 
 
-        add(zlabel, cc.xy(10, 2));
-        add(zspinner, cc.xy(12, 2));
+        add(xlabel, cc.xy(2, 4));
+        add(xspinner, cc.xy(4, 4));
+
+        add(ylabel, cc.xy(6, 4));
+        add(yspinner, cc.xy(8, 4));
+
+
+        add(zlabel, cc.xy(10, 4));
+        add(zspinner, cc.xy(12, 4));
 
 
     }
+
+    public StyledLabel getXspinnerHeader() {
+        return xspinnerHeader;
+    }
+
+
+    public StyledLabel getYspinnerHeader() {
+        return yspinnerHeader;
+    }
+
+
+    public StyledLabel getZspinnerHeader() {
+        return zspinnerHeader;
+    }
+
 
     public JSpinner getXspinner() {
         return xspinner;

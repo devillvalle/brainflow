@@ -55,17 +55,17 @@ public class CursorCoordinates implements EventSubscriber {
         if (gpoint != null) {
             xaxisLabel.setText(format.format(new Object[]{
                     gpoint.getAnatomy().XAXIS.toString().substring(0, 1),
-                    gpoint.getValue(gpoint.getAnatomy().XAXIS).getX()}
+                    gpoint.getValue(gpoint.getAnatomy().XAXIS).getValue()}
             ));
 
             yaxisLabel.setText(format.format(new Object[]{
                     gpoint.getAnatomy().YAXIS.toString().substring(0, 1),
-                    gpoint.getValue(gpoint.getAnatomy().YAXIS).getX()}
+                    gpoint.getValue(gpoint.getAnatomy().YAXIS).getValue()}
             ));
 
             zaxisLabel.setText(format.format(new Object[]{
                     gpoint.getAnatomy().ZAXIS.toString().substring(0, 1),
-                    gpoint.getValue(gpoint.getAnatomy().ZAXIS).getX()}
+                    gpoint.getValue(gpoint.getAnatomy().ZAXIS).getValue()}
             ));
 
 

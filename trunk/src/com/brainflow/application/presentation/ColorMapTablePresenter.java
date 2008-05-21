@@ -2,7 +2,7 @@ package com.brainflow.application.presentation;
 
 import com.brainflow.colormap.*;
 import com.brainflow.core.IImageDisplayModel;
-import com.brainflow.core.ImageLayer;
+import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.core.ImageView;
 import com.brainflow.utils.ResourceLoader;
 import com.jidesoft.dialog.ButtonPanel;

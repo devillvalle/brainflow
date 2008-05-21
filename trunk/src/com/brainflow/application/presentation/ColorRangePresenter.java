@@ -6,7 +6,7 @@ import com.brainflow.application.presentation.binding.DoubleToStringConverter;
 import com.brainflow.application.presentation.forms.DoubleSliderForm;
 
 import com.brainflow.core.ClipRange;
-import com.brainflow.core.ImageLayer;
+import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.core.ImageView;
 
 import net.java.dev.properties.binding.swing.adapters.SwingBind;

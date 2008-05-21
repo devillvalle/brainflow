@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 import com.brainflow.image.data.RGBAImage;
 import com.brainflow.image.rendering.RenderUtils;
-import com.brainflow.core.AbstractLayer;
+import com.brainflow.core.layer.AbstractLayer;
 
 /**
  * Created by IntelliJ IDEA.

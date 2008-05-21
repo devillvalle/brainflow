@@ -1,8 +1,9 @@
 package com.brainflow.image.space;
 
 import com.brainflow.image.anatomy.Anatomy3D;
-import com.brainflow.utils.*;
-import com.brainflow.utils.Index3D;
+import com.brainflow.utils.IDimension;
+import com.brainflow.utils.Dimension3D;
+import com.brainflow.math.Index3D;
 
 /**
  * Created by IntelliJ IDEA.
@@ -11,24 +12,18 @@ import com.brainflow.utils.Index3D;
  * Time: 9:20:13 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface IImageSpace3D extends IImageSpace {
+public interface IImageSpace3D extends IImageSpace, ICoordinateSpace3D {
 
-    @Override
-    Anatomy3D getAnatomy();
+
 
     ImageMapping3D getMapping();
 
-    IDimension<Float> getOrigin();
 
-    IDimension<Integer> getDimension();
 
-    float[] gridToWorld(int x, int y, int z);
+    Dimension3D<Integer> getDimension();
 
-    float[] gridToWorld(int[] gridpos);
+    float[] indexToWorld(int x, int y, int z);
 
-    float[] worldToGrid(float[] coord);
-
-    com.brainflow.utils.Index3D indexToGrid(int idx, Index3D voxel);
 
     Index3D indexToGrid(int idx);
 

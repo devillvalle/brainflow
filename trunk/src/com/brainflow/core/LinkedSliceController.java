@@ -1,6 +1,5 @@
 package com.brainflow.core;
 
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 
 import java.util.Iterator;
@@ -20,26 +19,26 @@ public class LinkedSliceController extends SimpleSliceController {
 
 
 
-    public void setSlice(AnatomicalPoint1D slice) {
+    public void setSlice(AnatomicalPoint3D slice) {
+
+        System.out.println("linkoed slice!!!!" + slice);
 
         IImagePlot selPlot = getView().getSelectedPlot();
         AnatomicalPoint3D cursor = getView().getCursorPos();
-        AnatomicalPoint1D crossSlice = getSlice(selPlot);
 
-         if (!slice.equals(crossSlice)) {
-            cursor.setValue(slice);
+
+         if (!slice.equals(cursor)) {
             getView().cursorPos.set(cursor);
         }
 
         selPlot.setSlice(slice);
         
-        assert slice.getAnatomy() == selPlot.getDisplayAnatomy().ZAXIS;
 
         Iterator<IImagePlot> iter = getView().plotIterator();
         while (iter.hasNext()) {
              IImagePlot plot = iter.next();
              if (plot == selPlot) continue;
-             crossSlice = getView().getCursorPos().getValue(plot.getDisplayAnatomy().ZAXIS);
+             AnatomicalPoint3D crossSlice = getView().getCursorPos();
              plot.setSlice(crossSlice);           
         }
 

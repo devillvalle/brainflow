@@ -1,9 +1,9 @@
 package com.brainflow.core;
 
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.Anatomy3D;
-import com.brainflow.image.space.ImageSpace2D;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.space.ICoordinateSpace;
+import com.brainflow.core.layer.AbstractLayer;
 
 import java.awt.image.BufferedImage;
 import java.awt.*;
@@ -24,9 +24,9 @@ public interface SliceRenderer {
 
     public void setDisplayAnatomy(Anatomy3D anatomy);
 
-    public void setSlice(AnatomicalPoint1D slice);
+    public void setSlice(AnatomicalPoint3D slice);
 
-    public AnatomicalPoint1D getSlice();
+    public AnatomicalPoint3D getSlice();
 
     public BufferedImage render();
 

@@ -45,8 +45,8 @@ public class MouseWheelInteractor extends ImageViewInteractor {
         double xextent = xrange.getInterval() - (xrange.getInterval() * .08) -1;
         double yextent = yrange.getInterval() - (yrange.getInterval() * .08) -1;
 
-        double xcenter = xrange.getCenter().getX();
-        double ycenter = yrange.getCenter().getX();
+        double xcenter = xrange.getCenter().getValue();
+        double ycenter = yrange.getCenter().getValue();
 
         double xmin = xcenter - xextent/2.0;
         double ymin = ycenter - yextent/2.0;
@@ -76,8 +76,8 @@ public class MouseWheelInteractor extends ImageViewInteractor {
         double xextent = xrange.getInterval() + (xrange.getInterval() * .08) +1;
         double yextent = yrange.getInterval() + (yrange.getInterval() * .08) +1;
 
-        double xcenter = xrange.getCenter().getX();
-        double ycenter = yrange.getCenter().getX();
+        double xcenter = xrange.getCenter().getValue();
+        double ycenter = yrange.getCenter().getValue();
 
         double xmin = xcenter - (xextent/2.0);
         double ymin = ycenter - (yextent/2.0);

@@ -21,7 +21,7 @@ public class LinkedSliceController extends SimpleSliceController {
 
     public void setSlice(AnatomicalPoint3D slice) {
 
-        System.out.println("linkoed slice!!!!" + slice);
+        System.out.println("linked slice!!!!" + slice);
 
         IImagePlot selPlot = getView().getSelectedPlot();
         AnatomicalPoint3D cursor = getView().getCursorPos();

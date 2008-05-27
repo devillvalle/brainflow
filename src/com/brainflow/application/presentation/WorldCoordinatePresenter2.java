@@ -2,6 +2,7 @@ package com.brainflow.application.presentation;
 
 import com.brainflow.application.presentation.binding.DoubleToStringConverter;
 import com.brainflow.application.presentation.binding.PercentageRangeConverter;
+import com.brainflow.application.presentation.binding.WorldToAxisConverter;
 import com.brainflow.application.presentation.forms.TripleSliderForm;
 import com.brainflow.application.presentation.forms.CoordinateSpinner;
 import com.brainflow.core.ImageView;
@@ -9,6 +10,7 @@ import com.brainflow.core.ImageView;
 import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
+import com.brainflow.image.space.IImageSpace3D;
 
 import net.java.dev.properties.binding.swing.adapters.SwingBind;
 import net.java.dev.properties.container.BeanContainer;
@@ -45,18 +47,28 @@ public class WorldCoordinatePresenter2 extends ImageViewPresenter {
         ImageView view = getSelectedView();
         IImageSpace ispace = view.getModel().getImageSpace();
 
+        form.getXspinner().setModel(new SpinnerNumberModel(0, -1000, 1000, 1.0));
+        form.getYspinner().setModel(new SpinnerNumberModel(0, -1000, 1000, 1.0));
+        form.getZspinner().setModel(new SpinnerNumberModel(0, -1000, 1000, 1.0));
+
+        
         //ImageAxis xaxis = ispace.getImageAxis(Axis.X_AXIS);
         //ImageAxis yaxis = ispace.getImageAxis(Axis.Y_AXIS);
         //ImageAxis zaxis = ispace.getImageAxis(Axis.Z_AXIS);
 
         // bind cursorPos values to JSliders using double --> integer converter wrapper
-        SwingBind.get().bind(view.cursorX, form.getXspinner());
-        SwingBind.get().bind(view.cursorY, form.getYspinner());
-        SwingBind.get().bind(view.cursorZ, form.getZspinner());
+        SwingBind.get().bind(new WorldToAxisConverter(view.worldCursorPos,
+                (IImageSpace3D)view.getModel().getImageSpace(), Axis.X_AXIS), form.getXspinner());
 
-        String header1 = view.cursorPos.get().getAnatomy().XAXIS.getMinDirection().toString();
-        String header2 = view.cursorPos.get().getAnatomy().YAXIS.getMinDirection().toString();
-        String header3 = view.cursorPos.get().getAnatomy().ZAXIS.getMinDirection().toString();
+        SwingBind.get().bind(new WorldToAxisConverter(view.worldCursorPos,
+                        (IImageSpace3D)view.getModel().getImageSpace(), Axis.Y_AXIS), form.getYspinner());
+        SwingBind.get().bind(new WorldToAxisConverter(view.worldCursorPos,
+                        (IImageSpace3D)view.getModel().getImageSpace(), Axis.Z_AXIS), form.getZspinner());
+
+
+        String header1 = view.worldCursorPos.get().getAnatomy().XAXIS.getMinDirection().toString();
+        String header2 = view.worldCursorPos.get().getAnatomy().YAXIS.getMinDirection().toString();
+        String header3 = view.worldCursorPos.get().getAnatomy().ZAXIS.getMinDirection().toString();
 
         form.getXspinnerHeader().setText(header1);
         form.getYspinnerHeader().setText(header2);

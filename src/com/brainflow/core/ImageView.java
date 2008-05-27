@@ -94,17 +94,21 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
         }
     };
 
-    public final RProperty<AnatomicalPoint3D> worldCursorPos = new ObservableWrapper.ReadWrite<AnatomicalPoint3D>(cursorPos) {
+    public final Property<AnatomicalPoint3D> worldCursorPos = new ObservableWrapper.ReadWrite<AnatomicalPoint3D>(cursorPos) {
 
         public void set(AnatomicalPoint3D ap) {
-            RProperty<AnatomicalPoint3D> cpos = (RProperty<AnatomicalPoint3D>) getProperties()[0];
+            if (ap.getAnatomy() != Anatomy3D.REFERENCE_ANATOMY) {
+                throw new IllegalArgumentException("world point " + ap + " must have Anatomy " + Anatomy3D.REFERENCE_ANATOMY);
+            }
+
+
             IImageSpace3D space = (IImageSpace3D)getModel().getImageSpace();
             float[] gridpos = space.worldToGrid((float)ap.getX(), (float)ap.getY(), (float)ap.getZ());
             double x1 = space.getImageAxis(Axis.X_AXIS).gridToReal(gridpos[0]);
             double y1 = space.getImageAxis(Axis.Y_AXIS).gridToReal(gridpos[1]);
             double z1 = space.getImageAxis(Axis.Z_AXIS).gridToReal(gridpos[2]);
 
-            cursorPos.set(new AnatomicalPoint3D(space, x1, y1, z1));
+            super.set(new AnatomicalPoint3D(space, x1, y1, z1));
         }
 
         public AnatomicalPoint3D get() {

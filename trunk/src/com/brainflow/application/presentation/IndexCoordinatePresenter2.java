@@ -44,12 +44,7 @@ public class IndexCoordinatePresenter2 extends ImageViewPresenter {
         ImageView view = getSelectedView();
         IImageSpace ispace = view.getModel().getImageSpace();
 
-        ImageAxis xaxis = ispace.getImageAxis(Axis.X_AXIS);
-        ImageAxis yaxis = ispace.getImageAxis(Axis.Y_AXIS);
-        ImageAxis zaxis = ispace.getImageAxis(Axis.Z_AXIS);
-
-
-
+        
         CoordinateToIndexConverter2 iconv = new CoordinateToIndexConverter2(view.worldCursorPos, (IImageSpace3D)view.getModel().getImageSpace(), Axis.X_AXIS);
         CoordinateToIndexConverter2 jconv = new CoordinateToIndexConverter2(view.worldCursorPos, (IImageSpace3D)view.getModel().getImageSpace(), Axis.Y_AXIS);
         CoordinateToIndexConverter2 kconv = new CoordinateToIndexConverter2(view.worldCursorPos, (IImageSpace3D)view.getModel().getImageSpace(), Axis.Z_AXIS);

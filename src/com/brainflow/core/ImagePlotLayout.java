@@ -17,6 +17,11 @@ import java.util.ListIterator;
  */
 public abstract class ImagePlotLayout {
 
+    public static final int DEFAULT_WIDTH  = 180;
+
+    public static final int DEFAULT_HEIGHT = 180;
+
+
     private ImageView view;
 
     protected List<IImagePlot> plots = new ArrayList<IImagePlot>();

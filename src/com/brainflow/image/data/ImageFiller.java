@@ -66,7 +66,7 @@ public class ImageFiller {
         else if (xaxis.sameAxis(axis1) && zaxis.sameAxis(axis2)) {
             fastIterator = makeIterator(xaxis, axis1);
             slowIterator = makeIterator(zaxis, axis2);
-            values = fillXZY(inputData, fastIterator, slowIterator, getFixedValue(yaxis, displayIndex));
+            values = fillXZY(inputData, fastIterator, slowIterator, displayIndex);
             //values = fillXZY(inputData, fastIterator, slowIterator, getFixedValue(yaxis, sliceIndex));
         }
 
@@ -74,7 +74,7 @@ public class ImageFiller {
         else if (zaxis.sameAxis(axis1) && yaxis.sameAxis(axis2)) {
             fastIterator = makeIterator(zaxis, axis1);
             slowIterator = makeIterator(yaxis, axis2);
-            values = fillZYX(inputData, fastIterator, slowIterator, getFixedValue(xaxis, displayIndex));
+            values = fillZYX(inputData, fastIterator, slowIterator, displayIndex);
             //values = fillZYX(inputData, fastIterator, slowIterator, getFixedValue(xaxis, sliceIndex));
         }
 
@@ -82,7 +82,7 @@ public class ImageFiller {
         else if (zaxis.sameAxis(axis1) & xaxis.sameAxis(axis2)) {
             fastIterator = makeIterator(zaxis, axis1);
             slowIterator = makeIterator(xaxis, axis2);
-            values = fillZXY(inputData, fastIterator, slowIterator, getFixedValue(yaxis, displayIndex));
+            values = fillZXY(inputData, fastIterator, slowIterator, displayIndex);
             //values = fillZXY(inputData, fastIterator, slowIterator, getFixedValue(yaxis, sliceIndex));
 
         } else{

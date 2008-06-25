@@ -7,8 +7,10 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.hints.ListDataIntelliHints;
 import com.jidesoft.swing.FolderChooser;
 import com.jidesoft.swing.SelectAllUtils;
+import com.jidesoft.dialog.JideOptionPane;
 
 import javax.imageio.ImageIO;
+import javax.imageio.stream.FileImageOutputStream;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -16,6 +18,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.awt.image.WritableRaster;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,43 +68,48 @@ public class SnapshotForm extends JPanel {
     }
 
     private void buildGUI() {
-        FormLayout layout = new FormLayout("8dlu, p, 5dlu, l:max(p;80dlu):g, 5dlu, 4dlu, 40dlu, 8dlu", "8dlu, p, 8dlu, p, 10dlu, p, 10dlu, p, 18dlu, p, 8dlu");
-        CellConstraints cc = new CellConstraints();
-        setLayout(layout);
+
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         WritableRaster raster = WritableRaster.createWritableRaster(snapShot.getSampleModel(), snapShot.getData().getDataBuffer(), new Point(0,0));
 
         ImageIcon icon = new ImageIcon(new BufferedImage(snapShot.getColorModel(), raster, false, null));
-        snapShotLabel = new JLabel(icon);
-        //snapShotLabel.setBackground(Color.LIGHT_GRAY.darker());
-        //snapShotLabel.setForeground(Color.LIGHT_GRAY.darker());
-        //snapShotLabel.setOpaque(true);
 
-        snapShotLabel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Image Snapshot"), BorderFactory.createEmptyBorder(3, 3, 3, 3)));
-        add(snapShotLabel, cc.xyw(2, 2, 6));
+        JPanel tp = new JPanel();
+        snapShotLabel = new JLabel(icon);
+        tp.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Image Snapshot"), BorderFactory.createEmptyBorder(3, 3, 3, 3)));
+
+
+        JPanel bp = new JPanel();
+        FormLayout layout = new FormLayout("5dlu, l:p, 3dlu, l:max(60dlu;p):g, 1dlu, 3dlu, p, 8dlu", "8dlu, p, 10dlu, p, 10dlu, p, 18dlu, p, 8dlu");
+        CellConstraints cc = new CellConstraints();
+
+
+        bp.setLayout(layout);
+
 
         imageFormatComboBox = new JComboBox(imageFormats);
         JLabel formatLabel = new JLabel("Image Format: ");
 
-        add(formatLabel, cc.xy(2, 4));
-        add(imageFormatComboBox, cc.xyw(4, 4, 1));
+        bp.add(formatLabel, cc.xy(2, 2));
+        bp.add(imageFormatComboBox, cc.xyw(4, 2, 2));
 
         JLabel fileNameLabel = new JLabel("File Name: ");
-        add(fileNameLabel, cc.xy(2, 6));
+        bp.add(fileNameLabel, cc.xy(2, 4));
 
         fileNameField = new JTextField();
-        add(fileNameField, cc.xyw(4, 6, 2));
+        bp.add(fileNameField, cc.xyw(4, 4, 2));
 
 
         JLabel filePathLabel = new JLabel("File Path: ");
-        add(filePathLabel, cc.xy(2, 8));
+        bp.add(filePathLabel, cc.xy(2, 6));
 
         filePathComboBox = new JComboBox(recentDirectories.toArray());
         filePathComboBox.setEditable(true);
-        add(filePathComboBox, cc.xyw(4, 8, 2));
+        bp.add(filePathComboBox, cc.xyw(4, 6, 2));
 
         //add(saveButton, cc.xy(7, 4));
-        add(browseButton, cc.xy(7, 8));
+        bp.add(browseButton, cc.xy(7, 6));
 
 
         ButtonBarBuilder builder = new ButtonBarBuilder();
@@ -110,7 +118,40 @@ public class SnapshotForm extends JPanel {
         builder.addRelatedGap();
         builder.addGridded(cancelButton);
         //builder.setBorder(BorderFactory.createRaisedBevelBorder()); 
-        add(builder.getPanel(), cc.xyw(2, 10, 3));
+        bp.add(builder.getPanel(), cc.xyw(2, 8, 3));
+
+        JScrollPane jsp = new JScrollPane(snapShotLabel);
+        jsp.setPreferredSize(new Dimension((int)Math.min(600, snapShotLabel.getPreferredSize().getWidth()),400));
+        tp.add(jsp, BorderLayout.CENTER);
+        add(tp);
+        add(bp);
+
+        saveButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String path = filePathComboBox.getSelectedItem().toString();
+                File ofile = new File(path + File.separatorChar + fileNameField.getText() + "." + imageFormatComboBox.getSelectedItem().toString());
+                System.out.println("file to save : " + ofile.getAbsolutePath());
+
+                FileImageOutputStream stream = null;
+                try {
+                    stream = new FileImageOutputStream(ofile);
+                    ImageIO.write(snapShot, imageFormatComboBox.getSelectedItem().toString(), stream);
+
+                } catch(IOException ex) {
+                    JideOptionPane.showMessageDialog(SnapshotForm.this, "Error writing snapshot image to file : " + ofile);
+                } finally {
+                    if (stream != null) {
+                        try {
+                            stream.close();
+                        } catch(IOException ex2) {}
+                        
+                    }
+                }
+
+
+
+            }
+        });
 
         browseButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

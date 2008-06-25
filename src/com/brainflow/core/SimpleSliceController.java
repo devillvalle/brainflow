@@ -2,6 +2,11 @@ package com.brainflow.core;
 
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.image.space.Axis;
+import com.brainflow.image.axis.ImageAxis;
+import net.java.dev.properties.container.BeanContainer;
+import net.java.dev.properties.events.PropertyListener;
+import net.java.dev.properties.BaseProperty;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,6 +23,24 @@ class SimpleSliceController implements SliceController {
 
     public SimpleSliceController(ImageView imageView) {
         this.imageView = imageView;
+        initCursorListener();
+    }
+
+    
+    protected void initCursorListener() {
+        BeanContainer.get().addListener(imageView.cursorPos, new PropertyListener() {
+            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+                AnatomicalPoint3D oldval = (AnatomicalPoint3D)oldValue;
+                AnatomicalPoint3D newval = (AnatomicalPoint3D)newValue;
+
+                if (!oldval.equals(newval)) {
+                    imageView.getSelectedPlot().setSlice(newval);
+                    IImagePlot selectedPlot = imageView.getSelectedPlot();
+                    selectedPlot.getComponent().repaint();
+
+                }
+            }
+        });
     }
 
 
@@ -27,23 +50,19 @@ class SimpleSliceController implements SliceController {
     }
 
     public AnatomicalPoint1D getSlice(IImagePlot plot) {
-         return imageView.getCursorPos().getValue(plot.getDisplayAnatomy().ZAXIS);
+        return imageView.getCursorPos().getValue(plot.getDisplayAnatomy().ZAXIS);
 
     }
 
     public void setSlice(AnatomicalPoint3D slice) {
-        AnatomicalPoint3D cursor = imageView.getCursorPos();
 
-        if (!slice.equals(cursor)) {
-            System.out.println("updating cursor slice to " + slice);
+        slice = slice.snapToBounds();
+
+        if (!slice.equals(imageView.cursorPos.get())) {
             imageView.cursorPos.set(slice);
-           
         }
 
-        System.out.println("setting slice to " + slice);
-
-        imageView.getSelectedPlot().setSlice(slice);
-
+        
     }
 
     protected ImageView getView() {
@@ -52,91 +71,67 @@ class SimpleSliceController implements SliceController {
     }
 
     public void nextSlice() {
-        /*AnatomicalPoint1D slice = getSlice();
-        AnatomicalPoint3D cursor = imageView.getCursorPos();
+
+        AnatomicalPoint3D slice = getSlice();
 
         Axis axis = imageView.getViewport().getBounds().findAxis(imageView.getSelectedPlot().getDisplayAnatomy().ZAXIS);
         ImageAxis iaxis = imageView.getModel().getImageAxis(axis);
 
-        int sample = iaxis.nearestSample(slice);
-        int nsample = sample + 1;
+        AnatomicalPoint1D pt = slice.getValue(iaxis.getAnatomicalAxis());
+        pt = new AnatomicalPoint1D(pt.getAnatomy(), pt.getValue() + iaxis.getSpacing());
 
-        if (nsample >= 0 && nsample < iaxis.getNumSamples()) {
-            cursor.setValue(iaxis.valueOf(nsample));
-            imageView.cursorPos.set(cursor);
-        }
+        //todo check bounds
 
-        */
+        imageView.cursorPos.set(slice.replace(pt));
+
+
     }
 
     public void previousSlice() {
-        /*AnatomicalPoint1D slice = getSlice();
-        AnatomicalPoint3D cursor = imageView.getCursorPos();
+        AnatomicalPoint3D slice = getSlice();
 
         Axis axis = imageView.getViewport().getBounds().findAxis(imageView.getSelectedPlot().getDisplayAnatomy().ZAXIS);
         ImageAxis iaxis = imageView.getModel().getImageAxis(axis);
 
-        int sample = iaxis.nearestSample(slice);
-        int nsample = sample - 1;
-        if (nsample >= 0 && nsample < iaxis.getNumSamples()) {
-            cursor.setValue(iaxis.valueOf(nsample));
-            imageView.cursorPos.set(cursor);
-        }
+        AnatomicalPoint1D pt = slice.getValue(iaxis.getAnatomicalAxis());
+        pt = new AnatomicalPoint1D(pt.getAnatomy(), pt.getValue() - iaxis.getSpacing());
 
-        */
+        //todo check bounds
+
+        imageView.cursorPos.set(slice.replace(pt));
+
 
     }
 
     public void pageBack() {
-        /*AnatomicalPoint1D slice = getSlice();
-
-        AnatomicalPoint3D cursor = imageView.getCursorPos();
+        AnatomicalPoint3D slice = getSlice();
 
         Axis axis = imageView.getViewport().getBounds().findAxis(imageView.getSelectedPlot().getDisplayAnatomy().ZAXIS);
         ImageAxis iaxis = imageView.getModel().getImageAxis(axis);
 
-        int sample = iaxis.nearestSample(slice);
-        double page = iaxis.getExtent() * pageStep;
-        int jump = (int) (page / iaxis.getSpacing());
+        AnatomicalPoint1D pt = slice.getValue(iaxis.getAnatomicalAxis());
+        pt = new AnatomicalPoint1D(pt.getAnatomy(), pt.getValue() - iaxis.getExtent() * pageStep);
 
-        // ensure we move at least one sample
-        jump = Math.max(jump, 1);
-        int nsample = sample - jump;
+        //todo check bounds
 
-        if (nsample >= 0 && nsample < iaxis.getNumSamples()) {
-            cursor.setValue(iaxis.valueOf(nsample));
-            imageView.cursorPos.set(cursor);
-        }
+        imageView.cursorPos.set(slice.replace(pt));
 
-      */
+
     }
 
     public void pageForward() {
-        /*AnatomicalPoint1D slice = getSlice();
-
-        AnatomicalPoint3D cursor = imageView.getCursorPos();
+        AnatomicalPoint3D slice = getSlice();
 
         Axis axis = imageView.getViewport().getBounds().findAxis(imageView.getSelectedPlot().getDisplayAnatomy().ZAXIS);
         ImageAxis iaxis = imageView.getModel().getImageAxis(axis);
 
+        AnatomicalPoint1D pt = slice.getValue(iaxis.getAnatomicalAxis());
+        pt = new AnatomicalPoint1D(pt.getAnatomy(), pt.getValue() + iaxis.getExtent() * pageStep);
 
-        int sample = iaxis.nearestSample(slice);
+        //todo check bounds
 
-        double page = iaxis.getExtent() * pageStep;
+        imageView.cursorPos.set(slice.replace(pt));
 
-        int jump = (int) (page / iaxis.getSpacing());
-
-        // ensure we move at least one sample
-        jump = Math.max(jump, 1);
-        int nsample = sample + jump;
-
-
-        if (nsample >= 0 && nsample < iaxis.getNumSamples()) {
-            cursor.setValue(iaxis.valueOf(nsample));
-            imageView.cursorPos.set(cursor);
-        }
-
-        */
 
     }
 }

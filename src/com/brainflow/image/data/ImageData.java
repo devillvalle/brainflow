@@ -68,8 +68,7 @@ public class ImageData {
             }
 
             public ImageIterator iterator() {
-                //todo this is wrong
-                return data.iterator();
+                throw new UnsupportedOperationException("not implemented");
             }
 
             public double maxValue() {
@@ -102,7 +101,7 @@ public class ImageData {
             }
 
             public final double worldValue(float realx, float realy, float realz, InterpolationFunction3D interp) {
-                return data.worldValue(realx,realy,realz, interp);
+                return data.worldValue(realx,realy,realz, interp) * scaleFactor;
             }
         };
     }

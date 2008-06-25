@@ -109,7 +109,7 @@ public class CoordinateSpace3D extends AbstractCoordinateSpace implements ICoord
 
         }
 
-        return SpaceFactory.createCoordinateSpace(axes);
+        return Space.createCoordinateSpace(axes);
 
     }
 

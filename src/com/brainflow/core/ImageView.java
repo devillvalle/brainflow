@@ -80,16 +80,15 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
     public final Property<AnatomicalPoint3D> cursorPos = new ObservableProperty<AnatomicalPoint3D>() {
 
         public void set(AnatomicalPoint3D ap) {
-            super.set(ap);
 
-            IImagePlot selectedPlot = getSelectedPlot();
-            if (selectedPlot != null) {
-                //this is a hack.
-                //todo this should give rise to an event, whcih slice controller responds to
-                //AnatomicalPoint1D slice = ap.getValue(selectedPlot.getDisplayAnatomy().ZAXIS);
-                sliceController.setSlice(ap);
-                selectedPlot.getComponent().repaint();
+            ap = ap.snapToBounds();
+            if (ap.equals(get())) {
+                System.out.println("old = new : do nothing");
+                return;
             }
+
+
+            super.set(ap);
 
         }
     };

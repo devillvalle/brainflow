@@ -60,13 +60,13 @@ public class OrthoPlotLayout extends ImagePlotLayout {
     public Dimension getPreferredSize() {
         switch (orientation) {
             case HORIZONTAL:
-                return new Dimension(3 * 256, 256);
+                return new Dimension(3 * DEFAULT_WIDTH, DEFAULT_HEIGHT);
             case TRIANGULAR:
-                return new Dimension(2 * 256, 2 * 256);
+                return new Dimension(2 * DEFAULT_WIDTH, 2 * DEFAULT_HEIGHT);
             case VERTICAL:
-                return new Dimension(1 * 256, 3 * 256);
+                return new Dimension(DEFAULT_WIDTH, 3 * DEFAULT_HEIGHT);
             default:
-                return new Dimension(256, 256);
+                return new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT);
         }
 
 

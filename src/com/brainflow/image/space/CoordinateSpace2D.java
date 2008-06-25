@@ -94,7 +94,7 @@ public class CoordinateSpace2D extends AbstractCoordinateSpace {
 
         }
 
-        return SpaceFactory.createCoordinateSpace(axes);
+        return Space.createCoordinateSpace(axes);
 
 
     }

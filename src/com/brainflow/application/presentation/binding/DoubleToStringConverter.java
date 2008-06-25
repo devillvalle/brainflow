@@ -36,10 +36,17 @@ public class DoubleToStringConverter extends ObservableWrapper.ReadWrite<String>
 
     @Override
     public void set(String s) {
-        System.out.println("setting : " + s);
-        double val = Double.parseDouble(s);
+
+        double val = getValue();
+
+        try {
+            val = Double.parseDouble(s);
+        } catch (NumberFormatException e) {
+
+        }
+
         WProperty<Double> wprop = (WProperty<Double>) getProperty();
         wprop.set(val);
-        System.out.println("to : " + val);
+        
     }
 }

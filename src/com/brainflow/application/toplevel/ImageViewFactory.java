@@ -59,7 +59,6 @@ public class ImageViewFactory {
         ImageView view = new ImageView(source.getModel());
         view.setPlotLayout(new OrthoPlotLayout(view,  orientation));
         addDefaultAnnotations(view);
-        //BrainCanvasManager.getInstance().yoke(source, view);
 
         return view;
 

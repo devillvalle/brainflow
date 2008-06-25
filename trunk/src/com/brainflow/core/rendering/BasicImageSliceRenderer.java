@@ -5,6 +5,7 @@ import com.brainflow.display.InterpolationType;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.data.*;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.image.operations.ImageSlicer;
@@ -62,9 +63,14 @@ public class BasicImageSliceRenderer implements SliceRenderer {
         this.slice = slice;
         this.layer = layer;
         this.refSpace = refSpace;
-        
+
         //hack cast
-        slicer = new ImageSlicer(new MappedDataAcessor3D(refSpace, (IImageData3D)layer.getData()));
+
+        if (refSpace.equals(layer.getData().getImageSpace())) {
+            slicer = new ImageSlicer((IImageData3D) layer.getData());
+        } else {
+            slicer = new ImageSlicer(new MappedDataAcessor3D(refSpace, (IImageData3D) layer.getData()));
+        }
     }
 
     public ImageSpace2D getImageSpace() {
@@ -82,18 +88,27 @@ public class BasicImageSliceRenderer implements SliceRenderer {
     private IImageData2D getData() {
         if (data != null) return data;
 
+        AnatomicalPoint1D zdisp = getZSlice();
 
+        int slice = (int) Math.round(zdisp.getValue());
 
-        float[] gridpos = refSpace.worldToGrid((float)slice.getX(), (float)slice.getY(), (float)slice.getZ());
-        AnatomicalPoint3D gridloc = new AnatomicalPoint3D(refSpace.getAnatomy(), gridpos[0], gridpos[1], gridpos[2]);
-
-        //AnatomicalPoint1D xdisp = gridloc.getValue(displayAnatomy.XAXIS, 0, refSpace.getDimension(displayAnatomy.XAXIS));
-       // AnatomicalPoint1D ydisp = gridloc.getValue(displayAnatomy.YAXIS, 0, refSpace.getDimension(displayAnatomy.YAXIS));
-        AnatomicalPoint1D zdisp = gridloc.getValue(displayAnatomy.ZAXIS, 0, refSpace.getDimension(displayAnatomy.ZAXIS));
-
-     
-        data = slicer.getSlice(getDisplayAnatomy(), (int)Math.round(zdisp.getValue()));
+        if (slice >= refSpace.getDimension(displayAnatomy.ZAXIS)) {
+            slice = refSpace.getDimension(displayAnatomy.ZAXIS) - 1;
+        } else if (slice < 0) {
+            slice = 0;
+        }
+       
+        data = slicer.getSlice(getDisplayAnatomy(), slice);
         return data;
+    }
+
+    private AnatomicalPoint1D getZSlice() {
+        float[] gridpos = refSpace.worldToGrid((float) slice.getX(), (float) slice.getY(), (float) slice.getZ());
+        AnatomicalPoint3D gridloc = new AnatomicalPoint3D(refSpace, gridpos[0], gridpos[1], gridpos[2]);
+
+        return gridloc.getValue(displayAnatomy.ZAXIS, 0, refSpace.getDimension(displayAnatomy.ZAXIS));
+
+
     }
 
     private RGBAImage getRGBAImage() {
@@ -216,7 +231,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
         double sy = ispace.getImageAxis(Axis.Y_AXIS).getRange().getInterval() / ispace.getDimension(Axis.Y_AXIS);
 
         // if (!source.isAlphaPremultiplied()) {
-       //PremultiplyFilter filter = new PremultiplyFilter();
+        //PremultiplyFilter filter = new PremultiplyFilter();
         //source = filter.filter(source, null);
         //  }
 
@@ -279,10 +294,10 @@ public class BasicImageSliceRenderer implements SliceRenderer {
     protected RGBAImage thresholdRGBA(RGBAImage rgba) {
         //todo here's the rub
         ImageSlicer slicer = new ImageSlicer(new MappedDataAcessor3D(refSpace, layer.getMaskList().composeMask(true)));
+        AnatomicalPoint1D zdisp = getZSlice();
 
-        float z = refSpace.worldToGridZ((float)slice.getX(), (float)slice.getY(), (float)slice.getZ());
-        int zed = Math.round(z);
-        IImageData2D maskData = slicer.getSlice(getDisplayAnatomy(), zed);
+
+        IImageData2D maskData = slicer.getSlice(getDisplayAnatomy(), (int)Math.round(zdisp.getValue()));
 
         UByteImageData2D alpha = rgba.getAlpha();
         UByteImageData2D out = new UByteImageData2D(alpha.getImageSpace());

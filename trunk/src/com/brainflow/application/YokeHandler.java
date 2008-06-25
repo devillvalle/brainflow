@@ -93,6 +93,10 @@ public class YokeHandler  {
 
     public void setTargetLocation(AnatomicalPoint3D point) {
         System.out.println("setting target location : " + point);
+        System.out.println("old target point : " + target.cursorPos.get());
+        System.out.println("target anatomy : " + target.cursorPos.get().getAnatomy());
+        System.out.println("source anatomy : " + point.getAnatomy());
+
         target.cursorPos.set(point);
       
     }

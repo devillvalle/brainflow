@@ -4,6 +4,10 @@ import com.brainflow.image.anatomy.AnatomicalPoint3D;
 
 import java.util.Iterator;
 
+import net.java.dev.properties.container.BeanContainer;
+import net.java.dev.properties.events.PropertyListener;
+import net.java.dev.properties.BaseProperty;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Brad Buchsbaum
@@ -17,30 +21,29 @@ public class LinkedSliceController extends SimpleSliceController {
         super(imageView);
     }
 
+    protected void initCursorListener() {
+        BeanContainer.get().addListener(getView().cursorPos, new PropertyListener() {
+            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+                AnatomicalPoint3D oldval = (AnatomicalPoint3D)oldValue;
+                AnatomicalPoint3D newval = (AnatomicalPoint3D)newValue;
+
+                if (!oldval.equals(newval)) {
+                    Iterator<IImagePlot> iter = getView().plotIterator();
+                    IImagePlot selPlot = getView().getSelectedPlot();
+                    while (iter.hasNext()) {
+                        IImagePlot plot = iter.next();
+                        if (plot == selPlot) continue;
+                        AnatomicalPoint3D crossSlice = getView().getCursorPos();
+                        plot.setSlice(crossSlice);
+                    }
 
 
-    public void setSlice(AnatomicalPoint3D slice) {
-
-        System.out.println("linked slice!!!!" + slice);
-
-        IImagePlot selPlot = getView().getSelectedPlot();
-        AnatomicalPoint3D cursor = getView().getCursorPos();
-
-
-         if (!slice.equals(cursor)) {
-            getView().cursorPos.set(cursor);
-        }
-
-        selPlot.setSlice(slice);
-        
-
-        Iterator<IImagePlot> iter = getView().plotIterator();
-        while (iter.hasNext()) {
-             IImagePlot plot = iter.next();
-             if (plot == selPlot) continue;
-             AnatomicalPoint3D crossSlice = getView().getCursorPos();
-             plot.setSlice(crossSlice);           
-        }
-
+                }
+            }
+        });
     }
+
+
+
+    
 }

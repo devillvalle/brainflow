@@ -4,6 +4,7 @@ import com.brainflow.image.iterators.XYZIterator;
 import com.brainflow.image.LinearSet1D;
 import com.brainflow.image.LinearSet3D;
 import com.brainflow.image.anatomy.AnatomicalAxis;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.axis.CoordinateAxis;
@@ -15,7 +16,7 @@ import com.brainflow.image.axis.CoordinateAxis;
  * Time: 2:15:53 PM
  * To change this template use File | Settings | File Templates.
  */
-public class SpaceFactory {
+public class Space {
 
     public static IImageSpace3D createImageSpace(int xdim, int ydim, int zdim, int dx, int dy, int dz) {
         ImageAxis xaxis = new ImageAxis(0, xdim*dx, AnatomicalAxis.LEFT_RIGHT, xdim);
@@ -24,6 +25,8 @@ public class SpaceFactory {
 
         return new ImageSpace3D(xaxis, yaxis, zaxis);
     }
+
+    
 
 
     public static IImageSpace createImageSpace(ImageAxis ... axes) {

@@ -19,7 +19,9 @@ public class AnatomicalPoint3D implements AnatomicalPoint {
     private ICoordinateSpace3D space;
 
     private AnatomicalPoint1D x;
+
     private AnatomicalPoint1D y;
+
     private AnatomicalPoint1D z;
 
 
@@ -40,12 +42,71 @@ public class AnatomicalPoint3D implements AnatomicalPoint {
         this.z = new AnatomicalPoint1D(space.getImageAxis(Axis.Z_AXIS), z);
     }
 
+    public AnatomicalPoint3D snapToBounds() {
+        double newx=x.getValue();
+        double newy=y.getValue();
+        double newz=z.getValue();
+
+        boolean changed = false;
+
+        if (x.getValue() < space.getImageAxis(Axis.X_AXIS).getMinimum()) {
+            newx = space.getImageAxis(Axis.X_AXIS).getMinimum();
+            changed=true;
+        } else if (x.getValue() > space.getImageAxis(Axis.X_AXIS).getMaximum()) {
+            newx = space.getImageAxis(Axis.X_AXIS).getMaximum();
+            changed=true;
+        }
+
+        if (y.getValue() < space.getImageAxis(Axis.Y_AXIS).getMinimum()) {
+            newy = space.getImageAxis(Axis.Y_AXIS).getMinimum();
+            changed=true;
+        } else if (y.getValue() > space.getImageAxis(Axis.Y_AXIS).getMaximum()) {
+            newy = space.getImageAxis(Axis.Y_AXIS).getMaximum();
+            changed=true;
+        }
+
+        if (z.getValue() < space.getImageAxis(Axis.Z_AXIS).getMinimum()) {
+            newz = space.getImageAxis(Axis.Z_AXIS).getMinimum();
+            changed=true;
+        } else if (z.getValue() > space.getImageAxis(Axis.Z_AXIS).getMaximum()) {
+            newz = space.getImageAxis(Axis.Z_AXIS).getMaximum();
+            changed=true;
+        }
+
+        if (changed) {
+            System.out.println("snapping to bounds ...");
+            System.out.println("old : " + this);
+            AnatomicalPoint3D ret = new AnatomicalPoint3D(space, newx, newy,newz);
+            System.out.println("new : " + ret);
+            return ret;
+
+        } else {
+            return this;
+        }
+
+
+
+
+    }
+
     public Anatomy3D getAnatomy() {
         return space.getAnatomy();
     }
 
     public ICoordinateSpace3D getSpace() {
         return space;
+    }
+
+    public AnatomicalPoint3D replace(AnatomicalPoint1D pt) {
+        if (pt.getAnatomy() == x.getAnatomy()) {
+            return new AnatomicalPoint3D(space, pt.getValue(), y.getValue(), z.getValue());
+        } else if (pt.getAnatomy() == y.getAnatomy()) {
+            return new AnatomicalPoint3D(space, x.getValue(), pt.getValue(), z.getValue());
+        } else if (pt.getAnatomy() == z.getAnatomy()) {
+            return new AnatomicalPoint3D(space, x.getValue(), y.getValue(), pt.getValue());
+        } else {
+            throw new IllegalArgumentException("supplied point has incomaptible axis : " + pt.getAnatomy());
+        }
     }
 
     public AnatomicalPoint3D convertTo(ICoordinateSpace3D other) {

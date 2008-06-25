@@ -61,7 +61,7 @@ public class ReorientImageFilter extends com.brainflow.image.operations.Abstract
 
  IImageData3D op = new BasicImageData3D(src.getCoordinateSpace(), getOutputDataType());
  ImageSpace3D space = (ImageSpace3D) src.getCoordinateSpace();
- XYZIterator iter = SpaceFactory.createXYZiterator(space);
+ XYZIterator iter = Space.createXYZiterator(space);
 
 
  Point3D holder = new Point3D();

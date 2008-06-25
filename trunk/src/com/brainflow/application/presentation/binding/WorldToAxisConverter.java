@@ -23,12 +23,10 @@ public class WorldToAxisConverter extends ObservableWrapper.ReadWrite<Double> {
 
     private Axis axis;
 
-    private IImageSpace3D space;
 
-    public WorldToAxisConverter(BaseProperty<AnatomicalPoint3D> property, IImageSpace3D _space, Axis _axis) {
+    public WorldToAxisConverter(BaseProperty<AnatomicalPoint3D> property, Axis _axis) {
         super(property);
         axis = _axis;
-        space = _space;
 
     }
 
@@ -44,29 +42,22 @@ public class WorldToAxisConverter extends ObservableWrapper.ReadWrite<Double> {
 
         AnatomicalPoint3D ap = getValue();
 
-        double ret;
-        if (axis == Axis.X_AXIS) {
-            ret = space.worldToGridX((float)ap.getX(), (float)ap.getY(), (float)ap.getZ());
-        } else if (axis == Axis.Y_AXIS) {
-            ret = space.worldToGridY((float)ap.getX(), (float)ap.getY(), (float)ap.getZ());
-        } else if (axis == Axis.Z_AXIS) {
-            ret = space.worldToGridZ((float)ap.getX(), (float)ap.getY(), (float)ap.getZ());
-        } else {
-            throw new AssertionError("illegal image axis : " + axis);
-        }
+
+        double ret = ap.getValue(axis.getId());
 
         return (double)Math.round(ret);
     }
 
     @Override
     public void set(Double val) {
+
         Property<AnatomicalPoint3D> wprop = (Property<AnatomicalPoint3D>) getProperty();
         AnatomicalPoint3D old = wprop.get();
+
         if (axis == Axis.X_AXIS) {
             wprop.set(new AnatomicalPoint3D(old.getAnatomy(), val, old.getY(), old.getZ()));
         } else if (axis == Axis.Y_AXIS) {
             wprop.set(new AnatomicalPoint3D(old.getAnatomy(), old.getX(), val, old.getZ()));
-
         } else if (axis == Axis.Z_AXIS) {
             wprop.set(new AnatomicalPoint3D(old.getAnatomy(), old.getX(), old.getY(), val));
         } else {

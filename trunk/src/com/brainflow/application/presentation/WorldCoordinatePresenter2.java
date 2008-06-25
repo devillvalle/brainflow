@@ -57,13 +57,9 @@ public class WorldCoordinatePresenter2 extends ImageViewPresenter {
         //ImageAxis zaxis = ispace.getImageAxis(Axis.Z_AXIS);
 
         // bind cursorPos values to JSliders using double --> integer converter wrapper
-        SwingBind.get().bind(new WorldToAxisConverter(view.worldCursorPos,
-                (IImageSpace3D)view.getModel().getImageSpace(), Axis.X_AXIS), form.getXspinner());
-
-        SwingBind.get().bind(new WorldToAxisConverter(view.worldCursorPos,
-                        (IImageSpace3D)view.getModel().getImageSpace(), Axis.Y_AXIS), form.getYspinner());
-        SwingBind.get().bind(new WorldToAxisConverter(view.worldCursorPos,
-                        (IImageSpace3D)view.getModel().getImageSpace(), Axis.Z_AXIS), form.getZspinner());
+        SwingBind.get().bind(new WorldToAxisConverter(view.worldCursorPos, Axis.X_AXIS), form.getXspinner());
+        SwingBind.get().bind(new WorldToAxisConverter(view.worldCursorPos, Axis.Y_AXIS), form.getYspinner());
+        SwingBind.get().bind(new WorldToAxisConverter(view.worldCursorPos, Axis.Z_AXIS), form.getZspinner());
 
 
         String header1 = view.worldCursorPos.get().getAnatomy().XAXIS.getMinDirection().toString();
@@ -74,13 +70,7 @@ public class WorldCoordinatePresenter2 extends ImageViewPresenter {
         form.getYspinnerHeader().setText(header2);
         form.getZspinnerHeader().setText(header3);
 
-        //SwingBind.get().bind(new DoubleToStringConverter(view.cursorX), form.getValueLabel1());
-        //SwingBind.get().bind(new DoubleToStringConverter(view.cursorY), form.getValueLabel2());
-        //SwingBind.get().bind(new DoubleToStringConverter(view.cursorZ), form.getValueLabel3());
-
-        //form.getSliderLabel1().setText("X: " + "(" + xaxis.getAnatomicalAxis() + ")");
-        //form.getSliderLabel2().setText("Y: " + "(" + yaxis.getAnatomicalAxis() + ")");
-        //form.getSliderLabel3().setText("Z: " + "(" + zaxis.getAnatomicalAxis() + ")");
+       
     }
 
 

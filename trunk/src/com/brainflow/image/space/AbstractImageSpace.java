@@ -198,7 +198,7 @@ public abstract class AbstractImageSpace implements IImageSpace {
 
         }
 
-        return SpaceFactory.createImageSpace(axes);
+        return Space.createImageSpace(axes);
 
     }
 

@@ -215,6 +215,7 @@ public class NiftiInfoReader implements ImageInfoReader {
         switch (datatype) {
             case Nifti1Dataset.NIFTI_TYPE_UINT8:
                 dtype = DataType.UBYTE;
+                break;
             case Nifti1Dataset.NIFTI_TYPE_INT8:
                 dtype = DataType.BYTE;
                 break;
@@ -283,7 +284,16 @@ public class NiftiInfoReader implements ImageInfoReader {
         info.calculateRealDim();
 
 
-        info.setScaleFactor(nifti.scl_slope);
+
+
+        if (nifti.scl_slope == 0 && nifti.scl_slope == 1) {
+            info.setScaleFactor(0);
+        } else {
+            info.setScaleFactor(nifti.scl_slope);
+        }
+
+
+        System.out.println("scale factor : " + info.getScaleFactor());
         info.setIntercept(nifti.scl_inter);
         info.setByteOffset((int) nifti.vox_offset);
         info.setOrigin(new Point3D(nifti.qoffset[0], nifti.qoffset[1], nifti.qoffset[2]));

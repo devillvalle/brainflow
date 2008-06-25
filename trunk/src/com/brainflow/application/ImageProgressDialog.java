@@ -31,6 +31,7 @@ public class ImageProgressDialog extends SwingWorker<IImageData, Integer> implem
 
     private JProgressBar progressBar;
 
+    private JLabel progressLabel;
 
     private JDialog dialog;
 
@@ -61,10 +62,13 @@ public class ImageProgressDialog extends SwingWorker<IImageData, Integer> implem
     private void buildGUI() {
         progressBar = new JProgressBar(0, 100);
         progressBar.setValue(0);
+        progressLabel = new JLabel("Percent Complete: " + progressBar.getValue() + "%");
+
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.add(new JLabel("Percent Complete: " + progressBar.getValue() + "%"));
+
+        panel.add(progressLabel);
         panel.add(Box.createVerticalStrut(3));
         panel.add(progressBar);
         panel.add(Box.createVerticalStrut(3));
@@ -93,9 +97,10 @@ public class ImageProgressDialog extends SwingWorker<IImageData, Integer> implem
 
     protected void process(List<Integer> chunks) {
         for (Integer i : chunks) {
-            double perc = ((double) i) / getMax();
+            double perc =  i / getMax();
             int prog = (int) (perc * 100f);
             progressBar.setValue(prog);
+            progressLabel.setText("Percent Complete: " + prog + "%");
 
         }
     }

@@ -8,6 +8,7 @@ import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.utils.DataType;
 import com.brainflow.utils.NumberUtils;
 import com.brainflow.utils.ProgressListener;
+import com.brainflow.utils.ProgressAdapter;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileUtil;
 
@@ -49,7 +50,6 @@ public class BasicImageReader implements ImageReader {
     private ByteOrder byteOrder = java.nio.ByteOrder.BIG_ENDIAN;
 
     public ByteBuffer buffer;
-
 
 
     private int skipUnits = 0;
@@ -158,13 +158,15 @@ public class BasicImageReader implements ImageReader {
 
             wholeBuffer.rewind();
             listener.setString("Converting Bytes To Array of Type: " + datatype);
-            Object data = null;
+
+            Object data;
+
             double sf = info.getScaleFactor();
             boolean scaleRequired = true;
-             if (NumberUtils.equals(sf, 1, .000001) || NumberUtils.equals(sf, 0, .0000001)) {
+            if (NumberUtils.equals(sf, 1, .0000001) || NumberUtils.equals(sf, 0, .0000001)) {
                 scaleRequired = false;
             }
-            
+
             if (datatype == DataType.BYTE) {
                 data = new byte[numBytes];
                 wholeBuffer.get((byte[]) data);
@@ -190,16 +192,16 @@ public class BasicImageReader implements ImageReader {
             //}
 
             if (fileDimensionality == 2) {
-                BasicImageData dat = new BasicImageData2D((ImageSpace2D)imageSpace, data, info.getDataFile().getName().getBaseName());
+                BasicImageData dat = new BasicImageData2D((ImageSpace2D) imageSpace, data, info.getDataFile().getName().getBaseName());
 
                 //dat.setImageLabel(info.getDataFile().getName().getBaseName());
                 listener.finished();
                 return dat;
             } else if (fileDimensionality == 3) {
 
-                IImageData3D dat = new BasicImageData3D((ImageSpace3D)imageSpace, data, info.getDataFile().getName().getBaseName());
+                IImageData3D dat = new BasicImageData3D((ImageSpace3D) imageSpace, data, info.getDataFile().getName().getBaseName());
                 if (scaleRequired) {
-                    dat = ImageData.createScaledData(dat,sf);
+                    dat = ImageData.createScaledData(dat, sf);
                 }
                 listener.finished();
                 return dat;
@@ -223,7 +225,7 @@ public class BasicImageReader implements ImageReader {
 
 
     // implement progress mechanism
-    protected IImageData getOutput() throws IOException {
+    /*protected IImageData getOutput() throws IOException {
 
         FileChannel inChannel = null;
 
@@ -276,11 +278,11 @@ public class BasicImageReader implements ImageReader {
 
 
             if (fileDimensionality == 2) {
-                IImageData2D data2d = new BasicImageData2D((ImageSpace2D)imageSpace, dataArray, info.getDataFile().getName().getBaseName());
+                IImageData2D data2d = new BasicImageData2D((ImageSpace2D) imageSpace, dataArray, info.getDataFile().getName().getBaseName());
                 //data2d.setImageLabel(info.getDataFile().getName().getBaseName());
                 return data2d;
             } else if (fileDimensionality == 3) {
-                IImageData3D data3d = new BasicImageData3D((ImageSpace3D)imageSpace, dataArray, info.getDataFile().getName().getBaseName());
+                IImageData3D data3d = new BasicImageData3D((ImageSpace3D) imageSpace, dataArray, info.getDataFile().getName().getBaseName());
                 //data3d.setImageLabel(info.getDataFile().getName().getBaseName());
                 return data3d;
             } else {
@@ -297,7 +299,7 @@ public class BasicImageReader implements ImageReader {
         }
 
 
-    }
+    }   */
 
 
     public IImageData readImage(ImageInfo info) throws BrainflowException {
@@ -307,7 +309,7 @@ public class BasicImageReader implements ImageReader {
         IImageData data = null;
 
         try {
-            data = getOutput();
+            data = getOutput(new ProgressAdapter());
         } catch (FileNotFoundException e) {
             log.warning("failed trying to find file " + info.getDataFile());
             throw new BrainflowException("BasicImageData.readImage: File Not Found Error", e);

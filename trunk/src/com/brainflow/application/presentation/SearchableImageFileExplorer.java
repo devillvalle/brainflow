@@ -83,7 +83,6 @@ public class SearchableImageFileExplorer extends AbstractPresenter {
                     protected void configureListModelWrapper(ListModelWrapper wrapper, Object node) {
 
                         if (node instanceof DefaultMutableTreeNode) {
-                            System.out.println("pricessing node : " + node);
                             //ImageFileExplorer.LazyNode inode = (ImageFileExplorer.LazyNode) node;
                             DefaultMutableTreeNode inode = (DefaultMutableTreeNode) node;
                             //System.out.println("inode path " + inode.getPath());

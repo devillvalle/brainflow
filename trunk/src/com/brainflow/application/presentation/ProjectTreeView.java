@@ -14,6 +14,9 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 
 /**
@@ -23,7 +26,7 @@ import java.util.Iterator;
  * Time: 4:54:31 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ProjectTreeView extends ImageViewPresenter {
+public class ProjectTreeView extends ImageViewPresenter implements MouseListener, MouseMotionListener {
 
     private BrainflowProject project;
 
@@ -39,6 +42,10 @@ public class ProjectTreeView extends ImageViewPresenter {
 
         treeModel = new DefaultTreeModel(rootNode);
         tree = new JTree(treeModel);
+        tree.setDragEnabled(true);
+
+        tree.addMouseListener(this);
+        tree.addMouseMotionListener(this);
 
 
     }
@@ -56,6 +63,53 @@ public class ProjectTreeView extends ImageViewPresenter {
 
     public JComponent getComponent() {
         return tree;
+    }
+
+    private MouseEvent firstMouseEvent = null;
+
+    public void mouseClicked(MouseEvent e) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void mousePressed(MouseEvent e) {
+        firstMouseEvent = e;
+        e.consume();
+    }
+
+    public void mouseDragged(MouseEvent e) {
+        System.out.println("dragged!");
+        if (firstMouseEvent != null) {
+            e.consume();
+            int dx = Math.abs(e.getX() - firstMouseEvent.getX());
+            int dy = Math.abs(e.getY() - firstMouseEvent.getY());
+            //Arbitrarily define a 5-pixel shift as the
+            //official beginning of a drag.
+            if (dx > 1 || dy > 1) {
+
+                //This is a drag, not a click.
+                JComponent c = (JComponent) e.getSource();
+                //Tell the transfer handler to initiate the drag.
+                TransferHandler handler = c.getTransferHandler();
+                handler.exportAsDrag(c, firstMouseEvent, -1);
+                firstMouseEvent = null;
+            }
+        }
+    }
+
+    public void mouseMoved(MouseEvent e) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void mouseReleased(MouseEvent e) {
+        firstMouseEvent = null;
+    }
+
+    public void mouseEntered(MouseEvent e) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void mouseExited(MouseEvent e) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
 

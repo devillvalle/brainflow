@@ -202,12 +202,13 @@ public class CanvasBar extends ImageViewPresenter {
             int index = layerButtonList.indexOf(comp);
             ImageView view = getSelectedView();
             if (index >= 0) {
-                AbstractLayer layer = view.getModel().getLayer(index);
+                //AbstractLayer layer = view.getModel().getLayer(index);
                 super.exportAsDrag(comp, e, action);
             }
         }
 
         public boolean canImport(TransferSupport support) {
+
             return true;
         }
 
@@ -263,7 +264,6 @@ public class CanvasBar extends ImageViewPresenter {
 
 
         public void mouseDragged(MouseEvent e) {
-            System.out.println("exporting as drag?");
             JComponent c = (JComponent) e.getSource();
             TransferHandler th = c.getTransferHandler();
             th.exportAsDrag(c, e, TransferHandler.MOVE);

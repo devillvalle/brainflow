@@ -581,9 +581,9 @@ public class Brainflow {
 
 
             loadingDock = new ImageFileExplorer(VFS.getManager().resolveFile(DirectoryManager.getInstance().getCurrentLocalDirectory().getAbsolutePath()));
-            ImageCanvasTransferHandler handler = new ImageCanvasTransferHandler();
-            loadingDock.setDragEnabled(true);
-            loadingDock.setTransferHandler(handler);
+            BrainCanvasTransferHandler handler = new BrainCanvasTransferHandler();
+            loadingDock.getJTree().setDragEnabled(true);
+            //loadingDock.setTransferHandler(handler);
             BrainCanvasManager.getInstance().getSelectedCanvas().getComponent().setTransferHandler(handler);
 
             DirectoryManager.getInstance().addFileSystemEventListener(new FileSystemEventListener() {

@@ -47,6 +47,24 @@ public class ProjectManager implements EventSubscriber, BrainflowProjectListener
         return activeProject;
     }
 
+    public IImageDisplayModel addToActiveProject(ImageLayer layer) {
+
+        boolean registered = DataSourceManager.getInstance().isRegistered(layer.getDataSource());
+
+        if (!registered) {
+            DataSourceManager.getInstance().register(layer.getDataSource());
+        }
+
+        //todo give sensible name
+        IImageDisplayModel displayModel = new ImageDisplayModel("model #" + (activeProject.size() + 1));
+        displayModel.addLayer(layer);
+        activeProject.addModel(displayModel);
+
+
+        return displayModel;
+
+    }
+
 
     public IImageDisplayModel addToActiveProject(IImageDataSource limg) {
 
@@ -63,7 +81,7 @@ public class ProjectManager implements EventSubscriber, BrainflowProjectListener
 
         ImageLayerProperties params = new ImageLayerProperties(
                 new Range(limg.getData().minValue(),
-                        limg.getData().maxValue()));
+                          limg.getData().maxValue()));
 
         params.colorMap.set(new LinearColorMap2(limg.getData().minValue(),
                 limg.getData().maxValue(),

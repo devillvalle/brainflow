@@ -1,6 +1,6 @@
 package com.brainflow.application.presentation;
 
-import com.brainflow.application.toplevel.BrainCanvasManager;
+import com.brainflow.application.toplevel.DisplayManager;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.IBrainCanvas;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -36,7 +36,7 @@ public class LinkedViewsPresenter extends BrainCanvasPresenter {
 
     public LinkedViewsPresenter() {
         // temporary
-        canvas = BrainCanvasManager.getInstance().getSelectedCanvas();
+        canvas = DisplayManager.getInstance().getSelectedCanvas();
         // temporary
         buildGUI();
         bind();
@@ -78,7 +78,7 @@ public class LinkedViewsPresenter extends BrainCanvasPresenter {
 
         Iterator<ImageView> iter = canvas.getImageCanvasModel().imageViewList.iterator();
 
-        Set<ImageView> viewSet = BrainCanvasManager.getInstance().getYokedViews(getSelectedView());
+        Set<ImageView> viewSet = DisplayManager.getInstance().getYokedViews(getSelectedView());
 
         int count = 0;
         while (iter.hasNext()) {
@@ -106,10 +106,10 @@ public class LinkedViewsPresenter extends BrainCanvasPresenter {
                 for (int i = f1; i <= f2; i++) {
 
                     if (model.isSelectedIndex(i)) {
-                        BrainCanvasManager.getInstance().yoke(view, (ImageView) model.getModel().getElementAt(i));
+                        DisplayManager.getInstance().yoke(view, (ImageView) model.getModel().getElementAt(i));
 
                     } else {
-                        BrainCanvasManager.getInstance().unyoke(view, (ImageView) model.getModel().getElementAt(i));
+                        DisplayManager.getInstance().unyoke(view, (ImageView) model.getModel().getElementAt(i));
 
                     }
                 }

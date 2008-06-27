@@ -1,5 +1,5 @@
 /*
- * BrainCanvasManager.java
+ * DisplayManager.java
  *
  * Created on April 30, 2003, 10:45 AM
  */
@@ -8,6 +8,7 @@ package com.brainflow.application.toplevel;
 
 import com.brainflow.application.services.ImageViewMousePointerEvent;
 import com.brainflow.application.services.ImageViewSelectionEvent;
+import com.brainflow.application.dnd.ImageViewTransferHandler;
 import com.brainflow.core.*;
 import com.brainflow.modes.ImageViewInteractor;
 import net.java.dev.properties.container.BeanContainer;
@@ -29,12 +30,12 @@ import java.util.logging.Logger;
  */
 
 
-public class BrainCanvasManager {
+public class DisplayManager {
 
     public static final String SELECTED_CANVAS_PROPERTY = "selectedCanvas";
 
 
-    private static final Logger log = Logger.getLogger(BrainCanvasManager.class.getName());
+    private static final Logger log = Logger.getLogger(DisplayManager.class.getName());
 
     private List<IBrainCanvas> canvasList = new ArrayList<IBrainCanvas>();
 
@@ -54,13 +55,13 @@ public class BrainCanvasManager {
 
     
 
-    protected BrainCanvasManager() {
+    protected DisplayManager() {
 
     }
 
 
-    public static BrainCanvasManager getInstance() {
-        return (BrainCanvasManager) SingletonRegistry.REGISTRY.getInstance("com.brainflow.application.toplevel.BrainCanvasManager");
+    public static DisplayManager getInstance() {
+        return (DisplayManager) SingletonRegistry.REGISTRY.getInstance("com.brainflow.application.toplevel.DisplayManager");
     }
 
     private void listenToCanvas(IBrainCanvas canvas) {
@@ -124,13 +125,18 @@ public class BrainCanvasManager {
         return selectedCanvas;
     }
 
+    public void displayView(ImageView view) {
+        view.setTransferHandler(new ImageViewTransferHandler());
+        getSelectedCanvas().addImageView(view);
+    }
+
     public void setSelectedCanvas(IBrainCanvas canvas) {
         if (canvasList.contains(canvas)) {
             IBrainCanvas oldCanvas = this.selectedCanvas;
             selectedCanvas = canvas;
             support.firePropertyChange(SELECTED_CANVAS_PROPERTY, oldCanvas, selectedCanvas);
         } else {
-            throw new RuntimeException("ImageCanvas " + canvas + " is not currently managed my BrainCanvasManager.");
+            throw new RuntimeException("ImageCanvas " + canvas + " is not currently managed my DisplayManager.");
         }
     }
 

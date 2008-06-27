@@ -76,7 +76,7 @@ public class ImageViewFactory {
     public static ImageView createYokedCoronalView(ImageView source) {
         ImageView view = new ImageView(source.getModel(), Brainflow.getInstance().getCommandContainer());
         view.setPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalCoronal()));
-        BrainCanvasManager.getInstance().yoke(source, view);
+        DisplayManager.getInstance().yoke(source, view);
         return view;
     }
 
@@ -84,7 +84,7 @@ public class ImageViewFactory {
     public static ImageView createYokedSagittalView(ImageView source) {
         ImageView view = new ImageView(source.getModel(), Brainflow.getInstance().getCommandContainer());
         view.setPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalSagittal()));
-        BrainCanvasManager.getInstance().yoke(source, view);
+        DisplayManager.getInstance().yoke(source, view);
         return view;
 
     }

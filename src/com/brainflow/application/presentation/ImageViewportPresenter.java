@@ -273,7 +273,7 @@ public class ImageViewportPresenter extends ImageViewPresenter {
         }
 
         /// what about unyoking old views?
-        //BrainCanvasManager.getInstance().yoke(view, boxView);
+        //DisplayManager.getInstance().yoke(view, boxView);
 
     }
 

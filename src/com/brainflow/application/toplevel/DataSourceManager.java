@@ -8,14 +8,13 @@ package com.brainflow.application.toplevel;
 
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.application.ImageProgressDialog;
-import com.brainflow.application.ImageViewTransferHandler;
 import com.brainflow.application.services.LoadableImageStatusEvent;
-import com.brainflow.core.IImageDisplayModel;
-import com.brainflow.core.ImageView;
 import org.bushe.swing.event.EventBus;
 
 import java.util.LinkedHashMap;
 import java.util.logging.Logger;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 /**
@@ -82,18 +81,13 @@ public class DataSourceManager {
         return imageMap.get(uid);
     }
 
-    public ImageProgressDialog createProgressDialog(final IImageDataSource dataSource) {
-        ImageProgressDialog id = new ImageProgressDialog(dataSource, BrainCanvasManager.getInstance().getSelectedCanvas().getComponent()) {
+    public ImageProgressDialog createProgressDialog(final IImageDataSource dataSource, final ActionListener listener) {
+        final ImageProgressDialog id = new ImageProgressDialog(dataSource, DisplayManager.getInstance().getSelectedCanvas().getComponent()) {
 
             protected void done() {
-                IImageDisplayModel displayModel = ProjectManager.getInstance().addToActiveProject(dataSource);
-
-                ImageView iview = ImageViewFactory.createAxialView(displayModel);
-                iview.setTransferHandler(new ImageViewTransferHandler());
-                BrainCanvasManager.getInstance().getSelectedCanvas().addImageView(iview);
+                listener.actionPerformed(new ActionEvent(dataSource, 0, "LOADED"));
                 getDialog().setVisible(false);
-
-
+               
             }
         };
 

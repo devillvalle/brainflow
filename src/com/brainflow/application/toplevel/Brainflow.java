@@ -1,6 +1,7 @@
 package com.brainflow.application.toplevel;
 
 import com.brainflow.application.*;
+import com.brainflow.application.dnd.BrainCanvasTransferHandler;
 import com.brainflow.application.actions.*;
 import com.brainflow.application.presentation.*;
 import com.brainflow.application.services.ImageViewMousePointerEvent;
@@ -55,6 +56,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.AWTEventListener;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -171,7 +174,7 @@ public class Brainflow {
             String osname = System.getProperty("os.name");
             if (osname.toUpperCase().contains("WINDOWS")) {
                 UIManager.setLookAndFeel(new WindowsLookAndFeel());
-                 //UIManager.setLookAndFeel(new com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel());
+                //UIManager.setLookAndFeel(new com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel());
 
                 //LookAndFeelFactory.NimbusInitializer init = new LookAndFeelFactory.NimbusInitializer();
                 //init.initialize(UIManager.getDefaults());
@@ -205,8 +208,8 @@ public class Brainflow {
         reportTime(startTime, "created brainframe");
         brainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        log.info("initializing BrainCanvasManager ...");
-        BrainCanvasManager.getInstance().createCanvas();
+        log.info("initializing DisplayManager ...");
+        DisplayManager.getInstance().createCanvas();
 
         log.info("initializing resources ...");
         FutureTask<Boolean> initResources = new FutureTask<Boolean>(new Callable<Boolean>() {
@@ -530,7 +533,7 @@ public class Brainflow {
         brainFrame.getDockingManager().getWorkspace().setLayout(new BorderLayout());
         brainFrame.getDockingManager().getWorkspace().add(documentPane, "Center");
 
-        JComponent canvas = BrainCanvasManager.getInstance().getSelectedCanvas().getComponent();
+        JComponent canvas = DisplayManager.getInstance().getSelectedCanvas().getComponent();
         canvas.setRequestFocusEnabled(true);
         canvas.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
@@ -584,7 +587,7 @@ public class Brainflow {
             BrainCanvasTransferHandler handler = new BrainCanvasTransferHandler();
             loadingDock.getJTree().setDragEnabled(true);
             //loadingDock.setTransferHandler(handler);
-            BrainCanvasManager.getInstance().getSelectedCanvas().getComponent().setTransferHandler(handler);
+            DisplayManager.getInstance().getSelectedCanvas().getComponent().setTransferHandler(handler);
 
             DirectoryManager.getInstance().addFileSystemEventListener(new FileSystemEventListener() {
                 public void eventOccurred(FileSystemEvent event) {
@@ -771,7 +774,7 @@ public class Brainflow {
             JComboBox choiceBox = new JComboBox(choices.toArray());
 
             //todo hackery alert
-            Anatomy anatomy = (Anatomy) dataSource.getImageInfo().getAnatomy();
+            Anatomy anatomy = dataSource.getImageInfo().getAnatomy();
             choiceBox.setSelectedItem(anatomy);
 
             FormLayout layout = new FormLayout("4dlu, l:p, p:g, 4dlu", "6dlu, p, 10dlu, p, 6dlu");
@@ -793,13 +796,25 @@ public class Brainflow {
 
     }
 
+    
+
     public void loadAndDisplay(final IImageDataSource dataSource) {
 
         if (dataSource != null) {
             final IImageDataSource checkedDataSource = specialHandling(dataSource);
             register(dataSource);
 
-            ImageProgressDialog id = DataSourceManager.getInstance().createProgressDialog(checkedDataSource);
+            ImageProgressDialog id = DataSourceManager.getInstance().createProgressDialog(checkedDataSource, new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    IImageDisplayModel displayModel = ProjectManager.getInstance().addToActiveProject(dataSource);
+                    ImageView iview = ImageViewFactory.createAxialView(displayModel);
+                    
+                    DisplayManager.getInstance().getSelectedCanvas().addImageView(iview);
+                    
+
+                }
+            });
+
 
             JDialog dialog = id.getDialog();
             dialog.setVisible(true);
@@ -810,6 +825,7 @@ public class Brainflow {
         }
 
     }
+
 
     public void loadAndDisplay(IImageDataSource limg, ImageView view) {
         if (limg != null) {
@@ -839,11 +855,11 @@ public class Brainflow {
 
 
     public ImageView getSelectedView() {
-        return BrainCanvasManager.getInstance().getSelectedCanvas().getSelectedView();
+        return DisplayManager.getInstance().getSelectedCanvas().getSelectedView();
     }
 
     public IBrainCanvas getSelectedCanvas() {
-        return BrainCanvasManager.getInstance().getSelectedCanvas();
+        return DisplayManager.getInstance().getSelectedCanvas();
 
     }
 

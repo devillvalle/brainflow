@@ -142,7 +142,7 @@ public class ImageProgressDialog extends SwingWorker<IImageData, Integer> implem
 
     public void setString(String _message) {
         message = _message;
-  
+
     }
 
     public void setIndeterminate(boolean b) {

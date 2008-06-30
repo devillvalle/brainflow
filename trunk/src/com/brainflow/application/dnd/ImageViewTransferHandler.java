@@ -48,6 +48,7 @@ public class ImageViewTransferHandler extends ImageDropHandler {
 
         if (c instanceof ImageView) {
             ImageView view = (ImageView) c;
+            
             Brainflow.getInstance().loadAndDisplay(dsource, view);
         }
 
@@ -70,7 +71,6 @@ public class ImageViewTransferHandler extends ImageDropHandler {
             importDataSource((IImageDataSource) obj, support);
         } else if (obj instanceof ImageLayer) {
             importImageLayer((ImageLayer) obj, support);
-
         }
     }
 }

@@ -47,13 +47,8 @@ public class BrainCanvasTransferHandler extends ImageDropHandler {
             Point p = support.getDropLocation().getDropPoint();
 
             IBrainCanvas canvas = (IBrainCanvas) c;
-            ImageView view = canvas.whichView(c, p);
 
-            if (view != null) {
-                Brainflow.getInstance().loadAndDisplay(dsource, view);
-            } else {
-                Brainflow.getInstance().loadAndDisplay(dsource);
-            }
+            Brainflow.getInstance().loadAndDisplay(dsource);
 
         }
 
@@ -64,9 +59,16 @@ public class BrainCanvasTransferHandler extends ImageDropHandler {
         if (c instanceof IBrainCanvas) {
             Point p = support.getDropLocation().getDropPoint();
 
+
             IBrainCanvas canvas = (IBrainCanvas) c;
-            IImageDisplayModel model = ProjectManager.getInstance().addToActiveProject(layer);
-            DisplayManager.getInstance().displayView(ImageViewFactory.createAxialView(model));
+            ImageView view = canvas.whichView(c, p);
+
+            if (view == null) {
+                IImageDisplayModel model = ProjectManager.getInstance().addToActiveProject(layer);
+                DisplayManager.getInstance().displayView(ImageViewFactory.createAxialView(model));
+            } else {
+                view.getModel().addLayer(layer);
+            }
 
 
         }

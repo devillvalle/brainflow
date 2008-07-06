@@ -76,7 +76,7 @@ public class ProjectManager implements EventSubscriber, BrainflowProjectListener
 
         //todo give sensible name
         IImageDisplayModel displayModel = new ImageDisplayModel("model #" + (activeProject.size() + 1));
-        activeProject.addModel(displayModel);
+
 
 
         ImageLayerProperties params = new ImageLayerProperties(
@@ -89,6 +89,8 @@ public class ProjectManager implements EventSubscriber, BrainflowProjectListener
 
         ImageLayer layer = new ImageLayer3D(limg, params);
         displayModel.addLayer(layer);
+
+        activeProject.addModel(displayModel);
 
 
         return displayModel;

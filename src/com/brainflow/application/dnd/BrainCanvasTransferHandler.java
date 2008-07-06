@@ -47,8 +47,14 @@ public class BrainCanvasTransferHandler extends ImageDropHandler {
             Point p = support.getDropLocation().getDropPoint();
 
             IBrainCanvas canvas = (IBrainCanvas) c;
+            ImageView view = canvas.whichView(c, p);
 
-            Brainflow.getInstance().loadAndDisplay(dsource);
+            if (view != null) {
+                Brainflow.getInstance().loadAndDisplay(dsource, view);
+            } else {
+
+                Brainflow.getInstance().loadAndDisplay(dsource);
+            }
 
         }
 

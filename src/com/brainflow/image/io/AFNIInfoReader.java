@@ -210,7 +210,7 @@ public class AFNIInfoReader implements ImageInfoReader {
 
         StringBuffer sb = new StringBuffer();
 
-        String line = null;
+        String line;
         do {
             line = reader.readLine();
             if (line != null) { sb.append(line); }

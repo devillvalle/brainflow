@@ -796,61 +796,60 @@ public class Brainflow {
 
     }
 
-    
 
     public void loadAndDisplay(final IImageDataSource dataSource) {
 
-        if (dataSource != null) {
-            final IImageDataSource checkedDataSource = specialHandling(dataSource);
-            register(dataSource);
 
-            ImageProgressDialog id = DataSourceManager.getInstance().createProgressDialog(checkedDataSource, new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    IImageDisplayModel displayModel = ProjectManager.getInstance().addToActiveProject(dataSource);
-                    ImageView iview = ImageViewFactory.createAxialView(displayModel);
-                    
-                    DisplayManager.getInstance().getSelectedCanvas().addImageView(iview);
-                    
+        final IImageDataSource checkedDataSource = specialHandling(dataSource);
+        register(checkedDataSource);
 
-                }
-            });
+        ImageProgressDialog id = DataSourceManager.getInstance().createProgressDialog(checkedDataSource, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                IImageDisplayModel displayModel = ProjectManager.getInstance().addToActiveProject(dataSource);
+                ImageView iview = ImageViewFactory.createAxialView(displayModel);
+
+                DisplayManager.getInstance().getSelectedCanvas().addImageView(iview);
 
 
-            JDialog dialog = id.getDialog();
-            dialog.setVisible(true);
-
-            id.execute();
+            }
+        });
 
 
-        }
+        JDialog dialog = id.getDialog();
+        dialog.setVisible(true);
+
+        id.execute();
+
 
     }
 
 
-    public void loadAndDisplay(IImageDataSource limg, ImageView view) {
-        if (limg != null) {
+    public void loadAndDisplay(final IImageDataSource dataSource, final ImageView view) {
+        final IImageDataSource checkedDataSource = specialHandling(dataSource);
+        register(checkedDataSource);
 
-            register(limg);
-            IImageData data = null;
-            data = limg.getData();
-            if (data != null) {
-
+        ImageProgressDialog id = DataSourceManager.getInstance().createProgressDialog(checkedDataSource, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
                 IImageDisplayModel dset = view.getModel();
-
+                IImageData data = dataSource.getData();
                 //todo data range should be a property of ImageLayerProperties, not IColorMap
                 ImageLayerProperties params = new ImageLayerProperties(new Range(data.minValue(), data.maxValue()));
 
                 //todo check data caches min and max values
                 params.colorMap.set(new LinearColorMap2(data.minValue(), data.maxValue(), ResourceManager.getInstance().getDefaultColorMap()));
-
-                ImageLayer layer = new ImageLayer3D(limg, params);
-
+                ImageLayer layer = new ImageLayer3D(dataSource, params);
                 dset.addLayer(layer);
-                // todo hack alert
-                //layer.getImageLayerProperties().visible.set(true);
+
 
             }
-        }
+        });
+
+        JDialog dialog = id.getDialog();
+        dialog.setVisible(true);
+
+        id.execute();
+
+
     }
 
 
@@ -976,19 +975,19 @@ public class Brainflow {
                 defaults.put("OptionPaneUI", "com.jidesoft.plaf.basic.BasicJideOptionPaneUI");
 
                 defaults.put("OptionPane.showBanner", Boolean.TRUE); // show banner or not. default is true
-                //defaults.put("OptionPane.bannerIcon", JideIconsFactory.getImageIcon(JideIconsFactory.JIDE50));
+//defaults.put("OptionPane.bannerIcon", JideIconsFactory.getImageIcon(JideIconsFactory.JIDE50));
                 defaults.put("OptionPane.bannerFontSize", 13);
                 defaults.put("OptionPane.bannerFontStyle", Font.BOLD);
                 defaults.put("OptionPane.bannerMaxCharsPerLine", 60);
                 defaults.put("OptionPane.bannerForeground", painter != null ? painter.getOptionPaneBannerForeground() : null);  // you should adjust this if banner background is not the default gradient paint
                 defaults.put("OptionPane.bannerBorder", null); // use default border
 
-                // set both bannerBackgroundDk and // set both bannerBackgroundLt to null if you don't want gradient
+// set both bannerBackgroundDk and // set both bannerBackgroundLt to null if you don't want gradient
                 defaults.put("OptionPane.bannerBackgroundDk", painter != null ? painter.getOptionPaneBannerDk() : null);
                 defaults.put("OptionPane.bannerBackgroundLt", painter != null ? painter.getOptionPaneBannerLt() : null);
                 defaults.put("OptionPane.bannerBackgroundDirection", Boolean.TRUE); // default is true
 
-                // optionally, you can set a Paint object for BannerPanel. If so, the three UIDefaults related to banner background above will be ignored.
+// optionally, you can set a Paint object for BannerPanel. If so, the three UIDefaults related to banner background above will be ignored.
                 defaults.put("OptionPane.bannerBackgroundPaint", null);
 
                 defaults.put("OptionPane.buttonAreaBorder", BorderFactory.createEmptyBorder(6, 6, 6, 6));
@@ -1008,7 +1007,7 @@ public class Brainflow {
                 StringWriter sw = new StringWriter();
                 PrintWriter out = new PrintWriter(sw);
                 e.printStackTrace(out);
-                // Add string to end of text area
+// Add string to end of text area
                 textArea.append(sw.toString());
                 textArea.setRows(10);
                 optionPane.setDetails(new JScrollPane(textArea));
@@ -1022,47 +1021,47 @@ public class Brainflow {
     }
 
     /*public static class NimbusInitializer implements LookAndFeelFactory.UIDefaultsInitializer {
-        public void initialize(UIDefaults defaults) {
-            Object marginBorder = new SwingLazyValue(
-                    "javax.swing.plaf.basic.BasicBorders$MarginBorder");
+      public void initialize(UIDefaults defaults) {
+          Object marginBorder = new SwingLazyValue(
+                  "javax.swing.plaf.basic.BasicBorders$MarginBorder");
 
-            Object[] uiDefaults = {
-                    "textHighlight", new ColorUIResource(197, 218, 233),
-                    "controlText", new ColorUIResource(Color.BLACK),
-                    "activeCaptionText", new ColorUIResource(Color.BLACK),
-                    "MenuItem.acceleratorFont", new FontUIResource("Arial", Font.PLAIN, 12),
-                    "ComboBox.background", new ColorUIResource(Color.WHITE),
-                    "ComboBox.disabledForeground", new ColorUIResource(Color.DARK_GRAY),
-                    "ComboBox.disabledBackground", new ColorUIResource(Color.GRAY),
+          Object[] uiDefaults = {
+                  "textHighlight", new ColorUIResource(197, 218, 233),
+                  "controlText", new ColorUIResource(Color.BLACK),
+                  "activeCaptionText", new ColorUIResource(Color.BLACK),
+                  "MenuItem.acceleratorFont", new FontUIResource("Arial", Font.PLAIN, 12),
+                  "ComboBox.background", new ColorUIResource(Color.WHITE),
+                  "ComboBox.disabledForeground", new ColorUIResource(Color.DARK_GRAY),
+                  "ComboBox.disabledBackground", new ColorUIResource(Color.GRAY),
 
-                    "activeCaption", new ColorUIResource(197, 218, 233),
-                    "inactiveCaption", new ColorUIResource(Color.DARK_GRAY),
-                    "control", new ColorUIResource(220, 223, 228),
-                    "controlLtHighlight", new ColorUIResource(Color.WHITE),
-                    "controlHighlight", new ColorUIResource(Color.LIGHT_GRAY),
-                    "controlShadow", new ColorUIResource(133, 137, 144),
-                    "controlDkShadow", new ColorUIResource(Color.BLACK),
-                    "MenuItem.background", new ColorUIResource(237, 239, 242),
-                    "SplitPane.background", new ColorUIResource(220, 223, 228),
-                    "Tree.hash", new ColorUIResource(Color.GRAY),
+                  "activeCaption", new ColorUIResource(197, 218, 233),
+                  "inactiveCaption", new ColorUIResource(Color.DARK_GRAY),
+                  "control", new ColorUIResource(220, 223, 228),
+                  "controlLtHighlight", new ColorUIResource(Color.WHITE),
+                  "controlHighlight", new ColorUIResource(Color.LIGHT_GRAY),
+                  "controlShadow", new ColorUIResource(133, 137, 144),
+                  "controlDkShadow", new ColorUIResource(Color.BLACK),
+                  "MenuItem.background", new ColorUIResource(237, 239, 242),
+                  "SplitPane.background", new ColorUIResource(220, 223, 228),
+                  "Tree.hash", new ColorUIResource(Color.GRAY),
 
-                    "TextField.foreground", new ColorUIResource(Color.BLACK),
-                    "TextField.inactiveForeground", new ColorUIResource(Color.BLACK),
-                    "TextField.selectionForeground", new ColorUIResource(Color.WHITE),
-                    "TextField.selectionBackground", new ColorUIResource(197, 218, 233),
-                    "Table.gridColor", new ColorUIResource(Color.BLACK),
-                    "TextField.background", new ColorUIResource(Color.WHITE),
+                  "TextField.foreground", new ColorUIResource(Color.BLACK),
+                  "TextField.inactiveForeground", new ColorUIResource(Color.BLACK),
+                  "TextField.selectionForeground", new ColorUIResource(Color.WHITE),
+                  "TextField.selectionBackground", new ColorUIResource(197, 218, 233),
+                  "Table.gridColor", new ColorUIResource(Color.BLACK),
+                  "TextField.background", new ColorUIResource(Color.WHITE),
 
-                    "Menu.border", marginBorder,
-                    "MenuItem.border", marginBorder,
-                    "CheckBoxMenuItem.border", marginBorder,
-                    "RadioButtonMenuItem.border", marginBorder,
-                    "Table.selectionBackground", new ColorUIResource(237, 239, 242),
-                    "Table.selectionForeground", new ColorUIResource(12, 239, 242)
-            };
-            LookAndFeelFactory.putDefaults(defaults, uiDefaults);
-        }
-    }  */
+                  "Menu.border", marginBorder,
+                  "MenuItem.border", marginBorder,
+                  "CheckBoxMenuItem.border", marginBorder,
+                  "RadioButtonMenuItem.border", marginBorder,
+                  "Table.selectionBackground", new ColorUIResource(237, 239, 242),
+                  "Table.selectionForeground", new ColorUIResource(12, 239, 242)
+          };
+          LookAndFeelFactory.putDefaults(defaults, uiDefaults);
+      }
+  }  */
 
 
 }

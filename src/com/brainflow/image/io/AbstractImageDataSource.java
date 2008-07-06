@@ -141,6 +141,7 @@ public abstract class AbstractImageDataSource implements IImageDataSource {
         if (!dataFile.getName().getPath().equals(that.getDataFile().getName().getPath())) return false;
         if (!header.getName().getPath().equals(that.getHeaderFile().getName().getPath())) return false;
         if (!getFileFormat().equals(that.getFileFormat())) return false;
+        if (!getImageInfo().getImageLabel().equals(that.getImageInfo().getImageLabel())) return false;
 
         return true;
     }
@@ -151,6 +152,7 @@ public abstract class AbstractImageDataSource implements IImageDataSource {
         result = header.getName().getPath().hashCode();
         result = 31 * result + dataFile.getName().getPath().hashCode();
         result = 17 * result + getFileFormat().hashCode();
+        result = 9 * result + getImageInfo().getImageLabel().hashCode();
         return result;
     }
 

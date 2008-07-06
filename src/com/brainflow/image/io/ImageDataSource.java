@@ -46,7 +46,7 @@ public class ImageDataSource extends AbstractImageDataSource {
 
 
     public boolean isLoaded() {
-        return dataRef == null;
+        return dataRef != null;
     }
 
     public IImageData load() throws BrainflowException {

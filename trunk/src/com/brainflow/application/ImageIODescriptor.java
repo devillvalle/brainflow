@@ -3,6 +3,7 @@ package com.brainflow.application;
 import com.brainflow.utils.FileObjectFilter;
 import com.brainflow.image.io.SoftImageDataSource;
 import com.brainflow.image.io.IImageDataSource;
+import com.brainflow.image.io.ImageDataSource;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.VFS;
@@ -70,7 +71,7 @@ public class ImageIODescriptor {
                     FileObject dobj = VFS.getManager().resolveFile(fobjs[i].getParent(), getDataName(fobjs[i]));
 
                     if (dobj != null && dobj.exists()) {
-                        limglist.add(new SoftImageDataSource(this, fobjs[i], dobj));
+                        limglist.add(new ImageDataSource(this, fobjs[i], dobj));
                     }
 
                 } catch (FileSystemException e) {
@@ -115,7 +116,7 @@ public class ImageIODescriptor {
             throw new IllegalArgumentException("data " + data.getName().getBaseName() + " does not have correct suffix for format : " + this.getFormatName());
         }
 
-        IImageDataSource limg = new SoftImageDataSource(this, header, data);
+        IImageDataSource limg = new ImageDataSource(this, header, data);
         return limg;
     }
 
@@ -136,7 +137,7 @@ public class ImageIODescriptor {
         }
 
 
-        IImageDataSource limg = new SoftImageDataSource(this, header, data);
+        IImageDataSource limg = new ImageDataSource(this, header, data);
         return limg;
     }
 

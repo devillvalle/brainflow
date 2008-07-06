@@ -143,11 +143,6 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
 
     public void addImageDisplayModelListener(ImageDisplayModelListener listener) {
-        //if (!listenerList.contains(listener)) {
-        //    listenerList.add(listener);
-        //} else {
-        //    log.warning("addImageDisplayModelListener: supplied instance has already been added to listener list");
-        //}
 
         eventListeners.add(ImageDisplayModelListener.class, listener);
     }
@@ -176,7 +171,9 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     public void addLayer(ImageLayer layer) {
         listenToLayer(layer);
+
         listModel.add(layer);
+
         if (listModel.size() == 1) {
             imageSpace = layer.getCoordinateSpace();
             listSelection.set(0);

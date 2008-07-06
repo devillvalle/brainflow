@@ -76,13 +76,13 @@ public class ProjectTreeView extends ImageViewPresenter implements MouseListener
 
 
                     if (opath.length > 0) {
-                        Object obj = opath[opath.length-1];
+                        Object obj = opath[opath.length - 1];
                         DefaultMutableTreeNode node = (DefaultMutableTreeNode) obj;
                         if (node.isLeaf()) {
                             Object layer = node.getUserObject();
                             if (layer instanceof ImageLayer) {
-                                ImageLayer ilayer = (ImageLayer)layer;
-                                ret =  DnDUtils.createTransferable(ilayer);
+                                ImageLayer ilayer = (ImageLayer) layer;
+                                ret = DnDUtils.createTransferable(ilayer);
                             }
 
                         }
@@ -201,15 +201,15 @@ public class ProjectTreeView extends ImageViewPresenter implements MouseListener
         }
 
         public void intervalAdded(BrainflowProjectEvent event) {
-            //To change body of implemented methods use File | Settings | File Templates.
+            System.out.println("interval added!");
         }
 
         public void contentsChanged(BrainflowProjectEvent event) {
-            //To change body of implemented methods use File | Settings | File Templates.
+            System.out.println("contents changed!");
         }
 
         public void intervalRemoved(BrainflowProjectEvent event) {
-            //To change body of implemented methods use File | Settings | File Templates.
+            System.out.println("interval removed!");
         }
 
 
@@ -220,42 +220,43 @@ public class ProjectTreeView extends ImageViewPresenter implements MouseListener
 
     }
 
+    class ImageLayerNode extends DefaultMutableTreeNode {
+
+        ImageLayer layer;
+
+        public ImageLayerNode(ImageLayer layer) {
+            super(layer);
+            this.layer = layer;
+
+        }
+
+        public ImageLayer getUserObject() {
+            return layer;
+        }
+    }
+
     class ImageDisplayModelNode extends DefaultMutableTreeNode {
 
         private IImageDisplayModel model;
+
+        private ImageModelListener listener = new ImageModelListener(this);
 
         public ImageDisplayModelNode(IImageDisplayModel _model) {
             super(_model);
             model = _model;
 
-            model.addImageDisplayModelListener(new ImageDisplayModelListener() {
+            model.addImageDisplayModelListener(listener);
 
-                public void intervalAdded(ListDataEvent e) {
-                    int idx = e.getIndex0();
-                    AbstractLayer layer = model.getLayer(idx);
-                    ImageDisplayModelNode.this.add(new DefaultMutableTreeNode(layer, false));
-                    treeModel.nodesWereInserted(ImageDisplayModelNode.this, new int[]{ImageDisplayModelNode.this.getChildCount() - 1});
-                }
-
-                public void intervalRemoved(ListDataEvent e) {
-                    int idx = e.getIndex0();
-                    ImageDisplayModelNode.this.remove(idx);
-
-                }
+            for (int i = 0; i < model.getNumLayers(); i++) {
+                ImageLayer layer = model.getLayer(i);
+                add(new ImageLayerNode(layer));
+                treeModel.nodesWereInserted(ImageDisplayModelNode.this, new int[]{ImageDisplayModelNode.this.getChildCount() - 1});
 
 
-                public void contentsChanged(ListDataEvent e) {
-                    // not sure what to do
-                }
-
-
-                public void imageSpaceChanged(IImageDisplayModel model, IImageSpace space) {
-                    //To change body of implemented methods use File | Settings | File Templates.
-                }
-            });
+            }
         }
 
-        public Object getUserObject() {
+        public IImageDisplayModel getUserObject() {
             return model;
         }
 
@@ -263,10 +264,44 @@ public class ProjectTreeView extends ImageViewPresenter implements MouseListener
             return model;
         }
 
+
         public boolean isLeaf() {
             return false;
         }
 
+
+    }
+
+    class ImageModelListener implements ImageDisplayModelListener {
+
+        private ImageDisplayModelNode node;
+
+        ImageModelListener(ImageDisplayModelNode node) {
+            this.node = node;
+        }
+
+        public void intervalAdded(ListDataEvent e) {
+            int idx = e.getIndex0();
+            ImageLayer layer = node.getModel().getLayer(idx);
+            node.add(new ImageLayerNode(layer));
+            treeModel.nodesWereInserted(node, new int[]{node.getChildCount() - 1});
+        }
+
+        public void intervalRemoved(ListDataEvent e) {
+            int idx = e.getIndex0();
+            node.remove(idx);
+
+        }
+
+
+        public void contentsChanged(ListDataEvent e) {
+            System.out.println("contents changed!");
+        }
+
+
+        public void imageSpaceChanged(IImageDisplayModel model, IImageSpace space) {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
 
     }
 

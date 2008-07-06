@@ -163,9 +163,14 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
                     ImageLeafNode node = (ImageLeafNode) value;
                     IImageDataSource limg = node.getUserObject();
                     label.setIcon(brickIcon);
-                    if (limg.isLoaded() && !selected) {
-                        label.setForeground(Color.GREEN.darker().darker());
 
+                    if (limg.isLoaded()) {
+                        System.out.println("loaded");
+                    }
+                    if (limg.isLoaded() && !selected) {
+                        System.out.println(limg.getStem() + " is loaded!");
+
+                        label.setForeground(Color.GREEN.darker().darker());
                     }
 
                 }

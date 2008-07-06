@@ -1,18 +1,26 @@
-** Fix: Loading and Unloading of Images is broken.
-        -- fixed, but not necessarily robust or well tested
+
+
+
+
+
+
+
+
+
+
+
+[Fix: Images loaded from within AFNI bricks are incorrectly colored ImageFileExplorer tree labels.
+[Fix: Images dragged from ImageFileExplorer are not properly overlaid on an ImageView
+Fix: ProjectTreeView does not always show all layers within model.
+
 ** Fix: Thresholding and scaling of Discrete Color Map.
         -- the shrinking and expanding of the discrete color bar still needs work.
 Fix: Toolbar and Popup menu items need to be properly bound to Bean Properties.
-Fix: Migrate Actions to Command framework.
-Fix: Open Image doesn't do anything.
+
 Fix: Color Bar not updated when modifying color map in RGB editor.
 FIX: RGB Editor should work with Discrete Color Maps
         -- works but converts to linear color map.
-Fix: ImageFileBrowser renderer must be fixed.
+
 Fix: Command accelerators need to be fixed.
 Fix: Annotations edited according to plot or "apply all"
 Fix: Progress Dialog is messed up.
-Fix: ImageCanvas Views are added to bottom layer and are sometimes occluded.
-Fix: Within slice crosshair change does not cause repaint
-Fix: Color Bar not updated with high/low range changed.
-    -- fixed

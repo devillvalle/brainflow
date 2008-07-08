@@ -77,8 +77,9 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
     private void bind() {
 
         visibilitySelection = new VisibilitySelection(getSelectedView());
-        SwingBind.get().bindSelectionIndex(getSelectedView().getModel().getListSelection(), layerSelector);
         SwingBind.get().bindContent(getSelectedView().getModel().getListModel(), layerSelector);
+        SwingBind.get().bindSelectionIndex(getSelectedView().getModel().getListSelection(), layerSelector);
+
 
         initVisibilityModel();
 
@@ -86,12 +87,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
     private void initVisibilityModel() {
 
-        CheckBoxListSelectionModel model = new CheckBoxListSelectionModel() {
-
-            public void insertIndexInterval(int i, int i1, boolean b) {
-                //do nothing    
-            }
-        };
+        CheckBoxListSelectionModel model = new CheckBoxListSelectionModel();
 
 
         layerSelector.setCheckBoxListSelectionModel(model);
@@ -103,10 +99,12 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
             public void valueChanged(ListSelectionEvent e) {
                 int f1 = e.getFirstIndex();
                 int f2 = e.getLastIndex();
+
                 CheckBoxListSelectionModel model = (CheckBoxListSelectionModel) e.getSource();
                 ImageView view = getSelectedView();
 
-                System.out.println("layer selection value changed !");
+                f2 = Math.min(view.getModel().getNumLayers()-1, f2);
+
                 for (int i = f1; i <= f2; i++) {
                     AbstractLayer layer = view.getModel().getLayer(i);
                     boolean vis = layer.getImageLayerProperties().visible.get();
@@ -123,15 +121,12 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
         ImageView view = getSelectedView();
         if (view != null) {
-            // todo make model iterable
-            int n = view.getModel().getNumLayers();
-            for (int i = 0; i < n; i++) {
-                AbstractLayer layer = view.getModel().getLayer(i);
-                if (layer.isVisible()) {
-                    layerSelector.addCheckBoxListSelectedIndex(i);
-                } else {
-                    layerSelector.removeCheckBoxListSelectedIndex(i);
-                }
+            int index = 0;
+            for (ImageLayer layer : view.getModel()) {
+                if (layer.isVisible()) layerSelector.addCheckBoxListSelectedIndex(index);
+                else layerSelector.removeCheckBoxListSelectedIndex(index);
+                index++;
+
             }
         }
 

@@ -22,7 +22,7 @@ import net.java.dev.properties.IndexedProperty;
  * Time: 10:11:55 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface IImageDisplayModel {
+public interface IImageDisplayModel extends Iterable<ImageLayer> {
 
 
     public Property<Integer> getListSelection();

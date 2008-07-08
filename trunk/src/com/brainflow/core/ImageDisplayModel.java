@@ -30,6 +30,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
 import java.util.logging.Logger;
 
 /**
@@ -110,6 +111,32 @@ public class ImageDisplayModel implements IImageDisplayModel {
         return listSelection;
     }
 
+    public Iterator<ImageLayer> iterator() {
+        return new Iterator<ImageLayer>() {
+
+            int i=0;
+            
+            public boolean hasNext() {
+                System.out.println("current index " + i);
+                System.out.println("list model size : " + listModel.size());
+                if (i < listModel.size() - 1) return true;
+
+                return false;
+            }
+
+            public ImageLayer next() {
+                System.out.println("next : ");
+                return listModel.get(i++);
+            }
+
+            public void remove() {
+                listModel.remove(i);
+            }
+        };
+
+
+    }
+
     public ImageLayerProperties getLayerParameters(int layer) {
         if (layer < 0 || layer > listModel.size()) {
             throw new IllegalArgumentException("illegal layer index");
@@ -171,8 +198,10 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     public void addLayer(ImageLayer layer) {
         listenToLayer(layer);
-
+        System.out.println("adding layer");
+        System.out.println("list size before  " + listModel.size());
         listModel.add(layer);
+        System.out.println("list size after  " + listModel.size());
 
         if (listModel.size() == 1) {
             imageSpace = layer.getCoordinateSpace();
@@ -457,7 +486,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     public ImageLayer getLayer(int layer) {
         if (layer < 0 || layer >= listModel.size()) {
-            throw new IllegalArgumentException("illegal layer index");
+            throw new IllegalArgumentException("illegal layer index : " + layer);
         }
         return listModel.get(layer);
     }

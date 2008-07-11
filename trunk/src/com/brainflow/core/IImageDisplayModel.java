@@ -28,6 +28,8 @@ public interface IImageDisplayModel extends Iterable<ImageLayer> {
     public Property<Integer> getListSelection();
 
     public IndexedProperty<ImageLayer> getListModel();
+
+    public IndexedProperty<Integer> getVisibleSelection();
     
     public String getName();
 

@@ -75,7 +75,15 @@ public class ImageLayerProperties implements Serializable {
         }
     };
 
-    public final Property<Boolean> visible = ObservableProperty.create(true);
+    public final Property<Boolean> visible = new ObservableProperty<Boolean>(true) {
+        public void set(Boolean aBoolean) {
+            if (!aBoolean) {
+              System.out.println("some schmuck is setting me false and this is bullshit");    
+            }
+            super.set(aBoolean);
+
+        }
+    };
 
     public final Property<Double> opacity = ObservableProperty.create(1.0);
 

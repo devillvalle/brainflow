@@ -9,16 +9,14 @@ import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.utils.WeakEventListenerList;
-import com.brainflow.core.layer.ImageLayer;
-import com.brainflow.core.layer.ImageLayerEvent;
-import com.brainflow.core.layer.ImageLayerListener;
-import com.brainflow.core.layer.ImageLayerProperties;
+import com.brainflow.core.layer.*;
 import net.java.dev.properties.BaseProperty;
 import net.java.dev.properties.Property;
 import net.java.dev.properties.IndexedProperty;
 import net.java.dev.properties.container.BeanContainer;
 import net.java.dev.properties.container.ObservableProperty;
 import net.java.dev.properties.container.ObservableIndexed;
+import net.java.dev.properties.container.ObservableWrapper;
 import net.java.dev.properties.events.PropertyListener;
 import net.java.dev.properties.events.IndexedPropertyListener;
 
@@ -28,9 +26,7 @@ import javax.swing.event.EventListenerList;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Iterator;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -44,10 +40,78 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     private final static Logger log = Logger.getLogger(ImageDisplayModel.class.getName());
 
+    private static IImageSpace EMPTY_SPACE = new ImageSpace3D(new ImageAxis(0, 100, Anatomy3D.getCanonicalAxial().XAXIS, 100),
+            new ImageAxis(0, 100, Anatomy3D.getCanonicalAxial().YAXIS, 100),
+            new ImageAxis(0, 100, Anatomy3D.getCanonicalAxial().ZAXIS, 100));
+
+    private IImageSpace imageSpace = EMPTY_SPACE;
+
+
     public static final String IMAGE_SPACE_PROPERTY = "imageSpace";
 
 
     public final IndexedProperty<ImageLayer> listModel = ObservableIndexed.create();
+
+    public final IndexedProperty<Integer> visibleSelection = new ObservableIndexed<Integer>() {
+
+        public void remove(Integer i) {
+            ImageLayer layer = getLayer(i);
+            boolean vis = layer.getImageLayerProperties().visible.get();
+            if (vis) {
+                layer.getImageLayerProperties().visible.set(false);
+            }
+
+            if (get().contains(i)) {
+                List<Integer> oldlist = get();
+                List<Integer> newlist = new ArrayList<Integer>();
+                newlist.addAll(oldlist);
+
+                newlist.remove(i);
+                super.set(newlist);
+            }
+
+
+        }
+
+        public void add(Integer i) {
+            ImageLayer layer = getLayer(i);
+            boolean vis = layer.getImageLayerProperties().visible.get();
+            if (!vis) {
+                layer.getImageLayerProperties().visible.set(true);
+            }
+
+            if (!get().contains(i)) {
+                List<Integer> oldlist = get();
+                List<Integer> newlist = new ArrayList<Integer>();
+                newlist.addAll(oldlist);
+
+                newlist.add(i);
+                super.set(newlist);
+            }
+
+        }
+
+        public void set(List<Integer> t) {
+            System.out.println("new indices " + Arrays.toString(t.toArray()));
+            for (int i = 0; i < getNumLayers(); i++) {
+                ImageLayer layer = getLayer(i);
+                if (t.contains(i)) {
+                    layer.getImageLayerProperties().visible.set(true);
+                } else {
+                    System.out.println("setting layer " + i + " to false");
+                    layer.getImageLayerProperties().visible.set(false);
+                }
+            }
+
+            super.set(t);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+
+        public void set(int index, Integer integer) {
+
+            super.set(index, integer);    //To change body of overridden methods use File | Settings | File Templates.
+        }
+    };
+
 
     public final Property<Integer> listSelection = new ObservableProperty<Integer>(-1) {
         public void set(Integer integer) {
@@ -72,16 +136,10 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     private ForwardingListDataListener forwarder = new ForwardingListDataListener();
 
-    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
-
-
-    private static IImageSpace EMPTY_SPACE = new ImageSpace3D(new ImageAxis(0, 100, Anatomy3D.getCanonicalAxial().XAXIS, 100),
-            new ImageAxis(0, 100, Anatomy3D.getCanonicalAxial().YAXIS, 100),
-            new ImageAxis(0, 100, Anatomy3D.getCanonicalAxial().ZAXIS, 100));
-
-    private IImageSpace imageSpace = EMPTY_SPACE;
-
+   
     private String name;
+
+    private ImageLayerListener visListener;
 
     public ImageDisplayModel(String _name) {
         BeanContainer.bind(this);
@@ -101,6 +159,26 @@ public class ImageDisplayModel implements IImageDisplayModel {
             }
         });
 
+        visListener = new ImageLayerListenerImpl() {
+            public void visibilityChanged(ImageLayerEvent event) {
+                ImageLayer layer = event.getAffectedLayer();
+                int index = ImageDisplayModel.this.indexOf(layer);
+                if (layer.isVisible()) {
+                    visibleSelection.add(index);
+                } else {
+                    visibleSelection.remove(index);
+                }
+
+            }
+        };
+
+        addImageLayerListener(visListener);
+
+
+    }
+
+    public IndexedProperty<Integer> getVisibleSelection() {
+        return visibleSelection;
     }
 
     public IndexedProperty<ImageLayer> getListModel() {
@@ -114,18 +192,15 @@ public class ImageDisplayModel implements IImageDisplayModel {
     public Iterator<ImageLayer> iterator() {
         return new Iterator<ImageLayer>() {
 
-            int i=0;
-            
+            int i = 0;
+
             public boolean hasNext() {
-                System.out.println("current index " + i);
-                System.out.println("list model size : " + listModel.size());
-                if (i < listModel.size() - 1) return true;
+                if (i < listModel.size()) return true;
 
                 return false;
             }
 
             public ImageLayer next() {
-                System.out.println("next : ");
                 return listModel.get(i++);
             }
 
@@ -164,6 +239,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         return listModel.get(listSelection.get());
     }
 
+
     public String getName() {
         return name;
     }
@@ -198,16 +274,19 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     public void addLayer(ImageLayer layer) {
         listenToLayer(layer);
-        System.out.println("adding layer");
-        System.out.println("list size before  " + listModel.size());
+
+        boolean vis = layer.isVisible();
+
         listModel.add(layer);
-        System.out.println("list size after  " + listModel.size());
 
         if (listModel.size() == 1) {
             imageSpace = layer.getCoordinateSpace();
             listSelection.set(0);
         }
 
+        if (vis) {
+            visibleSelection.add(indexOf(layer));
+        }
 
         //computeImageSpace();
 
@@ -255,6 +334,10 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
         BeanContainer.get().addListener(layer.getImageLayerProperties().visible, new PropertyListener() {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+                //ImageLayer layer = (ImageLayer)prop.getParent();
+                //int i = ImageDisplayModel.this.indexOf(layer);
+                //visibilityList.set(i, true);
+
                 ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
                 for (ImageLayerListener listener : listeners) {
                     listener.visibilityChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
@@ -360,24 +443,24 @@ public class ImageDisplayModel implements IImageDisplayModel {
     private void computeImageSpace() {
         /*IImageSpace uspace = null;
 
-        if (!(listModel.size() == 0)) {
-            for (int i = 0; i < listModel.size(); i++) {
-                ICoordinateSpace cspace = getLayer(i).getCoordinateSpace();
-                if (uspace == null) {
-                    uspace = new ImageSpace3D(cspace);
-                } else {
-                    uspace = (IImageSpace) uspace.union(cspace);
-                }
-            }
-        } else {
-            uspace = EMPTY_SPACE;
-        }
+     if (!(listModel.size() == 0)) {
+         for (int i = 0; i < listModel.size(); i++) {
+             ICoordinateSpace cspace = getLayer(i).getCoordinateSpace();
+             if (uspace == null) {
+                 uspace = new ImageSpace3D(cspace);
+             } else {
+                 uspace = (IImageSpace) uspace.union(cspace);
+             }
+         }
+     } else {
+         uspace = EMPTY_SPACE;
+     }
 
-        if (!uspace.equals(imageSpace)) {
-            ICoordinateSpace old = imageSpace;
-            imageSpace = uspace;
-            changeSupport.firePropertyChange(ImageDisplayModel.IMAGE_SPACE_PROPERTY, old, imageSpace);
-        }   */
+     if (!uspace.equals(imageSpace)) {
+         ICoordinateSpace old = imageSpace;
+         imageSpace = uspace;
+         changeSupport.firePropertyChange(ImageDisplayModel.IMAGE_SPACE_PROPERTY, old, imageSpace);
+     }   */
 
     }
 

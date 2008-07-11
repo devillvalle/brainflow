@@ -51,18 +51,15 @@ public abstract class ImageDropHandler extends TransferHandler {
     public boolean canImport(TransferSupport support) {
 
         DataFlavor[] flavors = support.getDataFlavors();
-        System.out.println("can import " + support);
-
+      
         for (int i = 0; i < flavors.length; i++) {
 
             Class c = flavors[i].getRepresentationClass();
             for (DataFlavor f : dropFlavors) {
                 if (f.getRepresentationClass().isAssignableFrom(c)) {
-                    System.out.println("yes we can! " + f.getRepresentationClass().getCanonicalName() + " --> " + c.getCanonicalName());
                     return true;
                 } else {
-                    System.out.println("no we can't! " + f.getRepresentationClass().getCanonicalName() + " --> " + c.getCanonicalName());
-
+                    
                 }
             }
 

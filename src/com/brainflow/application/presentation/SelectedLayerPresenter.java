@@ -5,6 +5,8 @@ import com.brainflow.core.layer.AbstractLayer;
 import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.core.layer.ImageLayerEvent;
 import com.brainflow.core.layer.ImageLayerListenerImpl;
+import com.brainflow.application.presentation.binding.VisibilityWrapper;
+import com.brainflow.application.presentation.binding.JideBind;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -37,6 +39,8 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
     private VisibilitySelection visibilitySelection;
 
+    private VisibilityWrapper visibilityWrapper;
+
     private JPanel form;
 
     private JScrollPane formPane;
@@ -60,7 +64,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
 
         layerSelector = new CheckBoxList();
-        initVisibilityModel();
+        //initVisibilityModel();
 
 
         formPane = new JScrollPane(layerSelector);
@@ -76,22 +80,31 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
     private void bind() {
 
-        visibilitySelection = new VisibilitySelection(getSelectedView());
+        //visibilitySelection = new VisibilitySelection(getSelectedView());
+        //visibilityWrapper = new VisibilityWrapper(getSelectedView().getModel());
+
         SwingBind.get().bindContent(getSelectedView().getModel().getListModel(), layerSelector);
         SwingBind.get().bindSelectionIndex(getSelectedView().getModel().getListSelection(), layerSelector);
+        JideBind.get().bindCheckedIndices(getSelectedView().getModel().getVisibleSelection(), layerSelector);
 
-
-        initVisibilityModel();
+        //initVisibilityModel();
 
     }
 
     private void initVisibilityModel() {
 
-        CheckBoxListSelectionModel model = new CheckBoxListSelectionModel();
+        CheckBoxListSelectionModel model = new CheckBoxListSelectionModel() {
+            public void insertIndexInterval(int i, int i1, boolean b) {
+
+                super.insertIndexInterval(i, i1, false);    //To change body of overridden methods use File | Settings | File Templates.
+            }
+
+            
+        };
 
 
         layerSelector.setCheckBoxListSelectionModel(model);
-
+        
        
         model.addListSelectionListener(new ListSelectionListener() {
 
@@ -142,11 +155,6 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
     public void viewSelected(ImageView view) {
 
-        if (visibilitySelection == null) {
-            visibilitySelection = new VisibilitySelection(view);
-        } else {
-            visibilitySelection.setImageView(view);
-        }
 
         bind();
         layerSelector.setEnabled(true);
@@ -158,8 +166,8 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
     }
 
-    public void intervalAdded(ListDataEvent e) {
-        //System.out.println("layer selection interval added !");
+    /*public void intervalAdded(ListDataEvent e) {
+        System.out.println("layer selection interval added !");
         int index = e.getIndex0();
         ImageView view = getSelectedView();
         AbstractLayer layer = view.getModel().getLayer(index);
@@ -170,7 +178,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
             layerSelector.getCheckBoxListSelectionModel().removeSelectionInterval(index, index);
 
         }
-    }
+    } */
 
     public JComponent getComponent() {
         return form;

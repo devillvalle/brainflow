@@ -88,8 +88,7 @@ public class Brainflow {
     }
 
 
-    private final BrainflowContext applicationContext = new BrainflowContext();
-
+    
     private final static Logger log = Logger.getLogger(Brainflow.class.getCanonicalName());
 
     private BrainFrame brainFrame = null;
@@ -173,6 +172,7 @@ public class Brainflow {
 
             String osname = System.getProperty("os.name");
             if (osname.toUpperCase().contains("WINDOWS")) {
+                
                 UIManager.setLookAndFeel(new WindowsLookAndFeel());
                 //UIManager.setLookAndFeel(new com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel());
 
@@ -537,8 +537,7 @@ public class Brainflow {
         canvas.setRequestFocusEnabled(true);
         canvas.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        applicationContext.putValue(ActionContext.SELECTED_CANVAS, canvas);
-
+      
 
         documentPane.setTabPlacement(DocumentPane.BOTTOM);
         documentPane.openDocument(new DocumentComponent(new JScrollPane(canvas), "Canvas-1"));

@@ -103,7 +103,7 @@ public class ProjectTreeView extends ImageViewPresenter implements MouseListener
 
 
     public void viewSelected(ImageView view) {
-        TreePath path = new TreePath(view.getModel());
+        //TreePath path = new TreePath(view.getModel());
         //tree.setS
 
     }
@@ -201,15 +201,12 @@ public class ProjectTreeView extends ImageViewPresenter implements MouseListener
         }
 
         public void intervalAdded(BrainflowProjectEvent event) {
-            System.out.println("interval added!");
         }
 
         public void contentsChanged(BrainflowProjectEvent event) {
-            System.out.println("contents changed!");
         }
 
         public void intervalRemoved(BrainflowProjectEvent event) {
-            System.out.println("interval removed!");
         }
 
 

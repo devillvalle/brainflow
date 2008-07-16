@@ -26,9 +26,9 @@ public class ColorAdjustmentControl extends AbstractPresenter {
 
     private SelectedLayerPresenter selectedLayerPresenter;
 
-    private ColorRangePresenter colorRangePresenter;
+    private ColorRangePresenter2 colorRangePresenter;
 
-    private ThresholdRangePresenter thresholdRangePresenter;
+    private ThresholdRangePresenter2 thresholdRangePresenter;
 
     private RenderingParamsPresenter renderParamsPresenter;
 
@@ -77,13 +77,15 @@ public class ColorAdjustmentControl extends AbstractPresenter {
         selectedLayerPresenter = new SelectedLayerPresenter();
         addCollapsiblePane(selectedLayerPresenter, "Selection", false);
 
+        colorRangePresenter = new ColorRangePresenter2();
+        addCollapsiblePane(colorRangePresenter, "Color Range", false);
+
+
         colorBarPresenter = new ColorBarPresenter();
         addCollapsiblePane(colorBarPresenter, "Color Map", false);
 
-        colorRangePresenter = new ColorRangePresenter();
-        addCollapsiblePane(colorRangePresenter, "Color Range", false);
 
-        thresholdRangePresenter = new ThresholdRangePresenter();
+        thresholdRangePresenter = new ThresholdRangePresenter2();
         addCollapsiblePane(thresholdRangePresenter, "Thresholds", false);
 
         renderParamsPresenter = new RenderingParamsPresenter();

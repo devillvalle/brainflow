@@ -26,17 +26,10 @@ import com.jidesoft.swing.CheckBoxListSelectionModel;
  */
 public class CheckBoxListAdapter extends SwingAdapter<List<Integer>, CheckBoxList> implements ListSelectionListener {
 
-    //CheckBoxListSelectionModel model = new CheckBoxListSelectionModel() {
-    //    public void insertIndexInterval(int i, int i1, boolean b) {
-    //
-    //        super.insertIndexInterval(i, i1, false);    //To change body of overridden methods use File | Settings | File Templates.
-    //    }
-    //};
 
 
     protected void bindListener(BaseProperty<List<Integer>> objectBaseProperty, CheckBoxList component) {
 
-        //component.setCheckBoxListSelectionModel(model);
         component.getCheckBoxListSelectionModel().addListSelectionListener(this);
     }
 
@@ -53,29 +46,12 @@ public class CheckBoxListAdapter extends SwingAdapter<List<Integer>, CheckBoxLis
     }
 
     protected void updateUI(List<Integer> newValue) {
-        //for (Integer i : newValue) {
-        //    model.addSelectionInterval(i,i);
-        //}
-        getComponent().setCheckBoxListSelectedIndices((int[]) Utils.asArray((IndexedProperty<Integer>) getProperty(), Integer.TYPE));
+         getComponent().setCheckBoxListSelectedIndices((int[]) Utils.asArray((IndexedProperty<Integer>) getProperty(), Integer.TYPE));
 
     }
 
     public void valueChanged(ListSelectionEvent e) {
-        //System.out.println("checkboxlist : value changed");
-        System.out.println("first index : " + e.getFirstIndex());
-        System.out.println("last index : " + e.getLastIndex());
-        System.out.println(e.toString());
-        System.out.println(this);
-
-        //List<Integer> indices = (List<Integer>) Utils.addToCollection(getComponent().getCheckBoxListSelectedIndices(),
-        //        new ArrayList<Integer>());
-
-        System.out.println("indices : " + Arrays.toString(getComponent().getCheckBoxListSelectedIndices()));
-        try {
-            System.out.println("values : " + Arrays.toString(getComponent().getCheckBoxListSelectedValues()));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+       
 
         callWhenUIChanged((List<Integer>) Utils.addToCollection(getComponent().getCheckBoxListSelectedIndices(),
                 new ArrayList<Integer>()));

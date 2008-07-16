@@ -51,10 +51,10 @@ public class IncreaseContrastCommand extends BrainFlowCommand {
         newHighClip = Math.min(newHighClip, layer.getImageLayerProperties().getColorMap().getMaximumValue());
         newLowClip = Math.max(newLowClip, layer.getImageLayerProperties().getColorMap().getMinimumValue());
 
-
-
-        clip.setClipRange(newLowClip, newHighClip);
-
+        double max = clip.maxValue.get();
+        double min = clip.minValue.get();
+        props.clipRange.set(new ClipRange(min, max, newLowClip, newHighClip));
+        
 
     }
 }

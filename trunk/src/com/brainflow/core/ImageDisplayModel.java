@@ -54,6 +54,22 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     public final IndexedProperty<Integer> visibleSelection = new ObservableIndexed<Integer>() {
 
+
+
+        private boolean isSynced() {
+            for (int i=0; i<getNumLayers(); i++) {
+                ImageLayer layer = getLayer(i);
+                if (layer.isVisible() && !get().contains(i)) {
+                    return false;
+                }
+                if (!layer.isVisible() && get().contains(i)) {
+                    return false;
+                }
+            }
+
+            return true;
+
+        }
         public void remove(Integer i) {
             ImageLayer layer = getLayer(i);
             boolean vis = layer.getImageLayerProperties().visible.get();
@@ -70,8 +86,12 @@ public class ImageDisplayModel implements IImageDisplayModel {
                 super.set(newlist);
             }
 
+            assert isSynced();
+
 
         }
+
+       
 
         public void add(Integer i) {
             ImageLayer layer = getLayer(i);
@@ -89,6 +109,8 @@ public class ImageDisplayModel implements IImageDisplayModel {
                 super.set(newlist);
             }
 
+            assert isSynced();
+
         }
 
         public void set(List<Integer> t) {
@@ -104,11 +126,13 @@ public class ImageDisplayModel implements IImageDisplayModel {
             }
 
             super.set(t);    //To change body of overridden methods use File | Settings | File Templates.
+            assert isSynced();
         }
 
         public void set(int index, Integer integer) {
 
-            super.set(index, integer);    //To change body of overridden methods use File | Settings | File Templates.
+            super.set(index, integer);
+            assert isSynced();
         }
     };
 
@@ -120,11 +144,6 @@ public class ImageDisplayModel implements IImageDisplayModel {
             }
 
 
-            if (integer < 0 && listModel.size() > 0) {
-                log.warning("silently aborting attempt to set layer index < 0");
-                return;
-            }
-
             super.set(integer);
         }
 
@@ -132,18 +151,18 @@ public class ImageDisplayModel implements IImageDisplayModel {
     };
 
 
-    private EventListenerList eventListeners = new WeakEventListenerList();
+    private WeakEventListenerList eventListeners = new WeakEventListenerList();
 
     private ForwardingListDataListener forwarder = new ForwardingListDataListener();
 
-   
+
     private String name;
 
     private ImageLayerListener visListener;
 
     public ImageDisplayModel(String _name) {
-        BeanContainer.bind(this);
         name = _name;
+        BeanContainer.bind(this);
 
         BeanContainer.get().addListener(listModel, new IndexedPropertyListener() {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
@@ -158,7 +177,6 @@ public class ImageDisplayModel implements IImageDisplayModel {
                 forwarder.fireIntervalRemoved(new ListDataEvent(ImageDisplayModel.this, ListDataEvent.INTERVAL_REMOVED, index, index));
             }
         });
-
         visListener = new ImageLayerListenerImpl() {
             public void visibilityChanged(ImageLayerEvent event) {
                 ImageLayer layer = event.getAffectedLayer();
@@ -214,8 +232,9 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     public ImageLayerProperties getLayerParameters(int layer) {
         if (layer < 0 || layer > listModel.size()) {
-            throw new IllegalArgumentException("illegal layer index");
+            throw new IllegalArgumentException("illegal layer index : " + layer);
         }
+
         ImageLayer ilayer = listModel.get(layer);
         return ilayer.getImageLayerProperties();
     }
@@ -223,7 +242,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     public void setSelectedIndex(int index) {
         if (index < 0 || index >= getNumLayers()) {
-            throw new IllegalArgumentException("index out of bounds");
+            throw new IllegalArgumentException("index out of bounds : " + index);
         }
 
         if (getSelectedIndex() != index) {
@@ -246,7 +265,9 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
 
     public void addImageDisplayModelListener(ImageDisplayModelListener listener) {
-
+        if (eventListeners.contains(ImageDisplayModelListener.class, listener)) {
+            return;
+        }
         eventListeners.add(ImageDisplayModelListener.class, listener);
     }
 
@@ -255,6 +276,9 @@ public class ImageDisplayModel implements IImageDisplayModel {
     }
 
     public void addImageLayerListener(ImageLayerListener listener) {
+        if (eventListeners.contains(ImageLayerListener.class, listener)) {
+            throw new IllegalArgumentException("listener list already contains listener : " + listener);
+        }
         eventListeners.add(ImageLayerListener.class, listener);
 
 
@@ -324,9 +348,6 @@ public class ImageDisplayModel implements IImageDisplayModel {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
                 ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
                 for (ImageLayerListener listener : listeners) {
-
-                    System.out.println("interpolation method changed to " + newValue);
-                    System.out.println("layer listener : " + listener);
                     listener.interpolationMethodChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
                 }
             }
@@ -382,6 +403,43 @@ public class ImageDisplayModel implements IImageDisplayModel {
             }
         });
 
+        BeanContainer.get().addListener(layer.getImageLayerProperties().thresholdRange, new PropertyListener() {
+            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+
+                ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
+                System.out.println("threshold changed!");
+                for (ImageLayerListener listener : listeners) {
+                    listener.thresholdChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
+                }
+
+            }
+        });
+
+        BeanContainer.get().addListener(layer.getImageLayerProperties().clipRange, new PropertyListener() {
+            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+                ClipRange clip = (ClipRange)newValue;
+                Number lowClip = clip.getLowClip();
+                Number highClip = clip.getHighClip();
+
+                ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
+
+                IColorMap oldMap = layer.getImageLayerProperties().getColorMap();
+
+                if (oldMap.getLowClip() == lowClip.doubleValue() && oldMap.getHighClip() == highClip.doubleValue()) {
+                    return;
+                }
+
+                IColorMap newMap = oldMap.newClipRange(lowClip.doubleValue(), highClip.doubleValue());
+                layer.getImageLayerProperties().colorMap.set(newMap);
+
+                ///System.out.println("low clip : " + lowClip);
+                for (ImageLayerListener listener : listeners) {
+                    listener.clipRangeChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
+                }
+
+            }
+        });
+
 
         BeanContainer.get().addListener(layer.getImageLayerProperties().clipRange.get().lowClip, new PropertyListener() {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
@@ -407,6 +465,9 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
             }
         });
+
+
+
 
         BeanContainer.get().addListener(layer.getImageLayerProperties().clipRange.get().highClip, new PropertyListener() {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {

@@ -12,6 +12,7 @@ import java.util.Comparator;
 public abstract class AbstractInterval implements Interval {
 
     protected double min;
+    
     protected double max;
 
     public AbstractInterval(double _min, double _max) {

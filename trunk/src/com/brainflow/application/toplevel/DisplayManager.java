@@ -212,7 +212,6 @@ public class DisplayManager {
 
         public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
             BrainCanvasModel model = (BrainCanvasModel)prop.getParent();
-            log.info("image view slected: firing event");
             EventBus.publish(new ImageViewSelectionEvent(model.getSelectedView()));
 
 

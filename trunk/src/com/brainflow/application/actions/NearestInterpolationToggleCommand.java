@@ -12,7 +12,7 @@ import com.pietschy.command.toggle.ToggleVetoException;
  * Date: Aug 12, 2007
  * Time: 10:31:56 PM
  */
-public class NearestInterpolationToggleCommand extends ToggleCommand {
+public class NearestInterpolationToggleCommand extends BrainFlowToggleCommand {
 
     public NearestInterpolationToggleCommand() {
         super("toggle-interp-nearest");
@@ -20,10 +20,19 @@ public class NearestInterpolationToggleCommand extends ToggleCommand {
 
     protected void handleSelection(boolean b) throws ToggleVetoException {
         if (b) {
-            ImageView view = Brainflow.getInstance().getSelectedView();
-            if (view != null) {
+            ImageView view = getSelectedView();
+            if (view != null && view.getScreenInterpolation() != InterpolationType.NEAREST_NEIGHBOR) {
                 view.setScreenInterpolation(InterpolationType.NEAREST_NEIGHBOR);
             }
         }
+
+
+    }
+
+    public void viewSelected(ImageView view) {
+        if (view.getScreenInterpolation() == InterpolationType.NEAREST_NEIGHBOR) {
+            setSelected(true);
+        }
+
     }
 }

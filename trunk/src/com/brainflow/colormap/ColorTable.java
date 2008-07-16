@@ -104,9 +104,6 @@ public class ColorTable {
         byte[] blues = new byte[256];
         byte[] alpha = new byte[256];
 
-        double curRed = clr.getRed();
-        double curGreen = clr.getGreen();
-        double curBlue = clr.getBlue();
 
         float[] hsb = Color.RGBtoHSB(clr.getRed(), clr.getGreen(), clr.getBlue(), null);
 

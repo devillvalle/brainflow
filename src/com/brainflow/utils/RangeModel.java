@@ -12,6 +12,7 @@ import com.jgoodies.binding.beans.Model;
 public class RangeModel extends Model implements IRange {
 
     public static final String RANGE_MIN_PROPERTY = "min";
+    
     public static final String RANGE_MAX_PROPERTY = "max";
 
     private IRange range;

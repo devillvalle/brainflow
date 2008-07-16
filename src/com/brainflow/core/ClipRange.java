@@ -96,11 +96,13 @@ public class ClipRange implements IRange {
     }
 
     public double getMin() {
-        return lowClip.get();
+        throw new UnsupportedOperationException("bad method");
+
     }
 
     public double getMax() {
-        return highClip.get();
+        throw new UnsupportedOperationException("bad method");
+                
     }
 
     public void setMax(double max) {

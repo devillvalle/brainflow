@@ -15,7 +15,9 @@ public class IntervalLookupTable<T extends MutableInterval> {
 
 
     private List<T> intervalList = new LinkedList<T>();
+
     private final Comparator wi_comparator = new AbstractInterval.WithinIntervalComparator();
+    
     private final Comparator i_comparator = new AbstractInterval.IntervalComparator();
 
     public IntervalLookupTable() {

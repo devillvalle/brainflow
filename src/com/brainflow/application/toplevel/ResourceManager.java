@@ -1,6 +1,7 @@
 package com.brainflow.application.toplevel;
 
 import com.brainflow.colormap.ColorTable;
+import com.brainflow.colormap.ColorBrewer;
 
 import java.awt.image.IndexColorModel;
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class ResourceManager {
 
     private Logger log = Logger.getLogger(ResourceManager.class.getName());
     
-    private HashMap<String, IndexColorModel> cachedMaps = new HashMap();
+    private HashMap<String, IndexColorModel> cachedMaps = new HashMap<String, IndexColorModel>();
 
     private static String defaultColorMap = "grayscale";
 
@@ -66,6 +67,15 @@ public class ResourceManager {
     //}
 
     private void loadColorMaps() throws IOException {
+
+        cachedMaps.put("YellowRed", ColorBrewer.YellowRed);
+        cachedMaps.put("YellowGreenBlue", ColorBrewer.YellowGreenBlue);
+        cachedMaps.put("RedYellowBlue", ColorBrewer.RedYellowBlue);
+        cachedMaps.put("Purples", ColorBrewer.Purples);
+        cachedMaps.put("PurpleBlue", ColorBrewer.PurpleBlue);
+        cachedMaps.put("Reds", ColorBrewer.Reds);
+        cachedMaps.put("Greens", ColorBrewer.Greens);
+        cachedMaps.put("BrownBlueGreen", ColorBrewer.BrownBlueGreen);
 
         InputStream istream = getClass().getClassLoader().getResourceAsStream("resources/colormaps/colormap.properties");
 

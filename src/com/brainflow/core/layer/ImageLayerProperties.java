@@ -77,10 +77,7 @@ public class ImageLayerProperties implements Serializable {
 
     public final Property<Boolean> visible = new ObservableProperty<Boolean>(true) {
         public void set(Boolean aBoolean) {
-            if (!aBoolean) {
-              System.out.println("some schmuck is setting me false and this is bullshit");    
-            }
-            super.set(aBoolean);
+           super.set(aBoolean);
 
         }
     };
@@ -90,7 +87,6 @@ public class ImageLayerProperties implements Serializable {
     public final Property<Double> smoothingRadius = ObservableProperty.create(0.0);
 
     public final ObservableProperty<ClipRange> thresholdRange = ObservableProperty.create(new ClipRange(0, 0, 0, 0));
-
 
     public final ObservableProperty<ClipRange> clipRange = ObservableProperty.create(new ClipRange(0, 0, 0, 0));
 

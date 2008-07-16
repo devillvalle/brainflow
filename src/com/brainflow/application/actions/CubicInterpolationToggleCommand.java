@@ -12,7 +12,7 @@ import com.pietschy.command.toggle.ToggleVetoException;
  * Date: Aug 12, 2007
  * Time: 10:31:56 PM
  */
-public class CubicInterpolationToggleCommand extends ToggleCommand {
+public class CubicInterpolationToggleCommand extends BrainFlowToggleCommand {
 
     public CubicInterpolationToggleCommand() {
         super("toggle-interp-cubic");
@@ -20,10 +20,19 @@ public class CubicInterpolationToggleCommand extends ToggleCommand {
 
     protected void handleSelection(boolean b) throws ToggleVetoException {
         if (b) {
-            ImageView view = Brainflow.getInstance().getSelectedView();
-            if (view != null) {
+            ImageView view = getSelectedView();
+            if (view != null && view.getScreenInterpolation() != InterpolationType.CUBIC) {
                 view.setScreenInterpolation(InterpolationType.CUBIC);
             }
         }
+    }
+
+    public void viewSelected(ImageView view) {
+        if (view.getScreenInterpolation() == InterpolationType.CUBIC) {
+
+            super.setSelected(true);
+
+        }
+
     }
 }

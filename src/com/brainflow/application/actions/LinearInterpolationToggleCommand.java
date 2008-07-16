@@ -12,20 +12,26 @@ import com.pietschy.command.toggle.ToggleVetoException;
  * Date: Aug 12, 2007
  * Time: 10:31:56 PM
  */
-public class LinearInterpolationToggleCommand extends ToggleCommand {
+public class LinearInterpolationToggleCommand extends BrainFlowToggleCommand {
 
     public LinearInterpolationToggleCommand() {
         super("toggle-interp-linear");
     }
 
     protected void handleSelection(boolean b) throws ToggleVetoException {
-
         if (b) {
-            ImageView view = Brainflow.getInstance().getSelectedView();
-            if (view != null) {
+            ImageView view = getSelectedView();
+            if (view != null && view.getScreenInterpolation() != InterpolationType.LINEAR) {
                 view.setScreenInterpolation(InterpolationType.LINEAR);
             }
-
         }
+
+    }
+
+    public void viewSelected(ImageView view) {
+        if (view.getScreenInterpolation() == InterpolationType.LINEAR) {
+            setSelected(true);
+        }
+
     }
 }

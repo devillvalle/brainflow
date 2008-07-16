@@ -45,9 +45,18 @@ public class DecreaseContrastCommand extends BrainFlowCommand {
         double newHighClip = Math.min(highClip + increment, layer.getImageLayerProperties().getColorMap().getMaximumValue());
         double newLowClip = Math.max(lowClip - increment, layer.getImageLayerProperties().getColorMap().getMinimumValue());
 
+        if (newLowClip >= newHighClip) {
+            newLowClip = newHighClip - .0001;
+        }
 
-        clipRange.setHighClip(newHighClip);
-        clipRange.setLowClip(newLowClip);
+        newHighClip = Math.min(newHighClip, layer.getImageLayerProperties().getColorMap().getMaximumValue());
+        newLowClip = Math.max(newLowClip, layer.getImageLayerProperties().getColorMap().getMinimumValue());
+
+
+        double max = clipRange.maxValue.get();
+        double min = clipRange.minValue.get();
+        props.clipRange.set(new ClipRange(min, max, newLowClip, newHighClip));
+
 
     }
 

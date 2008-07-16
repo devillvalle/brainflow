@@ -53,12 +53,12 @@ public class WeakEventListenerList extends EventListenerList {
         return ret;
     }
 
-    public synchronized EventListener[] getListeners(Class t) {
+    public synchronized <T extends EventListener> T[] getListeners(Class<T> t) {
         int tgtInd = 0;
-        EventListener[] ret = (EventListener[]) Array.newInstance(t, listenerSize);
+        T[] ret = (T[]) Array.newInstance(t, listenerSize);
         for (int i = 0; i < listenerSize; i++) {
             if (listenerList[i++] == t) {
-                EventListener l = (EventListener) ((WeakReference) listenerList[i]).get();
+                T l = (T) ((WeakReference) listenerList[i]).get();
                 if (l != null) {
                     ret[tgtInd++] = l;
                 } else { // listener was garbage collected
@@ -75,7 +75,7 @@ public class WeakEventListenerList extends EventListenerList {
         }
 
         if (ret.length != tgtInd) {
-            EventListener[] tmp = (EventListener[]) Array.newInstance(t, tgtInd);
+            T[] tmp = (T[]) Array.newInstance(t, tgtInd);
             System.arraycopy(ret, 0, tmp, 0, tgtInd);
             ret = tmp;
         }
@@ -91,7 +91,7 @@ public class WeakEventListenerList extends EventListenerList {
      * @param l the listener to be added
      */
     public synchronized void add(Class t, EventListener l) {
-        if (l == null) {
+        if (l == null ) {
             // In an ideal world, we would do an assertion here
             // to help developers know they are probably doing
             // something wrong
@@ -154,6 +154,32 @@ public class WeakEventListenerList extends EventListenerList {
                     listenerSize - index - 2);
             listenerSize -= 2;
         }
+    }
+
+    public synchronized boolean contains(Class t, EventListener l) {
+        if (!t.isInstance(l)) {
+            throw new IllegalArgumentException("Listener " + l + // NOI18N
+                    " is not of type " + t); // NOI18N
+        }
+
+        // Is l on the list?
+        int index = -1;
+        for (int i = listenerSize - 2; i >= 0; i -= 2) {
+            if ((listenerList[i] == t) && l.equals(((WeakReference) listenerList[i + 1]).get())) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index >= 0) {
+            return true;
+        } else {
+            return false;
+        }
+
+
+
+
     }
 
     private synchronized void writeObject(ObjectOutputStream os) throws IOException {

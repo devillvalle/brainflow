@@ -50,9 +50,9 @@ public class Histogram {
         return numBins;
     }
 
-    public double[] computeBins() {
+    public DoubleArrayList computeBins() {
         if (computed)
-            return binList.elements();
+            return binList;
 
         maxValue = data.maxValue();
         minValue = data.minValue();
@@ -60,7 +60,9 @@ public class Histogram {
         int[] bins = new int[numBins];
 
         binSize = (maxValue - minValue) / numBins;
+
         ImageIterator iter = data.iterator();
+        
         while (iter.hasNext()) {
             double val = iter.next();
             if (ignore != null)
@@ -75,9 +77,9 @@ public class Histogram {
         }
         computed = true;
         binList = new DoubleArrayList(ArrayUtils.castToDoubles(bins));
-        getBinIntervals(binSize);
+        computeBinIntervals(binSize);
         binList.trimToSize();
-        return binList.elements();
+        return binList;
     }
 
     public void ignoreRange(IRange range) {
@@ -91,9 +93,13 @@ public class Histogram {
     }
 
   
+    public DoubleArrayList getBinIntervals() {
+         if (!computed)
+            computeBins();
+        return binIntervals;
+    }
 
-
-    public double[] getBinIntervals(double binSize) {
+    private double[] computeBinIntervals(double binSize) {
         if (binIntervals == null) {
             double[] intervals = new double[numBins + 1];
             intervals[0] = minValue;
@@ -110,6 +116,8 @@ public class Histogram {
     }
 
     public int getHighestBin() {
+         if (!computed)
+            computeBins();
         return binList.indexOf(Descriptive.max(binList));
     }
 
@@ -151,7 +159,7 @@ public class Histogram {
         IImageDataSource dataSource = TestUtils.quickDataSource("resources/data/global_mean+orig.HEAD");
         Histogram histo = new Histogram(dataSource.getData(),256);
         histo.computeBins();
-        System.out.println("histo : " + Arrays.toString(histo.computeBins()));
+        
     }
 
 

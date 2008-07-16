@@ -30,8 +30,8 @@ public class HistogramDatasetX extends AbstractDataset implements IntervalXYData
     
     public HistogramDatasetX(Histogram _histogram) {
         histogram = _histogram;
-        bins = histogram.computeBins();
-        binIntervals = histogram.getBinIntervals(histogram.getBinSize());
+       // bins = histogram.computeBins();
+      //  binIntervals = histogram.getBinIntervals(histogram.getBinSize());
     }
 
     protected double[] getBins() {

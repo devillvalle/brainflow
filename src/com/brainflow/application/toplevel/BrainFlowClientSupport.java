@@ -28,7 +28,7 @@ public class BrainFlowClientSupport {
         this.client = client;
 
 
-        EventBus.subscribe(ImageViewSelectionEvent.class, new EventSubscriber() {
+        EventBus.subscribeStrongly(ImageViewSelectionEvent.class, new EventSubscriber() {
 
             public void onEvent(Object evt) {
                 ImageViewSelectionEvent event = (ImageViewSelectionEvent) evt;
@@ -47,7 +47,7 @@ public class BrainFlowClientSupport {
             }
         });
 
-        EventBus.subscribe(ImageViewLayerSelectionEvent.class, new EventSubscriber() {
+        EventBus.subscribeStrongly(ImageViewLayerSelectionEvent.class, new EventSubscriber() {
 
             public void onEvent(Object evt) {
                 EventServiceEvent ese = (EventServiceEvent) evt;
@@ -98,5 +98,15 @@ public class BrainFlowClientSupport {
 
     }
 
+    public ImageLayer getSelectedLayer() {
+        if (selectedView != null) {
+            return selectedView.getSelectedLayer();
+        }
 
+        return null;
+    }
+
+    public ImageView getSelectedView() {
+        return selectedView;
+    }
 }

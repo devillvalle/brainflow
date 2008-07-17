@@ -58,14 +58,27 @@ public class NumberRangeModel {
         return highValue;
     }
 
+    public boolean inBounds(double value) {
+        if (value >= min & value <= max) return true;
+        return false;
+    }
+
 
 
     public void setHighValue(double n) {
-        setRangeProperties(getLowValue(), n, getMin(), getMax(), isAdjusting);
+        double newLow = getLowValue();
+        if (n < newLow) {
+            newLow = n;
+        }
+        setRangeProperties(newLow, n, getMin(), getMax(), isAdjusting);
     }
 
     public void setLowValue(double n) {
-        setRangeProperties(n, getHighValue(), getMin(), getMax(), isAdjusting);
+        double newHigh = getHighValue();
+        if (n > newHigh) {
+            newHigh = n;
+        }
+        setRangeProperties(n, newHigh, getMin(), getMax(), isAdjusting);
     }
 
    
@@ -87,6 +100,7 @@ public class NumberRangeModel {
         if (newLow < newMin) {
             newLow = newMin;
         }
+
 
 
         boolean isChange =

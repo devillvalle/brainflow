@@ -12,6 +12,7 @@ package com.brainflow.utils;
 public class NumberUtils {
     
     
+
     
     public NumberUtils() {
     }

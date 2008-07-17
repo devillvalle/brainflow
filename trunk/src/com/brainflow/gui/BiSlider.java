@@ -13,12 +13,12 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.EtchedBorder;
 import javax.accessibility.AccessibleContext;
 import java.awt.*;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.awt.geom.*;
 import java.io.Serializable;
+import java.text.NumberFormat;
+import java.math.RoundingMode;
 
 /**
  * Created by IntelliJ IDEA.
@@ -110,21 +110,21 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
         }
     }
 
-   /* public void setHighValue(double n) {
-        NumberRangeModel m = getModel();
-        double oldValue = m.getHighValue();
-        if (NumberUtils.equals(oldValue, n, .0001)) {
-            return;
-        }
-        // m.setHighValue(n);
+    /* public void setHighValue(double n) {
+      NumberRangeModel m = getModel();
+      double oldValue = m.getHighValue();
+      if (NumberUtils.equals(oldValue, n, .0001)) {
+          return;
+      }
+      // m.setHighValue(n);
 
-        if (accessibleContext != null) {
-            accessibleContext.firePropertyChange(
-                    AccessibleContext.ACCESSIBLE_VALUE_PROPERTY,
-                    new Integer(oldValue),
-                    new Integer(m.getValue()));
-        }
-    }  */
+      if (accessibleContext != null) {
+          accessibleContext.firePropertyChange(
+                  AccessibleContext.ACCESSIBLE_VALUE_PROPERTY,
+                  new Integer(oldValue),
+                  new Integer(m.getValue()));
+      }
+  }  */
 
 
     public NumberRangeModel getModel() {
@@ -301,18 +301,13 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
     }
 
     private void updateGripperPositions() {
-        System.out.println("updating gripper");
-        float leftLoc = (float)((model.getLowValue() - model.getMin())/(model.getMax() - model.getMin()));
-        float rightLoc = (float)((model.getHighValue() - model.getMin())/(model.getMax() - model.getMin()));
+        float leftLoc = (float) ((model.getLowValue() - model.getMin()) / (model.getMax() - model.getMin()));
+        float rightLoc = (float) ((model.getHighValue() - model.getMin()) / (model.getMax() - model.getMin()));
 
-        System.out.println("left loc : " + leftLoc);
-        System.out.println("right loc : " + rightLoc);
-        if (!NumberUtils.equals(leftLoc,leftGripperLoc, .00001) || !NumberUtils.equals(rightLoc,rightGripperLoc,.00001)) {
+        if (!NumberUtils.equals(leftLoc, leftGripperLoc, .00001) || !NumberUtils.equals(rightLoc, rightGripperLoc, .00001)) {
             leftGripperLoc = leftLoc;
             rightGripperLoc = rightLoc;
             repaint();
-        } else {
-            System.out.println("do nothing!");
         }
     }
 
@@ -367,12 +362,36 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
     }
 
     JidePopup clickPopup;
-    JTextField clickField;
+    JFormattedTextField clickField;
 
     private JidePopup getClickPopup() {
         if (clickPopup == null) {
             clickPopup = new JidePopup();
-            clickField = new JTextField(15);
+            final NumberFormat format = NumberFormat.getNumberInstance();
+            format.setMaximumFractionDigits(2);
+            format.setRoundingMode(RoundingMode.UP);
+            clickField = new JFormattedTextField(format);
+            clickField.setColumns(15);
+            clickField.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    double val = ((Number)clickField.getValue()).doubleValue();
+                    if (model.inBounds(val)) {
+                        switch (gripperState) {                      
+                            case LEFT_SELECTED:
+                                model.setLowValue(val);
+                                break;
+                            case RIGHT_SELECTED:
+                                model.setHighValue(val);
+                                break;
+                            case BOTH_SELECTED:
+                                break;
+                            case NEITHER:
+                                break;
+                        }
+                    }
+                    clickPopup.hidePopup();
+                }
+            });
             clickField.setEditable(true);
 
             JPanel panel = new JPanel();
@@ -392,9 +411,19 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
 
     }
 
+    private void maybeHidePopup(Point p) {
+        if (clickPopup != null) {
+            if (clickPopup.isShowing()) {
+                clickPopup.hidePopup();
+            }
+        }
+
+
+    }
+
     public void mouseClicked(MouseEvent e) {
         gripperState = whichGripper(e.getPoint());
-        if (gripperState == GRIPPER_STATE.LEFT_SELECTED && e.getClickCount() == 2) {
+        if (gripperState != GRIPPER_STATE.NEITHER && e.getClickCount() == 2) {
             JidePopup popup = getClickPopup();
             popup.updateUI();
             if (popup.isShowing()) {
@@ -405,7 +434,12 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
                 popup.setMovable(false);
                 popup.setAttachable(false);
                 popup.setDefaultFocusComponent(clickField);
-                clickField.setText("" + leftGripperLoc);
+
+                if (gripperState == GRIPPER_STATE.LEFT_SELECTED)  {
+                    clickField.setValue(model.getLowValue());
+                } else if (gripperState == GRIPPER_STATE.RIGHT_SELECTED) {
+                    clickField.setValue(model.getHighValue());
+                }
 
                 Point screenPoint = e.getPoint();
                 SwingUtilities.convertPointToScreen(screenPoint, (Component) e.getSource());
@@ -456,6 +490,8 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
             lastPoint = e.getPoint();
         }
 
+        maybeHidePopup(e.getPoint());
+
     }
 
     public void mouseMoved(MouseEvent e) {
@@ -463,7 +499,7 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
     }
 
     public Dimension getPreferredSize() {
-        return new Dimension(300,30);
+        return new Dimension(300, 30);
     }
 
     public static void main(String[] args) {

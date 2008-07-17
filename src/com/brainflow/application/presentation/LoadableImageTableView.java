@@ -62,7 +62,7 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
 
     private ImageTableModel imageTableModel;
 
-    private Map<IImageDataSource, ImageIcon> imap = new HashMap<IImageDataSource, ImageIcon>();
+    //private Map<IImageDataSource, ImageIcon> imap = new HashMap<IImageDataSource, ImageIcon>();
 
     private List<IImageDataSource> imageList = new ArrayList<IImageDataSource>();
 
@@ -252,7 +252,7 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
             panel.add(loadButton);
 
             NullButton removeButton = new NullButton("Remove");
-            removeCommand.putParameter(ActionContext.SELECTED_LOADABLE_IMAGE, limg);
+            removeCommand.putParameter(RemoveLoadableImageCommand.SELECTED_DATASOURCE, limg);
 
             removeButton.addActionListener(removeCommand.getActionAdapter());
             panel.add(removeButton);

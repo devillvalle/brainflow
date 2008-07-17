@@ -15,16 +15,14 @@ import java.awt.event.ActionEvent;
  */
 public class RemoveLoadableImageCommand extends BrainFlowCommand {
 
+    public static final String SELECTED_DATASOURCE = "selected_datasource";
+
     public RemoveLoadableImageCommand() {
         getDefaultFace(true).setText("Remove");
     }
 
     protected void handleExecute() {
-        Object o = getParameter(ActionContext.SELECTED_LOADABLE_IMAGE);
-        System.out.println("loadable image? " + o);
-        //super.getSelectedView()
-
-        IImageDataSource limg = (IImageDataSource) getParameter(ActionContext.SELECTED_LOADABLE_IMAGE);
+       IImageDataSource limg = (IImageDataSource) getParameter(SELECTED_DATASOURCE);
         if (limg != null) {
             DataSourceManager.getInstance().requestRemoval(limg);
         }

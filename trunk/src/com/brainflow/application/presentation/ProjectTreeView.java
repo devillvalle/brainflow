@@ -128,7 +128,6 @@ public class ProjectTreeView extends ImageViewPresenter implements MouseListener
     }
 
     public void mouseDragged(MouseEvent e) {
-        System.out.println("dragged!");
         if (firstMouseEvent != null) {
             e.consume();
             int dx = Math.abs(e.getX() - firstMouseEvent.getX());
@@ -140,8 +139,7 @@ public class ProjectTreeView extends ImageViewPresenter implements MouseListener
                 //This is a drag, not a click.
                 JComponent c = (JComponent) e.getSource();
                 //Tell the transfer handler to initiate the drag.
-                System.out.println("exporting as drag!");
-                TransferHandler handler = c.getTransferHandler();
+                 TransferHandler handler = c.getTransferHandler();
                 handler.exportAsDrag(c, firstMouseEvent, -1);
                 firstMouseEvent = null;
             }

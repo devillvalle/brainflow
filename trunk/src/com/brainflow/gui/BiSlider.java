@@ -9,9 +9,6 @@ import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-import javax.swing.border.EtchedBorder;
-import javax.accessibility.AccessibleContext;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -19,6 +16,7 @@ import java.awt.geom.*;
 import java.io.Serializable;
 import java.text.NumberFormat;
 import java.math.RoundingMode;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -52,6 +50,19 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
 
     protected ChangeListener changeListener = createChangeListener();
 
+    private int TOP_CUSHION = 18;
+
+    private int BOTTOM_CUSHION = 2;
+
+    private int LEFT_CUSHION = 8;
+
+    private int RIGHT_CUSHION = 8;
+
+
+    private NumberFormat labelFormatter = NumberFormat.getNumberInstance();
+
+    private Map desktopHints;
+
 
     public BiSlider(NumberRangeModel model) {
         this.model = model;
@@ -62,13 +73,19 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
         rightGripperLoc = (float) ((model.getHighValue() - model.getMin()) / (model.getMax() - model.getMin()));
 
         model.addChangeListener(changeListener);
+
+        labelFormatter.setMaximumFractionDigits(2);
+        labelFormatter.setMinimumFractionDigits(0);
+
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        desktopHints = (Map) tk.getDesktopProperty("awt.font.desktophints");
+
+
     }
 
 
     private class ModelListener implements ChangeListener, Serializable {
         public void stateChanged(ChangeEvent e) {
-            System.out.println("model low value : " + model.getLowValue());
-            System.out.println("model high value : " + model.getHighValue());
 
             updateGripperPositions();
             fireStateChanged();
@@ -167,7 +184,7 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
     private int getAdjustedHeight() {
         Insets insets = getInsets();
 
-        int height = getHeight() - (insets.top + insets.bottom);
+        int height = getHeight() - (insets.top + insets.bottom + TOP_CUSHION + BOTTOM_CUSHION);
         return height;
 
     }
@@ -175,7 +192,7 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
     private int getAdjustedWidth() {
         Insets insets = getInsets();
 
-        int width = getWidth() - (insets.left + insets.right);
+        int width = getWidth() - (insets.left + insets.right + LEFT_CUSHION + RIGHT_CUSHION);
         return width;
 
     }
@@ -185,12 +202,11 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
         Graphics2D g2 = (Graphics2D) g;
 
 
-        Insets insets = getInsets();
         int width = getAdjustedWidth();
         int height = getAdjustedHeight();
 
-        int x0 = getInsets().left;
-        int y0 = getInsets().top;
+        int x0 = getInsets().left + LEFT_CUSHION;
+        int y0 = getInsets().top + TOP_CUSHION;
 
 
         int hubRadius = getGripperRadius();
@@ -253,6 +269,54 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
 
         g2.drawImage(img, x0, y0, null);
 
+        paintValueLabels(g2);
+
+
+    }
+
+    private void paintLeftLabel(Graphics2D g2) {
+        if (gripperState == GRIPPER_STATE.LEFT_SELECTED || gripperState == GRIPPER_STATE.BOTH_SELECTED) {
+            g2.setFont(g2.getFont().deriveFont(Font.BOLD));
+        } else {
+            g2.setFont(g2.getFont().deriveFont(Font.PLAIN));
+        }
+
+        g2.addRenderingHints(desktopHints);
+        g2.setColor(Color.BLACK);
+        Rectangle bounds = leftGripper.getBounds();
+
+        FontMetrics fmetric = g2.getFontMetrics(getFont());
+        String valueLabel = labelFormatter.format(model.getLowValue());
+        Rectangle2D labelBounds = fmetric.getStringBounds(valueLabel, g2);
+        g2.drawString(valueLabel, (int) (LEFT_CUSHION + getInsets().left + bounds.x + bounds.width / 2 - labelBounds.getWidth()), (int) (getInsets().top + TOP_CUSHION - labelBounds.getHeight() / 2));
+
+
+    }
+
+    private void paintRightLabel(Graphics2D g2) {
+        if (gripperState == GRIPPER_STATE.RIGHT_SELECTED || gripperState == GRIPPER_STATE.BOTH_SELECTED) {
+            g2.setFont(g2.getFont().deriveFont(Font.BOLD));
+        } else {
+            g2.setFont(g2.getFont().deriveFont(Font.PLAIN));
+        }
+
+        g2.addRenderingHints(desktopHints);
+        g2.setColor(Color.BLACK);
+        Rectangle bounds = rightGripper.getBounds();
+
+        FontMetrics fmetric = g2.getFontMetrics(getFont());
+        String valueLabel = labelFormatter.format(model.getHighValue());
+        Rectangle2D labelBounds = fmetric.getStringBounds(valueLabel, g2);
+        g2.drawString(valueLabel, LEFT_CUSHION + getInsets().left + bounds.x + bounds.width / 2, (int) (getInsets().top + TOP_CUSHION - labelBounds.getHeight() / 2));
+
+
+    }
+
+    private void paintValueLabels(Graphics2D g2) {
+        paintLeftLabel(g2);
+        if (model.getHighValue() != model.getLowValue())
+            paintRightLabel(g2);
+
 
     }
 
@@ -269,7 +333,7 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
 
     private void paintLeftGripper(Shape gripper, Graphics2D og) {
         Rectangle bounds = gripper.getBounds();
-        og.setPaint(new GradientPaint(bounds.x, bounds.y, Color.BLACK, bounds.x, bounds.y + bounds.height, Color.DARK_GRAY.brighter()));
+        og.setPaint(new GradientPaint(bounds.x, bounds.y, Color.BLACK, bounds.x, bounds.y + bounds.height, Color.DARK_GRAY.brighter().brighter()));
         og.fill(gripper);
         og.setPaint(Color.WHITE.darker());
         og.drawLine(bounds.x + (int) (bounds.getWidth() / 2.0), bounds.y, bounds.x + (int) (bounds.getWidth() / 2.0), bounds.y + bounds.height);
@@ -278,7 +342,7 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
 
     private void paintRightGripper(Shape gripper, Graphics2D og) {
         Rectangle bounds = gripper.getBounds();
-        og.setPaint(new GradientPaint(bounds.x, bounds.y, Color.BLACK, bounds.x, bounds.y + bounds.height, Color.DARK_GRAY.brighter()));
+        og.setPaint(new GradientPaint(bounds.x, bounds.y, Color.BLACK, bounds.x, bounds.y + bounds.height, Color.DARK_GRAY.brighter().brighter()));
         og.fill(gripper);
         og.setPaint(Color.WHITE.darker());
         og.drawLine(bounds.x + (int) (bounds.getWidth() / 2.0), bounds.y, bounds.x + (int) (bounds.getWidth() / 2.0), bounds.y + bounds.height);
@@ -288,7 +352,7 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
 
     private double getTrackWidth() {
         Insets insets = getInsets();
-        return getWidth() - (insets.left + insets.right) - getGripperRadius() * 2;
+        return getWidth() - (insets.left + insets.right + LEFT_CUSHION + RIGHT_CUSHION) - getGripperRadius() * 2;
 
     }
 
@@ -361,8 +425,9 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
 
     }
 
-    JidePopup clickPopup;
-    JFormattedTextField clickField;
+    private JidePopup clickPopup;
+
+    private JFormattedTextField clickField;
 
     private JidePopup getClickPopup() {
         if (clickPopup == null) {
@@ -374,9 +439,9 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
             clickField.setColumns(15);
             clickField.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    double val = ((Number)clickField.getValue()).doubleValue();
+                    double val = ((Number) clickField.getValue()).doubleValue();
                     if (model.inBounds(val)) {
-                        switch (gripperState) {                      
+                        switch (gripperState) {
                             case LEFT_SELECTED:
                                 model.setLowValue(val);
                                 break;
@@ -435,7 +500,7 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
                 popup.setAttachable(false);
                 popup.setDefaultFocusComponent(clickField);
 
-                if (gripperState == GRIPPER_STATE.LEFT_SELECTED)  {
+                if (gripperState == GRIPPER_STATE.LEFT_SELECTED) {
                     clickField.setValue(model.getLowValue());
                 } else if (gripperState == GRIPPER_STATE.RIGHT_SELECTED) {
                     clickField.setValue(model.getHighValue());
@@ -460,8 +525,9 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
     }
 
     public void mouseReleased(MouseEvent e) {
-        gripperState = GRIPPER_STATE.NEITHER;
+        gripperState = GRIPPER_STATE.NEITHER;    
         lastPoint = null;
+        repaint();
 
     }
 
@@ -469,7 +535,7 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
     private GRIPPER_STATE whichGripper(Point p) {
         Insets insets = getInsets();
         // because shapes are actually drawn on an offscreen image which is offset by insets.
-        p.setLocation(p.x - insets.left, p.y - insets.top);
+        p.setLocation(p.x - insets.left - LEFT_CUSHION, p.y - insets.top - TOP_CUSHION);
         if (leftGripper.contains(p.x, p.y)) {
             return GRIPPER_STATE.LEFT_SELECTED;
         } else if (rightGripper.contains(p.x, p.y)) {
@@ -499,7 +565,7 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
     }
 
     public Dimension getPreferredSize() {
-        return new Dimension(300, 30);
+        return new Dimension(300, 50);
     }
 
     public static void main(String[] args) {

@@ -6,6 +6,8 @@ import com.brainflow.application.BrainflowException;
 import com.brainflow.utils.Range;
 
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
@@ -25,9 +27,41 @@ public class HistogramColorBar extends JComponent {
 
     private Histogram histogram;
 
+    private double yaxisFraction = 1;
+
+
+
     public HistogramColorBar(IColorMap map, Histogram histogram) {
         this.colorMap = map;
         this.histogram = histogram;
+    }
+
+    public double getYaxisFraction() {
+        return yaxisFraction;
+    }
+
+    public void setYaxisFraction(double yaxisFraction) {
+        if (yaxisFraction <= 0) throw new IllegalArgumentException("yaxisFraction must be > 0 and <= 1");
+        this.yaxisFraction = yaxisFraction;
+        repaint();
+    }
+
+    public IColorMap getColorMap() {
+        return colorMap;
+    }
+
+    public void setColorMap(IColorMap colorMap) {
+        this.colorMap = colorMap;
+        repaint();
+    }
+
+    public Histogram getHistogram() {
+        return histogram;
+    }
+
+    public void setHistogram(Histogram histogram) {
+        this.histogram = histogram;
+        repaint();
     }
 
     protected void paintComponent(Graphics g) {
@@ -35,8 +69,6 @@ public class HistogramColorBar extends JComponent {
 
         int width = getWidth();
         int height = getHeight();
-
-        float binSize = (float)width/(float)histogram.getNumBins();
 
         histogram.computeBins();
 
@@ -46,7 +78,7 @@ public class HistogramColorBar extends JComponent {
         double minx = binIntervals.get(0);
         double xextent = binIntervals.get(binIntervals.size()-1) - minx;
 
-        double ymax = Math.log(binHeights.get(histogram.getHighestBin()));
+        double ymax = binHeights.get(histogram.getHighestBin()) * yaxisFraction;
 
         for (int i=0; i<binHeights.size(); i++) {
             double xstart = binIntervals.get(i);
@@ -60,7 +92,8 @@ public class HistogramColorBar extends JComponent {
             double nxstart = (xstart - minx)/xextent;
             double nxend = (xend - minx)/xextent;
 
-            double y = Math.log(binHeights.get(i));
+            //double y = Math.log(binHeights.get(i));
+            double y = binHeights.get(i);
             double ny = (y/ymax)*(double)height;
 
 
@@ -98,10 +131,23 @@ public class HistogramColorBar extends JComponent {
         histo.ignoreRange(new Range(0,10));
         histo.computeBins();
         IColorMap map = new LinearColorMap2(histo.getMinValue(), histo.getMaxValue(), ColorTable.GRAYSCALE);
-        HistogramColorBar bar = new HistogramColorBar(map, histo);
+        final HistogramColorBar bar = new HistogramColorBar(map, histo);
         bar.setPreferredSize(new Dimension(350, 100));
+
+        JPanel jp = new JPanel();
+        jp.setLayout(new BorderLayout());
+        jp.add(bar, BorderLayout.CENTER);
+        final JSlider slider = new JSlider(JSlider.VERTICAL, 0, 100, 100);
+        slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                double frac = (double)slider.getValue()/100.0;
+                bar.setYaxisFraction(frac);
+            }
+        });
+
+        jp.add(slider, BorderLayout.WEST);
         JFrame jf = new JFrame();
-        jf.add(bar, BorderLayout.CENTER);
+        jf.add(jp, BorderLayout.CENTER);
         jf.pack();
         jf.setVisible(true);
     }

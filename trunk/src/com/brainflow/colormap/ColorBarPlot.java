@@ -9,7 +9,7 @@
 
 package com.brainflow.colormap;
 
-import com.brainflow.application.presentation.forms.ColorBarForm;
+import com.brainflow.application.presentation.controls.ColorBarForm;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;

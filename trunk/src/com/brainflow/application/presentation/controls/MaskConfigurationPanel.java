@@ -2,11 +2,9 @@ package com.brainflow.application.presentation.forms;
 
 import com.brainflow.application.presentation.BindingUtils;
 import com.brainflow.core.*;
-import com.brainflow.core.layer.*;
 import com.brainflow.display.ThresholdRange;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.BrainIO;
-import com.brainflow.image.operations.Operations;
 import com.brainflow.image.operations.BinaryOperation;
 import com.brainflow.utils.Range;
 import com.jgoodies.binding.adapter.BasicComponentFactory;
@@ -118,7 +116,7 @@ public class MaskConfigurationPanel extends JPanel {
         add(sourceSelection, cc.xyw(4, 2, 2));
 
         JLabel operationLabel = new JLabel("Operation: ");
-        SelectionInList<? extends BinaryOperation> opList = new SelectionInList<BinaryOperation>(new BinaryOperation[]{Operations.AND, Operations.OR});
+        SelectionInList<BinaryOperation> opList = new SelectionInList<BinaryOperation>(new BinaryOperation[]{BinaryOperation.AND, BinaryOperation.OR});
         operationSelection = BasicComponentFactory.createComboBox(opList);
         operationSelection.setSelectedItem(item.getOperation());
 

@@ -2,7 +2,7 @@
  * Copyright (c) 2003-2007 jMonkeyEngine
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
+ * Redistribution and use in source and binary controls, with or without
  * modification, are permitted provided that the following conditions are
  * met:
  *
@@ -34,7 +34,6 @@ package com.brainflow.math;
 
 import com.brainflow.utils.NumberUtils;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.nio.FloatBuffer;
 import java.util.logging.Logger;

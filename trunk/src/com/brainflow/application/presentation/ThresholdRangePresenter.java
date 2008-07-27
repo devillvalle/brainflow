@@ -9,7 +9,7 @@
 
 package com.brainflow.application.presentation;
 
-import com.brainflow.application.presentation.forms.ThresholdRangeForm;
+import com.brainflow.application.presentation.controls.ThresholdRangeForm;
 import com.brainflow.application.presentation.binding.PercentageRangeConverter;
 import com.brainflow.application.presentation.binding.DoubleToStringConverter;
 

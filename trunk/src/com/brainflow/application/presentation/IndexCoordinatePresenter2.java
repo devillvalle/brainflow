@@ -1,9 +1,8 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.application.presentation.binding.CoordinateToIndexConverter2;
-import com.brainflow.application.presentation.forms.CoordinateSpinner;
+import com.brainflow.application.presentation.controls.CoordinateSpinner;
 import com.brainflow.core.ImageView;
-import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.IImageSpace3D;

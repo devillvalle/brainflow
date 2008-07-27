@@ -2,10 +2,6 @@ package com.brainflow.application.presentation.forms;
 
 import com.brainflow.application.MemoryImageDataSource;
 import com.brainflow.core.*;
-import com.brainflow.core.layer.ImageLayer;
-import com.brainflow.core.layer.ImageLayer3D;
-import com.brainflow.core.layer.ImageLayerProperties;
-import com.brainflow.core.layer.ImageMaskItem;
 import com.brainflow.display.ThresholdRange;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.data.IImageData3D;
@@ -67,7 +63,7 @@ public class MaskViewPanel extends JPanel {
 
 
             System.out.println("cardinality: " + mpanel.getMask().cardinality());
-            System.out.println("mask maximum : " + mpanel.getMask().maxValue());
+            System.out.println("mask maximum : " + mpanel.getMask().getMaxValue());
             frame.add(mpanel, BorderLayout.CENTER);
             frame.pack();
             frame.setVisible(true);

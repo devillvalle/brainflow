@@ -13,7 +13,7 @@ package com.brainflow.application.presentation;
 
 import com.brainflow.application.actions.DesignColorMapCommand;
 import com.brainflow.application.actions.SelectColorMapCommand;
-import com.brainflow.application.presentation.forms.ColorBarForm;
+import com.brainflow.application.presentation.controls.ColorBarForm;
 
 import com.brainflow.application.toplevel.ResourceManager;
 import com.brainflow.colormap.ColorTable;

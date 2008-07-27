@@ -258,12 +258,12 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
         og.fill(area);
 
 
-        leftGripper = createLeftArc(leftGripperLoc * getTrackWidth(), 0, hubRadius * 2);
+        leftGripper  = createLeftArc(leftGripperLoc * getTrackWidth(), 0, hubRadius * 2);
         rightGripper = createRightArc(rightGripperLoc * getTrackWidth(), 0, hubRadius * 2);
 
 
-        paintLeftGripper(leftGripper, og);
-        paintRightGripper(rightGripper, og);
+        paintGripper(leftGripper, og);
+        paintGripper(rightGripper, og);
 
         og.dispose();
 
@@ -331,25 +331,17 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
         return arc;
     }
 
-    private void paintLeftGripper(Shape gripper, Graphics2D og) {
+    private void paintGripper(Shape gripper, Graphics2D og) {
         Rectangle bounds = gripper.getBounds();
-        og.setPaint(new GradientPaint(bounds.x, bounds.y, Color.BLACK, bounds.x, bounds.y + bounds.height, Color.DARK_GRAY.brighter().brighter()));
-        og.fill(gripper);
-        og.setPaint(Color.WHITE.darker());
-        og.drawLine(bounds.x + (int) (bounds.getWidth() / 2.0), bounds.y, bounds.x + (int) (bounds.getWidth() / 2.0), bounds.y + bounds.height);
+                og.setPaint(new GradientPaint(bounds.x, bounds.y, Color.BLACK, bounds.x, bounds.y + bounds.height, Color.DARK_GRAY.brighter().brighter()));
+                og.fill(gripper);
+                og.setPaint(Color.WHITE.darker());
+                og.drawLine(bounds.x + (int) (bounds.getWidth() / 2.0), bounds.y, bounds.x + (int) (bounds.getWidth() / 2.0), bounds.y + bounds.height);
+
 
     }
 
-    private void paintRightGripper(Shape gripper, Graphics2D og) {
-        Rectangle bounds = gripper.getBounds();
-        og.setPaint(new GradientPaint(bounds.x, bounds.y, Color.BLACK, bounds.x, bounds.y + bounds.height, Color.DARK_GRAY.brighter().brighter()));
-        og.fill(gripper);
-        og.setPaint(Color.WHITE.darker());
-        og.drawLine(bounds.x + (int) (bounds.getWidth() / 2.0), bounds.y, bounds.x + (int) (bounds.getWidth() / 2.0), bounds.y + bounds.height);
-
-    }
-
-
+   
     private double getTrackWidth() {
         Insets insets = getInsets();
         return getWidth() - (insets.left + insets.right + LEFT_CUSHION + RIGHT_CUSHION) - getGripperRadius() * 2;
@@ -397,7 +389,6 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
                 model.setRangeProperties(computeLowValue(), computeHighValue(), model.getMin(), model.getMax(), false);
                 break;
             case RIGHT_SELECTED:
-
                 rightGripperLoc = Math.max(rightGripperLoc + (float) perc, 0);
                 rightGripperLoc = Math.min(rightGripperLoc, 1);
                 rightGripperLoc = Math.max(rightGripperLoc, leftGripperLoc);
@@ -517,11 +508,11 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
     }
 
     public void mouseExited(MouseEvent e) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 
     public void mouseEntered(MouseEvent e) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 
     public void mouseReleased(MouseEvent e) {

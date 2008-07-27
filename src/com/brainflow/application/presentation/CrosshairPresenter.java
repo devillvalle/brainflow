@@ -1,6 +1,6 @@
 package com.brainflow.application.presentation;
 
-import com.brainflow.application.presentation.forms.CrosshairForm;
+import com.brainflow.application.presentation.controls.CrosshairForm;
 import com.brainflow.core.annotations.CrosshairAnnotation;
 import com.brainflow.gui.AbstractPresenter;
 import com.jgoodies.binding.adapter.Bindings;

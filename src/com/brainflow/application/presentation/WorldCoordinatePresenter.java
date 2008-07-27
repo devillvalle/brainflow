@@ -2,7 +2,7 @@ package com.brainflow.application.presentation;
 
 import com.brainflow.application.presentation.binding.DoubleToStringConverter;
 import com.brainflow.application.presentation.binding.PercentageRangeConverter;
-import com.brainflow.application.presentation.forms.TripleSliderForm;
+import com.brainflow.application.presentation.controls.TripleSliderForm;
 import com.brainflow.core.ImageView;
 
 import com.brainflow.image.axis.ImageAxis;
@@ -10,7 +10,6 @@ import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
 
 import net.java.dev.properties.binding.swing.adapters.SwingBind;
-import net.java.dev.properties.container.BeanContainer;
 
 import javax.swing.*;
 

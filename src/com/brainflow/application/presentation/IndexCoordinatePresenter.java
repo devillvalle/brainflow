@@ -2,7 +2,7 @@ package com.brainflow.application.presentation;
 
 import com.brainflow.application.presentation.binding.CoordinateToIndexConverter;
 import com.brainflow.application.presentation.binding.IntegerToStringConverter;
-import com.brainflow.application.presentation.forms.TripleSliderForm;
+import com.brainflow.application.presentation.controls.TripleSliderForm;
 import com.brainflow.core.ImageView;
 import com.brainflow.image.axis.ImageAxis;
 import com.brainflow.image.space.Axis;

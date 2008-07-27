@@ -1,18 +1,12 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.application.presentation.binding.Bindable;
-import com.brainflow.application.presentation.binding.PercentageRangeConverter;
-import com.brainflow.application.presentation.binding.DoubleToStringConverter;
 import com.brainflow.application.presentation.binding.ExtBind;
-import com.brainflow.application.presentation.forms.DoubleSliderForm;
 
-import com.brainflow.core.ClipRange;
 import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.core.ImageView;
 import com.brainflow.gui.BiSlider;
 import com.brainflow.gui.NumberRangeModel;
-
-import net.java.dev.properties.binding.swing.adapters.SwingBind;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

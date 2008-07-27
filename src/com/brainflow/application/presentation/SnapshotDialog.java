@@ -1,6 +1,6 @@
 package com.brainflow.application.presentation;
 
-import com.brainflow.application.presentation.forms.SnapshotForm;
+import com.brainflow.application.presentation.controls.SnapshotForm;
 
 
 import javax.imageio.ImageIO;

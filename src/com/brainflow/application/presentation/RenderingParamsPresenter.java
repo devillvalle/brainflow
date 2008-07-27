@@ -11,7 +11,7 @@ package com.brainflow.application.presentation;
 
 import com.brainflow.application.presentation.binding.Bindable;
 import com.brainflow.application.presentation.binding.PercentageRangeConverter;
-import com.brainflow.application.presentation.forms.RenderingParamsForm;
+import com.brainflow.application.presentation.controls.RenderingParamsForm;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.layer.ImageLayer;
 

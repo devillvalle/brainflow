@@ -3,7 +3,7 @@ package com.brainflow.application.presentation;
 import com.brainflow.application.presentation.binding.Bindable;
 import com.brainflow.application.presentation.binding.PercentageRangeConverter;
 import com.brainflow.application.presentation.binding.DoubleToStringConverter;
-import com.brainflow.application.presentation.forms.DoubleSliderForm;
+import com.brainflow.application.presentation.controls.DoubleSliderForm;
 
 import com.brainflow.core.ClipRange;
 import com.brainflow.core.layer.ImageLayer;

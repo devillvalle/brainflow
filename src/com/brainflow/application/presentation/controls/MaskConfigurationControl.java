@@ -1,7 +1,6 @@
 package com.brainflow.application.presentation.forms;
 
 import com.brainflow.core.*;
-import com.brainflow.core.layer.*;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.BrainIO;
 import com.brainflow.utils.Range;
@@ -249,11 +248,11 @@ public class MaskConfigurationControl extends JPanel implements ImageViewClient 
             URL url = ClassLoader.getSystemResource("resources/data/icbm452_atlas_probability_gray.hdr");
             IImageData data = BrainIO.readAnalyzeImage(url);
 
-            ImageLayer ilayer = new ImageLayer3D(data, new ImageLayerProperties(new Range(data.minValue(), data.maxValue())));
+            ImageLayer ilayer = new ImageLayer3D(data, new ImageLayerProperties(new Range(data.getMinValue(), data.getMaxValue())));
 
             url = ClassLoader.getSystemResource("resources/data/icbm452_atlas_probability_white.hdr");
             data = BrainIO.readAnalyzeImage(url);
-            ImageLayer ilayer2 = new ImageLayer3D(data, new ImageLayerProperties(new Range(data.minValue(), data.maxValue())));
+            ImageLayer ilayer2 = new ImageLayer3D(data, new ImageLayerProperties(new Range(data.getMinValue(), data.getMaxValue())));
 
 
             IImageDisplayModel model = new ImageDisplayModel("model");

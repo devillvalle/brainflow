@@ -1,4 +1,4 @@
-package com.brainflow.application.presentation.forms;
+package com.brainflow.application.presentation.controls;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;

@@ -45,7 +45,7 @@ public class CoordinateSpinner extends JPanel {
         xspinner = new JSpinner(new SpinnerNumberModel());
 
         yspinner = new JSpinner(new SpinnerNumberModel());
-
+        
         zspinner = new JSpinner(new SpinnerNumberModel());
 
         layout = new FormLayout("8dlu, l:p, 2dlu, 30dlu:g, 5dlu, l:p, 2dlu, 30dlu:g, 5dlu, l:p, 2dlu, 30dlu:g, 8dlu", "8dlu, pref, 2dlu, pref, 8dlu");
@@ -126,7 +126,7 @@ public class CoordinateSpinner extends JPanel {
 
     public static void main(String[] args) {
         JFrame jf = new JFrame();
-        jf.add(new CoordinateSpinner2(), BorderLayout.CENTER);
+        jf.add(new CoordinateSpinner(), BorderLayout.CENTER);
 
         jf.pack();
         jf.setVisible(true);

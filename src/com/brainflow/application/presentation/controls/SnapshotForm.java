@@ -117,7 +117,7 @@ public class SnapshotForm extends JPanel {
         builder.addGridded(saveButton);
         builder.addRelatedGap();
         builder.addGridded(cancelButton);
-        //builder.setBorder(BorderFactory.createRaisedBevelBorder());
+        //builder.setBorder(BorderFactory.createRaisedBevelBorder()); 
         bp.add(builder.getPanel(), cc.xyw(2, 8, 3));
 
         JScrollPane jsp = new JScrollPane(snapShotLabel);
@@ -144,7 +144,7 @@ public class SnapshotForm extends JPanel {
                         try {
                             stream.close();
                         } catch(IOException ex2) {}
-
+                        
                     }
                 }
 
@@ -288,7 +288,7 @@ public class SnapshotForm extends JPanel {
 
             //UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
             BufferedImage bimg = ImageIO.read(ClassLoader.getSystemResource("resources/data/axial_slice.png"));
-            SnapshotForm2 form = new SnapshotForm2(bimg);
+            SnapshotForm form = new SnapshotForm(bimg);
 
 
             String[] formats = ImageIO.getWriterFileSuffixes();

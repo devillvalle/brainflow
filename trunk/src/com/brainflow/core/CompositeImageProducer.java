@@ -6,7 +6,9 @@ import com.brainflow.core.layer.ImageLayerListener;
 import com.brainflow.display.InterpolationType;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.image.axis.AxisRange;
+import com.brainflow.image.space.Axis;
 import com.brainflow.utils.OndeckTaskExecutor;
 import org.apache.commons.pipeline.Feeder;
 import org.apache.commons.pipeline.driver.SynchronousStageDriverFactory;
@@ -16,6 +18,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,19 +38,6 @@ public class CompositeImageProducer extends AbstractImageProducer {
     private ImageLayerListener layerListener;
 
 
-    private ImageProcessingStage gatherRenderersStage;
-
-    private ImageProcessingStage renderLayersStage;
-
-    //private ImageProcessingStage renderCoordinatesStage;
-
-    private ImageProcessingStage cropImageStage;
-
-    private ImageProcessingStage resizeImageStage;
-
-
-    private TerminalFeeder terminal = new TerminalFeeder();
-
     private boolean dirty = true;
 
     private BufferedImage lastImage;
@@ -56,7 +46,7 @@ public class CompositeImageProducer extends AbstractImageProducer {
 
 
     public CompositeImageProducer(IImagePlot plot, Anatomy3D displayAnatomy) {
-        this(plot, displayAnatomy, (AnatomicalPoint3D)plot.getModel().getImageSpace().getCentroid());
+        this(plot, displayAnatomy, (AnatomicalPoint3D) plot.getModel().getImageSpace().getCentroid());
 
     }
 
@@ -68,19 +58,18 @@ public class CompositeImageProducer extends AbstractImageProducer {
     }
 
     public CompositeImageProducer(IImagePlot plot,
-                                      Anatomy3D displayAnatomy, AnatomicalPoint3D slice, ExecutorService service) {
-            this.plot = plot;
-            setDisplayAnatomy(displayAnatomy);
+                                  Anatomy3D displayAnatomy, AnatomicalPoint3D slice, ExecutorService service) {
+        this.plot = plot;
+        setDisplayAnatomy(displayAnatomy);
 
-            //initPipeline();
+        //initPipeline();
 
-            setSlice(slice);
-            layerListener = new PipelineLayerListener();
-            getModel().addImageLayerListener(layerListener);
-            renderQueue = new OndeckTaskExecutor<BufferedImage>(service);
+        setSlice(slice);
+        layerListener = new PipelineLayerListener();
+        getModel().addImageLayerListener(layerListener);
+        renderQueue = new OndeckTaskExecutor<BufferedImage>(service);
 
-        }
-
+    }
 
 
 
@@ -104,8 +93,12 @@ public class CompositeImageProducer extends AbstractImageProducer {
     }
 
     public void setSlice(AnatomicalPoint3D slice) {
+        AnatomicalPoint1D pt = slice.getValue(getDisplayAnatomy().ZAXIS);
+         if (pt.getValue() == getSlice().getValue(getDisplayAnatomy().ZAXIS).getValue()) {
+            return;
+        }
+
         super.setSlice(slice);
-        //pipeline.clearPath(gatherRenderersStage);
         dirty = true;
     }
 
@@ -164,44 +157,20 @@ public class CompositeImageProducer extends AbstractImageProducer {
 
     }
 
-    private void initPipeline() {
-        pipeline = new ImagePlotPipeline(getPlot());
-        try {
-            gatherRenderersStage = new GatherRenderersStage();
-            pipeline.addStage(gatherRenderersStage, new SynchronousStageDriverFactory());
-
-
-            renderLayersStage = new RenderLayersStage();
-            pipeline.addStage(renderLayersStage, new SynchronousStageDriverFactory());
-
-
-            cropImageStage = new CropImageStage();
-            pipeline.addStage(cropImageStage, new SynchronousStageDriverFactory());
-
-            resizeImageStage = new ResizeImageStage();
-            pipeline.addStage(resizeImageStage, new SynchronousStageDriverFactory());
-
-            pipeline.getSourceFeeder().feed(getModel());
-            pipeline.setTerminalFeeder(terminal);
-        }
-        catch (ValidationException e) {
-            // can'three really handle this exception, so throw uncheckedexception
-            throw new RuntimeException(e);
-        }
-
-
-    }
-
 
     public synchronized BufferedImage render() {
 
-        //assert pipeline.getStageDrivers().get(0).getState() != StageDriver.State.RUNNING;
+
         ImagePlotPipeline pipeline = createPipeline();
 
         pipeline.getSourceFeeder().feed(getModel());
         pipeline.run();
+
+
+        lastImage = ((TerminalFeeder) pipeline.getTerminalFeeder()).getImage();
         dirty = false;
-        lastImage = ((TerminalFeeder)pipeline.getTerminalFeeder()).getImage();
+
+
         return lastImage;
     }
 
@@ -219,8 +188,6 @@ public class CompositeImageProducer extends AbstractImageProducer {
     }
 
 
-
-
     private Callable<BufferedImage> createRenderTask() {
         return new Callable<BufferedImage>() {
             public BufferedImage call() throws Exception {
@@ -229,7 +196,6 @@ public class CompositeImageProducer extends AbstractImageProducer {
                 return buf;
 
             }
-
 
 
         };
@@ -251,7 +217,6 @@ public class CompositeImageProducer extends AbstractImageProducer {
             return finalImage;
         }
     }
-
 
 
     protected void finalize() throws Throwable {
@@ -280,11 +245,8 @@ public class CompositeImageProducer extends AbstractImageProducer {
         public void colorMapChanged(ImageLayerEvent event) {
             //pipeline.clearPath(gatherRenderersStage);
             dirty = true;
-
-            ThreadPoolExecutor executor = (ThreadPoolExecutor)renderQueue.getExecutorService();
-           
             renderQueue.submitTask(createRenderTask());
-            //plot.getComponent().repaint();
+
         }
 
         public void opacityChanged(ImageLayerEvent event) {

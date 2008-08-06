@@ -7,6 +7,8 @@ import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.utils.DataType;
 
 import java.awt.image.*;
+import java.util.concurrent.*;
+import java.math.BigDecimal;
 
 
 /**
@@ -26,19 +28,19 @@ public abstract class BasicImageData extends AbstractImageData {
 
     protected Object storage;
 
-    protected double minValue;
+    private Future<Double> maxValue;
 
-    protected double maxValue;
+    private Future<Double> minValue;
 
-    protected boolean recomputeMax = true;
+    private static ExecutorService service = Executors.newCachedThreadPool();
 
-    protected boolean recomputeMin = true;
 
-    protected int identifier = 0;
+    private Future<Long> hashid;
 
 
     public BasicImageData(IImageSpace space) {
         super(space);
+
     }
 
     protected BasicImageData(IImageSpace space, DataType dtype) {
@@ -51,6 +53,87 @@ public abstract class BasicImageData extends AbstractImageData {
 
     public Object getStorage() {
         return storage;
+    }
+
+    private void computeStats() {
+
+
+        maxValue = service.submit(new Callable<Double>() {
+            public Double call() {
+                return computeMax();
+
+            }
+        });
+
+        minValue = service.submit(new Callable<Double>() {
+
+
+            public Double call() {
+
+                return computeMin();
+
+            }
+        });
+
+        hashid = service.submit(new Callable<Long>() {
+            Long result = null;
+
+            public Long call() {
+                return computeHash();
+
+            }
+        });
+
+
+    }
+
+    private long computeHash() {
+        ImageIterator iter = this.iterator();
+        double sum = 0;
+        double code = 0;
+
+        while (iter.hasNext()) {
+            double val = iter.next();
+            sum += val;
+            code += iter.index() * val;
+        }
+
+        return Double.doubleToLongBits(sum + code);
+
+    }
+
+    protected final double computeMin() {
+        ImageIterator iter = this.iterator();
+
+        double _min = Double.MAX_VALUE;
+        while (iter.hasNext()) {
+            double val = iter.next();
+            if (val < _min) {
+                _min = val;
+
+            }
+        }
+
+
+        return _min;
+
+    }
+
+    protected double computeMax() {
+        ImageIterator iter = this.iterator();
+
+        double _max = -Double.MAX_VALUE;
+        while (iter.hasNext()) {
+            double val = iter.next();
+            if (val > _max) {
+                _max = val;
+
+            }
+        }
+
+
+        return _max;
+
     }
 
 
@@ -80,6 +163,10 @@ public abstract class BasicImageData extends AbstractImageData {
         } else {
             throw new IllegalArgumentException("BasicImageData: cannot allocate data of type " + datatype.toString());
         }
+
+        computeStats();
+
+
     }
 
     public DataBuffer getDataBuffer() {
@@ -88,8 +175,6 @@ public abstract class BasicImageData extends AbstractImageData {
 
 
     protected DataBuffer allocateBuffer(int size) {
-
-        DataBuffer data = null;
 
         if (datatype == DataType.BYTE) {
             if (storage == null)
@@ -115,36 +200,52 @@ public abstract class BasicImageData extends AbstractImageData {
             throw new IllegalArgumentException("BasicImageData: cannot allocate data of type " + datatype.toString());
         }
 
+        computeStats();
+
         return data;
     }
 
-    public double maxValue() {
-        if (!recomputeMax)
-            return maxValue;
+    protected long hashid() {
 
-        ImageIterator iter = this.iterator();
-        double max = -Double.MAX_VALUE;
-        while (iter.hasNext()) {
-            max = Math.max(iter.next(), max);
+        try {
+            System.out.println("requesting hashid ...");
+            return hashid.get();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
-        recomputeMax = false;
-        maxValue = max;
-        return maxValue;
+
+    }
+
+
+    public double maxValue() {
+
+        try {
+            System.out.println("requesting max value ...");
+            return maxValue.get();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 
     public double minValue() {
-        if (!recomputeMin)
-            return minValue;
-        ImageIterator iter = this.iterator();
-        double min = Double.MAX_VALUE;
-        while (iter.hasNext()) {
-            min = Math.min(iter.next(), min);
+
+        try {
+            return minValue.get();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+
         }
 
-        recomputeMin = false;
-        minValue = min;
-        return minValue;
+
     }
 
 
@@ -155,20 +256,30 @@ public abstract class BasicImageData extends AbstractImageData {
     public abstract ImageIterator iterator();
 
 
-    public int hashCode() {
-        StringBuffer sb = new StringBuffer();
-        sb.append(String.valueOf(super.hashCode()));
-        sb.append(this.getImageLabel());
-        return sb.hashCode();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BasicImageData that = (BasicImageData) o;
+
+        if (!that.space.equals(o)) return false;
+        if (!(that.hashid() == hashid())) return false;
+        if (!that.getImageLabel().equals(getImageLabel())) return false;
+
+        return true;
     }
 
+    public int hashCode() {
+        int result = (int) hashid() + getImageLabel().hashCode() + space.hashCode();
+        return result;
+    }
 
     public static BasicImageData create(IImageSpace space, DataType type) {
         if (space.getNumDimensions() == 2) {
-            return new BasicImageData2D((ImageSpace2D)space, type);
+            return new BasicImageData2D((ImageSpace2D) space, type);
         }
         if (space.getNumDimensions() == 3) {
-            return new BasicImageData3D((ImageSpace3D)space, type);
+            return new BasicImageData3D((ImageSpace3D) space, type);
         } else
             throw new IllegalArgumentException("Cannot create BasicImageData with dimensionality " + space.getNumDimensions());
     }

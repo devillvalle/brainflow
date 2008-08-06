@@ -68,13 +68,17 @@ public abstract class ImageViewPresenter extends AbstractPresenter implements Im
 
             public void onEvent(Object evt) {
                 //System.out.println("ON EVENT: LAYER SELECTION EVENT");
-                EventServiceEvent ese = (EventServiceEvent) evt;
-                if (ese.getSource() == getSelectedView()) {
-                    ImageLayer layer = getSelectedView().getSelectedLayer();
-                    //System.out.println("LAYER : " + layer);
-                    if (layer != null) {
-                        layerSelected(layer);
+                ImageViewLayerSelectionEvent event = (ImageViewLayerSelectionEvent) evt;
+                if (event.getSource() == getSelectedView()) {
+
+                    ImageLayer oldLayer = event.getDeselectedLayer();
+                    if (oldLayer != null) {
+                        layerDeselected(oldLayer);
                     }
+
+                    ImageLayer layer = event.getSelectedLayer();
+                    layerSelected(layer);
+
                 }
             }
         });
@@ -122,6 +126,10 @@ public abstract class ImageViewPresenter extends AbstractPresenter implements Im
     public abstract void allViewsDeselected();
 
     protected void layerChangeNotification() {
+    }
+
+    protected void layerDeselected(ImageLayer layer) {
+
     }
 
     protected void layerSelected(ImageLayer layer) {

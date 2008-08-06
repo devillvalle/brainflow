@@ -11,6 +11,8 @@ import com.brainflow.math.Index3D;
 import com.brainflow.utils.DataType;
 import test.TestUtils;
 
+import java.math.BigDecimal;
+
 
 /**
  * <p>Title: </p>
@@ -31,109 +33,64 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
 
     private IImageSpace3D space3d;
 
+
     public BasicImageData3D(BasicImageData3D src) {
-        //todo look at all the code duplication
-        
+        //todo look at all the code duplication       
         super(src.getImageSpace(), src.getDataType());
+        planeSize = space.getDimension(Axis.X_AXIS) * space.getDimension(Axis.Y_AXIS);
+        dim0 = space.getDimension(Axis.X_AXIS);
+        space3d = getImageSpace();
         fillBuffer(src.storage, space.getNumSamples());
-        planeSize = space.getDimension(Axis.X_AXIS) * space.getDimension(Axis.Y_AXIS);
-        dim0 = space.getDimension(Axis.X_AXIS);
-
-        space3d = getImageSpace();
     }
 
 
-    public BasicImageData3D(ImageSpace3D space, DataType _type) {
+    public BasicImageData3D(IImageSpace3D space, DataType _type) {
         super(space, _type);
-        data = allocateBuffer(space.getNumSamples());
+
         planeSize = space.getDimension(Axis.X_AXIS) * space.getDimension(Axis.Y_AXIS);
         dim0 = space.getDimension(Axis.X_AXIS);
-
         space3d = getImageSpace();
+        allocateBuffer(space.getNumSamples());
 
     }
 
-    public BasicImageData3D(ImageSpace3D space, DataType _type, String imageLabel) {
+    public BasicImageData3D(IImageSpace3D space, DataType _type, String imageLabel) {
         super(space, _type, imageLabel);
-        data = allocateBuffer(space.getNumSamples());
         planeSize = space.getDimension(Axis.X_AXIS) * space.getDimension(Axis.Y_AXIS);
         dim0 = space.getDimension(Axis.X_AXIS);
-
         space3d = getImageSpace();
+        allocateBuffer(space.getNumSamples());
+
 
     }
 
-    public BasicImageData3D(ImageSpace3D space, Object array) {
+    public BasicImageData3D(IImageSpace3D space, Object array) {
         super(space,establishDataType(array));
         storage = array;
 
-        data = allocateBuffer(space.getNumSamples());
+
         planeSize = space.getDimension(Axis.X_AXIS) * space.getDimension(Axis.Y_AXIS);
         dim0 = space.getDimension(Axis.X_AXIS);
-
         space3d = getImageSpace();
+        allocateBuffer(space.getNumSamples());
 
     }
 
-    public BasicImageData3D(ImageSpace3D space, Object array, String imageLabel) {
+    public BasicImageData3D(IImageSpace3D space, Object array, String imageLabel) {
         super(space,establishDataType(array), imageLabel);
         storage = array;
-
         data = allocateBuffer(space.getNumSamples());
         planeSize = space.getDimension(Axis.X_AXIS) * space.getDimension(Axis.Y_AXIS);
         dim0 = space.getDimension(Axis.X_AXIS);
-
         space3d = getImageSpace();
 
     }
 
    
 
-    public double maxValue() {
-        if (!recomputeMax) {
-            return maxValue;
-        }
-
-        int sz = data.getSize();
-        double _max = -Double.MAX_VALUE;
-        for (int i = 0; i < sz; i++) {
-            double val = data.getElemDouble(i);
-            if (val > _max) {
-                _max = val;
-
-            }
-        }
 
 
-        maxValue = _max;
-        recomputeMax = false;
-
-        return maxValue;
-
-    }
-
-    public final double minValue() {
-        if (!recomputeMin) {
-            return minValue;
-        }
-
-        int sz = data.getSize();
-        double _min = Double.MAX_VALUE;
-        for (int i = 0; i < sz; i++) {
-            double val = data.getElemDouble(i);
-            if (val < _min) {
-                _min = val;
-
-            }
-        }
-
-
-        minValue = _min;
-        recomputeMin = false;
-
-        return minValue;
-
-    }
+   
 
     public ImageInfo getImageInfo() {
         // todo is this  what we really want to do?
@@ -308,9 +265,36 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
 
     }
 
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BasicImageData3D that = (BasicImageData3D) o;
+
+        if (dim0 != that.dim0) return false;
+        if (planeSize != that.planeSize) return false;
+        if (!space3d.equals(that.space3d)) return false;
+        if (!(hashid() == that.hashid())) return false;
+
+
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + planeSize;
+        result = 31 * result + dim0;
+        result = 31 * result + space3d.hashCode();
+        result = 31 * result + (int)hashid();
+        return result;
+    }
+
     public String toString() {
         return this.getImageLabel();
     }
+
+
 
 
 

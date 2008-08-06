@@ -39,8 +39,8 @@ public class GatherRenderersStage extends ImageProcessingStage {
         IImageDisplayModel model = (IImageDisplayModel)o;
         for (int i=0; i<model.getNumLayers(); i++) {
             AbstractLayer layer = model.getLayer(i);
-            SliceRenderer renderer = layer.getSliceRenderer(model.getImageSpace(), getSlice());
-            renderer.setDisplayAnatomy(getDisplayAnatomy());
+            SliceRenderer renderer = layer.getSliceRenderer(model.getImageSpace(), getSlice(), getDisplayAnatomy());
+            
             rendererList.add(renderer);
         }
 

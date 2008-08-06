@@ -1,6 +1,7 @@
 package com.brainflow.core.layer;
 
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.space.ICoordinateSpace;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.data.CoordinateSet3D;
@@ -33,9 +34,11 @@ public class CoordinateLayer extends AbstractLayer {
         return coordinates;
     }
 
-    public SliceRenderer getSliceRenderer(IImageSpace refspace, AnatomicalPoint3D slice) {
-        return new BasicCoordinateSliceRenderer(this, slice);
+    public SliceRenderer getSliceRenderer(IImageSpace refspace, AnatomicalPoint3D slice, Anatomy3D displayAnatomy) {
+       return new BasicCoordinateSliceRenderer(this, slice, displayAnatomy);
     }
+
+    
 
     public ICoordinateSpace getCoordinateSpace() {
         return coordinates.getSpace();

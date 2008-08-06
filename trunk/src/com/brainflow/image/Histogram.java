@@ -65,6 +65,7 @@ public class Histogram {
         
         while (iter.hasNext()) {
             double val = iter.next();
+
             if (ignore != null)
                 if (ignore.contains(val))
                     continue;
@@ -75,6 +76,7 @@ public class Histogram {
 
             bins[nbin]++;
         }
+
         computed = true;
         binList = new DoubleArrayList(ArrayUtils.castToDoubles(bins));
         computeBinIntervals(binSize);
@@ -89,7 +91,26 @@ public class Histogram {
     public double getBinSize() {
         computeBins();
         return binSize;
+    }
 
+    public int whichBin(double value) {
+        computeBins();
+      
+        for (int i=0; i<binIntervals.size()-1; i++) {
+            double b1 = binIntervals.get(i);
+            double b2 = binIntervals.get(i+1);
+
+            if (value >= b1 && value <= b2) {
+                return i;
+            }
+
+        }
+
+        return -1;
+    }
+
+    public int getCount(int bin) {
+        return (int)binList.get(bin);
     }
 
   

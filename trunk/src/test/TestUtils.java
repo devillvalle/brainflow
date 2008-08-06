@@ -63,6 +63,7 @@ public class TestUtils {
 
         try {
             IImageDataSource dataSource = TestUtils.quickDataSource(headerName);
+            dataSource.load();
             layer = new ImageLayer3D(dataSource);
         } catch(Exception e) {
             throw new RuntimeException(e);

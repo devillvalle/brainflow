@@ -21,8 +21,6 @@ import com.brainflow.core.ClipRange;
 public class BiSliderAdapter extends SwingAdapter<ClipRange, BiSlider> implements ChangeListener {
 
     protected void bindListener(BaseProperty<ClipRange> clipRangeBaseProperty, BiSlider component) {
-        System.out.println("adding lister to bislider");
-        System.out.println("slider " + component);
         component.addChangeListener(this);
     }
 

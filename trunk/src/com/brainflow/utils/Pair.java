@@ -15,6 +15,7 @@ public class Pair<T, E> {
     
     
     private T left;
+    
     private E right;
     
     

@@ -1,6 +1,7 @@
 package com.brainflow.core.layer;
 
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.space.ICoordinateSpace;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.core.layer.IMaskList;
@@ -64,7 +65,7 @@ public abstract class AbstractLayer {
 
     public abstract double getValue(AnatomicalPoint3D pt);
 
-    public abstract SliceRenderer getSliceRenderer(IImageSpace refspace, AnatomicalPoint3D slice);
+    public abstract SliceRenderer getSliceRenderer(IImageSpace refspace, AnatomicalPoint3D slice, Anatomy3D displayAnatomy);
 
 
     public boolean isVisible() {

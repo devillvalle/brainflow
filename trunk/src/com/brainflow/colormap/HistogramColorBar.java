@@ -29,11 +29,18 @@ public class HistogramColorBar extends JComponent {
 
     private double yaxisFraction = 1;
 
+    private int RIGHT_CUSHION = 12;
+
+    private int BOTTOM_CUSHION = 12;
+
+    private int TOP_CUSHION = 4;
 
 
+    
     public HistogramColorBar(IColorMap map, Histogram histogram) {
         this.colorMap = map;
         this.histogram = histogram;
+
     }
 
     public double getYaxisFraction() {
@@ -59,16 +66,68 @@ public class HistogramColorBar extends JComponent {
         return histogram;
     }
 
+    public int getYOffset() {
+        return getInsets().top + TOP_CUSHION;
+    }
+
+    public int getXOffset() {
+        return getInsets().left;
+    }
+
+    public double getMinValue() {
+        return histogram.getMinValue();
+    }
+
+    public double getMaxValue() {
+        return histogram.getMaxValue();
+    }
+
+    public double valueToLocationX(double value) {
+        double perc = (value - histogram.getMinValue())/(histogram.getMaxValue() - histogram.getMinValue());
+        return perc*getDataArea().width;
+    }
+
+    public double locationToValueX(int loc) {
+        double perc = ((double)loc - getXOffset())/getDataArea().getWidth();
+        return perc*(histogram.getMaxValue() - histogram.getMinValue()) + histogram.getMinValue();
+
+
+    }
+
+
+    public int getBin(double value) {
+        return histogram.whichBin(value);
+    }
+    public double getCount(double value) {
+        int bin = histogram.whichBin(value);
+        if (bin < 0) return 0;
+        return histogram.getCount(bin);
+    }
+
     public void setHistogram(Histogram histogram) {
         this.histogram = histogram;
         repaint();
     }
 
+    public Rectangle getDataArea() {
+
+        Insets insets = getInsets();
+        return new Rectangle(insets.left, insets.top + TOP_CUSHION,
+                getWidth() - insets.left - insets.right - RIGHT_CUSHION,
+                getHeight() - insets.top - insets.bottom - BOTTOM_CUSHION - TOP_CUSHION);
+    }
+
+
+
+
+
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D)g;
 
-        int width = getWidth();
-        int height = getHeight();
+        Rectangle dataArea = getDataArea();
+
+        int width = dataArea.width;
+        int height = dataArea.height;
 
         histogram.computeBins();
 
@@ -94,11 +153,10 @@ public class HistogramColorBar extends JComponent {
 
             //double y = Math.log(binHeights.get(i));
             double y = binHeights.get(i);
-            double ny = (y/ymax)*(double)height;
+            double ny = Math.min((y/ymax), 1)*(double)height;
 
-
-
-            Rectangle2D rect = new Rectangle2D.Double(nxstart*width, height-ny, (nxend-nxstart)*width, ny);
+          
+            Rectangle2D rect = new Rectangle2D.Double(dataArea.x + nxstart*width, height-ny + dataArea.y, (nxend-nxstart)*width, ny);
 
             GradientPaint gp = new GradientPaint((float)(nxstart*width), 0, startColor, (float)(nxend*width), 0, endColor);
 

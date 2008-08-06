@@ -10,7 +10,6 @@
 package com.brainflow.application.presentation;
 
 
-
 import com.brainflow.application.actions.DesignColorMapCommand;
 import com.brainflow.application.actions.SelectColorMapCommand;
 import com.brainflow.application.presentation.controls.ColorBarForm;
@@ -86,11 +85,9 @@ public class ColorBarPresenter extends ImageViewPresenter {
 
         colorMapListener = new PropertyListener() {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
-                System.out.println("color map changed :" + this);
 
-                //todo why null?
-                IColorMap cmap = (IColorMap)newValue;
-               
+                IColorMap cmap = (IColorMap) newValue;
+
                 form.setColorMap(cmap);
             }
         };
@@ -106,13 +103,14 @@ public class ColorBarPresenter extends ImageViewPresenter {
     }
 
     public void viewSelected(final ImageView view) {
-         form.setColorMap(view.getSelectedLayer().getImageLayerProperties().colorMap.get());
+        form.setColorMap(view.getSelectedLayer().getImageLayerProperties().colorMap.get());
 
-         BeanContainer.get().addListener(view.getSelectedLayer().getImageLayerProperties().colorMap, colorMapListener);
+        BeanContainer.get().addListener(view.getSelectedLayer().getImageLayerProperties().colorMap, colorMapListener);
 
     }
 
     protected void layerSelected(ImageLayer layer) {
+        //todo what about unregistering deselected layer?
         form.setColorMap(layer.getImageLayerProperties().colorMap.get());
         BeanContainer.get().addListener(layer.getImageLayerProperties().colorMap, colorMapListener);
 
@@ -132,7 +130,6 @@ public class ColorBarPresenter extends ImageViewPresenter {
             IndexColorModel icm = maps.get(name);
             SelectColorMapCommand action = new SelectColorMapCommand(name,
                     ColorTable.createImageIcon(icm, 30, 12), icm);
-
 
 
             actions.add(action.getActionAdapter());
@@ -192,7 +189,7 @@ public class ColorBarPresenter extends ImageViewPresenter {
             int layer = view.getModel().getSelectedIndex();
 
             IColorMap oldMap = view.getModel().getLayer(layer).
-                                    getImageLayerProperties().getColorMap();
+                    getImageLayerProperties().getColorMap();
 
             ColorGradientEditor chooser = new ColorGradientEditor(oldMap.getMinimumValue(), oldMap.getMaximumValue());
 
@@ -218,10 +215,8 @@ public class ColorBarPresenter extends ImageViewPresenter {
             if (result == 0) {
 
 
-
-
                 IColorMap newMap = chooser.getColorMap();
-               
+
                 view.getModel().getLayer(layer).
                         getImageLayerProperties().colorMap.set(newMap);
             }

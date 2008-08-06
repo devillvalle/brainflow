@@ -114,14 +114,12 @@ public class ImageDisplayModel implements IImageDisplayModel {
         }
 
         public void set(List<Integer> t) {
-            System.out.println("new indices " + Arrays.toString(t.toArray()));
             for (int i = 0; i < getNumLayers(); i++) {
                 ImageLayer layer = getLayer(i);
                 if (t.contains(i)) {
                     layer.getImageLayerProperties().visible.set(true);
                 } else {
-                    System.out.println("setting layer " + i + " to false");
-                    layer.getImageLayerProperties().visible.set(false);
+                     layer.getImageLayerProperties().visible.set(false);
                 }
             }
 
@@ -130,7 +128,6 @@ public class ImageDisplayModel implements IImageDisplayModel {
         }
 
         public void set(int index, Integer integer) {
-
             super.set(index, integer);
             assert isSynced();
         }
@@ -139,6 +136,10 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     public final Property<Integer> listSelection = new ObservableProperty<Integer>(-1) {
         public void set(Integer integer) {
+            if (integer > 0) {
+                System.out.println("" + integer);    
+            }
+            System.out.println("setting selected layer index " + integer);
             if (integer >= listModel.size() || integer < -1) {
                 throw new IllegalArgumentException("selection index exceeds size of list");
             }
@@ -177,6 +178,8 @@ public class ImageDisplayModel implements IImageDisplayModel {
                 forwarder.fireIntervalRemoved(new ListDataEvent(ImageDisplayModel.this, ListDataEvent.INTERVAL_REMOVED, index, index));
             }
         });
+
+
         visListener = new ImageLayerListenerImpl() {
             public void visibilityChanged(ImageLayerEvent event) {
                 ImageLayer layer = event.getAffectedLayer();

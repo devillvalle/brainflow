@@ -107,20 +107,7 @@ public class ImageFiller {
 
     }
 
-    protected int getFixedValue(AnatomicalAxis axis1, int fpoint) {
-
-
-
-        //ImageAxis iaxis = ispace.getImageAxis(axis1, true);
-        //if (fpoint.getAnatomy() == axis1) {
-        //    return iaxis.nearestSample(fpoint);
-        //} else if (fpoint.getAnatomy() == axis1.getFlippedAxis()) {
-        //    return iaxis.nearestSample(fpoint.mirrorPoint(iaxis));
-        //} else throw new AssertionError();
-
-        return 0 ;
-
-    }
+   
 
     private QuickIterator makeIterator(AnatomicalAxis axis1, AnatomicalAxis axis2) {
         if (axis1 == axis2) {

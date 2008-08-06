@@ -5,6 +5,8 @@ import com.brainflow.image.anatomy.AnatomicalDirection;
 import com.brainflow.image.anatomy.AnatomicalPoint1D;
 import com.brainflow.utils.NumberUtils;
 
+import java.util.Arrays;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -201,24 +203,24 @@ public class ImageAxis extends CoordinateAxis {
         return ret;
     }
 
-
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         ImageAxis imageAxis = (ImageAxis) o;
 
         if (samples != imageAxis.samples) return false;
-        if (!NumberUtils.equals(imageAxis.spacing, spacing, .001) ) return false;
-        if (!getRange().equals(imageAxis.getRange())) return false;
+        if (Double.compare(imageAxis.spacing, spacing) != 0) return false;
 
         return true;
     }
 
     public int hashCode() {
-        int result;
+        int result = super.hashCode();
         long temp;
-        result = samples;
+        result = 31 * result + samples;
+        result = 31 * result + (sampleArray != null ? Arrays.hashCode(sampleArray) : 0);
         temp = spacing != +0.0d ? Double.doubleToLongBits(spacing) : 0L;
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;

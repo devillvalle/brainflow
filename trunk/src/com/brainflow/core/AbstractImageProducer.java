@@ -21,7 +21,7 @@ public abstract class AbstractImageProducer implements IImageProducer {
 
     private Anatomy3D displayAnatomy;
 
-    private AnatomicalPoint3D slice;
+    private AnatomicalPoint3D slice = new AnatomicalPoint3D(Anatomy3D.AXIAL_LAI, 0,0,0);
 
     private Rectangle screenSize;
 

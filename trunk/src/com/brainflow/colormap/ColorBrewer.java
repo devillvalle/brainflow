@@ -23,14 +23,14 @@ public class ColorBrewer {
     private static final int[] GreensHex = { 0xEDF8E9, 0xC7E9C0, 0xA1D99B, 0x74C476, 0x41AB5D, 0x238B45, 0x005A32 };
     private static final int[] BrBGHex = { 0x8C510A, 0xD8B365, 0xF6E8C3, 0xF5F5F5, 0xC7EAE5, 0x5AB4AC, 0x01665E };
 
-    public static final IndexColorModel YellowRed = createColorModel(YellowRedHex);
-    public static final IndexColorModel RedYellowBlue = createColorModel(RedYellowBlueHex);
-    public static final IndexColorModel YellowGreenBlue = createColorModel(YellowGreenBlueHex);
-    public static final IndexColorModel Purples = createColorModel(PurplesHex);
-    public static final IndexColorModel PurpleBlue = createColorModel(PurpleBlueHex);
-    public static final IndexColorModel Reds = createColorModel(RedsHex);
-    public static final IndexColorModel Greens = createColorModel(GreensHex);
-    public static final IndexColorModel BrownBlueGreen = createColorModel(BrBGHex);
+    public static final IndexColorModel YellowRed = ColorTable.resampleMap(createColorModel(YellowRedHex), 14);
+    public static final IndexColorModel RedYellowBlue = ColorTable.resampleMap(createColorModel(RedYellowBlueHex), 14);
+    public static final IndexColorModel YellowGreenBlue = ColorTable.resampleMap(createColorModel(YellowGreenBlueHex), 14);
+    public static final IndexColorModel Purples = ColorTable.resampleMap(createColorModel(PurplesHex), 14);
+    public static final IndexColorModel PurpleBlue = ColorTable.resampleMap(createColorModel(PurpleBlueHex), 14);
+    public static final IndexColorModel Reds = ColorTable.resampleMap(createColorModel(RedsHex), 14);
+    public static final IndexColorModel Greens = ColorTable.resampleMap(createColorModel(GreensHex), 14);
+    public static final IndexColorModel BrownBlueGreen = ColorTable.resampleMap(createColorModel(BrBGHex), 14);
 
 
     public static IndexColorModel createColorModel(int[] hexvals) {

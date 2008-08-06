@@ -125,6 +125,17 @@ public final class AxisRange implements Cloneable {
         return new AxisRange(aaxis, begin, end);
     }
 
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = begin != +0.0d ? Double.doubleToLongBits(begin) : 0L;
+        result = (int) (temp ^ (temp >>> 32));
+        temp = end != +0.0d ? Double.doubleToLongBits(end) : 0L;
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (aaxis != null ? aaxis.hashCode() : 0);
+        return result;
+    }
+
     public boolean equals(Object other) {
         if (!(other instanceof AxisRange)) {
             return false;

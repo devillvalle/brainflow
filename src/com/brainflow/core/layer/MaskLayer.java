@@ -9,6 +9,7 @@ import com.brainflow.core.layer.ImageLayerProperties;
 import com.brainflow.core.layer.IMaskItem;
 import com.brainflow.core.SliceRenderer;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.data.IImageData3D;
 import com.brainflow.image.data.MaskedData3D;
 import com.brainflow.image.data.RGBAImage;
@@ -70,23 +71,22 @@ public class MaskLayer extends ImageLayer {
 
     public double getValue(AnatomicalPoint3D pt) {
         IImageSpace space = getCoordinateSpace();
-        float x = (float)pt.getValue(space.getAnatomicalAxis(Axis.X_AXIS)).getValue();
-        float y = (float)pt.getValue(space.getAnatomicalAxis(Axis.Y_AXIS)).getValue();
-        float z = (float)pt.getValue(space.getAnatomicalAxis(Axis.Z_AXIS)).getValue();
+        float x = (float) pt.getValue(space.getAnatomicalAxis(Axis.X_AXIS)).getValue();
+        float y = (float) pt.getValue(space.getAnatomicalAxis(Axis.Y_AXIS)).getValue();
+        float z = (float) pt.getValue(space.getAnatomicalAxis(Axis.Z_AXIS)).getValue();
 
         return getData().value(x, y, z, new NearestNeighborInterpolator());
     }
 
-
-    public SliceRenderer getSliceRenderer(IImageSpace refspace, AnatomicalPoint3D slice) {
-        return new BasicImageSliceRenderer((ImageSpace3D)refspace, this, slice) {
-                    protected RGBAImage thresholdRGBA(RGBAImage rgba) {
-                        return rgba;
-                    }
-                };
-
+    public SliceRenderer getSliceRenderer(IImageSpace refspace, AnatomicalPoint3D slice, Anatomy3D displayAnatomy) {
+        return new BasicImageSliceRenderer((ImageSpace3D) refspace, this, slice, displayAnatomy) {
+            protected RGBAImage thresholdRGBA(RGBAImage rgba) {
+                return rgba;
+            }
+        };
 
     }
+
 
     @Override
     public MaskedData3D getData() {

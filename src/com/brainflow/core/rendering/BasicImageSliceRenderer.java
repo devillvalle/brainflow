@@ -15,6 +15,7 @@ import com.brainflow.image.space.*;
 import com.brainflow.core.SliceRenderer;
 import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.core.layer.ImageLayerProperties;
+import com.brainflow.utils.SoftCache;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -24,6 +25,13 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.util.logging.Logger;
+import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.HashMap;
+
+import net.java.dev.properties.container.BeanContainer;
+import net.java.dev.properties.events.PropertyListener;
+import net.java.dev.properties.BaseProperty;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,7 +42,7 @@ import java.util.logging.Logger;
  */
 public class BasicImageSliceRenderer implements SliceRenderer {
 
-    private static Logger log = Logger.getLogger(BasicImageSliceRenderer.class.getName());
+    private static final Logger log = Logger.getLogger(BasicImageSliceRenderer.class.getName());
 
     private AnatomicalPoint3D slice;
 
@@ -58,6 +66,37 @@ public class BasicImageSliceRenderer implements SliceRenderer {
 
     private IImageSpace3D refSpace;
 
+    private SoftCache<AnatomicalPoint1D, IImageData2D> dataCache;
+
+    private SoftCache<AnatomicalPoint1D, RGBAImage> rgbaCache;
+
+    private IColorMap lastColorMap;
+
+
+    public BasicImageSliceRenderer(BasicImageSliceRenderer renderer, AnatomicalPoint3D slice, boolean keepCache) {
+        this.slice = slice;
+        this.layer = renderer.layer;
+        this.refSpace = renderer.refSpace;
+        this.displayAnatomy = renderer.displayAnatomy;
+        this.lastColorMap = renderer.lastColorMap;
+
+        if (refSpace.equals(layer.getData().getImageSpace())) {
+            slicer = new ImageSlicer((IImageData3D) layer.getData());
+        } else {
+            slicer = new ImageSlicer(new MappedDataAcessor3D(refSpace, (IImageData3D) layer.getData()));
+        }
+
+        if (keepCache) {
+            dataCache = renderer.dataCache;
+            rgbaCache = renderer.rgbaCache;
+        } else {
+            initCache();
+        }
+
+        
+
+    }
+
 
     public BasicImageSliceRenderer(IImageSpace3D refSpace, ImageLayer layer, AnatomicalPoint3D slice) {
         this.slice = slice;
@@ -71,6 +110,60 @@ public class BasicImageSliceRenderer implements SliceRenderer {
         } else {
             slicer = new ImageSlicer(new MappedDataAcessor3D(refSpace, (IImageData3D) layer.getData()));
         }
+
+        initCache();
+
+    }
+
+    public BasicImageSliceRenderer(IImageSpace3D refSpace, ImageLayer layer, AnatomicalPoint3D slice, Anatomy3D displayAnatomy) {
+        this.slice = slice;
+        this.layer = layer;
+        this.refSpace = refSpace;
+        this.displayAnatomy = displayAnatomy;
+
+        //hack cast
+
+        if (refSpace.equals(layer.getData().getImageSpace())) {
+            slicer = new ImageSlicer((IImageData3D) layer.getData());
+        } else {
+            slicer = new ImageSlicer(new MappedDataAcessor3D(refSpace, (IImageData3D) layer.getData()));
+        }
+
+        initCache();
+
+
+    }
+
+    private void initCache() {
+        dataCache = new SoftCache<AnatomicalPoint1D, IImageData2D>();
+
+        rgbaCache = new SoftCache<AnatomicalPoint1D, RGBAImage>();
+
+        /*BeanContainer.get().addListener(layer.getImageLayerProperties().clipRange, new PropertyListener() {
+            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+                System.out.println("clearing rgba chache ");
+                System.out.println("size was " + rgbaCache.size());
+                rgbaCache.clear();
+            }
+        });
+
+        BeanContainer.get().addListener(layer.getImageLayerProperties().colorMap, new PropertyListener() {
+            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+                System.out.println("clearing rgba chache ");
+                System.out.println("size was " + rgbaCache.size());
+                rgbaCache.clear();
+            }
+        }); */
+
+    }
+
+
+    public SoftCache<AnatomicalPoint1D, IImageData2D> getDataCache() {
+        return dataCache;
+    }
+
+    public IImageSpace3D getReferenceSpace() {
+        return refSpace;
     }
 
     public ImageSpace2D getImageSpace() {
@@ -81,24 +174,35 @@ public class BasicImageSliceRenderer implements SliceRenderer {
         return displayAnatomy;
     }
 
-    public void setDisplayAnatomy(Anatomy3D displayAnatomy) {
-        this.displayAnatomy = displayAnatomy;
-    }
 
     private IImageData2D getData() {
         if (data != null) return data;
 
         AnatomicalPoint1D zdisp = getZSlice();
 
-        int slice = (int) Math.round(zdisp.getValue());
+        IImageData2D ret = dataCache.get(zdisp);
 
-        if (slice >= refSpace.getDimension(displayAnatomy.ZAXIS)) {
-            slice = refSpace.getDimension(displayAnatomy.ZAXIS) - 1;
-        } else if (slice < 0) {
-            slice = 0;
+        if (ret == null) {
+            int slice = (int) Math.round(zdisp.getValue());
+
+            if (slice >= refSpace.getDimension(displayAnatomy.ZAXIS)) {
+                slice = refSpace.getDimension(displayAnatomy.ZAXIS) - 1;
+            } else if (slice < 0) {
+                slice = 0;
+            }
+
+            System.out.println("creating new data slice");
+            ret = slicer.getSlice(getDisplayAnatomy(), slice);
+            dataCache.put(zdisp, ret);
+
+        } else {
+            System.out.println("retrieved cached data slice");
+            System.out.println("cache size : " + dataCache.size());
         }
-       
-        data = slicer.getSlice(getDisplayAnatomy(), slice);
+
+
+        data = ret;
+
         return data;
     }
 
@@ -111,11 +215,33 @@ public class BasicImageSliceRenderer implements SliceRenderer {
 
     }
 
+
+
     private RGBAImage getRGBAImage() {
         if (rgbaImage != null) return rgbaImage;
 
-        IColorMap cmap = layer.getImageLayerProperties().colorMap.get();
-        rgbaImage = cmap.getRGBAImage(getData());
+
+        AnatomicalPoint1D zdisp = getZSlice();
+
+        if (lastColorMap != layer.getImageLayerProperties().colorMap.get()) {
+            System.out.println("clearing rgba cache");
+            rgbaCache.clear();
+        } else {
+            rgbaImage = rgbaCache.get(zdisp);
+        }
+
+        if (rgbaImage == null) {
+            System.out.println("creating new rgba image");
+            IColorMap cmap = layer.getImageLayerProperties().colorMap.get();
+            lastColorMap = cmap;
+            rgbaImage = cmap.getRGBAImage(getData());
+            rgbaCache.put(zdisp, rgbaImage);
+
+        } else {
+            System.out.println("rgba cache size : " + rgbaCache.size());
+        }
+
+
         return rgbaImage;
     }
 
@@ -297,7 +423,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
         AnatomicalPoint1D zdisp = getZSlice();
 
 
-        IImageData2D maskData = slicer.getSlice(getDisplayAnatomy(), (int)Math.round(zdisp.getValue()));
+        IImageData2D maskData = slicer.getSlice(getDisplayAnatomy(), (int) Math.round(zdisp.getValue()));
 
         UByteImageData2D alpha = rgba.getAlpha();
         UByteImageData2D out = new UByteImageData2D(alpha.getImageSpace());

@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class RenderLayersStage extends ImageProcessingStage {
 
-    BufferedImage composite;
+    private BufferedImage composite;
 
 
     public void flush() {
@@ -36,7 +36,7 @@ public class RenderLayersStage extends ImageProcessingStage {
         if (renderers.size() == 0 || allTransparent(renderers)) {
             System.out.println("renderer size = 0 or all transparent");
             composite = null;
-        } else if (renderers.size() == 1 && renderers.get(0).getLayer().getImageLayerProperties().opacity.get().doubleValue() >= 1) {
+        } else if (renderers.size() == 1 && renderers.get(0).getLayer().getImageLayerProperties().opacity.get() >= 1) {
             SliceRenderer renderer = renderers.get(0);
             composite = renderer.render();
         } else {
@@ -48,7 +48,7 @@ public class RenderLayersStage extends ImageProcessingStage {
 
 
             for (SliceRenderer renderer : renderers) {
-                if (renderer != null)  // temporary hack
+                if (renderer != null)  // todo temporary hack
                     renderer.renderUnto(frameBounds, g2);
             }
 

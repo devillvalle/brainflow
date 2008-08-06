@@ -10,29 +10,39 @@
 package com.brainflow.application.services;
 
 import com.brainflow.core.ImageView;
+import com.brainflow.core.layer.ImageLayer;
 
 /**
  * @author buchs
  */
 public class ImageViewLayerSelectionEvent extends ImageViewEvent {
 
-    private int selectionIndex;
+
+    private ImageLayer deselectedLayer;
+
+    private ImageLayer selectedLayer;
 
     /**
      * Creates a new instance of ImageLayerSelectionEvent
      */
 
-    public ImageViewLayerSelectionEvent(ImageView view, int selectionIndex) {
+    public ImageViewLayerSelectionEvent(ImageView view, ImageLayer deselectedLayer, ImageLayer selectedLayer) {
         super(view);
-        this.selectionIndex = selectionIndex;
+        this.selectedLayer = selectedLayer;
+        this.deselectedLayer = deselectedLayer;
+
     }
 
-    public int getSelectionIndex() {
-        return selectionIndex;
+    public ImageLayer getSelectedLayer() {
+        return selectedLayer;
+    }
+
+    public ImageLayer getDeselectedLayer() {
+        return deselectedLayer;
     }
 
     public String toString() {
-        return getImageView().getName() + " Selected Layer : " + selectionIndex;
+        return getImageView().getName() + " Selected Layer : " + selectedLayer;
     }
 
 }

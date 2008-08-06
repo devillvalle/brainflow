@@ -91,8 +91,7 @@ public class RGBAImage {
     }
 
     public BufferedImage getAsBufferedImage() {
-        return null;
-        //BufferedImage.
+        throw new UnsupportedOperationException();
 
     }
 
@@ -112,36 +111,6 @@ public class RGBAImage {
         return alpha;
     }
 
-    /*public void setRed(UByteImageData2D _red) {
-        if (!_red.getImageSpace().equals(red.getImageSpace())) {
-            throw new IllegalArgumentException("incomaptible image space");
-
-        }
-
-        red = _red;
-    }
-
-    public void setGreen(UByteImageData2D _green) {
-        if (!_green.getImageSpace().equals(green.getImageSpace())) {
-            throw new IllegalArgumentException("incomaptible image space");
-        }
-    }
-
-    public void setBlue(UByteImageData2D _blue) {
-        if (!_blue.getImageSpace().equals(blue.getImageSpace())) {
-            throw new IllegalArgumentException("incomaptible image space");
-        }
-
-        blue = _blue;
-    }
-
-    public void setAlpha(UByteImageData2D _alpha) {
-        if (!_alpha.getImageSpace().equals(alpha.getImageSpace())) {
-            throw new IllegalArgumentException("incomaptible image space");
-        }
-
-        alpha = _alpha;
-    }  */
-
+    
 
 }

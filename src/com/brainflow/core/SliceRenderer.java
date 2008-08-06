@@ -22,8 +22,6 @@ public interface SliceRenderer {
 
     public Anatomy3D getDisplayAnatomy();
 
-    public void setDisplayAnatomy(Anatomy3D anatomy);
-
     public void setSlice(AnatomicalPoint3D slice);
 
     public AnatomicalPoint3D getSlice();

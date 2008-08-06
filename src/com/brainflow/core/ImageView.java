@@ -542,9 +542,14 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
         public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
 
             int selectionIndex = (Integer) newValue;
+            int oldIndex = (Integer)oldValue;
+
+            ImageLayer selectedLayer = getModel().getLayer(selectionIndex);
+            ImageLayer deselectedLayer = getModel().getLayer(oldIndex);
+
             if (selectionIndex >= 0) {
 
-                EventBus.publish(new ImageViewLayerSelectionEvent(ImageView.this, selectionIndex));
+                EventBus.publish(new ImageViewLayerSelectionEvent(ImageView.this, deselectedLayer, selectedLayer));
             }
 
         }
@@ -553,13 +558,6 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
     }
 
 
-    class CrosshairHandler implements PropertyChangeListener {
-
-        public void propertyChange(PropertyChangeEvent evt) {
-
-
-        }
-    }
 
 
     class ViewportHandler implements PropertyChangeListener {

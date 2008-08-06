@@ -6,11 +6,19 @@ import com.brainflow.core.rendering.BasicImageSliceRenderer;
 import com.brainflow.core.layer.ImageLayerProperties;
 import com.brainflow.core.SliceRenderer;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.image.anatomy.AnatomicalAxis;
+import com.brainflow.image.anatomy.Anatomy;
+import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.data.IImageData3D;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.image.space.IImageSpace3D;
+import com.brainflow.image.space.Axis;
+import com.brainflow.utils.Pair;
+
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Created by IntelliJ IDEA.
@@ -65,11 +73,32 @@ public class ImageLayer3D extends ImageLayer<ImageSpace3D> {
         return 0;
     }
 
-    private SliceRenderer getSliceRenderer(IImageSpace3D refspace, AnatomicalPoint3D slice) {
-        return new BasicImageSliceRenderer(refspace, this, slice);
+
+    private Map<Anatomy3D, BasicImageSliceRenderer> rendererMap = new HashMap<Anatomy3D, BasicImageSliceRenderer>();
+
+
+    private SliceRenderer getSliceRenderer(IImageSpace3D refspace, AnatomicalPoint3D slice, Anatomy3D displayAnatomy) {
+        BasicImageSliceRenderer renderer = rendererMap.get(displayAnatomy);
+        if (renderer != null) {
+            renderer = new BasicImageSliceRenderer(renderer, slice, true);
+            rendererMap.put(displayAnatomy, renderer);
+            System.out.println("returning extant renderer");
+            System.out.println("nrenderers : " + rendererMap.size());
+
+        } else {
+            renderer =  new BasicImageSliceRenderer(refspace, this, slice, displayAnatomy);
+            rendererMap.put(displayAnatomy, renderer);
+            System.out.println("returning new renderer");
+            System.out.println("nrenderers : " + rendererMap.size());
+
+        }
+
+        return renderer;
     }
 
-    public SliceRenderer getSliceRenderer(IImageSpace refspace, AnatomicalPoint3D slice) {
-        return getSliceRenderer((IImageSpace3D)refspace, slice);
+    public SliceRenderer getSliceRenderer(IImageSpace refspace, AnatomicalPoint3D slice, Anatomy3D displayAnatomy) {
+        return getSliceRenderer((IImageSpace3D)refspace, slice, displayAnatomy);
     }
+
+
 }

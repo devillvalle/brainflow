@@ -117,11 +117,7 @@ public class NumberRangeModel {
             max = newMax;
             isAdjusting = adjusting;
 
-            System.out.println("new low : " + lowValue);
-            System.out.println("new high : " + highValue);
-            System.out.println("new min : " + newMin);
-            System.out.println("new max : " + newMax);
-
+            
             fireStateChanged();
         }
     }

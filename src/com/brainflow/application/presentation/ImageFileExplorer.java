@@ -216,7 +216,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
                     IImageDataSource[] ret = new IImageDataSource[list.size()];
                     list.toArray(ret);
 
-                    System.out.println("creating transferable!");
+
                     return DnDUtils.createTransferable(ret[0]);
                 }  else {
                     return null;
@@ -262,6 +262,21 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
     }
 
     public void addFileRoot(FileObject fobj) {
+        TreeNode root = (TreeNode)explorer.getJTree().getModel().getRoot();
+        Enumeration e = root.children();
+
+        while (e.hasMoreElements()) {
+            TreeNode node = (TreeNode)e.nextElement();
+            if (node instanceof FolderNode) {
+                FolderNode folder = (FolderNode)node;
+                if (folder.getFileObject().equals(fobj)) {
+                    folder.resynch();
+                    return;
+                }
+            }
+        }
+
+        
         explorer.addFileRoot(fobj);
     }
 
@@ -489,6 +504,8 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
 
     public abstract class LazyNode extends DefaultMutableTreeNode {
 
+
+
         public abstract List<LazyNode> fetchChildNodes();
 
         public abstract boolean areChildrenDefined();
@@ -532,6 +549,8 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
         public boolean isLeaf() {
             return false;
         }
+
+
 
         public List<LazyNode> fetchChildNodes() {
             if (!areChildrenDefined()) {
@@ -621,6 +640,14 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
             return false;
         }
 
+        public void resynch() {
+            if (areChildrenDefined) {
+                areChildrenDefined = false;
+                findChildren();               
+            }
+
+        }
+
         public boolean areChildrenDefined() {
             return areChildrenDefined;
         }
@@ -633,11 +660,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
             return 1;
         }
 
-        public List<LazyNode> fetchChildNodes() {
-            if (areChildrenDefined) {
-                return childNodes;
-            }
-
+        private void findChildren() {
             FileObject folder = getFileObject();
             try {
                 FileObject[] children = folder.findFiles(getSelector());
@@ -655,6 +678,16 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
 
                 }
             });
+
+        }
+
+        public List<LazyNode> fetchChildNodes() {
+            if (areChildrenDefined) {
+                return childNodes;
+            }
+
+            findChildren();
+
 
             areChildrenDefined = true;
             return childNodes;

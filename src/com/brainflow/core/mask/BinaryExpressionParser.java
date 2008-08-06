@@ -79,6 +79,8 @@ public class BinaryExpressionParser {
         .infixl(p_and, 20)
         .infixl(p_or, 20);
 
+        
+
 
         final Parser<INode> p_expr = Expressions.buildExpressionParser(p_term, optable);
         expr_holder[0] = p_expr;

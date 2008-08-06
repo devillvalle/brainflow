@@ -93,8 +93,8 @@ public class CoordinateAxis {
 
     public int hashCode() {
         int result;
-        result = (axis != null ? axis.hashCode() : 0);
-        result = 31 * result + (range != null ? range.hashCode() : 0);
+        result = axis.hashCode();
+        result = 31 * result + range.hashCode();
         return result;
     }
 }

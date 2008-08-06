@@ -40,9 +40,10 @@ public class BasicCoordinateSliceRenderer implements SliceRenderer {
 
     private ICoordinateSpace space;
 
-    public BasicCoordinateSliceRenderer(CoordinateLayer layer, AnatomicalPoint3D slice) {
+    public BasicCoordinateSliceRenderer(CoordinateLayer layer, AnatomicalPoint3D slice, Anatomy3D displayAnatomy) {
         this.slice = slice;
         this.layer = layer;
+        this.displayAnatomy = displayAnatomy;
 
     }
 
@@ -69,13 +70,7 @@ public class BasicCoordinateSliceRenderer implements SliceRenderer {
         return displayAnatomy;
     }
 
-    public void setDisplayAnatomy(Anatomy3D anatomy) {
-        if (getDisplayAnatomy() != anatomy) {
-            displayAnatomy = anatomy;
-            flush();
-        }
-
-    }
+    
 
     public void setSlice(AnatomicalPoint3D slice) {
         if (!getSlice().equals(slice)) {

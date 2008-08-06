@@ -68,7 +68,7 @@ public class ImageData {
             }
 
             public ImageIterator iterator() {
-                throw new UnsupportedOperationException("not implemented");
+                 return new BasicImageData3D.Iterator3D(this);
             }
 
             public double maxValue() {
@@ -102,6 +102,17 @@ public class ImageData {
 
             public final double worldValue(float realx, float realy, float realz, InterpolationFunction3D interp) {
                 return data.worldValue(realx,realy,realz, interp) * scaleFactor;
+            }
+
+            public String toString() {
+                return data.toString();    
+            }
+
+            public boolean equals(Object obj) {
+                //todo how to check for equality of "scaleFactor"?
+                return data.equals(obj);
+
+
             }
         };
     }

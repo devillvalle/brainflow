@@ -205,6 +205,9 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
         int width = getAdjustedWidth();
         int height = getAdjustedHeight();
 
+        if (height < 0) return;
+        if (width < 0) return;
+
         int x0 = getInsets().left + LEFT_CUSHION;
         int y0 = getInsets().top + TOP_CUSHION;
 

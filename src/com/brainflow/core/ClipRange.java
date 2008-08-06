@@ -6,6 +6,7 @@ import net.java.dev.properties.container.BeanContainer;
 import net.java.dev.properties.container.ObservableProperty;
 import net.java.dev.properties.container.ObservableWrapper;
 import com.brainflow.utils.IRange;
+import com.brainflow.utils.Range;
 
 /**
  * Created by IntelliJ IDEA.
@@ -93,6 +94,10 @@ public class ClipRange implements IRange {
 
     public double getInterval() {
         return highClip.get() - lowClip.get();
+    }
+
+    public Range getInnerRange() {
+        return new Range(lowClip.get(), highClip.get());
     }
 
     public double getMin() {

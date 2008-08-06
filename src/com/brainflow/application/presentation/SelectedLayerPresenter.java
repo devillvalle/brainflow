@@ -27,7 +27,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
 
     private CheckBoxList layerSelector;
-
+    //private JList layerSelector;
 
     private JPanel form;
 
@@ -48,6 +48,7 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
         CellConstraints cc = new CellConstraints();
 
         layerLabel = new JLabel("Selected Layer: ");
+        //layerSelector = new CheckBoxList();
         layerSelector = new CheckBoxList();
 
         formPane = new JScrollPane(layerSelector);
@@ -63,17 +64,17 @@ public class SelectedLayerPresenter extends ImageViewPresenter {
 
     private void bind() {
 
+        ExtBind.get().bindContent(getSelectedView().getModel().getListModel(), layerSelector);
+        
+        ExtBind.get().bindSelectionIndex(getSelectedView().getModel().getListSelection(), layerSelector);
 
-        SwingBind.get().bindContent(getSelectedView().getModel().getListModel(), layerSelector);
-        SwingBind.get().bindSelectionIndex(getSelectedView().getModel().getListSelection(), layerSelector);
-
-
+    
         ExtBind.get().bindCheckedIndices(getSelectedView().getModel().getVisibleSelection(), layerSelector);
 
     }
 
     public void viewDeselected(ImageView view) {
-        SwingBind.get().unbind(layerSelector);
+        ExtBind.get().unbind(layerSelector);
         
 
     }

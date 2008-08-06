@@ -3,6 +3,7 @@ package com.brainflow.image.anatomy;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.image.axis.CoordinateAxis;
 import com.brainflow.image.axis.ImageAxis;
+import com.brainflow.utils.NumberUtils;
 
 /**
  * Created by IntelliJ IDEA.
@@ -100,7 +101,7 @@ public class AnatomicalPoint1D implements AnatomicalPoint {
         AnatomicalPoint1D that = (AnatomicalPoint1D) o;
 
         if (Double.compare(that.value, value) != 0) return false;
-        if (!getAnatomy().equals(that.getAnatomy())) return false;
+        if (axis != null ? !axis.equals(that.axis) : that.axis != null) return false;
 
         return true;
     }

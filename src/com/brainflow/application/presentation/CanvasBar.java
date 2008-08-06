@@ -42,6 +42,8 @@ public class CanvasBar extends ImageViewPresenter {
     private ActionCommand rotateCommand = new RotateLayersCommand();
 
 
+
+
     public CanvasBar() {
         super();
 
@@ -49,7 +51,6 @@ public class CanvasBar extends ImageViewPresenter {
     }
 
     public void viewSelected(ImageView view) {
-
         repopulate();
     }
 
@@ -168,11 +169,13 @@ public class CanvasBar extends ImageViewPresenter {
 
             int buttonIndex = layerButtonList.indexOf(button);
 
+            System.out.println("button index : " + buttonIndex);
 
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 ImageView view = getSelectedView();
 
                 int selIdx = view.getModel().getSelectedIndex();
+                System.out.println("sel idx : " + selIdx);
                 if (selIdx != buttonIndex) {
                     view.setSelectedLayerIndex(buttonIndex);
 

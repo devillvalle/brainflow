@@ -211,10 +211,10 @@ public class LinearColorBar extends AbstractColorBar {
 
     public Dimension getPreferredSize() {
         if (getOrientation() == SwingConstants.VERTICAL) {
-            return new Dimension(75, 256);
+            return new Dimension(32, 256);
         }
 
-        return new Dimension(256, 50);
+        return new Dimension(256, 32);
     }
 
     public static void main(String[] args) {

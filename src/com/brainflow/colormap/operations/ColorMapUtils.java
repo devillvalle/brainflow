@@ -74,7 +74,6 @@ public class ColorMapUtils {
     if(src.getColorModel() instanceof IndexColorModel) {
       IndexColorModel icm = (IndexColorModel)src.getColorModel();
       byte[][] data = new byte[3][icm.getMapSize()];
-      //System.out.println("num components = " + icm.getNumComponents());
       icm.getReds(data[0]);
       icm.getGreens(data[1]);
       icm.getBlues(data[2]);
@@ -99,7 +98,6 @@ public class ColorMapUtils {
     if(src.getColorModel() instanceof IndexColorModel) {
       IndexColorModel icm = (IndexColorModel)src.getColorModel();
       byte[][] data = new byte[icm.getNumComponents()][icm.getMapSize()];
-      //System.out.println("num components = " + icm.getNumComponents());
       icm.getReds(data[0]);
       icm.getGreens(data[1]);
       icm.getBlues(data[2]);

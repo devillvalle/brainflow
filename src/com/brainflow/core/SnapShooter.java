@@ -168,8 +168,7 @@ public class SnapShooter {
        ragged.extendLower(-4, new Color(102, 0, 255, 225));
        ragged.extendLower(-20, new Color(204, 51, 255, 255));
 
-       System.out.println(ragged);
-
+       
        ImageLayer layer1 = new ImageLayer(il1.getData());
        layer1.getImageLayerProperties().getColorMap().setProperty(lmap);
        ImageLayer layer2 = new ImageLayer(il2.getData());

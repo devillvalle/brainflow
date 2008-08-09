@@ -1,6 +1,6 @@
 package com.brainflow.application.mapping;
 
-import com.brainflow.application.BrainflowException;
+import com.brainflow.application.BrainFlowException;
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.application.ImageIODescriptor;
 import com.brainflow.application.toplevel.ImageIOManager;
@@ -24,7 +24,6 @@ public class IImageDataSourceConverter implements Converter {
 
 
     public void marshal(Object object, HierarchicalStreamWriter writer, MarshallingContext context) {
-        System.out.println("marshalling data source");
         Integer dataIndex = (Integer)context.get(INDEX_KEY);
 
         if (dataIndex != null) {
@@ -72,9 +71,8 @@ public class IImageDataSourceConverter implements Converter {
         try {
             ImageIODescriptor descriptor = ImageIOManager.getInstance().getDescriptor(header);
             IImageDataSource dataSource = descriptor.createLoadableImage(header, data);
-            System.out.println("data source = " + dataSource);
             return dataSource;
-        } catch(BrainflowException e) {
+        } catch(BrainFlowException e) {
             throw new RuntimeException(e);
         }
 
@@ -83,7 +81,6 @@ public class IImageDataSourceConverter implements Converter {
     }
 
     public boolean canConvert(Class aClass) {
-        System.out.println("can convert " + aClass + " to " + getClass());
        
         if (IImageDataSource.class.isAssignableFrom(aClass)) {
             return true;

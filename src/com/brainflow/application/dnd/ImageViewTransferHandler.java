@@ -1,27 +1,12 @@
 package com.brainflow.application.dnd;
 
-import com.brainflow.application.toplevel.Brainflow;
-import com.brainflow.application.toplevel.ProjectManager;
-import com.brainflow.application.toplevel.ImageViewFactory;
-import com.brainflow.application.toplevel.DisplayManager;
-import com.brainflow.application.LoadableImageTransferable;
+import com.brainflow.application.toplevel.BrainFlow;
 import com.brainflow.core.ImageView;
-import com.brainflow.core.IBrainCanvas;
 import com.brainflow.core.IImageDisplayModel;
-import com.brainflow.core.ImageDisplayModel;
 import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.image.io.IImageDataSource;
 
-import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -49,7 +34,7 @@ public class ImageViewTransferHandler extends ImageDropHandler {
         if (c instanceof ImageView) {
             ImageView view = (ImageView) c;
             
-            Brainflow.getInstance().loadAndDisplay(dsource, view);
+            BrainFlow.getInstance().loadAndDisplay(dsource, view);
         }
 
     }

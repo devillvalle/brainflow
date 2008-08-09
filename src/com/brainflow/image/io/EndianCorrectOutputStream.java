@@ -203,7 +203,6 @@ public class EndianCorrectOutputStream extends DataOutputStream {
 		try {
 		EndianCorrectInputStream ecs_in = new EndianCorrectInputStream(args[0]+File.separator+"double.dat", Boolean.valueOf(args[1]).booleanValue());
 		d = ecs_in.readDoubleCorrect();
-		System.out.println("read in "+d);
 		ecs_in.close();
 
 		EndianCorrectOutputStream ecs_out = new EndianCorrectOutputStream(args[2]+File.separator+"double.dat", Boolean.valueOf(args[3]).booleanValue());
@@ -219,7 +218,6 @@ public class EndianCorrectOutputStream extends DataOutputStream {
 		try {
 		EndianCorrectInputStream ecs_in = new EndianCorrectInputStream(args[0]+File.separator+"short.dat", Boolean.getBoolean(args[1]));
 		s = ecs_in.readShortCorrect();
-		System.out.println("read in "+s);
 		ecs_in.close();
 
 		EndianCorrectOutputStream ecs_out = new EndianCorrectOutputStream(args[2]+File.separator+"short.dat", Boolean.getBoolean(args[3]));
@@ -235,7 +233,6 @@ public class EndianCorrectOutputStream extends DataOutputStream {
 		try {
 		EndianCorrectInputStream ecs_in = new EndianCorrectInputStream(args[0]+File.separator+"int.dat", Boolean.getBoolean(args[1]));
 		i = ecs_in.readIntCorrect();
-		System.out.println("read in "+i);
 		ecs_in.close();
 
 		EndianCorrectOutputStream ecs_out = new EndianCorrectOutputStream(args[2]+File.separator+"int.dat", Boolean.getBoolean(args[3]));
@@ -244,7 +241,7 @@ public class EndianCorrectOutputStream extends DataOutputStream {
 
 		}
 		catch (IOException ex) {
-			System.out.println("Oops ! bad int: "+ex.getMessage());
+
 		}
 
 	return;

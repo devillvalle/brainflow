@@ -208,7 +208,6 @@ public abstract class BasicImageData extends AbstractImageData {
     protected long hashid() {
 
         try {
-            System.out.println("requesting hashid ...");
             return hashid.get();
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
@@ -223,7 +222,6 @@ public abstract class BasicImageData extends AbstractImageData {
     public double maxValue() {
 
         try {
-            System.out.println("requesting max value ...");
             return maxValue.get();
         } catch (ExecutionException e) {
             throw new RuntimeException(e);

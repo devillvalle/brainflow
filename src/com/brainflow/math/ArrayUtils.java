@@ -298,8 +298,7 @@ public class ArrayUtils {
 
     public static void main(String[] args) {
         byte b = (byte) 145;
-        System.out.println("byte b = " + b);
-        System.out.println("" + (b & 0xff));
+      
     }
 
 

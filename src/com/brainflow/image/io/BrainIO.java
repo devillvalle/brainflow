@@ -1,7 +1,7 @@
 package com.brainflow.image.io;
 
 
-import com.brainflow.application.BrainflowException;
+import com.brainflow.application.BrainFlowException;
 import com.brainflow.image.data.BasicImageData;
 import com.brainflow.image.data.IImageData;
 
@@ -41,7 +41,7 @@ public class BrainIO {
     }
 
 
-    public static IImageData readNiftiImage(URL header) throws BrainflowException {
+    public static IImageData readNiftiImage(URL header) throws BrainFlowException {
 
         IImageData data;
 
@@ -55,27 +55,27 @@ public class BrainIO {
             data = ireader.readImage(info.get(0), new ProgressAdapter());
 
         } catch (FileSystemException e) {
-            throw new BrainflowException(e);
+            throw new BrainFlowException(e);
         }
 
         return data;
     }
 
 
-    public static IImageData readNiftiImage(String fname) throws BrainflowException {
+    public static IImageData readNiftiImage(String fname) throws BrainFlowException {
 
         try {
             URL url = new File(fname).toURI().toURL();
             return readNiftiImage(url);
         } catch (MalformedURLException e) {
-            throw new BrainflowException(e);
+            throw new BrainFlowException(e);
         }
 
 
     }
 
 
-    public static IImageData readAnalyzeImage(URL header) throws BrainflowException {
+    public static IImageData readAnalyzeImage(URL header) throws BrainFlowException {
         IImageData data;
         try {
             AnalyzeInfoReader reader = new AnalyzeInfoReader();
@@ -86,7 +86,7 @@ public class BrainIO {
             data = ireader.readImage(info.get(0), new ProgressAdapter());
 
         } catch (FileSystemException e) {
-            throw new BrainflowException(e.getMessage(), e);
+            throw new BrainFlowException(e.getMessage(), e);
         }
 
 
@@ -94,7 +94,7 @@ public class BrainIO {
     }
 
 
-    public static IImageData readAnalyzeImage(String fname) throws BrainflowException {
+    public static IImageData readAnalyzeImage(String fname) throws BrainFlowException {
         AnalyzeInfoReader reader = new AnalyzeInfoReader();
 
         List<ImageInfo> info = reader.readInfo(new File(fname));
@@ -106,7 +106,7 @@ public class BrainIO {
         return data;
     }
 
-    public static IImageData readAnalyzeImage(ImageInfo info, int timeNum) throws BrainflowException {
+    public static IImageData readAnalyzeImage(ImageInfo info, int timeNum) throws BrainFlowException {
         info.setDimensionality(3);
 
         BasicImageReader ireader = new BasicImageReader(info);
@@ -123,7 +123,7 @@ public class BrainIO {
         return data;
     }
 
-    public static void appendAnalyzeImage(int imgNum, ImageInfo info, BasicImageData data) throws BrainflowException {
+    public static void appendAnalyzeImage(int imgNum, ImageInfo info, BasicImageData data) throws BrainFlowException {
         FileImageOutputStream ostream = null;
         String fname = info.getDataFile().getName().getPath();
 
@@ -139,7 +139,7 @@ public class BrainIO {
 
             if (pos != ostream.length()) {
                 log.severe("Error appending image to 4D file, aborting");
-                throw new BrainflowException("file length: " + pos + " does not match stream postion " + ostream.length());
+                throw new BrainFlowException("file length: " + pos + " does not match stream postion " + ostream.length());
             }
 
             ostream.seek(ostream.length());
@@ -163,9 +163,9 @@ public class BrainIO {
                 throw new IllegalArgumentException("Data Type : " + dtype + " not supported");
 
         } catch (FileNotFoundException e1) {
-            throw new BrainflowException(e1);
+            throw new BrainFlowException(e1);
         } catch (IOException e2) {
-            throw new BrainflowException(e2);
+            throw new BrainFlowException(e2);
         } finally {
             try {
                 ostream.close();
@@ -174,7 +174,7 @@ public class BrainIO {
         }
     }
 
-    public static void writeAnalyzeImage(String fname, BasicImageData data) throws BrainflowException {
+    public static void writeAnalyzeImage(String fname, BasicImageData data) throws BrainFlowException {
 
         FileImageOutputStream ostream = null;
 
@@ -218,9 +218,9 @@ public class BrainIO {
                 throw new IllegalArgumentException("Data Type : " + dtype + " not supported");
 
         } catch (FileNotFoundException e1) {
-            throw new BrainflowException(e1);
+            throw new BrainFlowException(e1);
         } catch (IOException e2) {
-            throw new BrainflowException(e2);
+            throw new BrainFlowException(e2);
         } finally {
             try {
                 ostream.close();

@@ -28,7 +28,6 @@ public class DnDUtils {
             throw new RuntimeException(e);
         }
 
-        System.out.println("localObject : " + localObject);
 
         return new Transferable() {
             public DataFlavor[] getTransferDataFlavors() {
@@ -65,7 +64,7 @@ public class DnDUtils {
         try {
             Transferable trans = DnDUtils.createTransferable("hello");
             String obj = (String)trans.getTransferData(trans.getTransferDataFlavors()[0]);
-            System.out.println("obj : " + obj);
+        
         } catch(Exception  e) {
             e.printStackTrace();
         }

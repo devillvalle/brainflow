@@ -84,11 +84,11 @@ public class ImageInfoInspector {
         }
 
         public void setValue(Object o) {
-            System.out.println("setting value to " + o);
+
         }
 
         public void setType(Class aClass) {
-            System.out.println("setting type to : " + aClass);
+
         }
     }
 

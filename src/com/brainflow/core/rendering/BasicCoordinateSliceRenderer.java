@@ -84,15 +84,13 @@ public class BasicCoordinateSliceRenderer implements SliceRenderer {
     }
 
     public BufferedImage render() {
-        CoordinateSet3D set = layer.getDataSource();
-        AnatomicalAxis zaxis = getSlice().getAnatomy().ZAXIS;
-        List<AnatomicalPoint3D> pts = set.pointsWithinPlane(getSlice().getValue(zaxis));
+        //CoordinateSet3D set = layer.getDataSource();
+        //AnatomicalAxis zaxis = getSlice().getAnatomy().ZAXIS;
+        //List<AnatomicalPoint3D> pts = set.pointsWithinPlane(getSlice().getValue(zaxis));
 
-        for (AnatomicalPoint3D pt : pts) {
-            System.out.println("found point : " + pts);
-        }
 
-        return null;
+
+        throw new UnsupportedOperationException();
     }
 
     public void renderUnto(Rectangle2D frame, Graphics2D g2) {
@@ -116,15 +114,7 @@ public class BasicCoordinateSliceRenderer implements SliceRenderer {
         g2.setComposite(composite);
 
 
-        System.out.println("trans zero : " + transx);
-        System.out.println("trans zero : " + transy);
 
-        System.out.println("min zero : " + minx);
-        System.out.println("min zero : " + miny);
-
-        System.out.println("frame bounds : " + frame);
-
-        System.out.println("clip : " + g2.getClip());
 
         IColorMap map = getLayer().getImageLayerProperties().colorMap.get();
         for (int i : indices) {
@@ -136,9 +126,7 @@ public class BasicCoordinateSliceRenderer implements SliceRenderer {
             double x = pt.getValue(displayAnatomy.XAXIS).getValue();
             double y = pt.getValue(displayAnatomy.YAXIS).getValue();
 
-            System.out.println("anat zero : " + x);
-            System.out.println("anat zero : " + y);
-
+    
             Color c = map.getColor(value);
             g2.setColor(c);
 

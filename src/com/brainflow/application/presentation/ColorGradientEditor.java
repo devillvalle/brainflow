@@ -109,12 +109,6 @@ public class ColorGradientEditor extends JPanel {
             }
         });
 
-        //PropertyAdapter adapter = new PropertyAdapter(this, ColorGradientEditor.TWO_COLOR_GRADIENT_PROPERTY);
-        //System.out.println("" + twoColorButton.isSelected());
-        //Bindings.bind(twoColorButton, adapter, Boolean.TRUE);
-        //System.out.println("" + adapter.value());
-        System.out.println("" + twoColorButton.isSelected());
-        System.out.println("hell");
 
 
     }

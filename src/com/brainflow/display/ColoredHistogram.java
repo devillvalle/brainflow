@@ -1,6 +1,6 @@
 package com.brainflow.display;
 
-import com.brainflow.application.BrainflowException;
+import com.brainflow.application.BrainFlowException;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMapDeprecated;
@@ -113,7 +113,6 @@ public class ColoredHistogram extends JPanel {
               
 
                 //int numBins = histogram.getNumBins();
-                //System.out.println("painting series");
                 double xval= dataset.getXValue(series, item);
                 Color rgb = colorModel.getColor(xval);
 
@@ -220,8 +219,8 @@ public class ColoredHistogram extends JPanel {
             frame.getContentPane().add(chist);
             frame.pack();
             frame.setVisible(true);
-        } catch (BrainflowException ex) {
-            System.out.println(ex.getMessage());
+        } catch (BrainFlowException ex) {
+           
         }
     }
 

@@ -195,9 +195,7 @@ public class DynamicSplineXYDataset extends DynamicXYDataset {
         for (int i = 0; i < this.getSeriesCount(); i++) {
             DoubleArrayList xlist = getSpline(i, DOMAIN);
             DoubleArrayList ylist = getSpline(i, RANGE);
-            System.out.println("series: " + i);
-            System.out.println(xlist);
-            System.out.println(ylist);
+
         }
     }
 

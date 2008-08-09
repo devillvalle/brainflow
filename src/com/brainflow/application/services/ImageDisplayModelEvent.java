@@ -9,7 +9,7 @@
 
 package com.brainflow.application.services;
 
-import com.brainflow.application.BrainflowProject;
+import com.brainflow.application.BrainFlowProject;
 import com.brainflow.application.toplevel.BrainflowProjectEvent;
 import com.brainflow.core.IImageDisplayModel;
 import org.bushe.swing.event.AbstractEventServiceEvent;
@@ -60,7 +60,7 @@ public class ImageDisplayModelEvent extends AbstractEventServiceEvent {
         return event.getModel();
     }
 
-    public BrainflowProject getProject() {
+    public BrainFlowProject getProject() {
         return event.getProject();
     }
 

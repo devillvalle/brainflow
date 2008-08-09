@@ -352,13 +352,11 @@ public class MaskListPresenter extends ImageViewPresenter {
         public void actionPerformed(ActionEvent e) {
 
             if (hierTable.getSelectedRow() < 0) {
-                System.out.println("slected row : " + hierTable.getSelectedRow());
                 return;
             }
             
-            System.out.println("selected row : " + hierTable.getSelectedRow());
-            Class c = hierTable.getModel().getValueAt(hierTable.getSelectedRow(), hierTable.getSelectedColumn()).getClass();
-            System.out.println("class : " + c.getCanonicalName());
+             Class c = hierTable.getModel().getValueAt(hierTable.getSelectedRow(), hierTable.getSelectedColumn()).getClass();
+            
         }
     }
 

@@ -6,7 +6,7 @@ import com.brainflow.image.space.Axis;
 import com.brainflow.image.io.BrainIO;
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.application.MemoryImageDataSource;
-import com.brainflow.application.BrainflowException;
+import com.brainflow.application.BrainFlowException;
 import com.brainflow.display.ThresholdRange;
 
 import java.util.List;
@@ -298,7 +298,7 @@ public class ConnectedComponentsFilter3 extends AbstractImageFilter {
             //BrainIO.writeAnalyzeImage("\"F:/data/anyback/tRepeat-stat-clustered-meth3", (BasicImageData) idata);
 
 
-        } catch (BrainflowException e) {
+        } catch (BrainFlowException e) {
             e.printStackTrace();
         }
 

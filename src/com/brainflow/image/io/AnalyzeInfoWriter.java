@@ -6,7 +6,7 @@
 
 package com.brainflow.image.io;
 
-import com.brainflow.application.BrainflowException;
+import com.brainflow.application.BrainFlowException;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
@@ -30,7 +30,7 @@ public class AnalyzeInfoWriter implements com.brainflow.image.io.ImageInfoWriter
     /**
      * Creates a new instance of ImageInfoWriter
      */
-    public void writeInfo(File file, ImageInfo info) throws BrainflowException {
+    public void writeInfo(File file, ImageInfo info) throws BrainFlowException {
         FileImageOutputStream ostream = null;
         try {
             String opname = AnalyzeInfoReader.getHeaderName(file.getAbsolutePath());
@@ -139,10 +139,10 @@ public class AnalyzeInfoWriter implements com.brainflow.image.io.ImageInfoWriter
             ostream.writeInt(smin);
         }
         catch (FileNotFoundException e) {
-            throw new BrainflowException(e);
+            throw new BrainFlowException(e);
         }
         catch (IOException e2) {
-            throw new BrainflowException(e2);
+            throw new BrainFlowException(e2);
         }
 
         finally {
@@ -151,7 +151,7 @@ public class AnalyzeInfoWriter implements com.brainflow.image.io.ImageInfoWriter
                     ostream.close();
                 }
             } catch (IOException ex3) {
-                throw new BrainflowException(ex3);
+                throw new BrainFlowException(ex3);
             }
         }
 

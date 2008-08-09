@@ -70,8 +70,7 @@ public class StaticCrossHair implements GraphicsVisitor {
     Graphics2D g2 = (Graphics2D)g;
     bounds = component.getBounds();
     if (bounds != null) {
-      //System.out.println(bounds.toString());
-      g2.clip(bounds);
+     g2.clip(bounds);
     }
 
 

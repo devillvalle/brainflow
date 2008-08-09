@@ -177,8 +177,7 @@ public abstract class AbstractImageSpace implements IImageSpace {
             throw new IllegalArgumentException("cannot perform union for ImageSpaces with different axis orientations");
         }
 
-        System.out.println("these are same axes, proceeding");
-
+    
         ImageAxis[] axes = new ImageAxis[getNumDimensions()];
 
         for (int i = 0; i < axes.length; i++) {

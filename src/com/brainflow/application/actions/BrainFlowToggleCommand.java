@@ -1,6 +1,6 @@
 package com.brainflow.application.actions;
 
-import com.brainflow.application.toplevel.Brainflow;
+import com.brainflow.application.toplevel.BrainFlow;
 import com.brainflow.application.toplevel.BrainFlowClientSupport;
 import com.brainflow.application.IBrainFlowClient;
 import com.brainflow.core.ImageView;
@@ -41,7 +41,7 @@ public abstract class BrainFlowToggleCommand extends ToggleCommand implements IB
     }
 
     public IBrainCanvas getSelectedCanvas() {
-        return Brainflow.getInstance().getSelectedCanvas();
+        return BrainFlow.getInstance().getSelectedCanvas();
 
     }
 

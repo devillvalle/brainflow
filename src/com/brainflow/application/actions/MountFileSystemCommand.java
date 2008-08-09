@@ -2,7 +2,7 @@ package com.brainflow.application.actions;
 
 import com.jidesoft.swing.FolderChooser;
 import com.brainflow.application.toplevel.DirectoryManager;
-import com.brainflow.application.toplevel.Brainflow;
+import com.brainflow.application.toplevel.BrainFlow;
 
 import java.io.File;
 import java.util.logging.Logger;
@@ -33,7 +33,7 @@ public class MountFileSystemCommand extends BrainFlowCommand {
         }
 
 
-        final int res = chooser.showOpenDialog(Brainflow.getInstance().getApplicationFrame());
+        final int res = chooser.showOpenDialog(BrainFlow.getInstance().getApplicationFrame());
         try {
             if (res == FolderChooser.APPROVE_OPTION) {
                 File[] files = chooser.getSelectedFiles();

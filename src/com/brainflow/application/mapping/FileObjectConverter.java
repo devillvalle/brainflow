@@ -22,7 +22,6 @@ public class FileObjectConverter implements Converter {
 
     //@Testable
     public void marshal(Object object, HierarchicalStreamWriter writer, MarshallingContext context) {
-        System.out.println("marshalling file object");
         try {
             FileObject fobj = (FileObject) object;
             writer.addAttribute("uri", fobj.getName().getURI());
@@ -37,7 +36,6 @@ public class FileObjectConverter implements Converter {
 
     //@Testable
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        System.out.println("unmarshalling file object");
         String uri = reader.getAttribute("uri");
 
         FileObject ret;
@@ -48,7 +46,6 @@ public class FileObjectConverter implements Converter {
             throw new RuntimeException(e);
         }
 
-        System.out.println("putting " + ret.getName().getURI() + " into context map");
 
         context.put(ret.getName().getURI(), ret);
 
@@ -57,10 +54,7 @@ public class FileObjectConverter implements Converter {
     }
 
     public boolean canConvert(Class aClass) {
-        System.out.println("can convert " + aClass + " to " + getClass());
         if (FileObject.class.isAssignableFrom(aClass)) {
-            System.out.println("damn straight you can!");
-            //System.out.println("super class of " + aClass + " is " + aClass.getSuperclass());
             return true;
             
         }

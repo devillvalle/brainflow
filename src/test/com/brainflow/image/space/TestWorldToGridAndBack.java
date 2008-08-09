@@ -1,6 +1,6 @@
 package test.com.brainflow.image.space;
 
-import com.brainflow.application.BrainflowException;
+import com.brainflow.application.BrainFlowException;
 import com.brainflow.image.anatomy.AnatomicalAxis;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
 import com.brainflow.image.anatomy.Anatomy3D;
@@ -40,7 +40,7 @@ public class TestWorldToGridAndBack {
 
         try {
             space2 = (IImageSpace3D)TestUtils.quickDataSource("icbm452_atlas_probability_gray.hdr").load().getImageSpace();
-        } catch (BrainflowException e ) {
+        } catch (BrainFlowException e ) {
             fail();
         }
     }

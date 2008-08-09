@@ -7,7 +7,7 @@ import com.brainflow.image.data.IImageData3D;
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.image.space.IImageSpace;
 import test.TestUtils;
-import com.brainflow.application.BrainflowException;
+import com.brainflow.application.BrainFlowException;
 import com.brainflow.core.layer.ImageLayer3D;
 import com.brainflow.core.ImageDisplayModel;
 import com.brainflow.core.IImageDisplayModel;
@@ -43,7 +43,7 @@ public class TestImageOverlay {
 
             foreLayer = new ImageLayer3D(foreground);
             backLayer = new ImageLayer3D(background);
-        } catch(BrainflowException e) {
+        } catch(BrainFlowException e) {
             fail();
         }
 

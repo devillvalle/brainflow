@@ -140,8 +140,7 @@ public class CoordinateSelector extends JComponent {
 
         if (this.selectedView != _selectedView) {
             this.selectedView = _selectedView;
-            System.out.println("new view detected by CoordinateSelector");
-            PropertyConnector.connect(selectedView, "crosshairVoxel", this, "crosshairVoxel");
+           PropertyConnector.connect(selectedView, "crosshairVoxel", this, "crosshairVoxel");
             enableSpinners();
         }
 
@@ -157,7 +156,6 @@ public class CoordinateSelector extends JComponent {
         crosshairVoxel = _crosshairVoxel;
         crosshairVoxelBean.setBean(crosshairVoxel);
 
-        System.out.println("new crosshair point detected by CoordinateSelector");
         changeSupport.firePropertyChange("crosshairVoxel", oldVoxel, crosshairVoxel);
 
     }

@@ -6,13 +6,12 @@
 
 package com.brainflow.image.io;
 
-import com.brainflow.application.BrainflowException;
+import com.brainflow.application.BrainFlowException;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.io.ImageInfoReader;
 import com.brainflow.utils.DataType;
 import com.brainflow.utils.Dimension3D;
 import com.brainflow.utils.Point3D;
-import com.brainflow.utils.ToStringGenerator;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.VFS;
 
@@ -79,7 +78,7 @@ public class AnalyzeInfoReader implements ImageInfoReader {
     }
 
 
-    public List<ImageInfo> readInfo(File f) throws BrainflowException {
+    public List<ImageInfo> readInfo(File f) throws BrainFlowException {
         List<ImageInfo> ret = null;
 
         String headerName = AnalyzeInfoReader.getHeaderName(f.getAbsolutePath());
@@ -99,7 +98,7 @@ public class AnalyzeInfoReader implements ImageInfoReader {
 
         } catch (Exception e) {
             log.warning("Exception caught in AnalyzeInfoReader.readInfo ");
-            throw new BrainflowException(e);
+            throw new BrainFlowException(e);
         }
 
 
@@ -107,21 +106,21 @@ public class AnalyzeInfoReader implements ImageInfoReader {
 
     }
 
-    public List<? extends ImageInfo> readInfo(InputStream istream) throws BrainflowException {
+    public List<? extends ImageInfo> readInfo(InputStream istream) throws BrainFlowException {
         List<ImageInfo> ret = null;
 
         try {
             MemoryCacheImageInputStream mis = new MemoryCacheImageInputStream(istream);
             ret  = readHeader(mis);
         } catch (Exception e) {
-            throw new BrainflowException(e);
+            throw new BrainFlowException(e);
         }
 
         return ret;
 
     }
 
-    public List<? extends ImageInfo> readInfo(FileObject fobj) throws BrainflowException {
+    public List<? extends ImageInfo> readInfo(FileObject fobj) throws BrainFlowException {
         List<ImageInfo> ret = null;
 
         try {
@@ -137,7 +136,7 @@ public class AnalyzeInfoReader implements ImageInfoReader {
             }
 
         } catch (Exception e) {
-            throw new BrainflowException(e);
+            throw new BrainFlowException(e);
         }
 
         return ret;
@@ -145,7 +144,7 @@ public class AnalyzeInfoReader implements ImageInfoReader {
 
   
 
-    private List<ImageInfo> readHeader(ImageInputStream istream) throws BrainflowException {
+    private List<ImageInfo> readHeader(ImageInputStream istream) throws BrainFlowException {
         ImageInfo info = new ImageInfo();
 
         readBeginning(istream);
@@ -155,7 +154,7 @@ public class AnalyzeInfoReader implements ImageInfoReader {
         } else if (sizeof_hdr == AnalyzeInfoReader.SWAPPED_HEADER_SIZE) {
             info.setEndian(ByteOrder.LITTLE_ENDIAN);
             istream.setByteOrder(ByteOrder.LITTLE_ENDIAN);
-        } else throw new BrainflowException("Illegal Value (" + sizeof_hdr + ") for header size, cannot proceed!");
+        } else throw new BrainFlowException("Illegal Value (" + sizeof_hdr + ") for header size, cannot proceed!");
 
         try {
             dim[0] = istream.readShort();
@@ -213,7 +212,7 @@ public class AnalyzeInfoReader implements ImageInfoReader {
 
             if (dataType == null) {
 
-                throw new BrainflowException("Illegal Data Type: " + dataType);
+                throw new BrainFlowException("Illegal Data Type: " + dataType);
             }
 
             //logger.log(Level.INFO, "Data Type: " + dataType);
@@ -285,7 +284,7 @@ public class AnalyzeInfoReader implements ImageInfoReader {
             istream.close();
         }
         catch (IOException e) {
-            throw new BrainflowException(e);
+            throw new BrainFlowException(e);
         }
 
 
@@ -294,7 +293,7 @@ public class AnalyzeInfoReader implements ImageInfoReader {
     }
 
 
-    private void readBeginning(ImageInputStream istream) throws BrainflowException {
+    private void readBeginning(ImageInputStream istream) throws BrainFlowException {
         try {
             istream.seek(0);
             sizeof_hdr = istream.readInt();
@@ -307,7 +306,7 @@ public class AnalyzeInfoReader implements ImageInfoReader {
             regular = istream.readByte();
             hkey_un0 = istream.readByte();
         } catch (Exception e) {
-            throw new BrainflowException(e);
+            throw new BrainFlowException(e);
         }
     }
 
@@ -315,9 +314,8 @@ public class AnalyzeInfoReader implements ImageInfoReader {
         AnalyzeInfoReader reader = new AnalyzeInfoReader();
         try {
             List<ImageInfo> info = reader.readInfo(new File(args[0]));
-            System.out.println(info.get(0));
             java.util.Date d = new java.util.Date();
-            System.out.println(new ToStringGenerator().generateToString(d));
+          
         } catch (Exception e) {
             e.printStackTrace();
         }

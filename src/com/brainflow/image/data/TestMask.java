@@ -57,13 +57,11 @@ public class TestMask {
         for (int i=0; i<100; i++) {
             byte[] b = testAnd(in, mask);
             curTime = System.currentTimeMillis();
-            System.out.println("iter took : " + (curTime - lastTime));
             lastTime = curTime;
         }
 
         long avg = (curTime - time)/100;
-        System.out.println("average = " + avg);
-
+      
 
     }
 

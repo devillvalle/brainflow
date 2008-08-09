@@ -139,22 +139,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
 
         rgbaCache = new SoftCache<AnatomicalPoint1D, RGBAImage>();
 
-        /*BeanContainer.get().addListener(layer.getImageLayerProperties().clipRange, new PropertyListener() {
-            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
-                System.out.println("clearing rgba chache ");
-                System.out.println("size was " + rgbaCache.size());
-                rgbaCache.clear();
-            }
-        });
-
-        BeanContainer.get().addListener(layer.getImageLayerProperties().colorMap, new PropertyListener() {
-            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
-                System.out.println("clearing rgba chache ");
-                System.out.println("size was " + rgbaCache.size());
-                rgbaCache.clear();
-            }
-        }); */
-
+       
     }
 
 
@@ -191,15 +176,10 @@ public class BasicImageSliceRenderer implements SliceRenderer {
                 slice = 0;
             }
 
-            System.out.println("creating new data slice");
             ret = slicer.getSlice(getDisplayAnatomy(), slice);
             dataCache.put(zdisp, ret);
 
-        } else {
-            System.out.println("retrieved cached data slice");
-            System.out.println("cache size : " + dataCache.size());
         }
-
 
         data = ret;
 
@@ -224,23 +204,18 @@ public class BasicImageSliceRenderer implements SliceRenderer {
         AnatomicalPoint1D zdisp = getZSlice();
 
         if (lastColorMap != layer.getImageLayerProperties().colorMap.get()) {
-            System.out.println("clearing rgba cache");
             rgbaCache.clear();
         } else {
             rgbaImage = rgbaCache.get(zdisp);
         }
 
         if (rgbaImage == null) {
-            System.out.println("creating new rgba image");
-            IColorMap cmap = layer.getImageLayerProperties().colorMap.get();
+           IColorMap cmap = layer.getImageLayerProperties().colorMap.get();
             lastColorMap = cmap;
             rgbaImage = cmap.getRGBAImage(getData());
             rgbaCache.put(zdisp, rgbaImage);
 
-        } else {
-            System.out.println("rgba cache size : " + rgbaCache.size());
         }
-
 
         return rgbaImage;
     }
@@ -474,7 +449,7 @@ if (Double.compare(trange.getMin(), trange.getMax()) != 0) {
    return ret;
 
 } else {
-   System.out.println("min thresh = max thresh");
+
    return rgba;
 }
 }     */

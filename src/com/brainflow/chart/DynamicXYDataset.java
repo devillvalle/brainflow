@@ -271,8 +271,7 @@ public class DynamicXYDataset extends AbstractDataset implements org.jfree.data.
             }
         }
 
-        System.out.println("minDistance: " + minDistance);
-        
+
         return item;
     }
     

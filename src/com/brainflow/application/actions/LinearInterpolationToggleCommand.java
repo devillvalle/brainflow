@@ -1,9 +1,7 @@
 package com.brainflow.application.actions;
 
-import com.brainflow.application.toplevel.Brainflow;
 import com.brainflow.core.ImageView;
 import com.brainflow.display.InterpolationType;
-import com.pietschy.command.toggle.ToggleCommand;
 import com.pietschy.command.toggle.ToggleVetoException;
 
 /**

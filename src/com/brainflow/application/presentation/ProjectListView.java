@@ -1,6 +1,6 @@
 package com.brainflow.application.presentation;
 
-import com.brainflow.application.BrainflowProject;
+import com.brainflow.application.BrainFlowProject;
 import com.brainflow.core.layer.AbstractLayer;
 import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.core.IImageDisplayModel;
@@ -30,7 +30,7 @@ import net.java.dev.properties.binding.swing.adapters.SwingBind;
  */
 public class ProjectListView extends ImageViewPresenter {
 
-    private BrainflowProject project;
+    private BrainFlowProject project;
 
     private JPanel form;
 
@@ -44,7 +44,7 @@ public class ProjectListView extends ImageViewPresenter {
 
     private IImageDisplayModel selectedModel;
 
-    public ProjectListView(BrainflowProject _project) {
+    public ProjectListView(BrainFlowProject _project) {
         project = _project;
         buildGUI();
 

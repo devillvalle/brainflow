@@ -448,7 +448,6 @@ public class MaskTablePresenter extends ImageViewPresenter {
         }
 
         public boolean shouldSelectCell(EventObject anEvent) {
-            System.out.println("should selected cell " + anEvent);
             return super.shouldSelectCell(anEvent);
         }
     }
@@ -506,7 +505,6 @@ public class MaskTablePresenter extends ImageViewPresenter {
             IMaskItem item = rowItem.getMaskItem();
             IMaskList maskList = rowItem.getLayer().getMaskList();
             List<? extends AbstractLayer> list = maskList.getCongruentLayers(getSelectedView().getModel());
-            System.out.println("num congruent layers : " + list.size());
             ComboBoxModel model = new DefaultComboBoxModel(list.toArray());
             //comboBox.setConverterContext(getConverterContext());
 

@@ -1,7 +1,7 @@
 package com.brainflow.application.toplevel;
 
 import com.brainflow.core.IImageDisplayModel;
-import com.brainflow.application.BrainflowProject;
+import com.brainflow.application.BrainFlowProject;
 
 import javax.swing.event.ListDataEvent;
 import java.util.EventObject;
@@ -17,13 +17,13 @@ public class BrainflowProjectEvent extends EventObject {
 
     private IImageDisplayModel model;
 
-    private BrainflowProject project;
+    private BrainFlowProject project;
 
     private ListDataEvent event;
 
 
 
-    public BrainflowProjectEvent(BrainflowProject _project, IImageDisplayModel _model, ListDataEvent _event) {
+    public BrainflowProjectEvent(BrainFlowProject _project, IImageDisplayModel _model, ListDataEvent _event) {
         super(_project);
 
         project = _project;
@@ -35,7 +35,7 @@ public class BrainflowProjectEvent extends EventObject {
         return model;
     }
 
-    public BrainflowProject getProject() {
+    public BrainFlowProject getProject() {
         return project;
     }
 

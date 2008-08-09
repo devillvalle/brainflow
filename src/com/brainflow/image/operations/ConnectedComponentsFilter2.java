@@ -1,6 +1,6 @@
 package com.brainflow.image.operations;
 
-import com.brainflow.application.BrainflowException;
+import com.brainflow.application.BrainFlowException;
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.application.MemoryImageDataSource;
 import com.brainflow.image.data.BasicImageData;
@@ -160,7 +160,7 @@ public class ConnectedComponentsFilter2 extends AbstractImageFilter {
             BrainIO.writeAnalyzeImage("c:/DTI/slopes/bAge.Norm_index_largekernel.hdr", (BasicImageData) idata);
 
 
-        } catch (BrainflowException e) {
+        } catch (BrainFlowException e) {
             e.printStackTrace();
         }
 

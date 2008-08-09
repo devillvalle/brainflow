@@ -304,10 +304,7 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
             IImageData data = TestUtils.quickDataSource("mean-BRB-EPI-001.nii").load();
             Index3D vox = new Index3D(0,0,0);
 
-            System.out.println("class : " + data.getClass());
-            System.out.println("double min : " + Double.MIN_VALUE);
-            System.out.println("double -max : " + -Double.MAX_VALUE);
-
+         
 
         } catch (Exception e) {
             e.printStackTrace();

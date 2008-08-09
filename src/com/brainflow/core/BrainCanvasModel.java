@@ -100,16 +100,13 @@ public class BrainCanvasModel {
             listSelection.set(listSelection.get()-1);
         }
 
-        System.out.println("removing image view " + view);
         cutLinks(view);
         view.clearListeners();
-        System.out.println("cutting links " + view);
         System.gc();
 
     }
 
     private void cutLinks(ImageView view) {
-        System.out.println("view link set size : " + viewLinkMap.size());
         Set<ImageView> viewSet = viewLinkMap.keySet();
         Iterator<ImageView> iter = viewSet.iterator();
 
@@ -119,13 +116,11 @@ public class BrainCanvasModel {
 
                 YokeHandler handler = viewLinkMap.get(cur);
                 handler.removeSource(view);
-                System.out.println("handler sources : " + handler.getSources().size());
             }
         }
 
         viewLinkMap.remove(view);
-        System.out.println("view link set size : " + viewLinkMap.size());
-        System.out.println("image view list size : " + imageViewList.size());
+      
     }
 
     public Set<ImageView> getYokedViews(ImageView view) {

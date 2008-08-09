@@ -49,7 +49,6 @@ public class MoveCrosshairMode extends ImageCanvasMode {
 
             AnatomicalPoint3D ap = iview.getAnatomicalLocation(source, p);
             ap = ap.convertTo((IImageSpace3D)iview.getModel().getImageSpace());
-             System.out.println("ap ... " + ap);
             if (iview.getViewport().inBounds(ap)) {
                 iview.cursorPos.set(ap);
             }
@@ -74,8 +73,7 @@ public class MoveCrosshairMode extends ImageCanvasMode {
     public void mouseDragged(MouseEvent event) {
         if (SwingUtilities.isLeftMouseButton(event)) {
             dragging = true;
-            System.out.println("moving crosshair ...");
-            moveCrosshair(event.getPoint(), (Component) event.getSource());
+           moveCrosshair(event.getPoint(), (Component) event.getSource());
 
         }
 

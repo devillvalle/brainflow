@@ -220,7 +220,6 @@ public class CompositeImageProducer extends AbstractImageProducer {
 
 
     protected void finalize() throws Throwable {
-        System.out.println("garbage collecting " + this);
         getModel().removeImageLayerListener(layerListener);
 
     }

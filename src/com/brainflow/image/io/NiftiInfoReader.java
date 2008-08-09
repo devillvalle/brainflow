@@ -1,6 +1,6 @@
 package com.brainflow.image.io;
 
-import com.brainflow.application.BrainflowException;
+import com.brainflow.application.BrainFlowException;
 import test.TestUtils;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.io.ImageInfoReader;
@@ -108,7 +108,7 @@ public class NiftiInfoReader implements ImageInfoReader {
 
     }
 
-    public List<NiftiImageInfo> readInfo(InputStream istream) throws BrainflowException {
+    public List<NiftiImageInfo> readInfo(InputStream istream) throws BrainFlowException {
         List<NiftiImageInfo> ret = null;
         // todo check to see if valid nifti file extension
         // todo provide dummy header name?
@@ -117,7 +117,7 @@ public class NiftiInfoReader implements ImageInfoReader {
 
         } catch (Exception e) {
             log.warning("Exception caught in NiftiInfoReader.readInfo ");
-            throw new BrainflowException(e);
+            throw new BrainFlowException(e);
         }
 
 
@@ -127,7 +127,7 @@ public class NiftiInfoReader implements ImageInfoReader {
     }
 
     @Override
-    public List<NiftiImageInfo> readInfo(File f) throws BrainflowException {
+    public List<NiftiImageInfo> readInfo(File f) throws BrainFlowException {
         List<NiftiImageInfo> ret;
         // todo check to see if valid nifti file extension
         try {
@@ -144,7 +144,7 @@ public class NiftiInfoReader implements ImageInfoReader {
 
         } catch (Exception e) {
             //log.warning("Exception caught in AnalyzeInfoReader.readInfo ");
-            throw new BrainflowException(e);
+            throw new BrainFlowException(e);
         }
 
 
@@ -177,7 +177,7 @@ public class NiftiInfoReader implements ImageInfoReader {
         return resolveFileObject(f.getAbsolutePath());
     }
 
-    public List<NiftiImageInfo> readInfo(FileObject fobj) throws BrainflowException {
+    public List<NiftiImageInfo> readInfo(FileObject fobj) throws BrainFlowException {
         List<NiftiImageInfo> ret;
 
         try {
@@ -193,7 +193,7 @@ public class NiftiInfoReader implements ImageInfoReader {
 
 
         } catch (IOException e) {
-            throw new BrainflowException(e);
+            throw new BrainFlowException(e);
         }
 
         return ret;
@@ -209,7 +209,7 @@ public class NiftiInfoReader implements ImageInfoReader {
     }
 
 
-    private void fillDataType(short datatype, NiftiImageInfo info) throws BrainflowException {
+    private void fillDataType(short datatype, NiftiImageInfo info) throws BrainFlowException {
 
         DataType dtype = null;
         switch (datatype) {
@@ -235,15 +235,15 @@ public class NiftiInfoReader implements ImageInfoReader {
                 dtype = DataType.LONG;
                 break;
             case Nifti1Dataset.NIFTI_TYPE_UINT16:
-                throw new BrainflowException("Do not support NIFTI_TYPE_UINT16 datatype");
+                throw new BrainFlowException("Do not support NIFTI_TYPE_UINT16 datatype");
             case Nifti1Dataset.NIFTI_TYPE_UINT32:
-                throw new BrainflowException("Do not support NIFTI_TYPE_UINT32 datatype");
+                throw new BrainFlowException("Do not support NIFTI_TYPE_UINT32 datatype");
             case Nifti1Dataset.NIFTI_TYPE_UINT64:
-                throw new BrainflowException("Do not support NIFTI_TYPE_UINT64 datatype");
+                throw new BrainFlowException("Do not support NIFTI_TYPE_UINT64 datatype");
             case Nifti1Dataset.NIFTI_TYPE_RGB24:
-                throw new BrainflowException("Do not support NIFTI_TYPE_RGB24 datatype");
+                throw new BrainFlowException("Do not support NIFTI_TYPE_RGB24 datatype");
             default:
-                throw new BrainflowException("Do not support NIFTI_TYPE " + datatype);
+                throw new BrainFlowException("Do not support NIFTI_TYPE " + datatype);
 
         }
 
@@ -252,12 +252,12 @@ public class NiftiInfoReader implements ImageInfoReader {
 
     }
 
-    private void fillImageDim(short[] dim, NiftiImageInfo info) throws BrainflowException {
+    private void fillImageDim(short[] dim, NiftiImageInfo info) throws BrainFlowException {
         int numDims = dim[0];
         if (dim[0] > 2 && dim[0] < 5) {
             info.setDimensionality(dim[0]);
         } else {
-            throw new BrainflowException("Nifti images with fewer than 3 or more than 4 dimensions are not supported." + dim[0]);
+            throw new BrainFlowException("Nifti images with fewer than 3 or more than 4 dimensions are not supported." + dim[0]);
         }
 
         info.setArrayDim(new Dimension3D<Integer>((int) dim[1], (int) dim[2], (int) dim[3]));
@@ -269,7 +269,7 @@ public class NiftiInfoReader implements ImageInfoReader {
 
     }
 
-    private NiftiImageInfo fillInfo(Nifti1Dataset nifti) throws BrainflowException {
+    private NiftiImageInfo fillInfo(Nifti1Dataset nifti) throws BrainFlowException {
         NiftiImageInfo info = new NiftiImageInfo();
         short[] dim = nifti.dim;
 
@@ -278,7 +278,6 @@ public class NiftiInfoReader implements ImageInfoReader {
         fillDataType(nifti.datatype, info);
         float[] pixdim = nifti.pixdim;
         fillPixDim(pixdim, info);
-        System.out.println(Arrays.toString(pixdim));
 
 
         info.calculateRealDim();
@@ -293,7 +292,6 @@ public class NiftiInfoReader implements ImageInfoReader {
         }
 
 
-        System.out.println("scale factor : " + info.getScaleFactor());
         info.setIntercept(nifti.scl_inter);
         info.setByteOffset((int) nifti.vox_offset);
         info.setOrigin(new Point3D(nifti.qoffset[0], nifti.qoffset[1], nifti.qoffset[2]));
@@ -311,9 +309,7 @@ public class NiftiInfoReader implements ImageInfoReader {
         Vector3f q = info.quaternion;
         Vector3f qo = info.qoffset;
 
-        System.out.println("NIFTI qoffset : " + info.qoffset);
 
-        //info.
         info.qform = NiftiImageInfo.quaternionToMatrix(q.get(0), q.get(1),q.get(2),
                 qo.get(0), qo.get(1), qo.get(2),
                 pixdim[1], pixdim[2],pixdim[3],
@@ -332,7 +328,7 @@ public class NiftiInfoReader implements ImageInfoReader {
     }
 
 
-    private List<NiftiImageInfo> readHeader(String name, InputStream stream) throws IOException, BrainflowException {
+    private List<NiftiImageInfo> readHeader(String name, InputStream stream) throws IOException, BrainFlowException {
         NiftiImageInfo info;
 
         try {
@@ -341,7 +337,7 @@ public class NiftiInfoReader implements ImageInfoReader {
             info = fillInfo(nifti);
         } catch (IOException e) {
             throw e;
-        } catch (BrainflowException e) {
+        } catch (BrainFlowException e) {
             throw e;
         }
 
@@ -351,7 +347,7 @@ public class NiftiInfoReader implements ImageInfoReader {
     }
 
 
-    private List<NiftiImageInfo> readHeader(String name) throws IOException, BrainflowException {
+    private List<NiftiImageInfo> readHeader(String name) throws IOException, BrainFlowException {
         NiftiImageInfo info;
 
         try {
@@ -360,7 +356,7 @@ public class NiftiInfoReader implements ImageInfoReader {
             info = fillInfo(nifti);
         } catch (IOException e) {
             throw e;
-        } catch (BrainflowException e) {
+        } catch (BrainFlowException e) {
             throw e;
         }
 
@@ -375,16 +371,10 @@ public class NiftiInfoReader implements ImageInfoReader {
            
             URL url = TestUtils.getDataURL("BRB-20071214-09-t1_mprage-001.nii");
             NiftiImageInfo info = reader.readInfo(VFS.getManager().resolveFile(url.toString())).get(0);
-            System.out.println("info : " + info);
-            System.out.println("nearest anatomy : " + NiftiImageInfo.nearestAnatomy(info.qform));
 
-            System.out.println(info.qform.mult(new Vector3f(0,0,0)));
 
             IDimension dim = info.getArrayDim();
-            System.out.println(info.qform.mult(new Vector3f(0,0,0)));
-            System.out.println("dim : " + dim);
-            System.out.println(info.qform.mult(new Vector3f(239,255,159)));
-
+        
         } catch (Exception e) {
             e.printStackTrace();
         }

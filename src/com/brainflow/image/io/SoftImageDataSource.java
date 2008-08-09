@@ -7,7 +7,7 @@ import com.brainflow.utils.ProgressListener;
 import com.brainflow.utils.ProgressAdapter;
 import com.brainflow.image.io.AbstractImageDataSource;
 import com.brainflow.application.ImageIODescriptor;
-import com.brainflow.application.BrainflowException;
+import com.brainflow.application.BrainFlowException;
 import org.apache.commons.vfs.FileObject;
 
 import java.lang.ref.SoftReference;
@@ -64,7 +64,7 @@ public class SoftImageDataSource extends AbstractImageDataSource {
         if (dataRef.get() == null) {
             try {
                 load();
-            } catch (BrainflowException e) {
+            } catch (BrainFlowException e) {
                 log.severe("failed to load " + getDataFile().getName().getPath());
                 throw new RuntimeException(e);
             }
@@ -75,7 +75,7 @@ public class SoftImageDataSource extends AbstractImageDataSource {
 
 
 
-    public IImageData load(ProgressListener plistener) throws BrainflowException {
+    public IImageData load(ProgressListener plistener) throws BrainFlowException {
         try {
 
 
@@ -93,10 +93,10 @@ public class SoftImageDataSource extends AbstractImageDataSource {
             dataRef = new SoftReference(data);
         } catch (IllegalAccessException e) {
             log.warning("Error caught in BasicImageData.load()");
-            throw new BrainflowException(e);
+            throw new BrainFlowException(e);
         } catch (InstantiationException e) {
             log.warning("Error caught in BasicImageData.load()");
-            throw new BrainflowException(e);
+            throw new BrainFlowException(e);
         }
 
         return dataRef.get();
@@ -104,7 +104,7 @@ public class SoftImageDataSource extends AbstractImageDataSource {
     }
 
 
-    public IImageData load() throws BrainflowException {
+    public IImageData load() throws BrainFlowException {
         try {
 
             ImageInfo imageInfo = getImageInfo();
@@ -124,10 +124,10 @@ public class SoftImageDataSource extends AbstractImageDataSource {
 
         } catch (IllegalAccessException e) {
             log.warning("Error caught in BasicImageData.load()");
-            throw new BrainflowException(e);
+            throw new BrainFlowException(e);
         } catch (InstantiationException e) {
             log.warning("Error caught in BasicImageData.load()");
-            throw new BrainflowException(e);
+            throw new BrainFlowException(e);
         }
 
         return (IImageData) dataRef.get();

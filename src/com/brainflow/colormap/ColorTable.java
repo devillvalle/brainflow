@@ -1,7 +1,7 @@
 package com.brainflow.colormap;
 
 import cern.colt.list.DoubleArrayList;
-import com.brainflow.application.BrainflowException;
+import com.brainflow.application.BrainFlowException;
 import com.brainflow.math.ArrayUtils;
 import com.brainflow.math.BSpline;
 import org.jdom.Document;
@@ -396,7 +396,7 @@ public class ColorTable {
 
     }
 
-    public static IndexColorModel createFromXML(String rgbaXML) throws BrainflowException {
+    public static IndexColorModel createFromXML(String rgbaXML) throws BrainFlowException {
 
         IndexColorModel icm = null;
 
@@ -437,16 +437,16 @@ public class ColorTable {
 
 
         } catch (JDOMException e) {
-            throw new BrainflowException("failed to parse XML color map", e);
+            throw new BrainFlowException("failed to parse XML color map", e);
         } catch (IOException e) {
-            throw new BrainflowException("failed to parse XML color map", e);
+            throw new BrainFlowException("failed to parse XML color map", e);
         }
 
 
         return icm;
     }
 
-    public static IndexColorModel createFromXMLInputStream(InputStream istream) throws BrainflowException {
+    public static IndexColorModel createFromXMLInputStream(InputStream istream) throws BrainFlowException {
         assert istream != null : "ColorTable.createFromXMLInputStream passed a null InputStream";
 
         try {
@@ -464,7 +464,7 @@ public class ColorTable {
             return ColorTable.createFromXML(sb.toString());
 
         } catch (IOException e) {
-            throw new BrainflowException("Error loading color model from XML stream", e);
+            throw new BrainFlowException("Error loading color model from XML stream", e);
         }
 
     }

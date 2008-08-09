@@ -386,7 +386,6 @@ public class MaskListEditor {
             }
 
             List<? extends AbstractLayer> list = maskList.getCongruentLayers(model);
-            System.out.println("num congruent layers : " + list.size());
             ComboBoxModel model = new DefaultComboBoxModel(list.toArray());
             //comboBox.setConverterContext(getConverterContext());
 

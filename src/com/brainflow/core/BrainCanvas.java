@@ -281,7 +281,7 @@ public class BrainCanvas extends JComponent implements InternalFrameListener, IB
            ImageView view = (ImageView)e.getInternalFrame().getContentPane();
            removeImageView(view);
            //e.getInternalFrame().dispose();
-           //System.out.println("number of internal frames ? " + desktopPane.getAllFrames().length);
+          
        }
     }
 

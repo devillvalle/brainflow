@@ -93,8 +93,7 @@ public class CoordinateSpace3D extends AbstractCoordinateSpace implements ICoord
             throw new IllegalArgumentException("cannot perform union for ImageSpaces with different axis orientations");
         }
 
-        System.out.println("these are same axes, proceeding");
-
+       
         CoordinateAxis[] axes = new ImageAxis[getNumDimensions()];
 
         for (int i = 0; i < axes.length; i++) {

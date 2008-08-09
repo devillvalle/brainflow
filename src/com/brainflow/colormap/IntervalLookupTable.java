@@ -17,7 +17,7 @@ public class IntervalLookupTable<T extends MutableInterval> {
     private List<T> intervalList = new LinkedList<T>();
 
     private final Comparator wi_comparator = new AbstractInterval.WithinIntervalComparator();
-    
+
     private final Comparator i_comparator = new AbstractInterval.IntervalComparator();
 
     public IntervalLookupTable() {
@@ -36,20 +36,16 @@ public class IntervalLookupTable<T extends MutableInterval> {
         }
 
         // Search for the non-existent item
-        System.out.println("searching for: " + ival);
         int index = Collections.binarySearch(intervalList, ival, i_comparator);
-        System.out.println("index is " + index);
         // Add the non-existent item to the list
         if (index < 0) {
             Interval nearest = intervalList.get(intervalList.size() - 1);
             if (nearest.overlapsWith(ival)) {
-                System.out.println("");
                 throw new IllegalArgumentException("interval overlaps with existing interval in table: " +
                         nearest + " overlaps with " + ival);
 
             }
 
-            System.out.println("not found, adding at index : " + (-index - 1));
             intervalList.add(-index - 1, ival);
 
         } else {
@@ -133,9 +129,7 @@ public class IntervalLookupTable<T extends MutableInterval> {
             intervalList.set(index, interval);
         } else if (oldval.overlapsWith(interval)) {
             placeInterval(index, interval);
-        }
-
-        else {
+        } else {
             throw new IllegalArgumentException("Supplied interval must overlap with prior interval at same index " +
                     "old interval: " + oldval + " new interval: " + interval);
         }
@@ -298,11 +292,6 @@ public class IntervalLookupTable<T extends MutableInterval> {
 
             return intervalList.get(index);
         } catch (ArrayIndexOutOfBoundsException e) {
-
-            System.out.println("index = " + index);
-            System.out.println("value = " + val);
-            System.out.println("min value " + getFirstInterval().getMinimum());
-            System.out.println("max value " + getLastInterval().getMaximum());
             throw e;
 
         }

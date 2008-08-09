@@ -1,9 +1,8 @@
 package com.brainflow.application.actions;
 
-import com.brainflow.application.toplevel.Brainflow;
+import com.brainflow.application.toplevel.BrainFlow;
 import com.brainflow.application.toplevel.BrainFlowClientSupport;
 import com.brainflow.application.IBrainFlowClient;
-import com.brainflow.core.BrainCanvas;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.IBrainCanvas;
 import com.brainflow.core.IImageDisplayModel;
@@ -45,7 +44,7 @@ public abstract class BrainFlowCommand extends ActionCommand implements IBrainFl
     }
 
     public IBrainCanvas getSelectedCanvas() {
-        return Brainflow.getInstance().getSelectedCanvas();
+        return BrainFlow.getInstance().getSelectedCanvas();
 
     }
 

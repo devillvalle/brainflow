@@ -20,8 +20,8 @@ public class TestYAML {
             System.out.println(map);
             for (Iterator iter = map.keySet().iterator(); iter.hasNext(); ) {
                 Object obj = iter.next();
-                System.out.println(obj);
-                System.out.println(obj.getClass());
+                //System.out.println(obj);
+                //System.out.println(obj.getClass());
             }
         } catch(FileNotFoundException e) {
             e.printStackTrace();

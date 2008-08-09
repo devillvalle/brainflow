@@ -57,11 +57,10 @@ public class SelectRangeOp extends BaseColorMapOp  {
 
           if (rnd >= mapsize)
             rnd = mapsize-1;
-          //System.out.println("rnd = " + rnd);
           ntable[i][j] = table[i][rnd];
           idx++;
         }
-        //System.out.println("table = " + i  + ", " + j + ": " + Acme.TUtils.ubyte(table[i][j]));
+
       }
     }
 

@@ -31,24 +31,21 @@ public class VisibilityWrapper {
 
         public void set(List<Integer> t) {
             if (t.equals(get())) {
-                System.out.println("do nothing : old set equlas new set");
+
                 return;
             }
 
             for (Integer i : t) {
                 if (i >= model.getNumLayers()) {
-                    System.out.println("WHOA!!!!");
                     throw new IllegalArgumentException(" index " + i + " invalid for list model with " + model.getNumLayers() + " layers");
                 }
             }
 
             for (int i=0; i<model.getNumLayers(); i++) {
                 if (t.contains(i)) {
-                    System.out.println("setting layer " + i + " to visible");
-                    model.getLayer(i).getImageLayerProperties().visible.set(true);
+                     model.getLayer(i).getImageLayerProperties().visible.set(true);
                 } else {
-                    System.out.println("setting layer " + i + " to not visible");
-                    model.getLayer(i).getImageLayerProperties().visible.set(false);
+                     model.getLayer(i).getImageLayerProperties().visible.set(false);
                 }
             }
 
@@ -102,7 +99,6 @@ public class VisibilityWrapper {
                 int layerIndex = event.getLayerIndex();
 
                 ImageLayer layer = model.getLayer(layerIndex);
-                System.out.println("visibility changed! layer " + layerIndex + " is now " + layer.isVisible());
                 if (!layer.isVisible()) {
                     visibleIndices.remove(new Integer(layerIndex));
                 }
@@ -113,7 +109,6 @@ public class VisibilityWrapper {
         BeanContainer.get().addListener(model.getListModel(), new IndexedPropertyListener() {
 
             public void propertyInserted(IndexedProperty prop, Object value, int index) {
-                System.out.println("layer inserted! " + index);
                 updateModel();
             }
 
@@ -122,7 +117,6 @@ public class VisibilityWrapper {
             }
 
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
-                System.out.println("layer changed! " + index);
                 updateModel();
             }
         });

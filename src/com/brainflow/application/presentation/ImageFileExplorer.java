@@ -6,7 +6,6 @@ import com.brainflow.application.toplevel.ImageIOManager;
 import com.brainflow.gui.AbstractPresenter;
 import com.brainflow.gui.FileExplorer;
 import com.brainflow.utils.ResourceLoader;
-import com.brainflow.image.io.SoftImageDataSource;
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.io.ImageDataSource;
@@ -16,7 +15,6 @@ import com.jidesoft.swing.DefaultOverlayable;
 import com.jidesoft.swing.InfiniteProgressPanel;
 import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 import org.apache.commons.vfs.*;
-import org.jvnet.substance.SubstanceDefaultTreeCellRenderer;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -476,7 +474,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
             log.severe("failed to load image info for file : " + fobj);
             return null;
             //throw new RuntimeException(e);
-        } catch (BrainflowException e) {
+        } catch (BrainFlowException e) {
             log.severe("failed to load image info for file : " + fobj);
             //throw new RuntimeException(e);
             return null;

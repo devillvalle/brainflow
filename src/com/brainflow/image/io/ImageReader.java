@@ -1,6 +1,6 @@
 package com.brainflow.image.io;
 
-import com.brainflow.application.BrainflowException;
+import com.brainflow.application.BrainFlowException;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.utils.ProgressListener;
 
@@ -14,9 +14,9 @@ import com.brainflow.utils.ProgressListener;
 public interface ImageReader {
 
 
-    public IImageData readImage(ImageInfo info) throws BrainflowException;
+    public IImageData readImage(ImageInfo info) throws BrainFlowException;
 
-    public IImageData readImage(ImageInfo info, ProgressListener plistener) throws BrainflowException;
+    public IImageData readImage(ImageInfo info, ProgressListener plistener) throws BrainFlowException;
 
 
 }

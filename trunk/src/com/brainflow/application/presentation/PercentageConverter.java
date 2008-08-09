@@ -44,13 +44,6 @@ class PercentageConverter extends AbstractConverter {
         Number dmax = (Number) max.getValue();
         double percent = (val - dmin.doubleValue()) / (dmax.doubleValue() - dmin.doubleValue()) * numUnits;
 
-        if (percent > 100) {
-            System.out.println("val = " + val);
-            System.out.println("dmin = " + dmin);
-            System.out.println("dmax = " + dmax);
-            System.out.println("percent = " + percent);
-
-        }
 
         return (int) Math.round(percent);
 
@@ -63,13 +56,7 @@ class PercentageConverter extends AbstractConverter {
         Integer val = (Integer) object;
 
         double newval = (val / numUnits) * (dmax.doubleValue() - dmin.doubleValue()) + dmin.doubleValue();
-        if (newval > 1000) {
-            System.out.println("int val = " + val);
-            System.out.println("dmin = " + dmin);
-            System.out.println("dmax = " + dmax);
-            System.out.println("newval = " + newval);
 
-        }
 
         subject.setValue(newval);
 

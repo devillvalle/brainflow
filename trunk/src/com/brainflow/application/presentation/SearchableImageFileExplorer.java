@@ -85,18 +85,12 @@ public class SearchableImageFileExplorer extends AbstractPresenter {
                         if (node instanceof DefaultMutableTreeNode) {
                             //ImageFileExplorer.LazyNode inode = (ImageFileExplorer.LazyNode) node;
                             DefaultMutableTreeNode inode = (DefaultMutableTreeNode) node;
-                            //System.out.println("inode path " + inode.getPath());
                             boolean expanded = explorer.getJTree().isExpanded(new TreePath(inode.getPath()));
-                            //System.out.println("expanded ? " + expanded);
-                            //System.out.println("is leaf ? " + inode.isLeaf());
                             if (inode.isLeaf() || expanded) {
                                 super.configureListModelWrapper(wrapper, node);
                             }
 
-                        } else {
-                            //System.out.println("node aint no lazy node");
-                            //System.out.println("node is a  : " + node.getClass());
-                        }
+                        } 
                     }
 
                     

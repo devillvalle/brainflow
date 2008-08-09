@@ -136,10 +136,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     public final Property<Integer> listSelection = new ObservableProperty<Integer>(-1) {
         public void set(Integer integer) {
-            if (integer > 0) {
-                System.out.println("" + integer);    
-            }
-            System.out.println("setting selected layer index " + integer);
+
             if (integer >= listModel.size() || integer < -1) {
                 throw new IllegalArgumentException("selection index exceeds size of list");
             }
@@ -339,7 +336,6 @@ public class ImageDisplayModel implements IImageDisplayModel {
         BeanContainer.get().addListener(layer.getImageLayerProperties().colorMap, new PropertyListener() {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
                 ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
-                //System.out.println("color map changed");
                 for (ImageLayerListener listener : listeners) {
                     listener.colorMapChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
                 }
@@ -410,7 +406,6 @@ public class ImageDisplayModel implements IImageDisplayModel {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
 
                 ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
-                System.out.println("threshold changed!");
                 for (ImageLayerListener listener : listeners) {
                     listener.thresholdChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
                 }
@@ -435,7 +430,6 @@ public class ImageDisplayModel implements IImageDisplayModel {
                 IColorMap newMap = oldMap.newClipRange(lowClip.doubleValue(), highClip.doubleValue());
                 layer.getImageLayerProperties().colorMap.set(newMap);
 
-                ///System.out.println("low clip : " + lowClip);
                 for (ImageLayerListener listener : listeners) {
                     listener.clipRangeChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
                 }
@@ -461,7 +455,6 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
                 layer.getImageLayerProperties().colorMap.set(newMap);
 
-                ///System.out.println("low clip : " + lowClip);
                 for (ImageLayerListener listener : listeners) {
                     listener.clipRangeChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
                 }

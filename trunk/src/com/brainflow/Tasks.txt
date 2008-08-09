@@ -11,7 +11,7 @@
 
 [Fix: Images loaded from within AFNI bricks are incorrectly colored ImageFileExplorer tree labels.
 [Fix: Images dragged from ImageFileExplorer are not properly overlaid on an ImageView
-Fix: ProjectTreeView does not always show all layers within model.
+[Fix: ProjectTreeView does not always show all layers within model.]
 
 ** Fix: Thresholding and scaling of Discrete Color Map.
         -- the shrinking and expanding of the discrete color bar still needs work.
@@ -24,3 +24,4 @@ FIX: RGB Editor should work with Discrete Color Maps
 Fix: Command accelerators need to be fixed.
 Fix: Annotations edited according to plot or "apply all"
 Fix: Progress Dialog is messed up.
+Fix" transparent "box" over histogram "shakes" as values change

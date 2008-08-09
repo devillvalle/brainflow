@@ -2,11 +2,9 @@ package com.brainflow.application.presentation.binding;
 
 import net.java.dev.properties.binding.swing.adapters.SwingBind;
 import net.java.dev.properties.binding.swing.adapters.ComboAndListModel;
-import net.java.dev.properties.binding.swing.adapters.SwingAdapter;
 import net.java.dev.properties.binding.Adapter;
 
 import net.java.dev.properties.IndexedProperty;
-import net.java.dev.properties.Property;
 import net.java.dev.properties.BaseProperty;
 
 import com.jidesoft.swing.CheckBoxList;
@@ -28,7 +26,7 @@ public class ExtBind extends SwingBind {
     private static ExtBind instance;
 
     protected ExtBind() {
-        addAdapter(new MyListIndexAdapter());
+        addAdapter(new MyListIndexAdapterX());
         addAdapter(new CheckBoxListAdapter());
         addAdapter(new BiSliderAdapter());
         addAdapter(new ToggleBarAdapter());
@@ -48,7 +46,7 @@ public class ExtBind extends SwingBind {
     }
 
     public void bindSelectionIndex(BaseProperty<Integer> property, CheckBoxList cmp) {
-        new MyListIndexAdapter().bind(property, cmp);
+        new MyListIndexAdapterX().bind(property, cmp);
 
     }
 

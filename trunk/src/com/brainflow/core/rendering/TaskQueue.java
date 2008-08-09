@@ -27,9 +27,7 @@ public class TaskQueue<T> {
         return new Callable<Integer>() {
             public Integer call() throws Exception {
                 long sleep = (long) (Math.random() * Math.abs(1000));
-                System.out.println(this.getClass() + " sleeping for : " + sleep);
                 Thread.sleep(sleep);
-                System.out.println("id : " + id);
                 return id;
             }
 
@@ -45,7 +43,6 @@ public class TaskQueue<T> {
             FutureTask<Integer> task = new FutureTask<Integer>(createTask(i)) {
                 protected void done() {
                     super.done();
-                    System.out.println("task done!");
                     try {
                         System.out.println("result : " + get());
                     } catch(Exception e) {
@@ -57,8 +54,7 @@ public class TaskQueue<T> {
 
                 protected void set(Integer integer) {
                     super.set(integer);
-                    System.out.println("result = " + integer);
-                    //To change body of overridden methods use File | Settings | File Templates.
+                    
                 }
             };
             queue.submit(task);

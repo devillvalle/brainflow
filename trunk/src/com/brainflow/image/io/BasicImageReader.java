@@ -1,6 +1,6 @@
 package com.brainflow.image.io;
 
-import com.brainflow.application.BrainflowException;
+import com.brainflow.application.BrainFlowException;
 import com.brainflow.image.data.*;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace2D;
@@ -10,7 +10,6 @@ import com.brainflow.utils.NumberUtils;
 import com.brainflow.utils.ProgressListener;
 import com.brainflow.utils.ProgressAdapter;
 import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileUtil;
 
 import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
@@ -18,7 +17,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.channels.FileChannel;
 import java.util.logging.Logger;
 
 /**
@@ -302,7 +300,7 @@ public class BasicImageReader implements ImageReader {
     }   */
 
 
-    public IImageData readImage(ImageInfo info) throws BrainflowException {
+    public IImageData readImage(ImageInfo info) throws BrainFlowException {
         setImageInfo(info);
 
 
@@ -312,16 +310,16 @@ public class BasicImageReader implements ImageReader {
             data = getOutput(new ProgressAdapter());
         } catch (FileNotFoundException e) {
             log.warning("failed trying to find file " + info.getDataFile());
-            throw new BrainflowException("BasicImageData.readImage: File Not Found Error", e);
+            throw new BrainFlowException("BasicImageData.readImage: File Not Found Error", e);
         } catch (IOException e) {
-            throw new BrainflowException("BasicImageData.readImage: File Reading Error", e);
+            throw new BrainFlowException("BasicImageData.readImage: File Reading Error", e);
         }
 
         return data;
 
     }
 
-    public IImageData readImage(ImageInfo info, ProgressListener plistener) throws BrainflowException {
+    public IImageData readImage(ImageInfo info, ProgressListener plistener) throws BrainFlowException {
 
         setImageInfo(info);
         IImageData data = null;
@@ -330,9 +328,9 @@ public class BasicImageReader implements ImageReader {
             data = getOutput(plistener);
 
         } catch (FileNotFoundException e) {
-            throw new BrainflowException("BasicImageData.readImage: File Not Found Error", e);
+            throw new BrainFlowException("BasicImageData.readImage: File Not Found Error", e);
         } catch (IOException e) {
-            throw new BrainflowException("BasicImageData.readImage: File Reading Error", e);
+            throw new BrainFlowException("BasicImageData.readImage: File Reading Error", e);
         }
 
         return data;

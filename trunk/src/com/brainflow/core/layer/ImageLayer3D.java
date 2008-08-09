@@ -82,14 +82,10 @@ public class ImageLayer3D extends ImageLayer<ImageSpace3D> {
         if (renderer != null) {
             renderer = new BasicImageSliceRenderer(renderer, slice, true);
             rendererMap.put(displayAnatomy, renderer);
-            System.out.println("returning extant renderer");
-            System.out.println("nrenderers : " + rendererMap.size());
 
         } else {
             renderer =  new BasicImageSliceRenderer(refspace, this, slice, displayAnatomy);
             rendererMap.put(displayAnatomy, renderer);
-            System.out.println("returning new renderer");
-            System.out.println("nrenderers : " + rendererMap.size());
 
         }
 

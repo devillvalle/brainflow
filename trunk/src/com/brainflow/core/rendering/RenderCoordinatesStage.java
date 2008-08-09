@@ -43,9 +43,7 @@ public class RenderCoordinatesStage extends ImageProcessingStage {
     private void renderUnto(CoordinateLayer layer, BufferedImage image) {
         AnatomicalAxis zaxis = getSlice().getAnatomy().ZAXIS;
         List<AnatomicalPoint3D> pts = layer.getDataSource().pointsWithinPlane(getSlice().getValue(zaxis));
-        for (int i=0; i<pts.size(); i++) {
-            System.out.println("point within plance: " + pts.get(i));
-        }
+        
 
     }
 

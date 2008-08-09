@@ -1,14 +1,12 @@
 package com.brainflow.application.presentation;
 
-import com.brainflow.application.BrainflowProject;
+import com.brainflow.application.BrainFlowProject;
 import com.brainflow.application.dnd.DnDUtils;
 import com.brainflow.application.toplevel.BrainflowProjectEvent;
 import com.brainflow.application.toplevel.BrainflowProjectListener;
 import com.brainflow.core.*;
-import com.brainflow.core.layer.AbstractLayer;
 import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.image.space.IImageSpace;
-import com.brainflow.image.io.IImageDataSource;
 
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
@@ -17,8 +15,6 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.List;
-import java.util.ArrayList;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -34,7 +30,7 @@ import java.awt.datatransfer.Transferable;
  */
 public class ProjectTreeView extends ImageViewPresenter implements MouseListener, MouseMotionListener {
 
-    private BrainflowProject project;
+    private BrainFlowProject project;
 
     private DefaultTreeModel treeModel;
 
@@ -42,7 +38,7 @@ public class ProjectTreeView extends ImageViewPresenter implements MouseListener
 
     private JTree tree;
 
-    public ProjectTreeView(BrainflowProject _project) {
+    public ProjectTreeView(BrainFlowProject _project) {
         project = _project;
         rootNode = new ProjectNode(project);
 
@@ -165,9 +161,9 @@ public class ProjectTreeView extends ImageViewPresenter implements MouseListener
 
     class ProjectNode extends DefaultMutableTreeNode implements BrainflowProjectListener {
 
-        private BrainflowProject project;
+        private BrainFlowProject project;
 
-        public ProjectNode(BrainflowProject _project) {
+        public ProjectNode(BrainFlowProject _project) {
             super(_project);
 
             project = _project;
@@ -290,7 +286,7 @@ public class ProjectTreeView extends ImageViewPresenter implements MouseListener
 
 
         public void contentsChanged(ListDataEvent e) {
-            System.out.println("contents changed!");
+
         }
 
 

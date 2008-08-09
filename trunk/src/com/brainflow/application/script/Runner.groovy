@@ -9,7 +9,7 @@
 
 
 static main(String[] args) {
-    def bf = new com.brainflow.application.toplevel.Brainflow();
+    def bf = new com.brainflow.application.toplevel.BrainFlow();
     bf.launch();
 
     

@@ -61,7 +61,6 @@ public class YokeHandler  {
     }
 
     public void removeSource(ImageView view) {
-        System.out.println("removing source " + view);
         if (sources.containsKey(view)) {
             sources.remove(view);
             BeanContainer.get().removeListener(view.cursorPos, crossHandler);
@@ -69,7 +68,6 @@ public class YokeHandler  {
             log.warning("Failed removal request: YokeHandler does not contain the view " + view);
         }
 
-        System.out.println("source size " + sources.size());
 
     }
 
@@ -92,10 +90,6 @@ public class YokeHandler  {
     }
 
     public void setTargetLocation(AnatomicalPoint3D point) {
-        System.out.println("setting target location : " + point);
-        System.out.println("old target point : " + target.cursorPos.get());
-        System.out.println("target anatomy : " + target.cursorPos.get().getAnatomy());
-        System.out.println("source anatomy : " + point.getAnatomy());
 
         target.cursorPos.set(point);
       
@@ -105,10 +99,6 @@ public class YokeHandler  {
         return target.getCursorPos();
     }
 
-    protected void finalize() throws Throwable {
-        super.finalize();    //To change body of overridden methods use File | Settings | File Templates.
-        System.out.println("yoke handler : target " + target + " is being finalized!");
-    }
 
 
 
@@ -126,10 +116,7 @@ public class YokeHandler  {
                 if (!ap.equals(handler.get().getTargetLocation())) {
                     handler.get().setTargetLocation(ap);
                 }
-            } else {
-                System.out.println("reference was gc'd");
             }
-            //To change body of implemented methods use File | Settings | File Templates.
         }
     }
 
@@ -143,10 +130,7 @@ public class YokeHandler  {
         handler.addSource(s1);
         handler.addSource(s2);
 
-        System.out.println("does handler contain s1 ?" + handler.containsSource(s1));
-        System.out.println("does handler contain target ?" + handler.containsSource(target));
-        System.out.println("does handler contain s2 ?" + handler.containsSource(s2));
-
+     
 
     }
 

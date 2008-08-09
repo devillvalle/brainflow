@@ -1,6 +1,6 @@
 package com.brainflow.image.io;
 
-import com.brainflow.application.BrainflowException;
+import com.brainflow.application.BrainFlowException;
 import com.brainflow.image.io.ImageInfoReader;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.anatomy.AnatomicalAxis;
@@ -71,7 +71,7 @@ public class AFNIInfoReader implements ImageInfoReader {
     }
 
 
-    public List<AFNIImageInfo> readInfo(InputStream stream) throws BrainflowException {
+    public List<AFNIImageInfo> readInfo(InputStream stream) throws BrainFlowException {
 
         List<AFNIImageInfo> ret;
 
@@ -79,7 +79,7 @@ public class AFNIInfoReader implements ImageInfoReader {
             ret = readHeader(stream);
 
         } catch (IOException e) {
-            throw new BrainflowException(e);
+            throw new BrainFlowException(e);
         }
 
         return ret;
@@ -87,7 +87,7 @@ public class AFNIInfoReader implements ImageInfoReader {
 
     }
 
-    public List<AFNIImageInfo> readInfo(FileObject fobj) throws BrainflowException {
+    public List<AFNIImageInfo> readInfo(FileObject fobj) throws BrainFlowException {
         List<AFNIImageInfo> ret;
 
         try {
@@ -102,15 +102,15 @@ public class AFNIInfoReader implements ImageInfoReader {
             }
 
         } catch (FileSystemException e) {
-            throw new BrainflowException(e);
+            throw new BrainFlowException(e);
         } catch (IOException e) {
-            throw new BrainflowException(e);
+            throw new BrainFlowException(e);
         }
 
         return ret;
     }
 
-    public List<AFNIImageInfo> readInfo(File f) throws BrainflowException {
+    public List<AFNIImageInfo> readInfo(File f) throws BrainFlowException {
         List<AFNIImageInfo> ret;
         try {
             InputStream istream = new FileInputStream(f);
@@ -123,7 +123,7 @@ public class AFNIInfoReader implements ImageInfoReader {
             }
 
         } catch (IOException e) {
-            throw new BrainflowException(e);
+            throw new BrainFlowException(e);
         }
 
         return ret;
@@ -485,24 +485,17 @@ public class AFNIInfoReader implements ImageInfoReader {
             ImageInfoReader reader = new AFNIInfoReader();
 
             List<? extends ImageInfo> ilist = reader.readInfo(url.openStream());
-            System.out.println("" + ilist.size());
-            System.out.println("scalefactor " + ilist.get(41).getScaleFactor());
-            System.out.println("anatomy : " + ilist.get(0).getAnatomy());
 
             ImageInfo info = ilist.get(0);
             ImageSpace3D space = (ImageSpace3D)info.createImageSpace();
 
-            System.out.println("origin : " + space.getOrigin());
 
             Matrix4f mat = ((Anatomy3D)ilist.get(0).getAnatomy()).getReferenceTransform();
 
-            System.out.println("ref : " + mat);
             IDimension spacing = info.getSpacing();
             mat.scale(new Vector3f(spacing.getDim(0).floatValue(), spacing.getDim(1).floatValue(), spacing.getDim(2).floatValue()));
-            System.out.println("scale : " + mat);
             mat.setTranslation(new Vector3f(100,100,100));
-            System.out.println("translated : " + mat);
-
+       
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }

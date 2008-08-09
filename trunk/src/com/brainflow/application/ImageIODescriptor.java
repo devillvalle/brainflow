@@ -1,7 +1,6 @@
 package com.brainflow.application;
 
 import com.brainflow.utils.FileObjectFilter;
-import com.brainflow.image.io.SoftImageDataSource;
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.image.io.ImageDataSource;
 import org.apache.commons.vfs.FileObject;
@@ -37,7 +36,7 @@ public class ImageIODescriptor {
     Logger log = Logger.getLogger(ImageIODescriptor.class.getName());
 
 
-    private ImageIODescriptor(Element formatElement) throws BrainflowException {
+    private ImageIODescriptor(Element formatElement) throws BrainFlowException {
         Element headerElement = formatElement.getChild("Header");
         Element dataElement = formatElement.getChild("Data");
 
@@ -55,7 +54,7 @@ public class ImageIODescriptor {
             headerReader = Class.forName(headerReaderClassName);
 
         } catch (ClassNotFoundException e) {
-            throw new BrainflowException("ImageIODescriptor() : couldn'three load class " + dataReaderClassName, e);
+            throw new BrainFlowException("ImageIODescriptor() : couldn'three load class " + dataReaderClassName, e);
         }
     }
 
@@ -187,7 +186,6 @@ public class ImageIODescriptor {
 
     public boolean isHeaderMatch(FileObject fobj) {
         if (fobj.getName().getPath().endsWith(headerExtension)) {
-            //System.out.println("file :" + fobj.getName().getPath() + " does match " + headerExtension);
             return true;
         } else {
             return false;
@@ -241,7 +239,7 @@ public class ImageIODescriptor {
         return getFormatName();
     }
 
-    public static ImageIODescriptor loadFromXML(Element formatElement) throws BrainflowException {
+    public static ImageIODescriptor loadFromXML(Element formatElement) throws BrainFlowException {
         return new ImageIODescriptor(formatElement);
     }
 

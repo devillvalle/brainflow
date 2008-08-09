@@ -67,7 +67,6 @@ public abstract class ImageViewPresenter extends AbstractPresenter implements Im
         EventBus.subscribeStrongly(ImageViewLayerSelectionEvent.class, new EventSubscriber() {
 
             public void onEvent(Object evt) {
-                //System.out.println("ON EVENT: LAYER SELECTION EVENT");
                 ImageViewLayerSelectionEvent event = (ImageViewLayerSelectionEvent) evt;
                 if (event.getSource() == getSelectedView()) {
 

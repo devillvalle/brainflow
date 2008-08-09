@@ -85,7 +85,6 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
                             ImageCanvas.this.mousePressed(me);
                             break;
                         case MouseEvent.MOUSE_RELEASED:
-                            //System.out.println("dispatching " + me.getSource().getClass().getName());
                             ImageCanvas.this.mouseReleased(me);
                             break;
                         case MouseEvent.MOUSE_CLICKED:
@@ -98,7 +97,7 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
                             ImageCanvas.this.mouseExited(me);
                             break;
                         default:
-                            System.out.println("unrecgonized mouse event : " + me.paramString());
+
 
 
                     }
@@ -362,11 +361,9 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
         MouseListener[] mouseListeners = listenerList.getListeners(MouseListener.class);
         int i = 0;
         for (MouseListener ml : mouseListeners) {
-            //System.out.println("sending mouse released to : " + i + " :" + ml.getClass().getName());
             ml.mouseReleased(e);
             i++;
         }
-        //redispatchMouseEvent(e);
 
     }
 
@@ -377,7 +374,6 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
         for (MouseListener ml : mouseListeners) {
             ml.mouseEntered(e);
         }
-        //redispatchMouseEvent(e);
     }
 
     public void mouseExited(MouseEvent e) {
@@ -414,7 +410,6 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
 
     /*private void redispatchMouseEvent(MouseEvent e) {
 
-        //System.out.println("redispatching event ...");
         Point glassPanePoint = e.getPoint();
         Container container = rootPane.getLayeredPane();
         Point containerPoint = SwingUtilities.convertPoint(rootPane.getGlassPane(),
@@ -445,7 +440,6 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
 
 
             if (ancestor != null) {
-                //System.out.println("ancestor is : " + ancestor.getClass().getCanonicalName());
 
                 ImageView selView = (ImageView) ancestor;
                 while (ancestor.getParent() instanceof ImageView) {
@@ -453,12 +447,9 @@ public class ImageCanvas extends JComponent implements MouseListener, MouseMotio
                     ancestor = selView;
                 }
 
-                //System.out.println("selected view: " + canvasModel.getSelectedView());
                 if (canvasModel.getSelectedView() != selView) {
-                    //System.out.println("not forwarding event");
                     // not selected, do not forward mouse event ...
                 } else {
-                    //System.out.println("forwarding event");
                     Point componentPoint = SwingUtilities.convertPoint(rootPane.getGlassPane(),
                             glassPanePoint,
                             component);

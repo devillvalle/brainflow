@@ -17,7 +17,6 @@ public class DepthFirstAdapter extends AnalysisAdapter {
 
 
     public void caseComparisonNode(ComparisonNode node) {
-        System.out.println("parent of " + node + " is : " + node.getParent());
         node.left().apply(this);
         node.right().apply(this);
 
@@ -25,12 +24,10 @@ public class DepthFirstAdapter extends AnalysisAdapter {
     }
 
     public void caseVariableNode(VariableNode node) {
-        System.out.println("parent of " + node + " is : " + node.getParent());
 
     }
 
     public void caseConstantNode(ConstantNode node) {
-        System.out.println("parent of " + node + " is : " + node.getParent());
-        
+
     }
 }

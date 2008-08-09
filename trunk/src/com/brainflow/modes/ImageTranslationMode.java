@@ -37,7 +37,6 @@ public class ImageTranslationMode extends ImageCanvasMode implements MouseListen
     }
 
     public void mouseDragged(MouseEvent event) {
-        //System.out.println("image translation dragging!") ;
         dragging = true;
         ImageView selectedView = canvas.whichSelectedView(event.getPoint());
         if (selectedView != null) {

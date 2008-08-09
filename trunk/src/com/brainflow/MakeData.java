@@ -43,9 +43,6 @@ public class MakeData {
         data3 = fillVertical(data3);
         data4 = fillDiagonal(data4);
 
-        System.out.println("num zero samples : " + data4.getDimension(Axis.X_AXIS));
-        System.out.println("num zero samples : " + data4.getDimension(Axis.Y_AXIS));
-        System.out.println("num one samples : " + data4.getDimension(Axis.Z_AXIS));
 
         try {
             BrainIO.writeAnalyzeImage("c:/horizontal_stripes", (BasicImageData) data1);

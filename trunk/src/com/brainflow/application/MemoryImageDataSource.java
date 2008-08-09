@@ -70,12 +70,12 @@ public class MemoryImageDataSource implements IImageDataSource {
         return data;
     }
 
-    public IImageData load(ProgressListener plistener) throws BrainflowException {
+    public IImageData load(ProgressListener plistener) throws BrainFlowException {
         plistener.finished();
         return data;
     }
 
-    public IImageData load() throws BrainflowException {
+    public IImageData load() throws BrainFlowException {
         return data;
     }
 

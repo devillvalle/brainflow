@@ -1,6 +1,6 @@
 package com.brainflow.application.toplevel;
 
-import com.brainflow.application.BrainflowProject;
+import com.brainflow.application.BrainFlowProject;
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.application.services.ImageDisplayModelEvent;
 import com.brainflow.application.services.LoadableImageStatusEvent;
@@ -28,9 +28,9 @@ import java.util.List;
 
 public class ProjectManager implements EventSubscriber, BrainflowProjectListener {
 
-    private List<BrainflowProject> projects = new ArrayList<BrainflowProject>();
+    private List<BrainFlowProject> projects = new ArrayList<BrainFlowProject>();
 
-    private BrainflowProject activeProject = new BrainflowProject();
+    private BrainFlowProject activeProject = new BrainFlowProject();
 
     protected ProjectManager() {
         // Exists only to thwart instantiation.
@@ -43,7 +43,7 @@ public class ProjectManager implements EventSubscriber, BrainflowProjectListener
         return (ProjectManager) SingletonRegistry.REGISTRY.getInstance("com.brainflow.application.toplevel.ProjectManager");
     }
 
-    public BrainflowProject getActiveProject() {
+    public BrainFlowProject getActiveProject() {
         return activeProject;
     }
 

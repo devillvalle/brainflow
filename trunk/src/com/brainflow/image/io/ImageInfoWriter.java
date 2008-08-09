@@ -6,7 +6,7 @@
 
 package com.brainflow.image.io;
 
-import com.brainflow.application.BrainflowException;
+import com.brainflow.application.BrainFlowException;
 
 import java.io.File;
 
@@ -18,6 +18,6 @@ public interface ImageInfoWriter {
     /**
      * Creates a new instance of ImageInfoWriter
      */
-    public void writeInfo(File file, ImageInfo info) throws BrainflowException;
+    public void writeInfo(File file, ImageInfo info) throws BrainFlowException;
 
 }

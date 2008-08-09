@@ -38,9 +38,7 @@ public class CoordinateToIndexConverter2 extends ObservableWrapper.ReadWrite<Int
 
     private Index3D getGridValue() {
         AnatomicalPoint3D ap = getValue();
-        System.out.println("coordinate value : " + ap);
         float[] gpt = space.worldToGrid((float)ap.getX(), (float)ap.getY(), (float)ap.getZ());
-        System.out.println("grid value : " + Arrays.toString(gpt));
         return new Index3D(Math.round(gpt[0]), Math.round(gpt[1]), Math.round(gpt[2]));
 
     }
@@ -65,31 +63,24 @@ public class CoordinateToIndexConverter2 extends ObservableWrapper.ReadWrite<Int
 
     @Override
     public void set(Integer i) {
-        System.out.println("setting integer value : " + i);
-        
+
         Index3D voxel = getGridValue();
-        System.out.println("current grid value " + voxel);
 
         if (axis == Axis.X_AXIS) {
-            System.out.println("x axis");
-            voxel = new Index3D(i, voxel.i2(), voxel.i3());
+             voxel = new Index3D(i, voxel.i2(), voxel.i3());
 
         } else if (axis == Axis.Y_AXIS) {
-            System.out.println("y axis");
             voxel = new Index3D(voxel.i1(), i, voxel.i3());
         } else if (axis == Axis.Z_AXIS) {
-            System.out.println("z axis");
             voxel = new Index3D(voxel.i1(), voxel.i2(), i);
         } else {
             throw new AssertionError("illegal image axis : " + axis);
         }
 
-        System.out.println("new voxel is " + voxel);
 
         float[] ret = space.gridToWorld(voxel.i1(),  voxel.i2(), voxel.i3());
         AnatomicalPoint3D nap = new AnatomicalPoint3D(getValue().getAnatomy(), ret[0], ret[1], ret[2]);
 
-        System.out.println("new point : " + nap);
         WProperty<AnatomicalPoint3D> wprop = (WProperty<AnatomicalPoint3D>) getProperty();
         wprop.set(nap);
     }

@@ -200,7 +200,7 @@ public class ColorMapTablePresenter extends ImageViewPresenter {
 
             } else {
                 //todo this is not professional
-                System.out.println("not a ragged color map");
+
             }
 
         }
@@ -268,7 +268,6 @@ public class ColorMapTablePresenter extends ImageViewPresenter {
 
 
                 if (rows[rows.length - 1] > rows[0]) {
-                    System.out.println("rows: " + Arrays.toString(rows));
                     assert rows[rows.length - 1] < cmap.getMapSize();
 
                     cmap.equalizeIntervals(rows[0], rows[rows.length - 1]);
@@ -283,7 +282,7 @@ public class ColorMapTablePresenter extends ImageViewPresenter {
 
 
         public boolean shouldBeEnabled() {
-            System.out.println("somebody is calling shouldBeEnabled");
+            
             return false;
         }
     }

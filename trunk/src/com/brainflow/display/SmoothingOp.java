@@ -48,8 +48,8 @@ public class SmoothingOp {
             bimg.createGraphics().drawRenderedImage(input,
                     AffineTransform.getTranslateInstance(-input.getMinX(), -input.getMinY()));
         } else {
-            System.out.println("input is bufferedimage");
-            bimg = (BufferedImage) input;
+
+            bimg = input;
         }
 
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -76,10 +76,7 @@ public class SmoothingOp {
             kernel2[i] = kernel[i + 1];
         if (kernel2.length == 1)
             kernel2[0] = 1f;
-        System.out.println("radius = " + radius);
-        for (int i = 0; i < kernel2.length; i++) {
-            System.out.println("k " + i + ": " + kernel2[i]);
-        }
+        
         return kernel2;
     }
 

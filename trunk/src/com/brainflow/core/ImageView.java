@@ -83,7 +83,7 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
             ap = ap.snapToBounds();
             if (ap.equals(get())) {
-                System.out.println("old = new : do nothing");
+                // do nothing
                 return;
             }
 

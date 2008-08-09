@@ -4,7 +4,7 @@ import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.io.ImageInfoReader;
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.application.ImageIODescriptor;
-import com.brainflow.application.BrainflowException;
+import com.brainflow.application.BrainFlowException;
 import org.apache.commons.vfs.FileObject;
 
 import java.awt.image.BufferedImage;
@@ -76,7 +76,7 @@ public abstract class AbstractImageDataSource implements IImageDataSource {
             ImageInfoReader reader = (ImageInfoReader) getDescriptor().getHeaderReader().newInstance();
             imageInfoList = reader.readInfo(getHeaderFile());
 
-        } catch (BrainflowException e) {
+        } catch (BrainFlowException e) {
             //e.printStackTrace();
             throw new RuntimeException(e);
         } catch (InstantiationException e2) {

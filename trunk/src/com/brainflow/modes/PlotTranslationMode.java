@@ -45,7 +45,6 @@ public class PlotTranslationMode extends ImageCanvasMode {
                 Timer timer = new Timer(100, new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         if (dragging) {
-                            System.out.println("100 ms and still dragging now setting cursorPos");
                             canvas.setCursor(getCursor());
                         }
                     }

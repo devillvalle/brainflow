@@ -445,14 +445,11 @@ public class LinearColorMapDeprecated extends AbstractColorMap {
 
     public static void main(String[] args) {
         LinearColorMapDeprecated cmap = new LinearColorMapDeprecated(0, 32555, ColorTable.GRAYSCALE);
-        System.out.println(cmap.getInterval(0));
-        System.out.println(cmap.getInterval(1));
-
 
         XStream stream = new XStream(new DomDriver());
         Annotations.configureAliases(stream, LinearColorMapDeprecated.class);
 
-        System.out.println(stream.toXML(cmap));
+
     }
 
 

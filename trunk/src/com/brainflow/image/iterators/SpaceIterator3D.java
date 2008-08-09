@@ -6,7 +6,7 @@ import com.brainflow.image.space.Axis;
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.image.data.IImageData3D;
 import test.TestUtils;
-import com.brainflow.application.BrainflowException;
+import com.brainflow.application.BrainFlowException;
 
 import java.util.Arrays;
 
@@ -183,7 +183,7 @@ public class SpaceIterator3D implements XYZIterator {
             System.out.println("z max vox : " + Arrays.toString(zmaxvox));
 
 
-        } catch (BrainflowException e) {
+        } catch (BrainFlowException e) {
             e.printStackTrace();
         }
     }

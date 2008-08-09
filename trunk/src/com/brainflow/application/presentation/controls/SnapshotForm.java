@@ -130,7 +130,6 @@ public class SnapshotForm extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 String path = filePathComboBox.getSelectedItem().toString();
                 File ofile = new File(path + File.separatorChar + fileNameField.getText() + "." + imageFormatComboBox.getSelectedItem().toString());
-                System.out.println("file to save : " + ofile.getAbsolutePath());
 
                 FileImageOutputStream stream = null;
                 try {
@@ -292,11 +291,7 @@ public class SnapshotForm extends JPanel {
 
 
             String[] formats = ImageIO.getWriterFileSuffixes();
-            for (int i = 0; i < formats.length; i++) {
-                System.out.println("format: " + formats[i]);
-            }
-
-
+            
             JFrame frame = new JFrame();
             frame.add(form, BorderLayout.CENTER);
             frame.pack();

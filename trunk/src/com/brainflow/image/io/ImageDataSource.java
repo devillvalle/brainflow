@@ -6,7 +6,7 @@ import com.brainflow.image.io.ImageReader;
 import com.brainflow.utils.ProgressListener;
 import com.brainflow.image.io.AbstractImageDataSource;
 import com.brainflow.application.ImageIODescriptor;
-import com.brainflow.application.BrainflowException;
+import com.brainflow.application.BrainFlowException;
 import org.apache.commons.vfs.FileObject;
 
 import java.util.logging.Logger;
@@ -50,7 +50,7 @@ public class ImageDataSource extends AbstractImageDataSource {
         return dataRef != null;
     }
 
-    public IImageData load() throws BrainflowException {
+    public IImageData load() throws BrainFlowException {
         try {
 
             ImageInfo imageInfo = getImageInfoList().get(getImageIndex());
@@ -92,16 +92,16 @@ public class ImageDataSource extends AbstractImageDataSource {
 
         } catch (IllegalAccessException e) {
             log.warning("Error caught in BasicImageData.load()");
-            throw new BrainflowException(e);
+            throw new BrainFlowException(e);
         } catch (InstantiationException e) {
             log.warning("Error caught in BasicImageData.load()");
-            throw new BrainflowException(e);
+            throw new BrainFlowException(e);
         }
 
         return dataRef;
     }
 
-    public IImageData load(ProgressListener plistener) throws BrainflowException {
+    public IImageData load(ProgressListener plistener) throws BrainFlowException {
         try {
 
             ImageInfo imageInfo = getImageInfoList().get(getImageIndex());
@@ -117,10 +117,10 @@ public class ImageDataSource extends AbstractImageDataSource {
             dataRef = data;
         } catch (IllegalAccessException e) {
             log.warning("Error caught in BasicImageData.load()");
-            throw new BrainflowException(e);
+            throw new BrainFlowException(e);
         } catch (InstantiationException e) {
             log.warning("Error caught in BasicImageData.load()");
-            throw new BrainflowException(e);
+            throw new BrainFlowException(e);
         }
 
         return dataRef;

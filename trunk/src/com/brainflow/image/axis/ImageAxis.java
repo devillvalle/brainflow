@@ -287,9 +287,6 @@ public class ImageAxis extends CoordinateAxis {
         i2[0] = 55;
 
 
-        System.out.println("" + i1[0]);
-        System.out.println("" + i2[0]);
-
     }
 
 

@@ -275,7 +275,6 @@ public class DataFrame {
             int vcount = 0;
             while (tokenizer.nextToken() != StreamTokenizer.TT_EOL) {
                 dframe.addEmptyVariable(tokenizer.sval, vtypes[vcount]);
-                System.out.println(tokenizer.toString());
                 vcount++;
             }
 

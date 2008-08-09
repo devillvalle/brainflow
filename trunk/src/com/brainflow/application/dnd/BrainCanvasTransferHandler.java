@@ -1,21 +1,13 @@
 package com.brainflow.application.dnd;
 
 import com.brainflow.application.toplevel.*;
-import com.brainflow.application.dnd.ImageViewTransferHandler;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.IBrainCanvas;
 import com.brainflow.core.IImageDisplayModel;
-import com.brainflow.core.ImageDisplayModel;
 import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.image.io.IImageDataSource;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -50,10 +42,10 @@ public class BrainCanvasTransferHandler extends ImageDropHandler {
             ImageView view = canvas.whichView(c, p);
 
             if (view != null) {
-                Brainflow.getInstance().loadAndDisplay(dsource, view);
+                BrainFlow.getInstance().loadAndDisplay(dsource, view);
             } else {
 
-                Brainflow.getInstance().loadAndDisplay(dsource);
+                BrainFlow.getInstance().loadAndDisplay(dsource);
             }
 
         }
@@ -95,9 +87,7 @@ public class BrainCanvasTransferHandler extends ImageDropHandler {
 
 
     public static void main(String[] args) {
-        System.out.println("" + Number.class.isAssignableFrom(Double.class));
-        System.out.println("" + Double.class.isAssignableFrom(Number.class));
-
+        
     }
 
 

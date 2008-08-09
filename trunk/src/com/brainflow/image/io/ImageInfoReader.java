@@ -1,11 +1,10 @@
 package com.brainflow.image.io;
 
-import com.brainflow.application.BrainflowException;
+import com.brainflow.application.BrainFlowException;
 import org.apache.commons.vfs.FileObject;
 
 import java.io.File;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -20,11 +19,11 @@ import java.util.List;
 
 public interface ImageInfoReader {
 
-    public List<? extends ImageInfo> readInfo(File f) throws BrainflowException;
+    public List<? extends ImageInfo> readInfo(File f) throws BrainFlowException;
 
-    public List<? extends ImageInfo> readInfo(FileObject fobj) throws BrainflowException;
+    public List<? extends ImageInfo> readInfo(FileObject fobj) throws BrainFlowException;
 
-    public List<? extends ImageInfo> readInfo(InputStream stream) throws BrainflowException;
+    public List<? extends ImageInfo> readInfo(InputStream stream) throws BrainFlowException;
 
 
 

@@ -115,7 +115,7 @@ public class ColorIntervalEditor extends JComponent {
     }
 
     public static void main(String[] args) {
-        com.jidesoft.utils.Lm.verifyLicense("UIN", "Brainflow", "7.YTcWgxxjx1xjSnUqG:U1ldgGetfRn1");
+        com.jidesoft.utils.Lm.verifyLicense("UIN", "BrainFlow", "7.YTcWgxxjx1xjSnUqG:U1ldgGetfRn1");
 
         try {
 

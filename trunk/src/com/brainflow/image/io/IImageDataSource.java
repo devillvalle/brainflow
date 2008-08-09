@@ -4,7 +4,7 @@ import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.utils.ProgressListener;
 import com.brainflow.application.ImageIODescriptor;
-import com.brainflow.application.BrainflowException;
+import com.brainflow.application.BrainFlowException;
 import org.apache.commons.vfs.FileObject;
 
 import java.awt.image.BufferedImage;
@@ -48,9 +48,9 @@ public interface IImageDataSource {
 
     public void releaseData();
 
-    public IImageData load(ProgressListener plistener) throws BrainflowException;
+    public IImageData load(ProgressListener plistener) throws BrainFlowException;
 
-    public IImageData load() throws BrainflowException;
+    public IImageData load() throws BrainFlowException;
 
     public int getUniqueID();
 

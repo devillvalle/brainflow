@@ -235,7 +235,6 @@ public class ImageFiller {
             x = slowIterator.next();
             while (fastIterator.hasNext()) {
                 z = fastIterator.next();
-                //System.out.println("x : " + x + " y: " + y + " z: " + z + "value : " + data.value(x, y, z));
                 op[i] = (float)data.value(x, y, z);
                 i++;
             }

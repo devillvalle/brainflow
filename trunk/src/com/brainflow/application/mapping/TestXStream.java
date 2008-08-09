@@ -45,8 +45,6 @@ public class TestXStream {
             limg2 = descriptor2.createLoadableImage(fobj2, VFS.getManager().resolveFile("c:/javacode/googlecode/brainflow/src/resources/data/icbm452_atlas_probability_gray.img"));
 
 
-            System.out.println(limg1.getDataFile().getName());
-            System.out.println(limg2.getDataFile().getName());
             XStream xstream = new XStream(new DomDriver());
             xstream.setMarshallingStrategy(new com.thoughtworks.xstream.core.TreeMarshallingStrategy());
             xstream.alias("image-data", IImageDataSource.class);

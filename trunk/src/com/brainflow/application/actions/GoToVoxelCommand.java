@@ -34,7 +34,6 @@ public class GoToVoxelCommand extends BrainFlowCommand {
                 String t = tokenizer.nextToken();
                 try {
                     vox[count] = Integer.parseInt(t);
-                    System.out.println("vox " + count + " " + vox[count]);
                     count++;
                 } catch (NumberFormatException e) {
                     //todo report error on status bar?
@@ -45,10 +44,7 @@ public class GoToVoxelCommand extends BrainFlowCommand {
         }
 
         float[] coords = view.getModel().getImageSpace().indexToWorld(vox);
-        System.out.println("coords = " + Arrays.toString(coords));
-        System.out.println("anatomy of view : " + view.getModel().getImageSpace().getAnatomy());
-        System.out.println("anatomy of cursor : " + view.cursorPos.get().getAnatomy());
-
+     
         AnatomicalPoint3D ap = new AnatomicalPoint3D((Anatomy3D)view.getModel().getImageSpace().getAnatomy(), coords[0], coords[1], coords[2]);
         view.cursorX.set(ap.getX());
         view.cursorY.set(ap.getY());

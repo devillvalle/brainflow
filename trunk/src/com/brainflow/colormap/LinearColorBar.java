@@ -60,8 +60,6 @@ public class LinearColorBar extends AbstractColorBar {
 
         double cRange = model.getMaximumValue() - model.getMinimumValue();
 
-        //System.out.println("start index : " + startIndex);
-        //System.out.println("end index : " + endIndex);
 
         float lastFrac = -1;
         for (int i = startIndex; i <= endIndex; i++) {
@@ -79,9 +77,6 @@ public class LinearColorBar extends AbstractColorBar {
             lastFrac = f;
         }
 
-        //System.out.println("high clip : " + model.getHighClip());
-        ///System.out.println("last value = " + frac[model.getMapSize()-1]);
-        //System.out.println("second to last value = " + frac[model.getMapSize()-2]);
 
         return frac;
 

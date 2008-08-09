@@ -2,7 +2,7 @@ package com.brainflow.colormap;
 
 import com.brainflow.image.Histogram;
 import com.brainflow.image.io.IImageDataSource;
-import com.brainflow.application.BrainflowException;
+import com.brainflow.application.BrainFlowException;
 import com.brainflow.utils.Range;
 
 import javax.swing.*;
@@ -36,7 +36,7 @@ public class HistogramColorBar extends JComponent {
     private int TOP_CUSHION = 4;
 
 
-    
+
     public HistogramColorBar(IColorMap map, Histogram histogram) {
         this.colorMap = map;
         this.histogram = histogram;
@@ -93,6 +93,20 @@ public class HistogramColorBar extends JComponent {
 
 
     }
+
+    public double locationToValueY(int loc) {
+        double perc = ((double)loc - getYOffset())/getDataArea().getHeight();
+        if (perc < 0 || perc > 1) return -1;
+
+        DoubleArrayList binHeights = histogram.computeBins();
+        double ymax = binHeights.get(histogram.getHighestBin()) * yaxisFraction;
+
+        return (1-perc)*ymax;
+
+
+    }
+
+
 
 
     public int getBin(double value) {
@@ -155,7 +169,7 @@ public class HistogramColorBar extends JComponent {
             double y = binHeights.get(i);
             double ny = Math.min((y/ymax), 1)*(double)height;
 
-          
+
             Rectangle2D rect = new Rectangle2D.Double(dataArea.x + nxstart*width, height-ny + dataArea.y, (nxend-nxstart)*width, ny);
 
             GradientPaint gp = new GradientPaint((float)(nxstart*width), 0, startColor, (float)(nxend*width), 0, endColor);
@@ -182,7 +196,7 @@ public class HistogramColorBar extends JComponent {
         IImageDataSource dataSource = TestUtils.quickDataSource("resources/data/global_mean+orig.HEAD");
         try {
             dataSource.load();
-        } catch(BrainflowException e) {
+        } catch(BrainFlowException e) {
             e.printStackTrace();
         }
         Histogram histo = new Histogram(dataSource.getData(),75);

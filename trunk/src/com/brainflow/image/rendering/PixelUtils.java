@@ -67,19 +67,16 @@ public class PixelUtils {
         if (radius > (Math.max(xspacing, yspacing) * 2)) {
             rows = 5;
             cols = 5;
-            System.out.println("5 rows!");
         }
 
         if (radius > (Math.max(xspacing, yspacing) * 3)) {
             rows = 7;
             cols = 7;
-            System.out.println("7 rows!");
         }
 
         if (radius > (Math.max(xspacing, yspacing) * 3)) {
             rows = 9;
             cols = 9;
-            System.out.println("9 rows!");
         }
 
 

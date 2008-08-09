@@ -294,7 +294,6 @@ public class FileExplorer extends AbstractPresenter {
                         //    this.rootNameCache.put(file, filename);
                         //}
                         // long end = System.currentTimeMillis();
-                        // System.out.println(filename + ":" + (end - start));
                     } else {
                         filename = file.getName().getBaseName();
                     }

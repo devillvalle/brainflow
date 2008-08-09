@@ -124,10 +124,8 @@ public class FileListEditor extends JPanel implements DNDComponentInterface {
             public void mouseClicked(MouseEvent e) {
                 FileListEditor local = FileListEditor.this;
                 int clicks = e.getClickCount();
-                System.out.println("clicks = " + clicks);
                 if (clicks >= 2) {
                     int idx = local.fileList.getSelectedIndex();
-                    System.out.println("idx = " + idx);
                     if (idx >= 0)
                         local.firePropertyChange(FileListEditor.FILE_DOUBLE_CLICKED_PROPERTY, "old", "new");
                 }

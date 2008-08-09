@@ -61,7 +61,6 @@ public class ButtonList extends JComponent implements ListDataListener {
 
             public void valueChanged(ListSelectionEvent e) {
 
-                System.out.println(e.getSource());
                 int idx = selectionModel.getMinSelectionIndex();
                 buttonGroup.setSelected(buttons.get(idx).getModel(), true);
 
@@ -151,8 +150,6 @@ public class ButtonList extends JComponent implements ListDataListener {
                                              boolean isAdjusting) {
         Object[] listeners = listenerList.getListenerList();
         ListSelectionEvent e = null;
-
-        System.out.println("number of listeners =  " + listeners.length);
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
             if (listeners[i] == ListSelectionListener.class) {
                 if (e == null) {
@@ -165,17 +162,14 @@ public class ButtonList extends JComponent implements ListDataListener {
     }
 
     public void intervalAdded(ListDataEvent e) {
-        System.out.println("interval added");
         initComponents();
     }
 
     public void intervalRemoved(ListDataEvent e) {
-        System.out.println("interval removed");
         initComponents();
     }
 
     public void contentsChanged(ListDataEvent e) {
-        System.out.println("interval contents changed");
         initComponents();
     }
 

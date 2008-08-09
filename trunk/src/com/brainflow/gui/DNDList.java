@@ -65,7 +65,7 @@ public class DNDList extends JList implements DropTargetListener,DragSourceListe
   public void dragEnter (DropTargetDragEvent event) {
     
     // debug messages for diagnostics 
-    System.out.println( "dragEnter");
+
     event.acceptDrag (DnDConstants.ACTION_MOVE);
   }
 
@@ -75,7 +75,7 @@ public class DNDList extends JList implements DropTargetListener,DragSourceListe
    */
 
   public void dragExit (DropTargetEvent event) {
-    System.out.println( "dragExit");
+
     
   }
 
@@ -85,7 +85,7 @@ public class DNDList extends JList implements DropTargetListener,DragSourceListe
    */
 
   public void dragOver (DropTargetDragEvent event) {
-    System.out.println( "dragOver");
+
   }
 
   /**
@@ -147,8 +147,6 @@ public class DNDList extends JList implements DropTargetListener,DragSourceListe
         
         // as the name suggests, starts the dragging
         dragSource.startDrag (event, DragSource.DefaultMoveDrop, text, this);
-    } else {
-        System.out.println( "nothing was selected");   
     }
   }
 
@@ -171,7 +169,7 @@ public class DNDList extends JList implements DropTargetListener,DragSourceListe
    */
 
   public void dragEnter (DragSourceDragEvent event) {
-    System.out.println( " dragEnter");
+
   }
 
   /**
@@ -181,7 +179,7 @@ public class DNDList extends JList implements DropTargetListener,DragSourceListe
    */
 
   public void dragExit (DragSourceEvent event) {
-    System.out.println( "dragExit");
+
     
   }
 
@@ -192,7 +190,7 @@ public class DNDList extends JList implements DropTargetListener,DragSourceListe
    */
 
   public void dragOver (DragSourceDragEvent event) {
-    System.out.println( "dragExit");
+
     
   }
 
@@ -202,7 +200,7 @@ public class DNDList extends JList implements DropTargetListener,DragSourceListe
    */
    
   public void dropActionChanged ( DragSourceDragEvent event) {
-    System.out.println( "dropActionChanged"); 
+   
   }
 
   /**

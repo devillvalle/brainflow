@@ -279,14 +279,11 @@ public class BoundedRangeAdapterExt implements BoundedRangeModel, Serializable {
     public void setValue(int n) {
         Throwable t = new Throwable();
         t.printStackTrace();
-        System.out.println("setValue = " + n);
-        System.out.println("extent " + getExtent());
         int newValue = Math.max(n, min);
         if (newValue + getExtent() > max) {
             newValue = max - getExtent();
         }
 
-        System.out.println("new value " + newValue);
         setRangeProperties(newValue, getExtent(), min, max, isAdjusting);
     }
 

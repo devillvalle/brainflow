@@ -25,12 +25,12 @@ public class StaticTimer {
     public static void report(String message) {
         long last = curTime;
         curTime = System.currentTimeMillis();
-        System.out.println(message + " : increment = " + (curTime - last));
+        System.err.println(message + " : increment = " + (curTime - last));
     }
     
     public static void end(String message) {
         curTime = System.currentTimeMillis();
-        System.out.println(message + " : end time = " + curTime);
+        System.err.println(message + " : end time = " + curTime);
     }
         
         

@@ -9,7 +9,6 @@ package com.brainflow.utils;
  */
 
 
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
@@ -60,7 +59,7 @@ public class ShowUIDefaults extends JFrame implements ActionListener {
             UIManager.setLookAndFeel(e.getActionCommand());
         }
         catch (Exception e2) {
-            System.out.println(e2);
+            e2.printStackTrace();
         }
 
         getContentPane().remove(tabbedPane);
@@ -205,14 +204,13 @@ public class ShowUIDefaults extends JFrame implements ActionListener {
                 super.paint(g);
             }
             catch (Exception e) {
-//				System.out.println(e);
-//				System.out.println(e.getStackTrace()[0]);
+                e.printStackTrace();
             }
         }
     }
 
     public static void main(String[] args) {
-        com.jidesoft.utils.Lm.verifyLicense("UIN", "Brainflow", "S5XiLlHH0VReaWDo84sDmzPxpMJvjP3");
+        com.jidesoft.utils.Lm.verifyLicense("UIN", "BrainFlow", "S5XiLlHH0VReaWDo84sDmzPxpMJvjP3");
 
         //javax.swing.LookAndFeel lipstikLnF = new com.lipstikLF.LipstikLookAndFeel();
         try {

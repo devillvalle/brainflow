@@ -107,10 +107,7 @@ public class HandledBorder extends AbstractBorder {
             paintSelected(c, g, x, y, width, height);
         } else if (isPreSelected()) {
             paintPreSelected(c, g, x, y, width, height);
-        } else {
-            //System.out.println("no border");
         }
-
 
     }
 
@@ -265,7 +262,6 @@ public class HandledBorder extends AbstractBorder {
         //panel.setOpaque(true);
         //panel.setBackground(Color.GREEN);
 
-        System.out.println(panel.getInsets());
         jf.setLayout(null);
         jf.add(panel);
         //jf.pack();

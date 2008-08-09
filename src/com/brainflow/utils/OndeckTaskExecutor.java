@@ -75,7 +75,6 @@ public class OndeckTaskExecutor<T> {
         return new Callable<Integer>() {
             public Integer call() throws Exception {
                 long sleep = (int) Math.abs((Math.random() * 100));
-                //System.out.println("sleeping for " + sleep);
                 Thread.sleep(sleep);
                 return id;
             }
@@ -91,7 +90,6 @@ public class OndeckTaskExecutor<T> {
         OndeckTaskExecutor<Integer> runner = new OndeckTaskExecutor<Integer>();
         for (int i = 0; i < 100; i++) {
             long sleep = (int) Math.abs((Math.random() * 50));
-            //System.out.println("sleeping for " + sleep);
             Thread.sleep(sleep);
             runner.submitTask(createCallable(i));
         }

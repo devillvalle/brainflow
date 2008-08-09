@@ -74,10 +74,7 @@ public class AnatomicalPoint3D implements AnatomicalPoint {
         }
 
         if (changed) {
-            System.out.println("snapping to bounds ...");
-            System.out.println("old : " + this);
             AnatomicalPoint3D ret = new AnatomicalPoint3D(space, newx, newy,newz);
-            System.out.println("new : " + ret);
             return ret;
 
         } else {
@@ -255,7 +252,6 @@ public class AnatomicalPoint3D implements AnatomicalPoint {
         AnatomicalPoint3D a = new AnatomicalPoint3D(Anatomy3D.AXIAL_LAI, 12, 50, 12);
         AnatomicalPoint3D b = new AnatomicalPoint3D(Anatomy3D.AXIAL_LPI, 12, 50, 12);
 
-        System.out.println(a.convertTo(b.getSpace()));
-
+    
     }
 }

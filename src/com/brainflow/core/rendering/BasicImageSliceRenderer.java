@@ -2,10 +2,7 @@ package com.brainflow.core.rendering;
 
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.display.InterpolationType;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.anatomy.Anatomy3D;
-import com.brainflow.image.anatomy.AnatomicalPoint3D;
-import com.brainflow.image.anatomy.AnatomicalAxis;
+import com.brainflow.image.anatomy.*;
 import com.brainflow.image.data.*;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.image.operations.ImageSlicer;
@@ -93,7 +90,6 @@ public class BasicImageSliceRenderer implements SliceRenderer {
             initCache();
         }
 
-        
 
     }
 
@@ -124,6 +120,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
         //hack cast
 
         if (refSpace.equals(layer.getData().getImageSpace())) {
+
             slicer = new ImageSlicer((IImageData3D) layer.getData());
         } else {
             slicer = new ImageSlicer(new MappedDataAcessor3D(refSpace, (IImageData3D) layer.getData()));
@@ -139,7 +136,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
 
         rgbaCache = new SoftCache<AnatomicalPoint1D, RGBAImage>();
 
-       
+
     }
 
 
@@ -163,6 +160,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
     private IImageData2D getData() {
         if (data != null) return data;
 
+
         AnatomicalPoint1D zdisp = getZSlice();
 
         IImageData2D ret = dataCache.get(zdisp);
@@ -176,6 +174,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
                 slice = 0;
             }
 
+
             ret = slicer.getSlice(getDisplayAnatomy(), slice);
             dataCache.put(zdisp, ret);
 
@@ -187,14 +186,17 @@ public class BasicImageSliceRenderer implements SliceRenderer {
     }
 
     private AnatomicalPoint1D getZSlice() {
+
+        // convert from world coordinates to the grid coordinates
         float[] gridpos = refSpace.worldToGrid((float) slice.getX(), (float) slice.getY(), (float) slice.getZ());
         AnatomicalPoint3D gridloc = new AnatomicalPoint3D(refSpace, gridpos[0], gridpos[1], gridpos[2]);
 
-        return gridloc.getValue(displayAnatomy.ZAXIS, 0, refSpace.getDimension(displayAnatomy.ZAXIS));
+
+        //get the value along whatever the z axis is for the current display anatomy
+        return gridloc.getValue(refSpace.getImageAxis(displayAnatomy.ZAXIS, true).getAnatomicalAxis(), 0, refSpace.getDimension(displayAnatomy.ZAXIS));
 
 
     }
-
 
 
     private RGBAImage getRGBAImage() {
@@ -210,7 +212,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
         }
 
         if (rgbaImage == null) {
-           IColorMap cmap = layer.getImageLayerProperties().colorMap.get();
+            IColorMap cmap = layer.getImageLayerProperties().colorMap.get();
             lastColorMap = cmap;
             rgbaImage = cmap.getRGBAImage(getData());
             rgbaCache.put(zdisp, rgbaImage);

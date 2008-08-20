@@ -47,7 +47,7 @@ public class ImageInfoInspector {
 
     public static void main(String[] args) {
         try {
-            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceBusinessBlueSteelLookAndFeel());
+            //UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceBusinessBlueSteelLookAndFeel());
 
             IImageDataSource source = TestUtils.quickDataSource("icbm452_atlas_probability_gray.hdr");
             ImageInfo info = source.getImageInfo();

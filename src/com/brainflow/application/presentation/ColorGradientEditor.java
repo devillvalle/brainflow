@@ -190,7 +190,7 @@ public class ColorGradientEditor extends JPanel {
 
         try {
 
-            UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceModerateLookAndFeel());
+            //UIManager.setLookAndFeel(new org.jvnet.substance.skin.SubstanceModerateLookAndFeel());
 
             LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
 

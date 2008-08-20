@@ -33,7 +33,7 @@ public class MountFileSystemCommand extends BrainFlowCommand {
         }
 
 
-        final int res = chooser.showOpenDialog(BrainFlow.getInstance().getApplicationFrame());
+        final int res = chooser.showOpenDialog(BrainFlow.get().getApplicationFrame());
         try {
             if (res == FolderChooser.APPROVE_OPTION) {
                 File[] files = chooser.getSelectedFiles();

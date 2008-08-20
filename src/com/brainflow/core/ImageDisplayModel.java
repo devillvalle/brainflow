@@ -94,8 +94,10 @@ public class ImageDisplayModel implements IImageDisplayModel {
        
 
         public void add(Integer i) {
+            //todo this breaks down if same layer is addewd twice to model
             ImageLayer layer = getLayer(i);
             boolean vis = layer.getImageLayerProperties().visible.get();
+
             if (!vis) {
                 layer.getImageLayerProperties().visible.set(true);
             }
@@ -184,7 +186,9 @@ public class ImageDisplayModel implements IImageDisplayModel {
                 if (layer.isVisible()) {
                     visibleSelection.add(index);
                 } else {
-                    visibleSelection.remove(index);
+                    if (visibleSelection.get().contains(index)) {
+                        visibleSelection.remove(visibleSelection.get().indexOf(index));
+                    }
                 }
 
             }

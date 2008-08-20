@@ -41,7 +41,7 @@ public abstract class BrainFlowToggleCommand extends ToggleCommand implements IB
     }
 
     public IBrainCanvas getSelectedCanvas() {
-        return BrainFlow.getInstance().getSelectedCanvas();
+        return BrainFlow.get().getSelectedCanvas();
 
     }
 

@@ -89,7 +89,7 @@ public class RenderUtils {
 
         DataBuffer buffer = new DataBufferInt(pixels, width * height);
 
-        //DirectColorModel dcm = new DirectColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB),
+        //DirectColorModel dcm = new DirectColorModel(ColorSpace.get(ColorSpace.CS_sRGB),
         //        32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000, false, DataBuffer.TYPE_INT);
 
 

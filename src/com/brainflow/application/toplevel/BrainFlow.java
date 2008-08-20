@@ -111,7 +111,7 @@ public class BrainFlow {
         // Exists only to thwart instantiation.
     }
 
-    public static BrainFlow getInstance() {
+    public static BrainFlow get() {
         return (BrainFlow) SingletonRegistry.REGISTRY.getInstance("com.brainflow.application.toplevel.BrainFlow");
     }
 
@@ -119,7 +119,7 @@ public class BrainFlow {
     public static void main(String[] args) {
 
 
-        final BrainFlow bflow = getInstance();
+        final BrainFlow bflow = get();
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -154,7 +154,7 @@ public class BrainFlow {
 
             String osname = System.getProperty("os.name");
             if (osname.toUpperCase().contains("WINDOWS")) {
-                
+               
                 UIManager.setLookAndFeel(new WindowsLookAndFeel());
                 LookAndFeelFactory.installJideExtension();
 
@@ -162,14 +162,26 @@ public class BrainFlow {
                 UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
                 LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
 
-            } else {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } else if (osname.toUpperCase().contains("MAC")) {
+                System.setProperty("Quaqua.tabLayoutPolicy","wrap");
+                UIManager.setLookAndFeel(new ch.randelshofer.quaqua.QuaquaLookAndFeel());
+                               
                 LookAndFeelFactory.installJideExtension();
 
             }
 
         } catch (UnsupportedLookAndFeelException e) {
             log.severe("could not load look and feel");
+        } catch(Throwable ex) {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                LookAndFeelFactory.installJideExtension();
+
+            } catch(Throwable ex2) {
+                log.severe("could not load look and feel");
+                throw new RuntimeException("failed to initialize look and feel", ex2);
+            }
+
         }
 
 

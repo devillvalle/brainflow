@@ -284,7 +284,9 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
             g2.setFont(g2.getFont().deriveFont(Font.PLAIN));
         }
 
-        g2.addRenderingHints(desktopHints);
+        if (desktopHints != null) {
+            g2.addRenderingHints(desktopHints);
+        }
         g2.setColor(Color.BLACK);
         Rectangle bounds = leftGripper.getBounds();
 
@@ -303,7 +305,9 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
             g2.setFont(g2.getFont().deriveFont(Font.PLAIN));
         }
 
-        g2.addRenderingHints(desktopHints);
+        if (desktopHints != null) {
+            g2.addRenderingHints(desktopHints);
+        }
         g2.setColor(Color.BLACK);
         Rectangle bounds = rightGripper.getBounds();
 

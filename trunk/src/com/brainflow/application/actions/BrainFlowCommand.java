@@ -44,7 +44,7 @@ public abstract class BrainFlowCommand extends ActionCommand implements IBrainFl
     }
 
     public IBrainCanvas getSelectedCanvas() {
-        return BrainFlow.getInstance().getSelectedCanvas();
+        return BrainFlow.get().getSelectedCanvas();
 
     }
 

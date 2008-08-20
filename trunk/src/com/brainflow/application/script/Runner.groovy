@@ -17,7 +17,7 @@ static main(String[] args) {
 
 
 def bf() {
-    BrainFlow().getInstance()
+    BrainFlow().get()
 }
 
 

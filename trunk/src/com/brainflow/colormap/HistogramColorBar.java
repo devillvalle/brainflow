@@ -82,9 +82,9 @@ public class HistogramColorBar extends JComponent {
         return histogram.getMaxValue();
     }
 
-    public double valueToLocationX(double value) {
+    public int valueToLocationX(double value) {
         double perc = (value - histogram.getMinValue())/(histogram.getMaxValue() - histogram.getMinValue());
-        return perc*getDataArea().width;
+        return (int)Math.round(perc*getDataArea().width);
     }
 
     public double locationToValueX(int loc) {

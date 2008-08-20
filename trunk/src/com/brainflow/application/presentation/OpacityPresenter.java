@@ -96,7 +96,7 @@ public class OpacityPresenter extends ImageViewPresenter implements Bindable {
 
             Bindings.bind(form.getValueLabel(),
                 ConverterFactory.createStringConverter(adapter.getValueModel(Opacity.OPACITY_PROPERTY),
-                        NumberFormat.getInstance()));
+                        NumberFormat.get()));
         } else {
             adapter.setBean(opacity);
         }

@@ -98,15 +98,36 @@ public class BrainFlowStarter {
 
     private IImageDataSource convertToDataSource(String path) throws BrainFlowException {
 
-        return BrainFlow.getInstance().createDataSource(path);
+        return BrainFlow.get().createDataSource(path);
 
 
     }
 
 
     public void launch() {
-        final BrainFlow bflow = BrainFlow.getInstance();
+        final BrainFlow bflow = BrainFlow.get();
         bflow.initImageIO();
+
+        if (extras.size() > 0) {
+            try {
+                List<String> fnames = convertToAbsolutePaths(extras);
+                List<IImageDataSource> sourceList = new ArrayList<IImageDataSource>();
+                for (String str : fnames) {
+                    sourceList.add(convertToDataSource(str));
+                }
+
+                
+                
+
+            } catch(FileNotFoundException e) {
+                System.err.println(e.getMessage());
+                System.exit(1);
+            } catch(BrainFlowException e2) {
+                System.err.println(e2.getMessage());
+                System.exit(1);
+            }
+
+        }
 
 
     }
@@ -115,7 +136,7 @@ public class BrainFlowStarter {
     public void launchX() {
         initLogging();
 
-        final BrainFlow bflow = BrainFlow.getInstance();
+        final BrainFlow bflow = BrainFlow.get();
 
         final List<IImageDataSource> fileSources = new ArrayList<IImageDataSource>();
 
@@ -226,11 +247,11 @@ public class BrainFlowStarter {
         try {
             if (loadTask != null) {
                 List<IImageDataSource> dlist = loadTask.get();
-                //IImageDisplayModel displayModel = ProjectManager.getInstance().addToActiveProject(dataSource);
+                //IImageDisplayModel displayModel = ProjectManager.get().addToActiveProject(dataSource);
                 //ImageView iview = ImageViewFactory.createAxialView(displayModel);
 
-                //DisplayManager.getInstance().getSelectedCanvas().addImageView(iview);
-                //ProjectManager.getInstance().getActiveProject().
+                //DisplayManager.get().getSelectedCanvas().addImageView(iview);
+                //ProjectManager.get().getActiveProject().
 
             }
         } catch (Throwable e) {
@@ -245,8 +266,9 @@ public class BrainFlowStarter {
         CmdLineParser parser = new CmdLineParser(this);
         try {
             parser.parseArgument(args);
+            this.launch();
 
-            System.out.println(this);
+            System.out.println(this.extras);
 
         } catch (CmdLineException e) {
             // handling of wrong arguments

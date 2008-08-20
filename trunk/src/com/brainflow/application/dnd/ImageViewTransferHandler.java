@@ -34,7 +34,7 @@ public class ImageViewTransferHandler extends ImageDropHandler {
         if (c instanceof ImageView) {
             ImageView view = (ImageView) c;
             
-            BrainFlow.getInstance().loadAndDisplay(dsource, view);
+            BrainFlow.get().loadAndDisplay(dsource, view);
         }
 
     }

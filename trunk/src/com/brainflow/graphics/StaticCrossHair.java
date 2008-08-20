@@ -76,7 +76,7 @@ public class StaticCrossHair implements GraphicsVisitor {
 
 
     g2.setStroke(new BasicStroke(thickness, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL));
-   // AlphaComposite comp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+   // AlphaComposite comp = AlphaComposite.get(AlphaComposite.SRC_OVER, alpha);
   //  g2.setComposite(comp);
 
     Line2D bvert = new Line2D.Double(point.getX(), point.getY()+gap, point.getX(), point.getY()+radius);

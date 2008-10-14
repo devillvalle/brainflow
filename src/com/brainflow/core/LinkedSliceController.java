@@ -35,6 +35,7 @@ public class LinkedSliceController extends SimpleSliceController {
                         if (plot == selPlot) continue;
                         AnatomicalPoint3D crossSlice = getView().getCursorPos();
                         plot.setSlice(crossSlice);
+                        System.out.println("cross slice anatomy : " + crossSlice.getSpace().getAnatomy());
                     }
 
 

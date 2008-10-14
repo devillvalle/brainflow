@@ -89,9 +89,9 @@ public class BrainCanvasModel {
 
     public void addImageView(ImageView view) {
         imageViewList.add(view);
-        if (listSelection.get() == -1) {
-            listSelection.set(0);
-        }
+        //if (listSelection.get() == -1) {
+        //    listSelection.set(0);
+        //}
     }
 
     public void removeImageView(ImageView view) {       

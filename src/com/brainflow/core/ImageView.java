@@ -414,6 +414,8 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
         AnatomicalPoint3D ap = cursorPos.get();
         //todo fix me
+
+
         AnatomicalPoint3D dispAP = null;
 
         double xpt = dispAP.getValue(Axis.X_AXIS.getId());
@@ -431,7 +433,7 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
         return SwingUtilities.convertPoint(plot.getComponent(), location, this);
 
 
-    }
+    }   
 
     public boolean pointInPlot(Component source, Point p) {
         Point viewPoint = SwingUtilities.convertPoint(source, p, this);

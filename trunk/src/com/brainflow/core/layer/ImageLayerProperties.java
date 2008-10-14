@@ -5,6 +5,7 @@ import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMap2;
 import com.brainflow.display.*;
 import com.brainflow.utils.IRange;
+import com.brainflow.utils.Range;
 import com.brainflow.core.ClipRange;
 import com.jgoodies.binding.list.SelectionInList;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -33,21 +34,11 @@ import java.io.Serializable;
 @XStreamAlias("layer-properties")
 public class ImageLayerProperties implements Serializable {
 
-    public static final String THRESHOLD_PROPERTY = "threshold";
 
-    public static final String RESAMPLE_PROPERTY = "interpolation";
 
-    public static final String COLOR_MAP_PROPERTY = "colorMap";
 
-    public static final String VISIBLE_PROPERTY = "visible";
 
-    public static final String IMAGEOP_PROPERTY = "imageOpList";
 
-    public static final String OPACITY_PROPERTY = "opacity";
-
-    public static final String SMOOTHING_PROPERTY = "smoothingRadius";
-
-    public static final String CLIP_RANGE_PROPERTY = "clipRange";
 
     public final ObservableProperty<IColorMap> colorMap = ObservableProperty.create();
 
@@ -91,9 +82,21 @@ public class ImageLayerProperties implements Serializable {
     public final ObservableProperty<ClipRange> clipRange = ObservableProperty.create(new ClipRange(0, 0, 0, 0));
 
 
+    public ImageLayerProperties(ImageLayerProperties props) {
+        BeanContainer.bind(this);
+        visible.set(props.visible.get());
+        opacity.set(props.opacity.get());
+        smoothingRadius.set(props.smoothingRadius.get());
+        thresholdRange.set(props.thresholdRange.get());
 
-    @XStreamOmitField
-    private SelectionInList interpolationMethod;
+        init(props.colorMap.get(), new Range(props.clipRange.get().minValue.get(), props.clipRange.get().maxValue.get()));
+        //clipRange.set(props.clipRange.get());
+        //colorMap.set(props.colorMap.get());
+
+        System.out.println("here");
+        
+
+    }
 
 
     public ImageLayerProperties(IRange _dataRange) {
@@ -154,9 +157,7 @@ public class ImageLayerProperties implements Serializable {
         return clipRange.get();
     }
 
-    public SelectionInList getInterpolationMethod() {
-        return interpolationMethod;
-    }
+
 
 
     public float getOpacity() {

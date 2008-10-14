@@ -6,16 +6,14 @@ import com.brainflow.core.rendering.BasicImageSliceRenderer;
 import com.brainflow.core.layer.ImageLayerProperties;
 import com.brainflow.core.SliceRenderer;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
-import com.brainflow.image.anatomy.AnatomicalAxis;
-import com.brainflow.image.anatomy.Anatomy;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.data.IImageData3D;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.image.space.IImageSpace3D;
-import com.brainflow.image.space.Axis;
-import com.brainflow.utils.Pair;
+import com.brainflow.image.space.ICoordinateSpace3D;
+import com.brainflow.image.interpolation.NearestNeighborInterpolator;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -31,9 +29,12 @@ import java.util.HashMap;
 
 
 
-public class ImageLayer3D extends ImageLayer<ImageSpace3D> {
+public class ImageLayer3D extends ImageLayer<ImageSpace3D>  {
 
 
+    public ImageLayer3D(ImageLayer3D layer) {
+        super(layer.getDataSource(), new ImageLayerProperties(layer.getImageLayerProperties()));           
+    }
 
     public ImageLayer3D(IImageData data) {
         super(new MemoryImageDataSource(data));
@@ -57,21 +58,16 @@ public class ImageLayer3D extends ImageLayer<ImageSpace3D> {
     }
 
     public double getValue(AnatomicalPoint3D pt) {
-        // todo fixme
-        IImageSpace space = getCoordinateSpace();
+       IImageSpace space = getCoordinateSpace();
 
-        //ImageAxis xaxis = space.getImageAxis(Axis.X_AXIS);
-        //ImageAxis yaxis = space.getImageAxis(Axis.Y_AXIS);
-        //ImageAxis zaxis = space.getImageAxis(Axis.Z_AXIS);
+        AnatomicalPoint3D apt = pt.convertTo((ICoordinateSpace3D)space);
 
-        //float x = (float)pt.getValue(space.getAnatomicalAxis(Axis.Y_AXIS)).getValue();
-        //float y = (float)pt.getValue(space.getAnatomicalAxis(Axis.Y_AXIS)).getValue();
-        //float z = (float)pt.getValue(space.getAnatomicalAxis(Axis.Z_AXIS)).getValue();
+        return getData().worldValue((float)apt.getX(), (float)apt.getY(), (float)apt.getZ(), new NearestNeighborInterpolator());
 
-        //return getData().worldValue(x, y, z, new NearestNeighborInterpolator());
-
-        return 0;
+        
     }
+
+
 
 
     private Map<Anatomy3D, BasicImageSliceRenderer> rendererMap = new HashMap<Anatomy3D, BasicImageSliceRenderer>();

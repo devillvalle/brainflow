@@ -17,6 +17,7 @@ import com.brainflow.utils.Range;
 import com.brainflow.core.layer.AbstractLayer;
 import com.brainflow.core.layer.ImageLayerProperties;
 import com.brainflow.core.layer.ImageMaskList;
+import com.brainflow.core.ClipRange;
 
 
 /**
@@ -30,6 +31,12 @@ public abstract class ImageLayer<T extends IImageSpace> extends AbstractLayer {
     private IImageDataSource dataSource;
 
     //private IImageData data;
+
+    public ImageLayer(ImageLayer layer) {
+        super(layer.getImageLayerProperties());
+        this.dataSource = layer.getDataSource();
+        initMaskList();
+    }
 
     public ImageLayer(IImageDataSource dataSource) {
         super(new ImageLayerProperties(ColorTable.GRAYSCALE, new Range(0, 255)));
@@ -48,19 +55,18 @@ public abstract class ImageLayer<T extends IImageSpace> extends AbstractLayer {
         super(_properties);
         this.dataSource = dataSource;
 
-        try { if (dataSource.isLoaded()) {
-            getImageLayerProperties().getClipRange().setLowClip(getData().minValue());
-            getImageLayerProperties().getClipRange().setHighClip(getData().maxValue());
+
+        if (dataSource.isLoaded()) {
+            ClipRange clip = _properties.getClipRange();
+            _properties.clipRange.set(new ClipRange(getData().minValue(), getData().maxValue(), clip.getLowClip(), clip.getHighClip()));
+            //_properties.getClipRange().setLowClip(getData().minValue());
+            //_properties.getClipRange().setHighClip(getData().maxValue());
 
         }
-        } catch(NullPointerException e) {
 
-            e.printStackTrace();
-        }
         //data = dataSource.getData();
         initMaskList();
     }
-
 
 
     private void initMaskList() {
@@ -68,7 +74,7 @@ public abstract class ImageLayer<T extends IImageSpace> extends AbstractLayer {
     }
 
     public ImageMaskList getMaskList() {
-        return (ImageMaskList)(super.getMaskList());
+        return (ImageMaskList) (super.getMaskList());
     }
 
 
@@ -79,13 +85,13 @@ public abstract class ImageLayer<T extends IImageSpace> extends AbstractLayer {
     public IImageDataSource getDataSource() {
         return dataSource;
     }
-    
+
     public String getLabel() {
         return dataSource.getStem();
     }
 
     public T getCoordinateSpace() {
-        return (T)dataSource.getData().getImageSpace();
+        return (T) dataSource.getData().getImageSpace();
     }
 
     public double getMaxValue() {
@@ -101,18 +107,21 @@ public abstract class ImageLayer<T extends IImageSpace> extends AbstractLayer {
         return dataSource.getImageInfo().getImageLabel();
     }
 
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ImageLayer that = (ImageLayer) o;
-
-        if (!dataSource.equals(that.dataSource)) return false;
-
-        return true;
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();    //To change body of overridden methods use File | Settings | File Templates.
     }
 
-    public int hashCode() {
-        return dataSource.hashCode();
-    }
+    /*public boolean equals(Object o) {
+       if (this == o) return true;
+       if (o == null || getClass() != o.getClass()) return false;
+
+       ImageLayer that = (ImageLayer) o;
+
+       if (!dataSource.equals(that.dataSource)) return false;
+
+       return true;
+   } */
+
+
 }

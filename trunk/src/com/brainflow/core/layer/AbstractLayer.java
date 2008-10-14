@@ -22,7 +22,7 @@ import java.beans.PropertyChangeSupport;
  */
 public abstract class AbstractLayer {
     
-    private PropertyChangeSupport support = new PropertyChangeSupport(this);
+    //private PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     // instantiate to a NullMaskList or something to that effect.
     private IMaskList maskList;
@@ -38,22 +38,7 @@ public abstract class AbstractLayer {
         return properties;
     }
 
-    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-        support.addPropertyChangeListener(propertyName, listener);
-    }
-
-    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-        support.removePropertyChangeListener(propertyName, listener);
-    }
-
-
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        support.addPropertyChangeListener(listener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        support.removePropertyChangeListener(listener);
-    }
+   
 
     protected void setMaskList(IMaskList list) {
         maskList = list;
@@ -89,13 +74,13 @@ public abstract class AbstractLayer {
     private void init() {
         // todo move to ImageLayerProperties class (or rethink entirely?)
         // this whole thing is obscene, avert your eyes
-        properties.getColorMap().addPropertyChangeListener(new PropertyChangeListener() {
+        /*properties.getColorMap().addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
 
                 support.firePropertyChange(new PropertyChangeEvent(AbstractLayer.this, ImageLayerProperties.COLOR_MAP_PROPERTY,
                         evt.getOldValue(), evt.getNewValue()));
             }
-        });
+        });*/
 
 
 

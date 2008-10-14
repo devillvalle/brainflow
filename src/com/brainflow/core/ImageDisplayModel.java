@@ -86,6 +86,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
                 super.set(newlist);
             }
 
+          
             assert isSynced();
 
 
@@ -111,6 +112,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
                 super.set(newlist);
             }
 
+
             assert isSynced();
 
         }
@@ -118,19 +120,24 @@ public class ImageDisplayModel implements IImageDisplayModel {
         public void set(List<Integer> t) {
             for (int i = 0; i < getNumLayers(); i++) {
                 ImageLayer layer = getLayer(i);
-                if (t.contains(i)) {
+                  if (t.contains(i)) {
                     layer.getImageLayerProperties().visible.set(true);
-                } else {
+                 } else {
                      layer.getImageLayerProperties().visible.set(false);
                 }
             }
 
-            super.set(t);    //To change body of overridden methods use File | Settings | File Templates.
+            super.set(t);
+
+
+            //To change body of overridden methods use File | Settings | File Templates.
             assert isSynced();
         }
 
         public void set(int index, Integer integer) {
             super.set(index, integer);
+
+
             assert isSynced();
         }
     };
@@ -327,14 +334,14 @@ public class ImageDisplayModel implements IImageDisplayModel {
     private void listenToLayer(final ImageLayer layer) {
 
 
-        layer.addPropertyChangeListener(ImageLayerProperties.RESAMPLE_PROPERTY, new PropertyChangeListener() {
+        /*layer.addPropertyChangeListener(ImageLayerProperties.RESAMPLE_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
                 for (ImageLayerListener listener : listeners) {
                     listener.interpolationMethodChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer) evt.getSource()));
                 }
             }
-        });
+        }); */
 
 
         BeanContainer.get().addListener(layer.getImageLayerProperties().colorMap, new PropertyListener() {

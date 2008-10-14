@@ -14,6 +14,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.beans.PropertyVetoException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -173,7 +174,9 @@ public class BrainCanvas extends JComponent implements InternalFrameListener, IB
 
 
     public void setSelectedView(ImageView view) {
-        canvasModel.setSelectedView(view);
+        if (canvasModel.getSelectedView() == view) return;
+        
+        updateSelection(view);
     }
 
     public ImageView getSelectedView() {
@@ -189,6 +192,18 @@ public class BrainCanvas extends JComponent implements InternalFrameListener, IB
             }
 
         }
+
+    }
+
+    private JInternalFrame whichFrame(ImageView view) {
+        JInternalFrame[] frames = desktopPane.getAllFrames();
+        for (int i = 0; i < frames.length; i++) {
+            if (frames[i].getContentPane() == view) {
+                return frames[i];
+            }
+        }
+
+        return null;
 
     }
 
@@ -218,7 +233,6 @@ public class BrainCanvas extends JComponent implements InternalFrameListener, IB
 
 
     public void addImageView(ImageView view) {
-
         view.setSize(view.getPreferredSize());
         JInternalFrame jframe = new JInternalFrame("view", true, true, true, true);
 
@@ -240,10 +254,14 @@ public class BrainCanvas extends JComponent implements InternalFrameListener, IB
         canvasModel.addImageView(view);
         putTitle(jframe, view);
 
-        
+
 
         desktopPane.add(jframe);
         jframe.moveToFront();
+
+        if (getSelectedView() == null) {
+           setSelectedView(view);
+        }
 
 
     }
@@ -258,6 +276,20 @@ public class BrainCanvas extends JComponent implements InternalFrameListener, IB
         canvasModel.setSelectedView(view);
         for (ImageViewInteractor interactor : interactors) {
             interactor.setView(view);
+
+        }
+
+        JInternalFrame frame = whichFrame(view);
+        if (frame != null) {
+            frame.moveToFront();
+
+            if (!frame.isSelected()) {
+                try {
+                    frame.setSelected(true);
+                } catch(PropertyVetoException e) {
+                    log.severe(e.getMessage());
+                }
+            } 
 
         }
     }
@@ -295,12 +327,15 @@ public class BrainCanvas extends JComponent implements InternalFrameListener, IB
     }
 
     public void internalFrameActivated(InternalFrameEvent e) {
-        JInternalFrame frame = e.getInternalFrame();
+       JInternalFrame frame = e.getInternalFrame();
 
         Component c = frame.getContentPane();
         if (c instanceof ImageView) {
+
             ImageView sel = (ImageView) c;
-            updateSelection(sel);
+            if (sel != getSelectedView()) {
+                updateSelection(sel);
+            }
 
         } else {
             updateSelection(null);

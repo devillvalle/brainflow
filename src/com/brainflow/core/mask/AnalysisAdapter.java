@@ -17,7 +17,10 @@ public class AnalysisAdapter implements TreeWalker {
         this.rootNode = rootNode;
         inStart(rootNode);
         rootNode.apply(this);
-        return outStart(rootNode);
+        INode outnode =  outStart(rootNode);
+
+        return outnode;
+
     }
 
     public void inStart(INode rootNode) {

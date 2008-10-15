@@ -6,6 +6,7 @@ import com.jidesoft.plaf.LookAndFeelFactory;
 import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.BF;
+import com.brainflow.core.ImageView;
 import com.brainflow.application.BrainFlowException;
 
 import javax.swing.*;
@@ -41,22 +42,32 @@ public class BinaryExpressionTester {
 
     IImageDisplayModel model;
 
+    ImageView view;
+
     public BinaryExpressionTester() {
 
-        textArea.setColumns(50);
+        //textArea.setColumns(10);
         textArea.setRows(10);
 
-        frame.add(textArea, BorderLayout.CENTER);
+
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+        model = loadModel();
+
+        view = new ImageView(model);
+        mainPanel.add(view, BorderLayout.CENTER);
+        mainPanel.add(new JScrollPane(textArea), BorderLayout.SOUTH);
+        mainPanel.setBorder(BorderFactory.createEtchedBorder());
+
+        frame.add(mainPanel, BorderLayout.CENTER);
         frame.add(parseButton, BorderLayout.NORTH);
 
 
-        textArea.setText("" + "V1 > 0 and V2 > 1");
+        textArea.setText("" + "V4 > V1 and V2 > 1.0");
 
-        BinaryExpressionParser parser = new BinaryExpressionParser();
-        INode node = parser.createParser().parse(textArea.getText());
 
-        expressionTree = new JTree(createTreeModel(node));
-        expressionTree.setBorder(BorderFactory.createEtchedBorder());
+        parseExpression();
+
         frame.add(expressionTree, BorderLayout.EAST);
 
         status.add(statusLabel);
@@ -76,10 +87,6 @@ public class BinaryExpressionTester {
         });
 
 
-        model = loadModel();
-
-        parseExpression();
-
 
     }
 
@@ -89,10 +96,14 @@ public class BinaryExpressionTester {
         try {
             INode node = parser.createParser().parse(textArea.getText());
             VariableSubstitution varsub = new VariableSubstitution(model);
-            node = varsub.start(node);
+            INode vnode  = varsub.start(node);
 
             MaskSubstitution masksub = new MaskSubstitution();
-            node = masksub.start(node);
+            INode mnode = masksub.start(vnode);
+
+            //ComparisonNode cnode = (ComparisonNode)node;
+            //MaskDataNode masknode = (MaskDataNode)cnode.left();
+           // System.out.println("cardinality " + masknode.getData().cardinality());
             
             expressionTree.setModel(createTreeModel(node));
             statusLabel.setForeground(Color.BLACK);
@@ -103,6 +114,7 @@ public class BinaryExpressionTester {
             Toolkit.getDefaultToolkit().beep();
             statusLabel.setForeground(Color.RED);
             statusLabel.setText(ex.getMessage());
+            ex.printStackTrace();
         }
 
     }
@@ -161,7 +173,7 @@ public class BinaryExpressionTester {
         }
 
         public boolean getAllowsChildren() {
-            return false;  //To change body of implemented methods use File | Settings | File Templates.
+            return false;
         }
 
         public boolean isLeaf() {

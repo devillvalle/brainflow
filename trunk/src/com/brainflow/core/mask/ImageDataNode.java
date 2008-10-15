@@ -1,10 +1,10 @@
 package com.brainflow.core.mask;
 
-import com.brainflow.image.data.IImageData;
-import com.brainflow.image.data.BivariateMaskNode3D;
-import com.brainflow.image.data.IImageData3D;
+import com.brainflow.image.data.*;
 import com.brainflow.image.operations.BinaryOperand;
 import com.brainflow.image.operations.Operations;
+import com.brainflow.image.operations.BinaryOperation;
+import com.brainflow.image.operations.BooleanOperation;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,22 +29,39 @@ public class ImageDataNode extends LeafNode implements LeafVisitable {
         return 0;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void accept(LeafNode leaf, BinaryOperand op) {
-        leaf.visitImage(this, op);
+    public LeafNode accept(LeafNode leaf, BinaryOperand op) {
+        return leaf.visitImage(this, op);
     }
 
-    public AbstractNode visitImage(ImageDataNode other, BinaryOperand op) {
-        // other.visitImageDataNode(this)
-         BivariateMaskNode3D bdata = new BivariateMaskNode3D((IImageData3D) getData(), (IImageData3D) other.getData(), Operations.lookup(op));
-         return new MaskDataNode(bdata);
+    public LeafNode visitImage(ImageDataNode left, BinaryOperand op) {
+
+        BivariateMaskNode3D bdata = new BivariateMaskNode3D((IImageData3D) left.getData(), (IImageData3D) getData(), Operations.lookup(op));
+        return new MaskDataNode(bdata);
     }
 
-    public AbstractNode visitMask(MaskDataNode other, BinaryOperand op) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public LeafNode visitMask(MaskDataNode left, BinaryOperand op) {
+        BinaryOperation bop = Operations.lookup(op);
+        if (!(bop instanceof BooleanOperation)) {
+            throw new SemanticError("illegal operation : " + op);
+        }
+
+        BooleanOperation boolop = (BooleanOperation) bop;
+        
+        IMaskedData3D mdat = new MaskedData3D((IImageData3D) getData(), new MaskPredicate() {
+            public boolean mask(double value) {
+                return value > 0;
+            }
+        });
+
+        BooleanMaskNode3D data = new BooleanMaskNode3D(left.getData(), mdat, boolop);
+        return new MaskDataNode(data);
     }
 
-    public AbstractNode visitConstant(ConstantNode other, BinaryOperand op) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public LeafNode visitConstant(ConstantNode left, BinaryOperand op) {
+        IImageData3D cdat = ImageData.createConstantData(left.getValue(), data.getImageSpace());
+        BivariateMaskNode3D bdata = new BivariateMaskNode3D(cdat, (IImageData3D) getData(), Operations.lookup(op));
+        return new MaskDataNode(bdata);
+
     }
 
     public void apply(TreeWalker walker) {

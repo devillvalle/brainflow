@@ -39,15 +39,15 @@ public class ConstantNode extends LeafNode implements LeafVisitable {
         return 0;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void accept(LeafNode leaf, BinaryOperand op) {
-        leaf.visitConstant(this, op);
+    public LeafNode accept(LeafNode leaf, BinaryOperand op) {
+        return leaf.visitConstant(this, op);
     }
 
-    public AbstractNode visitImage(ImageDataNode other, BinaryOperand op) {
+    public LeafNode visitImage(ImageDataNode left, BinaryOperand op) {
 
         final BinaryOperation bop = Operations.lookup(op);
 
-        IMaskedData3D mdat = new MaskedData3D((IImageData3D) other.getData(), new MaskPredicate() {
+        IMaskedData3D mdat = new MaskedData3D((IImageData3D) left.getData(), new MaskPredicate() {
             public boolean mask(double ovalue) {
                 return bop.isTrue(value, ovalue);
             }
@@ -57,11 +57,11 @@ public class ConstantNode extends LeafNode implements LeafVisitable {
 
     }
 
-    public AbstractNode visitConstant(ConstantNode other, BinaryOperand op) {
+    public LeafNode visitConstant(ConstantNode other, BinaryOperand op) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public AbstractNode visitMask(MaskDataNode other, BinaryOperand op) {
+    public LeafNode visitMask(MaskDataNode other, BinaryOperand op) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

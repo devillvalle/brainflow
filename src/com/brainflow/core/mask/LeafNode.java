@@ -12,9 +12,9 @@ import com.brainflow.image.operations.BinaryOperand;
 public abstract class LeafNode extends AbstractNode implements LeafVisitable {
 
 
-    public abstract AbstractNode visitImage(ImageDataNode other, BinaryOperand op);
-    public abstract AbstractNode visitMask(MaskDataNode other, BinaryOperand op);
-    public abstract AbstractNode visitConstant(ConstantNode other, BinaryOperand op);
+    public abstract LeafNode visitImage(ImageDataNode other, BinaryOperand op);
+    public abstract LeafNode visitMask(MaskDataNode other, BinaryOperand op);
+    public abstract LeafNode visitConstant(ConstantNode other, BinaryOperand op);
 
-    public abstract void accept(LeafNode leaf, BinaryOperand op);
+    public abstract LeafNode accept(LeafNode leaf, BinaryOperand op);
 }

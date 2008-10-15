@@ -1,7 +1,10 @@
 package com.brainflow.core.mask;
 
-import com.brainflow.image.data.IMaskedData3D;
+import com.brainflow.image.data.*;
 import com.brainflow.image.operations.BinaryOperand;
+import com.brainflow.image.operations.BinaryOperation;
+import com.brainflow.image.operations.Operations;
+import com.brainflow.image.operations.BooleanOperation;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,27 +30,72 @@ public class MaskDataNode extends LeafNode implements LeafVisitable {
         return mask;
     }
 
-    public void accept(LeafNode leaf, BinaryOperand op) {
-        leaf.visitMask(this, op );
+    public LeafNode accept(LeafNode leaf, BinaryOperand op) {
+        return leaf.visitMask(this, op );
     }
 
-    public AbstractNode visitImage(ImageDataNode other, BinaryOperand op) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public LeafNode visitImage(ImageDataNode left, BinaryOperand op) {
+        BinaryOperation bop = Operations.lookup(op);
+        if (!(bop instanceof BooleanOperation)) {
+            throw new SemanticError("illegal operation : " + op);
+        }
+
+        BooleanOperation boolop = (BooleanOperation) bop;
+
+        IMaskedData3D mdat = new MaskedData3D((IImageData3D) left.getData(), new MaskPredicate() {
+            public boolean mask(double value) {
+                return value > 0;
+            }
+        });
+
+        BooleanMaskNode3D data = new BooleanMaskNode3D(mdat, mask, boolop);
+        return new MaskDataNode(data);
+
     }
 
-    public AbstractNode visitConstant(ConstantNode other, BinaryOperand op) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public LeafNode visitConstant(ConstantNode left, BinaryOperand op) {
+        BinaryOperation bop = Operations.lookup(op);
+
+        if (!(bop instanceof BooleanOperation)) {
+            throw new SemanticError("illegal operation : " + op);
+        }
+
+        BooleanOperation boolop = (BooleanOperation) bop;
+
+        IImageData3D cdat = ImageData.createConstantData(left.getValue(), mask.getImageSpace());
+
+        IMaskedData3D mdat = new MaskedData3D(cdat, new MaskPredicate() {
+            public boolean mask(double value) {
+                return value > 0;
+            }
+        });
+
+        BooleanMaskNode3D data = new BooleanMaskNode3D(mdat, mask, boolop);
+        return new MaskDataNode(data);
+
     }
 
-    public AbstractNode visitMask(MaskDataNode other, BinaryOperand op) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public LeafNode visitMask(MaskDataNode left, BinaryOperand op) {
+        BinaryOperation bop = Operations.lookup(op);
+
+        if (!(bop instanceof BooleanOperation)) {
+            throw new SemanticError("illegal operation : " + op);
+        }
+
+        BooleanOperation boolop = (BooleanOperation) bop;
+
+
+        BooleanMaskNode3D data = new BooleanMaskNode3D(left.getData(), mask, boolop);
+        return new MaskDataNode(data);
     }
 
     public int depth() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 0;
     }
 
     public String toString() {
+        //return mask.toString() + " (" + mask.cardinality() + ")";
+
         return mask.toString();
     }
 }

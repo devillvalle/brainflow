@@ -11,6 +11,6 @@ import com.brainflow.image.operations.BinaryOperand;
  */
 public interface LeafVisitable {
 
-    public void accept(LeafNode leaf, BinaryOperand op);
+    public LeafNode accept(LeafNode leaf, BinaryOperand op);
 
 }

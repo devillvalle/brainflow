@@ -1,5 +1,13 @@
 package com.brainflow.core.mask;
 
+import com.brainflow.image.operations.BinaryOperand;
+import com.brainflow.image.operations.BinaryOperation;
+import com.brainflow.image.operations.Operations;
+import com.brainflow.image.data.IMaskedData3D;
+import com.brainflow.image.data.MaskedData3D;
+import com.brainflow.image.data.IImageData3D;
+import com.brainflow.image.data.MaskPredicate;
+
 import java.util.List;
 import java.util.Arrays;
 
@@ -10,7 +18,7 @@ import java.util.Arrays;
  * Time: 5:04:29 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ConstantNode extends AbstractNode {
+public class ConstantNode extends LeafNode implements LeafVisitable {
 
 
     private double value;
@@ -20,7 +28,7 @@ public class ConstantNode extends AbstractNode {
     }
 
     public String toString() {
-        return "value : " + value;
+        return "" + value;
     }
 
     public double getValue() {
@@ -29,6 +37,32 @@ public class ConstantNode extends AbstractNode {
 
     public int depth() {
         return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void accept(LeafNode leaf, BinaryOperand op) {
+        leaf.visitConstant(this, op);
+    }
+
+    public AbstractNode visitImage(ImageDataNode other, BinaryOperand op) {
+
+        final BinaryOperation bop = Operations.lookup(op);
+
+        IMaskedData3D mdat = new MaskedData3D((IImageData3D) other.getData(), new MaskPredicate() {
+            public boolean mask(double ovalue) {
+                return bop.isTrue(value, ovalue);
+            }
+        });
+
+        return new MaskDataNode(mdat);
+
+    }
+
+    public AbstractNode visitConstant(ConstantNode other, BinaryOperand op) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public AbstractNode visitMask(MaskDataNode other, BinaryOperand op) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public boolean isLeaf() {

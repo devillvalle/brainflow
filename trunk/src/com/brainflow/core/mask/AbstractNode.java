@@ -1,5 +1,10 @@
 package com.brainflow.core.mask;
 
+import com.brainflow.image.operations.BinaryOperand;
+import com.brainflow.image.operations.Operations;
+import com.brainflow.image.data.BivariateMaskNode3D;
+import com.brainflow.image.data.IImageData3D;
+
 import java.util.List;
 import java.util.Arrays;
 
@@ -30,8 +35,7 @@ public abstract class AbstractNode implements INode {
         return getChildren().size() == 0;
     }
 
-    
-
+   
 
     public void replaceChild(INode oldChild, INode newChild) {
         throw new UnsupportedOperationException();

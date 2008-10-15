@@ -24,7 +24,7 @@ public class VariableNode extends AbstractNode {
     }
 
     public String toString() {
-        return "var : " + varName;
+        return varName;
     }
 
     public boolean isLeaf() {

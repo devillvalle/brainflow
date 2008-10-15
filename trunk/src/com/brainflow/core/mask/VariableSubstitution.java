@@ -27,7 +27,6 @@ public class VariableSubstitution extends AnalysisAdapter {
     }
 
 
-
     private int mapIndex(String varName) {
         if (!varName.toUpperCase().startsWith("V")) {
             throw new IllegalArgumentException("illegal variable name : " + varName);

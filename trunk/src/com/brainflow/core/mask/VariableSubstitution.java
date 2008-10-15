@@ -28,12 +28,18 @@ public class VariableSubstitution extends AnalysisAdapter {
 
 
     private int mapIndex(String varName) {
+        System.out.println("varname " + varName);
         if (!varName.toUpperCase().startsWith("V")) {
             throw new IllegalArgumentException("illegal variable name : " + varName);
         }
 
         String numberPart = varName.substring(1);
-        return Integer.parseInt(numberPart) -1 ;
+        System.out.println("number part " + numberPart);
+
+        int index = Integer.parseInt(numberPart) -1 ;
+
+        System.out.println("index " + index);
+        return index;
 
     }
 

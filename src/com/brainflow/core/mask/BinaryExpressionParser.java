@@ -1,8 +1,10 @@
 package com.brainflow.core.mask;
 
-import jfun.parsec.*;
-import test.Testable;
+
 import com.brainflow.image.operations.BinaryOperand;
+import org.codehaus.jparsec.*;
+import org.codehaus.jparsec.functors.Binary;
+import org.codehaus.jparsec.functors.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,21 +15,99 @@ import com.brainflow.image.operations.BinaryOperand;
  */
 public class BinaryExpressionParser {
 
+    private static final Terminals OPERATORS = Terminals.operators("+", "-", "*", "/", "(", ")", "or", "and", "not", ">", "<");
 
-    private static Binary<INode> toMap2(final BinaryOperand op) {
-        return new Binary<INode>() {
-            public INode map(INode o1, INode o2) {
-                return new ComparisonNode(o1,o2,op);
+    private static final Parser<Void> IGNORED = Scanners.WHITESPACES.skipMany();
+
+    //static final Parser<?> TOKENIZER = Terminals.DecimalLiteral.TOKENIZER.or(OPERATORS.tokenizer());
+
+    enum BinaryOperator implements Binary<INode> {
+        AND {
+            public INode map(INode a, INode b) {
+                return new ComparisonNode(a, b, BinaryOperand.AND);
             }
-        };
+        },
+
+        EQ {
+            public INode map(INode a, INode b) {
+                return new ComparisonNode(a, b, BinaryOperand.EQ);
+            }
+        },
+
+        OR {
+            public INode map(INode a, INode b) {
+                return new ComparisonNode(a, b, BinaryOperand.OR);
+            }
+        },
+
+        GT {
+            public INode map(INode a, INode b) {
+                return new ComparisonNode(a, b, BinaryOperand.GT);
+            }
+        },
+
+        LT {
+            public INode map(INode a, INode b) {
+                return new ComparisonNode(a, b, BinaryOperand.LT);
+            }
+        }
+
+
     }
 
-    @Testable
+
+    private static Parser<?> term(String... names) {
+        return OPERATORS.token(names);
+    }
+
+    static <T> Parser<T> op(String name, T value) {
+        return term(name).retn(value);
+    }
+
+
+
     public Parser<INode> createParser() {
 
-        final Parser<_> s_whitespace = Scanners.isWhitespaces();
+
+        final Parser<?> TOKENIZER = Parsers.or(Terminals.DecimalLiteral.TOKENIZER,
+                (Parser<? extends Tokens.Fragment>) OPERATORS.tokenizer(),
+                Terminals.Identifier.TOKENIZER);
+
+        final Parser<INode> NUMBER = Terminals.DecimalLiteral.PARSER.map(new Map<String, INode>() {
+            public INode map(String s) {
+                return new ConstantNode(Double.valueOf(s));
+            }
+        });
+
+        final Parser<INode> VARIABLE = Terminals.Identifier.PARSER.map(new Map<String, INode>() {
+            public INode map(String s) {
+                return new VariableNode(s);
+            }
+        });
+
+
+        Parser.Reference<INode> ref = Parser.newReference();
+        Parser<INode> unit = ref.lazy().between(term("("), term(")")).or(NUMBER).or(VARIABLE);
+        Parser<INode> optable = new OperatorTable<INode>()
+
+                .infixl(op("and", BinaryOperator.AND), 10)
+                .infixl(op("or", BinaryOperator.OR), 10)
+                .infixl(op("<", BinaryOperator.LT), 20)
+                .infixl(op(">", BinaryOperator.GT), 20)
+
+                .build(unit);
+        
+        ref.set(optable);
+
+
+        return optable.from(TOKENIZER, IGNORED);
+
+
+
+        /*final Parser<_> s_whitespace = Scanners.isWhitespaces();
         final Parser<Tok> l_number = Lexers.decimal("number");
         final Parser<Tok> l_variable = Lexers.word("variable");
+
 
         final Terms ops = Terms.getOperatorsInstance("or", "and", "not", "-", "<", ">", "(", ")");
 
@@ -68,25 +148,23 @@ public class BinaryExpressionParser {
         final Parser<INode>[] expr_holder = new Parser[1];
         final Parser<INode> p_lazy_expr = Parsers.lazy(expr_holder);
         final Parser<INode> p_term = Parsers.plus(
-                 Parsers.between(p_lparen, p_rparen, p_lazy_expr),
-                 p_constant,
-                 p_variable
-         );
+                Parsers.between(p_lparen, p_rparen, p_lazy_expr),
+                p_constant,
+                p_variable
+        );
 
         final OperatorTable<INode> optable = new OperatorTable<INode>()
-        .infixl(p_lt, 10)
-        .infixl(p_gt, 10)
-        .infixl(p_and, 20)
-        .infixl(p_or, 20);
-
-        
+                .infixl(p_lt, 10)
+                .infixl(p_gt, 10)
+                .infixl(p_and, 20)
+                .infixl(p_or, 20);
 
 
         final Parser<INode> p_expr = Expressions.buildExpressionParser(p_term, optable);
         expr_holder[0] = p_expr;
         return Parsers.parseTokens(lexer, p_expr.followedBy(Parsers.eof()), "mask calculator");
 
-       
+        */
 
 
     }
@@ -96,12 +174,11 @@ public class BinaryExpressionParser {
 
         Parser<INode> parser = new BinaryExpressionParser().createParser();
         INode node = parser.parse("(V1 > 5) and (V2 < 4)");
-        VariableSubstitution builder = new VariableSubstitution(null);
-        builder.start(node);
 
-        
-        
-        
+        System.out.println("node : " + node);
+        //VariableSubstitution builder = new VariableSubstitution(null);
+        //builder.start(node);
+
 
     }
 }

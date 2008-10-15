@@ -19,7 +19,20 @@ public class MaskSubstitution extends AnalysisAdapter {
     @Override
     @Testable
     public void inComparison(ComparisonNode node) {
-        if ((node.left() instanceof ImageDataNode) && (node.right() instanceof ImageDataNode)) {
+
+        if (node.left() instanceof LeafNode & node.right() instanceof LeafNode) {
+            LeafNode left = (LeafNode)node.left();
+            LeafNode right = (LeafNode)node.right();
+
+            left.accept(right, node.getOp());
+
+            //left.reduce(right)
+
+        }
+
+   
+
+        /*if ((node.left() instanceof ImageDataNode) && (node.right() instanceof ImageDataNode)) {
             ImageDataNode lnode = (ImageDataNode) node.left();
             ImageDataNode rnode = (ImageDataNode) node.right();
 
@@ -81,7 +94,7 @@ public class MaskSubstitution extends AnalysisAdapter {
 
             BooleanMaskNode3D data = new BooleanMaskNode3D(lnode.getData(), rnode.getData(), bop);
             node.replaceBy(new MaskDataNode(data));
-        }
+        }  */
 
     }
 

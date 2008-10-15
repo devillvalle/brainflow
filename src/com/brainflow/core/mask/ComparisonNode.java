@@ -40,6 +40,10 @@ public class ComparisonNode extends AbstractNode {
         return op;
     }
 
+    public AbstractNode reduce(ImageDataNode other, BinaryOperand op) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public int depth() {
         return 1 + Math.max(left.depth(), right.depth());
     }
@@ -69,10 +73,6 @@ public class ComparisonNode extends AbstractNode {
     }
 
     public String toString() {
-        return "ComparisonNode{" +
-                "left=" + left +
-                ", right=" + right +
-                ", operation='" + op + '\'' +
-                '}';
+        return left + " " + op + " " + right;
     }
 }

@@ -1,8 +1,12 @@
 package com.brainflow.colormap;
 
 import javax.swing.*;
-import java.awt.*;
+
 import java.util.ListIterator;
+import java.util.List;
+import java.util.Collections;
+import java.util.Arrays;
+import java.awt.Color;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,8 +22,18 @@ public final class BinaryColorMap extends AbstractColorMap {
 
     private final Color foregroundColor;
 
+    private List<ColorInterval> intervals;
+
+
+    
+
     public BinaryColorMap(Color color) {
         this.foregroundColor = color;
+
+        intervals = Collections.unmodifiableList(Arrays.asList(
+                new ColorInterval(new OpenInterval(Double.NEGATIVE_INFINITY,0), backgroundColor),
+                new ColorInterval(new ClosedOpenInterval(0,Double.POSITIVE_INFINITY), foregroundColor)));
+
     }
 
     public AbstractColorBar createColorBar() {
@@ -37,11 +51,7 @@ public final class BinaryColorMap extends AbstractColorMap {
     }
 
     public ColorInterval getInterval(int index) {
-        if (index == 0) return new ColorInterval(new OpenInterval(0,0), Color.BLACK);
-        else if (index == 1) return new ColorInterval(new OpenInterval(1,1),foregroundColor);
-        else {
-            throw new IllegalArgumentException("index out of bounds");
-        }
+        return intervals.get(index);
     }
 
     public int getMapSize() {
@@ -49,10 +59,29 @@ public final class BinaryColorMap extends AbstractColorMap {
     }
 
     public ListIterator<ColorInterval> iterator() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return intervals.listIterator();
+
     }
 
     public IColorMap newClipRange(double lowClip, double highClip) {
         return this;
+    }
+
+    public static void main(String[] args) {
+        BinaryColorMap map = new BinaryColorMap(Color.RED);
+        System.out.println(map.getColor(0));
+        System.out.println(map.getColor(.5));
+        System.out.println(map.getColor(.9999));
+        System.out.println(map.getColor(1));
+        System.out.println(map.getColor(1000));
+
+        System.out.println(map.getInterval(0).containsValue(0));
+        System.out.println(map.getInterval(0).containsValue(.1));
+
+        System.out.println(map.getInterval(1).containsValue(0));
+        System.out.println(map.getInterval(1).containsValue(.1));
+
+
+
     }
 }

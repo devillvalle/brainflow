@@ -1,26 +1,27 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.application.presentation.binding.Bindable;
-import com.brainflow.application.presentation.binding.PercentageRangeConverter;
-import com.brainflow.application.presentation.binding.DoubleToStringConverter;
-import com.brainflow.application.presentation.controls.DoubleSliderForm;
+import com.brainflow.application.presentation.binding.ExtBind;
 
-import com.brainflow.core.ClipRange;
 import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.core.ImageView;
-
-import net.java.dev.properties.binding.swing.adapters.SwingBind;
+import com.brainflow.gui.BiSlider;
+import com.brainflow.gui.NumberRangeModel;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 
 /**
  * @author buchs
  */
 public class ColorRangePresenter extends ImageViewPresenter implements Bindable {
 
-  
-    
-    private DoubleSliderForm form;
+
+
+    private JPanel form;
+
+    private BiSlider bislider;
 
 
     /**
@@ -28,7 +29,7 @@ public class ColorRangePresenter extends ImageViewPresenter implements Bindable 
      */
     public ColorRangePresenter() {
 
-        form = new DoubleSliderForm();
+        form = new JPanel();
         initGUI();
 
         if (getSelectedView() != null) {
@@ -38,11 +39,13 @@ public class ColorRangePresenter extends ImageViewPresenter implements Bindable 
     }
 
 
-
-    
     private void initGUI() {
-        form.getSliderLabel1().setText("High: ");
-        form.getSliderLabel2().setText("Low: ");
+
+        bislider = new BiSlider(new NumberRangeModel(0,100,0,100));
+        form.setLayout(new BorderLayout());
+        form.setBorder(new EmptyBorder(5,1,5,1));
+        form.add(bislider, BorderLayout.CENTER);
+
     }
 
     public JComponent getComponent() {
@@ -50,7 +53,7 @@ public class ColorRangePresenter extends ImageViewPresenter implements Bindable 
     }
 
     public void allViewsDeselected() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        unbind();
     }
 
     public void viewSelected(ImageView view) {
@@ -63,19 +66,16 @@ public class ColorRangePresenter extends ImageViewPresenter implements Bindable 
     }
 
     public void unbind() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        ExtBind.get().unbind(bislider);
     }
 
     public void bind() {
         ImageLayer layer = getSelectedView().getModel().getSelectedLayer();
-        ClipRange clip = layer.getImageLayerProperties().getClipRange();
 
-        
-        SwingBind.get().bind(new PercentageRangeConverter(clip.highClip, clip.minValue.get(), clip.maxValue.get(), 100), form.getSlider1());
-        SwingBind.get().bind(new PercentageRangeConverter(clip.lowClip, clip.minValue.get(), clip.maxValue.get(), 100), form.getSlider2());
-        SwingBind.get().bind(new DoubleToStringConverter(clip.highClip), form.getValueField1());
-        SwingBind.get().bind(new DoubleToStringConverter(clip.lowClip), form.getValueField2());
-        
+        ExtBind.get().bindBiSlider(layer.getImageLayerProperties().clipRange, bislider);
+
+       
+
     }
 
 

@@ -68,7 +68,7 @@ public class ColorMapTablePresenter extends ImageViewPresenter {
         topPanel.add(segmentSpinner);
 
         ButtonPanel buttonPanel = new ButtonPanel();
-        buttonPanel.setSizeContraint(ButtonPanel.NO_LESS_THAN);
+        buttonPanel.setSizeConstraint(ButtonPanel.NO_LESS_THAN);
 
         JButton applyButton = new JButton("Apply");
         JButton resetButton = new JButton("Cancel");

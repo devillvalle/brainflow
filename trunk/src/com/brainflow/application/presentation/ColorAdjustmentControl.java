@@ -28,9 +28,9 @@ public class ColorAdjustmentControl extends AbstractPresenter {
 
     private ColorRangePresenter2 colorRangePresenter;
 
-    private HistogramPresenter histogramPresenter;
+    private HistogramPresenterX histogramPresenter;
 
-    private ThresholdRangePresenter2 thresholdRangePresenter;
+    private ThresholdRangePresenter thresholdRangePresenter;
 
     private RenderingParamsPresenter renderParamsPresenter;
 
@@ -59,7 +59,9 @@ public class ColorAdjustmentControl extends AbstractPresenter {
 
         cp.setEmphasized(true);
         cp.setOpaque(false);
-        //cp.setStyle(CollapsiblePane.PLAIN_STYLE);
+
+        //cp.setStyle(CollapsiblePane.SEPARATOR_STYLE);
+                  
 
         try {
             cp.setCollapsed(collapsed);
@@ -75,6 +77,10 @@ public class ColorAdjustmentControl extends AbstractPresenter {
 
     private void init() {
         cpanes = new CollapsiblePanes();
+        //cpanes.setBackground(Color.WHITE);
+        //cpanes.setGap(0);
+        //cpanes.setBorder(BorderFactory.createEmptyBorder());
+        
 
         selectedLayerPresenter = new SelectedLayerPresenter();
         addCollapsiblePane(selectedLayerPresenter, "Selection", false);
@@ -86,11 +92,11 @@ public class ColorAdjustmentControl extends AbstractPresenter {
         colorRangePresenter = new ColorRangePresenter2();
         addCollapsiblePane(colorRangePresenter, "Color Range", false);
 
-        histogramPresenter = new HistogramPresenter();
+        histogramPresenter = new HistogramPresenterX();
         addCollapsiblePane(histogramPresenter, "Histogram", true);
 
 
-        thresholdRangePresenter = new ThresholdRangePresenter2();
+        thresholdRangePresenter = new ThresholdRangePresenter();
         addCollapsiblePane(thresholdRangePresenter, "Thresholds", false);
 
         renderParamsPresenter = new RenderingParamsPresenter();

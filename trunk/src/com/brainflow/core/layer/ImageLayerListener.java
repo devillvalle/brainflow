@@ -28,5 +28,7 @@ public interface ImageLayerListener extends EventListener {
 
     public void clipRangeChanged(ImageLayerEvent event);
 
+    public void maskChanged(ImageLayerEvent event);
+
 
 }

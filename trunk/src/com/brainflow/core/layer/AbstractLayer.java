@@ -9,10 +9,6 @@ import com.brainflow.core.layer.ImageLayerProperties;
 import com.brainflow.core.SliceRenderer;
 import com.brainflow.core.ClipRange;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Brad Buchsbaum
@@ -25,7 +21,7 @@ public abstract class AbstractLayer {
     //private PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     // instantiate to a NullMaskList or something to that effect.
-    private IMaskList maskList;
+    //private IMaskProperty maskProperty;
 
     private ImageLayerProperties properties;
 
@@ -38,15 +34,7 @@ public abstract class AbstractLayer {
         return properties;
     }
 
-   
 
-    protected void setMaskList(IMaskList list) {
-        maskList = list;
-    }
-
-    public IMaskList getMaskList() {
-        return maskList;
-    }
 
     public abstract double getValue(AnatomicalPoint3D pt);
 
@@ -62,12 +50,16 @@ public abstract class AbstractLayer {
     }
 
     public ClipRange getThreshold() {
-        return properties.thresholdRange.get();
+        return properties.getThresholdRange();
     }
 
     public ClipRange getClipRange() {
         return properties.getClipRange();
     }
+
+    public abstract IMaskProperty getMaskProperty();
+
+
 
     public abstract Object getDataSource();
 

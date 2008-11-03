@@ -27,7 +27,8 @@ public class ImageLayerEvent extends EventObject {
     }
 
     public int getLayerIndex() {
-        return model.indexOf(affectedLayer);
+        //hack cast
+        return model.indexOf((ImageLayer3D)affectedLayer);
     }
 
 

@@ -7,7 +7,15 @@ import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.BF;
 import com.brainflow.core.ImageView;
+import com.brainflow.core.ImageDisplayModel;
+import com.brainflow.core.layer.IMaskProperty;
+import com.brainflow.core.layer.ImageLayer;
+import com.brainflow.core.layer.MaskLayer3D;
+import com.brainflow.core.layer.ImageLayer3D;
 import com.brainflow.application.BrainFlowException;
+import com.brainflow.application.presentation.binding.ExtBind;
+import com.brainflow.gui.MultiSelectToggleBar;
+import com.brainflow.image.data.IImageData;
 
 import javax.swing.*;
 import javax.swing.tree.TreeModel;
@@ -17,6 +25,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.Enumeration;
+import java.util.Arrays;
 
 /**
  * Created by IntelliJ IDEA.
@@ -42,7 +51,11 @@ public class BinaryExpressionTester {
 
     IImageDisplayModel model;
 
-    ImageView view;
+    ImageView dataView;
+
+    ImageView maskView;
+
+    //ImageView maskView;
 
     public BinaryExpressionTester() {
 
@@ -54,8 +67,16 @@ public class BinaryExpressionTester {
         mainPanel.setLayout(new BorderLayout());
         model = loadModel();
 
-        view = new ImageView(model);
-        mainPanel.add(view, BorderLayout.CENTER);
+        dataView = new ImageView(model);
+        maskView = new ImageView(createMaskModel(model));
+
+        JPanel leftPanel = wrapImageView(dataView);
+        JPanel rightPanel = wrapImageView(maskView);
+
+        JSplitPane splitpane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightPanel);
+
+
+        mainPanel.add(splitpane, BorderLayout.CENTER);
         mainPanel.add(new JScrollPane(textArea), BorderLayout.SOUTH);
         mainPanel.setBorder(BorderFactory.createEtchedBorder());
 
@@ -87,30 +108,93 @@ public class BinaryExpressionTester {
         });
 
 
+    }
+
+    private IImageDisplayModel createMaskModel(IImageDisplayModel model) {
+        IImageDisplayModel imodel = new ImageDisplayModel("maskmodel");
+        for (int i = 0; i < model.getNumLayers(); i++) {
+            ImageLayer3D layer = model.getLayer(i);
+            MaskLayer3D masklayer = new MaskLayer3D(layer.getMaskProperty().buildMask());
+            imodel.addLayer(masklayer);
+        }
+
+        return imodel;
+
+    }
+
+    public JPanel wrapImageView(ImageView view) {
+        MultiSelectToggleBar toggleBar = new MultiSelectToggleBar(Arrays.asList(1));
+        JPanel viewPanel = new JPanel();
+        viewPanel.setLayout(new BorderLayout());
+        viewPanel.add(toggleBar, BorderLayout.NORTH);
+        viewPanel.add(view, BorderLayout.CENTER);
+
+        ExtBind.get().bindContent(view.getModel().getListModel(), toggleBar);
+        ExtBind.get().bindToggleIndices(view.getModel().getVisibleSelection(), toggleBar);
+
+        return viewPanel;
+
 
     }
 
 
     public void parseExpression() {
-        BinaryExpressionParser parser = new BinaryExpressionParser();
-        try {
+        BinaryExpressionParser parser = new BinaryExpressionParser(new Context() {
+            public Object getValue(String symbol) {
+                int index = mapIndex(symbol);
+
+                if (index < 0 || (index > model.getNumLayers() - 1)) {
+                    throw new IllegalArgumentException("illegal layer index " + index);
+                }
+
+                return model.getLayer(index).getData();
+
+            }
+
+
+            private int mapIndex(String varName) {
+                if (!varName.toUpperCase().startsWith("V")) {
+                    throw new IllegalArgumentException("illegal variable name : " + varName);
+                }
+
+                String numberPart = varName.substring(1);
+                return Integer.parseInt(numberPart) - 1;
+
+
+            }
+        });
+
+
+        try
+
+        {
             INode node = parser.createParser().parse(textArea.getText());
+
+            RootNode root = new RootNode(node);
             VariableSubstitution varsub = new VariableSubstitution(model);
-            INode vnode  = varsub.start(node);
+            RootNode vnode = varsub.start(root);
 
             MaskSubstitution masksub = new MaskSubstitution();
-            INode mnode = masksub.start(vnode);
+            RootNode mnode = masksub.start(vnode);
+
+            // model.getLayer(model.getNumLayers()-1).getMaskProperty().putMask(IMaskProperty.MASK_KEY.EXPRESSION_MASK, mnode.getData());
 
             //ComparisonNode cnode = (ComparisonNode)node;
             //MaskDataNode masknode = (MaskDataNode)cnode.left();
-           // System.out.println("cardinality " + masknode.getData().cardinality());
-            
-            expressionTree.setModel(createTreeModel(node));
+            // System.out.println("cardinality " + masknode.getData().cardinality());
+
+            expressionTree.setModel(createTreeModel(mnode.getChild()));
             statusLabel.setForeground(Color.BLACK);
             statusLabel.setText("Expression Parsed Successfully");
 
 
-        } catch (Exception ex) {
+        }
+
+        catch (
+                Exception ex
+                )
+
+        {
             Toolkit.getDefaultToolkit().beep();
             statusLabel.setForeground(Color.RED);
             statusLabel.setText(ex.getMessage());
@@ -133,14 +217,14 @@ public class BinaryExpressionTester {
 
     class ExpressionNode implements TreeNode {
 
-        AbstractNode inode;
+        INode inode;
 
-        ExpressionNode(AbstractNode node) {
+        ExpressionNode(INode node) {
             this.inode = node;
         }
 
         public ExpressionNode getChildAt(int childIndex) {
-            return new ExpressionNode((AbstractNode) inode.getChildren().get(childIndex));
+            return new ExpressionNode(inode.getChildren().get(childIndex));
         }
 
         public int getChildCount() {
@@ -148,7 +232,8 @@ public class BinaryExpressionTester {
         }
 
         public TreeNode getParent() {
-            return new ExpressionNode((AbstractNode) inode.getParent());
+
+            return new ExpressionNode(inode.getParent());
         }
 
         public int getIndex(TreeNode node) {
@@ -199,7 +284,7 @@ public class BinaryExpressionTester {
 
 
     private TreeModel createTreeModel(INode root) {
-        return new DefaultTreeModel(new ExpressionNode((AbstractNode) root));
+        return new DefaultTreeModel(new ExpressionNode(root));
     }
 
 

@@ -18,10 +18,11 @@ import java.util.Arrays;
  * Time: 5:04:29 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ConstantNode extends LeafNode implements LeafVisitable {
+public class ConstantNode extends AbstractNode implements LeafNode, ValueNode<Double> {
 
 
     private double value;
+
 
     public ConstantNode(double value) {
         this.value = value;
@@ -31,8 +32,16 @@ public class ConstantNode extends LeafNode implements LeafVisitable {
         return "" + value;
     }
 
-    public double getValue() {
+    public Double evaluate() {
         return value;
+    }
+
+    public String getSymbol() {
+        return "" + value;
+    }
+
+    public boolean isNumber() {
+        return true;
     }
 
     public int depth() {
@@ -47,7 +56,7 @@ public class ConstantNode extends LeafNode implements LeafVisitable {
 
         final BinaryOperation bop = Operations.lookup(op);
 
-        IMaskedData3D mdat = new MaskedData3D((IImageData3D) left.getData(), new MaskPredicate() {
+        IMaskedData3D mdat = new MaskedData3D((IImageData3D) left.evaluate(), new MaskPredicate() {
             public boolean mask(double ovalue) {
                 return bop.isTrue(value, ovalue);
             }
@@ -58,11 +67,12 @@ public class ConstantNode extends LeafNode implements LeafVisitable {
     }
 
     public LeafNode visitConstant(ConstantNode other, BinaryOperand op) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+
+        throw new UnsupportedOperationException("");
     }
 
     public LeafNode visitMask(MaskDataNode other, BinaryOperand op) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        throw new UnsupportedOperationException("");
     }
 
     public boolean isLeaf() {

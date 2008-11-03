@@ -5,6 +5,7 @@ import com.brainflow.image.operations.BinaryOperand;
 import org.codehaus.jparsec.*;
 import org.codehaus.jparsec.functors.Binary;
 import org.codehaus.jparsec.functors.Map;
+import org.codehaus.jparsec.functors.Unary;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,6 +21,19 @@ public class BinaryExpressionParser {
     private static final Parser<Void> IGNORED = Scanners.WHITESPACES.skipMany();
 
     //static final Parser<?> TOKENIZER = Terminals.DecimalLiteral.TOKENIZER.or(OPERATORS.tokenizer());
+
+    enum UnaryOperator implements Unary<INode> {
+        NEG {
+            public INode map(INode iNode) {
+                if (iNode instanceof ConstantNode) {
+                    return new ConstantNode(-((ConstantNode)iNode).evaluate());
+                } else {
+                    throw new SemanticError("can only negate a constant value");
+                }
+                
+            }
+        }
+    }
 
     enum BinaryOperator implements Binary<INode> {
         AND {
@@ -64,6 +78,37 @@ public class BinaryExpressionParser {
         return term(name).retn(value);
     }
 
+    private Context context;
+
+    public BinaryExpressionParser() {
+        this.context = new Context() {
+            public Object getValue(String symbol) {
+                return "xxx";
+            }
+        };
+    }
+
+    public BinaryExpressionParser(Context context) {
+        this.context = context;
+    }
+
+    private Parser<ValueNode> constantParser() {
+        return Terminals.DecimalLiteral.PARSER.map(new Map<String, ValueNode>() {
+            public ValueNode map(String s) {
+                return new ConstantNode(Double.valueOf(s));
+            }
+        });
+
+    }
+
+    private Parser<ValueNode> variableParser() {
+        return Terminals.Identifier.PARSER.map(new Map<String, ValueNode>() {
+            public ValueNode map(String s) {
+                return new VariableNode(s, context);
+            }
+        });
+
+    }
 
 
     public Parser<INode> createParser() {
@@ -73,17 +118,10 @@ public class BinaryExpressionParser {
                 (Parser<? extends Tokens.Fragment>) OPERATORS.tokenizer(),
                 Terminals.Identifier.TOKENIZER);
 
-        final Parser<INode> NUMBER = Terminals.DecimalLiteral.PARSER.map(new Map<String, INode>() {
-            public INode map(String s) {
-                return new ConstantNode(Double.valueOf(s));
-            }
-        });
 
-        final Parser<INode> VARIABLE = Terminals.Identifier.PARSER.map(new Map<String, INode>() {
-            public INode map(String s) {
-                return new VariableNode(s);
-            }
-        });
+        final Parser<ValueNode> NUMBER = constantParser();
+
+        final Parser<ValueNode> VARIABLE = variableParser();
 
 
         Parser.Reference<INode> ref = Parser.newReference();
@@ -94,14 +132,14 @@ public class BinaryExpressionParser {
                 .infixl(op("or", BinaryOperator.OR), 10)
                 .infixl(op("<", BinaryOperator.LT), 20)
                 .infixl(op(">", BinaryOperator.GT), 20)
+                .prefix(op("-", UnaryOperator.NEG), 30)
 
                 .build(unit);
-        
+
         ref.set(optable);
 
 
         return optable.from(TOKENIZER, IGNORED);
-
 
 
         /*final Parser<_> s_whitespace = Scanners.isWhitespaces();
@@ -173,8 +211,10 @@ public class BinaryExpressionParser {
     public static void main(String[] args) {
 
         Parser<INode> parser = new BinaryExpressionParser().createParser();
-        INode node = parser.parse("(V1 > 5) and (V2 < 4)");
+        INode node = parser.parse("V1 > 5");
 
+        MaskSubstitution ms = new MaskSubstitution();
+        ms.start(new RootNode(node));
         System.out.println("node : " + node);
         //VariableSubstitution builder = new VariableSubstitution(null);
         //builder.start(node);

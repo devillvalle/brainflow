@@ -13,16 +13,28 @@ import com.brainflow.image.operations.BooleanOperation;
  * Time: 7:06:23 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ImageDataNode extends LeafNode implements LeafVisitable {
+public class ImageDataNode extends AbstractNode implements ValueNode<IImageData>, LeafNode,  LeafVisitable {
 
     private IImageData data;
 
-    public ImageDataNode(IImageData data) {
+    private String symbol;
+
+    public ImageDataNode(String symbol, IImageData data) {
         this.data = data;
+        this.symbol = symbol;
     }
 
-    public IImageData getData() {
+    
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public IImageData evaluate() {
         return data;
+    }
+
+    public boolean isNumber() {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public int depth() {
@@ -35,7 +47,7 @@ public class ImageDataNode extends LeafNode implements LeafVisitable {
 
     public LeafNode visitImage(ImageDataNode left, BinaryOperand op) {
 
-        BivariateMaskNode3D bdata = new BivariateMaskNode3D((IImageData3D) left.getData(), (IImageData3D) getData(), Operations.lookup(op));
+        BivariateMaskNode3D bdata = new BivariateMaskNode3D((IImageData3D) left.evaluate(), (IImageData3D) evaluate(), Operations.lookup(op));
         return new MaskDataNode(bdata);
     }
 
@@ -47,7 +59,7 @@ public class ImageDataNode extends LeafNode implements LeafVisitable {
 
         BooleanOperation boolop = (BooleanOperation) bop;
         
-        IMaskedData3D mdat = new MaskedData3D((IImageData3D) getData(), new MaskPredicate() {
+        IMaskedData3D mdat = new MaskedData3D((IImageData3D) evaluate(), new MaskPredicate() {
             public boolean mask(double value) {
                 return value > 0;
             }
@@ -58,8 +70,8 @@ public class ImageDataNode extends LeafNode implements LeafVisitable {
     }
 
     public LeafNode visitConstant(ConstantNode left, BinaryOperand op) {
-        IImageData3D cdat = ImageData.createConstantData(left.getValue(), data.getImageSpace());
-        BivariateMaskNode3D bdata = new BivariateMaskNode3D(cdat, (IImageData3D) getData(), Operations.lookup(op));
+        IImageData3D cdat = ImageData.createConstantData(left.evaluate().doubleValue(), data.getImageSpace());
+        BivariateMaskNode3D bdata = new BivariateMaskNode3D(cdat, (IImageData3D) evaluate(), Operations.lookup(op));
         return new MaskDataNode(bdata);
 
     }

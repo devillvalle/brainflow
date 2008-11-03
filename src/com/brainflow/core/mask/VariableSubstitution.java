@@ -4,9 +4,6 @@ import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.data.ImageData;
 
-import java.util.Map;
-import java.util.HashMap;
-
 import test.Testable;
 
 /**
@@ -46,7 +43,8 @@ public class VariableSubstitution extends AnalysisAdapter {
     
 
     public void caseConstantNode(ConstantNode node) {
-        node.replaceBy(new ImageDataNode(ImageData.createConstantData(node.getValue(), model.getSelectedLayer().getData().getImageSpace())));
+        double val =  node.evaluate().doubleValue();
+        node.replaceBy(new ImageDataNode(""+val, ImageData.createConstantData(val, model.getSelectedLayer().getData().getImageSpace())));
     }
 
     public void caseVariableNode(VariableNode node) {
@@ -58,7 +56,7 @@ public class VariableSubstitution extends AnalysisAdapter {
         }
 
         IImageData data = model.getLayer(index).getData();
-        node.replaceBy(new ImageDataNode(data));
+        node.replaceBy(new ImageDataNode(node.getSymbol(), data));
     }
 
 

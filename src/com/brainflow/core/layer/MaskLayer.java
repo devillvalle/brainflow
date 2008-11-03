@@ -68,6 +68,10 @@ public class MaskLayer extends ImageLayer {
 
     }
 
+    public IMaskProperty getMaskProperty() {
+        //todo implement please
+        throw new UnsupportedOperationException();
+    }
 
     public double getValue(AnatomicalPoint3D pt) {
         IImageSpace space = getCoordinateSpace();
@@ -79,11 +83,14 @@ public class MaskLayer extends ImageLayer {
     }
 
     public SliceRenderer getSliceRenderer(IImageSpace refspace, AnatomicalPoint3D slice, Anatomy3D displayAnatomy) {
-        return new BasicImageSliceRenderer((ImageSpace3D) refspace, this, slice, displayAnatomy) {
+        //todo fix me
+        /*return new BasicImageSliceRenderer((ImageSpace3D) refspace, this, slice, displayAnatomy) {
             protected RGBAImage thresholdRGBA(RGBAImage rgba) {
                 return rgba;
             }
-        };
+        };    */
+
+        return null;
 
     }
 

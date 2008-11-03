@@ -12,6 +12,8 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import net.java.dev.properties.Property;
 import net.java.dev.properties.IndexedProperty;
+import net.java.dev.properties.BaseProperty;
+import net.java.dev.properties.events.PropertyListener;
 import net.java.dev.properties.container.BeanContainer;
 import net.java.dev.properties.container.ObservableProperty;
 import net.java.dev.properties.container.ObservableIndexed;
@@ -31,19 +33,13 @@ import java.io.Serializable;
  * @version 1.0
  */
 
-@XStreamAlias("layer-properties")
+
 public class ImageLayerProperties implements Serializable {
-
-
-
-
 
 
 
     public final ObservableProperty<IColorMap> colorMap = ObservableProperty.create();
 
-    //@XStreamAlias("interpolation")
-    //private InterpolationMethod interpolation;
 
     public final IndexedProperty<InterpolationType> interpolationSet = new ObservableIndexed<InterpolationType>(
             InterpolationType.NEAREST_NEIGHBOR, InterpolationType.LINEAR, InterpolationType.CUBIC);
@@ -93,8 +89,7 @@ public class ImageLayerProperties implements Serializable {
         //clipRange.set(props.clipRange.get());
         //colorMap.set(props.colorMap.get());
 
-        System.out.println("here");
-        
+
 
     }
 
@@ -110,8 +105,6 @@ public class ImageLayerProperties implements Serializable {
         IColorMap imap = new LinearColorMap2(_dataRange.getMin(), _dataRange.getMax(), ColorTable.GRAYSCALE);
         init(imap, _dataRange);
 
-        //temporary hack replace with builder
-        //thresholdRange.get().setHighClip();
     }
 
     public ImageLayerProperties(IndexColorModel _icm, IRange _dataRange) {
@@ -120,13 +113,8 @@ public class ImageLayerProperties implements Serializable {
         init(imap, _dataRange);
     }
 
-    //public ImageLayerProperties(IColorMap map) {
-    //    init(map);
-    //}
-
 
     private void init(IColorMap map, IRange dataRange) {
-
         colorMap.set(map);
        
         clipRange.get().maxValue.set(dataRange.getMax());
@@ -138,12 +126,12 @@ public class ImageLayerProperties implements Serializable {
         thresholdRange.get().maxValue.set(dataRange.getMax());
         thresholdRange.get().minValue.set(dataRange.getMin());
 
+        
+
 
     }
 
-    public ThresholdRange getThresholdRange() {
-        return null;
-    }
+   
 
     public double getSmoothingRadius() {
         return smoothingRadius.get();
@@ -158,7 +146,9 @@ public class ImageLayerProperties implements Serializable {
     }
 
 
-
+    public ClipRange getThresholdRange() {
+        return thresholdRange.get();
+    }
 
     public float getOpacity() {
         return opacity.get().floatValue();

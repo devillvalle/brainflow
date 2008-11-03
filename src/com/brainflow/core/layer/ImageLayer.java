@@ -12,6 +12,7 @@ package com.brainflow.core.layer;
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.colormap.ColorTable;
 import com.brainflow.image.data.IImageData;
+import com.brainflow.image.data.MaskPredicate;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.utils.Range;
 import com.brainflow.core.layer.AbstractLayer;
@@ -35,7 +36,7 @@ public abstract class ImageLayer<T extends IImageSpace> extends AbstractLayer {
     public ImageLayer(ImageLayer layer) {
         super(layer.getImageLayerProperties());
         this.dataSource = layer.getDataSource();
-        initMaskList();
+
     }
 
     public ImageLayer(IImageDataSource dataSource) {
@@ -48,7 +49,7 @@ public abstract class ImageLayer<T extends IImageSpace> extends AbstractLayer {
 
         }
         //data = dataSource.getData();
-        initMaskList();
+       
     }
 
     public ImageLayer(IImageDataSource dataSource, ImageLayerProperties _properties) {
@@ -65,17 +66,12 @@ public abstract class ImageLayer<T extends IImageSpace> extends AbstractLayer {
         }
 
         //data = dataSource.getData();
-        initMaskList();
+
     }
 
 
-    private void initMaskList() {
-        setMaskList(new ImageMaskList(this));
-    }
 
-    public ImageMaskList getMaskList() {
-        return (ImageMaskList) (super.getMaskList());
-    }
+
 
 
     public IImageData getData() {

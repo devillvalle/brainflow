@@ -11,7 +11,9 @@ import com.brainflow.core.layer.ImageLayerEvent;
  */
 public class ImageLayerListenerImpl implements ImageLayerListener {
 
-    
+    public void maskChanged(ImageLayerEvent event) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 
     public void clipRangeChanged(ImageLayerEvent event) {
         //To change body of implemented methods use File | Settings | File Templates.

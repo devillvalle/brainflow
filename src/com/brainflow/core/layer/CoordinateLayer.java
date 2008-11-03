@@ -38,7 +38,11 @@ public class CoordinateLayer extends AbstractLayer {
        return new BasicCoordinateSliceRenderer(this, slice, displayAnatomy);
     }
 
-    
+    public IMaskProperty getMaskProperty() {
+        //todo implement please
+        throw new UnsupportedOperationException();
+       
+    }
 
     public ICoordinateSpace getCoordinateSpace() {
         return coordinates.getSpace();

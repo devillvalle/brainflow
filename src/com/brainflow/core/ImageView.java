@@ -10,7 +10,7 @@ import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.ICoordinateSpace;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.image.space.IImageSpace3D;
-import com.pietschy.command.CommandContainer;
+
 import com.pietschy.command.toggle.ToggleCommand;
 import com.pietschy.command.toggle.ToggleVetoException;
 import net.java.dev.properties.BaseProperty;
@@ -52,7 +52,6 @@ import java.util.logging.Logger;
 public class ImageView extends JComponent implements ListDataListener, ImageDisplayModelListener {
 
     private static final Logger log = Logger.getLogger(ImageView.class.getName());
-
 
     public final Property<IImageDisplayModel> displayModel = ObservableProperty.create();
 
@@ -179,34 +178,13 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
         super();
         BeanContainer.bind(this);
         displayModel.set(imodel);
-        //commandContainer = new CommandContainer();
 
         initView();
-
-        // getInputMap().put(KeyStroke.getKeyStroke("LEFT"),
-        //                      "none");
-
-
     }
 
 
-    public ImageView(IImageDisplayModel imodel, CommandContainer parentContainer) {
-        super();
-
-        BeanContainer.bind(this);
-        displayModel.set(imodel);
-
-        //commandContainer = new CommandContainer(parentContainer);
-
-        initView();
 
 
-    }
-
-
-    protected void initCommands() {
-
-    }
 
 
     public ImagePlotLayout getPlotLayout() {
@@ -610,6 +588,13 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
         }
 
 
+    }
+
+    public static class SelectableLayerImageView extends ImageView {
+
+        public SelectableLayerImageView(IImageDisplayModel imodel) {
+            super(imodel);
+        }
     }
 
 }

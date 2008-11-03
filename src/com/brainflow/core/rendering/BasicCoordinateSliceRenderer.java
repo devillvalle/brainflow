@@ -86,7 +86,7 @@ public class BasicCoordinateSliceRenderer implements SliceRenderer {
     public BufferedImage render() {
         //CoordinateSet3D set = layer.getDataSource();
         //AnatomicalAxis zaxis = getSlice().getAnatomy().ZAXIS;
-        //List<AnatomicalPoint3D> pts = set.pointsWithinPlane(getSlice().getValue(zaxis));
+        //List<AnatomicalPoint3D> pts = set.pointsWithinPlane(getSlice().evaluate(zaxis));
 
 
 

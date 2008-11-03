@@ -13,6 +13,7 @@ import com.brainflow.image.data.MaskedData2D;
 import com.brainflow.image.data.MaskPredicate;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.core.layer.AbstractLayer;
+import com.brainflow.core.ClipRange;
 
 /**
  * Created by IntelliJ IDEA.
@@ -54,7 +55,7 @@ public class ThresholdImagesStage extends ImageProcessingStage {
     }
 
     private RGBAImage threshold(AbstractLayer layer, RGBAImage rgba) {
-        ThresholdRange trange = layer.getImageLayerProperties().getThresholdRange();
+        ClipRange trange = layer.getImageLayerProperties().getClipRange();
 
 
         if (Double.compare(trange.getMin(), trange.getMax()) != 0) {

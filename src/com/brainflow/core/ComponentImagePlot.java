@@ -176,9 +176,14 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
 
 
         g2.setColor(oldColor);
-        g2.drawRenderedImage(producer.getImage(), AffineTransform.getTranslateInstance((int) plotArea.getMinX(), (int) plotArea.getMinY()));
-        //g2.drawImage(producer.getImage(), null, (int)plotArea.getMinX(), (int)plotArea.getMaxX());
 
+        if (plotArea.getWidth() < 5 || plotArea.getHeight() < 5) {
+            return;
+        }
+
+
+        g2.drawRenderedImage(producer.getImage(), AffineTransform.getTranslateInstance((int) plotArea.getMinX(), (int) plotArea.getMinY()));
+     
         for (String annot : annotationMap.keySet()) {
             IAnnotation ia = annotationMap.get(annot);
             if (ia.isVisible()) {

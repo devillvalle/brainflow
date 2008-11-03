@@ -201,7 +201,7 @@ public class MontageImageView extends AbstractGriddedImageView {
             double minDist = Double.MAX_VALUE;
             for (int i = 0; i < getNumPlots(); i++) {
                 //AnatomicalPoint1D pt = getSliceForPlot(i);
-                //minDist = Math.min(Math.abs(pt.getValue() - slice.getValue()), minDist);
+                //minDist = Math.min(Math.abs(pt.evaluate() - slice.evaluate()), minDist);
             }
 
             return minDist;

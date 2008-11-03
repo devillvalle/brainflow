@@ -3,6 +3,7 @@ package com.brainflow.core;
 import test.TestUtils;
 import com.brainflow.image.space.IImageSpace;
 import com.brainflow.core.layer.ImageLayer;
+import com.brainflow.core.layer.ImageLayer3D;
 import net.java.dev.properties.container.BeanContainer;
 import net.java.dev.properties.events.PropertyListener;
 import net.java.dev.properties.BaseProperty;
@@ -90,11 +91,11 @@ public class ImageViewClientSupport {
     }
 
     public static void main(String[] args) {
-        ImageLayer layer = TestUtils.quickLayer("icbm452_atlas_probability_gray.hdr");
+        ImageLayer3D layer = (ImageLayer3D)TestUtils.quickLayer("icbm452_atlas_probability_gray.hdr");
         IImageDisplayModel model = new ImageDisplayModel("junk");
         model.addLayer(layer);
         
-        ImageLayer layer2 = TestUtils.quickLayer("icbm452_atlas_probability_white.hdr");
+        ImageLayer3D layer2 = (ImageLayer3D)TestUtils.quickLayer("icbm452_atlas_probability_white.hdr");
         model.addLayer(layer2);
         model.setSelectedIndex(1);
 

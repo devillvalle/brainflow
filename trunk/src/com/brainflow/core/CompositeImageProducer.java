@@ -269,6 +269,12 @@ public class CompositeImageProducer extends AbstractImageProducer {
             //plot.getComponent().repaint();
         }
 
+        public void maskChanged(ImageLayerEvent event) {
+            dirty = true;
+            renderQueue.submitTask(createRenderTask());
+
+        }
+
         public void clipRangeChanged(ImageLayerEvent event) {
             // no need to repaint because clip events are also detected as color map events ...
 

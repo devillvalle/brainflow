@@ -9,6 +9,7 @@ import com.brainflow.image.space.IImageSpace;
 import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.core.layer.ImageLayerListener;
 import com.brainflow.core.layer.ImageLayerProperties;
+import com.brainflow.core.layer.ImageLayer3D;
 
 import java.util.List;
 
@@ -22,12 +23,12 @@ import net.java.dev.properties.IndexedProperty;
  * Time: 10:11:55 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface IImageDisplayModel extends Iterable<ImageLayer> {
+public interface IImageDisplayModel extends Iterable<ImageLayer3D> {
 
 
     public Property<Integer> getListSelection();
 
-    public IndexedProperty<ImageLayer> getListModel();
+    public IndexedProperty<ImageLayer3D> getListModel();
 
     public IndexedProperty<Integer> getVisibleSelection();
     
@@ -37,7 +38,7 @@ public interface IImageDisplayModel extends Iterable<ImageLayer> {
 
     public int getSelectedIndex();
 
-    public ImageLayer getSelectedLayer();
+    public ImageLayer3D getSelectedLayer();
 
     public void addImageDisplayModelListener(ImageDisplayModelListener listener);
 
@@ -51,9 +52,9 @@ public interface IImageDisplayModel extends Iterable<ImageLayer> {
 
     public List<Integer> indexOf(IImageData data);
 
-    public int indexOf(ImageLayer layer);
+    public int indexOf(ImageLayer3D layer);
 
-    public void addLayer(ImageLayer layer);
+    public void addLayer(ImageLayer3D layer);
 
     public void swapLayers(int index0, int index1);
 
@@ -61,11 +62,11 @@ public interface IImageDisplayModel extends Iterable<ImageLayer> {
 
     public void removeLayer(int layer);
 
-    public void removeLayer(ImageLayer layer);
+    public void removeLayer(ImageLayer3D layer);
 
     public ImageLayerProperties getLayerParameters(int layer);
 
-    public ImageLayer getLayer(int layer);
+    public ImageLayer3D getLayer(int layer);
 
     public int getNumLayers();
 

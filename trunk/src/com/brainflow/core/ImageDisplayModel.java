@@ -50,7 +50,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
     public static final String IMAGE_SPACE_PROPERTY = "imageSpace";
 
 
-    public final IndexedProperty<ImageLayer> listModel = ObservableIndexed.create();
+    public final IndexedProperty<ImageLayer3D> listModel = ObservableIndexed.create();
 
     public final IndexedProperty<Integer> visibleSelection = new ObservableIndexed<Integer>() {
 
@@ -145,12 +145,9 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     public final Property<Integer> listSelection = new ObservableProperty<Integer>(-1) {
         public void set(Integer integer) {
-
             if (integer >= listModel.size() || integer < -1) {
                 throw new IllegalArgumentException("selection index exceeds size of list");
             }
-
-
             super.set(integer);
         }
 
@@ -188,7 +185,8 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
         visListener = new ImageLayerListenerImpl() {
             public void visibilityChanged(ImageLayerEvent event) {
-                ImageLayer layer = event.getAffectedLayer();
+                //todo hack cast
+                ImageLayer3D layer = (ImageLayer3D)event.getAffectedLayer();
                 int index = ImageDisplayModel.this.indexOf(layer);
                 if (layer.isVisible()) {
                     visibleSelection.add(index);
@@ -210,7 +208,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         return visibleSelection;
     }
 
-    public IndexedProperty<ImageLayer> getListModel() {
+    public IndexedProperty<ImageLayer3D> getListModel() {
         return listModel;
     }
 
@@ -218,8 +216,8 @@ public class ImageDisplayModel implements IImageDisplayModel {
         return listSelection;
     }
 
-    public Iterator<ImageLayer> iterator() {
-        return new Iterator<ImageLayer>() {
+    public Iterator<ImageLayer3D> iterator() {
+        return new Iterator<ImageLayer3D>() {
 
             int i = 0;
 
@@ -229,7 +227,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
                 return false;
             }
 
-            public ImageLayer next() {
+            public ImageLayer3D next() {
                 return listModel.get(i++);
             }
 
@@ -265,7 +263,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         return listSelection.get();
     }
 
-    public ImageLayer getSelectedLayer() {
+    public ImageLayer3D getSelectedLayer() {
         return listModel.get(listSelection.get());
     }
 
@@ -307,7 +305,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
     }
 
 
-    public void addLayer(ImageLayer layer) {
+    public void addLayer(ImageLayer3D layer) {
         listenToLayer(layer);
 
         boolean vis = layer.isVisible();
@@ -331,7 +329,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     }
 
-    private void listenToLayer(final ImageLayer layer) {
+    private void listenToLayer(final ImageLayer3D layer) {
 
 
         /*layer.addPropertyChangeListener(ImageLayerProperties.RESAMPLE_PROPERTY, new PropertyChangeListener() {
@@ -474,6 +472,20 @@ public class ImageDisplayModel implements IImageDisplayModel {
         });
 
 
+        BeanContainer.get().addListener(layer.maskProperty, new PropertyListener() {
+            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+                MaskProperty3D mp = (MaskProperty3D)newValue;
+
+                ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
+                for (ImageLayerListener listener : listeners) {
+                    listener.maskChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
+
+                }
+                System.out.println("mask changed!");
+            }
+        });
+
+
 
 
         BeanContainer.get().addListener(layer.getImageLayerProperties().clipRange.get().highClip, new PropertyListener() {
@@ -508,32 +520,10 @@ public class ImageDisplayModel implements IImageDisplayModel {
     }
 
 
-    private void computeImageSpace() {
-        /*IImageSpace uspace = null;
-
-     if (!(listModel.size() == 0)) {
-         for (int i = 0; i < listModel.size(); i++) {
-             ICoordinateSpace cspace = getLayer(i).getCoordinateSpace();
-             if (uspace == null) {
-                 uspace = new ImageSpace3D(cspace);
-             } else {
-                 uspace = (IImageSpace) uspace.union(cspace);
-             }
-         }
-     } else {
-         uspace = EMPTY_SPACE;
-     }
-
-     if (!uspace.equals(imageSpace)) {
-         ICoordinateSpace old = imageSpace;
-         imageSpace = uspace;
-         changeSupport.firePropertyChange(ImageDisplayModel.IMAGE_SPACE_PROPERTY, old, imageSpace);
-     }   */
-
-    }
 
 
-    public int indexOf(ImageLayer layer) {
+
+    public int indexOf(ImageLayer3D layer) {
         return listModel.get().indexOf(layer);
 
 
@@ -556,8 +546,8 @@ public class ImageDisplayModel implements IImageDisplayModel {
     public void rotateLayers() {
         if (getNumLayers() < 2) return;
 
-        List<ImageLayer> newModel = new ArrayList<ImageLayer>();
-        ImageLayer firstLayer = getLayer(getNumLayers() - 1);
+        List<ImageLayer3D> newModel = new ArrayList<ImageLayer3D>();
+        ImageLayer3D firstLayer = getLayer(getNumLayers() - 1);
 
         newModel.add(firstLayer);
         for (int i = 0; i < listModel.size() - 1; i++) {
@@ -566,9 +556,6 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
         listModel.set(newModel);
 
-//imageListModel = newModel;
-//imageListModel.addListDataListener(forwarder);
-//layerSelection.setListModel(imageListModel);
 
         forwarder.fireContentsChanged(new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, 0, getNumLayers() - 1));
 
@@ -587,7 +574,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
             throw new IllegalArgumentException("Invalid layer index : " + index1);
         }
 
-        List<ImageLayer> newModel = new ArrayList<ImageLayer>();
+        List<ImageLayer3D> newModel = new ArrayList<ImageLayer3D>();
         for (int i = 0; i < listModel.size(); i++) {
             if (i == index0) {
                 newModel.add(i, listModel.get(index1));
@@ -621,11 +608,11 @@ public class ImageDisplayModel implements IImageDisplayModel {
         }
 
         listModel.remove(layer);
-        computeImageSpace();
+        //computeImageSpace();
 
     }
 
-    public void removeLayer(ImageLayer layer) {
+    public void removeLayer(ImageLayer3D layer) {
         assert listModel.get().contains(layer);
         int idx = listModel.get().indexOf(layer);
         removeLayer(idx);
@@ -635,7 +622,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         return listModel.get().contains(layer);
     }
 
-    public ImageLayer getLayer(int layer) {
+    public ImageLayer3D getLayer(int layer) {
         if (layer < 0 || layer >= listModel.size()) {
             throw new IllegalArgumentException("illegal layer index : " + layer);
         }

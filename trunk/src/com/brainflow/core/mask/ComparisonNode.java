@@ -21,8 +21,6 @@ public class ComparisonNode extends AbstractNode {
 
     private BinaryOperand op;
 
-
-
     public ComparisonNode(INode left, INode right, BinaryOperand op) {
         this.left = left;
         this.right = right;
@@ -41,7 +39,7 @@ public class ComparisonNode extends AbstractNode {
     }
 
     public AbstractNode reduce(ImageDataNode other, BinaryOperand op) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        throw new UnsupportedOperationException();
     }
 
     public int depth() {

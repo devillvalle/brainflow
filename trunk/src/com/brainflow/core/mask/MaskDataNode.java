@@ -13,7 +13,7 @@ import com.brainflow.image.operations.BooleanOperation;
  * Time: 9:25:47 AM
  * To change this template use File | Settings | File Templates.
  */
-public class MaskDataNode extends LeafNode implements LeafVisitable {
+public class MaskDataNode extends AbstractNode implements LeafNode, LeafVisitable {
 
 
     private IMaskedData3D mask;
@@ -42,7 +42,7 @@ public class MaskDataNode extends LeafNode implements LeafVisitable {
 
         BooleanOperation boolop = (BooleanOperation) bop;
 
-        IMaskedData3D mdat = new MaskedData3D((IImageData3D) left.getData(), new MaskPredicate() {
+        IMaskedData3D mdat = new MaskedData3D((IImageData3D) left.evaluate(), new MaskPredicate() {
             public boolean mask(double value) {
                 return value > 0;
             }
@@ -62,7 +62,7 @@ public class MaskDataNode extends LeafNode implements LeafVisitable {
 
         BooleanOperation boolop = (BooleanOperation) bop;
 
-        IImageData3D cdat = ImageData.createConstantData(left.getValue(), mask.getImageSpace());
+        IImageData3D cdat = ImageData.createConstantData(left.evaluate().doubleValue(), mask.getImageSpace());
 
         IMaskedData3D mdat = new MaskedData3D(cdat, new MaskPredicate() {
             public boolean mask(double value) {

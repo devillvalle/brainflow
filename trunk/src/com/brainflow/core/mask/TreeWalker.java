@@ -9,6 +9,8 @@ package com.brainflow.core.mask;
  */
 public interface TreeWalker {
 
+    public void caseRootNode(RootNode node);
+
     public void caseComparisonNode(ComparisonNode node);
 
     public void caseVariableNode(VariableNode node);
@@ -18,6 +20,8 @@ public interface TreeWalker {
     public void caseImageDataNode(ImageDataNode node);
 
     public void caseMaskDataNode(MaskDataNode node);
+
+    public void caseNegationNode(NegationNode node);
 
 
 

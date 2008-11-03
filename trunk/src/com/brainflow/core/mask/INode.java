@@ -22,6 +22,8 @@ public interface INode {
 
     public void setParent(INode parent);
 
+    public INode getParent();
+
     public void replaceChild(INode oldChild, INode newChild);
 
     public void replaceBy(INode node);

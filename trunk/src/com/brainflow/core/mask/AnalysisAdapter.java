@@ -9,25 +9,29 @@ package com.brainflow.core.mask;
  */
 public class AnalysisAdapter implements TreeWalker {
 
-    protected INode rootNode;
+    protected RootNode rootNode;
 
 
 
-    public INode start(INode rootNode) {
+    public RootNode start(RootNode rootNode) {
         this.rootNode = rootNode;
-        inStart(rootNode);
-        rootNode.apply(this);
-        INode outnode =  outStart(rootNode);
+        inRootNode(rootNode);
+        caseRootNode(rootNode);
+        return outRootNode(rootNode);
+    }
 
-        return outnode;
+    public void caseRootNode(RootNode node) {
+
+        node.getChild().apply(this);
+
 
     }
 
-    public void inStart(INode rootNode) {
-
+    public void inRootNode(RootNode rootNode) {
+        
     }
 
-    public INode outStart(INode rootNode) {
+    public RootNode outRootNode(RootNode rootNode) {
         return rootNode;
 
     }
@@ -48,6 +52,23 @@ public class AnalysisAdapter implements TreeWalker {
 
     }
 
+    public void caseNegationNode(NegationNode node) {
+        inNegation(node);
+        node.getNegatable().apply(this);
+        outNegation(node);
+    }
+
+    public void inNegation(NegationNode node) {
+        //System.out.println("in negation " + node);
+        System.out.println("ngetable in class : " + node.getNegatable().getClass());
+
+    }
+
+    public void outNegation(NegationNode node) {
+        //System.out.println("out negation " + node);
+        System.out.println("ngetable out class : " + node.getNegatable().getClass());
+
+    }
 
     public void caseVariableNode(VariableNode node) {
 

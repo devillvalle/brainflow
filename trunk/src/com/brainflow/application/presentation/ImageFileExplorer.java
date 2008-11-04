@@ -211,7 +211,11 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
                         }
                     }
 
+                    if (list.size() == 0) return null;
+
                     IImageDataSource[] ret = new IImageDataSource[list.size()];
+
+
                     list.toArray(ret);
 
 

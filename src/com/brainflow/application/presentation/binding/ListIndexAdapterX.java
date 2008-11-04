@@ -19,7 +19,7 @@ import com.jidesoft.swing.CheckBoxList;
  * Time: 8:28:32 AM
  * To change this template use File | Settings | File Templates.
  */
-public class MyListIndexAdapterX extends SwingAdapter<Integer, CheckBoxList> implements ListSelectionListener {
+public class ListIndexAdapterX extends SwingAdapter<Integer, CheckBoxList> implements ListSelectionListener {
 
     @Override
     protected void bindListener(BaseProperty<Integer> property, CheckBoxList cmp) {

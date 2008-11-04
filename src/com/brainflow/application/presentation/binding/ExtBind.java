@@ -10,6 +10,7 @@ import net.java.dev.properties.BaseProperty;
 import com.jidesoft.swing.CheckBoxList;
 import com.brainflow.gui.BiSlider;
 import com.brainflow.gui.ToggleBar;
+import com.brainflow.gui.MultiSelectToggleBar;
 import com.brainflow.core.ClipRange;
 
 import javax.swing.*;
@@ -26,15 +27,20 @@ public class ExtBind extends SwingBind {
     private static ExtBind instance;
 
     protected ExtBind() {
-        addAdapter(new MyListIndexAdapterX());
+        addAdapter(new ListIndexAdapterX());
         addAdapter(new CheckBoxListAdapter());
         addAdapter(new BiSliderAdapter());
         addAdapter(new ToggleBarAdapter());
+        addAdapter(new MultiSelectToggleBarAdapter());
 
     }
 
     public void bindCheckedIndices(IndexedProperty<Integer> property, CheckBoxList cmp) {
         new CheckBoxListAdapter().bind(property, cmp);
+    }
+
+    public void bindToggleIndices(IndexedProperty<Integer> property, MultiSelectToggleBar cmp) {
+        new MultiSelectToggleBarAdapter().bind(property, cmp);
     }
 
     public void bindBiSlider(BaseProperty<ClipRange> property, BiSlider cmp) {
@@ -46,7 +52,7 @@ public class ExtBind extends SwingBind {
     }
 
     public void bindSelectionIndex(BaseProperty<Integer> property, CheckBoxList cmp) {
-        new MyListIndexAdapterX().bind(property, cmp);
+        new ListIndexAdapterX().bind(property, cmp);
 
     }
 
@@ -84,6 +90,11 @@ public class ExtBind extends SwingBind {
 
 
     public void bindContent(IndexedProperty<?> property, ToggleBar cmp) {
+        cmp.putClientProperty("Property", property);
+        cmp.setModel(new ComboAndListModel(property));
+    }
+
+    public void bindContent(IndexedProperty<?> property, MultiSelectToggleBar cmp) {
         cmp.putClientProperty("Property", property);
         cmp.setModel(new ComboAndListModel(property));
     }

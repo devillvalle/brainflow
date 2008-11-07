@@ -26,7 +26,7 @@ public class ColorAdjustmentControl extends AbstractPresenter {
 
     private SelectedLayerPresenter selectedLayerPresenter;
 
-    private ColorRangePresenter2 colorRangePresenter;
+    private ColorRangePresenter colorRangePresenter;
 
     private HistogramPresenterX histogramPresenter;
 
@@ -89,7 +89,7 @@ public class ColorAdjustmentControl extends AbstractPresenter {
         addCollapsiblePane(colorBarPresenter, "Color Map", false);
 
 
-        colorRangePresenter = new ColorRangePresenter2();
+        colorRangePresenter = new ColorRangePresenter();
         addCollapsiblePane(colorRangePresenter, "Color Range", false);
 
         histogramPresenter = new HistogramPresenterX();

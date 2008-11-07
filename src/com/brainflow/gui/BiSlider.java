@@ -50,7 +50,7 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
 
     protected ChangeListener changeListener = createChangeListener();
 
-    private int TOP_CUSHION = 18;
+    private int TOP_CUSHION = 20;
 
     private int BOTTOM_CUSHION = 2;
 
@@ -139,7 +139,7 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
           accessibleContext.firePropertyChange(
                   AccessibleContext.ACCESSIBLE_VALUE_PROPERTY,
                   new Integer(oldValue),
-                  new Integer(m.getValue()));
+                  new Integer(m.evaluate()));
       }
   }  */
 

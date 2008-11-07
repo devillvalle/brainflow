@@ -92,7 +92,7 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
         };
         table.setModel(imageTableModel);
         table.setPreferredScrollableViewportSize(new Dimension(600, 400));
-        table.setExpandableColumn(-1);
+        table.setHierarchicalColumn(-1);
         table.setSingleExpansion(true);
         table.setName("Available Images");
         table.setShowGrid(false);

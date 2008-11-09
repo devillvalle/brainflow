@@ -30,7 +30,7 @@ public class ExtBind extends SwingBind {
         addAdapter(new ListIndexAdapterX());
         addAdapter(new CheckBoxListAdapter());
         addAdapter(new BiSliderAdapter());
-        addAdapter(new ToggleBarAdapter());
+        addAdapter(new ToggleBarAdapterX());
         addAdapter(new MultiSelectToggleBarAdapter());
 
     }
@@ -48,7 +48,7 @@ public class ExtBind extends SwingBind {
     }
 
     public void bindToggleBar(BaseProperty<Integer> property, ToggleBar cmp) {
-        new ToggleBarAdapter().bind(property, cmp);
+        new ToggleBarAdapterX().bind(property, cmp);
     }
 
     public void bindSelectionIndex(BaseProperty<Integer> property, CheckBoxList cmp) {

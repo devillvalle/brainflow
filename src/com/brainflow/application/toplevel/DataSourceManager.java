@@ -67,6 +67,8 @@ public class DataSourceManager {
             throw new IllegalArgumentException("IImageDataSource " + limg.getStem() + " with uinique ID " + uid + " is already registered.");
         }
 
+        //limg.getDataFile().getFileSystem().addListener();
+
         imageMap.put(uid, limg);
         log.fine("registering image ..." + limg.getImageInfo().getImageLabel());
         EventBus.publish(new LoadableImageStatusEvent(limg, LoadableImageStatusEvent.EventID.IMAGE_REGISTERED));

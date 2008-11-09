@@ -81,7 +81,7 @@ public class HistogramPresenterX extends ImageViewPresenter {
 
         if (histo == null ) {
 
-            int nbins = Math.min(getSelectedLayer().getImageLayerProperties().colorMap.get().getMapSize(), 75);
+            int nbins = Math.min(getSelectedLayer().getImageLayerProperties().colorMap.get().getMapSize(), 30);
             histo = new Histogram(data, nbins);
             histo.ignoreRange(new Range(0, 0));
             cache.put(data, histo);

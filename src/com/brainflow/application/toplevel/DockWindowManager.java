@@ -44,7 +44,7 @@ class DockWindowManager implements DockableFrameListener {
         dframe.getContext().setInitMode(state);
         dframe.getContext().setInitSide(side);
         dframe.getContext().setInitIndex(0);
-        dframe.getContext().setHidable(false);
+        dframe.getContext().setHidable(true);
         
 
        
@@ -63,6 +63,7 @@ class DockWindowManager implements DockableFrameListener {
         menuFace.setExtendsContext(Face.DEFAULT);
         //menuFace.setIcon( dframe.getIcon());
         menuFace.setText(title);
+
         return command;
 
     }

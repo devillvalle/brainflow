@@ -7,11 +7,8 @@ import com.brainflow.core.mask.*;
 import com.brainflow.core.layer.*;
 import com.brainflow.utils.IRange;
 import com.brainflow.image.data.IImageData;
-import com.brainflow.image.data.BinaryImageData3D;
-import com.brainflow.image.data.IMaskedData3D;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.CellConstraints;
-import com.jidesoft.swing.JideBoxLayout;
 import com.jidesoft.popup.JidePopup;
 import com.jidesoft.status.StatusBar;
 import com.jidesoft.status.LabelStatusBarItem;
@@ -305,7 +302,7 @@ public class MaskExpressionPresenter extends ImageViewPresenter {
             VariableSubstitution varsub = new VariableSubstitution(model);
             RootNode vnode = varsub.start(root);
 
-            MaskSubstitution masksub = new MaskSubstitution();
+            MaskEvaluator masksub = new MaskEvaluator();
             RootNode res = masksub.start(vnode);
 
             statusLabel.setText("Parsed Expression: " + res.getChild());

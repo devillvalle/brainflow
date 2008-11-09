@@ -35,7 +35,7 @@ public class ImageViewMouseEvent extends AbstractEventServiceEvent {
     }
 
     public AnatomicalPoint3D getLocation() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
 

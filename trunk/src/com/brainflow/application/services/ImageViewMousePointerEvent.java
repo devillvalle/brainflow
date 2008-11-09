@@ -3,6 +3,8 @@ package com.brainflow.application.services;
 import com.brainflow.core.ImageView;
 import com.brainflow.image.anatomy.AnatomicalPoint;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.image.space.IImageSpace3D;
+import com.brainflow.image.space.Axis;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -24,13 +26,24 @@ public class ImageViewMousePointerEvent extends ImageViewMouseEvent {
     }
 
     public AnatomicalPoint3D getLocation() {
-        if (getImageView() == null) {
-            return null;
-        }
 
         if (ap == null) {
             MouseEvent event = getEvent();
-            ap = getImageView().getAnatomicalLocation((Component) event.getSource(), event.getPoint());
+            AnatomicalPoint3D cursorPos = getImageView().getCursorPos();
+            AnatomicalPoint3D tmp = getImageView().getAnatomicalLocation(event.getComponent(), event.getPoint());
+            ap = tmp.convertTo(cursorPos.getSpace());
+
+
+            IImageSpace3D space = (IImageSpace3D)getImageView().getModel().getImageSpace();
+            float[] gridpos = space.worldToGrid((float)ap.getX(), (float)ap.getY(), (float)ap.getZ());
+            double x1 = space.getImageAxis(Axis.X_AXIS).gridToReal(gridpos[0]);
+            double y1 = space.getImageAxis(Axis.Y_AXIS).gridToReal(gridpos[1]);
+            double z1 = space.getImageAxis(Axis.Z_AXIS).gridToReal(gridpos[2]);
+
+            ap = new AnatomicalPoint3D(space, x1, y1, z1);
+
+
+
         }
 
         return ap;
@@ -43,8 +56,8 @@ public class ImageViewMousePointerEvent extends ImageViewMouseEvent {
         if (tmp == null) return "cursorPos : --";
 
         builder.append("zero: " + (int) getLocation().getX());
-        builder.append(" zero: " + (int) getLocation().getY());
-        builder.append(" one: " + (int) getLocation().getZ());
+        builder.append("one: " + (int) getLocation().getY());
+        builder.append("two: " + (int) getLocation().getZ());
 
         return builder.toString();
     }

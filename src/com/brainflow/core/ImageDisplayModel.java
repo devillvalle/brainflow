@@ -521,7 +521,9 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
 
 
-
+    public boolean containsLayer(ImageLayer3D layer) {
+        return listModel.get().contains(layer);
+    }
 
     public int indexOf(ImageLayer3D layer) {
         return listModel.get().indexOf(layer);

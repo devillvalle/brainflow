@@ -68,6 +68,8 @@ public interface IImageDisplayModel extends Iterable<ImageLayer3D> {
 
     public ImageLayer3D getLayer(int layer);
 
+    public boolean containsLayer(ImageLayer3D layer);
+
     public int getNumLayers();
 
     public IImageSpace getImageSpace();

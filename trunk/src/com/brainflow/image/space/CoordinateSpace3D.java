@@ -86,7 +86,7 @@ public class CoordinateSpace3D extends AbstractCoordinateSpace implements ICoord
         return origin;
     }
 
-    @Override
+
     public ICoordinateSpace union(ICoordinateSpace other) {
         assert sameAxes(other) : "cannot perform union for ImageSpaces with different axis orientations";
         if (!sameAxes(other)) {

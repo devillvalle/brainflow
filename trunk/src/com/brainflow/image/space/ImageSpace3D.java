@@ -231,7 +231,7 @@ public class ImageSpace3D extends AbstractImageSpace implements IImageSpace3D {
 
 
     //public Index3D pointToVoxel(Point3D pt) {
-    //    int x = getImageAxis(Axis.X_AXIS).nearestSample(pt.getValue());
+    //    int x = getImageAxis(Axis.X_AXIS).nearestSample(pt.evaluate());
     //    int y = getImageAxis(Axis.Y_AXIS).nearestSample(pt.getY());
     //    int z = getImageAxis(Axis.Z_AXIS).nearestSample(pt.getZ());
     //    return new Index3D(x, y, z);
@@ -254,7 +254,7 @@ public class ImageSpace3D extends AbstractImageSpace implements IImageSpace3D {
        AnatomicalAxis yaxis = avol.findAxis(getAnatomicalAxis(Axis.Y_AXIS));
        AnatomicalAxis zaxis = avol.findAxis(getAnatomicalAxis(Axis.Z_AXIS));
 
-       double zero = xaxis.convertValue(this.getAnatomicalAxis(Axis.X_AXIS), otherPoint3D.getValue());
+       double zero = xaxis.convertValue(this.getAnatomicalAxis(Axis.X_AXIS), otherPoint3D.evaluate());
        double zero = yaxis.convertValue(this.getAnatomicalAxis(Axis.Y_AXIS), otherPoint3D.getY());
        double one = zaxis.convertValue(this.getAnatomicalAxis(Axis.Z_AXIS), otherPoint3D.getZ());
 

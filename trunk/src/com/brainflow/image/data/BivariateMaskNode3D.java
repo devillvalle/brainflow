@@ -98,7 +98,7 @@ public class BivariateMaskNode3D implements IMaskedData3D {
     }
 
     public String getImageLabel() {
-        return left.getImageLabel() + ":" + right.getImageLabel();
+        return left.getImageLabel() + operation.operand() + right.getImageLabel();
     }
 
     public double value(int index) {
@@ -139,9 +139,10 @@ public class BivariateMaskNode3D implements IMaskedData3D {
             iter = left.iterator();
         }
 
-        public double next() {
+        public double next() {          
+            double val =  value(iter.index());
             advance();
-            return value(iter.index());
+            return val;
 
         }
 

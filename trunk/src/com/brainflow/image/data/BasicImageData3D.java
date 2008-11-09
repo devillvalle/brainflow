@@ -118,7 +118,7 @@ public class BasicImageData3D extends BasicImageData implements IImageData3D {
 
 
 
-    @Override
+
     public final double worldValue(float realx, float realy, float realz, InterpolationFunction3D interp) {
         double x = space3d.worldToGridX(realx, realy, realz);
         double y = space3d.worldToGridY(realx, realy, realz);

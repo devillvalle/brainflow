@@ -24,7 +24,7 @@ public final class Operations {
 
     public static final BinaryOperation LT_EQ = new _LTEQ_();
 
-     public static final BinaryOperation EQ = new _EQ_();
+    public static final BinaryOperation EQ = new _EQ_();
 
 
 

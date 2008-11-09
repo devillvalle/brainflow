@@ -172,11 +172,11 @@ public class AnatomicalPoint3D implements AnatomicalPoint {
 
     /*public void setValue(AnatomicalPoint1D val) {
      if (val.getAnatomy().sameAxis(anatomy.XAXIS)) {
-         x = anatomy.XAXIS.convertValue(val.getAnatomy(), val.getValue());
+         x = anatomy.XAXIS.convertValue(val.getAnatomy(), val.evaluate());
      } else if (val.getAnatomy().sameAxis(anatomy.YAXIS)) {
-         y = anatomy.YAXIS.convertValue(val.getAnatomy(), val.getValue());
+         y = anatomy.YAXIS.convertValue(val.getAnatomy(), val.evaluate());
      } else if (val.getAnatomy().sameAxis(anatomy.ZAXIS)) {
-         z = anatomy.ZAXIS.convertValue(val.getAnatomy(), val.getValue());
+         z = anatomy.ZAXIS.convertValue(val.getAnatomy(), val.evaluate());
      } else {
          throw new AssertionError();
      }

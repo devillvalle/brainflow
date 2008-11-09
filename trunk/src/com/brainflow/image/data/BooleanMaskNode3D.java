@@ -103,7 +103,7 @@ public class BooleanMaskNode3D implements IMaskedData3D {
     }
 
     public String getImageLabel() {
-        return left.getImageLabel() + ":" + right.getImageLabel();
+        return left.getImageLabel() + operation.operand() + right.getImageLabel();
     }
 
     public IImageSpace3D getImageSpace() {
@@ -143,7 +143,7 @@ public class BooleanMaskNode3D implements IMaskedData3D {
     }
 
     public String toString() {
-        return left.getImageLabel() + " " + operation + " " + right.getImageLabel();
+        return left.getImageLabel() + " " + operation.toString() + " " + right.getImageLabel();
     }
 
 
@@ -156,8 +156,9 @@ public class BooleanMaskNode3D implements IMaskedData3D {
         }
 
         public double next() {
+            int idx = iter.index();
             advance();
-            return operation.isTrue(left.isTrue(iter.index()), right.isTrue(iter.index())) ? 1 : 0;
+            return operation.isTrue(left.isTrue(idx), right.isTrue(idx)) ? 1 : 0;
 
         }
 

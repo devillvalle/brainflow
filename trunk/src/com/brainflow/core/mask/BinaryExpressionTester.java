@@ -8,14 +8,11 @@ import com.brainflow.core.IImageDisplayModel;
 import com.brainflow.core.BF;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.ImageDisplayModel;
-import com.brainflow.core.layer.IMaskProperty;
-import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.core.layer.MaskLayer3D;
 import com.brainflow.core.layer.ImageLayer3D;
 import com.brainflow.application.BrainFlowException;
 import com.brainflow.application.presentation.binding.ExtBind;
 import com.brainflow.gui.MultiSelectToggleBar;
-import com.brainflow.image.data.IImageData;
 
 import javax.swing.*;
 import javax.swing.tree.TreeModel;
@@ -174,7 +171,7 @@ public class BinaryExpressionTester {
             VariableSubstitution varsub = new VariableSubstitution(model);
             RootNode vnode = varsub.start(root);
 
-            MaskSubstitution masksub = new MaskSubstitution();
+            MaskEvaluator masksub = new MaskEvaluator();
             RootNode mnode = masksub.start(vnode);
 
             // model.getLayer(model.getNumLayers()-1).getMaskProperty().putMask(IMaskProperty.MASK_KEY.EXPRESSION_MASK, mnode.getData());

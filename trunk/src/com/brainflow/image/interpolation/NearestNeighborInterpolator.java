@@ -26,6 +26,8 @@ public class NearestNeighborInterpolator implements InterpolationFunction3D {
         int z_up = (int) Math.floor(dz + .5);
 
         double total;
+
+        //todo slow ....
         int d1 = data.getDimension(Axis.X_AXIS);
         int d2 = data.getDimension(Axis.Y_AXIS);
         int d3 = data.getDimension(Axis.Z_AXIS);

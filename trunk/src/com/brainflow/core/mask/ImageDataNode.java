@@ -1,10 +1,7 @@
 package com.brainflow.core.mask;
 
 import com.brainflow.image.data.*;
-import com.brainflow.image.operations.BinaryOperand;
-import com.brainflow.image.operations.Operations;
-import com.brainflow.image.operations.BinaryOperation;
-import com.brainflow.image.operations.BooleanOperation;
+import com.brainflow.image.operations.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,7 +10,7 @@ import com.brainflow.image.operations.BooleanOperation;
  * Time: 7:06:23 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ImageDataNode extends AbstractNode implements ValueNode<IImageData>, LeafNode,  LeafVisitable {
+public class ImageDataNode extends AbstractNode implements ValueNode<IImageData>, LeafNode, LeafVisitable {
 
     private IImageData data;
 
@@ -24,7 +21,7 @@ public class ImageDataNode extends AbstractNode implements ValueNode<IImageData>
         this.symbol = symbol;
     }
 
-    
+
     public String getSymbol() {
         return symbol;
     }
@@ -45,6 +42,19 @@ public class ImageDataNode extends AbstractNode implements ValueNode<IImageData>
         return leaf.visitImage(this, op);
     }
 
+    public LeafNode visitUnary(UnaryOperand op) {
+        switch (op) {
+            case ADD:
+                return this;
+            case NEGATE:
+                return new ImageDataNode("-" + getSymbol(), ImageData.createScaledData((IImageData3D) data, -1));
+            default:
+                throw new SemanticError("unsupported operation " + op + " for operand : " + getSymbol());
+        }
+
+
+    }
+
     public LeafNode visitImage(ImageDataNode left, BinaryOperand op) {
 
         BivariateMaskNode3D bdata = new BivariateMaskNode3D((IImageData3D) left.evaluate(), (IImageData3D) evaluate(), Operations.lookup(op));
@@ -58,7 +68,7 @@ public class ImageDataNode extends AbstractNode implements ValueNode<IImageData>
         }
 
         BooleanOperation boolop = (BooleanOperation) bop;
-        
+
         IMaskedData3D mdat = new MaskedData3D((IImageData3D) evaluate(), new MaskPredicate() {
             public boolean mask(double value) {
                 return value > 0;

@@ -33,14 +33,23 @@ public abstract class ImageLayer<T extends IImageSpace> extends AbstractLayer {
 
     //private IImageData data;
 
+
+
+
     public ImageLayer(ImageLayer layer) {
-        super(layer.getImageLayerProperties());
+        super(layer.getLabel() + "*", layer.getImageLayerProperties());
         this.dataSource = layer.getDataSource();
 
     }
 
-    public ImageLayer(IImageDataSource dataSource) {
-        super(new ImageLayerProperties(ColorTable.GRAYSCALE, new Range(0, 255)));
+    public ImageLayer(String name, ImageLayer layer) {
+        super(name, layer.getImageLayerProperties());
+        this.dataSource = layer.getDataSource();
+
+    }
+
+    public ImageLayer(String name, IImageDataSource dataSource) {
+        super(name, new ImageLayerProperties(ColorTable.GRAYSCALE, new Range(0, 255)));
         this.dataSource = dataSource;
 
         if (dataSource.isLoaded()) {
@@ -48,24 +57,28 @@ public abstract class ImageLayer<T extends IImageSpace> extends AbstractLayer {
             getImageLayerProperties().getClipRange().setHighClip(getData().maxValue());
 
         }
-        //data = dataSource.getData();
-       
+        
+
+    }
+
+    public ImageLayer(IImageDataSource dataSource) {
+        this(dataSource.getStem(), dataSource);
+
     }
 
     public ImageLayer(IImageDataSource dataSource, ImageLayerProperties _properties) {
-        super(_properties);
+        super(dataSource.getStem(), _properties);
         this.dataSource = dataSource;
 
 
         if (dataSource.isLoaded()) {
             ClipRange clip = _properties.getClipRange();
             _properties.clipRange.set(new ClipRange(getData().minValue(), getData().maxValue(), clip.getLowClip(), clip.getHighClip()));
-            //_properties.getClipRange().setLowClip(getData().minValue());
-            //_properties.getClipRange().setHighClip(getData().maxValue());
+
 
         }
 
-        //data = dataSource.getData();
+        
 
     }
 
@@ -83,7 +96,7 @@ public abstract class ImageLayer<T extends IImageSpace> extends AbstractLayer {
     }
 
     public String getLabel() {
-        return dataSource.getStem();
+        return getName();
     }
 
     public T getCoordinateSpace() {
@@ -100,7 +113,7 @@ public abstract class ImageLayer<T extends IImageSpace> extends AbstractLayer {
 
 
     public String toString() {
-        return dataSource.getImageInfo().getImageLabel();
+        return getName();
     }
 
     @Override

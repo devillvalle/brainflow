@@ -15,7 +15,7 @@ import com.brainflow.utils.DataType;
  * Time: 9:50:11 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MaskedData2D implements IImageData2D {
+public class MaskedData2D implements IImageData2D, IMaskedData2D {
 
     private IImageData2D source;
 
@@ -27,6 +27,8 @@ public class MaskedData2D implements IImageData2D {
         source = src;
         this.predicate = predicate;
     }
+
+    
 
 
     public int indexOf(int x, int y) {
@@ -40,6 +42,14 @@ public class MaskedData2D implements IImageData2D {
 
     public double worldValue(double realx, double realy, InterpolationFunction2D interp) {
         return predicate.mask(source.worldValue(realx, realy, interp)) ? 1 : 0;
+    }
+
+    public boolean isTrue(int index) {
+        return predicate.mask(source.value(index));
+    }
+
+    public boolean isTrue(int x, int y) {
+        return predicate.mask(source.value(x, y));
     }
 
     public double value(int x, int y) {
@@ -58,7 +68,20 @@ public class MaskedData2D implements IImageData2D {
         source.setValue(x, y, val);
     }
 
+    public int cardinality() {
+        //todo this code is duplicated from MaskedData3D
+        
+        MaskedIterator iter = new MaskedIterator();
+        int count = 0;
+        while (iter.hasNext()) {
+            if (iter.next() > 0) {
+                count++;
+            }
+        }
 
+        return count;
+
+    }
 
     public ImageIterator iterator() {
         return new MaskedIterator();

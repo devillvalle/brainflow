@@ -1,10 +1,7 @@
 package com.brainflow.core.mask;
 
 import com.brainflow.image.data.*;
-import com.brainflow.image.operations.BinaryOperand;
-import com.brainflow.image.operations.BinaryOperation;
-import com.brainflow.image.operations.Operations;
-import com.brainflow.image.operations.BooleanOperation;
+import com.brainflow.image.operations.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,13 +10,23 @@ import com.brainflow.image.operations.BooleanOperation;
  * Time: 9:25:47 AM
  * To change this template use File | Settings | File Templates.
  */
-public class MaskDataNode extends AbstractNode implements LeafNode, LeafVisitable {
+public class MaskDataNode extends AbstractNode implements ValueNode<IMaskedData3D>, LeafVisitable {
 
 
     private IMaskedData3D mask;
 
+    private String name;
+
+
     public MaskDataNode(IMaskedData3D mask) {
         this.mask = mask;
+        name = mask.getImageLabel();
+    }
+
+
+    public MaskDataNode(String name, IMaskedData3D mask) {
+        this.mask = mask;
+        this.name = name;
     }
 
     public void apply(TreeWalker walker) {
@@ -30,12 +37,25 @@ public class MaskDataNode extends AbstractNode implements LeafNode, LeafVisitabl
         return mask;
     }
 
+    public String getSymbol() {
+        return name;
+    }
+
+    public boolean isNumber() {
+        return false;
+    }
+
+    public IMaskedData3D evaluate() {
+        return mask;
+    }
+
     public LeafNode accept(LeafNode leaf, BinaryOperand op) {
         return leaf.visitMask(this, op );
     }
 
     public LeafNode visitImage(ImageDataNode left, BinaryOperand op) {
         BinaryOperation bop = Operations.lookup(op);
+
         if (!(bop instanceof BooleanOperation)) {
             throw new SemanticError("illegal operation : " + op);
         }
@@ -89,12 +109,23 @@ public class MaskDataNode extends AbstractNode implements LeafNode, LeafVisitabl
         return new MaskDataNode(data);
     }
 
+    public ValueNode visitUnary(UnaryOperand op) {
+        switch (op) {
+            case ADD:
+                throw new SemanticError("error: invalid operation " + op + " for binary operand");
+            case NEGATE:
+                throw new SemanticError("error: invalid operation " + op + " for binary operand");
+            default:
+                throw new RuntimeException("default switch case ...");
+        }
+
+    }
+
     public int depth() {
         return 0;
     }
 
     public String toString() {
-        //return mask.toString() + " (" + mask.cardinality() + ")";
 
         return mask.toString();
     }

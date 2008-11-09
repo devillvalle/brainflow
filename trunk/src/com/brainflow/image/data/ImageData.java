@@ -21,13 +21,83 @@ import test.Testable;
  */
 public class ImageData {
 
-     public static IImageData3D createConstantData(final double value, final IImageSpace space) {
-         if (space instanceof ImageSpace3D) {
-             return ImageData.createConstantData(value, (ImageSpace3D)space);
-         } else {
-             throw new IllegalArgumentException("IImageSpace argumnet must be of class ImageSpace3D");
-         }
-     }
+
+    public static IImageData3D createConstantData(final double value, final IImageSpace space) {
+        if (space instanceof ImageSpace3D) {
+            return ImageData.createConstantData(value, (ImageSpace3D) space);
+        } else {
+            throw new IllegalArgumentException("IImageSpace argumnet must be of class ImageSpace3D");
+        }
+    }
+
+    public static IMaskedData createMask(MaskPredicate pred, IImageData dat) {
+        if (dat instanceof IImageData2D) {
+            return new MaskedData2D((IImageData2D) dat, pred);
+        } else if (dat instanceof IImageData3D) {
+            return new MaskedData3D((IImageData3D) dat, pred);
+        }
+
+        throw new IllegalArgumentException("could not create mask, wrong data class " + dat.getClass());
+    }
+
+    public static double meanDeviation(IImageData data, double referenceVal) {
+        ImageIterator iter = data.iterator();
+
+        double sum = 0;
+        int count = 0;
+
+        while (iter.hasNext()) {
+            double val = iter.next();
+            if (val != 0) {
+                sum = sum + Math.pow(val - referenceVal, 2);
+                count++;
+            }
+
+        }
+
+        return sum/count;
+
+
+    }
+
+
+
+    public static double nonzeroMean(IImageData data) {
+        ImageIterator iter = data.iterator();
+
+        double sum = 0;
+        int count = 0;
+        while (iter.hasNext()) {
+            double val = iter.next();
+            if (val != 0) {
+                sum = sum + val;
+                count++;
+            }
+
+        }
+
+        return sum/count;
+
+    }
+
+    public static double mean(IImageData data) {
+        ImageIterator iter = data.iterator();
+
+        double sum = 0;
+
+        while (iter.hasNext()) {
+            sum = sum + iter.next();
+        }
+
+        return sum/iter.index();
+
+
+    }
+
+    public static IImageData3D negate(final IImageData3D data) {
+        return createScaledData(data, -1);
+
+    }
 
     public static IImageData3D createScaledData(final IImageData3D data, final double scaleFactor) {
         return new IImageData3D() {
@@ -36,7 +106,7 @@ public class ImageData {
             }
 
             public final int indexOf(int x, int y, int z) {
-                return data.indexOf(x,y,z);
+                return data.indexOf(x, y, z);
             }
 
             public Index3D indexToGrid(int idx) {
@@ -44,7 +114,7 @@ public class ImageData {
             }
 
             public void setValue(int x, int y, int z, double val) {
-                data.setValue(x,y,z,val);
+                data.setValue(x, y, z, val);
             }
 
             public Anatomy getAnatomy() {
@@ -68,7 +138,7 @@ public class ImageData {
             }
 
             public ImageIterator iterator() {
-                 return new BasicImageData3D.Iterator3D(this);
+                return new BasicImageData3D.Iterator3D(this);
             }
 
             public double maxValue() {
@@ -80,7 +150,7 @@ public class ImageData {
             }
 
             public void setValue(int idx, double val) {
-                data.setValue(idx,val);
+                data.setValue(idx, val);
             }
 
 
@@ -93,19 +163,19 @@ public class ImageData {
             }
 
             public final double value(float x, float y, float z, InterpolationFunction3D interp) {
-                return data.value(x,y,z,interp) * scaleFactor;
+                return data.value(x, y, z, interp) * scaleFactor;
             }
 
             public final double value(int x, int y, int z) {
-                return data.value(x,y,z) * scaleFactor;
+                return data.value(x, y, z) * scaleFactor;
             }
 
             public final double worldValue(float realx, float realy, float realz, InterpolationFunction3D interp) {
-                return data.worldValue(realx,realy,realz, interp) * scaleFactor;
+                return data.worldValue(realx, realy, realz, interp) * scaleFactor;
             }
 
             public String toString() {
-                return data.toString();    
+                return data.toString();
             }
 
             public boolean equals(Object obj) {
@@ -166,7 +236,6 @@ public class ImageData {
 
 
         };
-
 
 
     }

@@ -1,6 +1,7 @@
 package com.brainflow.core.mask;
 
 import com.brainflow.image.operations.BinaryOperand;
+import com.brainflow.image.operations.UnaryOperand;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,5 +13,9 @@ import com.brainflow.image.operations.BinaryOperand;
 public interface LeafVisitable {
 
     public LeafNode accept(LeafNode leaf, BinaryOperand op);
+
+    //public LeafNode accept(UnaryOperand op);
+
+
 
 }

@@ -3,10 +3,12 @@ package com.brainflow.core.mask;
 import com.brainflow.image.operations.BinaryOperand;
 import com.brainflow.image.operations.BinaryOperation;
 import com.brainflow.image.operations.Operations;
+import com.brainflow.image.operations.UnaryOperand;
 import com.brainflow.image.data.IMaskedData3D;
 import com.brainflow.image.data.MaskedData3D;
 import com.brainflow.image.data.IImageData3D;
 import com.brainflow.image.data.MaskPredicate;
+import com.sun.org.apache.bcel.internal.classfile.ConstantValue;
 
 import java.util.List;
 import java.util.Arrays;
@@ -18,7 +20,7 @@ import java.util.Arrays;
  * Time: 5:04:29 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ConstantNode extends AbstractNode implements LeafNode, ValueNode<Double> {
+public class ConstantNode extends AbstractNode implements ValueNode<Double> {
 
 
     private double value;
@@ -45,12 +47,13 @@ public class ConstantNode extends AbstractNode implements LeafNode, ValueNode<Do
     }
 
     public int depth() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 0;
     }
 
     public LeafNode accept(LeafNode leaf, BinaryOperand op) {
         return leaf.visitConstant(this, op);
     }
+
 
     public LeafNode visitImage(ImageDataNode left, BinaryOperand op) {
 
@@ -63,12 +66,62 @@ public class ConstantNode extends AbstractNode implements LeafNode, ValueNode<Do
         });
 
         return new MaskDataNode(mdat);
+    }
+
+    public LeafNode visitUnary(UnaryOperand op) {
+        switch (op) {
+            case ADD:
+                return this;
+            case NEGATE:
+                System.out.println("negating node");
+                return new ConstantNode(-value);
+            default:
+                throw new SemanticError("unsupported operation " + op + " for value : " + value);
+        }
 
     }
 
     public LeafNode visitConstant(ConstantNode other, BinaryOperand op) {
+        switch (op) {
+            case AND:
+                throw new SemanticError("Cannot apply " + op + " to two constants");
+            case EQ:
+                if (other.value == value) {
+                    return new ConstantNode(1);
+                } else {
+                    return new ConstantNode(0);
+                }
+            case GT:
+                if (other.value > value) {
+                    return new ConstantNode(1);
+                } else {
+                    return new ConstantNode(0);
+                }
 
-        throw new UnsupportedOperationException("");
+            case GT_EQ:
+                if (other.value >= value) {
+                    return new ConstantNode(1);
+                } else {
+                    return new ConstantNode(0);
+                }
+            case LT:
+                if (other.value < value) {
+                    return new ConstantNode(1);
+                } else {
+                    return new ConstantNode(0);
+                }
+            case LT_EQ:
+                if (other.value <= value) {
+                    return new ConstantNode(1);
+                } else {
+                    return new ConstantNode(0);
+                }
+
+            case OR:
+                throw new SemanticError("Cannot apply " + op + " to two constants");
+            default:
+                throw new SemanticError("error: reached default switch case ...");
+        }
     }
 
     public LeafNode visitMask(MaskDataNode other, BinaryOperand op) {

@@ -52,21 +52,37 @@ public class AnalysisAdapter implements TreeWalker {
 
     }
 
-    public void caseNegationNode(NegationNode node) {
-        inNegation(node);
-        node.getNegatable().apply(this);
-        outNegation(node);
+    public void caseFunctionNode(FunctionNode node) {
+        inFunction(node);
+        for (INode cnode : node.getChildren()) {
+            cnode.apply(this);
+        }        
+        outFunction(node);
     }
 
-    public void inNegation(NegationNode node) {
+    public void inFunction(FunctionNode node) {
+
+    }
+
+    public void outFunction(FunctionNode node) {
+
+    }
+
+    public void caseUnaryNode(UnaryNode node) {
+        inUnary(node);
+        node.getChild().apply(this);
+        outUnary(node);
+    }
+
+    public void inUnary(UnaryNode node) {
         //System.out.println("in negation " + node);
-        System.out.println("ngetable in class : " + node.getNegatable().getClass());
+        System.out.println("in unary node " + node);
 
     }
 
-    public void outNegation(NegationNode node) {
+    public void outUnary(UnaryNode node) {
         //System.out.println("out negation " + node);
-        System.out.println("ngetable out class : " + node.getNegatable().getClass());
+        System.out.println("out unary node " + node);
 
     }
 

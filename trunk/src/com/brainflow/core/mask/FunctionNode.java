@@ -2,6 +2,10 @@ package com.brainflow.core.mask;
 
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.operations.BinaryOperand;
+import com.brainflow.image.operations.UnaryOperand;
+
+import java.util.List;
+import java.util.Arrays;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,8 +18,15 @@ public class FunctionNode extends AbstractNode implements ValueNode<IImageData> 
 
     private IFunction<IImageData> function;
 
-    public FunctionNode(IFunction<IImageData> function) {
+    private List<INode> argumentNodes;
+
+    public FunctionNode(IFunction<IImageData> function, List<INode> argumentNodes) {
         this.function = function;
+        this.argumentNodes = argumentNodes;
+
+        for (INode node : argumentNodes) {
+            node.setParent(this);
+        }
     }
 
     public String getSymbol() {
@@ -27,20 +38,33 @@ public class FunctionNode extends AbstractNode implements ValueNode<IImageData> 
     }
 
     public IImageData evaluate() {
-        return function.evaluate();
+        return function.evaluate(argumentNodes);
+    }
+
+    public List<INode> getChildren() {
+        return argumentNodes;
     }
 
     public int depth() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        int md = 0;
+        for (INode node : argumentNodes) {
+            md = Math.max(md, node.depth());
+        }
+
+        return md + 1;
     }
 
     public void apply(TreeWalker walker) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        walker.caseFunctionNode(this);
     }
 
     @Override
     public String toString() {
         return function.getName();
+    }
+
+    public LeafNode visitUnary(UnaryOperand op) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public LeafNode visitImage(ImageDataNode other, BinaryOperand op) {

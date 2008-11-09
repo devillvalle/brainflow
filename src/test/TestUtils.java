@@ -34,7 +34,8 @@ public class TestUtils {
     }
 
     public static IImageDisplayModel quickModel(String headerName) {
-        ImageLayer layer = quickLayer(headerName);
+        //todo hack cast
+        ImageLayer3D layer = (ImageLayer3D)quickLayer(headerName);
         IImageDisplayModel model = new ImageDisplayModel("model");
         model.addLayer(layer);
         return model;

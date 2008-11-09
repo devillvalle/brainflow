@@ -7,16 +7,13 @@ package com.brainflow.image.data;
  * Time: 11:44:10 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface IMaskedData3D extends IImageData3D {
+public interface IMaskedData3D extends IImageData3D, IMaskedData {
 
 
 
-    public int cardinality();
 
     public boolean isTrue(int x, int y, int z);
 
-    public boolean isTrue(int index);
 
-   // public MaskPredicate getPredicate();
 
 }

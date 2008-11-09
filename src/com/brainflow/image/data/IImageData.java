@@ -35,6 +35,8 @@ public interface IImageData extends DataAccessor {
 
     public ImageIterator iterator();
 
+    //public IImageData multiply(double val);
+
     
 
     

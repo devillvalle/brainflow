@@ -1,5 +1,7 @@
 package com.brainflow.colormap;
 
+import org.codehaus.jparsec.functors.Binary;
+
 import javax.swing.*;
 
 import java.util.ListIterator;
@@ -64,7 +66,7 @@ public final class BinaryColorMap extends AbstractColorMap {
     }
 
     public IColorMap newClipRange(double lowClip, double highClip) {
-        return this;
+        return new BinaryColorMap(foregroundColor);
     }
 
     public static void main(String[] args) {

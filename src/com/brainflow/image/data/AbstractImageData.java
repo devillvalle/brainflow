@@ -76,6 +76,4 @@ public abstract class AbstractImageData implements IImageData {
     }
 
     
-
-
 }

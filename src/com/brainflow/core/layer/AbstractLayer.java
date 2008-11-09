@@ -25,8 +25,11 @@ public abstract class AbstractLayer {
 
     private ImageLayerProperties properties;
 
-    protected AbstractLayer(ImageLayerProperties properties) {
+    private String name;
+
+    protected AbstractLayer(String name, ImageLayerProperties properties) {
         this.properties = properties;
+        this.name = name;
         init();
     }
 
@@ -35,6 +38,9 @@ public abstract class AbstractLayer {
     }
 
 
+    public String getName() {
+        return name;
+    }
 
     public abstract double getValue(AnatomicalPoint3D pt);
 
@@ -64,18 +70,6 @@ public abstract class AbstractLayer {
     public abstract Object getDataSource();
 
     private void init() {
-        // todo move to ImageLayerProperties class (or rethink entirely?)
-        // this whole thing is obscene, avert your eyes
-        /*properties.getColorMap().addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-
-                support.firePropertyChange(new PropertyChangeEvent(AbstractLayer.this, ImageLayerProperties.COLOR_MAP_PROPERTY,
-                        evt.getOldValue(), evt.getNewValue()));
-            }
-        });*/
-
-
-
 
 
 

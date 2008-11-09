@@ -22,7 +22,7 @@ public class CoordinateLayer extends AbstractLayer {
     private CoordinateSet3D coordinates;
 
     public CoordinateLayer(ImageLayerProperties properties, CoordinateSet3D coords) {
-        super(properties);
+        super("coords", properties);
         coordinates = coords;
     }
 

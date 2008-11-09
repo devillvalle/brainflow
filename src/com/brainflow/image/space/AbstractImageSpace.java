@@ -171,7 +171,6 @@ public abstract class AbstractImageSpace implements IImageSpace {
         return true;
     }
 
-    @Override
     public IImageSpace union(ICoordinateSpace other) {
        if (!sameAxes(other)) {
             throw new IllegalArgumentException("cannot perform union for ImageSpaces with different axis orientations");

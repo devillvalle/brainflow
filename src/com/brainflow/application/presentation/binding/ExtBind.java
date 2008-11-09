@@ -9,7 +9,7 @@ import net.java.dev.properties.BaseProperty;
 
 import com.jidesoft.swing.CheckBoxList;
 import com.brainflow.gui.BiSlider;
-import com.brainflow.gui.ToggleBar;
+import com.brainflow.gui.ToggleBarX;
 import com.brainflow.gui.MultiSelectToggleBar;
 import com.brainflow.core.ClipRange;
 
@@ -47,7 +47,7 @@ public class ExtBind extends SwingBind {
         new BiSliderAdapter().bind(property, cmp);
     }
 
-    public void bindToggleBar(BaseProperty<Integer> property, ToggleBar cmp) {
+    public void bindToggleBar(BaseProperty<Integer> property, ToggleBarX cmp) {
         new ToggleBarAdapterX().bind(property, cmp);
     }
 
@@ -89,7 +89,7 @@ public class ExtBind extends SwingBind {
     }
 
 
-    public void bindContent(IndexedProperty<?> property, ToggleBar cmp) {
+    public void bindContent(IndexedProperty<?> property, ToggleBarX cmp) {
         cmp.putClientProperty("Property", property);
         cmp.setModel(new ComboAndListModel(property));
     }

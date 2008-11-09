@@ -1,9 +1,6 @@
 package com.brainflow.application.presentation.binding;
 
-import com.jidesoft.swing.CheckBoxList;
-import com.brainflow.gui.ToggleBar;
-
-import java.util.List;
+import com.brainflow.gui.ToggleBarX;
 
 import net.java.dev.properties.binding.swing.adapters.SwingAdapter;
 import net.java.dev.properties.BaseProperty;
@@ -18,14 +15,14 @@ import javax.swing.event.ListSelectionEvent;
  * Time: 10:41:05 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ToggleBarAdapterX extends SwingAdapter<Integer, ToggleBar> implements ListSelectionListener {
+public class ToggleBarAdapterX extends SwingAdapter<Integer, ToggleBarX> implements ListSelectionListener {
 
 
-    protected void bindListener(BaseProperty<Integer> integerBaseProperty, ToggleBar component) {
+    protected void bindListener(BaseProperty<Integer> integerBaseProperty, ToggleBarX component) {
         component.addListSelectionListener(this);
     }
 
-    protected void unbindListener(BaseProperty<Integer> integerBaseProperty, ToggleBar component) {
+    protected void unbindListener(BaseProperty<Integer> integerBaseProperty, ToggleBarX component) {
         component.removeListSelectionListener(this);
 
     }
@@ -36,7 +33,7 @@ public class ToggleBarAdapterX extends SwingAdapter<Integer, ToggleBar> implemen
     }
 
     protected Class getComponentType() {
-        return ToggleBar.class;
+        return ToggleBarX.class;
     }
 
     protected void updateUI(Integer newValue) {

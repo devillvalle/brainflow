@@ -1,10 +1,6 @@
 package com.brainflow.core.mask;
 
 import test.Testable;
-import com.brainflow.image.data.*;
-import com.brainflow.image.operations.Operations;
-import com.brainflow.image.operations.BinaryOperation;
-import com.brainflow.image.operations.BooleanOperation;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,20 +9,19 @@ import com.brainflow.image.operations.BooleanOperation;
  * Time: 8:24:59 AM
  * To change this template use File | Settings | File Templates.
  */
-public class MaskSubstitution extends AnalysisAdapter {
+public class MaskEvaluator extends AnalysisAdapter {
 
 
     @Override
     @Testable
     public void inComparison(ComparisonNode node) {
 
-        if (node.left() instanceof LeafNode && node.right() instanceof LeafNode) {
+        if (node.left().isLeaf() && node.right().isLeaf()) {
             LeafNode left = (LeafNode) node.left();
             LeafNode right = (LeafNode) node.right();
 
             LeafNode mnode = left.accept(right, node.getOp());
             node.replaceBy(mnode);
-            //left.reduce(right)
 
         }
 
@@ -38,17 +33,13 @@ public class MaskSubstitution extends AnalysisAdapter {
 
     }
 
-
     @Override
-    public void inNegation(NegationNode node) {
-        super.inNegation(node);   
-        
-    }
-
-    @Override
-    public void outNegation(NegationNode node) {
-        super.outNegation(node);   
-        //node.getNegatable();
+    public void inUnary(UnaryNode node) {
+        if (node.getChild().isLeaf()) {
+            LeafNode lnode = (LeafNode) node.getChild();
+            LeafNode ret = lnode.visitUnary(node.getOp());
+            node.replaceBy(ret);
+        }
     }
 
     @Override

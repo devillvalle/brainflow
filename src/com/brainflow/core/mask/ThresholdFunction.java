@@ -2,6 +2,8 @@ package com.brainflow.core.mask;
 
 import com.brainflow.image.data.IMaskedData3D;
 
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Brad
@@ -13,6 +15,14 @@ public class ThresholdFunction implements IFunction<IMaskedData3D> {
 
     public int getNumArguments() {
         return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<Class> getArgumentTypes() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public IMaskedData3D evaluate(List<INode> arguments) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public IMaskedData3D evaluate() {

@@ -21,9 +21,9 @@ public interface TreeWalker {
 
     public void caseMaskDataNode(MaskDataNode node);
 
-    public void caseNegationNode(NegationNode node);
+    public void caseUnaryNode(UnaryNode node);
 
-
+    public void caseFunctionNode(FunctionNode node);
 
 
 }

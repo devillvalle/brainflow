@@ -1,27 +1,13 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.application.actions.RotateLayersCommand;
-import com.brainflow.application.dnd.AbstractLayerTransferable;
-import com.brainflow.application.presentation.controls.CoordinateSpinner;
 import com.brainflow.application.presentation.binding.ExtBind;
-import com.brainflow.core.layer.AbstractLayer;
-import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.core.ImageView;
-import com.brainflow.core.SliceRenderer;
-import com.brainflow.gui.ToggleBar;
-import com.brainflow.image.anatomy.AnatomicalPoint3D;
-import com.brainflow.image.space.IImageSpace;
+import com.brainflow.gui.ToggleBarX;
 import com.pietschy.command.ActionCommand;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.*;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Arrays;
 
 /**
@@ -35,7 +21,7 @@ public class CanvasBar extends ImageViewPresenter {
 
     private JToolBar canvasBar;
 
-    private ToggleBar toggleBar;
+    private ToggleBarX toggleBar;
 
 
 
@@ -66,7 +52,7 @@ public class CanvasBar extends ImageViewPresenter {
         
         canvasBar.add(rotateButton);
 
-        toggleBar = new ToggleBar(Arrays.asList("Tabula Rasa"));
+        toggleBar = new ToggleBarX(Arrays.asList("Tabula Rasa"));
         canvasBar.add(toggleBar);
 
     }

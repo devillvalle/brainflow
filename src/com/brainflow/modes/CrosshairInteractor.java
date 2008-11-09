@@ -38,26 +38,7 @@ public class CrosshairInteractor extends ImageViewInteractor {
         }
 
         AnatomicalPoint3D cursorPos = iview.getCursorPos();
-        
         AnatomicalPoint3D ap = iview.getAnatomicalLocation(event.getComponent(), event.getPoint());
-
-
-        //IImageSpace fromSpace = iview.getViewport().getBounds();
-
-         //AxisRange a1 = iview.getSelectedPlot().getXAxisRange();
-         //AxisRange a2 =  iview.getSelectedPlot().getYAxisRange();
-
-        //ImageAxis xaxis = new ImageAxis(a1, 1.0);
-        //ImageAxis yaxis = new ImageAxis(a2, 1.0);
-
-
-        //ImageSpace2D fromSpace = new ImageSpace2D(xaxis, yaxis);
-        //AnatomicalPoint2D fromPoint = new AnatomicalPoint2D((Anatomy2D)fromSpace.getAnatomy(), ap.getValue(), ap.getY());
-        //AnatomicalPoint2D.convertPoint(fromSpace, fromPoint, cursorPos.getAnatomy().);
-
-
-        //AnatomicalPoint2D.convertPoint()
-
         AnatomicalPoint3D tap = ap.convertTo(cursorPos.getSpace());
 
 

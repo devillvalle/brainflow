@@ -28,6 +28,8 @@ public class BinaryImageData3D extends BinaryImageData implements IMaskedData3D 
         init();
     }
 
+
+
     private BinaryImageData3D(IImageSpace3D space, BitVector bits) {
         super(space, bits);
         init();
@@ -37,8 +39,10 @@ public class BinaryImageData3D extends BinaryImageData implements IMaskedData3D 
         return (ImageSpace3D)space;
     }
 
-    public BinaryImageData3D(MaskedData3D src) {
+    public BinaryImageData3D(IMaskedData3D src) {
         super(src.getImageSpace());
+
+        
         BitVector bits = getBitVector();
         ImageIterator iter = src.iterator();
 
@@ -62,7 +66,7 @@ public class BinaryImageData3D extends BinaryImageData implements IMaskedData3D 
     }
 
     private void init() {
-        //todo these constants shouldf be moved to image space
+        //todo these constants should be moved to image space
         planeSize = space.getDimension(Axis.X_AXIS) * space.getDimension(Axis.Y_AXIS);
         dim0 = space.getDimension(Axis.X_AXIS);
 
@@ -75,7 +79,7 @@ public class BinaryImageData3D extends BinaryImageData implements IMaskedData3D 
 
         BitVector ret = getBitVector().copy();
         ret.or(data.getBitVector());
-        return new BinaryImageData3D((ImageSpace3D) getImageSpace(), ret);
+        return new BinaryImageData3D(getImageSpace(), ret);
     }
 
     public BinaryImageData3D AND(BinaryImageData data) {

@@ -2,6 +2,7 @@ package com.brainflow.core.mask;
 
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.operations.BinaryOperand;
+import com.brainflow.image.operations.UnaryOperand;
 
 import java.util.List;
 import java.util.Arrays;
@@ -60,6 +61,10 @@ public class VariableNode extends AbstractNode implements ValueNode {
 
     public List<INode> getChildren() {
         return Arrays.asList();
+    }
+
+    public LeafNode visitUnary(UnaryOperand op) {
+        throw new UnsupportedOperationException();       
     }
 
     public LeafNode visitImage(ImageDataNode other, BinaryOperand op) {

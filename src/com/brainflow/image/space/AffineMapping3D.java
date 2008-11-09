@@ -44,67 +44,67 @@ public class AffineMapping3D implements ImageMapping3D {
         return mat.toTranslationVector();
     }
 
-    @Override
+
     public Vector3f gridToWorld(int i, int j, int k, Vector3f out) {
         return mat.mult3f(i,j,k, out);
     }
 
-    @Override
+
     public Vector3f gridToWorld(Vector3f in) {
         return mat.mult(in, new Vector3f());
     }
 
-    @Override
+
     public Vector3f gridToWorld(float i, float j, float k) {
         return mat.mult3f(i,j,k, new Vector3f());
     }
 
-    @Override
+
     public Vector3f gridToWorld(float i, float j, float k, Vector3f out) {
         return mat.mult3f(i,j,k, out);
     }
 
-    @Override
+
     public Vector3f gridToWorld(int i, int j, int k) {
         return mat.mult3f(i,j,k, new Vector3f());
     }
 
-    @Override
+
     public Vector3f worldToGrid(Vector3f in, Vector3f out) {
         return invMat.mult3f(in.x, in.y, in.z, out);
     }
 
-    @Override
+
     public Vector3f worldToGrid(Vector3f in) {
         return invMat.mult(in, new Vector3f());
     }
 
-    @Override
+
     public final float gridToWorldX(float x, float y, float z) {
         return mat.multX(x,y,z);
     }
 
-    @Override
+
     public final float gridToWorldY(float x, float y, float z) {
         return mat.multY(x,y,z);
     }
 
-    @Override
+
     public final float gridToWorldZ(float x, float y, float z) {
         return mat.multZ(x,y,z);
     }
 
-    @Override
+
     public final float worldToGridX(float x, float y, float z) {
         return invMat.multX(x,y,z);
     }
 
-    @Override
+
     public final float worldToGridY(float x, float y, float z) {
         return invMat.multY(x,y,z);
     }
 
-    @Override
+   
     public final float worldToGridZ(float x, float y, float z) {
         return invMat.multZ(x,y,z);
     }

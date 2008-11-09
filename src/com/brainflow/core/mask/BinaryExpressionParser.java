@@ -2,6 +2,7 @@ package com.brainflow.core.mask;
 
 
 import com.brainflow.image.operations.BinaryOperand;
+import com.brainflow.image.operations.UnaryOperand;
 import org.codehaus.jparsec.*;
 import org.codehaus.jparsec.functors.Binary;
 import org.codehaus.jparsec.functors.Map;
@@ -25,11 +26,7 @@ public class BinaryExpressionParser {
     enum UnaryOperator implements Unary<INode> {
         NEG {
             public INode map(INode iNode) {
-                if (iNode instanceof ConstantNode) {
-                    return new ConstantNode(-((ConstantNode)iNode).evaluate());
-                } else {
-                    throw new SemanticError("can only negate a constant value");
-                }
+                return new UnaryNode(iNode, UnaryOperand.NEGATE);
                 
             }
         }
@@ -211,9 +208,9 @@ public class BinaryExpressionParser {
     public static void main(String[] args) {
 
         Parser<INode> parser = new BinaryExpressionParser().createParser();
-        INode node = parser.parse("V1 > 5");
+        INode node = parser.parse("-5 > 6");
 
-        MaskSubstitution ms = new MaskSubstitution();
+        MaskEvaluator ms = new MaskEvaluator();
         ms.start(new RootNode(node));
         System.out.println("node : " + node);
         //VariableSubstitution builder = new VariableSubstitution(null);

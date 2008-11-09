@@ -19,6 +19,8 @@ import javax.swing.event.ListSelectionEvent;
  * To change this template use File | Settings | File Templates.
  */
 public class ToggleBarAdapterX extends SwingAdapter<Integer, ToggleBar> implements ListSelectionListener {
+
+
     protected void bindListener(BaseProperty<Integer> integerBaseProperty, ToggleBar component) {
         component.addListSelectionListener(this);
     }
@@ -28,7 +30,6 @@ public class ToggleBarAdapterX extends SwingAdapter<Integer, ToggleBar> implemen
 
     }
 
-    private void joke() {}
 
     protected Class getType() {
         return Integer.class;

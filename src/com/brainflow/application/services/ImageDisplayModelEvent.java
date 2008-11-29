@@ -10,7 +10,7 @@
 package com.brainflow.application.services;
 
 import com.brainflow.application.BrainFlowProject;
-import com.brainflow.application.toplevel.BrainflowProjectEvent;
+import com.brainflow.application.toplevel.BrainFlowProjectEvent;
 import com.brainflow.core.IImageDisplayModel;
 import org.bushe.swing.event.AbstractEventServiceEvent;
 
@@ -29,7 +29,7 @@ public class ImageDisplayModelEvent extends AbstractEventServiceEvent {
         LAYER_INTERVAL_REMOVED
     }
 
-    private BrainflowProjectEvent event;
+    private BrainFlowProjectEvent event;
 
     private TYPE type;
 
@@ -38,7 +38,7 @@ public class ImageDisplayModelEvent extends AbstractEventServiceEvent {
      * Creates a new instance of ImageDisplayModelEvent
      */
 
-    public ImageDisplayModelEvent(BrainflowProjectEvent _event, TYPE _type) {
+    public ImageDisplayModelEvent(BrainFlowProjectEvent _event, TYPE _type) {
         super(_event);
         event = _event;
         type = _type;

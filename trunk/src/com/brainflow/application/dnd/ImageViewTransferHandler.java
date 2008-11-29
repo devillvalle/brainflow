@@ -50,7 +50,7 @@ public class ImageViewTransferHandler extends ImageDropHandler {
             ImageLayer3D layeradd = (ImageLayer3D)layer;
             // todo hack cast
             if (dset.containsLayer(layeradd)) {
-                System.out.println("COPYING LAYER");
+                //System.out.println("COPYING LAYER");
                 layeradd = new ImageLayer3D(layeradd);
 
             }

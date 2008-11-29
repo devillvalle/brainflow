@@ -481,7 +481,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
                     listener.maskChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
 
                 }
-                System.out.println("mask changed!");
+                //System.out.println("mask changed!");
             }
         });
 

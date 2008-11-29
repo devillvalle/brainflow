@@ -7,11 +7,13 @@
 package com.brainflow.application.toplevel;
 
 import com.brainflow.image.io.IImageDataSource;
+import com.brainflow.image.data.IImageData;
 import com.brainflow.application.ImageProgressDialog;
 import com.brainflow.application.services.LoadableImageStatusEvent;
 import org.bushe.swing.event.EventBus;
 
 import java.util.LinkedHashMap;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -87,10 +89,21 @@ public class DataSourceManager {
         final ImageProgressDialog id = new ImageProgressDialog(dataSource, DisplayManager.getInstance().getSelectedCanvas().getComponent()) {
 
             protected void done() {
+                try {
+                    IImageData data = get();
+                } catch(ExecutionException e1) {
+                    throw new RuntimeException(e1);
+                } catch(InterruptedException e2) {
+                    throw new RuntimeException(e2);
+                }
+
+
                 listener.actionPerformed(new ActionEvent(dataSource, 0, "LOADED"));
                 getDialog().setVisible(false);
                
             }
+
+            
         };
 
         return id;

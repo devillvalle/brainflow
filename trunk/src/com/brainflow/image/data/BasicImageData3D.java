@@ -4,14 +4,11 @@ import com.brainflow.image.interpolation.InterpolationFunction3D;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.image.space.Axis;
-import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.image.space.IImageSpace3D;
 import com.brainflow.math.ArrayUtils;
 import com.brainflow.math.Index3D;
 import com.brainflow.utils.DataType;
 import test.TestUtils;
-
-import java.math.BigDecimal;
 
 
 /**

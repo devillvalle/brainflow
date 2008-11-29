@@ -9,8 +9,6 @@ import com.brainflow.math.ArrayUtils;
 import com.brainflow.utils.IRange;
 import test.TestUtils;
 
-import java.util.Arrays;
-
 /**
  * <p>Title: </p>
  * <p>Description: </p>

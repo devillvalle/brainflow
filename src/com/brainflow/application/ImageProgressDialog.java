@@ -111,9 +111,11 @@ public class ImageProgressDialog extends SwingWorker<IImageData, Integer> implem
 
     }
 
-    protected IImageData doInBackground() throws Exception {
+    protected IImageData doInBackground() throws BrainFlowException {
         return loadable.load(this);
     }
+
+
 
 
     public void setValue(int val) {
@@ -144,6 +146,8 @@ public class ImageProgressDialog extends SwingWorker<IImageData, Integer> implem
         message = _message;
 
     }
+
+
 
     public void setIndeterminate(boolean b) {
         //To change body of implemented methods use File | Settings | File Templates.

@@ -72,7 +72,7 @@ public class BrainCanvasTransferHandler extends ImageDropHandler {
                 IImageDisplayModel model = view.getModel();
 
                 if (model.containsLayer(layeradd)) {
-                    System.out.println("COPYING LAYER");
+                    //System.out.println("COPYING LAYER");
                     layeradd = new ImageLayer3D(layeradd);
 
                 }

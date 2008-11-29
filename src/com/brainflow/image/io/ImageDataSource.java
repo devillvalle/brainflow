@@ -41,6 +41,7 @@ public class ImageDataSource extends AbstractImageDataSource {
 
 
     public IImageData getData() {
+        
        //todo check if loaded?
         return dataRef;
     }

@@ -44,7 +44,7 @@ public class TaskQueue<T> {
                 protected void done() {
                     super.done();
                     try {
-                        System.out.println("result : " + get());
+                        //System.out.println("result : " + get());
                     } catch(Exception e) {
                         e.printStackTrace();
                     }

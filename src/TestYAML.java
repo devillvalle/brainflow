@@ -17,7 +17,7 @@ public class TestYAML {
     public static void main(String[] args) {
         try {
             HashMap map = (HashMap)YAML.load(new FileReader("c:/javacode/googlecode/brainflow/test.yml"));
-            System.out.println(map);
+            //System.out.println(map);
             for (Iterator iter = map.keySet().iterator(); iter.hasNext(); ) {
                 Object obj = iter.next();
                 //System.out.println(obj);

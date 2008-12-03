@@ -9,8 +9,6 @@ import com.brainflow.colormap.ColorTable;
 import com.brainflow.colormap.IColorMap;
 import com.brainflow.colormap.LinearColorMap2;
 import com.brainflow.core.*;
-import com.brainflow.core.layer.AbstractLayer;
-import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.core.layer.ImageLayer3D;
 import com.brainflow.core.layer.ImageLayerProperties;
 import com.brainflow.image.anatomy.AnatomicalPoint3D;
@@ -19,6 +17,7 @@ import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.utils.Range;
+import com.brainflow.gui.ExceptionDialog;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.docking.DefaultDockingManager;
@@ -33,7 +32,7 @@ import com.jidesoft.status.LabelStatusBarItem;
 import com.jidesoft.status.StatusBar;
 import com.jidesoft.swing.JideBoxLayout;
 import com.jidesoft.swing.JideTabbedPane;
-import com.jidesoft.dialog.JideOptionPane;
+import com.jidesoft.swing.JideSplitPane;
 import com.jidesoft.action.CommandBar;
 import com.jidesoft.action.CommandMenuBar;
 import com.pietschy.command.CommandContainer;
@@ -43,13 +42,14 @@ import com.pietschy.command.group.CommandGroup;
 import com.pietschy.command.group.ExpansionPointBuilder;
 import com.pietschy.command.toggle.ToggleCommand;
 import com.pietschy.command.toggle.ToggleGroup;
-import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
+import com.pietschy.command.ActionCommand;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.VFS;
 
 import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
+
 
 
 import javax.swing.*;
@@ -70,6 +70,8 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+import de.javasoft.plaf.synthetica.*;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -86,7 +88,11 @@ public class BrainFlow {
     }
 
 
-    
+    private SplashScreen splash;
+
+    private Graphics2D splashGraphics;
+
+
     private final static Logger log = Logger.getLogger(BrainFlow.class.getCanonicalName());
 
     private BrainFrame brainFrame = null;
@@ -125,6 +131,7 @@ public class BrainFlow {
             public void run() {
                 try {
                     log.info("Launching BrainFlow ...");
+
                     bflow.launch();
                 } catch (Throwable e) {
                     Logger.getAnonymousLogger().severe("Error Launching BrainFlow, exiting");
@@ -137,6 +144,69 @@ public class BrainFlow {
         });
 
     }
+
+    private void openSplash() {
+         splash = SplashScreen.getSplashScreen();
+         if (splash == null)
+         {
+             System.out.println(
+                 "Error: no splash image specified on the command line");
+             return;
+         }
+
+         // compute base positions for text and progress bar
+         Dimension splashSize = splash.getSize();
+         textY = splashSize.height - 20;
+         barY = splashSize.height - 30;
+
+         splashGraphics = splash.createGraphics();
+    }
+
+
+     private static final int X = 20, W = 250;
+     private static final int TEXT_H = 10, BAR_H = 20;
+     private static final int NUM_BUBBLES = 10;
+
+     private int textY, barY;
+     private int barPos = 0;
+
+
+     public void closeSplash() {
+         if (splash != null) {
+             splash.close();
+         }
+     }
+
+     public void drawSplashProgress(String msg)
+     {
+         if (splashGraphics == null) return;
+
+         // clear what we don't need from previous state
+         splashGraphics.setComposite(AlphaComposite.Clear);
+         splashGraphics.fillRect(X, textY, W, TEXT_H+20);
+
+         /*if (barPos == 0)
+         {
+             splashGraphics.fillRect(X, barY, W, BAR_H);
+         }*/
+
+         // draw new state
+         splashGraphics.setPaintMode();
+
+         // draw message
+         splashGraphics.setColor(Color.WHITE);
+         splashGraphics.drawString(msg, X, textY + TEXT_H);
+
+         // draw progress bar
+         //splashGraphics.setColor(Color.BLUE);
+         //splashGraphics.fillOval(X + barPos * (BAR_H + 1), barY, BAR_H, BAR_H);
+
+         // show changes
+
+         if (splash.isVisible())
+            splash.update();
+         //barPos = (barPos + 1) % NUM_BUBBLES;
+     }
 
 
     public JFrame getApplicationFrame() {
@@ -151,23 +221,30 @@ public class BrainFlow {
 
 
         try {
+            openSplash();
+            drawSplashProgress("loading look and feel");
 
             String osname = System.getProperty("os.name");
+            System.out.println("os name is : " + osname);
             if (osname.toUpperCase().contains("WINDOWS")) {
-               
-                UIManager.setLookAndFeel(new WindowsLookAndFeel());
+                UIManager.setLookAndFeel(new de.javasoft.plaf.synthetica.SyntheticaSimple2DLookAndFeel());
+                //UIManager.setLookAndFeel(new SyntheticaWhiteVisionLookAndFeel());
+                //UIManager.setLookAndFeel(new WindowsLookAndFeel());
                 LookAndFeelFactory.installJideExtension();
 
             } else if (osname.toUpperCase().contains("LINUX")) {
-                UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-                LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
-
-            } else if (osname.toUpperCase().contains("MAC")) {
-                System.setProperty("Quaqua.tabLayoutPolicy","wrap");
-                UIManager.setLookAndFeel(new ch.randelshofer.quaqua.QuaquaLookAndFeel());
-                               
+                System.out.println("linux detected");
+                //UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+                //LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
+                UIManager.setLookAndFeel(new SyntheticaWhiteVisionLookAndFeel());
+                //UIManager.setLookAndFeel(new WindowsLookAndFeel());
                 LookAndFeelFactory.installJideExtension();
 
+            } else if (osname.toUpperCase().contains("MAC")) {
+                //System.setProperty("Quaqua.tabLayoutPolicy","wrap");
+                UIManager.setLookAndFeel(new SyntheticaWhiteVisionLookAndFeel());
+                //UIManager.setLookAndFeel(new ch.randelshofer.quaqua.QuaquaLookAndFeel());
+                LookAndFeelFactory.installJideExtension();
             }
 
         } catch (UnsupportedLookAndFeelException e) {
@@ -185,65 +262,76 @@ public class BrainFlow {
         }
 
 
-
+        drawSplashProgress("creating frame ...");
         brainFrame = new BrainFrame();
         statusBar = new StatusBar();
 
         brainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        log.info("initializing DisplayManager ...");
-        DisplayManager.getInstance().createCanvas();
 
-        log.info("initializing resources ...");
+        drawSplashProgress("initializing DisplayManager ...");
+        DisplayManager.getInstance().newCanvas();
 
+
+        drawSplashProgress("initializing resources ...");
 
         FutureTask<Boolean> initResources = new FutureTask<Boolean>(new Callable<Boolean>() {
             public Boolean call() throws Exception {
-                return initializeResources();
+                System.out.println("initializing resources");
+                Boolean ret = initializeResources();
+                System.out.println("done initializing resources");
+                return ret;
             }
         });
 
         threadService.execute(initResources);
 
 
-        log.info("loading commands ...");
+
+        drawSplashProgress("loading commands ...");
         FutureTask<Boolean> loadCommandsTask = new FutureTask<Boolean>(new Callable<Boolean>() {
             public Boolean call() throws Exception {
-                return loadCommands();
+                System.out.println("loading commands");
+                Boolean ret = loadCommands();
+                System.out.println("done loading commands ...");
+                return ret;
             }
         });
 
         threadService.execute(loadCommandsTask);
 
 
-        log.info("initializing IO ...");
+        drawSplashProgress("initializing IO ...");
         FutureTask<Boolean> initIOTask = new FutureTask<Boolean>(new Callable<Boolean>() {
             public Boolean call() throws Exception {
-                return initImageIO();
+                System.out.println("initializing IO ...");
+                Boolean ret =  initImageIO();
+                System.out.println("done initializing IO ...");
+                return ret;
             }
         });
 
         threadService.execute(initIOTask);
 
 
-        log.info("initializing status bar ...");
+        drawSplashProgress("initializing status bar ...");
         initializeStatusBar();
 
 
-        log.info("initializing work space ...");
+        drawSplashProgress("initializing work space ...");
         initializeWorkspace();
 
         loadCommandsTask.get();
 
-        log.info("binding container ...");
+        drawSplashProgress("binding container ...");
         bindContainer();
 
 
-        log.info("initializing tool bar ...");
+        drawSplashProgress("initializing tool bar ...");
         initializeToolBar();
 
 
-        log.info("initializing menu ...");
+        drawSplashProgress("initializing menu ...");
         initializeMenu();
 
         initIOTask.get();
@@ -279,11 +367,8 @@ public class BrainFlow {
         commandContainer = new CommandContainer();
         commandContainer.bind(brainFrame);
 
-
         CommandGroup imageViewGroup = new CommandGroup("image-view-menu");
         imageViewGroup.bind(brainFrame);
-
-
     }
 
     private void initializeLogging() {
@@ -378,6 +463,13 @@ public class BrainFlow {
 
     }
 
+    private void bindCommand(ActionCommand command, boolean installShortCut) {
+        command.bind(getApplicationFrame());
+        if (installShortCut) {
+            command.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        }
+    }
+
     private void initializeToolBar() {
 
 
@@ -388,37 +480,18 @@ public class BrainFlow {
         ToggleGroup interpToggleGroup = new ToggleGroup("toggle-interp-group");
         interpToggleGroup.bind(getApplicationFrame());
 
-        OpenImageCommand openImageCommand = new OpenImageCommand();
-        openImageCommand.bind(getApplicationFrame());
+        bindCommand(new OpenImageCommand(), true);
+        bindCommand(new SnapshotCommand(), true);
+        bindCommand(new NewCanvasCommand(), true);
 
-        SnapshotCommand snapshotCommand = new SnapshotCommand();
-        snapshotCommand.bind(getApplicationFrame());
+        bindCommand(new CreateAxialViewCommand(), true);
+        bindCommand(new CreateSagittalViewCommand(), true);
 
-        CreateAxialViewCommand axialCommand = new CreateAxialViewCommand();
-        axialCommand.bind(getApplicationFrame());
-        axialCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        bindCommand(new CreateCoronalViewCommand(), true);
+        bindCommand(new CreateVerticalOrthogonalCommand(), true);
 
-
-        CreateSagittalViewCommand sagittalCommand = new CreateSagittalViewCommand();
-        sagittalCommand.bind(getApplicationFrame());
-        sagittalCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-
-        CreateCoronalViewCommand coronalCommand = new CreateCoronalViewCommand();
-        coronalCommand.bind(getApplicationFrame());
-        coronalCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-
-
-        CreateVerticalOrthogonalCommand vertCommand = new CreateVerticalOrthogonalCommand();
-        vertCommand.bind(getApplicationFrame());
-        vertCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-
-        CreateHorizontalOrthogonalCommand horizCommand = new CreateHorizontalOrthogonalCommand();
-        horizCommand.bind(getApplicationFrame());
-        horizCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-
-        CreateTriangularOrthogonalCommand triCommand = new CreateTriangularOrthogonalCommand();
-        triCommand.bind(getApplicationFrame());
-        triCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        bindCommand(new CreateHorizontalOrthogonalCommand(), true);
+        bindCommand(new CreateTriangularOrthogonalCommand(), true);
 
 
         CommandGroup orthoGroup = new CommandGroup("ortho-view-group");
@@ -426,13 +499,32 @@ public class BrainFlow {
 
 
         final NextSliceCommand nextSliceCommand = new NextSliceCommand();
-        nextSliceCommand.bind(getApplicationFrame());
-        nextSliceCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-
+        bindCommand(nextSliceCommand, false);
 
         final PreviousSliceCommand previousSliceCommand = new PreviousSliceCommand();
-        previousSliceCommand.bind(getApplicationFrame());
-        previousSliceCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        bindCommand(previousSliceCommand, false);
+
+
+
+
+        bindCommand(new PageBackSliceCommand(), true);
+        bindCommand(new PageForwardSliceCommand(), true);
+
+        bindCommand(new IncreaseContrastCommand(), true);
+        bindCommand(new DecreaseContrastCommand(), true);
+
+
+        bindCommand(new NearestInterpolationToggleCommand(), true);
+        bindCommand(new LinearInterpolationToggleCommand(), true);
+        bindCommand(new CubicInterpolationToggleCommand(), true);
+        bindCommand(new ToggleAxisLabelCommand(), true);
+
+
+        JToolBar mainToolbar = mainToolbarGroup.createToolBar();
+
+
+        brainFrame.getContentPane().add(mainToolbar, BorderLayout.NORTH);
+
 
         Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
             public void eventDispatched(AWTEvent event) {
@@ -450,51 +542,17 @@ public class BrainFlow {
         }, AWTEvent.KEY_EVENT_MASK);
 
 
-        PageBackSliceCommand pageBackSliceCommand = new PageBackSliceCommand();
-        pageBackSliceCommand.bind(getApplicationFrame());
-        pageBackSliceCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-        PageForwardSliceCommand pageForwardSliceCommand = new PageForwardSliceCommand();
-        pageForwardSliceCommand.bind(getApplicationFrame());
-        pageForwardSliceCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+    }
 
-
-        IncreaseContrastCommand increaseContrastCommand = new IncreaseContrastCommand();
-        increaseContrastCommand.bind(getApplicationFrame());
-        increaseContrastCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-
-        DecreaseContrastCommand decreaseContrastCommand = new DecreaseContrastCommand();
-        decreaseContrastCommand.bind(getApplicationFrame());
-        decreaseContrastCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-
-
-        ToggleCommand nearest = new NearestInterpolationToggleCommand();
-        nearest.bind(getApplicationFrame());
-        decreaseContrastCommand.installShortCut(documentPane, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-
-        ToggleCommand linear = new LinearInterpolationToggleCommand();
-        linear.bind(getApplicationFrame());
-
-        ToggleCommand cubic = new CubicInterpolationToggleCommand();
-        cubic.bind(getApplicationFrame());
-
-        ToggleCommand toggleAxisLabelCommand = new ToggleAxisLabelCommand();
-        toggleAxisLabelCommand.bind(getApplicationFrame());
-
-
-        JToolBar mainToolbar = mainToolbarGroup.createToolBar();
-        //ActionCommand increaseContrastCommand = new IncreaseContrastCommand();
-        //increaseContrastCommand.bind(brainFrame);
-        //mainToolbar.add(increaseContrastCommand.getActionAdapter());
-
-        //ActionCommand decreaseContrastCommand = new DecreaseContrastCommand();
-        //decreaseContrastCommand.bind(brainFrame);
-        //mainToolbar.add(decreaseContrastCommand.getActionAdapter());
-
-
-        brainFrame.getContentPane().add(mainToolbar, BorderLayout.NORTH);
-
-
+    public void addCanvas(IBrainCanvas canvas) {
+        //todo sync with DisplayManager?
+        JComponent comp = canvas.getComponent();
+        comp.setRequestFocusEnabled(true);
+        comp.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        String canvasName = "Canvas-" + (documentPane.getDocumentCount() + 1);
+        documentPane.openDocument(new DocumentComponent(new JScrollPane(comp), canvasName));
+        documentPane.setActiveDocument(canvasName);
 
     }
 
@@ -508,7 +566,7 @@ public class BrainFlow {
         canvas.setRequestFocusEnabled(true);
         canvas.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-      
+
 
         documentPane.setTabPlacement(DocumentPane.BOTTOM);
         documentPane.openDocument(new DocumentComponent(new JScrollPane(canvas), "Canvas-1"));
@@ -538,7 +596,7 @@ public class BrainFlow {
         brainFrame.setVisible(true);
 
 
-        CanvasBarX cbar = new CanvasBarX();
+        CanvasBar cbar = new CanvasBar();
 
         /// TODO add automatic updating of canvas to Canvas Bar via EventBus
         //cbar.setImageCanvas(canvas);
@@ -555,6 +613,7 @@ public class BrainFlow {
 
             loadingDock = new ImageFileExplorer(VFS.getManager().resolveFile(DirectoryManager.getInstance().getCurrentLocalDirectory().getAbsolutePath()));
             BrainCanvasTransferHandler handler = new BrainCanvasTransferHandler();
+
             loadingDock.getJTree().setDragEnabled(true);
             //loadingDock.setTransferHandler(handler);
             DisplayManager.getInstance().getSelectedCanvas().getComponent().setTransferHandler(handler);
@@ -599,16 +658,30 @@ public class BrainFlow {
     }
 
     private void initProjectView() throws IOException {
+
+        ViewListPresenter viewListPresenter = new ViewListPresenter();
+
         ProjectTreeView projectTreeView = new ProjectTreeView(ProjectManager.getInstance().getActiveProject());
         DockableFrame dframe = DockWindowManager.getInstance().createDockableFrame("Project",
                 "resources/icons/folder_page.png",
                 DockContext.STATE_FRAMEDOCKED,
-                DockContext.DOCK_SIDE_WEST, 1);
+                DockContext.DOCK_SIDE_WEST, 2);
 
-        dframe.getContentPane().add(new JScrollPane(projectTreeView.getComponent()));
-        dframe.setPreferredSize(new Dimension(275, 200));
+
+
+        JideSplitPane splitPane = new JideSplitPane(JideSplitPane.VERTICAL_SPLIT);
+        splitPane.addPane(new JScrollPane(projectTreeView.getComponent()));
+
+        viewListPresenter.getComponent().setPreferredSize(new Dimension(275, 80));
+        splitPane.addPane(new JScrollPane(viewListPresenter.getComponent()));
+
+        dframe.getContentPane().add(splitPane);
+
+
+
 
         brainFrame.getDockingManager().addFrame(dframe);
+
     }
 
     private void initLoadableImageTableView() throws IOException {
@@ -616,7 +689,7 @@ public class BrainFlow {
         LoadableImageTableView loadView = new LoadableImageTableView();
         DockableFrame dframe = DockWindowManager.getInstance().createDockableFrame("Loaded Images",
                 "resources/icons/det_pane_hide.gif",
-                DockContext.STATE_FRAMEDOCKED,
+                DockContext.STATE_HIDDEN,
                 DockContext.DOCK_SIDE_WEST,
                 1);
 
@@ -676,11 +749,14 @@ public class BrainFlow {
 
         LayerInfoControl layerInfoControl = new LayerInfoControl();
 
+        MaskControl maskControl = new MaskControl();
+
         //ColorMapTablePresenter tablePresenter = new ColorMapTablePresenter();
 
         //MaskTablePresenter maskPresenter = new MaskTablePresenter();
 
         tabbedPane.addTab("Adjustment", new JScrollPane(colorAdjustmentControl.getComponent()));
+        tabbedPane.addTab("Image Mask", maskControl.getComponent());
         tabbedPane.addTab("Layer Info", new JScrollPane(layerInfoControl.getComponent()));
         //tabbedPane.addTab("Color Table", tablePresenter.getComponent());
         //tabbedPane.addTab("Mask Table", maskPresenter.getComponent());
@@ -807,7 +883,7 @@ public class BrainFlow {
 
                 //todo check data caches min and max values
                 params.colorMap.set(new LinearColorMap2(data.minValue(), data.maxValue(), ResourceManager.getInstance().getDefaultColorMap()));
-                ImageLayer layer = new ImageLayer3D(dataSource, params);
+                ImageLayer3D layer = new ImageLayer3D(dataSource, params);
                 dset.addLayer(layer);
 
 
@@ -875,29 +951,39 @@ public class BrainFlow {
             setText("Value :");
         }
 
-        public void onEvent(Object evt) {
-
-            ImageViewMousePointerEvent event = (ImageViewMousePointerEvent) evt;
-
+        private boolean validEvent(ImageViewMousePointerEvent event) {
             //todo only publish events when cursorPos is over valid view
             ImageView view = event.getImageView();
 
             if (view == null) {
-                return;
+                //todo this should be impossible
+                return false;
             }
             if (view.getModel().getSelectedIndex() < 0) {
-                // no layer selected
-                return;
+                // an empty view ... hmmm
+                return false;
             }
 
             if (event.getLocation() == null) {
-                // not clear why this should ever be the case. But it is.
-                return;
+                // well, shouldn't realy happen but ...
+                return false;
             }
 
+            return true;
+
+        }
+
+        public void onEvent(Object evt) {
+            ImageViewMousePointerEvent event = (ImageViewMousePointerEvent) evt;
+
+            //todo only publish events when cursorPos is over valid view
+            ImageView view = event.getImageView();
+            if (!validEvent(event)) return;
 
             AnatomicalPoint3D gpoint = event.getLocation();
-            AbstractLayer layer = view.getSelectedLayer();
+            ImageLayer3D layer = (ImageLayer3D)view.getSelectedLayer();
+
+
             double value = layer.getValue(gpoint);
 
 
@@ -969,19 +1055,19 @@ public class BrainFlow {
                 defaults.put("OptionPaneUI", "com.jidesoft.plaf.basic.BasicJideOptionPaneUI");
 
                 defaults.put("OptionPane.showBanner", Boolean.TRUE); // show banner or not. default is true
-//defaults.put("OptionPane.bannerIcon", JideIconsFactory.getImageIcon(JideIconsFactory.JIDE50));
+                //defaults.put("OptionPane.bannerIcon", JideIconsFactory.getImageIcon(JideIconsFactory.JIDE50));
                 defaults.put("OptionPane.bannerFontSize", 13);
                 defaults.put("OptionPane.bannerFontStyle", Font.BOLD);
                 defaults.put("OptionPane.bannerMaxCharsPerLine", 60);
                 defaults.put("OptionPane.bannerForeground", painter != null ? painter.getOptionPaneBannerForeground() : null);  // you should adjust this if banner background is not the default gradient paint
                 defaults.put("OptionPane.bannerBorder", null); // use default border
 
-// set both bannerBackgroundDk and // set both bannerBackgroundLt to null if you don't want gradient
+                // set both bannerBackgroundDk and // set both bannerBackgroundLt to null if you don't want gradient
                 defaults.put("OptionPane.bannerBackgroundDk", painter != null ? painter.getOptionPaneBannerDk() : null);
                 defaults.put("OptionPane.bannerBackgroundLt", painter != null ? painter.getOptionPaneBannerLt() : null);
                 defaults.put("OptionPane.bannerBackgroundDirection", Boolean.TRUE); // default is true
 
-// optionally, you can set a Paint object for BannerPanel. If so, the three UIDefaults related to banner background above will be ignored.
+                // optionally, you can set a Paint object for BannerPanel. If so, the three UIDefaults related to banner background above will be ignored.
                 defaults.put("OptionPane.bannerBackgroundPaint", null);
 
                 defaults.put("OptionPane.buttonAreaBorder", BorderFactory.createEmptyBorder(6, 6, 6, 6));
@@ -990,24 +1076,13 @@ public class BrainFlow {
         };
         uiDefaultsCustomizer.customize(UIManager.getDefaults());
 
+
+
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             public void uncaughtException(Thread t, Throwable e) {
                 e.printStackTrace();
-                JideOptionPane optionPane = new JideOptionPane("Click \"Details\" button to see more information ... ", JOptionPane.ERROR_MESSAGE, JideOptionPane.CLOSE_OPTION);
-                optionPane.setTitle("An " + e.getClass().getName() + " occurred in BrainFlow : " + e.getMessage());
-
-
-                JTextArea textArea = new JTextArea();
-                StringWriter sw = new StringWriter();
-                PrintWriter out = new PrintWriter(sw);
-                e.printStackTrace(out);
-// Add string to end of text area
-                textArea.append(sw.toString());
-                textArea.setRows(10);
-                optionPane.setDetails(new JScrollPane(textArea));
-                JDialog dialog = optionPane.createDialog(brainFrame, "Warning");
-                dialog.setResizable(true);
-                dialog.pack();
+                ExceptionDialog ed = new ExceptionDialog(e);
+                JDialog dialog = ed.createDialog(brainFrame);
                 dialog.setVisible(true);
             }
         });

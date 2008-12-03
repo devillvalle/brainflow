@@ -7,12 +7,17 @@
 package com.brainflow.application.toplevel;
 
 import com.brainflow.image.io.IImageDataSource;
+import com.brainflow.image.io.ImageInfo;
+import com.brainflow.image.io.SoftImageDataSource;
+import com.brainflow.image.io.ImageDataSource;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.application.ImageProgressDialog;
+import com.brainflow.application.ImageIODescriptor;
 import com.brainflow.application.services.LoadableImageStatusEvent;
 import org.bushe.swing.event.EventBus;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 import java.awt.event.ActionListener;
@@ -75,6 +80,28 @@ public class DataSourceManager {
         log.fine("registering image ..." + limg.getImageInfo().getImageLabel());
         EventBus.publish(new LoadableImageStatusEvent(limg, LoadableImageStatusEvent.EventID.IMAGE_REGISTERED));
     }
+
+    public IImageDataSource createDataSource(ImageIODescriptor descriptor, ImageInfo info, boolean register) {
+
+        IImageDataSource source = new SoftImageDataSource(descriptor, info);
+        if (register) {
+            register(source);
+        }
+
+        return source;
+    }
+
+    public IImageDataSource createDataSource(ImageIODescriptor descriptor, List<ImageInfo> infoList, int index, boolean register) {
+
+        IImageDataSource source = new ImageDataSource(descriptor, infoList, index);
+        if (register) {
+            register(source);
+        }
+
+        return source;
+    }
+
+    
 
 
     public int getNumLoadableImages() {

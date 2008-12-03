@@ -116,8 +116,8 @@ public class BrainFlowStarter {
                     sourceList.add(convertToDataSource(str));
                 }
 
-                
-                
+
+
 
             } catch(FileNotFoundException e) {
                 System.err.println(e.getMessage());
@@ -198,10 +198,10 @@ public class BrainFlowStarter {
                     List<IImageDataSource> dataList = new ArrayList<IImageDataSource>();
                     for (IImageDataSource dsource : fileSources) {
                         DataSourceManager.getInstance().register(dsource);
-                        System.out.println("loading data");
+                        //System.out.println("loading data");
                         dsource.load();
                         dataList.add(dsource);
-                        System.out.println("finished loading data");
+                        //System.out.println("finished loading data");
                     }
 
                     return dataList;
@@ -210,23 +210,23 @@ public class BrainFlowStarter {
             });
 
             ExecutorService service = Executors.newFixedThreadPool(1);
-            System.out.println("submitting load task");
+            //System.out.println("submitting load task");
             service.submit(loadTask);
 
         }
 
 
-        System.out.println("found " + fileSources.size() + " loadable files");
+        //System.out.println("found " + fileSources.size() + " loadable files");
 
         try {
             SwingUtilities.invokeAndWait(new Runnable() {
 
                 public void run() {
                     try {
-                        System.out.println("launching brainflow");
+                        //System.out.println("launching brainflow");
                         bflow.launch();
-                        System.out.println("launched brainflow");
-                        System.out.println("getting loaded images");
+                        //System.out.println("launched brainflow");
+                        //System.out.println("getting loaded images");
 
 
                     } catch (Throwable e) {
@@ -268,7 +268,7 @@ public class BrainFlowStarter {
             parser.parseArgument(args);
             this.launch();
 
-            System.out.println(this.extras);
+            //System.out.println(this.extras);
 
         } catch (CmdLineException e) {
             // handling of wrong arguments

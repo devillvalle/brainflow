@@ -29,7 +29,7 @@ public class CrosshairCoordinates extends LabelStatusBarItem implements EventSub
     private MessageFormat format = new MessageFormat("{0}: {1, number, ##0.0}");
 
     public CrosshairCoordinates() {
-        EventBus.subscribeExactly(ImageViewCursorEvent.class, this);
+        EventBus.subscribeExactlyStrongly(ImageViewCursorEvent.class, this);
         xaxisLabel.setText("0.0");
         yaxisLabel.setText("0.0");
         zaxisLabel.setText("0.0");
@@ -56,6 +56,7 @@ public class CrosshairCoordinates extends LabelStatusBarItem implements EventSub
 
 
     public void onEvent(Object evt) {
+        //todo much is redundant with class CursorCoordinates ...
         ImageViewCursorEvent event = (ImageViewCursorEvent) evt;
         AnatomicalPoint3D cursor = event.getCursor();
 

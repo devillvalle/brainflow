@@ -8,8 +8,12 @@ package com.brainflow.application.toplevel;
 
 import com.brainflow.application.services.ImageViewMousePointerEvent;
 import com.brainflow.application.services.ImageViewSelectionEvent;
+import com.brainflow.application.services.ImageViewCursorEvent;
 import com.brainflow.application.dnd.ImageViewTransferHandler;
+import com.brainflow.application.presentation.ImageViewPresenter;
 import com.brainflow.core.*;
+import com.brainflow.core.layer.ImageLayer;
+import com.brainflow.core.layer.ImageLayer3D;
 import com.brainflow.modes.ImageViewInteractor;
 import net.java.dev.properties.container.BeanContainer;
 import net.java.dev.properties.events.PropertyListener;
@@ -17,6 +21,7 @@ import net.java.dev.properties.BaseProperty;
 
 import org.bushe.swing.event.EventBus;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeListener;
@@ -48,7 +53,7 @@ public class DisplayManager {
 
     private ImageViewMouseMotionListener cursorListener;
 
-
+    private CrossHairListener crossHairListener;
 
 
     //private WeakHashMap<ImageView, IImageDisplayModel> registeredViews = new WeakHashMap<ImageView, IImageDisplayModel>();
@@ -66,7 +71,8 @@ public class DisplayManager {
 
     private void listenToCanvas(IBrainCanvas canvas) {
         if (canvasListener == null) canvasListener = new CanvasSelectionListener();
-         if (cursorListener == null) cursorListener = new ImageViewMouseMotionListener();
+        if (cursorListener == null) cursorListener = new ImageViewMouseMotionListener();
+        if (crossHairListener == null) crossHairListener = new CrossHairListener();
 
         //canvas.getImageCanvasModel().addPropertyChangeListener(canvasListener);
         //canvas.getImageCanvasModel().listSelection.
@@ -104,12 +110,6 @@ public class DisplayManager {
 
         listenToCanvas(_canvas);
 
-        //List<ImageView> views = _canvas.getImageCanvasModel().getImageViews();
-
-        //for (ImageView v : views) {
-        //    registeredViews.put(v, v.getModel());
-
-        //}
 
     }
 
@@ -125,9 +125,23 @@ public class DisplayManager {
         return selectedCanvas;
     }
 
+    public List<ImageView> getImageViews(IImageDisplayModel model) {
+        //List<ImageView> ret = new ArrayList<ImageView>();
+        return selectedCanvas.getViews(model);
+    }
+
     public void displayView(ImageView view) {
         view.setTransferHandler(new ImageViewTransferHandler());
         getSelectedCanvas().addImageView(view);
+    }
+
+    public void replaceLayer(ImageLayer3D oldlayer, ImageLayer3D newlayer, ImageView view) {
+        int i = view.getModel().indexOf(oldlayer);
+        if (i < 0) {
+            throw new IllegalArgumentException("layer " + oldlayer + " not found in model " + view.getModel());
+        }
+
+        view.getModel().setLayer(i, newlayer);
     }
 
     public void setSelectedCanvas(IBrainCanvas canvas) {
@@ -142,13 +156,13 @@ public class DisplayManager {
 
 
     public IBrainCanvas[] getImageCanvases() {
-        BrainCanvas[] canvi = new BrainCanvas[canvasList.size()];
+        IBrainCanvas[] canvi = new IBrainCanvas[canvasList.size()];
         canvasList.toArray(canvi);
         return canvi;
     }
 
-    public IBrainCanvas createCanvas() {
-        BrainCanvas canvas = new BrainCanvas();
+    public IBrainCanvas newCanvas() {
+        IBrainCanvas canvas = new BrainCanvas();
         addImageCanvas(canvas);
         return canvas;
     }
@@ -205,6 +219,35 @@ public class DisplayManager {
     public void yoke(ImageView target1, ImageView target2) {
         getSelectedCanvas().getImageCanvasModel().yoke(target1, target2);
 
+    }
+
+    class CrossHairListener extends ImageViewPresenter {
+
+        class Listener implements PropertyListener {
+            public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
+                EventBus.publish(new ImageViewCursorEvent(getSelectedImageView()));
+            }
+        }
+
+        Listener listener = new Listener();
+
+        public void viewSelected(ImageView view) {
+            EventBus.publish(new ImageViewCursorEvent(getSelectedView()));
+            BeanContainer.get().addListener(view.cursorPos, listener);
+        }
+
+        @Override
+        public void viewDeselected(ImageView view) {
+            BeanContainer.get().removeListener(view.cursorPos, listener);
+        }
+
+        public void allViewsDeselected() {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public JComponent getComponent() {
+            throw new UnsupportedOperationException();
+        }
     }
 
 

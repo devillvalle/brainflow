@@ -20,7 +20,7 @@ public class ImageViewCursorEvent extends ImageViewEvent {
 
     public ImageViewCursorEvent(ImageView view) {
         super(view);
-        cpos = view.getCursorPos();
+        cpos = view.worldCursorPos.get();
     }
 
     public AnatomicalPoint3D getCursor() {

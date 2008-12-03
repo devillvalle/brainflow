@@ -81,6 +81,10 @@ public class BooleanMaskNode3D implements IMaskedData3D {
         throw new RuntimeException("illegal operation");
     }
 
+    public DataWriter3D createWriter(boolean clear) {
+        throw new UnsupportedOperationException();
+    }
+
     public Index3D indexToGrid(int idx) {
         return left.indexToGrid(idx);
     }

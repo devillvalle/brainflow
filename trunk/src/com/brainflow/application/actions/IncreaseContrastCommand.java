@@ -4,6 +4,7 @@ import com.brainflow.core.layer.AbstractLayer;
 import com.brainflow.core.layer.ImageLayerProperties;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.ClipRange;
+import com.brainflow.core.IClipRange;
 
 /**
  * BrainFlow Project
@@ -33,7 +34,7 @@ public class IncreaseContrastCommand extends BrainFlowCommand {
 
     private void incrementContrast(AbstractLayer layer) {
         ImageLayerProperties props = layer.getImageLayerProperties();
-        ClipRange clip = props.getClipRange();
+        IClipRange clip = props.getClipRange();
 
         double highClip = clip.getHighClip();
         double lowClip = clip.getLowClip();
@@ -51,8 +52,8 @@ public class IncreaseContrastCommand extends BrainFlowCommand {
         newHighClip = Math.min(newHighClip, layer.getImageLayerProperties().getColorMap().getMaximumValue());
         newLowClip = Math.max(newLowClip, layer.getImageLayerProperties().getColorMap().getMinimumValue());
 
-        double max = clip.maxValue.get();
-        double min = clip.minValue.get();
+        double max = clip.getMax();
+        double min = clip.getMin();
         props.clipRange.set(new ClipRange(min, max, newLowClip, newHighClip));
         
 

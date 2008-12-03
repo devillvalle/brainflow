@@ -7,6 +7,7 @@
 package com.brainflow.image.interpolation;
 
 import com.brainflow.image.space.Axis;
+import com.brainflow.image.data.DataAccessor3D;
 
 /**
  * @author bradley
@@ -19,19 +20,19 @@ public class TrilinearInterpolator implements InterpolationFunction3D {
     public TrilinearInterpolator() {
     }
 
-    public double interpolate(double dx, double dy, double dz, com.brainflow.image.data.IImageData3D data) {
+    public double interpolate(double dx, double dy, double dz, DataAccessor3D data) {
         double a, b, c, d, e, f;
         if (dx < 0 || dy < 0 || dz < 0)
             return 0;
 
 
-        if (dx > (data.getDimension(Axis.X_AXIS) - 1) ) {
+        if (dx > (data.getImageSpace().getDimension(Axis.X_AXIS) - 1) ) {
             return 0;
         }
-        if (dy > (data.getDimension(Axis.Y_AXIS) - 1) ) {
+        if (dy > (data.getImageSpace().getDimension(Axis.Y_AXIS) - 1) ) {
             return 0;
         }
-        if (dz > (data.getDimension(Axis.Z_AXIS) - 1) ) {
+        if (dz > (data.getImageSpace().getDimension(Axis.Z_AXIS) - 1) ) {
             return 0;
         }
 
@@ -72,7 +73,7 @@ public class TrilinearInterpolator implements InterpolationFunction3D {
         int zidx = z_down;
 
         double total = data.value(xidx, yidx, zidx) * d * e * f;
-        double val = 0;
+        double val;
 
         if (x_up != x_down) {
             xidx++;

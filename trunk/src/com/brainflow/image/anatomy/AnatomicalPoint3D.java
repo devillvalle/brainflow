@@ -5,6 +5,7 @@ import com.brainflow.image.axis.CoordinateAxis;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.CoordinateSpace3D;
 import com.brainflow.image.space.ICoordinateSpace3D;
+import com.brainflow.image.space.IImageSpace3D;
 
 /**
  * Created by IntelliJ IDEA.
@@ -122,6 +123,20 @@ public class AnatomicalPoint3D implements AnatomicalPoint {
 
         return new AnatomicalPoint3D(other, retx.getValue(), rety.getValue(), retz.getValue());
 
+
+    }
+
+    public static AnatomicalPoint3D convertToWorld(AnatomicalPoint3D pt, IImageSpace3D space)  {
+        pt = pt.convertTo(space);
+
+        double gridx = space.getImageAxis(Axis.X_AXIS).gridPosition(pt.getX());
+        double gridy = space.getImageAxis(Axis.Y_AXIS).gridPosition(pt.getY());
+        double gridz = space.getImageAxis(Axis.Z_AXIS).gridPosition(pt.getZ());
+
+        float[] ret = space.gridToWorld((float)gridx, (float)gridy, (float)gridz);
+        pt = new AnatomicalPoint3D(Anatomy3D.REFERENCE_ANATOMY, ret[0], ret[1], ret[2]);
+        return pt;
+        
 
     }
 

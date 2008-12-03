@@ -1,6 +1,7 @@
 package com.brainflow.image.interpolation;
 
 import com.brainflow.image.data.IImageData3D;
+import com.brainflow.image.data.DataAccessor3D;
 
 /**
  * <p>Title: </p>
@@ -14,6 +15,6 @@ import com.brainflow.image.data.IImageData3D;
 
 public interface InterpolationFunction3D {
 
-    public double interpolate(double dx, double dy, double dz, IImageData3D data);
+    public double interpolate(double dx, double dy, double dz, DataAccessor3D data);
 
 }

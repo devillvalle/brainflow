@@ -321,7 +321,7 @@ public class BiSlider extends JPanel implements MouseMotionListener, MouseListen
 
     private void paintValueLabels(Graphics2D g2) {
         paintLeftLabel(g2);
-        if (model.getHighValue() != model.getLowValue())
+        if (!NumberUtils.equals(model.getHighValue(), model.getLowValue(), .0001))
             paintRightLabel(g2);
 
 

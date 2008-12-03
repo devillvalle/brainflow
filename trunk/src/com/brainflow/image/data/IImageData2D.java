@@ -18,8 +18,9 @@ public interface IImageData2D extends IImageData, DataAccessor2D {
     public int indexOf(int x, int y);
 
     
-    public void setValue(int x, int y, double val);
-
+   
     public ImageSpace2D getImageSpace();
+
+    public DataWriter2D createWriter(boolean clear);
 
 }

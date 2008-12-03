@@ -5,8 +5,11 @@ import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.iterators.ImageIterator;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.ImageSpace2D;
+import com.brainflow.image.space.IImageSpace;
 import com.brainflow.utils.DataType;
 import com.brainflow.utils.IDimension;
+
+import java.awt.image.DataBuffer;
 
 
 /**
@@ -75,11 +78,10 @@ public class BasicImageData2D extends BasicImageData implements IImageData2D {
         return data.getElemDouble(index);
     }
 
-    public void setValue(int idx, double val) {
-        data.setElemDouble(idx, val);
-    }
+
 
     public final int indexOf(int x, int y) {
+        //todo this is obviously slow
         return space.getDimension(Axis.X_AXIS) * y + x;
     }
 
@@ -98,17 +100,73 @@ public class BasicImageData2D extends BasicImageData implements IImageData2D {
     }
 
 
-
-    public final void setValue(int x, int y, double val) {
+    private void setValue(int x, int y, double val) {
         data.setElemDouble(indexOf(x, y), val);
     }
 
-  
+     private void setValue(int idx, double val) {
+        data.setElemDouble(idx, val);
+    }
+
 
     public ImageIterator iterator() {
         return new Iterator2D();
     }
 
+    public DataWriter2D createWriter(boolean clear) {
+        return new DataWriter2D() {
+
+            ImageSpace2D space = BasicImageData2D.this.getImageSpace();
+            DataBuffer buffer = BasicImageData2D.this.copyBuffer();
+            Object storage = BasicImageData2D.this.storage;
+
+            BasicImageData2D delegate = new BasicImageData2D(space, storage);
+
+            public final int indexOf(int x, int y) {
+                return delegate.indexOf(x,y);
+            }
+
+            public void setValue(int x, int y, double val) {
+                delegate.setValue(x,y,val);
+            }
+
+            public IImageData2D asImageData() {
+                return delegate;
+            }
+
+            public void setValue(int index, double value) {
+                delegate.setValue(index, value);
+
+            }
+
+            public double value(int index) {
+                return delegate.value(index);
+            }
+
+            public int numElements() {
+                return delegate.numElements();
+            }
+
+            public ImageSpace2D getImageSpace() {
+                return delegate.getImageSpace();
+
+            }
+
+            public double value(double x, double y, InterpolationFunction2D interp) {
+                return delegate.value(x,y,interp);
+
+            }
+
+            public double worldValue(double realx, double realy, InterpolationFunction2D interp) {
+                return delegate.worldValue(realx, realy, interp);
+            }
+
+            public double value(int x, int y) {
+                return delegate.value(x,y);
+            }
+        };
+
+    }
 
     final class Iterator2D implements ImageIterator {
 

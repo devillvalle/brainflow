@@ -17,7 +17,8 @@ public interface IImageData3D extends IImageData, DataAccessor3D {
 
     public Index3D indexToGrid(int idx);
 
-    public void setValue(int x, int y, int z, double val);
-
+    
     public IImageSpace3D getImageSpace();
+
+    public DataWriter3D createWriter(boolean clear);
 }

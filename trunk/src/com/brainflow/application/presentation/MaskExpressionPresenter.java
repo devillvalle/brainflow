@@ -3,6 +3,7 @@ package com.brainflow.application.presentation;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.ClipRange;
 import com.brainflow.core.IImageDisplayModel;
+import com.brainflow.core.IClipRange;
 import com.brainflow.core.mask.*;
 import com.brainflow.core.layer.*;
 import com.brainflow.utils.IRange;
@@ -232,7 +233,7 @@ public class MaskExpressionPresenter extends ImageViewPresenter {
 
     }
 
-    private String convertThresholdToString(ClipRange clip) {
+    private String convertThresholdToString(IClipRange clip) {
         IRange range = clip.getInnerRange();
 
         //todo hack cast

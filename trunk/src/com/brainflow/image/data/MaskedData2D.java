@@ -60,13 +60,6 @@ public class MaskedData2D implements IImageData2D, IMaskedData2D {
         return predicate.mask(source.value(index)) ? 1 : 0;
     }
 
-    public void setValue(int idx, double val) {
-        source.setValue(idx, val);
-    }
-
-    public void setValue(int x, int y, double val) {
-        source.setValue(x, y, val);
-    }
 
     public int cardinality() {
         //todo this code is duplicated from MaskedData3D
@@ -83,13 +76,17 @@ public class MaskedData2D implements IImageData2D, IMaskedData2D {
 
     }
 
+    public DataWriter2D createWriter(boolean clear) {
+        throw new UnsupportedOperationException("MaskedData2D does not support data writing");
+    }
+
     public ImageIterator iterator() {
         return new MaskedIterator();
 
     }
 
     public ImageSpace2D getImageSpace() {
-        return (ImageSpace2D)source.getImageSpace();
+        return source.getImageSpace();
     }
 
     public DataType getDataType() {

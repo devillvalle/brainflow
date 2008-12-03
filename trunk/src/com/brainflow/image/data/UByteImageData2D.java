@@ -55,8 +55,6 @@ public class UByteImageData2D extends AbstractImageData implements IImageData2D 
          
     }
 
-    
-
 
 
     public double maxValue() {
@@ -152,13 +150,13 @@ public class UByteImageData2D extends AbstractImageData implements IImageData2D 
 
 
 
-    public void setValue(int x, int y, double val) {
+    private void setValue(int x, int y, double val) {
         data[indexOf(x, y)] = (byte) val;
     }
 
-
-
-
+    public DataWriter2D createWriter(boolean clear) {
+        throw new UnsupportedOperationException();
+    }
 
     final class Iterator2D implements ImageIterator {
 

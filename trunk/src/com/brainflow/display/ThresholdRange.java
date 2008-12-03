@@ -101,7 +101,7 @@ public class ThresholdRange extends LayerProperty implements MaskPredicate, IRan
         firePropertyChange(ThresholdRange.INCLUSIVE_PROPERTY, old, isInclusive());
     }
 
-    public void setRange(double min, double max) {
+    /*public void setRange(double min, double max) {
         if (isSymmetrical()) {
             max = Math.abs(max);
             min = -Math.abs(max);
@@ -109,13 +109,13 @@ public class ThresholdRange extends LayerProperty implements MaskPredicate, IRan
 
         setMin(min);
         setMax(max);
-    }
+    } */
 
     public boolean isSymmetrical() {
         return symmetrical;
     }
 
-    public void setSymmetrical(boolean symmetrical) {
+    /*public void setSymmetrical(boolean symmetrical) {
         boolean old = isSymmetrical();
         this.symmetrical = symmetrical;
 
@@ -123,7 +123,7 @@ public class ThresholdRange extends LayerProperty implements MaskPredicate, IRan
 
         setMax(Math.abs(thresholdRange.getMax()));
         setMin(-getMax());
-    }
+    }*/
 
 
     protected double[] filterHighValue(double low, double high) {
@@ -170,7 +170,7 @@ public class ThresholdRange extends LayerProperty implements MaskPredicate, IRan
         return thresholdRange.getMin();
     }
 
-    public void setMin(double min) {
+    /*public void setMin(double min) {
         double old = getMin();
 
         double[] rvals = filterLowValue(min, getMax());
@@ -178,6 +178,7 @@ public class ThresholdRange extends LayerProperty implements MaskPredicate, IRan
 
         if (rvals[1] != getMax()) {
             double oldThresh = getMax();
+            thresholdRange = new ThresholdRange(getMin(), rvals[1])
             thresholdRange.setMax(rvals[1]);
             firePropertyChange(ThresholdRange.MAX_PROPERTY,
                     oldThresh, getMax());
@@ -186,13 +187,13 @@ public class ThresholdRange extends LayerProperty implements MaskPredicate, IRan
         thresholdRange.setMin(rvals[0]);
         firePropertyChange(ThresholdRange.MIN_PROPERTY, old, getMin());
 
-    }
+    }  */
 
     public double getMax() {
         return thresholdRange.getMax();
     }
 
-    public void setMax(double max) {
+    /*public void setMax(double max) {
 
         double old = getMax();
 
@@ -211,7 +212,7 @@ public class ThresholdRange extends LayerProperty implements MaskPredicate, IRan
         firePropertyChange(ThresholdRange.MAX_PROPERTY, old, getMax());
 
 
-    }
+    } */
 
     public double getInterval() {
         return thresholdRange.getInterval();

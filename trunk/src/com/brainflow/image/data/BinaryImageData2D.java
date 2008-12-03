@@ -66,7 +66,7 @@ public class BinaryImageData2D extends BinaryImageData implements IImageData2D {
         }
         BitVector ret = getBitVector().copy();
         ret.or(data.getBitVector());
-        return new BinaryImageData2D((ImageSpace2D) getImageSpace(), ret);
+        return new BinaryImageData2D(getImageSpace(), ret);
 
     }
 
@@ -101,5 +101,7 @@ public class BinaryImageData2D extends BinaryImageData implements IImageData2D {
         getBitVector().putQuick(indexOf(x, y), val > 0);
     }
 
-
+    public DataWriter2D createWriter(boolean clear) {
+        throw new UnsupportedOperationException();
+    }
 }

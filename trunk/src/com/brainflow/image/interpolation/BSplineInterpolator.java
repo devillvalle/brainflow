@@ -8,6 +8,7 @@ package com.brainflow.image.interpolation;
 
 import cern.colt.list.DoubleArrayList;
 import com.brainflow.image.data.IImageData3D;
+import com.brainflow.image.data.DataAccessor3D;
 import com.brainflow.image.operations.FormatImageFilter;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.IImageSpace;
@@ -47,7 +48,7 @@ public class BSplineInterpolator implements InterpolationFunction3D {
         filter.setInput(0, srcImage);
         filter.setOutputDataType(DataType.DOUBLE);
         coefficientImage = (IImageData3D) filter.getOutput();
-        IImageSpace space = (IImageSpace) coefficientImage.getImageSpace();
+        IImageSpace space = coefficientImage.getImageSpace();
         width = space.getDimension(Axis.X_AXIS);
         height = space.getDimension(Axis.Y_AXIS);
         depth = space.getDimension(Axis.Z_AXIS);
@@ -84,7 +85,8 @@ public class BSplineInterpolator implements InterpolationFunction3D {
                 }
                 convertToInterpolationCoefficients(row1D, poles, epsilon);
                 for (int x = 0; x < width; x++) {
-                    coefficientImage.setValue(x, y, z, row1D[x]);
+                    //todo fixme
+                    //coefficientImage.setValue(x, y, z, row1D[x]);
                 }
             }
         }
@@ -98,7 +100,8 @@ public class BSplineInterpolator implements InterpolationFunction3D {
                 }
                 convertToInterpolationCoefficients(row1D, poles, epsilon);
                 for (int y = 0; y < height; y++) {
-                    coefficientImage.setValue(x, y, z, row1D[y]);
+                    //todo fixme
+                    //coefficientImage.setValue(x, y, z, row1D[y]);
                 }
             }
         }
@@ -111,7 +114,8 @@ public class BSplineInterpolator implements InterpolationFunction3D {
 
                 convertToInterpolationCoefficients(row1D, poles, epsilon);
                 for (int z = 0; z < depth; z++) {
-                    coefficientImage.setValue(x, y, z, row1D[z]);
+                    //todo fixme
+                    //coefficientImage.setValue(x, y, z, row1D[z]);
                 }
             }
         }
@@ -191,7 +195,7 @@ public class BSplineInterpolator implements InterpolationFunction3D {
     } /* end InitialAntiCausalCoefficient */
 
 
-    public double interpolate(double x, double y, double z, com.brainflow.image.data.IImageData3D data) {
+    public double interpolate(double x, double y, double z, DataAccessor3D data) {
         DBGvaluect++;
         double[] xWeight = new double[6];
         double[] yWeight = new double[6];

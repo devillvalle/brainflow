@@ -26,7 +26,7 @@ public class MemoryImageDataSource implements IImageDataSource {
         data = _data;
     }
 
-    public List<? extends ImageInfo> getImageInfoList() {
+    public List<ImageInfo> getImageInfoList() {
         return Arrays.asList(data.getImageInfo());
     }
 

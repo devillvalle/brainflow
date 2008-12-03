@@ -7,6 +7,7 @@
 package com.brainflow.image.interpolation;
 
 import com.brainflow.image.data.IImageData3D;
+import com.brainflow.image.data.DataAccessor3D;
 import com.brainflow.image.space.Axis;
 
 /**
@@ -20,7 +21,7 @@ public class NearestNeighborInterpolator implements InterpolationFunction3D {
     public NearestNeighborInterpolator() {
     }
 
-    public double interpolate(double dx, double dy, double dz, IImageData3D data) {
+    public double interpolate(double dx, double dy, double dz, DataAccessor3D data) {
         int x_up = (int) Math.floor(dx + .5);
         int y_up = (int) Math.floor(dy + .5);
         int z_up = (int) Math.floor(dz + .5);
@@ -28,9 +29,9 @@ public class NearestNeighborInterpolator implements InterpolationFunction3D {
         double total;
 
         //todo slow ....
-        int d1 = data.getDimension(Axis.X_AXIS);
-        int d2 = data.getDimension(Axis.Y_AXIS);
-        int d3 = data.getDimension(Axis.Z_AXIS);
+        int d1 = data.getImageSpace().getDimension(Axis.X_AXIS);
+        int d2 = data.getImageSpace().getDimension(Axis.Y_AXIS);
+        int d3 = data.getImageSpace().getDimension(Axis.Z_AXIS);
 
 
         if (x_up >= d1)

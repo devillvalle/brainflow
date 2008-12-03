@@ -1,6 +1,11 @@
 package com.brainflow.core.annotations;
 
 import com.brainflow.core.IImagePlot;
+import com.brainflow.image.anatomy.AnatomicalPoint3D;
+import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.image.anatomy.AnatomicalAxis;
+import com.brainflow.image.space.IImageSpace3D;
+import com.brainflow.image.space.Axis;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -30,10 +35,17 @@ public class SliceAnnotation extends AbstractAnnotation {
 
         FontMetrics fmetric = g2d.getFontMetrics(font);
 
-        String label = "" + (int)plot.getSlice().getX();
+        AnatomicalPoint3D pt = plot.getSlice();
+
+        //todo hack cast
+        IImageSpace3D space = (IImageSpace3D)plot.getModel().getImageSpace();
+        pt = AnatomicalPoint3D.convertToWorld(pt, space);
+        AnatomicalAxis zaxis = Anatomy3D.REFERENCE_ANATOMY.matchAxis(plot.getDisplayAnatomy().ZAXIS);
+
+        String label = "" + (int)Math.round(pt.getValue(zaxis).getValue());
         Rectangle2D strBounds = fmetric.getStringBounds(label, g2d);
 
-        g2d.drawString("" + (int)plot.getSlice().getX(), (int)(plotArea.getX() + (plotArea.getWidth()/2) - strBounds.getWidth()), (int)plotArea.getY() -2);
+        g2d.drawString(label, (int)(plotArea.getX() + (plotArea.getWidth()/2) - strBounds.getWidth()), (int)plotArea.getY() -2);
         
 
     }

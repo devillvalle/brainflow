@@ -55,11 +55,10 @@ public class ImageData {
 
         }
 
-        return sum/count;
+        return sum / count;
 
 
     }
-
 
 
     public static double nonzeroMean(IImageData data) {
@@ -76,7 +75,7 @@ public class ImageData {
 
         }
 
-        return sum/count;
+        return sum / count;
 
     }
 
@@ -89,7 +88,7 @@ public class ImageData {
             sum = sum + iter.next();
         }
 
-        return sum/iter.index();
+        return sum / iter.index();
 
 
     }
@@ -113,9 +112,6 @@ public class ImageData {
                 return data.indexToGrid(idx);
             }
 
-            public void setValue(int x, int y, int z, double val) {
-                data.setValue(x, y, z, val);
-            }
 
             public Anatomy getAnatomy() {
                 return data.getAnatomy();
@@ -137,6 +133,10 @@ public class ImageData {
                 return data.getImageLabel();
             }
 
+            public DataWriter3D createWriter(boolean clear) {
+                return data.createWriter(clear);
+            }
+
             public ImageIterator iterator() {
                 return new BasicImageData3D.Iterator3D(this);
             }
@@ -147,10 +147,6 @@ public class ImageData {
 
             public double minValue() {
                 return data.minValue() * scaleFactor;
-            }
-
-            public void setValue(int idx, double val) {
-                data.setValue(idx, val);
             }
 
 
@@ -228,6 +224,10 @@ public class ImageData {
 
             public void setValue(int x, int y, int z, double val) {
                 throw new UnsupportedOperationException();
+            }
+
+            public DataWriter3D createWriter(boolean clear) {
+                throw new UnsupportedOperationException("Cannot create writer for class " + getClass());
             }
 
             public String getImageLabel() {

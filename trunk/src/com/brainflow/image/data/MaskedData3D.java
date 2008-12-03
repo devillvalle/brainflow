@@ -74,16 +74,6 @@ public class MaskedData3D implements IMaskedData3D {
 
 
 
-    public void setValue(int idx, double val) {
-        source.setValue(idx, val);
-    }
-
-    public void setValue(int x, int y, int z, double val) {
-        source.setValue(x, y, z, val);
-    }
-
-
-
     public IImageSpace3D getImageSpace() {
         return source.getImageSpace();
     }
@@ -127,7 +117,9 @@ public class MaskedData3D implements IMaskedData3D {
         return new MaskedIterator();
     }
 
-   
+    public DataWriter3D createWriter(boolean clear) {
+        throw new UnsupportedOperationException("Cannot create writer for class " + getClass());
+    }
 
     public int cardinality() {
         MaskedIterator iter = new MaskedIterator();

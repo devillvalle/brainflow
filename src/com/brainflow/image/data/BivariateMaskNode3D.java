@@ -123,7 +123,11 @@ public class BivariateMaskNode3D implements IMaskedData3D {
         return left.numElements();
     }
 
-    public void setValue(int idx, double val) {
+    private void setValue(int idx, double val) {
+        throw new UnsupportedOperationException();
+    }
+
+    public DataWriter3D createWriter(boolean clear) {
         throw new UnsupportedOperationException();
     }
 

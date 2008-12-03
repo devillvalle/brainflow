@@ -19,7 +19,6 @@ public interface IImageSpace3D extends IImageSpace, ICoordinateSpace3D {
     ImageMapping3D getMapping();
 
 
-
     Dimension3D<Integer> getDimension();
 
     float[] indexToWorld(int x, int y, int z);

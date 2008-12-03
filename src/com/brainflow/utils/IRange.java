@@ -15,11 +15,11 @@ public interface IRange {
 
     public double getMax();
 
-    public void setMax(double max);
+    //public void setMax(double max);
 
-    public void setMin(double min);
+    //public void setMin(double min);
 
-    public void setRange(double min, double max);
+    //public void setRange(double min, double max);
 
     public boolean contains(double val);
 

@@ -56,6 +56,8 @@ public interface IImageDisplayModel extends Iterable<ImageLayer3D> {
 
     public void addLayer(ImageLayer3D layer);
 
+    public void setLayer(int idx, ImageLayer3D layer);
+
     public void swapLayers(int index0, int index1);
 
     public void rotateLayers();

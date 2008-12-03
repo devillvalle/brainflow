@@ -7,6 +7,7 @@ import com.brainflow.display.*;
 import com.brainflow.utils.IRange;
 import com.brainflow.utils.Range;
 import com.brainflow.core.ClipRange;
+import com.brainflow.core.IClipRange;
 import com.jgoodies.binding.list.SelectionInList;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
@@ -73,9 +74,9 @@ public class ImageLayerProperties implements Serializable {
 
     public final Property<Double> smoothingRadius = ObservableProperty.create(0.0);
 
-    public final ObservableProperty<ClipRange> thresholdRange = ObservableProperty.create(new ClipRange(0, 0, 0, 0));
+    public final ObservableProperty<IClipRange> thresholdRange = ObservableProperty.create();
 
-    public final ObservableProperty<ClipRange> clipRange = ObservableProperty.create(new ClipRange(0, 0, 0, 0));
+    public final ObservableProperty<IClipRange> clipRange = ObservableProperty.create();
 
 
     public ImageLayerProperties(ImageLayerProperties props) {
@@ -84,8 +85,8 @@ public class ImageLayerProperties implements Serializable {
         opacity.set(props.opacity.get());
         smoothingRadius.set(props.smoothingRadius.get());
         thresholdRange.set(props.thresholdRange.get());
-
-        init(props.colorMap.get(), new Range(props.clipRange.get().minValue.get(), props.clipRange.get().maxValue.get()));
+        //clipRange.set(props.clipRange.get());
+        init(props.colorMap.get(), new Range(props.clipRange.get().getMin(), props.clipRange.get().getMax()));
         //clipRange.set(props.clipRange.get());
         //colorMap.set(props.colorMap.get());
 
@@ -100,12 +101,6 @@ public class ImageLayerProperties implements Serializable {
         init(imap, _dataRange);
     }
 
-    public ImageLayerProperties(IRange _dataRange, ThresholdRange _thresholdRange) {
-        BeanContainer.bind(this);
-        IColorMap imap = new LinearColorMap2(_dataRange.getMin(), _dataRange.getMax(), ColorTable.GRAYSCALE);
-        init(imap, _dataRange);
-
-    }
 
     public ImageLayerProperties(IndexColorModel _icm, IRange _dataRange) {
         BeanContainer.bind(this);
@@ -116,15 +111,13 @@ public class ImageLayerProperties implements Serializable {
 
     private void init(IColorMap map, IRange dataRange) {
         colorMap.set(map);
-       
-        clipRange.get().maxValue.set(dataRange.getMax());
-        clipRange.get().minValue.set(dataRange.getMin());
 
-        clipRange.get().lowClip.set(map.getLowClip());
-        clipRange.get().highClip.set(map.getHighClip());
+        IClipRange clip = new ClipRange(dataRange.getMin(), dataRange.getMax(), map.getLowClip(), map.getHighClip());
+        clipRange.set(clip);
 
-        thresholdRange.get().maxValue.set(dataRange.getMax());
-        thresholdRange.get().minValue.set(dataRange.getMin());
+        //todo this automatically resets threshold range ...
+        IClipRange tclip = new ClipRange(dataRange.getMin(), dataRange.getMax(), 0, 0);
+        thresholdRange.set(tclip);
 
         
 
@@ -141,12 +134,12 @@ public class ImageLayerProperties implements Serializable {
         return visible.get();
     }
 
-    public ClipRange getClipRange() {
+    public IClipRange getClipRange() {
         return clipRange.get();
     }
 
 
-    public ClipRange getThresholdRange() {
+    public IClipRange getThresholdRange() {
         return thresholdRange.get();
     }
 

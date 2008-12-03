@@ -55,9 +55,11 @@ public abstract class BasicImageData extends AbstractImageData {
         return storage;
     }
 
+
+
     private void computeStats() {
 
-
+        //todo eliminate this hack
         maxValue = service.submit(new Callable<Double>() {
             public Double call() {
                 return computeMax();
@@ -65,6 +67,7 @@ public abstract class BasicImageData extends AbstractImageData {
             }
         });
 
+        //todo eliminate this hack
         minValue = service.submit(new Callable<Double>() {
 
 
@@ -74,7 +77,8 @@ public abstract class BasicImageData extends AbstractImageData {
 
             }
         });
-
+        
+        //todo eliminate this hack
         hashid = service.submit(new Callable<Long>() {
             Long result = null;
 
@@ -120,6 +124,7 @@ public abstract class BasicImageData extends AbstractImageData {
     }
 
     protected double computeMax() {
+
         ImageIterator iter = this.iterator();
 
         double _max = -Double.MAX_VALUE;
@@ -173,7 +178,22 @@ public abstract class BasicImageData extends AbstractImageData {
         return data;
     }
 
-
+    protected DataBuffer copyBuffer() {
+        if (datatype == DataType.BYTE) {
+            return new DataBufferByte((byte[]) storage, ((byte[])storage).length);
+        } else if (datatype == DataType.SHORT) {
+            return new DataBufferShort((short[]) storage, ((short[])storage).length);
+        } else if (datatype == DataType.INTEGER) {
+            return new DataBufferInt((int[]) storage, ((int[])storage).length);
+        } else if (datatype == DataType.FLOAT) {
+            return new DataBufferFloat((float[]) storage, ((float[])storage).length);
+        } else if (datatype == DataType.DOUBLE) {
+            return new DataBufferDouble((double[]) storage, ((double[])storage).length);
+        } else {
+            throw new IllegalArgumentException("BasicImageData: cannot allocate data of type " + datatype.toString());
+        }
+        
+    }
     protected DataBuffer allocateBuffer(int size) {
 
         if (datatype == DataType.BYTE) {
@@ -206,7 +226,7 @@ public abstract class BasicImageData extends AbstractImageData {
     }
 
     protected long hashid() {
-
+        //todo eliminate this hack
         try {
             return hashid.get();
         } catch (ExecutionException e) {
@@ -220,6 +240,7 @@ public abstract class BasicImageData extends AbstractImageData {
 
 
     public double maxValue() {
+        //todo eliminate this hack
 
         try {
             return maxValue.get();
@@ -233,7 +254,7 @@ public abstract class BasicImageData extends AbstractImageData {
     }
 
     public double minValue() {
-
+        //todo eliminate this hack
         try {
             return minValue.get();
         } catch (ExecutionException e) {

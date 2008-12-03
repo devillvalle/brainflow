@@ -40,7 +40,7 @@ public interface IImageDataSource {
 
     public ImageInfo getImageInfo();
 
-    public List<? extends ImageInfo> getImageInfoList();
+    public List<ImageInfo> getImageInfoList();
 
     public BufferedImage getPreview();
 
@@ -51,6 +51,7 @@ public interface IImageDataSource {
     public IImageData load(ProgressListener plistener) throws BrainFlowException;
 
     public IImageData load() throws BrainFlowException;
+
 
     public int getUniqueID();
 

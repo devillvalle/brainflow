@@ -30,18 +30,20 @@ public class RangeModel extends Model implements IRange {
     }
 
     public void setRange(double min, double max) {
-        range.setRange(min, max);
+        range = new Range(min, max);
     }
 
     public void setMin(double min) {
         double old = range.getMin();
-        range.setMin(min);
+        //todo check bounds
+        range = new Range(min, getMax());
         this.firePropertyChange(RANGE_MIN_PROPERTY, old, range.getMin());
     }
 
     public void setMax(double max) {
         double old = range.getMax();
-        range.setMax(max);
+        //todo check bounds
+        range = new Range(getMin(), max);
         this.firePropertyChange(RANGE_MAX_PROPERTY, old, range.getMax());
     }
 

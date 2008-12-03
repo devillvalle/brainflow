@@ -2,6 +2,7 @@ package com.brainflow.core.layer;
 
 import com.brainflow.image.data.*;
 import com.brainflow.core.ClipRange;
+import com.brainflow.core.IClipRange;
 
 import java.util.HashMap;
 
@@ -61,7 +62,7 @@ public class MaskProperty3D implements IMaskProperty<IMaskedData3D> {
         } else {
 
 
-            final ClipRange range = layer.getImageLayerProperties().thresholdRange.get();
+            final IClipRange range = layer.getImageLayerProperties().thresholdRange.get();
             MaskPredicate pred = new MaskPredicate() {
                 public boolean mask(double value) {
                     return !range.contains(value);

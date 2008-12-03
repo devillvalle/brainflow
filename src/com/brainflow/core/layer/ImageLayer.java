@@ -19,6 +19,7 @@ import com.brainflow.core.layer.AbstractLayer;
 import com.brainflow.core.layer.ImageLayerProperties;
 import com.brainflow.core.layer.ImageMaskList;
 import com.brainflow.core.ClipRange;
+import com.brainflow.core.IClipRange;
 
 
 /**
@@ -53,8 +54,10 @@ public abstract class ImageLayer<T extends IImageSpace> extends AbstractLayer {
         this.dataSource = dataSource;
 
         if (dataSource.isLoaded()) {
-            getImageLayerProperties().getClipRange().setLowClip(getData().minValue());
-            getImageLayerProperties().getClipRange().setHighClip(getData().maxValue());
+            IClipRange clip = new ClipRange(getData().minValue(), getData().maxValue(), getData().minValue(), getData().maxValue());
+            //getImageLayerProperties().getClipRange().setLowClip(getData().minValue());
+            //getImageLayerProperties().getClipRange().setHighClip(getData().maxValue());
+            getImageLayerProperties().clipRange.set(clip);
 
         }
         
@@ -62,17 +65,17 @@ public abstract class ImageLayer<T extends IImageSpace> extends AbstractLayer {
     }
 
     public ImageLayer(IImageDataSource dataSource) {
-        this(dataSource.getStem(), dataSource);
+        this(dataSource.getImageInfo().getImageLabel(), dataSource);
 
     }
 
     public ImageLayer(IImageDataSource dataSource, ImageLayerProperties _properties) {
-        super(dataSource.getStem(), _properties);
+        super(dataSource.getImageInfo().getImageLabel(), _properties);
         this.dataSource = dataSource;
 
 
         if (dataSource.isLoaded()) {
-            ClipRange clip = _properties.getClipRange();
+            IClipRange clip = _properties.getClipRange();
             _properties.clipRange.set(new ClipRange(getData().minValue(), getData().maxValue(), clip.getLowClip(), clip.getHighClip()));
 
 

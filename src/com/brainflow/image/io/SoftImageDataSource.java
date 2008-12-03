@@ -12,6 +12,7 @@ import org.apache.commons.vfs.FileObject;
 
 import java.lang.ref.SoftReference;
 import java.util.logging.Logger;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,6 +42,10 @@ public class SoftImageDataSource extends AbstractImageDataSource {
     public SoftImageDataSource(ImageIODescriptor _descriptor, FileObject _header) {
         super(_descriptor, _header);
 
+    }
+
+    public SoftImageDataSource(ImageIODescriptor _descriptor, List<ImageInfo> infoList, int _index) {
+        super(_descriptor, infoList, _index);
     }
 
     public void releaseData() {

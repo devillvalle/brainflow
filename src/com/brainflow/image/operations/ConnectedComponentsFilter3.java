@@ -7,7 +7,8 @@ import com.brainflow.image.io.BrainIO;
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.application.MemoryImageDataSource;
 import com.brainflow.application.BrainFlowException;
-import com.brainflow.display.ThresholdRange;
+import com.brainflow.utils.Range;
+//import com.brainflow.display.ThresholdRange;
 
 import java.util.List;
 
@@ -276,7 +277,12 @@ public class ConnectedComponentsFilter3 extends AbstractImageFilter {
             IImageDataSource img = new MemoryImageDataSource(BrainIO.readNiftiImage("F:/data/anyback/tRepeat-stat.nii"));
             IImageData3D data = (IImageData3D) img.getData();
 
-            MaskedData3D mask = new MaskedData3D(data, new ThresholdRange(-1000, 1));
+            MaskedData3D mask = new MaskedData3D(data, new MaskPredicate() {
+                public boolean mask(double value) {
+                    if (value > 1000) return true;
+                    return false;
+                }
+            });
             System.out.println("cardinality " + mask.cardinality());
             BinaryImageData3D binData = new BinaryImageData3D(mask);
             System.out.println("cardinality " + binData.cardinality());

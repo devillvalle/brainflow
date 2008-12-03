@@ -4,7 +4,6 @@ package com.brainflow.core;
 import net.java.dev.properties.Property;
 import net.java.dev.properties.container.BeanContainer;
 import net.java.dev.properties.container.ObservableProperty;
-import net.java.dev.properties.container.ObservableWrapper;
 import com.brainflow.utils.IRange;
 import com.brainflow.utils.Range;
 
@@ -17,13 +16,19 @@ import com.brainflow.utils.Range;
  */
 
 
-public class ClipRange implements IRange {
+public class ClipRange implements IClipRange {
 
-    public final Property<Double> minValue = ObservableProperty.create();
+    private final double minValue;
 
-    public final Property<Double> maxValue = ObservableProperty.create();
+    private final double maxValue;
 
-    public final Property<Double> lowClip = new ObservableProperty<Double>(0.0) {
+    private final double lowClip;
+
+    private final double highClip;
+
+
+
+    /*public final Property<Double> lowClip = new ObservableProperty<Double>(0.0) {
         public void set(Double aDouble) {
 
             if (aDouble > highClip.get()) {
@@ -51,88 +56,98 @@ public class ClipRange implements IRange {
 
             super.set(aDouble);
         }
-    };
+    };*/
 
 
 
     public ClipRange(double min, double max, double lowClip, double highClip) {
-        BeanContainer.bind(this);
+        //BeanContainer.bind(this);
 
-        if (min > lowClip) throw new IllegalArgumentException("min cannot exceed lowClip");
-        if (max < highClip) throw new IllegalArgumentException("max cannot be less than highClip");
+        //if (min > lowClip) throw new IllegalArgumentException("min cannot exceed lowClip");
+        //if (max < highClip) throw new IllegalArgumentException("max cannot be less than highClip");
         if (lowClip > highClip) throw new IllegalArgumentException("lowClip cannot exceed highClip");
         if (min > max) throw new IllegalArgumentException("min cannot exceed max");
 
 
-        this.highClip.set(highClip);
-        this.lowClip.set(lowClip);
-        this.maxValue.set(max);
-        this.minValue.set(min);
+
+        this.maxValue = max;
+        this.minValue = min;
+
+        this.highClip = Math.min(highClip, maxValue);
+        this.lowClip = Math.max(lowClip, min);
     }
 
 
     public double getHighClip() {
-        return highClip.get();
+        return highClip;
     }
 
-    public void setClipRange(double low, double high) {
-        lowClip.set(low);
-        highClip.set(high);
-    }
+    //public void setClipRange(double low, double high) {
+    //    lowClip.set(low);
+    //    highClip.set(high);
+    //}
 
-    public void setHighClip(double highClip) {
-        this.highClip.set(highClip);
-    }
+    //public void setHighClip(double highClip) {
+    //    this.highClip.set(highClip);
+    //}
 
     public double getLowClip() {
-        return lowClip.get();
+        return lowClip;
     }
 
-    public void setLowClip(double lowClip) {
-       this.lowClip.set(lowClip);
-    }
+    //public void setLowClip(double lowClip) {
+    //   this.lowClip.set(lowClip);
+    //}
 
     public double getInterval() {
-        return highClip.get() - lowClip.get();
+        return highClip - lowClip;
     }
 
-    public Range getInnerRange() {
-        return new Range(lowClip.get(), highClip.get());
+    public IRange getInnerRange() {
+        return new Range(lowClip, highClip);
     }
 
     public double getMin() {
-        throw new UnsupportedOperationException("bad method");
+        return minValue;
 
     }
 
     public double getMax() {
-        throw new UnsupportedOperationException("bad method");
+        return maxValue;
                 
     }
 
-    public void setMax(double max) {
+    public IClipRange newClipRange(double min, double max, double lowclip, double highclip) {
+        //todo check validity
+        System.out.println("new regular clip range ");
+        System.out.println("low : " + lowclip);
+        System.out.println("high : " + highclip);
+        return new ClipRange(min, max, lowclip, highclip);
+    }
+
+    /*public void setMax(double max) {
         if (max > maxValue.get()) {
             throw new IllegalArgumentException("value " + max + " out of range ");
         }
 
-        highClip.set(max);
+        maxValue.set(max);
     }
 
     public void setMin(double min) {
          if (min < minValue.get()) {
             throw new IllegalArgumentException("value " + min + " out of range ");
         }
-        lowClip.set(min);
+        minValue.set(min);
     }
 
     public void setRange(double min, double max) {
         //todo check for correctness
         setMin(min);
         setMax(max);
-    }
+    }*/
 
-    public final boolean contains(double val) {
-        if (lowClip.get() <= val && highClip.get() >= val) {
+    public boolean contains(double val) {
+        if (lowClip <= val && highClip >= val) {
             return true;
         }
 

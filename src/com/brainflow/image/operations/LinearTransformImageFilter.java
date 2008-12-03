@@ -9,10 +9,7 @@ package com.brainflow.image.operations;
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import com.brainflow.image.axis.ImageAxis;
-import com.brainflow.image.data.BasicImageData;
-import com.brainflow.image.data.BasicImageData3D;
-import com.brainflow.image.data.IImageData;
-import com.brainflow.image.data.IImageData3D;
+import com.brainflow.image.data.*;
 import com.brainflow.image.iterators.XYZIterator;
 import com.brainflow.image.space.Axis;
 import com.brainflow.image.space.ImageSpace3D;
@@ -70,7 +67,7 @@ public class LinearTransformImageFilter extends AbstractTransformImageFilter {
         outputSpace.anchorAxis(a2.getAnatomicalAxis(), a2.getAnatomicalAxis().getMinDirection(), origin.getY());
         outputSpace.anchorAxis(a3.getAnatomicalAxis(), a3.getAnatomicalAxis().getMinDirection(), origin.getZ());
 
-        BasicImageData3D odata = (BasicImageData3D) BasicImageData.create(outputSpace, outputDataType);
+        DataWriter3D odata = ((IImageData3D) BasicImageData.create(outputSpace, outputDataType)).createWriter(false);
 
 
         return resample(first, odata);
@@ -78,7 +75,7 @@ public class LinearTransformImageFilter extends AbstractTransformImageFilter {
 
     }
 
-    private IImageData3D resample(BasicImageData3D src, BasicImageData3D odat) {
+    private IImageData3D resample(BasicImageData3D src, DataWriter3D odat) {
 
         XYZIterator iter = Space.createXYZiterator((ImageSpace3D) odat.getImageSpace());
         Vector3f holder = new Vector3f();
@@ -113,7 +110,7 @@ public class LinearTransformImageFilter extends AbstractTransformImageFilter {
         }
 
 
-        return odat;
+        return odat.asImageData();
     }
 
 

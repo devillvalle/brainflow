@@ -8,6 +8,7 @@ import com.brainflow.core.layer.IMaskList;
 import com.brainflow.core.layer.ImageLayerProperties;
 import com.brainflow.core.SliceRenderer;
 import com.brainflow.core.ClipRange;
+import com.brainflow.core.IClipRange;
 
 /**
  * Created by IntelliJ IDEA.
@@ -55,11 +56,11 @@ public abstract class AbstractLayer {
         return properties.opacity.get();
     }
 
-    public ClipRange getThreshold() {
+    public IClipRange getThreshold() {
         return properties.getThresholdRange();
     }
 
-    public ClipRange getClipRange() {
+    public IClipRange getClipRange() {
         return properties.getClipRange();
     }
 

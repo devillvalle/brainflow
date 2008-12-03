@@ -196,7 +196,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
             }
 
             protected Transferable createTransferable(JComponent c) {
-
+                System.out.println("trying to create transferable");
                 if (c instanceof JTree) {
                     JTree tree = (JTree) c;
                     TreePath path = tree.getSelectionPath();
@@ -204,7 +204,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
                     List<IImageDataSource> list = new ArrayList<IImageDataSource>();
                     for (int i = 0; i < obj.length; i++) {
                         DefaultMutableTreeNode node = (DefaultMutableTreeNode) obj[i];
-                        if (node.isLeaf() & node instanceof DataSourceNode)  {
+                        if (node instanceof DataSourceNode)  {
                             DataSourceNode dnode = (DataSourceNode)node;
                             IImageDataSource source = dnode.getUserObject();
                             list.add(source);
@@ -462,7 +462,7 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
             } else if (fobj.getType() == FileType.FILE && ImageIOManager.getInstance().isLoadableImage(fobj)) {
                 ImageIODescriptor desc = ImageIOManager.getInstance().getDescriptor(fobj);
                 IImageDataSource source = desc.createLoadableImage(fobj);
-                List<? extends ImageInfo> infoList = source.getImageInfoList();
+                List<ImageInfo> infoList = source.getImageInfoList();
 
                 assert infoList.size() != 0;
 

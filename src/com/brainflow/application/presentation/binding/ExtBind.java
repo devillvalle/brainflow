@@ -12,6 +12,7 @@ import com.brainflow.gui.BiSlider;
 import com.brainflow.gui.ToggleBarX;
 import com.brainflow.gui.MultiSelectToggleBar;
 import com.brainflow.core.ClipRange;
+import com.brainflow.core.IClipRange;
 
 import javax.swing.*;
 
@@ -43,7 +44,7 @@ public class ExtBind extends SwingBind {
         new MultiSelectToggleBarAdapter().bind(property, cmp);
     }
 
-    public void bindBiSlider(BaseProperty<ClipRange> property, BiSlider cmp) {
+    public void bindBiSlider(BaseProperty<IClipRange> property, BiSlider cmp) {
         new BiSliderAdapter().bind(property, cmp);
     }
 

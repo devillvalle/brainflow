@@ -32,7 +32,7 @@ public abstract class AbstractImageDataSource implements IImageDataSource {
 
     private BufferedImage previewImage = BLANK;
 
-    private List<? extends ImageInfo> imageInfoList;
+    private List<ImageInfo> imageInfoList;
 
     private int index = 0;
 
@@ -40,6 +40,7 @@ public abstract class AbstractImageDataSource implements IImageDataSource {
   
     public AbstractImageDataSource(ImageIODescriptor _descriptor, ImageInfo _info) {
         imageInfoList = Arrays.asList(_info);
+
         descriptor = _descriptor;
 
         //todo ensure ImageInfo matches descriptor
@@ -47,6 +48,19 @@ public abstract class AbstractImageDataSource implements IImageDataSource {
         header = getImageInfo().getHeaderFile();
 
     }
+
+
+    public AbstractImageDataSource(ImageIODescriptor _descriptor, List<ImageInfo> infoList, int _index) {
+        imageInfoList = infoList;
+        index = _index;
+        descriptor = _descriptor;
+
+        //todo ensure ImageInfo matches descriptor
+        dataFile = getImageInfo().getDataFile();
+        header = getImageInfo().getHeaderFile();
+
+    }
+
 
     public AbstractImageDataSource(ImageIODescriptor _descriptor, FileObject _header, FileObject _data) {
         descriptor = _descriptor;
@@ -59,7 +73,7 @@ public abstract class AbstractImageDataSource implements IImageDataSource {
         header = _header;
     }
 
-    public List<? extends ImageInfo> getImageInfoList() {
+    public List<ImageInfo> getImageInfoList() {
         if (imageInfoList == null) fetchImageInfo();
         return imageInfoList;
     }
@@ -131,6 +145,8 @@ public abstract class AbstractImageDataSource implements IImageDataSource {
         return header.getName().getBaseName();
 
     }
+
+
 
     public boolean equals(Object o) {
         if (this == o) return true;

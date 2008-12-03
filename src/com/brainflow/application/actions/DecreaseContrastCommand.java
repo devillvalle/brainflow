@@ -4,6 +4,7 @@ import com.brainflow.core.layer.AbstractLayer;
 import com.brainflow.core.layer.ImageLayerProperties;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.ClipRange;
+import com.brainflow.core.IClipRange;
 
 /**
  * BrainFlow Project
@@ -35,7 +36,7 @@ public class DecreaseContrastCommand extends BrainFlowCommand {
 
     private void decrementContrast(AbstractLayer layer) {
         ImageLayerProperties props = layer.getImageLayerProperties();
-        ClipRange clipRange = props.getClipRange();
+        IClipRange clipRange = props.getClipRange();
         double highClip = clipRange.getHighClip();
         double lowClip = clipRange.getLowClip();
 
@@ -53,8 +54,8 @@ public class DecreaseContrastCommand extends BrainFlowCommand {
         newLowClip = Math.max(newLowClip, layer.getImageLayerProperties().getColorMap().getMinimumValue());
 
 
-        double max = clipRange.maxValue.get();
-        double min = clipRange.minValue.get();
+        double max = clipRange.getMax();
+        double min = clipRange.getMin();
         props.clipRange.set(new ClipRange(min, max, newLowClip, newHighClip));
 
 

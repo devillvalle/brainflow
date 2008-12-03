@@ -1,10 +1,7 @@
 package com.brainflow.image.operations;
 
 import cern.colt.list.IntArrayList;
-import com.brainflow.image.data.BasicImageData;
-import com.brainflow.image.data.BasicImageData3D;
-import com.brainflow.image.data.IImageData;
-import com.brainflow.image.data.IImageData3D;
+import com.brainflow.image.data.*;
 import com.brainflow.image.io.BrainIO;
 import com.brainflow.image.space.ImageSpace3D;
 import com.brainflow.utils.DataType;
@@ -120,7 +117,7 @@ public class RegionGrowingImageFilter extends AbstractImageFilter {
 
         IntArrayList regionIndices = new IntArrayList(50);
 
-        IImageData3D visited = null;
+        DataWriter3D visited = null;
 
         Stack<int[]> searchStack = new Stack<int[]>();
 
@@ -128,7 +125,7 @@ public class RegionGrowingImageFilter extends AbstractImageFilter {
             seed = _seed;
             data = _data;
             space = (ImageSpace3D) data.getImageSpace();
-            visited = (IImageData3D) BasicImageData.create(space, DataType.INTEGER);
+            visited = ((IImageData3D) BasicImageData.create(space, DataType.INTEGER)).createWriter(false);
         }
 
         public IntArrayList growRegion() {

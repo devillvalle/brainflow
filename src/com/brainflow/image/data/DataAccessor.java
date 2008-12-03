@@ -18,6 +18,6 @@ public interface DataAccessor {
 
     public int numElements();
 
-    public IImageSpace getImageSpace();
+    //public IImageSpace getImageSpace();
 
 }

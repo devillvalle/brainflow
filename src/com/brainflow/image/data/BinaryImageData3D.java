@@ -164,4 +164,8 @@ public class BinaryImageData3D extends BinaryImageData implements IMaskedData3D 
         return getBitVector().getQuick(index);
 
     }
+
+    public DataWriter3D createWriter(boolean clear) {
+        throw new UnsupportedOperationException();
+    }
 }

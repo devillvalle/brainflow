@@ -55,9 +55,8 @@ public class ImageDisplayModel implements IImageDisplayModel {
     public final IndexedProperty<Integer> visibleSelection = new ObservableIndexed<Integer>() {
 
 
-
         private boolean isSynced() {
-            for (int i=0; i<getNumLayers(); i++) {
+            for (int i = 0; i < getNumLayers(); i++) {
                 ImageLayer layer = getLayer(i);
                 if (layer.isVisible() && !get().contains(i)) {
                     return false;
@@ -70,9 +69,11 @@ public class ImageDisplayModel implements IImageDisplayModel {
             return true;
 
         }
+
         public void remove(Integer i) {
             ImageLayer layer = getLayer(i);
             boolean vis = layer.getImageLayerProperties().visible.get();
+
             if (vis) {
                 layer.getImageLayerProperties().visible.set(false);
             }
@@ -86,13 +87,12 @@ public class ImageDisplayModel implements IImageDisplayModel {
                 super.set(newlist);
             }
 
-          
+
             assert isSynced();
 
 
         }
 
-       
 
         public void add(Integer i) {
             //todo this breaks down if same layer is addewd twice to model
@@ -120,10 +120,10 @@ public class ImageDisplayModel implements IImageDisplayModel {
         public void set(List<Integer> t) {
             for (int i = 0; i < getNumLayers(); i++) {
                 ImageLayer layer = getLayer(i);
-                  if (t.contains(i)) {
+                if (t.contains(i)) {
                     layer.getImageLayerProperties().visible.set(true);
-                 } else {
-                     layer.getImageLayerProperties().visible.set(false);
+                } else {
+                    layer.getImageLayerProperties().visible.set(false);
                 }
             }
 
@@ -186,7 +186,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         visListener = new ImageLayerListenerImpl() {
             public void visibilityChanged(ImageLayerEvent event) {
                 //todo hack cast
-                ImageLayer3D layer = (ImageLayer3D)event.getAffectedLayer();
+                ImageLayer3D layer = (ImageLayer3D) event.getAffectedLayer();
                 int index = ImageDisplayModel.this.indexOf(layer);
                 if (layer.isVisible()) {
                     visibleSelection.add(index);
@@ -325,7 +325,30 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
     }
 
-    private void updateColorMapClips() {
+    
+
+
+    public void setLayer(int index, ImageLayer3D layer) {
+        //todo check to see if layer is compatible
+        //todo remove listeners for old layer
+        List<ImageLayer3D> newModel = new ArrayList<ImageLayer3D>();
+        for (int i = 0; i < listModel.size(); i++) {
+            ImageLayer3D curlayer = listModel.get(i);
+            if (i == index) {
+                newModel.add(layer);
+                //todo remove listeners
+            } else {
+                newModel.add(curlayer);
+            }
+
+
+        }
+
+        listModel.set(newModel);
+
+        System.out.println("just set new list model, selected index = " + listSelection.get());
+        forwarder.fireContentsChanged(new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, 0, getNumLayers() - 1));
+
 
     }
 
@@ -393,23 +416,24 @@ public class ImageDisplayModel implements IImageDisplayModel {
         });
 
 
-        BeanContainer.get().addListener(layer.getImageLayerProperties().thresholdRange.get().lowClip, new PropertyListener() {
+        /*BeanContainer.get().addListener(layer.getImageLayerProperties().thresholdRange.get().lowClip, new PropertyListener() {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
                 ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
                 for (ImageLayerListener listener : listeners) {
                     listener.thresholdChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
                 }
             }
-        });
+        }); */
 
-        BeanContainer.get().addListener(layer.getImageLayerProperties().thresholdRange.get().highClip, new PropertyListener() {
+
+        /*BeanContainer.get().addListener(layer.getImageLayerProperties().thresholdRange.get().highClip, new PropertyListener() {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
                 ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
                 for (ImageLayerListener listener : listeners) {
                     listener.thresholdChanged(new ImageLayerEvent(ImageDisplayModel.this, layer));
                 }
             }
-        });
+        });*/
 
         BeanContainer.get().addListener(layer.getImageLayerProperties().thresholdRange, new PropertyListener() {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
@@ -424,7 +448,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
 
         BeanContainer.get().addListener(layer.getImageLayerProperties().clipRange, new PropertyListener() {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
-                ClipRange clip = (ClipRange)newValue;
+                ClipRange clip = (ClipRange) newValue;
                 Number lowClip = clip.getLowClip();
                 Number highClip = clip.getHighClip();
 
@@ -447,7 +471,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         });
 
 
-        BeanContainer.get().addListener(layer.getImageLayerProperties().clipRange.get().lowClip, new PropertyListener() {
+        /*BeanContainer.get().addListener(layer.getImageLayerProperties().clipRange.get().lowClip, new PropertyListener() {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
                 Number lowClip = (Number) newValue;
                 Number highClip = layer.getImageLayerProperties().clipRange.get().getHighClip();
@@ -469,12 +493,12 @@ public class ImageDisplayModel implements IImageDisplayModel {
                 }
 
             }
-        });
+        }); */
 
 
         BeanContainer.get().addListener(layer.maskProperty, new PropertyListener() {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
-                MaskProperty3D mp = (MaskProperty3D)newValue;
+                MaskProperty3D mp = (MaskProperty3D) newValue;
 
                 ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
                 for (ImageLayerListener listener : listeners) {
@@ -486,9 +510,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
         });
 
 
-
-
-        BeanContainer.get().addListener(layer.getImageLayerProperties().clipRange.get().highClip, new PropertyListener() {
+        /*BeanContainer.get().addListener(layer.getImageLayerProperties().clipRange.get().highClip, new PropertyListener() {
             public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
                 Number highClip = (Number) newValue;
                 Number lowClip = layer.getImageLayerProperties().clipRange.get().getLowClip();
@@ -514,11 +536,10 @@ public class ImageDisplayModel implements IImageDisplayModel {
             // may not be necessary if because of  call above ...
 
 
-        });
+        });*/
 
 
     }
-
 
 
     public boolean containsLayer(ImageLayer3D layer) {
@@ -589,8 +610,6 @@ public class ImageDisplayModel implements IImageDisplayModel {
         }
 
         listModel.set(newModel);
-//imageListModel.addListDataListener(forwarder);
-//layerSelection.setListModel(imageListModel);
 
         forwarder.fireContentsChanged(new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, index0, index1));
     }

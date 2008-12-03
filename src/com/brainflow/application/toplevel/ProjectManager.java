@@ -26,7 +26,7 @@ import java.util.List;
  */
 
 
-public class ProjectManager implements EventSubscriber, BrainflowProjectListener {
+public class ProjectManager implements EventSubscriber, BrainFlowProjectListener {
 
     private List<BrainFlowProject> projects = new ArrayList<BrainFlowProject>();
 
@@ -57,7 +57,9 @@ public class ProjectManager implements EventSubscriber, BrainflowProjectListener
 
         //todo give sensible name
         IImageDisplayModel displayModel = new ImageDisplayModel("model #" + (activeProject.size() + 1));
-        displayModel.addLayer(layer);
+
+        //todo hack cast
+        displayModel.addLayer((ImageLayer3D)layer);
         activeProject.addModel(displayModel);
 
 
@@ -87,7 +89,7 @@ public class ProjectManager implements EventSubscriber, BrainflowProjectListener
                 limg.getData().maxValue(),
                 ResourceManager.getInstance().getDefaultColorMap()));
 
-        ImageLayer layer = new ImageLayer3D(limg, params);
+        ImageLayer3D layer = new ImageLayer3D(limg, params);
         displayModel.addLayer(layer);
 
         activeProject.addModel(displayModel);
@@ -128,31 +130,32 @@ public class ProjectManager implements EventSubscriber, BrainflowProjectListener
                 }
 
                 for (ImageLayer layer : removables) {
-                    dmodel.removeLayer(layer);
+                    //todo hack cast
+                    dmodel.removeLayer((ImageLayer3D)layer);
                 }
             }
         }
     }
 
 
-    public void modelAdded(BrainflowProjectEvent event) {
+    public void modelAdded(BrainFlowProjectEvent event) {
         EventBus.publish(new ImageDisplayModelEvent(event, ImageDisplayModelEvent.TYPE.LAYER_ADDED));
 
     }
 
-    public void modelRemoved(BrainflowProjectEvent event) {
+    public void modelRemoved(BrainFlowProjectEvent event) {
         EventBus.publish(new ImageDisplayModelEvent(event, ImageDisplayModelEvent.TYPE.LAYER_REMOVED));
     }
 
-    public void intervalAdded(BrainflowProjectEvent e) {
+    public void intervalAdded(BrainFlowProjectEvent e) {
         EventBus.publish(new ImageDisplayModelEvent(e, ImageDisplayModelEvent.TYPE.LAYER_INTERVAL_ADDED));
     }
 
-    public void intervalRemoved(BrainflowProjectEvent e) {
+    public void intervalRemoved(BrainFlowProjectEvent e) {
         EventBus.publish(new ImageDisplayModelEvent(e, ImageDisplayModelEvent.TYPE.LAYER_INTERVAL_REMOVED));
     }
 
-    public void contentsChanged(BrainflowProjectEvent e) {
+    public void contentsChanged(BrainFlowProjectEvent e) {
         EventBus.publish(new ImageDisplayModelEvent(e, ImageDisplayModelEvent.TYPE.LAYER_CHANGED));
     }
 }

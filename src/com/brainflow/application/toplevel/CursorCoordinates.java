@@ -27,7 +27,7 @@ public class CursorCoordinates implements EventSubscriber {
     private MessageFormat format = new MessageFormat("{0}: {1, number, ##0.0}");
 
     public CursorCoordinates() {
-        EventBus.subscribeExactly(ImageViewMousePointerEvent.class, this);
+        EventBus.subscribeExactlyStrongly(ImageViewMousePointerEvent.class, this);
         xaxisLabel.setText("0.0");
         yaxisLabel.setText("0.0");
         zaxisLabel.setText("0.0");
@@ -50,6 +50,7 @@ public class CursorCoordinates implements EventSubscriber {
     }
 
     public void onEvent(Object evt) {
+
         ImageViewMousePointerEvent event = (ImageViewMousePointerEvent) evt;
         AnatomicalPoint3D gpoint = event.getLocation();
         if (gpoint != null) {

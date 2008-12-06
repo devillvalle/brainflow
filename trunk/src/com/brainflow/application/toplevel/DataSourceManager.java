@@ -13,7 +13,7 @@ import com.brainflow.image.io.ImageDataSource;
 import com.brainflow.image.data.IImageData;
 import com.brainflow.application.ImageProgressDialog;
 import com.brainflow.application.ImageIODescriptor;
-import com.brainflow.application.services.LoadableImageStatusEvent;
+import com.brainflow.application.services.DataSourceStatusEvent;
 import org.bushe.swing.event.EventBus;
 
 import java.util.LinkedHashMap;
@@ -55,7 +55,7 @@ public class DataSourceManager {
 
         if (imageMap.containsKey(limg.getUniqueID())) {
             imageMap.remove(limg.getUniqueID());
-            EventBus.publish(new LoadableImageStatusEvent(limg, LoadableImageStatusEvent.EventID.IMAGE_REMOVED));
+            EventBus.publish(new DataSourceStatusEvent(limg, DataSourceStatusEvent.EventID.IMAGE_REMOVED));
         }
 
         return true;
@@ -78,7 +78,7 @@ public class DataSourceManager {
 
         imageMap.put(uid, limg);
         log.fine("registering image ..." + limg.getImageInfo().getImageLabel());
-        EventBus.publish(new LoadableImageStatusEvent(limg, LoadableImageStatusEvent.EventID.IMAGE_REGISTERED));
+        EventBus.publish(new DataSourceStatusEvent(limg, DataSourceStatusEvent.EventID.IMAGE_REGISTERED));
     }
 
     public IImageDataSource createDataSource(ImageIODescriptor descriptor, ImageInfo info, boolean register) {

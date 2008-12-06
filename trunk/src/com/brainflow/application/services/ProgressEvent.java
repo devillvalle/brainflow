@@ -1,5 +1,5 @@
 /*
- * LoadableImageProgressEvent.java
+ * DataSourceProgressEvent.java
  *
  * Created on June 22, 2006, 3:20 PM
  *

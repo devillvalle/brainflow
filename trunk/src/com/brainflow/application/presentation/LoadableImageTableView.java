@@ -1,16 +1,9 @@
 package com.brainflow.application.presentation;
 
 import com.brainflow.image.io.IImageDataSource;
-import com.brainflow.application.actions.ActionContext;
 import com.brainflow.application.actions.RemoveLoadableImageCommand;
-import com.brainflow.application.services.LoadableImageStatusEvent;
-import com.brainflow.colormap.ColorTable;
-import com.brainflow.core.*;
+import com.brainflow.application.services.DataSourceStatusEvent;
 import com.brainflow.gui.AbstractPresenter;
-import com.brainflow.image.anatomy.AnatomicalPoint1D;
-import com.brainflow.image.anatomy.Anatomy3D;
-import com.brainflow.utils.IRange;
-import com.brainflow.utils.Range;
 import com.jidesoft.grid.*;
 import com.jidesoft.swing.NullButton;
 import com.jidesoft.swing.NullJideButton;
@@ -30,15 +23,11 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.awt.image.RenderedImage;
-import java.awt.image.renderable.ParameterBlock;
 import java.io.IOException;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -69,7 +58,7 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
     private ActionCommand removeCommand = new RemoveLoadableImageCommand();
 
     public LoadableImageTableView() {
-        EventBus.subscribe(LoadableImageStatusEvent.class, this);
+        EventBus.subscribe(DataSourceStatusEvent.class, this);
     }
 
     public JComponent getComponent() {
@@ -132,8 +121,8 @@ public class LoadableImageTableView extends AbstractPresenter implements EventSu
 
 
     public void onEvent(Object evt) {
-        LoadableImageStatusEvent event = (LoadableImageStatusEvent) evt;
-        LoadableImageStatusEvent.EventID id = event.getEventID();
+        DataSourceStatusEvent event = (DataSourceStatusEvent) evt;
+        DataSourceStatusEvent.EventID id = event.getEventID();
 
 
         switch (id) {

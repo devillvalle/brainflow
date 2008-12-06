@@ -1,5 +1,5 @@
 /*
- * LoadableImageProgressEvent.java
+ * DataSourceProgressEvent.java
  *
  * Created on June 22, 2006, 3:29 PM
  *
@@ -13,7 +13,7 @@ package com.brainflow.application.services;
  *
  * @author buchs
  */
-public class LoadableImageProgressEvent extends ProgressEvent {
+public class DataSourceProgressEvent extends ProgressEvent {
 
     public enum State {
         INITIATED,
@@ -25,7 +25,7 @@ public class LoadableImageProgressEvent extends ProgressEvent {
     private State state;
     
     /** Creates a new instance of LoadableImageProgressEvent */
-    public LoadableImageProgressEvent(Object source, int _progress, String _message, State _state) {
+    public DataSourceProgressEvent(Object source, int _progress, String _message, State _state) {
         super(source, _progress, _message);
         state = _state;
     }

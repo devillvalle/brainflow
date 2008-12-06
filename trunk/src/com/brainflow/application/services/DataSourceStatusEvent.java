@@ -10,7 +10,7 @@ import org.bushe.swing.event.AbstractEventServiceEvent;
  * Time: 1:33:56 PM
  * To change this template use File | Settings | File Templates.
  */
-public class LoadableImageStatusEvent extends AbstractEventServiceEvent {
+public class DataSourceStatusEvent extends AbstractEventServiceEvent {
 
 
     public enum EventID {
@@ -22,7 +22,7 @@ public class LoadableImageStatusEvent extends AbstractEventServiceEvent {
 
     private IImageDataSource sourceImage;
 
-    public LoadableImageStatusEvent(IImageDataSource source, EventID _id) {
+    public DataSourceStatusEvent(IImageDataSource source, EventID _id) {
         super(source);
         sourceImage = source;
         id = _id;

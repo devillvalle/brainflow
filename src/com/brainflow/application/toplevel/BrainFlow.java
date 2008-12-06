@@ -40,7 +40,6 @@ import com.pietschy.command.GuiCommands;
 import com.pietschy.command.configuration.ParseException;
 import com.pietschy.command.group.CommandGroup;
 import com.pietschy.command.group.ExpansionPointBuilder;
-import com.pietschy.command.toggle.ToggleCommand;
 import com.pietschy.command.toggle.ToggleGroup;
 import com.pietschy.command.ActionCommand;
 import org.apache.commons.vfs.FileObject;
@@ -62,6 +61,7 @@ import java.io.*;
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Callable;
@@ -69,6 +69,7 @@ import java.util.concurrent.FutureTask;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+
 
 import de.javasoft.plaf.synthetica.*;
 
@@ -99,6 +100,8 @@ public class BrainFlow {
 
 
     private RecentPathMenu pathMenu = new RecentPathMenu();
+
+    private FavoritesMenu favoritesMenu = new FavoritesMenu();
 
     private DocumentPane documentPane = new DocumentPane();
 
@@ -403,6 +406,7 @@ public class BrainFlow {
         menuBar.add(fileMenuGroup.createMenuItem());
         menuBar.add(viewMenuGroup.createMenuItem());
         menuBar.add(gotoMenuGroup.createMenuItem());
+        menuBar.add(favoritesMenu.getCommandGroup().createMenuItem());
 
         brainFrame.setJMenuBar(menuBar);
 
@@ -1132,5 +1136,8 @@ public class BrainFlow {
       }
   }  */
 
+
+
+   
 
 }

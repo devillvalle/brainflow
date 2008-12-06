@@ -3,7 +3,7 @@ package com.brainflow.application.toplevel;
 import com.brainflow.application.BrainFlowProject;
 import com.brainflow.image.io.IImageDataSource;
 import com.brainflow.application.services.ImageDisplayModelEvent;
-import com.brainflow.application.services.LoadableImageStatusEvent;
+import com.brainflow.application.services.DataSourceStatusEvent;
 import com.brainflow.colormap.LinearColorMap2;
 import com.brainflow.core.*;
 import com.brainflow.core.layer.ImageLayer;
@@ -34,7 +34,7 @@ public class ProjectManager implements EventSubscriber, BrainFlowProjectListener
 
     protected ProjectManager() {
         // Exists only to thwart instantiation.
-        EventBus.subscribe(LoadableImageStatusEvent.class, this);
+        EventBus.subscribe(DataSourceStatusEvent.class, this);
         activeProject.addListDataListener(this);
         activeProject.setName("Project-1");
     }
@@ -101,7 +101,7 @@ public class ProjectManager implements EventSubscriber, BrainFlowProjectListener
 
 
     public void onEvent(Object evt) {
-        LoadableImageStatusEvent event = (LoadableImageStatusEvent) evt;
+        DataSourceStatusEvent event = (DataSourceStatusEvent) evt;
         switch (event.getEventID()) {
             case IMAGE_LOADED:
                 break;

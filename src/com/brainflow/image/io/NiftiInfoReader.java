@@ -20,6 +20,8 @@ import java.io.*;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import java.net.URL;
@@ -36,6 +38,27 @@ import java.net.URL;
 public class NiftiInfoReader implements ImageInfoReader {
 
     private static final Logger log = Logger.getLogger(NiftiInfoReader.class.getName());
+
+
+
+
+    public static boolean isHeaderFile(String name) {
+        if (name.endsWith(".nii") || name.endsWith(".nii.gz") || name.endsWith(".hdr") ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static boolean isImageFile(String name) {
+        if (name.endsWith(".nii") || name.endsWith(".nii.gz") || name.endsWith(".img") ) {
+            return true;
+        }
+
+        return false;
+    }
+
+
 
     public static String getHeaderName(String name) {
         if (name.endsWith(".img")) {
@@ -108,12 +131,24 @@ public class NiftiInfoReader implements ImageInfoReader {
 
     }
 
-    public List<NiftiImageInfo> readInfo(InputStream istream) throws BrainFlowException {
-        List<NiftiImageInfo> ret = null;
+    public List<ImageInfo> readInfo(URL url) throws BrainFlowException {
+        try {
+            FileObject fobj = VFS.getManager().resolveFile(url.toString());
+            return readInfo(fobj);
+        } catch(FileSystemException e) {
+            throw new BrainFlowException(e);
+        }
+
+    }
+
+    public List<ImageInfo> readInfo(InputStream istream) throws BrainFlowException {
+        List<ImageInfo> ret = null;
         // todo check to see if valid nifti file extension
         // todo provide dummy header name?
         try {
-            ret = readHeader("", istream);
+
+            throw new UnsupportedOperationException();
+            //ret = readHeader("", istream);
 
         } catch (Exception e) {
             log.warning("Exception caught in NiftiInfoReader.readInfo ");
@@ -121,21 +156,22 @@ public class NiftiInfoReader implements ImageInfoReader {
         }
 
 
-        return ret;
+        //return ret;
 
 
     }
 
-    @Override
-    public List<NiftiImageInfo> readInfo(File f) throws BrainFlowException {
-        List<NiftiImageInfo> ret;
+
+    public List<ImageInfo> readInfo(File f) throws BrainFlowException {
+        List<ImageInfo> ret;
         // todo check to see if valid nifti file extension
         try {
 
             String headerName = NiftiInfoReader.getHeaderName(f.getName());
-            ret = readHeader(headerName, getInputStream(f));
             FileObject dataFile = VFS.getManager().resolveFile(f.getParentFile(), NiftiInfoReader.getImageName(f.getName()));
             FileObject headerFile = VFS.getManager().resolveFile(f.getParentFile(), NiftiInfoReader.getHeaderName(f.getName()));
+
+            ret = readHeader(headerName, headerFile, getInputStream(f));
             for (ImageInfo ii : ret) {
                 ii.setDataFile(dataFile);
                 ii.setHeaderFile(headerFile);
@@ -151,6 +187,47 @@ public class NiftiInfoReader implements ImageInfoReader {
         return ret;
 
     }
+
+   /*private List<ImageInfo> readHeader(InputStream istream) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(istream));
+
+
+        HeaderAttribute ret = null;
+        skipNewLines(reader);
+
+        // parse the header
+        do {
+            ret = parseElement(reader);
+            if (ret != null) {
+                putAttribute(ret.getKey(), ret);
+            }
+
+        } while (ret != null);
+
+        // determine how many sub-bricks
+        HeaderAttribute attr = attributeMap.get(AFNIAttributeKey.DATASET_RANK);
+        int numImages = (Integer) attr.getData().get(1);
+        List<ImageInfo> infoList = new ArrayList<ImageInfo>(numImages);
+
+        //create instances
+        for (int i = 0; i < numImages; i++) {
+            AFNIImageInfo info = new AFNIImageInfo(attributeMap);
+            infoList.add(info);
+        }
+
+        // fill instances with data. Yes, this is all very ugly.
+        Iterator<AFNIAttributeKey> iter = attributeMap.keySet().iterator();
+        while (iter.hasNext()) {
+            AFNIAttributeKey key = iter.next();
+            processAttribute(key, attributeMap.get(key), infoList);
+        }
+
+        processByteOffsets(infoList);
+
+        return infoList;
+
+    } */
+
 
     private FileObject resolveFileObject(String f) throws FileNotFoundException {
         try {
@@ -177,13 +254,13 @@ public class NiftiInfoReader implements ImageInfoReader {
         return resolveFileObject(f.getAbsolutePath());
     }
 
-    public List<NiftiImageInfo> readInfo(FileObject fobj) throws BrainFlowException {
-        List<NiftiImageInfo> ret;
+    public List<ImageInfo> readInfo(FileObject fobj) throws BrainFlowException {
+        List<ImageInfo> ret;
 
         try {
 
             String headerName = NiftiInfoReader.getHeaderName(fobj.getName().getBaseName());
-            ret = readHeader(headerName, getInputStream(fobj));
+            ret = readHeader(headerName, fobj, getInputStream(fobj));
             FileObject dataFile = VFS.getManager().resolveFile(fobj.getParent(), NiftiInfoReader.getImageName(fobj.getName().getBaseName()));
             FileObject headerFile = VFS.getManager().resolveFile(fobj.getParent(), NiftiInfoReader.getHeaderName(fobj.getName().getBaseName()));
             for (ImageInfo ii : ret) {
@@ -328,27 +405,51 @@ public class NiftiInfoReader implements ImageInfoReader {
     }
 
 
-    private List<NiftiImageInfo> readHeader(String name, InputStream stream) throws IOException, BrainFlowException {
-        NiftiImageInfo info;
+    private List<ImageInfo> readHeader(String name, FileObject file, InputStream stream) throws IOException, BrainFlowException {
+        ImageInfo info;
+        FileObject dataFile = VFS.getManager().resolveFile(file.getParent(), NiftiInfoReader.getImageName(file.getName().getBaseName()));
+        FileObject headerFile = VFS.getManager().resolveFile(file.getParent(), NiftiInfoReader.getHeaderName(file.getName().getBaseName()));
 
         try {
             Nifti1Dataset nifti = new Nifti1Dataset(name);
             nifti.readHeader(stream);
+
+            //for (int i = 0; i < numImages; i++) {
+            //AFNIImageInfo info = new AFNIImageInfo(attributeMap);
+            //infoList.add(info);
+
             info = fillInfo(nifti);
+            info.setDataFile(dataFile);
+            info.setHeaderFile(headerFile);
+
+
         } catch (IOException e) {
             throw e;
         } catch (BrainFlowException e) {
             throw e;
         }
 
+        int nimages = info.getNumImages();
+        if (nimages == 1) {
+            return Arrays.asList(info);
+        } else {
 
-        return Arrays.asList(info);
+            List<ImageInfo> ret = new ArrayList<ImageInfo>();
+            for (int i=0; i<nimages; i++) {
+                NiftiImageInfo ni = (NiftiImageInfo)info.selectInfo(i);
+                ret.add(ni);
+            }
+
+            return ret;
+        }
+
+
 
     }
 
 
-    private List<NiftiImageInfo> readHeader(String name) throws IOException, BrainFlowException {
-        NiftiImageInfo info;
+    private List<ImageInfo> readHeader(String name) throws IOException, BrainFlowException {
+        ImageInfo info;
 
         try {
             Nifti1Dataset nifti = new Nifti1Dataset(name);
@@ -370,7 +471,7 @@ public class NiftiInfoReader implements ImageInfoReader {
             NiftiInfoReader reader = new NiftiInfoReader();
            
             URL url = TestUtils.getDataURL("BRB-20071214-09-t1_mprage-001.nii");
-            NiftiImageInfo info = reader.readInfo(VFS.getManager().resolveFile(url.toString())).get(0);
+            ImageInfo info = reader.readInfo(VFS.getManager().resolveFile(url.toString())).get(0);
 
 
             IDimension dim = info.getArrayDim();

@@ -4,6 +4,7 @@ package com.brainflow.image.io;
 import com.brainflow.application.BrainFlowException;
 import com.brainflow.image.data.BasicImageData;
 import com.brainflow.image.data.IImageData;
+import com.brainflow.image.data.IImageData3D;
 
 import com.brainflow.utils.DataType;
 import com.brainflow.utils.IDimension;
@@ -41,6 +42,91 @@ public class BrainIO {
     }
 
 
+    public static IImageData3D loadVolume(String fileName) throws BrainFlowException {
+        ImageInfoReader reader = createInfoReader(fileName);
+        List<? extends ImageInfo> info = reader.readInfo(new File(fileName));
+
+
+        BasicImageReader ireader = new BasicImageReader();
+        return (IImageData3D) ireader.readImage(info.get(0));
+
+
+    }
+
+
+    public static IImageData3D loadVolume(URL url) throws BrainFlowException {
+        ImageInfoReader reader = createInfoReader(url);
+
+        List<? extends ImageInfo> info = reader.readInfo(url);
+        BasicImageReader ireader = new BasicImageReader(info.get(0));
+        return (IImageData3D) ireader.readImage(info.get(0));
+
+
+    }
+
+    public static boolean isSupportedFile(String fileName) {
+        if (NiftiInfoReader.isHeaderFile(fileName) || NiftiInfoReader.isImageFile(fileName)) {
+            return true;
+        }
+
+        if (AnalyzeInfoReader.isHeaderFile(fileName) || AnalyzeInfoReader.isImageFile(fileName)) {
+            return true;
+        }
+
+        if (AFNIInfoReader.isHeaderFile(fileName) || AFNIInfoReader.isImageFile(fileName)) {
+            return true;
+        }
+
+
+        return false;
+
+
+    }
+
+
+    public static ImageInfoReader createInfoReader(URL url) {
+
+        String fileName = url.toString();
+
+        if (NiftiInfoReader.isHeaderFile(fileName) || NiftiInfoReader.isImageFile(fileName)) {
+            return new NiftiInfoReader();
+        }
+
+        if (AnalyzeInfoReader.isHeaderFile(fileName) || AnalyzeInfoReader.isImageFile(fileName)) {
+            return new AnalyzeInfoReader();
+        }
+
+        if (AFNIInfoReader.isHeaderFile(fileName) || AFNIInfoReader.isImageFile(fileName)) {
+            return new AFNIInfoReader();
+        }
+
+
+        throw new IllegalArgumentException("could not find info read for file " + fileName);
+
+
+    }
+
+
+    public static ImageInfoReader createInfoReader(String fileName) {
+        if (NiftiInfoReader.isHeaderFile(fileName) || NiftiInfoReader.isImageFile(fileName)) {
+            return new NiftiInfoReader();
+        }
+
+        if (AnalyzeInfoReader.isHeaderFile(fileName) || AnalyzeInfoReader.isImageFile(fileName)) {
+            return new AnalyzeInfoReader();
+        }
+
+        if (AFNIInfoReader.isHeaderFile(fileName) || AFNIInfoReader.isImageFile(fileName)) {
+            return new AFNIInfoReader();
+        }
+
+
+        throw new IllegalArgumentException("could not find info read for file " + fileName);
+
+
+    }
+
+
     public static IImageData readNiftiImage(URL header) throws BrainFlowException {
 
         IImageData data;
@@ -49,7 +135,7 @@ public class BrainIO {
             NiftiInfoReader reader = new NiftiInfoReader();
 
 
-            List<NiftiImageInfo> info = reader.readInfo(VFS.getManager().resolveFile(header.toString()));
+            List<ImageInfo> info = reader.readInfo(VFS.getManager().resolveFile(header.toString()));
 
             BasicImageReader ireader = new BasicImageReader(info.get(0));
             data = ireader.readImage(info.get(0), new ProgressAdapter());

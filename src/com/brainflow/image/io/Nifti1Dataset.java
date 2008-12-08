@@ -929,6 +929,13 @@ public class Nifti1Dataset {
                     size_code = new int[2];
                     size_code[0] = dis.readInt();
                     size_code[1] = dis.readInt();
+
+                    if (size_code[0] < EXT_KEY_SIZE) {
+                        //todo this is a hack to aovid NegativeArraySizeException
+                        // need to check Nifti docs to see what's happening here
+                        break;
+                    }
+
                     eblob = new byte[size_code[0] - EXT_KEY_SIZE];
                     dis.readFully(eblob, 0, size_code[0] - EXT_KEY_SIZE);
                     extension_blobs.add(eblob);

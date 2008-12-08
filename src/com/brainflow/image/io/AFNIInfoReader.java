@@ -30,6 +30,23 @@ public class AFNIInfoReader implements ImageInfoReader {
 
     private Map<AFNIAttributeKey, HeaderAttribute> attributeMap = new HashMap<AFNIAttributeKey, HeaderAttribute>();
 
+
+    public static boolean isHeaderFile(String name) {
+        if (name.endsWith(".HEAD") || name.endsWith(".HEAD.gz")) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static boolean isImageFile(String name) {
+        if (name.endsWith(".BRIK") || name.endsWith(".BRIK.gz")) {
+            return true;
+        }
+
+        return false;
+    }
+
     public static String getHeaderName(String name) {
         if (name.endsWith(".BRIK")) {
             name = name.substring(0, name.length() - 4);
@@ -39,7 +56,7 @@ public class AFNIInfoReader implements ImageInfoReader {
         if (name.endsWith(".HEAD")) {
             return name;
         }
-        
+
         if (name.endsWith(".BRIK.gz")) {
             name = name.substring(0, name.length() - 7);
             return name + "HEAD";
@@ -71,9 +88,9 @@ public class AFNIInfoReader implements ImageInfoReader {
     }
 
 
-    public List<AFNIImageInfo> readInfo(InputStream stream) throws BrainFlowException {
+    public List<ImageInfo> readInfo(InputStream stream) throws BrainFlowException {
 
-        List<AFNIImageInfo> ret;
+        List<ImageInfo> ret;
 
         try {
             ret = readHeader(stream);
@@ -87,8 +104,17 @@ public class AFNIInfoReader implements ImageInfoReader {
 
     }
 
-    public List<AFNIImageInfo> readInfo(FileObject fobj) throws BrainFlowException {
-        List<AFNIImageInfo> ret;
+    public List<ImageInfo> readInfo(URL url) throws BrainFlowException {
+        try {
+            FileObject fobj = VFS.getManager().resolveFile(url.toString());
+            return readInfo(fobj);
+        } catch (FileSystemException e) {
+            throw new BrainFlowException(e);
+        }
+    }
+
+    public List<ImageInfo> readInfo(FileObject fobj) throws BrainFlowException {
+        List<ImageInfo> ret;
 
         try {
 
@@ -97,7 +123,7 @@ public class AFNIInfoReader implements ImageInfoReader {
             FileObject headerFile = VFS.getManager().resolveFile(fobj.getParent(), AFNIInfoReader.getHeaderName(fobj.getName().getBaseName()));
             for (ImageInfo ii : ret) {
                 ii.setDataFile(dataFile);
-                 ii.setHeaderFile(headerFile);
+                ii.setHeaderFile(headerFile);
 
             }
 
@@ -110,8 +136,8 @@ public class AFNIInfoReader implements ImageInfoReader {
         return ret;
     }
 
-    public List<AFNIImageInfo> readInfo(File f) throws BrainFlowException {
-        List<AFNIImageInfo> ret;
+    public List<ImageInfo> readInfo(File f) throws BrainFlowException {
+        List<ImageInfo> ret;
         try {
             InputStream istream = new FileInputStream(f);
             ret = readHeader(istream);
@@ -132,7 +158,7 @@ public class AFNIInfoReader implements ImageInfoReader {
     }
 
 
-    private List<AFNIImageInfo> readHeader(InputStream istream) throws IOException {
+    private List<ImageInfo> readHeader(InputStream istream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(istream));
 
 
@@ -150,11 +176,11 @@ public class AFNIInfoReader implements ImageInfoReader {
 
         // determine how many sub-bricks
         HeaderAttribute attr = attributeMap.get(AFNIAttributeKey.DATASET_RANK);
-        int numImages = (Integer)attr.getData().get(1);
-        List<AFNIImageInfo> infoList = new ArrayList<AFNIImageInfo>(numImages);
+        int numImages = (Integer) attr.getData().get(1);
+        List<ImageInfo> infoList = new ArrayList<ImageInfo>(numImages);
 
         //create instances
-        for (int i=0; i<numImages; i++) {
+        for (int i = 0; i < numImages; i++) {
             AFNIImageInfo info = new AFNIImageInfo(attributeMap);
             infoList.add(info);
         }
@@ -173,12 +199,12 @@ public class AFNIInfoReader implements ImageInfoReader {
     }
 
     // must be processed after all other attributes
-    private void processByteOffsets(List<AFNIImageInfo> infoList) {
+    private void processByteOffsets(List<ImageInfo> infoList) {
         int offset = 0;
-        for (int i=0; i<infoList.size(); i++) {
-            AFNIImageInfo info = infoList.get(i);
+        for (int i = 0; i < infoList.size(); i++) {
+            AFNIImageInfo info = (AFNIImageInfo)infoList.get(i);
             info.setByteOffset(offset);
-            offset = offset + (info.getDataType().getBytesPerUnit()*info.getArrayDim().product());
+            offset = offset + (info.getDataType().getBytesPerUnit() * info.getArrayDim().product());
         }
     }
 
@@ -204,7 +230,7 @@ public class AFNIInfoReader implements ImageInfoReader {
         if (typeStr == null) return null;
 
         String nameStr = reader.readLine();
-       
+
 
         String countStr = reader.readLine();
 
@@ -213,8 +239,10 @@ public class AFNIInfoReader implements ImageInfoReader {
         String line;
         do {
             line = reader.readLine();
-            if (line != null) { sb.append(line); }
-            
+            if (line != null) {
+                sb.append(line);
+            }
+
         } while (line != null && !line.equals(""));
 
         //sb.trimToSize();
@@ -249,7 +277,7 @@ public class AFNIInfoReader implements ImageInfoReader {
 
     }
 
-    private void processOrigin(List<Float> origin, List<AFNIImageInfo> infoList) {
+    private void processOrigin(List<Float> origin, List<ImageInfo> infoList) {
         Point3D pt = new Point3D();
         pt.setX(origin.get(0));
         pt.setY(origin.get(1));
@@ -261,7 +289,7 @@ public class AFNIInfoReader implements ImageInfoReader {
 
     }
 
-    private void processDimensions(List<Integer> dims, List<AFNIImageInfo> infoList) {
+    private void processDimensions(List<Integer> dims, List<ImageInfo> infoList) {
         int i = dims.size() - 1;
 
         while (i > 0) {
@@ -280,7 +308,7 @@ public class AFNIInfoReader implements ImageInfoReader {
 
     }
 
-    private void processSpacing(List<Float> delta, List<AFNIImageInfo> infoList) {
+    private void processSpacing(List<Float> delta, List<ImageInfo> infoList) {
         Dimension3D<Float> spacing = new Dimension3D<Float>(Math.abs(delta.get(0)), Math.abs(delta.get(1)), Math.abs(delta.get(2)));
         for (ImageInfo info : infoList) {
             info.setSpacing(spacing);
@@ -288,7 +316,7 @@ public class AFNIInfoReader implements ImageInfoReader {
 
     }
 
-    private void processByteOrder(List<String> orderList, List<AFNIImageInfo> infoList) {
+    private void processByteOrder(List<String> orderList, List<ImageInfo> infoList) {
         String orderStr = orderList.get(0);
 
         ByteOrder bord;
@@ -305,7 +333,7 @@ public class AFNIInfoReader implements ImageInfoReader {
         }
     }
 
-    private void processBrickTypes(List<Integer> types, List<AFNIImageInfo> infoList) {
+    private void processBrickTypes(List<Integer> types, List<ImageInfo> infoList) {
         //only handle first type
         int n = 0;
         for (Integer code : types) {
@@ -333,7 +361,7 @@ public class AFNIInfoReader implements ImageInfoReader {
     }
 
 
-    private void processDatasetRank(List<Integer> rank, List<AFNIImageInfo> infoList) {
+    private void processDatasetRank(List<Integer> rank, List<ImageInfo> infoList) {
         int dim1 = rank.get(0);
         if (dim1 != 3) {
             throw new IllegalArgumentException("AFNI attribute DATASET_RANK[0] must be 3");
@@ -348,7 +376,7 @@ public class AFNIInfoReader implements ImageInfoReader {
 
     }
 
-    private void processOrientSpecific(List<Integer> codes, List<AFNIImageInfo> infoList) {
+    private void processOrientSpecific(List<Integer> codes, List<ImageInfo> infoList) {
         if (codes.size() != 3) {
             throw new IllegalArgumentException("AFNI attribute ORIENT_SPECIFIC must have three entries");
         }
@@ -392,25 +420,25 @@ public class AFNIInfoReader implements ImageInfoReader {
         }
     }
 
-    private void processBrickFloatFacs(List<Float> facs, List<AFNIImageInfo> infoList) {
+    private void processBrickFloatFacs(List<Float> facs, List<ImageInfo> infoList) {
         assert facs.size() == infoList.size();
-        for (int i=0; i<facs.size(); i++) {
+        for (int i = 0; i < facs.size(); i++) {
             infoList.get(i).setScaleFactor(facs.get(i));
 
         }
     }
 
-    private void processBrickLabels(List<String> labels, List<AFNIImageInfo> infoList) {
+    private void processBrickLabels(List<String> labels, List<ImageInfo> infoList) {
         assert labels.size() == infoList.size();
 
         if (labels.size() > 1) {
-            for (int i=0; i<labels.size(); i++) {
+            for (int i = 0; i < labels.size(); i++) {
                 infoList.get(i).setImageLabel(labels.get(i));
             }
         } // todo consider the impact of this decision ...
     }
 
-    private void processAttribute(AFNIAttributeKey key, HeaderAttribute attribute, List<AFNIImageInfo> infoList) {
+    private void processAttribute(AFNIAttributeKey key, HeaderAttribute attribute, List<ImageInfo> infoList) {
         HeaderAttribute.IntegerAttribute iattr;
         HeaderAttribute.FloatAttribute fattr;
         HeaderAttribute.StringAttribute sattr;
@@ -419,7 +447,7 @@ public class AFNIInfoReader implements ImageInfoReader {
 
             case BRICK_FLOAT_FACS:
                 fattr = (HeaderAttribute.FloatAttribute) attribute;
-                processBrickFloatFacs(fattr.getData(),infoList);
+                processBrickFloatFacs(fattr.getData(), infoList);
                 break;
             case BRICK_KEYWORDS:
                 break;
@@ -484,18 +512,18 @@ public class AFNIInfoReader implements ImageInfoReader {
             URL url = ClassLoader.getSystemResource("resources/data/motion-reg2+orig.HEAD");
             ImageInfoReader reader = new AFNIInfoReader();
 
-            List<? extends ImageInfo> ilist = reader.readInfo(url.openStream());
+            List<? extends ImageInfo> ilist = reader.readInfo(url);
 
             ImageInfo info = ilist.get(0);
-            ImageSpace3D space = (ImageSpace3D)info.createImageSpace();
+            ImageSpace3D space = (ImageSpace3D) info.createImageSpace();
 
 
-            Matrix4f mat = ((Anatomy3D)ilist.get(0).getAnatomy()).getReferenceTransform();
+            Matrix4f mat = ((Anatomy3D) ilist.get(0).getAnatomy()).getReferenceTransform();
 
             IDimension spacing = info.getSpacing();
             mat.scale(new Vector3f(spacing.getDim(0).floatValue(), spacing.getDim(1).floatValue(), spacing.getDim(2).floatValue()));
-            mat.setTranslation(new Vector3f(100,100,100));
-       
+            mat.setTranslation(new Vector3f(100, 100, 100));
+
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }

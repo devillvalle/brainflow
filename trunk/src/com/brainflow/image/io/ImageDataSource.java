@@ -4,12 +4,14 @@ import com.brainflow.image.data.IImageData;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.io.ImageReader;
 import com.brainflow.utils.ProgressListener;
+import com.brainflow.utils.ProgressAdapter;
 import com.brainflow.image.io.AbstractImageDataSource;
 import com.brainflow.application.ImageIODescriptor;
 import com.brainflow.application.BrainFlowException;
 import org.apache.commons.vfs.FileObject;
 
 import java.util.logging.Logger;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,10 +41,18 @@ public class ImageDataSource extends AbstractImageDataSource {
         super(_descriptor, _header);
     }
 
+    public ImageDataSource(ImageIODescriptor _descriptor, List<ImageInfo> infoList, int _index) {
+        super(_descriptor, infoList, _index);
+    }
+
 
     public IImageData getData() {
-        
-       //todo check if loaded?
+        if (!isLoaded()) try {
+            load();
+        } catch(BrainFlowException e) {
+            throw new RuntimeException(e);
+        }
+
         return dataRef;
     }
 
@@ -55,38 +65,14 @@ public class ImageDataSource extends AbstractImageDataSource {
         try {
 
             ImageInfo imageInfo = getImageInfoList().get(getImageIndex());
-            if (imageInfo.getDataFile() == null) {
+            assert imageInfo.getDataFile() != null;
+            //if (imageInfo.getDataFile() == null) {
                 //todo this is truly horrid
-                imageInfo.setDataFile(getDataFile());
-            }
+                //imageInfo.setDataFile(getDataFile());
+            //}
 
             ImageReader ireader = (ImageReader) getDescriptor().getDataReader().newInstance();
-            IImageData data = ireader.readImage(imageInfo, new ProgressListener() {
-
-                public void setValue(int val) {
-                    //To change body of implemented methods use File | Settings | File Templates.
-                }
-
-                public void setMinimum(int val) {
-                    //To change body of implemented methods use File | Settings | File Templates.
-                }
-
-                public void setMaximum(int val) {
-                    //To change body of implemented methods use File | Settings | File Templates.
-                }
-
-                public void setString(String message) {
-                    log.info(message);
-                }
-
-                public void setIndeterminate(boolean b) {
-                    //To change body of implemented methods use File | Settings | File Templates.
-                }
-
-                public void finished() {
-                    //To change body of implemented methods use File | Settings | File Templates.
-                }
-            });
+            IImageData data = ireader.readImage(imageInfo, new ProgressAdapter());
 
             //data.setImageLabel(getStem());
             dataRef = data;

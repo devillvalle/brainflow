@@ -230,8 +230,8 @@ public class BrainFlow {
             String osname = System.getProperty("os.name");
             System.out.println("os name is : " + osname);
             if (osname.toUpperCase().contains("WINDOWS")) {
-                UIManager.setLookAndFeel(new de.javasoft.plaf.synthetica.SyntheticaSimple2DLookAndFeel());
-                //UIManager.setLookAndFeel(new SyntheticaWhiteVisionLookAndFeel());
+                //UIManager.setLookAndFeel(new de.javasoft.plaf.synthetica.SyntheticaSimple2DLookAndFeel());
+                UIManager.setLookAndFeel(new SyntheticaWhiteVisionLookAndFeel());
                 //UIManager.setLookAndFeel(new WindowsLookAndFeel());
                 LookAndFeelFactory.installJideExtension();
 

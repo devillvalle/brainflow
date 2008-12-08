@@ -70,6 +70,7 @@ public class DataSourceManager {
     public void register(IImageDataSource limg) {
         int uid = limg.getUniqueID();
         if (imageMap.containsKey(uid)) {
+
             log.warning("Attempt to load image already in memory: " + limg.getHeaderFile());
             throw new IllegalArgumentException("IImageDataSource " + limg.getStem() + " with uinique ID " + uid + " is already registered.");
         }
@@ -95,7 +96,8 @@ public class DataSourceManager {
 
         IImageDataSource source = new ImageDataSource(descriptor, infoList, index);
         if (register) {
-            register(source);
+            if (!isRegistered(source))
+                register(source);
         }
 
         return source;

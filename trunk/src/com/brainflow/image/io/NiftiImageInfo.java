@@ -61,7 +61,14 @@ public class NiftiImageInfo extends ImageInfo {
             throw new IllegalArgumentException("illegal selection index for image info with " + getNumImages() + " sub images");
         }
 
-        NiftiImageInfo ret = new NiftiImageInfo(this, getHeaderFile().getName().getBaseName() + ":" + index, index);
+        String name = getHeaderFile().getName().getBaseName();
+        int idx = name.indexOf(".");
+        if (idx > 0) {
+            name = name.substring(0, name.indexOf("."));
+        }
+        
+        NiftiImageInfo ret = new NiftiImageInfo(this, name + ":" + index, index);
+
         return ret;
 
     }

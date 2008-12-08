@@ -24,6 +24,10 @@ public class AFNIImageInfo extends ImageInfo {
         this.attributeMap = attributeMap;
     }
 
+    
+
+
+
 
 
 

@@ -96,6 +96,29 @@ public class ImageInfo implements java.io.Serializable {
         mapping = info.mapping;
     }
 
+    protected ImageInfo(ImageInfo info, String _imageLabel, int index) {
+        dataFile = info.dataFile;
+        headerFile = info.headerFile;
+        endian = info.endian;
+        scaleFactor = info.scaleFactor;
+        intercept = info.intercept;
+        dataType = info.dataType;
+        anatomy = info.anatomy;
+
+        dimensionality = 3;
+        byteOffset = info.byteOffset;
+        numImages = info.numImages;
+        origin = new Point3D(info.origin);
+
+        imageIndex = index;
+        voxelOffset = new Dimension3D<Integer>(info.voxelOffset);
+        imageLabel = info.imageLabel;
+        spacing = info.spacing;
+        arrayDim = info.arrayDim;
+        imageLabel = _imageLabel;
+        mapping = info.mapping;
+    }
+
 
     public ImageInfo(IImageData data) {
         IImageSpace space = data.getImageSpace();
@@ -120,15 +143,18 @@ public class ImageInfo implements java.io.Serializable {
     }
 
 
-    private List<Double> makeNumericList(double[] vals) {
-        List<Double> lst = new ArrayList<Double>(vals.length);
-        for (int i = 0; i < vals.length; i++) {
-            lst.add(vals[i]);
+    public ImageInfo selectInfo(int index) {
+        if (index < 0 || index >= getNumImages()) {
+            throw new IllegalArgumentException("illegal selection index for image info with " + getNumImages() + " sub images");
         }
 
-        return lst;
-    }
+        ImageInfo ret = new ImageInfo(this);
+        ret.dimensionality = getDimensionality()-1;
+        ret.imageIndex = index;
+        ret.imageLabel = getHeaderFile().getName().getBaseName() + ":" + index;
+        return ret;
 
+    }
 
     public IImageSpace createImageSpace() {
         ImageAxis[] iaxes = new ImageAxis[3];
@@ -204,7 +230,14 @@ public class ImageInfo implements java.io.Serializable {
     }
 
     public String getImageLabel() {
-        if (imageLabel == null) return getHeaderFile().getName().getBaseName();
+        if (imageLabel == null) {
+            if (getDimensionality() == 4) {
+                imageLabel = getHeaderFile().getName().getBaseName() + ":" + getImageIndex();
+            } else {
+                imageLabel = getHeaderFile().getName().getBaseName();
+            }
+        }
+                
         return imageLabel;
     }
 

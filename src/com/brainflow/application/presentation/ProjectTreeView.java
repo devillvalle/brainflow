@@ -2,23 +2,34 @@ package com.brainflow.application.presentation;
 
 import com.brainflow.application.BrainFlowProject;
 import com.brainflow.application.dnd.DnDUtils;
-import com.brainflow.application.toplevel.BrainflowProjectEvent;
-import com.brainflow.application.toplevel.BrainflowProjectListener;
-import com.brainflow.core.*;
+import com.brainflow.application.dnd.ImageDropHandler;
+import com.brainflow.application.toplevel.BrainFlowProjectEvent;
+import com.brainflow.application.toplevel.BrainFlowProjectListener;
+import com.brainflow.application.toplevel.BrainFlow;
 import com.brainflow.core.layer.ImageLayer;
+import com.brainflow.core.layer.ImageLayer3D;
+import com.brainflow.core.IBrainCanvas;
+import com.brainflow.core.ImageView;
+import com.brainflow.core.IImageDisplayModel;
+import com.brainflow.core.ImageDisplayModelListener;
 import com.brainflow.image.space.IImageSpace;
+import com.brainflow.image.io.IImageDataSource;
 
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.event.TreeSelectionEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.List;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.datatransfer.Transferable;
+import java.awt.*;
 
 
 /**
@@ -45,6 +56,29 @@ public class ProjectTreeView extends ImageViewPresenter implements MouseListener
         treeModel = new DefaultTreeModel(rootNode);
         tree = new JTree(treeModel);
 
+        tree.addTreeSelectionListener(new TreeSelectionListener() {
+            public void valueChanged(TreeSelectionEvent e) {
+                TreePath path = e.getPath();
+
+                Object sel = path.getLastPathComponent();
+                if (sel instanceof ImageDisplayModelNode) {
+                    ImageDisplayModelNode node = (ImageDisplayModelNode) sel;
+                    IBrainCanvas canvas = BrainFlow.get().getSelectedCanvas();
+                    if (canvas.getSelectedView().getModel() != node.getModel()) {
+                        List<ImageView> views = canvas.getViews();
+                        for (ImageView v : views) {
+                            if (v.getModel() == node.getModel()) {
+                                canvas.setSelectedView(v);
+                                break;
+                            }
+                        }
+                    }
+
+                }
+
+            }
+        });
+
         initDnD();
 
     }
@@ -57,7 +91,40 @@ public class ProjectTreeView extends ImageViewPresenter implements MouseListener
         tree.addMouseMotionListener(this);
 
 
-        TransferHandler handler = new TransferHandler() {
+        TransferHandler handler = new ImageDropHandler() {
+
+
+            private void importDataSource(IImageDataSource dsource, TransferSupport support) {
+                Component c = support.getComponent();
+
+
+            }
+
+
+
+            private void importImageLayer(ImageLayer layer, TransferSupport support) {
+                Component c = support.getComponent();
+
+                if (c == tree) {
+                    Point p = support.getDropLocation().getDropPoint();
+                    TreePath path = tree.getClosestPathForLocation(p.x, p.y);
+                    IImageDisplayModel model = findParentModel(path);
+                    if (model != null) {
+                        model.addLayer(new ImageLayer3D((ImageLayer3D) layer));
+                    }
+                }
+
+            }
+
+
+            public void dispatchOnObject(Object obj, TransferSupport support) {
+                if (obj instanceof IImageDataSource) {
+                    importDataSource((IImageDataSource) obj, support);
+                } else if (obj instanceof ImageLayer) {
+                    importImageLayer((ImageLayer) obj, support);
+                }
+            }
+
             public int getSourceActions(JComponent c) {
                 return TransferHandler.COPY;
             }
@@ -95,6 +162,27 @@ public class ProjectTreeView extends ImageViewPresenter implements MouseListener
         };
 
         tree.setTransferHandler(handler);
+    }
+
+    private IImageDisplayModel findParentModel(Point p) {
+        TreePath path = tree.getClosestPathForLocation(p.x, p.y);
+        return findParentModel(path);
+    }
+
+    private IImageDisplayModel findParentModel(TreePath path) {
+        Object[] obj = path.getPath();
+
+        if (obj.length == 0) return null;
+
+        for (int i=obj.length-1; i>=0; i--) {
+            Object node = obj[i];
+            if (node instanceof ImageDisplayModelNode) {
+                return ((ImageDisplayModelNode)node).getModel();
+            }
+        }
+
+        return null;
+
     }
 
 
@@ -135,7 +223,7 @@ public class ProjectTreeView extends ImageViewPresenter implements MouseListener
                 //This is a drag, not a click.
                 JComponent c = (JComponent) e.getSource();
                 //Tell the transfer handler to initiate the drag.
-                 TransferHandler handler = c.getTransferHandler();
+                TransferHandler handler = c.getTransferHandler();
                 handler.exportAsDrag(c, firstMouseEvent, -1);
                 firstMouseEvent = null;
             }
@@ -159,7 +247,7 @@ public class ProjectTreeView extends ImageViewPresenter implements MouseListener
     }
 
 
-    class ProjectNode extends DefaultMutableTreeNode implements BrainflowProjectListener {
+    class ProjectNode extends DefaultMutableTreeNode implements BrainFlowProjectListener {
 
         private BrainFlowProject project;
 
@@ -177,13 +265,13 @@ public class ProjectTreeView extends ImageViewPresenter implements MouseListener
             }
         }
 
-        public void modelAdded(BrainflowProjectEvent event) {
+        public void modelAdded(BrainFlowProjectEvent event) {
             add(new ImageDisplayModelNode(event.getModel()));
             treeModel.nodesWereInserted(this, new int[]{getChildCount() - 1});
 
         }
 
-        public void modelRemoved(BrainflowProjectEvent event) {
+        public void modelRemoved(BrainFlowProjectEvent event) {
             Enumeration en = children();
             while (en.hasMoreElements()) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) en.nextElement();
@@ -194,13 +282,13 @@ public class ProjectTreeView extends ImageViewPresenter implements MouseListener
 
         }
 
-        public void intervalAdded(BrainflowProjectEvent event) {
+        public void intervalAdded(BrainFlowProjectEvent event) {
         }
 
-        public void contentsChanged(BrainflowProjectEvent event) {
+        public void contentsChanged(BrainFlowProjectEvent event) {
         }
 
-        public void intervalRemoved(BrainflowProjectEvent event) {
+        public void intervalRemoved(BrainFlowProjectEvent event) {
         }
 
 

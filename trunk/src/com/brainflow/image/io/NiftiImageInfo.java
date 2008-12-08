@@ -21,13 +21,50 @@ public class NiftiImageInfo extends ImageInfo {
 
     public int qfac = 1;
 
-    public Matrix4f qform;
+    //todo provide reasonable defaults?
 
-    public Matrix4f sform;
+    public Matrix4f qform = new Matrix4f();
 
-    public Vector3f quaternion;
+    public Matrix4f sform = new Matrix4f();
 
-    public Vector3f qoffset;
+    public Vector3f quaternion = new Vector3f();
+
+    public Vector3f qoffset = new Vector3f();
+
+    //public static final int HEADER_OFFSET = 348;
+
+    public NiftiImageInfo() {
+    }
+
+    public NiftiImageInfo(NiftiImageInfo info) {
+        super(info);
+        qfac  = info.qfac;
+        qform = info.qform;
+        sform = info.sform;
+        quaternion=info.quaternion;
+        qoffset = info.qoffset;        
+    }
+
+    public NiftiImageInfo(NiftiImageInfo info, String _imageLabel, int index) {
+        super(info, _imageLabel, index);
+        qfac  = info.qfac;
+        qform = info.qform;
+        sform = info.sform;
+        quaternion=info.quaternion;
+        qoffset = info.qoffset;
+
+
+    }
+
+    public NiftiImageInfo selectInfo(int index) {
+        if (index < 0 || index >= getNumImages()) {
+            throw new IllegalArgumentException("illegal selection index for image info with " + getNumImages() + " sub images");
+        }
+
+        NiftiImageInfo ret = new NiftiImageInfo(this, getHeaderFile().getName().getBaseName() + ":" + index, index);
+        return ret;
+
+    }
 
     public static Matrix4f quaternionToMatrix(float qb, float qc, float qd,
                                               float qx, float qy, float qz,

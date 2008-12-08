@@ -6,6 +6,7 @@ import org.apache.commons.vfs.FileObject;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
+import java.net.URL;
 
 /**
  * <p>Title: </p>
@@ -19,11 +20,13 @@ import java.util.List;
 
 public interface ImageInfoReader {
 
-    public List<? extends ImageInfo> readInfo(File f) throws BrainFlowException;
+    //static <A extends Comparable<A>> A max
 
-    public List<? extends ImageInfo> readInfo(FileObject fobj) throws BrainFlowException;
+    public List<ImageInfo> readInfo(File f) throws BrainFlowException;
 
-    public List<? extends ImageInfo> readInfo(InputStream stream) throws BrainFlowException;
+    public List<ImageInfo> readInfo(FileObject fobj) throws BrainFlowException;
+
+    public List<ImageInfo> readInfo(URL url) throws BrainFlowException;
 
 
 

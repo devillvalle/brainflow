@@ -14,6 +14,7 @@ import com.brainflow.utils.Dimension3D;
 import com.brainflow.utils.Point3D;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.VFS;
+import org.apache.commons.vfs.FileSystemException;
 
 import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.ImageInputStream;
@@ -25,6 +26,7 @@ import java.nio.ByteOrder;
 import java.util.List;
 import java.util.Arrays;
 import java.util.logging.Logger;
+import java.net.URL;
 
 
 /**
@@ -47,6 +49,23 @@ public class AnalyzeInfoReader implements ImageInfoReader {
 
     public AnalyzeInfoReader() {
 
+    }
+
+
+    public static boolean isHeaderFile(String name) {
+        if (name.endsWith(".hdr")) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static boolean isImageFile(String name) {
+        if (name.endsWith(".img") ) {
+            return true;
+        }
+
+        return false;
     }
 
     public static String getHeaderName(String name) {
@@ -106,6 +125,16 @@ public class AnalyzeInfoReader implements ImageInfoReader {
 
     }
 
+     public List<ImageInfo> readInfo(URL url) throws BrainFlowException {
+        try {
+            FileObject fobj = VFS.getManager().resolveFile(url.toString());
+            return readInfo(fobj);
+        } catch(FileSystemException e) {
+            throw new BrainFlowException(e);
+        }
+
+    }
+
     public List<? extends ImageInfo> readInfo(InputStream istream) throws BrainFlowException {
         List<ImageInfo> ret = null;
 
@@ -120,7 +149,7 @@ public class AnalyzeInfoReader implements ImageInfoReader {
 
     }
 
-    public List<? extends ImageInfo> readInfo(FileObject fobj) throws BrainFlowException {
+    public List<ImageInfo> readInfo(FileObject fobj) throws BrainFlowException {
         List<ImageInfo> ret = null;
 
         try {

@@ -43,6 +43,7 @@ public class BasicImageReader implements ImageReader {
 
     private IImageSpace imageSpace;
 
+    //todo this is not set when no arg constructor is used
     private FileObject inputFile;
 
     private ByteOrder byteOrder = java.nio.ByteOrder.BIG_ENDIAN;
@@ -65,7 +66,7 @@ public class BasicImageReader implements ImageReader {
         info = _info;
 
         setByteOrder(info.getEndian());
-        setByteOffset(info.getDataOffset());
+        setByteOffset(info.getDataOffset(info.getImageIndex()));
 
         setFileDimensionality(info.getDimensionality());
         setDataType(info.getDataType());
@@ -104,7 +105,7 @@ public class BasicImageReader implements ImageReader {
     }
 
 
-    protected IImageData getOutput(ProgressListener listener) throws IOException {
+    protected IImageData getOutput(ProgressListener listener) throws BrainFlowException {
 
         InputStream istream = null;
 
@@ -118,7 +119,7 @@ public class BasicImageReader implements ImageReader {
             listener.setMaximum(numBytes);
             listener.setString("Opening Image Stream ...");
 
-            log.info("Input file system type: " + inputFile.getFileSystem());
+            //log.info("Input file system type: " + inputFile.getFileSystem());
             istream = new BufferedInputStream(inputFile.getContent().getInputStream());
             log.info("Getting input Stream ...");
             log.info("Input Stream is " + istream.getClass().getCanonicalName());
@@ -168,6 +169,9 @@ public class BasicImageReader implements ImageReader {
             if (datatype == DataType.BYTE) {
                 data = new byte[numBytes];
                 wholeBuffer.get((byte[]) data);
+            } else if (datatype == DataType.UBYTE) {
+                data = new byte[imageSpace.getNumSamples()];
+                wholeBuffer.get((byte[]) data);
             } else if (datatype == DataType.SHORT) {
                 data = new short[imageSpace.getNumSamples()];
                 wholeBuffer.asShortBuffer().get((short[]) data);
@@ -207,14 +211,16 @@ public class BasicImageReader implements ImageReader {
                 throw new RuntimeException("BasicImageReader.getOutput(): Dimensionality of: " + fileDimensionality + " not supported!");
 
         } catch (FileNotFoundException e1) {
-            throw e1;
+            throw new BrainFlowException(e1);
         } catch (IOException e2) {
-            throw e2;
+            throw new BrainFlowException(e2);
         } finally {
             //if (rac != null)
             //rac.close();
             if (istream != null) {
-                istream.close();
+                try {
+                    istream.close();
+                } catch(IOException e3) {}
             }
         }
 
@@ -308,11 +314,8 @@ public class BasicImageReader implements ImageReader {
 
         try {
             data = getOutput(new ProgressAdapter());
-        } catch (FileNotFoundException e) {
-            log.warning("failed trying to find file " + info.getDataFile());
-            throw new BrainFlowException("BasicImageData.readImage: File Not Found Error", e);
-        } catch (IOException e) {
-            throw new BrainFlowException("BasicImageData.readImage: File Reading Error", e);
+        } catch (BrainFlowException e) {            
+            throw e;
         }
 
         return data;
@@ -327,11 +330,9 @@ public class BasicImageReader implements ImageReader {
         try {
             data = getOutput(plistener);
 
-        } catch (FileNotFoundException e) {
-            throw new BrainFlowException("BasicImageData.readImage: File Not Found Error", e);
-        } catch (IOException e) {
-            throw new BrainFlowException("BasicImageData.readImage: File Reading Error", e);
-        }
+        } catch (BrainFlowException e) {
+            throw e;
+        } 
 
         return data;
     }

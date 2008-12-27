@@ -12,6 +12,7 @@ import com.brainflow.image.space.*;
 import com.brainflow.core.SliceRenderer;
 import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.core.layer.ImageLayerProperties;
+import com.brainflow.core.layer.ImageLayer3D;
 import com.brainflow.utils.SoftCache;
 
 import java.awt.*;
@@ -22,13 +23,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.util.logging.Logger;
-import java.util.Map;
-import java.util.LinkedHashMap;
-import java.util.HashMap;
-
-import net.java.dev.properties.container.BeanContainer;
-import net.java.dev.properties.events.PropertyListener;
-import net.java.dev.properties.BaseProperty;
 
 /**
  * Created by IntelliJ IDEA.
@@ -43,7 +37,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
 
     private AnatomicalPoint3D slice;
 
-    private ImageLayer layer;
+    private ImageLayer3D layer;
 
     private ImageSlicer slicer;
 
@@ -78,7 +72,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
         this.lastColorMap = renderer.lastColorMap;
 
         if (refSpace.equals(layer.getData().getImageSpace())) {
-            slicer = new ImageSlicer((IImageData3D) layer.getData());
+            slicer = new ImageSlicer(layer.getData());
         } else {
             slicer = new ImageSlicer(new MappedDataAcessor3D(refSpace, (IImageData3D) layer.getData()));
         }
@@ -94,36 +88,38 @@ public class BasicImageSliceRenderer implements SliceRenderer {
     }
 
 
-    public BasicImageSliceRenderer(IImageSpace3D refSpace, ImageLayer layer, AnatomicalPoint3D slice) {
+    public BasicImageSliceRenderer(IImageSpace3D refSpace, ImageLayer3D layer, AnatomicalPoint3D slice) {
         this.slice = slice;
         this.layer = layer;
         this.refSpace = refSpace;
 
-        //hack cast
 
         if (refSpace.equals(layer.getData().getImageSpace())) {
-            slicer = new ImageSlicer((IImageData3D) layer.getData());
+            slicer = new ImageSlicer(layer.getData());
         } else {
-            slicer = new ImageSlicer(new MappedDataAcessor3D(refSpace, (IImageData3D) layer.getData()));
+            slicer = new ImageSlicer(new MappedDataAcessor3D(refSpace,layer.getData()));
         }
 
         initCache();
 
     }
 
-    public BasicImageSliceRenderer(IImageSpace3D refSpace, ImageLayer layer, AnatomicalPoint3D slice, Anatomy3D displayAnatomy) {
+    public BasicImageSliceRenderer(IImageSpace3D refSpace, ImageLayer3D layer, AnatomicalPoint3D slice, Anatomy3D displayAnatomy) {
         this.slice = slice;
         this.layer = layer;
         this.refSpace = refSpace;
         this.displayAnatomy = displayAnatomy;
 
-        //hack cast
-
+        if (refSpace == null) System.out.println("refSpace == null");
+        if (layer == null) System.out.println("layer == null");
+        if (layer.getData() == null) {
+            System.out.println("layer.data == null"); 
+        }
         if (refSpace.equals(layer.getData().getImageSpace())) {
 
-            slicer = new ImageSlicer((IImageData3D) layer.getData());
+            slicer = new ImageSlicer(layer.getData());
         } else {
-            slicer = new ImageSlicer(new MappedDataAcessor3D(refSpace, (IImageData3D) layer.getData()));
+            slicer = new ImageSlicer(new MappedDataAcessor3D(refSpace,  layer.getData()));
         }
 
         initCache();
@@ -161,7 +157,9 @@ public class BasicImageSliceRenderer implements SliceRenderer {
         if (data != null) return data;
 
 
-        AnatomicalPoint1D zdisp = getZSlice();
+
+
+       AnatomicalPoint1D zdisp = getZSlice();
 
         IImageData2D ret = dataCache.get(zdisp);
 
@@ -188,8 +186,13 @@ public class BasicImageSliceRenderer implements SliceRenderer {
     private AnatomicalPoint1D getZSlice() {
 
         // convert from world coordinates to the grid coordinates
-        float[] gridpos = refSpace.worldToGrid((float) slice.getX(), (float) slice.getY(), (float) slice.getZ());
-        AnatomicalPoint3D gridloc = new AnatomicalPoint3D(refSpace, gridpos[0], gridpos[1], gridpos[2]);
+
+        double gridx = refSpace.getImageAxis(Axis.X_AXIS).gridPosition(slice.getX());
+        double gridy = refSpace.getImageAxis(Axis.Y_AXIS).gridPosition(slice.getY());
+        double gridz = refSpace.getImageAxis(Axis.Z_AXIS).gridPosition(slice.getZ());
+
+ 
+        AnatomicalPoint3D gridloc = new AnatomicalPoint3D(refSpace, gridx, gridy, gridz);
 
 
         //get the value along whatever the z axis is for the current display anatomy
@@ -200,7 +203,10 @@ public class BasicImageSliceRenderer implements SliceRenderer {
 
 
     private RGBAImage getRGBAImage() {
-        if (rgbaImage != null) return rgbaImage;
+        if (rgbaImage != null) {
+            //System.out.println("rgba image isn't even null");
+            return rgbaImage;
+        }
 
 
         AnatomicalPoint1D zdisp = getZSlice();
@@ -208,11 +214,13 @@ public class BasicImageSliceRenderer implements SliceRenderer {
         if (lastColorMap != layer.getImageLayerProperties().colorMap.get()) {
             rgbaCache.clear();
         } else {
+            //System.out.println("getting cached cmap");
             rgbaImage = rgbaCache.get(zdisp);
         }
 
         if (rgbaImage == null) {
             IColorMap cmap = layer.getImageLayerProperties().colorMap.get();
+            
             lastColorMap = cmap;
             rgbaImage = cmap.getRGBAImage(getData());
             rgbaCache.put(zdisp, rgbaImage);
@@ -395,8 +403,7 @@ public class BasicImageSliceRenderer implements SliceRenderer {
 
 
     protected RGBAImage thresholdRGBA(RGBAImage rgba) {
-        //todo here's the rub
-        ImageSlicer slicer = new ImageSlicer(new MappedDataAcessor3D(refSpace, layer.getMaskList().composeMask(true)));
+        ImageSlicer slicer = new ImageSlicer(new MappedDataAcessor3D(refSpace, layer.getMaskProperty().buildMask()));
         AnatomicalPoint1D zdisp = getZSlice();
 
 

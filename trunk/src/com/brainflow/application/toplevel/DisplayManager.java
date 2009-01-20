@@ -126,7 +126,6 @@ public class DisplayManager {
     }
 
     public List<ImageView> getImageViews(IImageDisplayModel model) {
-        //List<ImageView> ret = new ArrayList<ImageView>();
         return selectedCanvas.getViews(model);
     }
 
@@ -137,9 +136,13 @@ public class DisplayManager {
 
     public void replaceLayer(ImageLayer3D oldlayer, ImageLayer3D newlayer, ImageView view) {
         int i = view.getModel().indexOf(oldlayer);
+
         if (i < 0) {
             throw new IllegalArgumentException("layer " + oldlayer + " not found in model " + view.getModel());
         }
+
+
+        log.info("replacing layer : " + oldlayer + " with " + newlayer);
 
         view.getModel().setLayer(i, newlayer);
     }
@@ -197,10 +200,11 @@ public class DisplayManager {
     }*/
 
     public ImageView getSelectedImageView() {
-        if (selectedCanvas != null)
+        if (getSelectedCanvas() != null)
             return selectedCanvas.getSelectedView();
 
         //todo is this correct to return null?
+        //todo perhaps throw exception?
         return null;
 
     }

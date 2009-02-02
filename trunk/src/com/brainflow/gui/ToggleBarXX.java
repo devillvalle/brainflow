@@ -17,7 +17,7 @@ import java.awt.event.ItemEvent;
  * Time: 7:32:26 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ToggleBarX extends JPanel implements ListDataListener {
+public class ToggleBarXX extends JPanel implements ListDataListener {
 
 
 
@@ -33,7 +33,7 @@ public class ToggleBarX extends JPanel implements ListDataListener {
     private ButtonGroup buttonGroup = new ButtonGroup();
 
 
-    public ToggleBarX(List items) {
+    public ToggleBarXX(List items) {
         DefaultComboBoxModel dm = new DefaultComboBoxModel();
 
         for (Object obj : items) {
@@ -193,7 +193,7 @@ public class ToggleBarX extends JPanel implements ListDataListener {
 
                 int selIdx = buttonList.indexOf(button);
                 setSelectedItem(model.getElementAt(selIdx));
-                //ToggleBarX.this.fireListSelectionEvent();
+                //ToggleBarXX.this.fireListSelectionEvent();
                
             }
         }
@@ -204,7 +204,7 @@ public class ToggleBarX extends JPanel implements ListDataListener {
         JFrame frame = new JFrame();
         JPanel bar = new JPanel();
        
-        ToggleBarX tbar = new ToggleBarX(Arrays.asList("aaaa", "BBBB", "CCCCC"));
+        ToggleBarXX tbar = new ToggleBarXX(Arrays.asList("aaaa", "BBBB", "CCCCC"));
         bar.add(tbar);
         frame.add(bar, BorderLayout.NORTH);
         frame.pack();

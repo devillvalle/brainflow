@@ -91,7 +91,6 @@ public class NumberRangeModel {
     }
 
     public void setRangeProperties(double newLow, double newHigh, double newMin, double newMax, boolean adjusting) {
-        System.out.println("is adjusting " + adjusting);
         if (newMin > newMax) {
             newMin = newMax;
         }

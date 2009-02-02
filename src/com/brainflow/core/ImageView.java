@@ -207,7 +207,7 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
     }
 
     public void clearListeners() {
-        viewport.removePropertyChangeListener(viewportHandler);
+        //viewport.removePropertyChangeListener(viewportHandler);
         displayModel.get().removeImageDisplayModelListener(this);
         BeanContainer.get().removeListener(displayModel.get().getListSelection(), layerSelectionListener);
 
@@ -217,7 +217,7 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
 
     protected void registerListeners() {
-        viewport.addPropertyChangeListener(viewportHandler);
+        //viewport.addPropertyChangeListener(viewportHandler);
 
         displayModel.get().addImageDisplayModelListener(this);
 
@@ -242,6 +242,9 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
         viewport = new Viewport3D(getModel());
 
         AnatomicalPoint3D centroid = (AnatomicalPoint3D) getModel().getImageSpace().getCentroid();
+
+        // centroid is in world space
+        
         cursorPos.set(new CursorPosition((IImageSpace3D) getModel().getImageSpace(), centroid.getX(), centroid.getY(), centroid.getZ()));
 
         registerListeners();

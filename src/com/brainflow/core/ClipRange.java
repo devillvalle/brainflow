@@ -119,32 +119,10 @@ public class ClipRange implements IClipRange {
 
     public IClipRange newClipRange(double min, double max, double lowclip, double highclip) {
         //todo check validity
-        System.out.println("new regular clip range ");
-        System.out.println("low : " + lowclip);
-        System.out.println("high : " + highclip);
-        return new ClipRange(min, max, lowclip, highclip);
+         return new ClipRange(min, max, lowclip, highclip);
     }
 
-    /*public void setMax(double max) {
-        if (max > maxValue.get()) {
-            throw new IllegalArgumentException("value " + max + " out of range ");
-        }
 
-        maxValue.set(max);
-    }
-
-    public void setMin(double min) {
-         if (min < minValue.get()) {
-            throw new IllegalArgumentException("value " + min + " out of range ");
-        }
-        minValue.set(min);
-    }
-
-    public void setRange(double min, double max) {
-        //todo check for correctness
-        setMin(min);
-        setMax(max);
-    }*/
 
     public boolean contains(double val) {
         if (lowClip <= val && highClip >= val) {
@@ -154,5 +132,13 @@ public class ClipRange implements IClipRange {
         return false;
     }
 
-
+    @Override
+    public String toString() {
+        return "ClipRange{" +
+                "minValue=" + minValue +
+                ", maxValue=" + maxValue +
+                ", lowClip=" + lowClip +
+                ", highClip=" + highClip +
+                '}';
+    }
 }

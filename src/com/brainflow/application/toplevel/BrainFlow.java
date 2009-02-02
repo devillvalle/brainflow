@@ -277,45 +277,21 @@ public class BrainFlow {
 
 
         drawSplashProgress("initializing resources ...");
-
-        FutureTask<Boolean> initResources = new FutureTask<Boolean>(new Callable<Boolean>() {
-            public Boolean call() throws Exception {
-                System.out.println("initializing resources");
-                Boolean ret = initializeResources();
-                System.out.println("done initializing resources");
-                return ret;
-            }
-        });
-
-        threadService.execute(initResources);
+        initializeResources();
 
 
 
         drawSplashProgress("loading commands ...");
-        FutureTask<Boolean> loadCommandsTask = new FutureTask<Boolean>(new Callable<Boolean>() {
-            public Boolean call() throws Exception {
-                System.out.println("loading commands");
-                Boolean ret = loadCommands();
-                System.out.println("done loading commands ...");
-                return ret;
-            }
-        });
+        loadCommands();
 
-        threadService.execute(loadCommandsTask);
+
 
 
         drawSplashProgress("initializing IO ...");
-        FutureTask<Boolean> initIOTask = new FutureTask<Boolean>(new Callable<Boolean>() {
-            public Boolean call() throws Exception {
-                System.out.println("initializing IO ...");
-                Boolean ret =  initImageIO();
-                System.out.println("done initializing IO ...");
-                return ret;
-            }
-        });
 
-        threadService.execute(initIOTask);
+        initImageIO();
 
+        
 
         drawSplashProgress("initializing status bar ...");
         initializeStatusBar();
@@ -324,7 +300,6 @@ public class BrainFlow {
         drawSplashProgress("initializing work space ...");
         initializeWorkspace();
 
-        loadCommandsTask.get();
 
         drawSplashProgress("binding container ...");
         bindContainer();
@@ -337,9 +312,7 @@ public class BrainFlow {
         drawSplashProgress("initializing menu ...");
         initializeMenu();
 
-        initIOTask.get();
 
-        initResources.get();
 
         initExceptionHandler();
 
@@ -401,7 +374,6 @@ public class BrainFlow {
 
         menuBar.setStretch(true);
         menuBar.setPaintBackground(false);
-        //JMenuBar menuBar = new JMenuBar();
 
         menuBar.add(fileMenuGroup.createMenuItem());
         menuBar.add(viewMenuGroup.createMenuItem());
@@ -848,7 +820,7 @@ public class BrainFlow {
 
 
     public void loadAndDisplay(final IImageDataSource dataSource) {
-
+        log.info("loading and displaying : " + dataSource);
 
         final IImageDataSource checkedDataSource = specialHandling(dataSource);
         register(checkedDataSource);
@@ -924,6 +896,11 @@ public class BrainFlow {
         return sources[0];
 
 
+    }
+
+
+    public void replaceLayer(ImageLayer3D oldLayer, ImageLayer3D newLayer, ImageView view) {
+        DisplayManager.getInstance().replaceLayer(oldLayer, newLayer, view);
     }
 
 

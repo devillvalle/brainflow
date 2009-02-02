@@ -358,7 +358,8 @@ public class DiscreteColorMap extends AbstractColorMap {
         changeSupport.firePropertyChange(LOW_CLIP_PROPERTY, oldLowClip, getLowClip());
     }
 
-    public DiscreteColorMap newClipRange(double lowClip, double highClip) {
+    public DiscreteColorMap newClipRange(double lowClip, double highClip, double min, double max) {
+        //todo figure out what to do with max
         return new DiscreteColorMap(new SegmentArray(segments.getNumIntervals(), lowClip, highClip,
                 segments.getMinimum(), segments.getMaximum()), intervals);
 
@@ -426,7 +427,7 @@ public class DiscreteColorMap extends AbstractColorMap {
 
 
     public static void main(String[] args) {
-        LinearColorMapDeprecated cmap = new LinearColorMapDeprecated(0, 255, ColorTable.SPECTRUM);
+        LinearColorMap2 cmap = new LinearColorMap2(0, 255, ColorTable.SPECTRUM);
         DiscreteColorMap tmp = new DiscreteColorMap(cmap);
         tmp.setUpperBound(34, 125);
 

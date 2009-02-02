@@ -2,18 +2,16 @@ package com.brainflow.application.presentation;
 
 import com.brainflow.application.actions.RotateLayersCommand;
 import com.brainflow.application.presentation.binding.ExtBind;
-import com.brainflow.application.toplevel.DisplayManager;
 import com.brainflow.application.toplevel.BrainFlow;
 import com.brainflow.application.toplevel.DataSourceManager;
 import com.brainflow.core.ImageView;
 import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.core.layer.ImageLayer3D;
-import com.brainflow.gui.ToggleBarX;
+import com.brainflow.gui.ToggleBar;
 import com.brainflow.image.io.ImageInfo;
 import com.brainflow.image.io.IImageDataSource;
 import com.pietschy.command.ActionCommand;
 import com.jidesoft.swing.JideBoxLayout;
-import com.jidesoft.action.CommandBar;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
@@ -36,7 +34,7 @@ public class CanvasBar extends ImageViewPresenter {
 
     private JToolBar canvasBar;
 
-    private ToggleBarX toggleBar;
+    private ToggleBar toggleBar;
 
 
 
@@ -48,7 +46,7 @@ public class CanvasBar extends ImageViewPresenter {
 
     private JSpinner imageSpinner = new JSpinner();
 
-    private JLabel imageSpinnerLabel = new JLabel("Image Index: ");
+    private JLabel imageSpinnerLabel = new JLabel("::");
 
 
 
@@ -65,8 +63,10 @@ public class CanvasBar extends ImageViewPresenter {
         canvasBar = new JToolBar();
         imageSpinner.setEnabled(false);
         imageSpinnerLabel.setEnabled(false);
+
         Dimension d = imageSpinner.getPreferredSize();
         d.setSize(200, d.getHeight());
+
         imageSpinner.setPreferredSize(d);
 
         JideBoxLayout layout = new JideBoxLayout(canvasBar, BoxLayout.X_AXIS);
@@ -79,7 +79,7 @@ public class CanvasBar extends ImageViewPresenter {
         canvasBar.add(new JToolBar.Separator(), JideBoxLayout.FIX);
         canvasBar.add(rotateButton, JideBoxLayout.FIX);
 
-        toggleBar = new ToggleBarX(Arrays.asList("Tabula Rasa"));
+        toggleBar = new ToggleBar(Arrays.asList("Tabula Rasa"));
         canvasBar.add(toggleBar, JideBoxLayout.FIX);
 
         initSpinnerListener();
@@ -92,7 +92,7 @@ public class CanvasBar extends ImageViewPresenter {
                 String label = (String)imageSpinner.getValue();
 
                 //todo hack cast
-                ImageLayer3D layer = (ImageLayer3D)getSelectedLayer();
+                final ImageLayer3D layer = (ImageLayer3D)getSelectedLayer();
                 IImageDataSource dsource = layer.getDataSource();
 
                 //todo List<ImageInfo> might be Map<String, ImageInfo> (or something?)
@@ -101,11 +101,28 @@ public class CanvasBar extends ImageViewPresenter {
 
                 assert index >= 0;
 
-                
-                IImageDataSource dsource2 = DataSourceManager.getInstance().createDataSource(dsource.getDescriptor(), dsource.getImageInfoList(), index, true);
-                ImageLayer3D newlayer = new ImageLayer3D(dsource2, layer.getImageLayerProperties());
-                dsource2.getData();
-                DisplayManager.getInstance().replaceLayer(layer, newlayer, getSelectedView());
+                final IImageDataSource dsource2 = DataSourceManager.getInstance().createDataSource(dsource.getDescriptor(), dsource.getImageInfoList(), index, true);
+                //todo progress mechanism needed here
+
+                SwingWorker worker = new SwingWorker() {
+                    protected Object doInBackground() throws Exception {
+                        Object ret =  dsource2.getData();
+                        ImageLayer3D newlayer = new ImageLayer3D(dsource2, layer.getImageLayerProperties());
+                        BrainFlow.get().replaceLayer(layer, newlayer, getSelectedView());
+                        return ret;
+                    }
+
+                    @Override
+                    protected void done() {
+                        imageSpinner.setEnabled(true);
+                    }
+                };
+
+                imageSpinner.setEnabled(false);
+                worker.execute();
+
+
+
             }
         });
 

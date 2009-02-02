@@ -225,8 +225,9 @@ public class ImageSpace3D extends AbstractImageSpace implements IImageSpace3D {
         float y = a2.getNumSamples()/2;
         float z = a3.getNumSamples()/2;
 
-        Vector3f p = mapping.gridToWorld(x,y,z);
-        return new AnatomicalPoint3D(Anatomy3D.REFERENCE_ANATOMY, p.x,  p.y, p.z);
+        return new AnatomicalPoint3D(getAnatomy(), a1.getCenter().getValue(), a2.getCenter().getValue(), a3.getCenter().getValue());
+        //Vector3f p = mapping.gridToWorld(x,y,z);
+        //return new AnatomicalPoint3D(Anatomy3D.REFERENCE_ANATOMY, p.x,  p.y, p.z);
     }
 
 

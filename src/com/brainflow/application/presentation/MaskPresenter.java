@@ -147,7 +147,6 @@ public class MaskPresenter extends ImageViewPresenter {
     class ThresholdListener implements PropertyListener {
 
         public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
-            System.out.println("mask event ...");
             IImageDisplayModel model = new ImageDisplayModel("mask_model");
             ImageLayer3D layer = (ImageLayer3D) getSelectedLayer();
             MaskLayer3D maskLayer = new MaskLayer3D(layer.getMaskProperty().buildMask());

@@ -196,7 +196,6 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
             }
 
             protected Transferable createTransferable(JComponent c) {
-                System.out.println("trying to create transferable");
                 if (c instanceof JTree) {
                     JTree tree = (JTree) c;
                     TreePath path = tree.getSelectionPath();
@@ -211,13 +210,10 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
                         }
                     }
 
-                    if (list.size() == 0) return null;
+                    if (list.isEmpty()) return null;
 
                     IImageDataSource[] ret = new IImageDataSource[list.size()];
-
-
                     list.toArray(ret);
-
 
                     return DnDUtils.createTransferable(ret[0]);
                 }  else {
@@ -309,7 +305,6 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
             //workaraound for JIDE bug found in forum
             Enumeration<TreePath> state = TreeUtils.saveExpansionStateByTreePath(getJTree());
             dtm.nodeStructureChanged(node);
-
             TreeUtils.loadExpansionStateByTreePath(getJTree(), state);
 
         }

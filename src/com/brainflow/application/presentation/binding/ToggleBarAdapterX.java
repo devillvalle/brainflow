@@ -1,6 +1,6 @@
 package com.brainflow.application.presentation.binding;
 
-import com.brainflow.gui.ToggleBarX;
+import com.brainflow.gui.ToggleBar;
 
 import net.java.dev.properties.binding.swing.adapters.SwingAdapter;
 import net.java.dev.properties.BaseProperty;
@@ -15,14 +15,14 @@ import javax.swing.event.ListSelectionEvent;
  * Time: 10:41:05 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ToggleBarAdapterX extends SwingAdapter<Integer, ToggleBarX> implements ListSelectionListener {
+public class ToggleBarAdapterX extends SwingAdapter<Integer, ToggleBar> implements ListSelectionListener {
 
 
-    protected void bindListener(BaseProperty<Integer> integerBaseProperty, ToggleBarX component) {
+    protected void bindListener(BaseProperty<Integer> integerBaseProperty, ToggleBar component) {
         component.addListSelectionListener(this);
     }
 
-    protected void unbindListener(BaseProperty<Integer> integerBaseProperty, ToggleBarX component) {
+    protected void unbindListener(BaseProperty<Integer> integerBaseProperty, ToggleBar component) {
         component.removeListSelectionListener(this);
 
     }
@@ -33,7 +33,7 @@ public class ToggleBarAdapterX extends SwingAdapter<Integer, ToggleBarX> impleme
     }
 
     protected Class getComponentType() {
-        return ToggleBarX.class;
+        return ToggleBar.class;
     }
 
     protected void updateUI(Integer newValue) {

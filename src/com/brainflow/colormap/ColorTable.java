@@ -67,7 +67,7 @@ public class ColorTable {
 
 
     public static ImageIcon createImageIcon(IndexColorModel icm, int swatchWidth, int swatchHeight) {
-        LinearColorMapDeprecated cmap = new LinearColorMapDeprecated(0, 255, icm);
+        LinearColorMap2 cmap = new LinearColorMap2(0, 255, icm);
         LinearColorBar cbar = new LinearColorBar(cmap, SwingConstants.HORIZONTAL);
 
         cbar.setSize(swatchWidth, swatchHeight);

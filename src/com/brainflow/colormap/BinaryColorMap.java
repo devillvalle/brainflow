@@ -65,7 +65,7 @@ public final class BinaryColorMap extends AbstractColorMap {
 
     }
 
-    public IColorMap newClipRange(double lowClip, double highClip) {
+    public IColorMap newClipRange(double lowClip, double highClip, double min, double max) {
         return new BinaryColorMap(foregroundColor);
     }
 

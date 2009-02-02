@@ -53,7 +53,7 @@ public class ConstantColorMap extends AbstractColorMap {
         return interval.getColor();
     }
 
-    public IColorMap newClipRange(double lowClip, double highClip) {
+    public IColorMap newClipRange(double lowClip, double highClip, double min, double max) {
         return this;
     }
 }

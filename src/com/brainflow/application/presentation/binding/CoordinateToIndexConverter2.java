@@ -8,6 +8,7 @@ import net.java.dev.properties.BaseProperty;
 import net.java.dev.properties.RProperty;
 import net.java.dev.properties.WProperty;
 import net.java.dev.properties.container.ObservableWrapper;
+import net.java.dev.properties.container.BeanContainer;
 
 import java.util.Arrays;
 
@@ -26,6 +27,7 @@ public class CoordinateToIndexConverter2 extends ObservableWrapper.ReadWrite<Int
 
     public CoordinateToIndexConverter2(BaseProperty<AnatomicalPoint3D> property, IImageSpace3D _space, Axis _axis) {
         super(property);
+        BeanContainer.bind(this);
         axis = _axis;
         space = _space;
 
@@ -68,7 +70,6 @@ public class CoordinateToIndexConverter2 extends ObservableWrapper.ReadWrite<Int
 
         if (axis == Axis.X_AXIS) {
              voxel = new Index3D(i, voxel.i2(), voxel.i3());
-
         } else if (axis == Axis.Y_AXIS) {
             voxel = new Index3D(voxel.i1(), i, voxel.i3());
         } else if (axis == Axis.Z_AXIS) {

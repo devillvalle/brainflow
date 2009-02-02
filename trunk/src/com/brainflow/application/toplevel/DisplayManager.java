@@ -39,7 +39,6 @@ public class DisplayManager {
 
     public static final String SELECTED_CANVAS_PROPERTY = "selectedCanvas";
 
-
     private static final Logger log = Logger.getLogger(DisplayManager.class.getName());
 
     private List<IBrainCanvas> canvasList = new ArrayList<IBrainCanvas>();

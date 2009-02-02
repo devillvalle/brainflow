@@ -4,6 +4,7 @@ import net.java.dev.properties.BaseProperty;
 import net.java.dev.properties.RProperty;
 import net.java.dev.properties.WProperty;
 import net.java.dev.properties.container.ObservableWrapper;
+import net.java.dev.properties.container.BeanContainer;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,6 +23,7 @@ public class PercentageRangeConverter extends ObservableWrapper.ReadWrite<Intege
 
     public PercentageRangeConverter(BaseProperty<Double> property, double min, double max, int numUnits) {
         super(property);
+        BeanContainer.bind(property);
         this.min = min;
         this.max = max;
         this.numUnits = numUnits;
@@ -34,15 +36,15 @@ public class PercentageRangeConverter extends ObservableWrapper.ReadWrite<Intege
 
     private double getValue() {
         RProperty<Double> prop = (RProperty<Double>) getProperty();
-        return prop.get().doubleValue();
+        return prop.get();
     }
 
     @Override
     public void set(Integer o) {
-        double val = o.intValue();
+        double val = o;
         double newval = (val / numUnits) * (max - min) + min;
         WProperty<Double> wprop = (WProperty<Double>) getProperty();
-        wprop.set(new Double(newval));
+        wprop.set(newval);
 
 
     }

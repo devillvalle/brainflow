@@ -73,11 +73,16 @@ public abstract class ImageLayer<T extends IImageSpace> extends AbstractLayer {
         super(dataSource.getImageInfo().getImageLabel(), _properties);
         this.dataSource = dataSource;
 
-
+        //todo need to clone properties
         if (dataSource.isLoaded()) {
             IClipRange clip = _properties.getClipRange();
-            _properties.clipRange.set(new ClipRange(getData().minValue(), getData().maxValue(), clip.getLowClip(), clip.getHighClip()));
+            IClipRange newclip = clip.newClipRange(getData().minValue(), getData().maxValue(), clip.getLowClip(), clip.getHighClip());
+            _properties.clipRange.set(newclip);
+            _properties.colorMap.set(_properties.colorMap.get().newClipRange(
+                    newclip.getLowClip(), newclip.getHighClip(), newclip.getMin(), newclip.getMax()));
 
+            IClipRange thresh = _properties.getThresholdRange();
+            _properties.thresholdRange.set(thresh.newClipRange(newclip.getMin(), newclip.getMax(), thresh.getLowClip(), thresh.getHighClip()));
 
         }
 

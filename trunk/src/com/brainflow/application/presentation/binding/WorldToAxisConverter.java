@@ -9,6 +9,7 @@ import net.java.dev.properties.RProperty;
 import net.java.dev.properties.WProperty;
 import net.java.dev.properties.Property;
 import net.java.dev.properties.container.ObservableWrapper;
+import net.java.dev.properties.container.BeanContainer;
 
 import java.util.Arrays;
 
@@ -26,6 +27,7 @@ public class WorldToAxisConverter extends ObservableWrapper.ReadWrite<Double> {
 
     public WorldToAxisConverter(BaseProperty<AnatomicalPoint3D> property, Axis _axis) {
         super(property);
+        BeanContainer.bind(property);
         axis = _axis;
 
     }

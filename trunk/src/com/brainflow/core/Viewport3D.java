@@ -20,7 +20,7 @@ import java.beans.PropertyChangeEvent;
  * Time: 3:16:35 PM
  * To change this template use File | Settings | File Templates.
  */
-public class Viewport3D extends Model {
+public class Viewport3D  {
 
     
     public static final String X_AXIS_MIN_PROPERTY = "XAxisMin";
@@ -88,9 +88,9 @@ public class Viewport3D extends Model {
 
 
 
-    private final Property<Double> XAxisMax = ObservableProperty.create(0.0);
-    private final Property<Double> YAxisMax = ObservableProperty.create(0.0);
-    private final Property<Double> ZAxisMax = ObservableProperty.create(0.0);
+    public final Property<Double> XAxisMax = ObservableProperty.create(0.0);
+    public final Property<Double> YAxisMax = ObservableProperty.create(0.0);
+    public final Property<Double> ZAxisMax = ObservableProperty.create(0.0);
 
 
 

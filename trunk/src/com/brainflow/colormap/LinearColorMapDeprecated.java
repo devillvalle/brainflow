@@ -318,6 +318,10 @@ public class LinearColorMapDeprecated extends AbstractColorMap {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    public IColorMap newClipRange(double lowClip, double highClip, double min, double max) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     private byte[] getThresholdedInterleavedRGBAComponents(IImageData data) {
 
         int len = data.numElements();

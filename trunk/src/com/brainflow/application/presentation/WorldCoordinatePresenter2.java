@@ -45,12 +45,6 @@ public class WorldCoordinatePresenter2 extends ImageViewPresenter {
         form.getYspinner().setModel(new SpinnerNumberModel(0, -1000, 1000, 1.0));
         form.getZspinner().setModel(new SpinnerNumberModel(0, -1000, 1000, 1.0));
 
-        
-        //ImageAxis xaxis = ispace.getImageAxis(Axis.X_AXIS);
-        //ImageAxis yaxis = ispace.getImageAxis(Axis.Y_AXIS);
-        //ImageAxis zaxis = ispace.getImageAxis(Axis.Z_AXIS);
-
-        // bind cursorPos values to JSliders using double --> integer converter wrapper
         SwingBind.get().bind(new WorldToAxisConverter(view.worldCursorPos, Axis.X_AXIS), form.getXspinner());
         SwingBind.get().bind(new WorldToAxisConverter(view.worldCursorPos, Axis.Y_AXIS), form.getYspinner());
         SwingBind.get().bind(new WorldToAxisConverter(view.worldCursorPos, Axis.Z_AXIS), form.getZspinner());

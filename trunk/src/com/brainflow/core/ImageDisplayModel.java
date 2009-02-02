@@ -335,7 +335,9 @@ public class ImageDisplayModel implements IImageDisplayModel {
         for (int i = 0; i < listModel.size(); i++) {
             ImageLayer3D curlayer = listModel.get(i);
             if (i == index) {
+                listenToLayer(layer);
                 newModel.add(layer);
+
                 //todo remove listeners
             } else {
                 newModel.add(curlayer);
@@ -355,14 +357,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
     private void listenToLayer(final ImageLayer3D layer) {
 
 
-        /*layer.addPropertyChangeListener(ImageLayerProperties.RESAMPLE_PROPERTY, new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                ImageLayerListener[] listeners = eventListeners.getListeners(ImageLayerListener.class);
-                for (ImageLayerListener listener : listeners) {
-                    listener.interpolationMethodChanged(new ImageLayerEvent(ImageDisplayModel.this, (ImageLayer) evt.getSource()));
-                }
-            }
-        }); */
+
 
 
         BeanContainer.get().addListener(layer.getImageLayerProperties().colorMap, new PropertyListener() {
@@ -460,7 +455,7 @@ public class ImageDisplayModel implements IImageDisplayModel {
                     return;
                 }
 
-                IColorMap newMap = oldMap.newClipRange(lowClip.doubleValue(), highClip.doubleValue());
+                IColorMap newMap = oldMap.newClipRange(lowClip.doubleValue(), highClip.doubleValue(), clip.getMin(), clip.getMax());
                 layer.getImageLayerProperties().colorMap.set(newMap);
 
                 for (ImageLayerListener listener : listeners) {

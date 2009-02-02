@@ -4,6 +4,7 @@ import net.java.dev.properties.BaseProperty;
 import net.java.dev.properties.RProperty;
 import net.java.dev.properties.WProperty;
 import net.java.dev.properties.container.ObservableWrapper;
+import net.java.dev.properties.container.BeanContainer;
 
 import java.text.NumberFormat;
 
@@ -20,6 +21,7 @@ public class IntegerToStringConverter extends ObservableWrapper.ReadWrite<String
 
     public IntegerToStringConverter(BaseProperty<Integer> property) {
         super(property);
+        BeanContainer.bind(property);
         formatter.setMaximumFractionDigits(1);
     }
 

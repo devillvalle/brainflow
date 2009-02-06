@@ -50,7 +50,6 @@ import org.bushe.swing.event.EventBus;
 import org.bushe.swing.event.EventSubscriber;
 
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -109,7 +108,6 @@ public class BrainFlow {
 
     private StatusBar statusBar;
 
-
     private SelectedViewStatus viewStatus;
 
     private CommandContainer commandContainer;
@@ -149,75 +147,58 @@ public class BrainFlow {
     }
 
     private void openSplash() {
-         splash = SplashScreen.getSplashScreen();
-         if (splash == null)
-         {
-             System.out.println(
-                 "Error: no splash image specified on the command line");
-             return;
-         }
+        splash = SplashScreen.getSplashScreen();
+        if (splash == null) {
+            System.out.println(
+                    "Error: no splash image specified on the command line");
+            return;
+        }
 
-         // compute base positions for text and progress bar
-         Dimension splashSize = splash.getSize();
-         textY = splashSize.height - 20;
-         barY = splashSize.height - 30;
+        // compute base positions for text and progress bar
+        Dimension splashSize = splash.getSize();
+        textY = splashSize.height - 20;
+        barY = splashSize.height - 30;
 
-         splashGraphics = splash.createGraphics();
+        splashGraphics = splash.createGraphics();
     }
 
 
-     private static final int X = 20, W = 250;
-     private static final int TEXT_H = 10, BAR_H = 20;
-     private static final int NUM_BUBBLES = 10;
+    private static final int X = 20, W = 250;
+    private static final int TEXT_H = 10, BAR_H = 20;
+    private static final int NUM_BUBBLES = 10;
 
-     private int textY, barY;
-     private int barPos = 0;
+    private int textY, barY;
+    private int barPos = 0;
 
 
-     public void closeSplash() {
-         if (splash != null) {
-             splash.close();
-         }
-     }
+    public void closeSplash() {
+        if (splash != null) {
+            splash.close();
+        }
+    }
 
-     public void drawSplashProgress(String msg)
-     {
-         if (splashGraphics == null) return;
+    public void drawSplashProgress(String msg) {
+        if (splashGraphics == null) return;
 
-         // clear what we don't need from previous state
-         splashGraphics.setComposite(AlphaComposite.Clear);
-         splashGraphics.fillRect(X, textY, W, TEXT_H+20);
+        // clear what we don't need from previous state
+        splashGraphics.setComposite(AlphaComposite.Clear);
+        splashGraphics.fillRect(X, textY, W, TEXT_H + 20);
+        splashGraphics.setPaintMode();
 
-         /*if (barPos == 0)
-         {
-             splashGraphics.fillRect(X, barY, W, BAR_H);
-         }*/
+        // draw message
+        splashGraphics.setColor(Color.WHITE);
+        splashGraphics.drawString(msg, X, textY + TEXT_H);
 
-         // draw new state
-         splashGraphics.setPaintMode();
 
-         // draw message
-         splashGraphics.setColor(Color.WHITE);
-         splashGraphics.drawString(msg, X, textY + TEXT_H);
-
-         // draw progress bar
-         //splashGraphics.setColor(Color.BLUE);
-         //splashGraphics.fillOval(X + barPos * (BAR_H + 1), barY, BAR_H, BAR_H);
-
-         // show changes
-
-         if (splash.isVisible())
+        if (splash.isVisible())
             splash.update();
-         //barPos = (barPos + 1) % NUM_BUBBLES;
-     }
+
+    }
 
 
     public JFrame getApplicationFrame() {
         return brainFrame;
     }
-
-
-
 
 
     public void launch() throws Throwable {
@@ -236,7 +217,6 @@ public class BrainFlow {
                 LookAndFeelFactory.installJideExtension();
 
             } else if (osname.toUpperCase().contains("LINUX")) {
-                System.out.println("linux detected");
                 //UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
                 //LookAndFeelFactory.installJideExtension(LookAndFeelFactory.XERTO_STYLE);
                 UIManager.setLookAndFeel(new SyntheticaWhiteVisionLookAndFeel());
@@ -252,12 +232,12 @@ public class BrainFlow {
 
         } catch (UnsupportedLookAndFeelException e) {
             log.severe("could not load look and feel");
-        } catch(Throwable ex) {
+        } catch (Throwable ex) {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                 LookAndFeelFactory.installJideExtension();
 
-            } catch(Throwable ex2) {
+            } catch (Throwable ex2) {
                 log.severe("could not load look and feel");
                 throw new RuntimeException("failed to initialize look and feel", ex2);
             }
@@ -280,18 +260,14 @@ public class BrainFlow {
         initializeResources();
 
 
-
         drawSplashProgress("loading commands ...");
         loadCommands();
-
-
 
 
         drawSplashProgress("initializing IO ...");
 
         initImageIO();
 
-        
 
         drawSplashProgress("initializing status bar ...");
         initializeStatusBar();
@@ -311,7 +287,6 @@ public class BrainFlow {
 
         drawSplashProgress("initializing menu ...");
         initializeMenu();
-
 
 
         initExceptionHandler();
@@ -369,6 +344,7 @@ public class BrainFlow {
         CommandGroup gotoMenuGroup = new CommandGroup("goto-menu");
         gotoMenuGroup.bind(getApplicationFrame());
 
+        
 
         CommandBar menuBar = new CommandMenuBar();
 
@@ -464,12 +440,13 @@ public class BrainFlow {
         bindCommand(new CreateSagittalViewCommand(), true);
 
         bindCommand(new CreateCoronalViewCommand(), true);
+        bindCommand(new RotateOrientationCommand(), true);
         bindCommand(new CreateVerticalOrthogonalCommand(), true);
 
         bindCommand(new CreateHorizontalOrthogonalCommand(), true);
         bindCommand(new CreateTriangularOrthogonalCommand(), true);
 
-
+        
         CommandGroup orthoGroup = new CommandGroup("ortho-view-group");
         orthoGroup.bind(getApplicationFrame());
 
@@ -479,8 +456,6 @@ public class BrainFlow {
 
         final PreviousSliceCommand previousSliceCommand = new PreviousSliceCommand();
         bindCommand(previousSliceCommand, false);
-
-
 
 
         bindCommand(new PageBackSliceCommand(), true);
@@ -518,7 +493,6 @@ public class BrainFlow {
         }, AWTEvent.KEY_EVENT_MASK);
 
 
-
     }
 
     public void addCanvas(IBrainCanvas canvas) {
@@ -541,7 +515,6 @@ public class BrainFlow {
         JComponent canvas = DisplayManager.getInstance().getSelectedCanvas().getComponent();
         canvas.setRequestFocusEnabled(true);
         canvas.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-
 
 
         documentPane.setTabPlacement(DocumentPane.BOTTOM);
@@ -644,7 +617,6 @@ public class BrainFlow {
                 DockContext.DOCK_SIDE_WEST, 2);
 
 
-
         JideSplitPane splitPane = new JideSplitPane(JideSplitPane.VERTICAL_SPLIT);
         splitPane.addPane(new JScrollPane(projectTreeView.getComponent()));
 
@@ -652,8 +624,6 @@ public class BrainFlow {
         splitPane.addPane(new JScrollPane(viewListPresenter.getComponent()));
 
         dframe.getContentPane().add(splitPane);
-
-
 
 
         brainFrame.getDockingManager().addFrame(dframe);
@@ -962,7 +932,7 @@ public class BrainFlow {
             if (!validEvent(event)) return;
 
             AnatomicalPoint3D gpoint = event.getLocation();
-            ImageLayer3D layer = (ImageLayer3D)view.getSelectedLayer();
+            ImageLayer3D layer = (ImageLayer3D) view.getSelectedLayer();
 
 
             double value = layer.getValue(gpoint);
@@ -1058,7 +1028,6 @@ public class BrainFlow {
         uiDefaultsCustomizer.customize(UIManager.getDefaults());
 
 
-
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             public void uncaughtException(Thread t, Throwable e) {
                 e.printStackTrace();
@@ -1113,8 +1082,5 @@ public class BrainFlow {
       }
   }  */
 
-
-
-   
 
 }

@@ -1,6 +1,7 @@
 package com.brainflow.core;
 
 import com.brainflow.application.services.ImageViewLayerSelectionEvent;
+import com.brainflow.application.actions.CreateAxialViewCommand;
 import com.brainflow.core.annotations.IAnnotation;
 import com.brainflow.core.layer.ImageLayer;
 import com.brainflow.display.InterpolationType;
@@ -13,6 +14,8 @@ import com.brainflow.image.space.IImageSpace3D;
 
 import com.pietschy.command.toggle.ToggleCommand;
 import com.pietschy.command.toggle.ToggleVetoException;
+import com.pietschy.command.CommandContainer;
+import com.pietschy.command.Command;
 import net.java.dev.properties.BaseProperty;
 import net.java.dev.properties.IndexedProperty;
 import net.java.dev.properties.Property;
@@ -49,7 +52,7 @@ import java.util.logging.Logger;
  */
 
 
-public class ImageView extends JComponent implements ListDataListener, ImageDisplayModelListener {
+public class ImageView extends JPanel implements ListDataListener, ImageDisplayModelListener {
 
     private static final Logger log = Logger.getLogger(ImageView.class.getName());
 
@@ -81,13 +84,10 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
         public void set(AnatomicalPoint3D ap) {
 
             ap = ap.snapToBounds();
-            if (ap.equals(get())) {
-                // do nothing
-                return;
+            if (!ap.equals(get())) {
+                super.set(ap);
             }
 
-
-            super.set(ap);
 
         }
     };
@@ -100,8 +100,8 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
             }
 
 
-            IImageSpace3D space = (IImageSpace3D)getModel().getImageSpace();
-            float[] gridpos = space.worldToGrid((float)ap.getX(), (float)ap.getY(), (float)ap.getZ());
+            IImageSpace3D space = (IImageSpace3D) getModel().getImageSpace();
+            float[] gridpos = space.worldToGrid((float) ap.getX(), (float) ap.getY(), (float) ap.getZ());
             double x1 = space.getImageAxis(Axis.X_AXIS).gridToReal(gridpos[0]);
             double y1 = space.getImageAxis(Axis.Y_AXIS).gridToReal(gridpos[1]);
             double z1 = space.getImageAxis(Axis.Z_AXIS).gridToReal(gridpos[2]);
@@ -111,12 +111,12 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
         public AnatomicalPoint3D get() {
             RProperty<AnatomicalPoint3D> cpos = (RProperty<AnatomicalPoint3D>) getProperties()[0];
-            IImageSpace3D space = (IImageSpace3D)getModel().getImageSpace();
+            IImageSpace3D space = (IImageSpace3D) getModel().getImageSpace();
             double gridx = space.getImageAxis(Axis.X_AXIS).gridPosition(cpos.get().getX());
             double gridy = space.getImageAxis(Axis.Y_AXIS).gridPosition(cpos.get().getY());
-            double gridz =  space.getImageAxis(Axis.Z_AXIS).gridPosition(cpos.get().getZ());
+            double gridz = space.getImageAxis(Axis.Z_AXIS).gridPosition(cpos.get().getZ());
 
-            float[] ret = space.gridToWorld((float)gridx, (float)gridy, (float)gridz);
+            float[] ret = space.gridToWorld((float) gridx, (float) gridy, (float) gridz);
             return new AnatomicalPoint3D(Anatomy3D.REFERENCE_ANATOMY, ret[0], ret[1], ret[2]);
         }
     };
@@ -164,34 +164,39 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
     protected Viewport3D viewport;
 
-    private ViewportHandler viewportHandler = new ViewportHandler();
-
 
     private PlotSelectionHandler plotSelectionHandler = new PlotSelectionHandler();
 
     private ImageLayerSelectionListener layerSelectionListener = new ImageLayerSelectionListener();
 
+    private JPanel contentPane = new JPanel();
+
+    private JToolBar toolbar = new JToolBar();
+
+
+
+    //private ViewportHandler viewportHandler = new ViewportHandler();
+
     //private CommandContainer commandContainer;
 
 
     public ImageView(IImageDisplayModel imodel) {
-        super();
         BeanContainer.bind(this);
         displayModel.set(imodel);
 
+        setLayout(new BorderLayout());
+        add(contentPane, BorderLayout.CENTER);
+        add(toolbar, BorderLayout.NORTH);
+
         initView();
     }
-
-
-
-
 
 
     public ImagePlotLayout getPlotLayout() {
         return plotLayout;
     }
 
-    public void setPlotLayout(ImagePlotLayout plotLayout) {
+    public void initPlotLayout(ImagePlotLayout plotLayout) {
         this.plotLayout = plotLayout;
         List<IImagePlot> plots = plotLayout.layoutPlots();
 
@@ -230,7 +235,7 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
     private void updateView() {
         clearListeners();
         plotLayout.setView(this);
-        setPlotLayout(plotLayout);
+        initPlotLayout(plotLayout);
 
         initView();
 
@@ -239,18 +244,23 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
 
     private void initView() {
 
+
         viewport = new Viewport3D(getModel());
 
         AnatomicalPoint3D centroid = (AnatomicalPoint3D) getModel().getImageSpace().getCentroid();
 
         // centroid is in world space
-        
+
         cursorPos.set(new CursorPosition((IImageSpace3D) getModel().getImageSpace(), centroid.getX(), centroid.getY(), centroid.getZ()));
 
         registerListeners();
-        setPlotLayout(plotLayout);
+        initPlotLayout(plotLayout);
 
 
+    }
+
+    protected JPanel getContentPane() {
+        return contentPane;
     }
 
 
@@ -414,7 +424,7 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
         return SwingUtilities.convertPoint(plot.getComponent(), location, this);
 
 
-    }   
+    }
 
     public boolean pointInPlot(Component source, Point p) {
         Point viewPoint = SwingUtilities.convertPoint(source, p, this);
@@ -501,8 +511,9 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
         Viewport3D viewport = getViewport();
         List<IImagePlot> plots = getPlots();
         for (IImagePlot plot : plots) {
-            plot.setXAxisRange(viewport.getRange(plot.getDisplayAnatomy().XAXIS));
-            plot.setYAxisRange(viewport.getRange(plot.getDisplayAnatomy().YAXIS));
+            plot.setViewBounds(new ViewBounds(plot.getDisplayAnatomy(),
+                    viewport.getRange(plot.getDisplayAnatomy().XAXIS),
+                    viewport.getRange(plot.getDisplayAnatomy().YAXIS)));
 
         }
 
@@ -525,7 +536,7 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
         public void propertyChanged(BaseProperty prop, Object oldValue, Object newValue, int index) {
 
             int selectionIndex = (Integer) newValue;
-            int oldIndex = (Integer)oldValue;
+            int oldIndex = (Integer) oldValue;
 
             ImageLayer selectedLayer = getModel().getLayer(selectionIndex);
             ImageLayer deselectedLayer = getModel().getLayer(oldIndex);
@@ -541,15 +552,14 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
     }
 
 
-
-
     class ViewportHandler implements PropertyChangeListener {
 
         public void propertyChange(PropertyChangeEvent evt) {
             List<IImagePlot> plots = ImageView.this.getPlots();
             for (IImagePlot plot : plots) {
-                plot.setXAxisRange(viewport.getRange(plot.getDisplayAnatomy().XAXIS));
-                plot.setYAxisRange(viewport.getRange(plot.getDisplayAnatomy().YAXIS));
+                plot.setViewBounds(new ViewBounds(plot.getDisplayAnatomy(),
+                        viewport.getRange(plot.getDisplayAnatomy().XAXIS),
+                        viewport.getRange(plot.getDisplayAnatomy().YAXIS)));
 
             }
 
@@ -588,6 +598,15 @@ public class ImageView extends JComponent implements ListDataListener, ImageDisp
             if (view.isPreserveAspect() != b)
                 view.setPreserveAspect(b);
 
+        }
+
+
+    }
+
+
+    public static class Simple extends ImageView {
+        public Simple(IImageDisplayModel imodel) {
+            super(imodel);    //To change body of overridden methods use File | Settings | File Templates.
         }
 
 

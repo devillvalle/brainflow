@@ -129,4 +129,12 @@ public class OrthoPlotLayout extends ImagePlotLayout {
 
 
     }
+
+    public void setDisplayAnatomy(Anatomy3D displayAnatomy) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public Anatomy3D getDisplayAnatomy() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

@@ -7,6 +7,7 @@ import com.brainflow.core.annotations.SliceAnnotation;
 import com.brainflow.image.anatomy.Anatomy3D;
 import com.brainflow.image.axis.AxisRange;
 import com.brainflow.utils.StringGenerator;
+import com.brainflow.utils.IRange;
 
 import java.util.logging.Logger;
 
@@ -45,19 +46,18 @@ public class ImageViewFactory {
 
 
     public static IImagePlot createPlot(IImageDisplayModel displayModel, Anatomy3D displayAnatomy) {
-
-
         AxisRange xrange = displayModel.getImageAxis(displayAnatomy.XAXIS).getRange();
         AxisRange yrange = displayModel.getImageAxis(displayAnatomy.YAXIS).getRange();
+        ViewBounds vb = new ViewBounds(displayAnatomy, xrange, yrange);
 
-        return new ComponentImagePlot(displayModel, displayAnatomy, xrange, yrange);
+        return new ComponentImagePlot(displayModel, vb);
 
     }
 
 
     public static ImageView createOrthogonalView(ImageView source, OrthoPlotLayout.ORIENTATION orientation) {
         ImageView view = new ImageView(source.getModel());
-        view.setPlotLayout(new OrthoPlotLayout(view,  orientation));
+        view.initPlotLayout(new OrthoPlotLayout(view,  orientation));
         addDefaultAnnotations(view);
 
         return view;
@@ -66,7 +66,7 @@ public class ImageViewFactory {
 
     public static ImageView createYokedAxialView(ImageView source) {
         ImageView view = new ImageView(source.getModel());
-        view.setPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalAxial()));
+        view.initPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalAxial()));
 
         addDefaultAnnotations(view);
 
@@ -75,7 +75,7 @@ public class ImageViewFactory {
 
     public static ImageView createYokedCoronalView(ImageView source) {
         ImageView view = new ImageView(source.getModel());
-        view.setPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalCoronal()));
+        view.initPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalCoronal()));
         DisplayManager.getInstance().yoke(source, view);
         return view;
     }
@@ -83,7 +83,7 @@ public class ImageViewFactory {
 
     public static ImageView createYokedSagittalView(ImageView source) {
         ImageView view = new ImageView(source.getModel());
-        view.setPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalSagittal()));
+        view.initPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalSagittal()));
         DisplayManager.getInstance().yoke(source, view);
         return view;
 
@@ -92,7 +92,7 @@ public class ImageViewFactory {
 
     public static ImageView createAxialView(IImageDisplayModel displayModel) {
         ImageView view = new ImageView(displayModel);
-        view.setPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalAxial()));
+        view.initPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalAxial()));
         addDefaultAnnotations(view);
 
         /*ActionCommand aspectCommand = new SetPreserveAspectCommand(view);
@@ -117,7 +117,7 @@ public class ImageViewFactory {
 
     public static ImageView createSagittalView(ImageView source) {
         ImageView view = new ImageView(source.getModel());
-        view.setPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalSagittal()));
+        view.initPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalSagittal()));
         view.cursorPos.set(source.cursorPos.get());
         addDefaultAnnotations(view);
         return view;
@@ -126,7 +126,7 @@ public class ImageViewFactory {
 
     public static ImageView createCoronalView(ImageView source) {
         ImageView view = new ImageView(source.getModel());
-        view.setPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalCoronal()));
+        view.initPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalCoronal()));
         addDefaultAnnotations(view);
         return view;
 
@@ -135,13 +135,13 @@ public class ImageViewFactory {
 
     public static ImageView createAxialView(ImageView source) {
         ImageView view = new ImageView(source.getModel());
-        view.setPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalAxial()));
-
+        view.initPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalAxial()));
         addDefaultAnnotations(view);
         return view;
 
 
     }
+
 
     
 

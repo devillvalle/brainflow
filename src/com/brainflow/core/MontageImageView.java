@@ -110,7 +110,7 @@ public class MontageImageView extends AbstractGriddedImageView {
         AxisRange yrange = getModel().getImageAxis(displayAnatomy.YAXIS).getRange();
 
 
-        IImagePlot plot = new ComponentImagePlot(getModel(), displayAnatomy, xrange, yrange);
+        IImagePlot plot = new ComponentImagePlot(getModel(), new ViewBounds(displayAnatomy, xrange, yrange));
         plot.setName(displayAnatomy.XY_PLANE.getOrientation().toString() + row + ", " + column);
 
         CompositeImageProducer producer = new CompositeImageProducer(plot, getDisplayAnatomy());

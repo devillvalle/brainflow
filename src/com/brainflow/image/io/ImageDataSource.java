@@ -28,7 +28,6 @@ public class ImageDataSource extends AbstractImageDataSource {
     private IImageData dataRef = null;
 
 
-   
     public ImageDataSource(ImageIODescriptor _descriptor, ImageInfo _info) {
         super(_descriptor, _info);
     }
@@ -49,7 +48,7 @@ public class ImageDataSource extends AbstractImageDataSource {
     public IImageData getData() {
         if (!isLoaded()) try {
             load();
-        } catch(BrainFlowException e) {
+        } catch (BrainFlowException e) {
             throw new RuntimeException(e);
         }
 
@@ -67,8 +66,8 @@ public class ImageDataSource extends AbstractImageDataSource {
             ImageInfo imageInfo = getImageInfoList().get(getImageIndex());
             assert imageInfo.getDataFile() != null;
             //if (imageInfo.getDataFile() == null) {
-                //todo this is truly horrid
-                //imageInfo.setDataFile(getDataFile());
+            //todo this is truly horrid
+            //imageInfo.setDataFile(getDataFile());
             //}
 
             ImageReader ireader = (ImageReader) getDescriptor().getDataReader().newInstance();

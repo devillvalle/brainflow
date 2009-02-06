@@ -60,7 +60,7 @@ public class CompositeImageProducer extends AbstractImageProducer {
     public CompositeImageProducer(IImagePlot plot,
                                   Anatomy3D displayAnatomy, AnatomicalPoint3D slice, ExecutorService service) {
         this.plot = plot;
-        setDisplayAnatomy(displayAnatomy);
+        //setDisplayAnatomy(displayAnatomy);
 
         //initPipeline();
 
@@ -112,19 +112,33 @@ public class CompositeImageProducer extends AbstractImageProducer {
     }
 
     @Override
-    public void setXAxis(AxisRange xaxis) {
-        super.setXAxis(xaxis);
-        //pipeline.clearPath(cropImageStage);
-        dirty = true;
+    public Anatomy3D getDisplayAnatomy() {
+        return plot.getDisplayAnatomy();
+    }
+
+    //@Override
+    //public void setXAxis(AxisRange xaxis) {
+    //    super.setXAxis(xaxis);
+    //    //pipeline.clearPath(cropImageStage);
+    //    dirty = true;
+    //}
+
+    //@Override
+    //public void setYAxis(AxisRange yaxis) {
+    //    super.setYAxis(yaxis);
+    //    //pipeline.clearPath(cropImageStage);
+    //    dirty = true;
+    //}
+
+    @Override
+    public AxisRange getYAxis() {
+        return plot.getYAxisRange();
     }
 
     @Override
-    public void setYAxis(AxisRange yaxis) {
-        super.setYAxis(yaxis);
-        //pipeline.clearPath(cropImageStage);
-        dirty = true;
+    public AxisRange getXAxis() {
+        return plot.getYAxisRange();
     }
-
 
     public IImageDisplayModel getModel() {
         return plot.getModel();

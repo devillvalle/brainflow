@@ -29,7 +29,7 @@ public class ImagePlotFactory {
         AxisRange xrange = model.getImageAxis(displayAnatomy.XAXIS).getRange();
         AxisRange yrange = model.getImageAxis(displayAnatomy.YAXIS).getRange();
 
-        IImagePlot plot = new ComponentImagePlot(model, displayAnatomy, xrange, yrange);
+        IImagePlot plot = new ComponentImagePlot(model, new ViewBounds(displayAnatomy, xrange, yrange));
         plot.setName(displayAnatomy.XY_PLANE.getOrientation().toString());
 
         AnatomicalPoint3D slice = (AnatomicalPoint3D)model.getImageSpace().getCentroid();

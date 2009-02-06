@@ -19,15 +19,11 @@ public abstract class AbstractImageProducer implements IImageProducer {
 
     private IImageDisplayModel model;
 
-    private Anatomy3D displayAnatomy;
 
     private AnatomicalPoint3D slice = new AnatomicalPoint3D(Anatomy3D.AXIAL_LAI, 0,0,0);
 
     private Rectangle screenSize;
 
-    private AxisRange xaxis;
-
-    private AxisRange yaxis;
 
     private InterpolationType screenInterpolation = InterpolationType.CUBIC;
 
@@ -40,13 +36,8 @@ public abstract class AbstractImageProducer implements IImageProducer {
         return model;
     }
 
-    public void setDisplayAnatomy(Anatomy3D displayAnatomy) {
-        this.displayAnatomy = displayAnatomy;
-    }
 
-    public Anatomy3D getDisplayAnatomy() {
-        return displayAnatomy;
-    }
+    public abstract Anatomy3D getDisplayAnatomy();
 
     public void setSlice(AnatomicalPoint3D slice) {
         this.slice = slice;
@@ -61,21 +52,17 @@ public abstract class AbstractImageProducer implements IImageProducer {
         this.screenInterpolation = screenInterpolation;
     }
 
-    public AxisRange getXAxis() {
-        return xaxis;
-    }
+    public abstract AxisRange getXAxis();
 
-    public void setXAxis(AxisRange xaxis) {
-        this.xaxis = xaxis;
-    }
+    //public void setXAxis(AxisRange xaxis) {
+    //    this.xaxis = xaxis;
+    //}
 
-    public AxisRange getYAxis() {
-        return yaxis;
-    }
+    public abstract AxisRange getYAxis();
 
-    public void setYAxis(AxisRange yaxis) {
-        this.yaxis = yaxis;
-    }
+    //public void setYAxis(AxisRange yaxis) {
+    //    this.yaxis = yaxis;
+    //}
 
     public AnatomicalPoint3D getSlice() {
         return slice;

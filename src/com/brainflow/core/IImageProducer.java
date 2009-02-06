@@ -23,7 +23,6 @@ public interface IImageProducer {
 
     public IImagePlot getPlot();
 
-
     public IImageDisplayModel getModel();
 
     public Anatomy3D getDisplayAnatomy();
@@ -38,10 +37,7 @@ public interface IImageProducer {
 
     public InterpolationType getScreenInterpolation();
 
-    public void setYAxis(AxisRange yaxis);
-
-    public void setXAxis(AxisRange xaxis);
-
+    
     public void reset();
 
     public AxisRange getXAxis();

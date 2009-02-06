@@ -46,8 +46,8 @@ public class SnapShooter {
     public void setDisplayAnatomy(Anatomy3D _displayAnatomy) {
         displayAnatomy = _displayAnatomy;
 
-        emulator = new ComponentImagePlot(dset, displayAnatomy, dset.getImageAxis(displayAnatomy.XAXIS).getRange(),
-                dset.getImageAxis(displayAnatomy.YAXIS).getRange());
+        emulator = new ComponentImagePlot(dset, new ViewBounds(displayAnatomy, dset.getImageAxis(displayAnatomy.XAXIS).getRange(),
+                dset.getImageAxis(displayAnatomy.YAXIS).getRange()));
 
 
         width = (int) dset.getImageAxis(displayAnatomy.XAXIS).getRange().getInterval() * 2;

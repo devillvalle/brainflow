@@ -23,21 +23,6 @@ import java.beans.PropertyChangeEvent;
 public class Viewport3D  {
 
     
-    public static final String X_AXIS_MIN_PROPERTY = "XAxisMin";
-    public static final String Y_AXIS_MIN_PROPERTY = "YAxisMin";
-    public static final String Z_AXIS_MIN_PROPERTY = "ZAxisMin";
-
-    public static final String X_AXIS_MAX_PROPERTY = "XAxisMax";
-    public static final String Y_AXIS_MAX_PROPERTY = "YAxisMax";
-    public static final String Z_AXIS_MAX_PROPERTY = "ZAxisMax";
-
-
-    public static final String X_AXIS_EXTENT_PROPERTY = "XAxisExtent";
-    public static final String Y_AXIS_EXTENT_PROPERTY = "YAxisExtent";
-    public static final String Z_AXIS_EXTENT_PROPERTY = "ZAxisExtent";
-
-    public static final String BOUNDS_PROPERTY = "bounds";
-
 
     private IImageDisplayModel displayModel;
     
@@ -139,10 +124,13 @@ public class Viewport3D  {
     }
 
     public boolean inBounds(AnatomicalPoint3D pt) {
-
-        //if (!bounds.getImageAxis(pt.getAnatomy().XAXIS, true).getRange().contains(pt.evaluate())) return false;
-        //if (!bounds.getImageAxis(pt.getAnatomy().YAXIS, true).getRange().contains(pt.getY())) return false;
-        //if (!bounds.getImageAxis(pt.getAnatomy().ZAXIS, true).getRange().contains(pt.getZ())) return false;
+        if (pt.getAnatomy() != bounds.getAnatomy()) {
+            throw new IllegalArgumentException("supplied point must have same Anatomy as Viewport for inBounds test.");
+        }
+        
+        if (!bounds.getImageAxis(pt.getAnatomy().XAXIS, true).getRange().contains(pt.getX())) return false;
+        if (!bounds.getImageAxis(pt.getAnatomy().YAXIS, true).getRange().contains(pt.getY())) return false;
+        if (!bounds.getImageAxis(pt.getAnatomy().ZAXIS, true).getRange().contains(pt.getZ())) return false;
 
         return true;
     }

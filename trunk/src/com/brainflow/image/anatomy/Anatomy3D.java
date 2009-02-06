@@ -20,8 +20,6 @@ public class Anatomy3D implements Anatomy {
     private static final Anatomy3D[] instances = new Anatomy3D[24];
 
 
-
-
     public static final Anatomy3D AXIAL_LPI = new Anatomy3D(AnatomicalOrientation.AXIAL, AnatomicalAxis.LEFT_RIGHT, AnatomicalAxis.POSTERIOR_ANTERIOR, AnatomicalAxis.INFERIOR_SUPERIOR);
     public static final Anatomy3D AXIAL_RPI = new Anatomy3D(AnatomicalOrientation.AXIAL, AnatomicalAxis.RIGHT_LEFT, AnatomicalAxis.POSTERIOR_ANTERIOR, AnatomicalAxis.INFERIOR_SUPERIOR);
     public static final Anatomy3D AXIAL_LAI = new Anatomy3D(AnatomicalOrientation.AXIAL, AnatomicalAxis.LEFT_RIGHT, AnatomicalAxis.ANTERIOR_POSTERIOR, AnatomicalAxis.INFERIOR_SUPERIOR);
@@ -89,7 +87,7 @@ public class Anatomy3D implements Anatomy {
     }
 
     public AnatomicalAxis[] getAnatomicalAxes() {
-        return new AnatomicalAxis[] { XAXIS, YAXIS, ZAXIS };
+        return new AnatomicalAxis[]{XAXIS, YAXIS, ZAXIS};
     }
 
 
@@ -106,7 +104,7 @@ public class Anatomy3D implements Anatomy {
         return SAGITTAL_ASL;
     }
 
-     public static Anatomy3D getCanonicalCoronal() {
+    public static Anatomy3D getCanonicalCoronal() {
         return CORONAL_LSA;
     }
 
@@ -123,21 +121,19 @@ public class Anatomy3D implements Anatomy {
     }
 
 
-
     public Anatomy3D[] getCanonicalOrthogonal() {
-      if (isAxial()) {
-        return new Anatomy3D[] {this, SAGITTAL_ASL, CORONAL_LSA};
-      }
-      if (isSagittal()) {
-        return new Anatomy3D[] {this, AXIAL_LAI, CORONAL_LSA};
-      }
-      if (isCoronal()) {
-        return new Anatomy3D[] {this, AXIAL_LAI, SAGITTAL_ASL};
-      }
-      else {
-        // never here
-        throw new RuntimeException("Anatomy3D.getCanonicalOrthogonal(...) : reached ureachable else");
-      }
+        if (isAxial()) {
+            return new Anatomy3D[]{this, SAGITTAL_ASL, CORONAL_LSA};
+        }
+        if (isSagittal()) {
+            return new Anatomy3D[]{this, AXIAL_LAI, CORONAL_LSA};
+        }
+        if (isCoronal()) {
+            return new Anatomy3D[]{this, AXIAL_LAI, SAGITTAL_ASL};
+        } else {
+            // never here
+            throw new RuntimeException("Anatomy3D.getCanonicalOrthogonal(...) : reached ureachable else");
+        }
 
     }
 
@@ -148,15 +144,15 @@ public class Anatomy3D implements Anatomy {
     }
 
     public boolean isSagittal() {
-            if (orientation == AnatomicalOrientation.SAGITTAL)
-                return true;
-            return false;
+        if (orientation == AnatomicalOrientation.SAGITTAL)
+            return true;
+        return false;
     }
 
     public boolean isCoronal() {
-            if (orientation == AnatomicalOrientation.CORONAL)
-                return true;
-            return false;
+        if (orientation == AnatomicalOrientation.CORONAL)
+            return true;
+        return false;
     }
 
 
@@ -166,24 +162,24 @@ public class Anatomy3D implements Anatomy {
 
     public static Anatomy3D matchAnatomy(AnatomicalDirection a1, AnatomicalDirection a2, AnatomicalDirection a3) {
 
-        for (int i=0; i<instances.length; i++) {
+        for (int i = 0; i < instances.length; i++) {
             Anatomy3D tmp = instances[i];
-            if ( (tmp.XAXIS.getMinDirection() == a1) && (tmp.YAXIS.getMinDirection() == a2) && (tmp.ZAXIS.getMinDirection() == a3) ) {
+            if ((tmp.XAXIS.getMinDirection() == a1) && (tmp.YAXIS.getMinDirection() == a2) && (tmp.ZAXIS.getMinDirection() == a3)) {
                 return tmp;
             }
 
         }
 
-        
+
         throw new IllegalArgumentException("Axes do not correspond to valid anatomical volume ");
 
     }
 
     public static Anatomy3D matchAnatomy(AnatomicalAxis a1, AnatomicalAxis a2, AnatomicalAxis a3) {
 
-        for (int i=0; i<instances.length; i++) {
+        for (int i = 0; i < instances.length; i++) {
             Anatomy3D tmp = instances[i];
-            if ( (tmp.XAXIS == a1) && (tmp.YAXIS == a2) && (tmp.ZAXIS == a3) ) {
+            if ((tmp.XAXIS == a1) && (tmp.YAXIS == a2) && (tmp.ZAXIS == a3)) {
                 return tmp;
             }
 
@@ -194,13 +190,10 @@ public class Anatomy3D implements Anatomy {
     }
 
 
-
-
-
     public static Anatomy3D[] getAxialFamily() {
         Anatomy3D[] rets = new Anatomy3D[8];
-        int count=0;
-        for (int i=0; i<instances.length; i++) {
+        int count = 0;
+        for (int i = 0; i < instances.length; i++) {
             if (instances[i].getOrientation() == AnatomicalOrientation.AXIAL) {
                 rets[count] = instances[i];
                 count++;
@@ -212,8 +205,8 @@ public class Anatomy3D implements Anatomy {
 
     public static Anatomy3D[] getSagittalFamily() {
         Anatomy3D[] rets = new Anatomy3D[8];
-        int count=0;
-        for (int i=0; i<instances.length; i++) {
+        int count = 0;
+        for (int i = 0; i < instances.length; i++) {
             if (instances[i].getOrientation() == AnatomicalOrientation.SAGITTAL) {
                 rets[count] = instances[i];
                 count++;
@@ -225,8 +218,8 @@ public class Anatomy3D implements Anatomy {
 
     public static Anatomy3D[] getCoronalFamily() {
         Anatomy3D[] rets = new Anatomy3D[8];
-        int count=0;
-        for (int i=0; i<instances.length; i++) {
+        int count = 0;
+        for (int i = 0; i < instances.length; i++) {
             if (instances[i].getOrientation() == AnatomicalOrientation.CORONAL) {
                 rets[count] = instances[i];
                 count++;
@@ -235,7 +228,6 @@ public class Anatomy3D implements Anatomy {
 
         return rets;
     }
-
 
 
     public String toString() {
@@ -250,7 +242,6 @@ public class Anatomy3D implements Anatomy {
         return sb.toString();
 
     }
-
 
 
 }

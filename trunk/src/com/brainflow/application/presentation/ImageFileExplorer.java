@@ -196,29 +196,27 @@ public class ImageFileExplorer extends AbstractPresenter implements TreeSelectio
             }
 
             protected Transferable createTransferable(JComponent c) {
+
+                Transferable ret = null;
+
                 if (c instanceof JTree) {
                     JTree tree = (JTree) c;
                     TreePath path = tree.getSelectionPath();
                     Object[] obj = path.getPath();
-                    List<IImageDataSource> list = new ArrayList<IImageDataSource>();
-                    for (int i = 0; i < obj.length; i++) {
-                        DefaultMutableTreeNode node = (DefaultMutableTreeNode) obj[i];
-                        if (node instanceof DataSourceNode)  {
-                            DataSourceNode dnode = (DataSourceNode)node;
-                            IImageDataSource source = dnode.getUserObject();
-                            list.add(source);
-                        }
+
+                    // extracting last object in path ...
+                    DefaultMutableTreeNode node = (DefaultMutableTreeNode) obj[obj.length-1];
+
+                    if (node instanceof DataSourceNode)  {
+                        DataSourceNode dnode = (DataSourceNode)node;
+                        IImageDataSource source = dnode.getUserObject();
+                        ret = DnDUtils.createTransferable(source);
                     }
 
-                    if (list.isEmpty()) return null;
 
-                    IImageDataSource[] ret = new IImageDataSource[list.size()];
-                    list.toArray(ret);
-
-                    return DnDUtils.createTransferable(ret[0]);
-                }  else {
-                    return null;
                 }
+
+                return ret;
             }
 
         };

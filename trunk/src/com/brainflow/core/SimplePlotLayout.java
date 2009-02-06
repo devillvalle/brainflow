@@ -14,6 +14,8 @@ import java.util.List;
  * Time: 1:41:13 PM
  * To change this template use File | Settings | File Templates.
  */
+
+
 public class SimplePlotLayout extends ImagePlotLayout {
 
 
@@ -32,6 +34,7 @@ public class SimplePlotLayout extends ImagePlotLayout {
         List<IImagePlot> plots = new ArrayList<IImagePlot>();
         IImagePlot plot = createPlot(displayAnatomy);
         plots.add(plot);
+        
 
         return plots;
 
@@ -41,9 +44,10 @@ public class SimplePlotLayout extends ImagePlotLayout {
     public List<IImagePlot> layoutPlots() {
        plots = createPlots();
 
-       getView().setLayout(new BorderLayout());
-       getView().removeAll();
-       getView().add(plots.get(0).getComponent(), BorderLayout.CENTER);
+       getView().getContentPane().setLayout(new BorderLayout());
+       getView().getContentPane().removeAll();
+       getView().getContentPane().add(plots.get(0).getComponent(), BorderLayout.CENTER);
+       getView().revalidate();
 
        return plots;
     }
@@ -66,6 +70,15 @@ public class SimplePlotLayout extends ImagePlotLayout {
             return null;
         }
        
+    }
+
+    public void setDisplayAnatomy(Anatomy3D displayAnatomy) {
+        this.displayAnatomy = displayAnatomy;
+       
+    }
+
+    public Anatomy3D getDisplayAnatomy() {
+        return displayAnatomy;
     }
 
     public Dimension getPreferredSize() {

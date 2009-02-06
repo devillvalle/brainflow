@@ -27,9 +27,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
 
     private AnatomicalPoint3D slice;
 
-    private AxisRange xAxis;
-
-    private AxisRange yAxis;
+    ViewBounds viewBounds;
 
     private LinkedHashMap<String, IAnnotation> annotationMap = new LinkedHashMap<String, IAnnotation>();
 
@@ -37,7 +35,6 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
 
     private IImageDisplayModel model;
 
-    private Anatomy3D displayAnatomy;
 
     private Insets plotInsets = new Insets(18, 18, 18, 18);
 
@@ -56,10 +53,8 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
     private InterpolationType screenInterpolation = InterpolationType.LINEAR;
 
 
-    private ComponentImagePlot(IImageDisplayModel model, IImageProducer _producer, Anatomy3D displayAnatomy, AxisRange xAxis, AxisRange yAxis) {
-        this.xAxis = xAxis;
-        this.yAxis = yAxis;
-        this.displayAnatomy = displayAnatomy;
+    private ComponentImagePlot(IImageDisplayModel model, IImageProducer _producer, ViewBounds viewBounds) {
+        this.viewBounds = viewBounds;
         this.model = model;
         producer = _producer;
 
@@ -67,10 +62,8 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
 
     }
 
-    public ComponentImagePlot(IImageDisplayModel model, Anatomy3D displayAnatomy, AxisRange xAxis, AxisRange yAxis) {
-        this.xAxis = xAxis;
-        this.yAxis = yAxis;
-        this.displayAnatomy = displayAnatomy;
+    public ComponentImagePlot(IImageDisplayModel model, ViewBounds viewBounds) {
+        this.viewBounds = viewBounds;
         this.model = model;
         //producer = new CompositeImageProducer(this,  displayAnatomy);
         initAnnotationListener();
@@ -127,6 +120,16 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
 
     public JComponent getComponent() {
         return this;
+    }
+
+    public void setViewBounds(ViewBounds vbounds) {
+       viewBounds = vbounds;
+       producer.reset();
+       repaint();
+    }
+
+    public ViewBounds getViewBounds() {
+        return viewBounds;
     }
 
     private Insets getPlotSlack() {
@@ -265,11 +268,18 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
     }
 
     public Anatomy3D getDisplayAnatomy() {
-        return displayAnatomy;
+        return viewBounds.getDisplayAnatomy();
 
     }
 
-    public void updateAxis(AxisRange range) {
+    /*public void setDisplayAnatomy(Anatomy3D anatomy) {
+        displayAnatomy = anatomy;
+        xAxis = model.getImageAxis(displayAnatomy.XAXIS).getRange();
+        yAxis = model.getImageAxis(displayAnatomy.YAXIS).getRange();
+        repaint();
+    }*/
+
+    /*public void updateAxis(AxisRange range) {
         if (range.getAnatomicalAxis().sameAxis(xAxis.getAnatomicalAxis())) {
             if (!range.getAnatomicalAxis().sameDirection(xAxis.getAnatomicalAxis())) {
                 setXAxisRange(range.flip());
@@ -283,18 +293,28 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
                 setYAxisRange(range);
             }
         }
-    }
+    } */
 
     public double getXExtent() {
-        return xAxis.getInterval();
+        return viewBounds.getXExtent();
     }
 
     public double getYExtent() {
-        return yAxis.getInterval();
+        return viewBounds.getYExtent();
     }
 
-    public void setXAxisRange(AxisRange xrange) {
+    /*public void updateAxes(AxisRange xrange, AxisRange yrange) {
         xAxis = xrange;
+        yAxis = yrange;
+        producer.reset();
+        repaint();
+    } */
+
+
+
+    /*public void setXAxisRange(AxisRange xrange) {
+        xAxis = xrange;
+
         producer.setXAxis(xrange);
         repaint();
     }
@@ -303,7 +323,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
         yAxis = yrange;
         producer.setYAxis(yrange);
         repaint();
-    }
+    }*/
 
     public Point translateAnatToScreen(AnatomicalPoint2D pt) {
         if (pt.getAnatomy().XAXIS != getXAxisRange().getAnatomicalAxis()) {
@@ -350,11 +370,11 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
 
 
     public AxisRange getXAxisRange() {
-        return xAxis;
+        return viewBounds.getXrange();
     }
 
     public AxisRange getYAxisRange() {
-        return yAxis;
+        return viewBounds.getYrange();
     }
 
 
@@ -400,7 +420,7 @@ public class ComponentImagePlot extends JComponent implements IImagePlot {
     }
 
     public static ComponentImagePlot createComponentImagePlot(IImageDisplayModel model, IImageProducer _producer, Anatomy3D displayAnatomy, AxisRange xAxis, AxisRange yAxis) {
-        ComponentImagePlot plot = new ComponentImagePlot(model, _producer, displayAnatomy, xAxis, yAxis);
+        ComponentImagePlot plot = new ComponentImagePlot(model, _producer, new ViewBounds(displayAnatomy, xAxis, yAxis));
         plot.producer.setPlot(plot);
         return plot;
     }

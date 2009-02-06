@@ -39,13 +39,14 @@ public interface IImagePlot {
 
     public Anatomy3D getDisplayAnatomy();
 
+    //public void setDisplayAnatomy(Anatomy3D anatomy);
+
     public IImageDisplayModel getModel();
 
-    public void updateAxis(AxisRange range);
 
-    public void setXAxisRange(AxisRange drange);
+    public void setViewBounds(ViewBounds vbounds);
 
-    public void setYAxisRange(AxisRange drange);
+    public ViewBounds getViewBounds();
 
     public double getScaleX();
 

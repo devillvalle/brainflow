@@ -44,13 +44,14 @@ public abstract class ImagePlotLayout {
     protected IImagePlot createPlot(Anatomy3D displayAnatomy) {
 
         IImagePlot plot = ImagePlotFactory.createComponentPlot(view.getModel(), displayAnatomy);
-        
         plot.setSlice(getView().getCursorPos());
         plot.setScreenInterpolation(getView().getScreenInterpolation());
         return plot;
 
 
     }
+
+    
 
     public abstract SliceController createSliceController();
 
@@ -75,6 +76,10 @@ public abstract class ImagePlotLayout {
     public abstract List<IImagePlot> layoutPlots();
 
     public abstract IImagePlot whichPlot(Point p);
+
+    public abstract void setDisplayAnatomy(Anatomy3D displayAnatomy);
+
+    public abstract Anatomy3D getDisplayAnatomy();
 
     public abstract Dimension getPreferredSize();
 

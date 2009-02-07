@@ -1,6 +1,7 @@
 package com.brainflow.core;
 
 import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.image.axis.AxisRange;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -131,10 +132,18 @@ public class OrthoPlotLayout extends ImagePlotLayout {
     }
 
     public void setDisplayAnatomy(Anatomy3D displayAnatomy) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        Anatomy3D[] anatomy = displayAnatomy.getCanonicalOrthogonal();
+        for (int i=0; i<anatomy.length; i++) {
+            Anatomy3D danat = anatomy[i];
+            AxisRange xrange = getView().getModel().getImageAxis(danat.XAXIS).getRange();
+            AxisRange yrange = getView().getModel().getImageAxis(danat.YAXIS).getRange();
+            ViewBounds vb = new ViewBounds(displayAnatomy, xrange, yrange);
+
+            plots.get(i).setViewBounds(vb);
+        }
     }
 
     public Anatomy3D getDisplayAnatomy() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return plots.get(0).getDisplayAnatomy();
     }
 }

@@ -1,6 +1,7 @@
 package com.brainflow.core;
 
 import com.brainflow.image.anatomy.Anatomy3D;
+import com.brainflow.image.axis.AxisRange;
 
 import javax.swing.*;
 import java.awt.*;
@@ -74,6 +75,11 @@ public class SimplePlotLayout extends ImagePlotLayout {
 
     public void setDisplayAnatomy(Anatomy3D displayAnatomy) {
         this.displayAnatomy = displayAnatomy;
+        AxisRange xrange = getView().getModel().getImageAxis(displayAnatomy.XAXIS).getRange();
+        AxisRange yrange = getView().getModel().getImageAxis(displayAnatomy.YAXIS).getRange();
+        ViewBounds vb = new ViewBounds(displayAnatomy, xrange, yrange);
+
+        plots.get(0).setViewBounds(vb);
        
     }
 

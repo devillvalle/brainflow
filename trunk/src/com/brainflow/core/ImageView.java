@@ -16,6 +16,8 @@ import com.pietschy.command.toggle.ToggleCommand;
 import com.pietschy.command.toggle.ToggleVetoException;
 import com.pietschy.command.CommandContainer;
 import com.pietschy.command.Command;
+import com.pietschy.command.ActionCommand;
+import com.pietschy.command.face.Face;
 import net.java.dev.properties.BaseProperty;
 import net.java.dev.properties.IndexedProperty;
 import net.java.dev.properties.Property;
@@ -33,6 +35,7 @@ import javax.swing.event.ListDataListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
@@ -164,14 +167,12 @@ public class ImageView extends JPanel implements ListDataListener, ImageDisplayM
 
     protected Viewport3D viewport;
 
-
     private PlotSelectionHandler plotSelectionHandler = new PlotSelectionHandler();
 
     private ImageLayerSelectionListener layerSelectionListener = new ImageLayerSelectionListener();
 
     private JPanel contentPane = new JPanel();
 
-    private JToolBar toolbar = new JToolBar();
 
 
 
@@ -186,7 +187,6 @@ public class ImageView extends JPanel implements ListDataListener, ImageDisplayM
 
         setLayout(new BorderLayout());
         add(contentPane, BorderLayout.CENTER);
-        add(toolbar, BorderLayout.NORTH);
 
         initView();
     }
@@ -212,7 +212,6 @@ public class ImageView extends JPanel implements ListDataListener, ImageDisplayM
     }
 
     public void clearListeners() {
-        //viewport.removePropertyChangeListener(viewportHandler);
         displayModel.get().removeImageDisplayModelListener(this);
         BeanContainer.get().removeListener(displayModel.get().getListSelection(), layerSelectionListener);
 
@@ -222,8 +221,6 @@ public class ImageView extends JPanel implements ListDataListener, ImageDisplayM
 
 
     protected void registerListeners() {
-        //viewport.addPropertyChangeListener(viewportHandler);
-
         displayModel.get().addImageDisplayModelListener(this);
 
         addMouseListener(plotSelectionHandler);
@@ -404,7 +401,7 @@ public class ImageView extends JPanel implements ListDataListener, ImageDisplayM
         }
 
         AnatomicalPoint3D ap = cursorPos.get();
-        //todo fix me
+        //todo fix me, what on earth is going on here?
 
 
         AnatomicalPoint3D dispAP = null;
@@ -523,7 +520,7 @@ public class ImageView extends JPanel implements ListDataListener, ImageDisplayM
     public Dimension getPreferredSize() {
         Dimension d = plotLayout.getPreferredSize();
 
-        d.setSize(d.getWidth() * pixelsPerUnit.get().doubleValue(), d.getHeight() * pixelsPerUnit.get().doubleValue());
+        d.setSize(d.getWidth() * pixelsPerUnit.get(), d.getHeight() * pixelsPerUnit.get());
         return d;
     }
 
@@ -542,7 +539,6 @@ public class ImageView extends JPanel implements ListDataListener, ImageDisplayM
             ImageLayer deselectedLayer = getModel().getLayer(oldIndex);
 
             if (selectionIndex >= 0) {
-
                 EventBus.publish(new ImageViewLayerSelectionEvent(ImageView.this, deselectedLayer, selectedLayer));
             }
 
@@ -605,8 +601,23 @@ public class ImageView extends JPanel implements ListDataListener, ImageDisplayM
 
 
     public static class Simple extends ImageView {
-        public Simple(IImageDisplayModel imodel) {
-            super(imodel);    //To change body of overridden methods use File | Settings | File Templates.
+        public Simple(IImageDisplayModel imodel, Anatomy3D displayAnatomy) {
+            super(imodel);
+            initPlotLayout(new SimplePlotLayout(this, displayAnatomy));
+            initToolBar();
+        }
+
+        private void initToolBar() {
+            Action action = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    getPlotLayout().setDisplayAnatomy(Anatomy3D.SAGITTAL_ASL);
+                   //initPlotLayout(new SimplePlotLayout(ImageView.Simple.this, Anatomy3D.SAGITTAL_ASL)); 
+                }
+            };
+
+            action.putValue(Action.SMALL_ICON, "switch");
+            //getToolbar().add(action);
+
         }
 
 

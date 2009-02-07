@@ -65,8 +65,8 @@ public class ImageViewFactory {
     }
 
     public static ImageView createYokedAxialView(ImageView source) {
-        ImageView view = new ImageView(source.getModel());
-        view.initPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalAxial()));
+        ImageView view = new SimpleImageView(source.getModel(), Anatomy3D.getCanonicalAxial());
+        //view.initPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalAxial()));
 
         addDefaultAnnotations(view);
 
@@ -91,8 +91,7 @@ public class ImageViewFactory {
 
 
     public static ImageView createAxialView(IImageDisplayModel displayModel) {
-        ImageView view = new ImageView(displayModel);
-        view.initPlotLayout(new SimplePlotLayout(view, Anatomy3D.getCanonicalAxial()));
+        ImageView view = new SimpleImageView(displayModel, Anatomy3D.getCanonicalAxial());
         addDefaultAnnotations(view);
 
         /*ActionCommand aspectCommand = new SetPreserveAspectCommand(view);
